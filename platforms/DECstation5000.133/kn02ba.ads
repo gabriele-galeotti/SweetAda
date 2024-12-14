@@ -36,6 +36,8 @@ package KN02BA
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    MEMORY_CR_BASEADDRESS     : constant := 16#0C00_0000#; -- 32M space
    CPU_CR_BASEADDRESS        : constant := 16#0E00_0000#; -- 32M space
 
@@ -69,21 +71,21 @@ package KN02BA
    -- SSR System Support Register ---------------------------------------------
 
    type IOASIC_SSR_Type is record
-      LED0        : Boolean := True;   -- .... O... rear LEDs, 0=on, 1=off
-      LED1        : Boolean := True;   -- .... .O..
-      LED2        : Boolean := True;   -- .... ..O.
-      LED3        : Boolean := True;   -- .... ...O
-      LED4        : Boolean := True;   -- O... ....
-      LED5        : Boolean := True;   -- .O.. ....
-      LED6        : Boolean := True;   -- ..O. ....
-      LED7        : Boolean := True;   -- ...O ....
-      LANCE_RESET : Boolean := False;  -- active low
-      SCSI_RESET  : Boolean := False;  -- active low
-      RTC_RESET   : Boolean := False;  -- active low
-      SCC_RESET   : Boolean := False;  -- active low, SCC 0 & 1
+      LED0        : Boolean := True;  -- .... O... rear LEDs, 0=on, 1=off
+      LED1        : Boolean := True;  -- .... .O..
+      LED2        : Boolean := True;  -- .... ..O.
+      LED3        : Boolean := True;  -- .... ...O
+      LED4        : Boolean := True;  -- O... ....
+      LED5        : Boolean := True;  -- .O.. ....
+      LED6        : Boolean := True;  -- ..O. ....
+      LED7        : Boolean := True;  -- ...O ....
+      LANCE_RESET : Boolean := False; -- active low
+      SCSI_RESET  : Boolean := False; -- active low
+      RTC_RESET   : Boolean := False; -- active low
+      SCC_RESET   : Boolean := False; -- active low, SCC 0 & 1
       Unused1     : Bits_1  := 0;
-      TXDIS0      : Boolean := False;  -- active low
-      TXDIS1      : Boolean := False;  -- active low
+      TXDIS0      : Boolean := False; -- active low
+      TXDIS1      : Boolean := False; -- active low
       DIAGDN      : Boolean := False;
       Unused2     : Bits_16 := 0;
    end record
@@ -119,7 +121,6 @@ package KN02BA
 
    -- SIR/SIMR System Interrupt (Mask) Register -------------------------------
 
-   -- .../include/asm-mips/dec/kn02ba.h
    -- I/O ASIC interrupt bits. Star marks denote non-IRQ status bits.
    type IOASIC_SI_Type is record
       PBNO      : Boolean;      -- button debouncer
@@ -142,16 +143,16 @@ package KN02BA
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for IOASIC_SI_Type use record
-      PBNO      at 0 range 0 .. 0;
-      PBNC      at 0 range 1 .. 1;
-      SCSI_FIFO at 0 range 2 .. 2;
-      Unused1   at 0 range 3 .. 3;
-      PSU       at 0 range 4 .. 4;
-      RTC       at 0 range 5 .. 5;
-      SCC0      at 0 range 6 .. 6;
-      SCC1      at 0 range 7 .. 7;
-      LANCE     at 0 range 8 .. 8;
-      SCSI      at 0 range 9 .. 9;
+      PBNO      at 0 range  0 ..  0;
+      PBNC      at 0 range  1 ..  1;
+      SCSI_FIFO at 0 range  2 ..  2;
+      Unused1   at 0 range  3 ..  3;
+      PSU       at 0 range  4 ..  4;
+      RTC       at 0 range  5 ..  5;
+      SCC0      at 0 range  6 ..  6;
+      SCC1      at 0 range  7 ..  7;
+      LANCE     at 0 range  8 ..  8;
+      SCSI      at 0 range  9 ..  9;
       NRMOD     at 0 range 10 .. 10;
       Unused2   at 0 range 11 .. 11;
       BUS       at 0 range 12 .. 12;
@@ -193,5 +194,7 @@ package KN02BA
       (Memory_Address : Address)
       return Unsigned_32
       with Inline => True;
+
+pragma Style_Checks (On);
 
 end KN02BA;
