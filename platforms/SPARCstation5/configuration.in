@@ -71,8 +71,10 @@ GCC_SWITCHES_LOWLEVEL_PLATFORM += -DRELOCATE_DATA=0
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
-RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/srecord.tcl   \
-                   "$(SWEETADA_PATH)"/$(KERNEL_BASENAME).srec /dev/ttyUSB0 9600
+RUN_COMMAND   := "$(TCLSH)"                                          \
+                   "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/srecord.tcl \
+                   "$(SWEETADA_PATH)"/$(KERNEL_BASENAME).srec        \
+                   /dev/ttyUSB0 9600
 DEBUG_COMMAND :=
 
 else ifeq ($(APPLICATION_TYPE),QEMU)
