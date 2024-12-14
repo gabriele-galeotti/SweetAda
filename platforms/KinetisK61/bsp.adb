@@ -20,6 +20,8 @@ with Bits;
 with CPU;
 with ARMv7M;
 with K61;
+with Clocks;
+with DDR;
 with Exceptions;
 with Console;
 
@@ -54,10 +56,8 @@ package body BSP
    procedure SysTick_Init
       is
    begin
-      -- The LED is toggled every 1000 ticks, so that in 2000 ticks a complete
-      -- 1s-cycle can be observed @ 24 MHz CPU clock (MCLK)
-      ARMv7M.SYST_RVR.RELOAD := Bits_24 (24_000_000 / 2_000);
-      ARMv7M.SHPR3.PRI_15 := 16#01#;
+      ARMv7M.SYST_RVR.RELOAD := Bits_24 (75_000_000 / 1_000);
+      ARMv7M.SHPR3.PRI_15 := 16#FF#;
       ARMv7M.SYST_CVR.CURRENT := 0;
       ARMv7M.SYST_CSR := (
          ENABLE    => True,
@@ -77,7 +77,10 @@ package body BSP
       is
    begin
       -- wait for transmitter available
-      null;
+      loop
+         exit when UART5.S1.TDRE;
+      end loop;
+      UART5.D.RT := To_U8 (C);
    end Console_Putchar;
 
    procedure Console_Getchar
@@ -92,22 +95,41 @@ package body BSP
    ----------------------------------------------------------------------------
    procedure Setup
       is
-      Delay_Count : constant := 500_000;
    begin
-      -- WDOG -----------------------------------------------------------------
-      WDOG_UNLOCK := 16#C520#;
-      WDOG_UNLOCK := 16#D928#;
-      WDOG_STCTRLH.WDOGEN := False;
       -------------------------------------------------------------------------
-      SIM_SCGC5.PORTF := True; -- PORTF clock gate control
-      PORTF_PCR.Pins (12).MUX := 1;
-      GPIOF.GPIO_PDDR (12) := True;
-      loop
-         for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-         GPIOF.GPIO_PSOR (12) := True;
-         for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-         GPIOF.GPIO_PCOR (12) := True;
-      end loop;
+      Clocks.Init;
+      -- PORTx clock gate control ---------------------------------------------
+      SIM_SCGC5.PORTE := True;
+      SIM_SCGC5.PORTF := True;
+      -------------------------------------------------------------------------
+      Exceptions.Init;
+      -- UART5 ----------------------------------------------------------------
+      SIM_SCGC1.UART5 := True;
+      PORTE_MUXCTRL.PCR (8).MUX := MUX_ALT3;
+      PORTE_MUXCTRL.PCR (9).MUX := MUX_ALT3;
+      UART5.C4 := (
+         BRFA   => 0,
+         M10    => False,
+         MAEN2  => False,
+         MAEN1  => False
+         );
+      UART5.BDL.SBR := Bits_8 ((75 * MHz1 / 16) / 115_200);
+      UART5.BDH.SBR := 0;
+      UART5.C2.TE := True;
+      -- Console --------------------------------------------------------------
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
+      Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
+      -------------------------------------------------------------------------
+      Console.Print ("Kinetis K61", NL => True);
+      -------------------------------------------------------------------------
+      DDR.Init;
+      -------------------------------------------------------------------------
+      ARMv7M.Irq_Enable;
+      ARMv7M.Fault_Irq_Enable;
+      SysTick_Init;
       -------------------------------------------------------------------------
    end Setup;
 

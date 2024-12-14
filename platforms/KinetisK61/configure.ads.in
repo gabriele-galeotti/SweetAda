@@ -13,7 +13,7 @@ package Configure
    CPU_MODEL : constant String := "@CPU_MODEL@";
 
    -- basic configuration parameters
-   SYSCLK_FREQUENCY : constant := 24 * MHz1;
-   TICK_FREQUENCY   : constant := 1 * kHz1;
+   EXTAL_FREQUENCY : constant := 50 * MHz1;
+   TICK_FREQUENCY  : constant := 1 * kHz1;
 
 end Configure;

@@ -28,12 +28,27 @@ _start:
                 cpsid   i
 
                 //
+                // Disable the watchdog.
+                //
+#define WDOG_UNLOCK     0x4005200E
+#define WDOG_UNLOCK_KEY 0xD928C520
+                ldr     r0,=WDOG_UNLOCK
+                ldr     r1,=WDOG_UNLOCK_KEY
+                strh    r1,[r0]
+                mov     r1,r1,lsr#16
+                strh    r1,[r0]
+                // clear WDOG_STCTRLH.WDOGEN
+                sub     r0,r0,0xE
+                ldrh    r1,[r0]
+                bfc     r1,#0,#1
+                strh    r1,[r0]
+
+                //
                 // Setup stack pointer.
                 //
                 ldr     r0,=kernel_stack
                 mov     sp,r0
 
-#if 0
                 //
                 // Initialize .bss section.
                 //
@@ -46,14 +61,11 @@ _start:
 1:              stm     r1!,{r0}
 2:              cmp     r1,r2
                 bne     1b
-#endif
 
                 //
                 // Jump to high-level code.
                 //
                 .extern _ada_main
-                .extern bsp__setup
-                bl      bsp__setup
                 bl      _ada_main
 
 dead:           b       .

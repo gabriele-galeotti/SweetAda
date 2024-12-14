@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ exceptions.adb                                                                                            --
+-- __FLN__ clocks.adb                                                                                                --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,18 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
-with Configure;
 with Bits;
-with LLutils;
-with Abort_Library;
-with ARMv7M;
-with CPU;
 with K61;
-with BSP;
-with Console;
 
-package body Exceptions
+package body Clocks
    is
 
    --========================================================================--
@@ -37,7 +29,6 @@ package body Exceptions
    --                                                                        --
    --========================================================================--
 
-   use Interfaces;
    use Bits;
    use K61;
 
@@ -50,41 +41,62 @@ package body Exceptions
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Exception_Process
-   ----------------------------------------------------------------------------
-   procedure Exception_Process
-      is
-   begin
-      Console.Print ("*** EXCEPTION", NL => True);
-      Abort_Library.System_Abort;
-   end Exception_Process;
-
-   ----------------------------------------------------------------------------
-   -- Irq_Process
-   ----------------------------------------------------------------------------
-   procedure Irq_Process
-      is
-   begin
-      BSP.Tick_Count := @ + 1;
-      -- blink on-board LED2
-      if (BSP.Tick_Count mod Configure.TICK_FREQUENCY) = 0 then
-         GPIOF.PTOR (11) := True;
-      end if;
-   end Irq_Process;
-
-   ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
       is
-      Vector_Table : constant Asm_Entry_Point
-         with Import        => True,
-              External_Name => "vectors";
    begin
-      ARMv7M.VTOR.TBLOFF := Bits_25 (LLutils.Select_Address_Bits (Vector_Table'Address, 7, 31));
-      -- LED2 (YELLOW)
-      PORTF_MUXCTRL.PCR (11).MUX := MUX_ALT1_GPIO;
-      GPIOF.PDDR (11) := True;
+      -- MCG comes out of reset in FEI mode
+      SIM_CLKDIV1 := (
+         OUTDIV4 => OUTDIVx_DIV4,
+         OUTDIV3 => OUTDIVx_DIV4,
+         OUTDIV2 => OUTDIVx_DIV2,
+         OUTDIV1 => OUTDIVx_DIV1,
+         others  => <>
+         );
+      MCG_C2 := (
+         EREFS0 => EREFS0_EXT,
+         RANGE0 => RANGE0_VHI1,
+         others => <>
+         );
+      MCG_C1 := (
+         -- IRCLKEN => True,
+         IREFS   => IREFS_EXT,
+         FRDIV   => FRDIV_64_1280, -- 50 / 1280 = 39.0625 kHz
+         -- CLKS    => CLKS_FLLPLLCS, -- go to FEE
+         CLKS    => CLKS_EXT,      -- go to FBE
+         others  => <>
+         );
+      loop exit when MCG_S.IREFST = IREFST_EXT; end loop;
+      loop exit when MCG_S.CLKST = CLKST_EXT; end loop;
+      MCG_C5 := (
+         PRDIV0     => PRDIV0_DIV4,     -- 50 / 4 = 12.5 MHz
+         PLLCLKEN0  => True,
+         PLLREFSEL0 => PLLREFSEL0_OSC0,
+         others     => <>
+         );
+      -- FBE mode established
+      MCG_C6 := (
+         VDIV0  => VDIV0_x24,  -- 12.5 * 24 = 300 MHz (VCO)
+         PLLS   => PLLS_PLLCS,
+         others => <>
+         );
+      loop exit when MCG_S.PLLST = PLLST_PLLCS; end loop;
+      loop exit when MCG_S.LOCK0; end loop;
+      MCG_C1.CLKS := CLKS_FLLPLLCS;
+      MCG_C6.PLLS := PLLS_PLLCS;
+      loop exit when MCG_S.CLKST = CLKST_PLL; end loop;
+      if False then
+         -- 5.7.3 Debug trace clock
+         -- 12.2.3 System Options Register 2 (SIM_SOPT2)
+         -- 12.2.24 System Clock Divider Register 4 (SIM_CLKDIV4)
+         -- SIM_SOPT2.TRACECLKSEL := TRACECLKSEL_MCGCLKOUT;
+         SIM_SOPT2.TRACECLKSEL := TRACECLKSEL_CORE;
+         SIM_CLKDIV4.TRACEFRAC := 1;
+         SIM_CLKDIV4.TRACEDIV  := 1;
+         SIM_SCGC5.PORTA := True;               -- PORTA clock gate control
+         PORTA_MUXCTRL.PCR (6).MUX := MUX_ALT7; -- PTA6 = ALT7 = TRACE_CLKOUT
+      end if;
    end Init;
 
-end Exceptions;
+end Clocks;
