@@ -38,6 +38,13 @@ package DE10Lite
    use Bits;
    use Quartus;
 
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
+   -- Embedded Peripherals IP User Guide
+   -- ID 683130 Date 12/13/2021 Version 21.4
+   ----------------------------------------------------------------------------
+
    ----------------------------------------------------------------------------
    -- LEDs Avalon Memory Mapped Slave
    ----------------------------------------------------------------------------
@@ -55,7 +62,7 @@ package DE10Lite
            Convention => Ada;
 
    ----------------------------------------------------------------------------
-   -- JTAG UART
+   -- 12. JTAG UART Core
    ----------------------------------------------------------------------------
 
    -- 12.4.4.1. Data Register
@@ -117,5 +124,63 @@ package DE10Lite
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 23. Interval Timer Core
+   ----------------------------------------------------------------------------
+
+   type ITC_status_Type is record
+      TO       : Boolean;      -- The TO (timeout) bit is set to 1 when the internal counter reaches zero.
+      RUN      : Boolean;      -- The RUN bit reads as 1 when the internal counter is running; otherwise this bit reads as 0.
+      Reserved : Bits_14 := 0;
+   end record
+      with Size => 16;
+   for ITC_status_Type use record
+      TO       at 0 range  0 ..  0;
+      RUN      at 0 range  1 ..  1;
+      Reserved at 0 range  2 .. 15;
+   end record;
+
+   type ITC_control_Type is record
+      ITO      : Boolean;      -- If the ITO bit is 1, the interval timer core generates an IRQ when the status register’s TO bit is 1. When the ITO bit is 0, the timer does not generate IRQs.
+      CONT     : Boolean;      -- The CONT (continuous) bit determines how the internal counter behaves when it reaches zero.
+      START    : Boolean;      -- Writing a 1 to the START bit starts the internal counter running (counting down).
+      STOP     : Boolean;      -- Writing a 1 to the STOP bit stops the internal counter.
+      Reserved : Bits_12 := 0;
+   end record
+      with Size => 16;
+   for ITC_control_Type use record
+      ITO      at 0 range  0 ..  0;
+      CONT     at 0 range  1 ..  1;
+      START    at 0 range  2 ..  2;
+      STOP     at 0 range  3 ..  3;
+      Reserved at 0 range  4 .. 15;
+   end record;
+
+   type Interval_Timer32_Type is record
+      status  : ITC_status_Type  with Volatile_Full_Access => True;
+      control : ITC_control_Type with Volatile_Full_Access => True;
+      periodl : Unsigned_16      with Volatile_Full_Access => True;
+      periodh : Unsigned_16      with Volatile_Full_Access => True;
+      snapl   : Unsigned_16      with Volatile_Full_Access => True;
+      snaph   : Unsigned_16      with Volatile_Full_Access => True;
+   end record
+      with Size => 5 * 32 + 16;
+   for Interval_Timer32_Type use record
+      status  at 16#00# range 0 .. 15;
+      control at 16#04# range 0 .. 15;
+      periodl at 16#08# range 0 .. 15;
+      periodh at 16#0C# range 0 .. 15;
+      snapl   at 16#10# range 0 .. 15;
+      snaph   at 16#14# range 0 .. 15;
+   end record;
+
+   Timer : aliased Interval_Timer32_Type
+      with Address    => To_Address (timer_0_s1_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+pragma Style_Checks (On);
 
 end DE10Lite;

@@ -47,7 +47,10 @@ export QSYS_PROJECT_PATH := /root/workspace/devices/DE10-Lite/DE10-Lite_base_des
 export QSYS_FILE         := $(QSYS_PROJECT_PATH)/de10lite.qsys
 export QSYS_SOF_FILE     := $(QSYS_PROJECT_PATH)/output_files/DE10-Lite.sof
 export QSYS_JDI_FILE     := $(QSYS_PROJECT_PATH)/output_files/DE10-Lite.jdi
-export QSYS_IO_LIST      := leds.s1 switches.s1 jtag_uart_0.avalon_jtag_slave
+export QSYS_IO_LIST      := timer_0.s1                    \
+                            leds.s1                       \
+                            switches.s1                   \
+                            jtag_uart_0.avalon_jtag_slave
 
 ################################################################################
 # Run/debug interface.                                                         #
