@@ -59,8 +59,9 @@ export COMMPORT     := /dev/ttyACM0
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
 
-RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl \
-                   -b "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/download.bit         \
+RUN_COMMAND   := "$(TCLSH)"                                                 \
+                   "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl  \
+                   -b "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/download.bit \
                    -c $(COMMPORT)
 DEBUG_COMMAND := $(RUN_COMMAND)
 
