@@ -50,7 +50,7 @@ if {[lindex $argv 0] eq "-server"} {
     set platform [platform_get]
     if {$platform eq "windows"} {
         set OPENOCD_EXECUTABLE [file join $OPENOCD_PREFIX bin openocd.exe]
-        exec cmd.exe /C START "" "$OPENOCD_EXECUTABLE" -f "$OPENOCD_CFGFILE" &
+        exec cmd.exe /C START "OpenOCD " "$OPENOCD_EXECUTABLE" -f "$OPENOCD_CFGFILE" &
     } elseif {$platform eq "unix"} {
         set OPENOCD_EXECUTABLE [file join $OPENOCD_PREFIX bin openocd]
         # __FIX__
