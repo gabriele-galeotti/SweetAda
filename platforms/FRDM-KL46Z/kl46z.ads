@@ -38,44 +38,51 @@ package KL46Z
 pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
-   -- 4 Memory Map
+   -- KL46P121M48SF4RM
+   -- Rev. 3, July 2013
    ----------------------------------------------------------------------------
 
-   -- 4.6.2 Peripheral bridge (AIPS-lite) memory map
-
-   SIM_BASEADDRESS       : constant := 16#4004_7000#;
-   -- SIM_BASEADDRESS       : constant := 16#4004_8000#;
-   PORTx_MUX_BASEADDRESS : constant := 16#4004_9000#;
-   GPIO_BASEADDRESS      : constant := 16#400F_F000#;
-
    ----------------------------------------------------------------------------
-   -- 11 Port Control and Interrupts (PORT)
+   -- Chapter 11 Port Control and Interrupts (PORT)
    ----------------------------------------------------------------------------
 
-   -- 11.5.1 Pin Control Register n
+   PORT_MUXCTRL_BASEADDRESS : constant := 16#4004_9000#;
+
+   -- 11.5.1 Pin Control Register n (PORTx_PCRn)
+
    -- base address + 0h offset + (4d x i), i = 0 .. 31
 
-   MUX_Disabled  : constant := 2#000#;
-   MUX_ALT1_GPIO : constant := 2#001#;
-   MUX_ALT2      : constant := 2#010#;
-   MUX_ALT3      : constant := 2#011#;
-   MUX_ALT4      : constant := 2#100#;
-   MUX_ALT5      : constant := 2#101#;
-   MUX_ALT6      : constant := 2#110#;
-   MUX_ALT7      : constant := 2#111#;
+   PS_PULLDOWN : constant := 0; -- Internal pulldown resistor is enabled on the corresponding pin, if the corresponding Port Pull Enable field is set.
+   PS_PULLUP   : constant := 1; -- Internal pullup resistor is enabled on the corresponding pin, if the corresponding Port Pull Enable field is set.
 
-   IRQC_Disabled    : constant := 2#0000#;
-   IRQC_DMA_Rising  : constant := 2#0001#;
-   IRQC_DMA_Falling : constant := 2#0010#;
-   IRQC_DMA_Either  : constant := 2#0011#;
-   IRQC_IRQ_Zero    : constant := 2#1000#;
-   IRQC_IRQ_Rising  : constant := 2#1001#;
-   IRQC_IRQ_Falling : constant := 2#1010#;
-   IRQC_IRQ_Either  : constant := 2#1011#;
-   IRQC_IRQ_One     : constant := 2#1100#;
+   MUX_DISABLED  : constant := 2#000#; -- Pin disabled (analog).
+   MUX_ALT1_GPIO : constant := 2#001#; -- Alternative 1 (GPIO).
+   MUX_ALT2      : constant := 2#010#; -- Alternative 2 (chip-specific).
+   MUX_ALT3      : constant := 2#011#; -- Alternative 3 (chip-specific).
+   MUX_ALT4      : constant := 2#100#; -- Alternative 4 (chip-specific).
+   MUX_ALT5      : constant := 2#101#; -- Alternative 5 (chip-specific).
+   MUX_ALT6      : constant := 2#110#; -- Alternative 6 (chip-specific).
+   MUX_ALT7      : constant := 2#111#; -- Alternative 7 (chip-specific).
+
+   IRQC_DISABLED   : constant := 2#0000#; -- Interrupt/DMA request disabled.
+   IRQC_DMARISING  : constant := 2#0001#; -- DMA request on rising edge.
+   IRQC_DMAFALLING : constant := 2#0010#; -- DMA request on falling edge.
+   IRQC_DMAEITHER  : constant := 2#0011#; -- DMA request on either edge.
+   IRQC_RSVD1      : constant := 2#0100#; -- Reserved.
+   IRQC_RSVD2      : constant := 2#0101#; -- Reserved.
+   IRQC_RSVD3      : constant := 2#0110#; -- Reserved.
+   IRQC_RSVD4      : constant := 2#0111#; -- Reserved.
+   IRQC_IRQZERO    : constant := 2#1000#; -- Interrupt when logic zero.
+   IRQC_IRQRISING  : constant := 2#1001#; -- Interrupt on rising edge.
+   IRQC_IRQFALLING : constant := 2#1010#; -- Interrupt on falling edge.
+   IRQC_IRQEITHER  : constant := 2#1011#; -- Interrupt on either edge.
+   IRQC_IRQONE     : constant := 2#1100#; -- Interrupt when logic one.
+   IRQC_RSVD5      : constant := 2#1101#; -- Reserved.
+   IRQC_RSVD6      : constant := 2#1110#; -- Reserved.
+   IRQC_RSVD7      : constant := 2#1111#; -- Reserved.
 
    type PORTx_PCRn_Type is record
-      PS        : Boolean;                  -- Pull Select
+      PS        : Bits_1;                   -- Pull Select
       PE        : Boolean;                  -- Pull Enable
       SRE       : Boolean;                  -- Slew Rate Enable
       Reserved1 : Bits_1  := 0;
@@ -85,7 +92,7 @@ pragma Style_Checks (Off);
       Reserved3 : Bits_1  := 0;
       MUX       : Bits_3;                   -- Pin Mux Control
       Reserved4 : Bits_5  := 0;
-      IRQC      : Bits_4  := IRQC_Disabled; -- Interrupt Configuration
+      IRQC      : Bits_4  := IRQC_DISABLED; -- Interrupt Configuration
       Reserved5 : Bits_4  := 0;
       ISF       : Boolean := False;         -- Interrupt Status Flag
       Reserved6 : Bits_7  := 0;
@@ -110,125 +117,49 @@ pragma Style_Checks (Off);
       Reserved6 at 0 range 25 .. 31;
    end record;
 
-   PORTA_PCR_BASEADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#0000#;
-
-   PORTA_PCR : aliased array (0 .. 31) of PORTx_PCRn_Type
-      with Address    => System'To_Address (PORTA_PCR_BASEADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-
-   PORTB_PCR_BASEADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#1000#;
-
-   PORTB_PCR : aliased array (0 .. 31) of PORTx_PCRn_Type
-      with Address    => System'To_Address (PORTB_PCR_BASEADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-
-   PORTC_PCR_BASEADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#2000#;
-
-   PORTC_PCR : aliased array (0 .. 31) of PORTx_PCRn_Type
-      with Address    => System'To_Address (PORTC_PCR_BASEADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-
-   PORTD_PCR_BASEADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#3000#;
-
-   PORTD_PCR : aliased array (0 .. 31) of PORTx_PCRn_Type
-      with Address    => System'To_Address (PORTD_PCR_BASEADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-
-   PORTE_PCR_BASEADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#4000#;
-
-   PORTE_PCR : aliased array (0 .. 31) of PORTx_PCRn_Type
-      with Address    => System'To_Address (PORTE_PCR_BASEADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
+   type PORTx_PCR_Type is array (0 .. 31) of PORTx_PCRn_Type
+      with Pack => True;
 
    -- 11.5.2 Global Pin Control Low Register (PORTx_GPCLR)
-   -- 11.5.3 Global Pin Control High Register (PORTx_GPCHR)
 
-   type PORTx_GPCLHR_Type is record
-      GPWD : Bitmap_16 := [others => False]; -- Global Pin Write Data
-      GPWE : Bitmap_16 := [others => False]; -- Global Pin Write Enable
+   type Bitmap_16L is array (0 .. 15) of Boolean
+      with Component_Size => 1,
+           Size           => 16;
+
+   type PORTx_GPCLR_Type is record
+      GPWD : Bits_16    := 0;                 -- Global Pin Write Data
+      GPWE : Bitmap_16L := [others => False]; -- Global Pin Write Enable
    end record
       with Bit_Order            => Low_Order_First,
            Size                 => 32,
            Volatile_Full_Access => True;
-   for PORTx_GPCLHR_Type use record
+   for PORTx_GPCLR_Type use record
       GPWD at 0 range  0 .. 15;
       GPWE at 0 range 16 .. 31;
    end record;
 
-   PORTA_GPCLR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#0080#;
-   PORTA_GPCHR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#0084#;
+   -- 11.5.3 Global Pin Control High Register (PORTx_GPCHR)
 
-   PORTA_GPCLR : aliased PORTx_GPCLHR_Type
-      with Address    => System'To_Address (PORTA_GPCLR_ADDRESS),
-           Import     => True,
-           Convention => Ada;
-   PORTA_GPCHR : aliased PORTx_GPCLHR_Type
-      with Address    => System'To_Address (PORTA_GPCHR_ADDRESS),
-           Import     => True,
-           Convention => Ada;
+   type Bitmap_16H is array (16 .. 31) of Boolean
+      with Component_Size => 1,
+           Size           => 16;
 
-   PORTB_GPCLR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#1080#;
-   PORTB_GPCHR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#1084#;
-
-   PORTB_GPCLR : aliased PORTx_GPCLHR_Type
-      with Address    => System'To_Address (PORTB_GPCLR_ADDRESS),
-           Import     => True,
-           Convention => Ada;
-   PORTB_GPCHR : aliased PORTx_GPCLHR_Type
-      with Address    => System'To_Address (PORTB_GPCHR_ADDRESS),
-           Import     => True,
-           Convention => Ada;
-
-   PORTC_GPCLR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#2080#;
-   PORTC_GPCHR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#2084#;
-
-   PORTC_GPCLR : aliased PORTx_GPCLHR_Type
-      with Address    => System'To_Address (PORTC_GPCLR_ADDRESS),
-           Import     => True,
-           Convention => Ada;
-   PORTC_GPCHR : aliased PORTx_GPCLHR_Type
-      with Address    => System'To_Address (PORTC_GPCHR_ADDRESS),
-           Import     => True,
-           Convention => Ada;
-
-   PORTD_GPCLR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#3080#;
-   PORTD_GPCHR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#3084#;
-
-   PORTD_GPCLR : aliased PORTx_GPCLHR_Type
-      with Address    => System'To_Address (PORTD_GPCLR_ADDRESS),
-           Import     => True,
-           Convention => Ada;
-   PORTD_GPCHR : aliased PORTx_GPCLHR_Type
-      with Address    => System'To_Address (PORTD_GPCHR_ADDRESS),
-           Import     => True,
-           Convention => Ada;
-
-   PORTE_GPCLR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#4080#;
-   PORTE_GPCHR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#4084#;
-
-   PORTE_GPCLR : aliased PORTx_GPCLHR_Type
-      with Address    => System'To_Address (PORTE_GPCLR_ADDRESS),
-           Import     => True,
-           Convention => Ada;
-   PORTE_GPCHR : aliased PORTx_GPCLHR_Type
-      with Address    => System'To_Address (PORTE_GPCHR_ADDRESS),
-           Import     => True,
-           Convention => Ada;
+   type PORTx_GPCHR_Type is record
+      GPWD : Bits_16    := 0;                 -- Global Pin Write Data
+      GPWE : Bitmap_16H := [others => False]; -- Global Pin Write Enable
+   end record
+      with Bit_Order            => Low_Order_First,
+           Size                 => 32,
+           Volatile_Full_Access => True;
+   for PORTx_GPCHR_Type use record
+      GPWD at 0 range  0 .. 15;
+      GPWE at 0 range 16 .. 31;
+   end record;
 
    -- 11.5.4 Interrupt Status Flag Register (PORTx_ISFR)
 
    type PORTx_ISFR_Type is record
-      ISF : Bitmap_32 := [others => False]; -- Interrupt Status Flag
+      ISF : Bitmap_32; -- Interrupt Status Flag
    end record
       with Bit_Order            => Low_Order_First,
            Size                 => 32,
@@ -237,49 +168,54 @@ pragma Style_Checks (Off);
       ISF at 0 range 0 .. 31;
    end record;
 
-   PORTA_ISFR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#00A0#;
+   -- 11.5 Memory map and register definition
 
-   PORTA_ISFR : aliased PORTx_ISFR_Type
-      with Address    => System'To_Address (PORTA_ISFR_ADDRESS),
+   type PORT_MUXCTRL_Type is record
+      PCR   : PORTx_PCR_Type;
+      GPCLR : PORTx_GPCLR_Type;
+      GPCHR : PORTx_GPCHR_Type;
+      ISFR  : PORTx_ISFR_Type;
+   end record
+      with Size => 16#A4# * 8;
+   for PORT_MUXCTRL_Type use record
+      PCR   at 16#00# range 0 .. 32 * 32 - 1;
+      GPCLR at 16#80# range 0 .. 31;
+      GPCHR at 16#84# range 0 .. 31;
+      ISFR  at 16#A0# range 0 .. 31;
+   end record;
+
+   PORTA_MUXCTRL : aliased PORT_MUXCTRL_Type
+      with Address    => System'To_Address (PORT_MUXCTRL_BASEADDRESS + 16#0000#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
-
-   PORTB_ISFR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#10A0#;
-
-   PORTB_ISFR : aliased PORTx_ISFR_Type
-      with Address    => System'To_Address (PORTB_ISFR_ADDRESS),
+   PORTB_MUXCTRL : aliased PORT_MUXCTRL_Type
+      with Address    => System'To_Address (PORT_MUXCTRL_BASEADDRESS + 16#1000#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
-
-   PORTC_ISFR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#20A0#;
-
-   PORTC_ISFR : aliased PORTx_ISFR_Type
-      with Address    => System'To_Address (PORTC_ISFR_ADDRESS),
+   PORTC_MUXCTRL : aliased PORT_MUXCTRL_Type
+      with Address    => System'To_Address (PORT_MUXCTRL_BASEADDRESS + 16#2000#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
-
-   PORTD_ISFR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#30A0#;
-
-   PORTD_ISFR : aliased PORTx_ISFR_Type
-      with Address    => System'To_Address (PORTD_ISFR_ADDRESS),
+   PORTD_MUXCTRL : aliased PORT_MUXCTRL_Type
+      with Address    => System'To_Address (PORT_MUXCTRL_BASEADDRESS + 16#3000#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
-
-   PORTE_ISFR_ADDRESS : constant := PORTx_MUX_BASEADDRESS + 16#40A0#;
-
-   PORTE_ISFR : aliased PORTx_ISFR_Type
-      with Address    => System'To_Address (PORTE_ISFR_ADDRESS),
+   PORTE_MUXCTRL : aliased PORT_MUXCTRL_Type
+      with Address    => System'To_Address (PORT_MUXCTRL_BASEADDRESS + 16#4000#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    ----------------------------------------------------------------------------
-   -- 12 System Integration Module (SIM)
+   -- Chapter 12 System Integration Module (SIM)
    ----------------------------------------------------------------------------
+
+   SIM_BASEADDRESS : constant := 16#4004_7000#;
+   -- SIM_BASEADDRESS : constant := 16#4004_8000#;
 
    -- 12.2.1 System Options Register 1 (SIM_SOPT1)
 
@@ -309,10 +245,8 @@ pragma Style_Checks (Off);
       USBREGEN  at 0 range 31 .. 31;
    end record;
 
-   SIM_SOPT1_ADDRESS : constant := 16#4004_7000#;
-
    SIM_SOPT1 : aliased SIM_SOPT1_Type
-      with Address              => System'To_Address (SIM_SOPT1_ADDRESS),
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#0000#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -336,10 +270,8 @@ pragma Style_Checks (Off);
       Reserved2 at 0 range 27 .. 31;
    end record;
 
-   SIM_SOPT1CFG_ADDRESS : constant := 16#4004_7004#;
-
    SIM_SOPT1CFG : aliased SIM_SOPT1CFG_Type
-      with Address              => System'To_Address (SIM_SOPT1CFG_ADDRESS),
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#0004#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -349,14 +281,14 @@ pragma Style_Checks (Off);
    RTCCLKOUTSEL_RTC      : constant := 0; -- RTC 1 Hz clock is output on the RTC_CLKOUT pin.
    RTCCLKOUTSEL_OSCERCLK : constant := 1; -- OSCERCLK clock is output on the RTC_CLKOUT pin.
 
-   CLKOUTSEL_Reserved1 : constant := 2#000#; -- Reserved
-   CLKOUTSEL_Reserved2 : constant := 2#001#; -- Reserved
-   CLKOUTSEL_BUSCLOCK  : constant := 2#010#; -- Bus clock
-   CLKOUTSEL_LPO       : constant := 2#011#; -- LPO clock (1 kHz)
-   CLKOUTSEL_MCGIRCLK  : constant := 2#100#; -- MCGIRCLK
-   CLKOUTSEL_Reserved3 : constant := 2#101#; -- Reserved
-   CLKOUTSEL_OSCERCLK  : constant := 2#110#; -- OSCERCLK
-   CLKOUTSEL_Reserved4 : constant := 2#111#; -- Reserved
+   CLKOUTSEL_RSVD1    : constant := 2#000#; -- Reserved
+   CLKOUTSEL_RSVD2    : constant := 2#001#; -- Reserved
+   CLKOUTSEL_BUSCLOCK : constant := 2#010#; -- Bus clock
+   CLKOUTSEL_LPO      : constant := 2#011#; -- LPO clock (1 kHz)
+   CLKOUTSEL_MCGIRCLK : constant := 2#100#; -- MCGIRCLK
+   CLKOUTSEL_RSVD3    : constant := 2#101#; -- Reserved
+   CLKOUTSEL_OSCERCLK : constant := 2#110#; -- OSCERCLK
+   CLKOUTSEL_RSVD4    : constant := 2#111#; -- Reserved
 
    PLLFLLSEL_MCGFLLCLK     : constant := 0; -- MCGFLLCLK clock
    PLLFLLSEL_MCGFLLCLKDIV2 : constant := 1; -- MCGPLLCLK clock with fixed divide by two
@@ -377,7 +309,7 @@ pragma Style_Checks (Off);
    type SIM_SOPT2_Type is record
       Reserved1    : Bits_4 := 0;
       RTCCLKOUTSEL : Bits_1 := RTCCLKOUTSEL_RTC;    -- RTC clock out select
-      CLKOUTSEL    : Bits_3 := CLKOUTSEL_Reserved1; -- CLKOUT select
+      CLKOUTSEL    : Bits_3 := CLKOUTSEL_RSVD1;     -- CLKOUT select
       Reserved2    : Bits_8 := 0;
       PLLFLLSEL    : Bits_1 := PLLFLLSEL_MCGFLLCLK; -- PLL/FLL clock select
       Reserved3    : Bits_1 := 0;
@@ -403,10 +335,8 @@ pragma Style_Checks (Off);
       Reserved5    at 0 range 28 .. 31;
    end record;
 
-   SIM_SOPT2_ADDRESS : constant := 16#4004_8004#;
-
    SIM_SOPT2 : aliased SIM_SOPT2_Type
-      with Address              => System'To_Address (SIM_SOPT2_ADDRESS),
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#1004#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -456,31 +386,31 @@ pragma Style_Checks (Off);
    SIM_SOPT4_ADDRESS : constant := 16#4004_800C#;
 
    SIM_SOPT4 : aliased SIM_SOPT4_Type
-      with Address              => System'To_Address (SIM_SOPT4_ADDRESS),
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#100C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    -- 12.2.5 System Options Register 5 (SIM_SOPT5)
 
-   UARTnTXSRC_TX         : constant := 2#00#; -- UARTn_TX pin
-   UARTnTXSRC_TXMODTPM10 : constant := 2#01#; -- UARTn_TX pin modulated with TPM1 channel 0 output
-   UARTnTXSRC_TXMODTPM20 : constant := 2#10#; -- UARTn_TX pin modulated with TPM2 channel 0 output
-   UARTnTXSRC_RSVD       : constant := 2#11#; -- Reserved
+   UARTxTXSRC_TXPIN      : constant := 2#00#; -- UART?_TX pin
+   UARTxTXSRC_TXMODTPM10 : constant := 2#01#; -- UART?_TX pin modulated with TPM1 channel 0 output
+   UARTxTXSRC_TXMODTPM20 : constant := 2#10#; -- UART?_TX pin modulated with TPM2 channel 0 output
+   UARTxTXSRC_RSVD       : constant := 2#11#; -- Reserved
 
-   UARTnRXSRC_RX   : constant := 0; -- UARTn_RX pin
-   UARTnRXSRC_CMP0 : constant := 1; -- CMP0 output
+   UARTxRXSRC_RXPIN : constant := 0; -- UART?_RX pin
+   UARTxRXSRC_CMP0  : constant := 1; -- CMP0 output
 
    type SIM_SOPT5_Type is record
-      UART0TXSRC : Bits_2  := UARTnTXSRC_TX; -- UART0 Transmit Data Source Select
-      UART0RXSRC : Bits_1  := UARTnRXSRC_RX; -- UART0 Receive Data Source Select
+      UART0TXSRC : Bits_2  := UARTxTXSRC_TXPIN; -- UART0 Transmit Data Source Select
+      UART0RXSRC : Bits_1  := UARTxRXSRC_RXPIN; -- UART0 Receive Data Source Select
       Reserved1  : Bits_1  := 0;
-      UART1TXSRC : Bits_2  := UARTnTXSRC_TX; -- UART1 Transmit Data Source Select
-      UART1RXSRC : Bits_1  := UARTnRXSRC_RX; -- UART1 Receive Data Source Select
+      UART1TXSRC : Bits_2  := UARTxTXSRC_TXPIN; -- UART1 Transmit Data Source Select
+      UART1RXSRC : Bits_1  := UARTxRXSRC_RXPIN; -- UART1 Receive Data Source Select
       Reserved2  : Bits_9  := 0;
-      UART0ODE   : Boolean := False;         -- UART0 Open Drain Enable
-      UART1ODE   : Boolean := False;         -- UART1 Open Drain Enable
-      UART2ODE   : Boolean := False;         -- UART2 Open Drain Enable
+      UART0ODE   : Boolean := False;            -- UART0 Open Drain Enable
+      UART1ODE   : Boolean := False;            -- UART1 Open Drain Enable
+      UART2ODE   : Boolean := False;            -- UART2 Open Drain Enable
       Reserved3  : Bits_1  := 0;
       Reserved4  : Bits_12 := 0;
    end record
@@ -500,10 +430,8 @@ pragma Style_Checks (Off);
       Reserved4  at 0 range 20 .. 31;
    end record;
 
-   SIM_SOPT5_ADDRESS : constant := 16#4004_8010#;
-
    SIM_SOPT5 : aliased SIM_SOPT5_Type
-      with Address              => System'To_Address (SIM_SOPT5_ADDRESS),
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#1010#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -522,19 +450,19 @@ pragma Style_Checks (Off);
    ADC0TRGSEL_TPM1OVF   : constant := 2#1001#; -- TPM1 overflow
    ADC0TRGSEL_TPM2OVF   : constant := 2#1010#; -- TPM2 overflow
    ADC0TRGSEL_RSVD5     : constant := 2#1011#; -- Reserved
-   ADC0TRGSEL_RTCALM    : constant := 2#1100#; -- RTC alarm
+   ADC0TRGSEL_RTCALRM   : constant := 2#1100#; -- RTC alarm
    ADC0TRGSEL_RTCSEC    : constant := 2#1101#; -- RTC seconds
    ADC0TRGSEL_LPTMR0TRG : constant := 2#1110#; -- LPTMR0 trigger
    ADC0TRGSEL_RSVD6     : constant := 2#1111#; -- Reserved
 
-   ADC0PRETRGSEL_A : constant := 0; -- Pre-trigger A
-   ADC0PRETRGSEL_B : constant := 1; -- Pre-trigger B
+   ADC0PRETRGSEL_PRETRGA : constant := 0; -- Pre-trigger A
+   ADC0PRETRGSEL_PRETRGB : constant := 1; -- Pre-trigger B
 
    type SIM_SOPT7_Type is record
-      ADC0TRGSEL    : Bits_4  := ADC0TRGSEL_EXTRG; -- ADC0 trigger select
-      ADC0PRETRGSEL : Bits_1  := ADC0PRETRGSEL_A;  -- ADC0 Pretrigger Select
+      ADC0TRGSEL    : Bits_4  := ADC0TRGSEL_EXTRG;      -- ADC0 trigger select
+      ADC0PRETRGSEL : Bits_1  := ADC0PRETRGSEL_PRETRGA; -- ADC0 Pretrigger Select
       Reserved1     : Bits_2  := 0;
-      ADC0ALTTRGEN  : Boolean := False;            -- ADC0 Alternate Trigger Enable
+      ADC0ALTTRGEN  : Boolean := False;                 -- ADC0 Alternate Trigger Enable
       Reserved2     : Bits_24 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -547,10 +475,8 @@ pragma Style_Checks (Off);
       Reserved2     at 0 range 8 .. 31;
    end record;
 
-   SIM_SOPT7_ADDRESS : constant := 16#4004_8018#;
-
    SIM_SOPT7 : aliased SIM_SOPT7_Type
-      with Address              => System'To_Address (SIM_SOPT7_ADDRESS),
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#1018#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -620,10 +546,8 @@ pragma Style_Checks (Off);
       FAMID    at 0 range 28 .. 31;
    end record;
 
-   SIM_SDID_ADDRESS : constant := 16#4004_8024#;
-
    SIM_SDID : aliased SIM_SDID_Type
-      with Address              => System'To_Address (SIM_SDID_ADDRESS),
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#1024#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -671,10 +595,8 @@ pragma Style_Checks (Off);
       Reserved8 at 0 range 28 .. 31;
    end record;
 
-   SIM_SCGC4_ADDRESS : constant := SIM_BASEADDRESS + 16#1034#;
-
    SIM_SCGC4 : aliased SIM_SCGC4_Type
-      with Address              => System'To_Address (SIM_SCGC4_ADDRESS),
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#1034#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -716,10 +638,8 @@ pragma Style_Checks (Off);
       Reserved6 at 0 range 20 .. 31;
    end record;
 
-   SIM_SCGC5_ADDRESS : constant := SIM_BASEADDRESS + 16#1038#;
-
    SIM_SCGC5 : aliased SIM_SCGC5_Type
-      with Address              => System'To_Address (SIM_SCGC5_ADDRESS),
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#1038#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -761,10 +681,8 @@ pragma Style_Checks (Off);
       DAC0      at 0 range 31 .. 31;
    end record;
 
-   SIM_SCGC6_ADDRESS : constant := SIM_BASEADDRESS + 16#103C#;
-
    SIM_SCGC6 : aliased SIM_SCGC6_Type
-      with Address              => System'To_Address (SIM_SCGC6_ADDRESS),
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#103C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -784,10 +702,8 @@ pragma Style_Checks (Off);
       Reserved2 at 0 range 9 .. 31;
    end record;
 
-   SIM_SCGC7_ADDRESS : constant := SIM_BASEADDRESS + 16#1040#;
-
    SIM_SCGC7 : aliased SIM_SCGC7_Type
-      with Address              => System'To_Address (SIM_SCGC7_ADDRESS),
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#1040#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -835,10 +751,8 @@ pragma Style_Checks (Off);
       OUTDIV1   at 0 range 28 .. 31;
    end record;
 
-   SIM_CLKDIV1_ADDRESS : constant := 16#4004_8044#;
-
    SIM_CLKDIV1 : aliased SIM_CLKDIV1_Type
-      with Address              => System'To_Address (SIM_CLKDIV1_ADDRESS),
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#1044#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -870,10 +784,8 @@ pragma Style_Checks (Off);
       Reserved2 at 0 range 28 .. 31;
    end record;
 
-   SIM_FCFG1_ADDRESS : constant := 16#4004_804C#;
-
    SIM_FCFG1 : aliased SIM_FCFG1_Type
-      with Address              => System'To_Address (SIM_FCFG1_ADDRESS),
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#104C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -882,7 +794,7 @@ pragma Style_Checks (Off);
 
    type SIM_FCFG2_Type is record
       Reserved1 : Bits_16;
-      MAXADDR1  : Bits_7;  -- This field concatenated with leading zeros plus the value of the MAXADDR1 field indicates ...
+      MAXADDR1  : Bits_7;  -- This field concatenated with leading zeros plus the value of the MAXADDR1 field indicates the first invalid address of the second program flash block (flash block 1).
       Reserved2 : Bits_1;
       MAXADDR0  : Bits_7;  -- Max address block
       Reserved3 : Bits_1;
@@ -897,10 +809,8 @@ pragma Style_Checks (Off);
       Reserved3 at 0 range 31 .. 31;
    end record;
 
-   SIM_FCFG2_ADDRESS : constant := 16#4004_8050#;
-
    SIM_FCFG2 : aliased SIM_FCFG2_Type
-      with Address              => System'To_Address (SIM_FCFG2_ADDRESS),
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#1050#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -918,10 +828,8 @@ pragma Style_Checks (Off);
       Reserved at 0 range 16 .. 31;
    end record;
 
-   SIM_UIDMH_ADDRESS : constant := 16#4004_8058#;
-
    SIM_UIDMH : aliased SIM_UIDMH_Type
-      with Address              => System'To_Address (SIM_UIDMH_ADDRESS),
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#1058#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -937,10 +845,8 @@ pragma Style_Checks (Off);
       UID at 0 range 0 .. 31;
    end record;
 
-   SIM_UIDML_ADDRESS : constant := 16#4004_805C#;
-
    SIM_UIDML : aliased SIM_UIDML_Type
-      with Address              => System'To_Address (SIM_UIDML_ADDRESS),
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#105C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -956,10 +862,8 @@ pragma Style_Checks (Off);
       UID at 0 range 0 .. 31;
    end record;
 
-   SIM_UIDL_ADDRESS : constant := 16#4004_8060#;
-
    SIM_UIDL : aliased SIM_UIDL_Type
-      with Address              => System'To_Address (SIM_UIDL_ADDRESS),
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#1060#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -986,10 +890,8 @@ pragma Style_Checks (Off);
       Reserved at 0 range 4 .. 31;
    end record;
 
-   SIM_COPC_ADDRESS : constant := 16#4004_8100#;
-
    SIM_COPC : aliased SIM_COPC_Type
-      with Address              => System'To_Address (SIM_COPC_ADDRESS),
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#1100#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1010,27 +912,25 @@ pragma Style_Checks (Off);
       Reserved at 0 range 8 .. 31;
    end record;
 
-   SIM_SRVCOP_ADDRESS : constant := 16#4004_8104#;
-
    SIM_SRVCOP : aliased SIM_SRVCOP_Type
-      with Address              => System'To_Address (SIM_SRVCOP_ADDRESS),
+      with Address              => System'To_Address (SIM_BASEADDRESS + 16#1104#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- 13 System Mode Controller (SMC)
+   -- Chapter 13 System Mode Controller (SMC)
    ----------------------------------------------------------------------------
 
    -- 13.3.1 Power Mode Protection register (SMC_PMPROT)
 
    type SMC_PMPROT_Type is record
       Reserved1 : Bits_1  := 0;
-      AVLLS     : Boolean;      -- Allow Very-Low-Leakage Stop Mode
+      AVLLS     : Boolean := False; -- Allow Very-Low-Leakage Stop Mode
       Reserved2 : Bits_1  := 0;
-      ALLS      : Boolean;      -- Allow Low-Leakage Stop Mode
+      ALLS      : Boolean := False; -- Allow Low-Leakage Stop Mode
       Reserved3 : Bits_1  := 0;
-      AVLP      : Boolean;      -- Allow Very-Low-Power Modes
+      AVLP      : Boolean := False; -- Allow Very-Low-Power Modes
       Reserved4 : Bits_1  := 0;
       Reserved5 : Bits_1  := 0;
    end record
@@ -1072,10 +972,10 @@ pragma Style_Checks (Off);
    RUNM_RSVD2 : constant := 2#11#; -- Reserved
 
    type SMC_PMCTRL_Type is record
-      STOPM     : Bits_3;           -- Stop Mode Control
+      STOPM     : Bits_3  := STOPM_STOP; -- Stop Mode Control
       STOPA     : Boolean := False;
       Reserved1 : Bits_1  := 0;
-      RUNM      : Bits_2;           -- Run Mode Control
+      RUNM      : Bits_2  := RUNM_RUN;   -- Run Mode Control
       Reserved2 : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1113,11 +1013,11 @@ pragma Style_Checks (Off);
    PSTOPO_RSVD   : constant := 2#11#; -- Reserved
 
    type SMC_STOPCTRL_Type is record
-      VLLSM     : Bits_3;       -- VLLS Mode Control
+      VLLSM     : Bits_3  := VLLSM_VLLS3; -- VLLS Mode Control
       Reserved1 : Bits_1  := 0;
       Reserved2 : Bits_1  := 0;
-      PORPO     : Boolean;      -- POR Power Option
-      PSTOPO    : Bits_2;       -- Partial Stop Option
+      PORPO     : Boolean := False;       -- POR Power Option
+      PSTOPO    : Bits_2  := PSTOPO_STOP; -- Partial Stop Option
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1167,7 +1067,7 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- 14 Power Management Controller (PMC)
+   -- Chapter 14 Power Management Controller (PMC)
    ----------------------------------------------------------------------------
 
    -- 14.5.1 Low Voltage Detect Status And Control 1 register (PMC_LVDSC1)
@@ -1178,12 +1078,12 @@ pragma Style_Checks (Off);
    LVDV_RSVD2 : constant := 2#11#; -- Reserved
 
    type PMC_LVDSC1_Type is record
-      LVDV     : Bits_2;           -- Low-Voltage Detect Voltage Select
+      LVDV     : Bits_2  := LVDV_LOW; -- Low-Voltage Detect Voltage Select
       Reserved : Bits_2  := 0;
-      LVDRE    : Boolean;          -- Low-Voltage Detect Reset Enable
-      LVDIE    : Boolean;          -- Low-Voltage Detect Interrupt Enable
-      LVDACK   : Boolean := False; -- Low-Voltage Detect Acknowledge
-      LVDF     : Boolean := False; -- Low-Voltage Detect Flag
+      LVDRE    : Boolean := True;     -- Low-Voltage Detect Reset Enable
+      LVDIE    : Boolean := False;    -- Low-Voltage Detect Interrupt Enable
+      LVDACK   : Boolean := False;    -- Low-Voltage Detect Acknowledge
+      LVDF     : Boolean := False;    -- Low-Voltage Detect Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1212,11 +1112,11 @@ pragma Style_Checks (Off);
    LVWV_HIGH : constant := 2#11#; -- High trip point selected (VLVW = VLVW4)
 
    type PMC_LVDSC2_Type is record
-      LVWV     : Bits_2;           -- Low-Voltage Warning Voltage Select
+      LVWV     : Bits_2  := LVWV_LOW; -- Low-Voltage Warning Voltage Select
       Reserved : Bits_3  := 0;
-      LVWIE    : Boolean;          -- Low-Voltage Warning Interrupt Enable
-      LVWACK   : Boolean := False; -- Low-Voltage Warning Acknowledge
-      LVWF     : Boolean := False; -- Low-Voltage Warning Flag
+      LVWIE    : Boolean := False;    -- Low-Voltage Warning Interrupt Enable
+      LVWACK   : Boolean := False;    -- Low-Voltage Warning Acknowledge
+      LVWF     : Boolean := False;    -- Low-Voltage Warning Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1239,11 +1139,11 @@ pragma Style_Checks (Off);
    -- 14.5.3 Regulator Status And Control register (PMC_REGSC)
 
    type PMC_REGSC_Type is record
-      BGBE      : Boolean;          -- Bandgap Buffer Enable
+      BGBE      : Boolean := False; -- Bandgap Buffer Enable
       Reserved1 : Bits_1  := 0;
-      REGONS    : Boolean := False; -- Regulator In Run Regulation Status
+      REGONS    : Boolean := True;  -- Regulator In Run Regulation Status
       ACKISO    : Boolean := False; -- Acknowledge Isolation
-      BGEN      : Boolean;          -- Bandgap Enable In VLPx Operation
+      BGEN      : Boolean := False; -- Bandgap Enable In VLPx Operation
       Reserved2 : Bits_1  := 0;
       Reserved3 : Bits_2  := 0;
    end record
@@ -1268,7 +1168,7 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- 16 Reset Control Module (RCM)
+   -- Chapter 16 Reset Control Module (RCM)
    ----------------------------------------------------------------------------
 
    -- 16.2.1 System Reset Status Register 0 (RCM_SRS0)
@@ -1348,8 +1248,8 @@ pragma Style_Checks (Off);
    RSTFLTSS_LPO : constant := 1; -- LPO clock filter enabled
 
    type RCM_RPFC_Type is record
-      RSTFLTSRW : Bits_2;      -- Reset Pin Filter Select in Run and Wait Modes
-      RSTFLTSS  : Bits_1;      -- Reset Pin Filter Select in Stop Mode
+      RSTFLTSRW : Bits_2 := RSTFLTSRW_DIS; -- Reset Pin Filter Select in Run and Wait Modes
+      RSTFLTSS  : Bits_1 := RSTFLTSS_DIS;  -- Reset Pin Filter Select in Stop Mode
       Reserved  : Bits_5 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1404,7 +1304,7 @@ pragma Style_Checks (Off);
    RSTFLTSEL_CNT32 : constant := 2#11111#; -- Bus clock filter count is 32
 
    type RCM_RPFW_Type is record
-      RSTFLTSEL : Bits_5;      -- Reset Pin Filter Bus Clock Select
+      RSTFLTSEL : Bits_5 := RSTFLTSEL_CNT1; -- Reset Pin Filter Bus Clock Select
       Reserved  : Bits_3 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1423,7 +1323,7 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- 24 Multipurpose Clock Generator (MCG)
+   -- Chapter 24 Multipurpose Clock Generator (MCG)
    ----------------------------------------------------------------------------
 
    MCG_BASEADDRESS : constant := 16#4006_4000#;
@@ -1861,7 +1761,7 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- 25 Oscillator (OSC)
+   -- Chapter 25 Oscillator (OSC)
    ----------------------------------------------------------------------------
 
    -- 25.71.1 OSC Control Register (OSCx_CR)
@@ -1898,7 +1798,7 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- 32 Periodic Interrupt Timer (PIT)
+   -- Chapter 32 Periodic Interrupt Timer (PIT)
    ----------------------------------------------------------------------------
 
    -- 32.3.1 PIT Module Control Register (PIT_MCR)
@@ -2045,7 +1945,7 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- 34 Real Time Clock (RTC)
+   -- Chapter 34 Real Time Clock (RTC)
    ----------------------------------------------------------------------------
 
    -- 34.2.1 RTC Time Seconds Register (RTC_TSR)
@@ -2061,7 +1961,7 @@ pragma Style_Checks (Off);
    -- 34.2.2 RTC Time Prescaler Register (RTC_TPR)
 
    type RTC_TPR_Type is record
-      TPR      : Unsigned_16;      -- Time Prescaler Register
+      TPR      : Unsigned_16 := 0; -- Time Prescaler Register
       Reserved : Bits_16     := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2092,8 +1992,8 @@ pragma Style_Checks (Off);
    -- 34.2.4 RTC Time Compensation Register (RTC_TCR)
 
    type RTC_TCR_Type is record
-      TCR : Unsigned_8;      -- Time Compensation Register
-      CIR : Unsigned_8;      -- Compensation Interval Register
+      TCR : Unsigned_8 := 0; -- Time Compensation Register
+      CIR : Unsigned_8 := 0; -- Compensation Interval Register
       TCV : Unsigned_8 := 0; -- Time Compensation Value
       CIC : Unsigned_8 := 0; -- Compensation Interval Counter
    end record
@@ -2117,18 +2017,18 @@ pragma Style_Checks (Off);
    -- 34.2.5 RTC Control Register (RTC_CR)
 
    type RTC_CR_Type is record
-      SWR       : Boolean;      -- Software Reset
-      WPE       : Boolean;      -- Wakeup Pin Enable
-      SUP       : Boolean;      -- Supervisor Access
-      UM        : Boolean;      -- Update Mode
-      WPS       : Boolean;      -- Wakeup Pin Select
+      SWR       : Boolean := False; -- Software Reset
+      WPE       : Boolean := False; -- Wakeup Pin Enable
+      SUP       : Boolean := False; -- Supervisor Access
+      UM        : Boolean := False; -- Update Mode
+      WPS       : Boolean := False; -- Wakeup Pin Select
       Reserved1 : Bits_3  := 0;
-      OSCE      : Boolean;      -- Oscillator Enable
-      CLKO      : Boolean;      -- Clock Output
-      SC16P     : Boolean;      -- Oscillator 16pF Load Configure
-      SC8P      : Boolean;      -- Oscillator 8pF Load Configure
-      SC4P      : Boolean;      -- Oscillator 4pF Load Configure
-      SC2P      : Boolean;      -- Oscillator 2pF Load Configure
+      OSCE      : Boolean := False; -- Oscillator Enable
+      CLKO      : Boolean := False; -- Clock Output
+      SC16P     : Boolean := False; -- Oscillator 16pF Load Configure
+      SC8P      : Boolean := False; -- Oscillator 8pF Load Configure
+      SC4P      : Boolean := False; -- Oscillator 4pF Load Configure
+      SC2P      : Boolean := False; -- Oscillator 2pF Load Configure
       Reserved2 : Bits_1  := 0;
       Reserved3 : Bits_17 := 0;
    end record
@@ -2192,10 +2092,10 @@ pragma Style_Checks (Off);
 
    type RTC_LR_Type is record
       Reserved1 : Bits_3  := 2#111#;
-      TCL       : Boolean := True;  -- Time Compensation Lock
-      CRL       : Boolean := True;  -- Control Register Lock
-      SRL       : Boolean := True;  -- Status Register Lock
-      LRL       : Boolean := True;  -- Lock Register Lock
+      TCL       : Boolean := True;   -- Time Compensation Lock
+      CRL       : Boolean := True;   -- Control Register Lock
+      SRL       : Boolean := True;   -- Status Register Lock
+      LRL       : Boolean := True;   -- Lock Register Lock
       Reserved2 : Bits_1  := 1;
       Reserved3 : Bits_24 := 0;
    end record
@@ -2222,13 +2122,13 @@ pragma Style_Checks (Off);
    -- 34.2.8 RTC Interrupt Enable Register (RTC_IER)
 
    type RTC_IER_Type is record
-      TIIE      : Boolean;      -- Time Invalid Interrupt Enable
-      TOIE      : Boolean;      -- Time Overflow Interrupt Enable
-      TAIE      : Boolean;      -- Time Alarm Interrupt Enable
+      TIIE      : Boolean := True; -- Time Invalid Interrupt Enable
+      TOIE      : Boolean := True; -- Time Overflow Interrupt Enable
+      TAIE      : Boolean := True; -- Time Alarm Interrupt Enable
       Reserved1 : Bits_1  := 0;
-      TSIE      : Boolean;      -- Time Seconds Interrupt Enable
+      TSIE      : Boolean;         -- Time Seconds Interrupt Enable
       Reserved2 : Bits_2  := 0;
-      WPON      : Boolean;      -- Wakeup Pin On
+      WPON      : Boolean;         -- Wakeup Pin On
       Reserved3 : Bits_24 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2253,7 +2153,7 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- 39 Universal Asynchronous Receiver/Transmitter (UART0)
+   -- Chapter 39 Universal Asynchronous Receiver/Transmitter (UART0)
    ----------------------------------------------------------------------------
 
    -- 39.2.1 UART Baud Rate Register High (UARTx_BDH)
@@ -2262,10 +2162,10 @@ pragma Style_Checks (Off);
    SBNS_2 : constant := 1; -- Two stop bit.
 
    type UARTx_BDH_Type is record
-      SBR     : Bits_5;  -- Baud Rate Modulo Divisor.
-      SBNS    : Bits_1;  -- Stop Bit Number Select
-      RXEDGIE : Boolean; -- RX Input Active Edge Interrupt Enable (for RXEDGIF)
-      LBKDIE  : Boolean; -- LIN Break Detect Interrupt Enable (for LBKDIF)
+      SBR     : Bits_5  := 0;      -- Baud Rate Modulo Divisor.
+      SBNS    : Bits_1  := SBNS_1; -- Stop Bit Number Select
+      RXEDGIE : Boolean := False;  -- RX Input Active Edge Interrupt Enable (for RXEDGIF)
+      LBKDIE  : Boolean := False;  -- LIN Break Detect Interrupt Enable (for LBKDIF)
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2274,6 +2174,17 @@ pragma Style_Checks (Off);
       SBNS    at 0 range 5 .. 5;
       RXEDGIE at 0 range 6 .. 6;
       LBKDIE  at 0 range 7 .. 7;
+   end record;
+
+   -- 39.2.2 UART Baud Rate Register Low (UARTx_BDL)
+
+   type UARTx_BDL_Type is record
+      SBR : Bits_8 := 4; -- Baud Rate Modulo Divisor.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_BDL_Type use record
+      SBR at 0 range 0 .. 7;
    end record;
 
    -- 39.2.3 UART Control Register 1 (UARTx_C1)
@@ -2290,21 +2201,21 @@ pragma Style_Checks (Off);
    M_8 : constant := 0; -- Receiver and transmitter use 8-bit data characters.
    M_9 : constant := 1; -- Receiver and transmitter use 9-bit data characters.
 
-   RSRC_LOOPBACK  : constant := 0; -- Provided LOOPS is set, RSRC is cleared, selects internal loop back mode and the UART ...
-   RSRC_UART1WIRE : constant := 1; -- Single-wire UART mode where the UART_TX pin is connected to the transmitter output and ...
+   RSRC_LOOPBACK  : constant := 0; -- Provided LOOPS is set, RSRC is cleared, selects internal loop back mode and the UART does not use the UART_RX pins.
+   RSRC_UART1WIRE : constant := 1; -- Single-wire UART mode where the UART_TX pin is connected to the transmitter output and receiver input.
 
    LOOPS_NORMAL        : constant := 0; -- Normal operation - UART_RX and UART_TX use separate pins.
-   LOOPS_LOOPUART1WIRE : constant := 1; -- Loop mode or single-wire mode where transmitter outputs are internally connected ...
+   LOOPS_LOOPUART1WIRE : constant := 1; -- Loop mode or single-wire mode where transmitter outputs are internally connected to receiver input. (See RSRC bit.) UART_RX pin is not used by UART.
 
    type UARTx_C1_Type is record
-      PT     : Bits_1;  -- Parity Type
-      PE     : Boolean; -- Parity Enable
-      ILT    : Bits_1;  -- Idle Line Type Select
-      WAKE   : Bits_1;  -- Receiver Wakeup Method Select
-      M      : Bits_1;  -- 9-Bit or 8-Bit Mode Select
-      RSRC   : Bits_1;  -- Receiver Source Select
-      DOZEEN : Boolean; -- Doze Enable
-      LOOPS  : Bits_1;  -- Loop Mode Select
+      PT     : Bits_1  := PT_EVEN;       -- Parity Type
+      PE     : Boolean := False;         -- Parity Enable
+      ILT    : Bits_1  := ILT_START;     -- Idle Line Type Select
+      WAKE   : Bits_1  := WAKE_IDLELINE; -- Receiver Wakeup Method Select
+      M      : Bits_1  := M_8;           -- 9-Bit or 8-Bit Mode Select
+      RSRC   : Bits_1  := RSRC_LOOPBACK; -- Receiver Source Select
+      DOZEEN : Boolean := False;         -- Doze Enable
+      LOOPS  : Bits_1  := LOOPS_NORMAL;  -- Loop Mode Select
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2322,14 +2233,14 @@ pragma Style_Checks (Off);
    -- 39.2.4 UART Control Register 2 (UARTx_C2)
 
    type UARTx_C2_Type is record
-      SBK  : Boolean; -- Send Break
-      RWU  : Boolean; -- Receiver Wakeup Control
-      RE   : Boolean; -- Receiver Enable
-      TE   : Boolean; -- Transmitter Enable
-      ILIE : Boolean; -- Idle Line Interrupt Enable for IDLE
-      RIE  : Boolean; -- Receiver Interrupt Enable for RDRF
-      TCIE : Boolean; -- Transmission Complete Interrupt Enable for TC
-      TIE  : Boolean; -- Transmit Interrupt Enable for TDRE
+      SBK  : Boolean := False; -- Send Break
+      RWU  : Boolean := False; -- Receiver Wakeup Control
+      RE   : Boolean := False; -- Receiver Enable
+      TE   : Boolean := False; -- Transmitter Enable
+      ILIE : Boolean := False; -- Idle Line Interrupt Enable for IDLE
+      RIE  : Boolean := False; -- Receiver Interrupt Enable for RDRF
+      TCIE : Boolean := False; -- Transmission Complete Interrupt Enable for TC
+      TIE  : Boolean := False; -- Transmit Interrupt Enable for TDRE
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2372,14 +2283,14 @@ pragma Style_Checks (Off);
    -- 39.2.6 UART Status Register 2 (UARTx_S2)
 
    type UARTx_S2_Type is record
-      RAF     : Boolean; -- Receiver Active Flag
-      LBKDE   : Boolean; -- LIN Break Detection Enable
-      BRK13   : Boolean; -- Break Character Generation Length
-      RWUID   : Boolean; -- Receive Wake Up Idle Detect
-      RXINV   : Boolean; -- Receive Data Inversion
-      MSBF    : Boolean; -- MSB First
-      RXEDGIF : Boolean; -- UART_RX Pin Active Edge Interrupt Flag
-      LBKDIF  : Boolean; -- LIN Break Detect Interrupt Flag
+      RAF     : Boolean := False; -- Receiver Active Flag
+      LBKDE   : Boolean := False; -- LIN Break Detection Enable
+      BRK13   : Boolean := False; -- Break Character Generation Length
+      RWUID   : Boolean := False; -- Receive Wake Up Idle Detect
+      RXINV   : Boolean := False; -- Receive Data Inversion
+      MSBF    : Boolean := False; -- MSB First
+      RXEDGIF : Boolean := False; -- UART_RX Pin Active Edge Interrupt Flag
+      LBKDIF  : Boolean := False; -- LIN Break Detect Interrupt Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2397,14 +2308,14 @@ pragma Style_Checks (Off);
    -- 39.2.7 UART Control Register 3 (UARTx_C3)
 
    type UARTx_C3_Type is record
-      PEIE  : Boolean; -- Parity Error Interrupt Enable
-      FEIE  : Boolean; -- Framing Error Interrupt Enable
-      NEIE  : Boolean; -- Noise Error Interrupt Enable
-      ORIE  : Boolean; -- Overrun Interrupt Enable
-      TXINV : Boolean; -- Transmit Data Inversion
-      TXDIR : Boolean; -- UART_TX Pin Direction in Single-Wire Mode
-      R9T8  : Boolean; -- Receive Bit 9 / Transmit Bit 8
-      R8T9  : Boolean; -- Receive Bit 8 / Transmit Bit 9
+      PEIE  : Boolean := False; -- Parity Error Interrupt Enable
+      FEIE  : Boolean := False; -- Framing Error Interrupt Enable
+      NEIE  : Boolean := False; -- Noise Error Interrupt Enable
+      ORIE  : Boolean := False; -- Overrun Interrupt Enable
+      TXINV : Boolean := False; -- Transmit Data Inversion
+      TXDIR : Boolean := False; -- UART_TX Pin Direction in Single-Wire Mode
+      R9T8  : Boolean := False; -- Receive Bit 9 / Transmit Bit 8
+      R8T9  : Boolean := False; -- Receive Bit 8 / Transmit Bit 9
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2419,8 +2330,38 @@ pragma Style_Checks (Off);
       R8T9  at 0 range 7 .. 7;
    end record;
 
+   -- 39.2.8 UART Data Register (UARTx_D)
+
+   type UARTx_D_Type is record
+      RT : Unsigned_8; -- Read receive data buffer ? or write transmit data buffer ?.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_D_Type use record
+      RT at 0 range 0 .. 7;
+   end record;
+
    -- 39.2.9 UART Match Address Registers 1 (UARTx_MA1)
+
+   type UARTx_MA1_Type is record
+      MA : Unsigned_8 := 0; -- Match Address
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_MA1_Type use record
+      MA at 0 range 0 .. 7;
+   end record;
+
    -- 39.2.10 UART Match Address Registers 2 (UARTx_MA2)
+
+   type UARTx_MA2_Type is record
+      MA : Unsigned_8 := 0; -- Match Address
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_MA2_Type use record
+      MA at 0 range 0 .. 7;
+   end record;
 
    -- 39.2.11 UART Control Register 4 (UARTx_C4)
 
@@ -2430,10 +2371,10 @@ pragma Style_Checks (Off);
    OSR_32x : constant := 2#11111#; -- oversampling ratio for the receiver = 32x
 
    type UART0_C4_Type is record
-      OSR   : Bits_5;  -- Over Sampling Ratio
-      M10   : Boolean; -- 10-bit Mode select
-      MAEN2 : Boolean; -- Match Address Mode Enable 2
-      MAEN1 : Boolean; -- Match Address Mode Enable 1
+      OSR   : Bits_5  := OSR_16x; -- Over Sampling Ratio
+      M10   : Boolean := False;   -- 10-bit Mode select
+      MAEN2 : Boolean := False;   -- Match Address Mode Enable 2
+      MAEN1 : Boolean := False;   -- Match Address Mode Enable 1
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2447,12 +2388,12 @@ pragma Style_Checks (Off);
    -- 39.2.12 UART Control Register 5 (UARTx_C5)
 
    type UART0_C5_Type is record
-      RESYNCDIS : Boolean;      -- Resynchronization Disable
-      BOTHEDGE  : Boolean;      -- Both Edge Sampling
+      RESYNCDIS : Boolean := False; -- Resynchronization Disable
+      BOTHEDGE  : Boolean := False; -- Both Edge Sampling
       Reserved1 : Bits_3  := 0;
-      RDMAE     : Boolean;      -- Receiver Full DMA Enable
+      RDMAE     : Boolean := False; -- Receiver Full DMA Enable
       Reserved2 : Bits_1  := 0;
-      TDMAE     : Boolean;      -- Transmitter DMA Enable
+      TDMAE     : Boolean := False; -- Transmitter DMA Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2468,45 +2409,43 @@ pragma Style_Checks (Off);
    -- 39.2 Register definition
 
    type UART_0_Type is record
-        BDH : UARTx_BDH_Type with Volatile_Full_Access => True;
-        BDL : Unsigned_8     with Volatile_Full_Access => True;
-        C1  : UARTx_C1_Type  with Volatile_Full_Access => True;
-        C2  : UARTx_C2_Type  with Volatile_Full_Access => True;
-        S1  : UARTx_S1_Type  with Volatile_Full_Access => True;
-        S2  : UARTx_S2_Type  with Volatile_Full_Access => True;
-        C3  : UARTx_C3_Type  with Volatile_Full_Access => True;
-        D   : Unsigned_8     with Volatile_Full_Access => True;
-        MA1 : Unsigned_8     with Volatile_Full_Access => True;
-        MA2 : Unsigned_8     with Volatile_Full_Access => True;
-        C4  : UART0_C4_Type  with Volatile_Full_Access => True;
-        C5  : UART0_C5_Type  with Volatile_Full_Access => True;
+      BDH : UARTx_BDH_Type with Volatile_Full_Access => True;
+      BDL : UARTx_BDL_Type with Volatile_Full_Access => True;
+      C1  : UARTx_C1_Type  with Volatile_Full_Access => True;
+      C2  : UARTx_C2_Type  with Volatile_Full_Access => True;
+      S1  : UARTx_S1_Type  with Volatile_Full_Access => True;
+      S2  : UARTx_S2_Type  with Volatile_Full_Access => True;
+      C3  : UARTx_C3_Type  with Volatile_Full_Access => True;
+      D   : UARTx_D_Type   with Volatile_Full_Access => True;
+      MA1 : UARTx_MA1_Type with Volatile_Full_Access => True;
+      MA2 : UARTx_MA2_Type with Volatile_Full_Access => True;
+      C4  : UART0_C4_Type  with Volatile_Full_Access => True;
+      C5  : UART0_C5_Type  with Volatile_Full_Access => True;
    end record
       with Size => 16#C# * 8;
    for UART_0_Type use record
-        BDH at 16#0# range 0 .. 7;
-        BDL at 16#1# range 0 .. 7;
-        C1  at 16#2# range 0 .. 7;
-        C2  at 16#3# range 0 .. 7;
-        S1  at 16#4# range 0 .. 7;
-        S2  at 16#5# range 0 .. 7;
-        C3  at 16#6# range 0 .. 7;
-        D   at 16#7# range 0 .. 7;
-        MA1 at 16#8# range 0 .. 7;
-        MA2 at 16#9# range 0 .. 7;
-        C4  at 16#A# range 0 .. 7;
-        C5  at 16#B# range 0 .. 7;
+      BDH at 16#0# range 0 .. 7;
+      BDL at 16#1# range 0 .. 7;
+      C1  at 16#2# range 0 .. 7;
+      C2  at 16#3# range 0 .. 7;
+      S1  at 16#4# range 0 .. 7;
+      S2  at 16#5# range 0 .. 7;
+      C3  at 16#6# range 0 .. 7;
+      D   at 16#7# range 0 .. 7;
+      MA1 at 16#8# range 0 .. 7;
+      MA2 at 16#9# range 0 .. 7;
+      C4  at 16#A# range 0 .. 7;
+      C5  at 16#B# range 0 .. 7;
    end record;
 
-   UART0_BASEADDRESS : constant := 16#4006_A000#;
-
    UART0 : aliased UART_0_Type
-      with Address    => System'To_Address (UART0_BASEADDRESS),
+      with Address    => System'To_Address (16#4006_A000#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    ----------------------------------------------------------------------------
-   -- 40 Universal Asynchronous Receiver/Transmitter (UART1 and UART2)
+   -- Chapter 40 Universal Asynchronous Receiver/Transmitter (UART1 and UART2)
    ----------------------------------------------------------------------------
 
    -- 40.2.9 UART Control Register 4 (UARTx_C4)
@@ -2515,9 +2454,9 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_3  := 0;
       Reserved2 : Bits_1  := 0;
       Reserved3 : Bits_1  := 0;
-      RDMAS     : Boolean;      -- Receiver Full DMA Select
+      RDMAS     : Boolean := False; -- Receiver Full DMA Select
       Reserved4 : Bits_1  := 0;
-      TDMAS     : Boolean;      -- Transmitter DMA Select
+      TDMAS     : Boolean := False; -- Transmitter DMA Select
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2533,269 +2472,96 @@ pragma Style_Checks (Off);
    -- 40.2 Register definition
 
    type UART_12_Type is record
-        BDH : UARTx_BDH_Type with Volatile_Full_Access => True;
-        BDL : Unsigned_8     with Volatile_Full_Access => True;
-        C1  : UARTx_C1_Type  with Volatile_Full_Access => True;
-        C2  : UARTx_C2_Type  with Volatile_Full_Access => True;
-        S1  : UARTx_S1_Type  with Volatile_Full_Access => True;
-        S2  : UARTx_S2_Type  with Volatile_Full_Access => True;
-        C3  : UARTx_C3_Type  with Volatile_Full_Access => True;
-        D   : Unsigned_8     with Volatile_Full_Access => True;
-        C4  : UART12_C4_Type with Volatile_Full_Access => True;
+      BDH : UARTx_BDH_Type with Volatile_Full_Access => True;
+      BDL : UARTx_BDL_Type with Volatile_Full_Access => True;
+      C1  : UARTx_C1_Type  with Volatile_Full_Access => True;
+      C2  : UARTx_C2_Type  with Volatile_Full_Access => True;
+      S1  : UARTx_S1_Type  with Volatile_Full_Access => True;
+      S2  : UARTx_S2_Type  with Volatile_Full_Access => True;
+      C3  : UARTx_C3_Type  with Volatile_Full_Access => True;
+      D   : UARTx_D_Type   with Volatile_Full_Access => True;
+      C4  : UART12_C4_Type with Volatile_Full_Access => True;
    end record
       with Size => 9 * 8;
    for UART_12_Type use record
-        BDH at 0 range 0 .. 7;
-        BDL at 1 range 0 .. 7;
-        C1  at 2 range 0 .. 7;
-        C2  at 3 range 0 .. 7;
-        S1  at 4 range 0 .. 7;
-        S2  at 5 range 0 .. 7;
-        C3  at 6 range 0 .. 7;
-        D   at 7 range 0 .. 7;
-        C4  at 8 range 0 .. 7;
+      BDH at 0 range 0 .. 7;
+      BDL at 1 range 0 .. 7;
+      C1  at 2 range 0 .. 7;
+      C2  at 3 range 0 .. 7;
+      S1  at 4 range 0 .. 7;
+      S2  at 5 range 0 .. 7;
+      C3  at 6 range 0 .. 7;
+      D   at 7 range 0 .. 7;
+      C4  at 8 range 0 .. 7;
    end record;
 
-   UART1_BASEADDRESS : constant := 16#4006_B000#;
-
    UART1 : aliased UART_12_Type
-      with Address    => System'To_Address (UART1_BASEADDRESS),
+      with Address    => System'To_Address (16#4006_B000#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
-
-   UART2_BASEADDRESS : constant := 16#4006_C000#;
 
    UART2 : aliased UART_12_Type
-      with Address    => System'To_Address (UART2_BASEADDRESS),
+      with Address    => System'To_Address (16#4006_C000#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    ----------------------------------------------------------------------------
-   -- 42 General-Purpose Input/Output (GPIO)
+   -- Chapter 42 General-Purpose Input/Output (GPIO)
    ----------------------------------------------------------------------------
 
-   -- 42.2.1 Port Data Output Register
+   GPIO_BASEADDRESS : constant := 16#400F_F000#;
 
-   type GPIOx_PDOR_Type is new Bitmap_32;
+   -- 42.2.1 Port Data Output Register (GPIOx_PDOR)
+   -- 42.2.2 Port Set Output Register (GPIOx_PSOR)
+   -- 42.2.3 Port Clear Output Register (GPIOx_PCOR)
+   -- 42.2.4 Port Toggle Output Register (GPIOx_PTOR)
+   -- 42.2.5 Port Data Input Register (GPIOx_PDIR)
+   -- 42.2.6 Port Data Direction Register (GPIOx_PDDR)
 
-   -- 42.2.2 Port Set Output Register
+   type GPIO_PORT_Type is record
+      PDOR : Bitmap_32 with Volatile_Full_Access => True;
+      PSOR : Bitmap_32 with Volatile_Full_Access => True;
+      PCOR : Bitmap_32 with Volatile_Full_Access => True;
+      PTOR : Bitmap_32 with Volatile_Full_Access => True;
+      PDIR : Bitmap_32 with Volatile_Full_Access => True;
+      PDDR : Bitmap_32 with Volatile_Full_Access => True;
+   end record
+      with Size => 16#18# * 8;
+   for GPIO_PORT_Type use record
+      PDOR at 16#00# range 0 .. 31;
+      PSOR at 16#04# range 0 .. 31;
+      PCOR at 16#08# range 0 .. 31;
+      PTOR at 16#0C# range 0 .. 31;
+      PDIR at 16#10# range 0 .. 31;
+      PDDR at 16#14# range 0 .. 31;
+   end record;
 
-   type GPIOx_PSOR_Type is new Bitmap_32;
+   -- 42.2 Memory map and register definition
 
-   -- 42.2.3 Port Clear Output Register
-
-   type GPIOx_PCOR_Type is new Bitmap_32;
-
-   -- 42.2.4 Port Toggle Output Register
-
-   type GPIOx_PTOR_Type is new Bitmap_32;
-
-   -- 42.2.5 Port Data Input Register
-
-   type GPIOx_PDIR_Type is new Bitmap_32;
-
-   -- 42.2.6 Port Data Direction Register
-
-   type GPIOx_PDDR_Type is new Bitmap_32;
-
-   -- Port A
-
-   GPIOA_PDOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#00#;
-   GPIOA_PSOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#04#;
-   GPIOA_PCOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#08#;
-   GPIOA_PTOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#0C#;
-   GPIOA_PDIR_ADDRESS : constant := GPIO_BASEADDRESS + 16#10#;
-   GPIOA_PDDR_ADDRESS : constant := GPIO_BASEADDRESS + 16#14#;
-
-   GPIOA_PDOR : aliased GPIOx_PDOR_Type
-      with Address    => System'To_Address (GPIOD_PDOR_ADDRESS),
+   GPIOA : aliased GPIO_PORT_Type
+      with Address    => System'To_Address (GPIO_BASEADDRESS + 16#000#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
-   GPIOA_PSOR : aliased GPIOx_PSOR_Type
-      with Address    => System'To_Address (GPIOA_PSOR_ADDRESS),
+   GPIOB : aliased GPIO_PORT_Type
+      with Address    => System'To_Address (GPIO_BASEADDRESS + 16#040#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
-   GPIOA_PCOR : aliased GPIOx_PCOR_Type
-      with Address    => System'To_Address (GPIOA_PCOR_ADDRESS),
+   GPIOC : aliased GPIO_PORT_Type
+      with Address    => System'To_Address (GPIO_BASEADDRESS + 16#080#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
-   GPIOA_PTOR : aliased GPIOx_PTOR_Type
-      with Address    => System'To_Address (GPIOA_PTOR_ADDRESS),
+   GPIOD : aliased GPIO_PORT_Type
+      with Address    => System'To_Address (GPIO_BASEADDRESS + 16#0C0#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
-   GPIOA_PDIR : aliased GPIOx_PDIR_Type
-      with Address    => System'To_Address (GPIOA_PDIR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOA_PDDR : aliased GPIOx_PDDR_Type
-      with Address    => System'To_Address (GPIOA_PDDR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-
-   -- Port B
-
-   GPIOB_PDOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#40#;
-   GPIOB_PSOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#44#;
-   GPIOB_PCOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#48#;
-   GPIOB_PTOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#4C#;
-   GPIOB_PDIR_ADDRESS : constant := GPIO_BASEADDRESS + 16#50#;
-   GPIOB_PDDR_ADDRESS : constant := GPIO_BASEADDRESS + 16#54#;
-
-   GPIOB_PDOR : aliased GPIOx_PDOR_Type
-      with Address    => System'To_Address (GPIOD_PDOR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOB_PSOR : aliased GPIOx_PSOR_Type
-      with Address    => System'To_Address (GPIOB_PSOR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOB_PCOR : aliased GPIOx_PCOR_Type
-      with Address    => System'To_Address (GPIOB_PCOR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOB_PTOR : aliased GPIOx_PTOR_Type
-      with Address    => System'To_Address (GPIOB_PTOR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOB_PDIR : aliased GPIOx_PDIR_Type
-      with Address    => System'To_Address (GPIOB_PDIR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOB_PDDR : aliased GPIOx_PDDR_Type
-      with Address    => System'To_Address (GPIOB_PDDR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-
-   -- Port C
-
-   GPIOC_PDOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#80#;
-   GPIOC_PSOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#84#;
-   GPIOC_PCOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#88#;
-   GPIOC_PTOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#8C#;
-   GPIOC_PDIR_ADDRESS : constant := GPIO_BASEADDRESS + 16#90#;
-   GPIOC_PDDR_ADDRESS : constant := GPIO_BASEADDRESS + 16#94#;
-
-   GPIOC_PDOR : aliased GPIOx_PDOR_Type
-      with Address    => System'To_Address (GPIOC_PDOR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOC_PSOR : aliased GPIOx_PSOR_Type
-      with Address    => System'To_Address (GPIOC_PSOR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOC_PCOR : aliased GPIOx_PCOR_Type
-      with Address    => System'To_Address (GPIOC_PCOR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOC_PTOR : aliased GPIOx_PTOR_Type
-      with Address    => System'To_Address (GPIOC_PTOR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOC_PDIR : aliased GPIOx_PDIR_Type
-      with Address    => System'To_Address (GPIOC_PDIR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOC_PDDR : aliased GPIOx_PDDR_Type
-      with Address    => System'To_Address (GPIOC_PDDR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-
-   -- Port D
-
-   GPIOD_PDOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#C0#;
-   GPIOD_PSOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#C4#;
-   GPIOD_PCOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#C8#;
-   GPIOD_PTOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#CC#;
-   GPIOD_PDIR_ADDRESS : constant := GPIO_BASEADDRESS + 16#D0#;
-   GPIOD_PDDR_ADDRESS : constant := GPIO_BASEADDRESS + 16#D4#;
-
-   GPIOD_PDOR : aliased GPIOx_PDOR_Type
-      with Address    => System'To_Address (GPIOD_PDOR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOD_PSOR : aliased GPIOx_PSOR_Type
-      with Address    => System'To_Address (GPIOD_PSOR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOD_PCOR : aliased GPIOx_PCOR_Type
-      with Address    => System'To_Address (GPIOD_PCOR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOD_PTOR : aliased GPIOx_PTOR_Type
-      with Address    => System'To_Address (GPIOD_PTOR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOD_PDIR : aliased GPIOx_PDIR_Type
-      with Address    => System'To_Address (GPIOD_PDIR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOD_PDDR : aliased GPIOx_PDDR_Type
-      with Address    => System'To_Address (GPIOD_PDDR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-
-   -- Port E
-
-   GPIOE_PDOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#100#;
-   GPIOE_PSOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#104#;
-   GPIOE_PCOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#108#;
-   GPIOE_PTOR_ADDRESS : constant := GPIO_BASEADDRESS + 16#10C#;
-   GPIOE_PDIR_ADDRESS : constant := GPIO_BASEADDRESS + 16#110#;
-   GPIOE_PDDR_ADDRESS : constant := GPIO_BASEADDRESS + 16#114#;
-
-   GPIOE_PDOR : aliased GPIOx_PDOR_Type
-      with Address    => System'To_Address (GPIOE_PDOR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOE_PSOR : aliased GPIOx_PSOR_Type
-      with Address    => System'To_Address (GPIOE_PSOR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOE_PCOR : aliased GPIOx_PCOR_Type
-      with Address    => System'To_Address (GPIOE_PCOR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOE_PTOR : aliased GPIOx_PTOR_Type
-      with Address    => System'To_Address (GPIOE_PTOR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOE_PDIR : aliased GPIOx_PDIR_Type
-      with Address    => System'To_Address (GPIOE_PDIR_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-   GPIOE_PDDR : aliased GPIOx_PDDR_Type
-      with Address    => System'To_Address (GPIOE_PDDR_ADDRESS),
+   GPIOE : aliased GPIO_PORT_Type
+      with Address    => System'To_Address (GPIO_BASEADDRESS + 16#100#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
