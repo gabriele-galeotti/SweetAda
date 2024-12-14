@@ -20,6 +20,7 @@ with Bits;
 with CPU;
 with ARMv7M;
 with MSP432P401R;
+with Clocks;
 with Exceptions;
 with Console;
 
@@ -39,7 +40,6 @@ package body BSP
    use MSP432P401R;
 
    procedure SysTick_Init;
-   procedure Clk_Init;
 
    --========================================================================--
    --                                                                        --
@@ -68,104 +68,6 @@ package body BSP
          others    => <>
          );
    end SysTick_Init;
-
-   ----------------------------------------------------------------------------
-   -- Clk_Init
-   ----------------------------------------------------------------------------
-   -- Initialize clocks, HFXT = 48 MHz
-   -- MCLK CPU:     24 MHz
-   -- HSMCLK/SMCLK: 12 MHz
-   ----------------------------------------------------------------------------
-   procedure Clk_Init
-      is
-   begin
-      CSKEY.CSKEY := CSKEY_CSKEY;
-      loop
-         exit when CSSTAT.REFO_ON;
-      end loop;
-      -- set primary module for HFXT
-      PJ.PxSELC (2) := False;
-      PJ.PxSEL0 (2) := True;
-      PJ.PxSEL1 (2) := False;
-      PJ.PxSELC (3) := False;
-      PJ.PxSEL0 (3) := True;
-      PJ.PxSEL1 (3) := False;
-      -- HFX, 48 MHz external source
-      CSCTL2 := (
-         LFXTDRIVE  => LFXTDRIVE_0,
-         LFXT_EN    => False,
-         LFXTBYPASS => LFXTBYPASS_EXTAL,
-         HFXTDRIVE  => HFXTDRIVE_5_48,
-         HFXTFREQ   => HFXTFREQ_41_48,
-         HFXT_EN    => True,
-         HFXTBYPASS => HFXTBYPASS_EXTAL,
-         others     => <>
-         );
-      -- wait until HFXT oscillator does not fail
-      loop
-         CSCLRIFG.CLR_HFXTIFG := True;
-         for Delay_Loop_Count in 1 .. 1024 loop CPU.NOP; end loop;
-         exit when CSSTAT.HFXT_ON and then not CSIFG.HFXTIFG;
-      end loop;
-      -- clock enables
-      CSCLKEN := (
-         ACLK_EN   => True,
-         MCLK_EN   => True,
-         HSMCLK_EN => True,
-         SMCLK_EN  => True,
-         VLO_EN    => False,
-         REFO_EN   => True,
-         MODOSC_EN => False,
-         REFOFSEL  => REFOFSEL_32k,
-         others => <>
-         );
-      -- check for readiness
-      declare
-         Clock_Status : CSSTAT_Type;
-      begin
-         loop
-            Clock_Status := CSSTAT;
-            exit when Clock_Status.ACLK_READY   and then
-                      Clock_Status.BCLK_READY   and then
-                      Clock_Status.MCLK_READY   and then
-                      Clock_Status.SMCLK_READY  and then
-                      Clock_Status.HSMCLK_READY;
-         end loop;
-      end;
-      -- MCLK = 24 MHz (core clock), SMCLK = 12 MHz (peripherals)
-      CSCTL1 := (
-         SELM   => SELM_HFXTCLK,
-         SELS   => SELS_HFXTCLK,
-         SELA   => SELA_REFOCLK,
-         SELB   => SELB_REFOCLK,
-         DIVM   => DIVM_DIV2,
-         DIVHS  => DIVHS_DIV4,
-         DIVA   => DIVA_DIV4,
-         DIVS   => DIVS_DIV4,
-         others => <>
-         );
-      -- check for readiness
-      declare
-         Clock_Status : CSSTAT_Type;
-      begin
-         loop
-            Clock_Status := CSSTAT;
-            exit when Clock_Status.ACLK_READY   and then
-                      Clock_Status.BCLK_READY   and then
-                      Clock_Status.MCLK_READY   and then
-                      Clock_Status.SMCLK_READY  and then
-                      Clock_Status.HSMCLK_READY;
-         end loop;
-      end;
-      -- disable DCO
-      CSCTL0 := (
-         DCOTUNE => 0,
-         DCORSEL => DCORSEL_48M,
-         DCORES  => False,
-         DCOEN   => False,
-         others  => <>
-         );
-   end Clk_Init;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -212,8 +114,8 @@ package body BSP
       -- port mapping initialization ------------------------------------------
       PMAPKEYID.PMAPKEYx := PMAPKEYx_KEY;
       PMAPCTL.PMAPRECFG := True;
-      -- clock ----------------------------------------------------------------
-      Clk_Init;
+      -- clock setup ----------------------------------------------------------
+      Clocks.Init;
       -- USCI_A0 --------------------------------------------------------------
       eUSCI_A0.UCAxCTLW0.UCSWRST := True;
       eUSCI_A0.UCAxIRCTL.UCIREN := False;
