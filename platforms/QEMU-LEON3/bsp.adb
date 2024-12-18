@@ -92,7 +92,7 @@ package body BSP
          Console.Print ("Debug_Flag: ENABLED", NL => True);
       end if;
       -------------------------------------------------------------------------
-      Console.Print (Integer (Nwindows), Prefix => "Nwindows: ", NL => True);
+      Console.Print (Prefix => "Nwindows: ", Value => Integer (Nwindows), NL => True);
       -------------------------------------------------------------------------
       INTC_LEVEL.IL (10) := True;
       INTC_PROCMASK0.IM (10) := True;
