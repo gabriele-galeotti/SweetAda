@@ -43,6 +43,128 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
+   -- Chapter 3 Chip Configuration
+   ----------------------------------------------------------------------------
+
+   -- 3.2.2.3 Interrupt channel assignments
+
+   -- ADDR = Address
+   -- VECT = Vector
+   -- IRQ  = IRQ
+   -- nIPR = NVIC non-IPR register number
+   -- IPR  = NVIC IPR register number
+   -- SRC  = Source module
+   -- DSC  = Source description
+   --                                           ADDR            VECT    IRQ     nIPR    IPR     SRC                             DSC
+   ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   IRQ_DMA_CH0TC   : constant := 0;   --        0x0000_0040     16      0       0       0       DMA                             DMA channel 0, 16 transfer complete
+   IRQ_DMA_CH1TC   : constant := 1;   --        0x0000_0044     17      1       0       0       DMA                             DMA channel 1, 17 transfer complete
+   IRQ_DMA_CH2TC   : constant := 2;   --        0x0000_0048     18      2       0       0       DMA                             DMA channel 2, 18 transfer complete
+   IRQ_DMA_CH3TC   : constant := 3;   --        0x0000_004C     19      3       0       0       DMA                             DMA channel 3, 19 transfer complete
+   IRQ_DMA_CH4TC   : constant := 4;   --        0x0000_0050     20      4       0       1       DMA                             DMA channel 4, 20 transfer complete
+   IRQ_DMA_CH5TC   : constant := 5;   --        0x0000_0054     21      5       0       1       DMA                             DMA channel 5, 21 transfer complete
+   IRQ_DMA_CH6TC   : constant := 6;   --        0x0000_0058     22      6       0       1       DMA                             DMA channel 6, 22 transfer complete
+   IRQ_DMA_CH7TC   : constant := 7;   --        0x0000_005C     23      7       0       1       DMA                             DMA channel 7, 23 transfer complete
+   IRQ_DMA_CH8TC   : constant := 8;   --        0x0000_0060     24      8       0       2       DMA                             DMA channel 8, 24 transfer complete
+   IRQ_DMA_CH9TC   : constant := 9;   --        0x0000_0064     25      9       0       2       DMA                             DMA channel 9, 25 transfer complete.
+   IRQ_DMA_CH10TC  : constant := 10;  --        0x0000_0068     26      10      0       2       DMA                             DMA channel 10, 26 transfer complete
+   IRQ_DMA_CH11TC  : constant := 11;  --        0x0000_006C     27      11      0       2       DMA                             DMA channel 11, 27 transfer complete
+   IRQ_DMA_CH12TC  : constant := 12;  --        0x0000_0070     28      12      0       3       DMA                             DMA channel 12, 28 transfer complete
+   IRQ_DMA_CH13TC  : constant := 13;  --        0x0000_0074     29      13      0       3       DMA                             DMA channel 13, 29 transfer complete
+   IRQ_DMA_CH14TC  : constant := 14;  --        0x0000_0078     30      14      0       3       DMA                             DMA channel 14, 30 transfer complete
+   IRQ_DMA_CH15TC  : constant := 15;  --        0x0000_007C     31      15      0       3       DMA                             DMA channel 15, 31 transfer complete
+   IRQ_DMA_ERROR   : constant := 16;  --        0x0000_0080     32      16      0       4       DMA                             DMA error interrupt channels 0-31
+   IRQ_MCM_NORMAL  : constant := 17;  --        0x0000_0084     33      17      0       4       MCM                             Normal interrupt
+   IRQ_FLSH_CMD    : constant := 18;  --        0x0000_0088     34      18      0       4       Flash memory                    Command complete
+   IRQ_FLSH_RDCOLL : constant := 19;  --        0x0000_008C     35      19      0       4       Flash memory                    Read collision
+   IRQ_MODEC_LOW   : constant := 20;  --        0x0000_0090     36      20      0       5       Mode Controller                 Low-voltage detect, low-voltage warning
+   IRQ_LLWU_LOW    : constant := 21;  --        0x0000_0094     37      21      0       5       LLWU                            Low Leakage Wakeup
+   IRQ_WDOG        : constant := 22;  --        0x0000_0098     38      22      0       5       WDOG                            Watchdog interrupt
+   IRQ_RNG         : constant := 23;  --        0x0000_009C     39      23      0       5       RNG                             Randon Number Generator
+   IRQ_I2C0        : constant := 24;  --        0x0000_00A0     40      24      0       6       I2C0                            —
+   IRQ_I2C1        : constant := 25;  --        0x0000_00A4     41      25      0       6       I2C1                            —
+   IRQ_SPI0        : constant := 26;  --        0x0000_00A8     42      26      0       6       SPI0                            Single interrupt vector for all sources
+   IRQ_SPI1        : constant := 27;  --        0x0000_00AC     43      27      0       6       SPI1                            Single interrupt vector for all sources
+   IRQ_SPI2        : constant := 28;  --        0x0000_00B0     44      28      0       7       SPI2                            Single interrupt vector for all sources
+   IRQ_CAN0_MSG    : constant := 29;  --        0x0000_00B4     45      29      0       7       CAN0                            OR'ed Message buffer (0-15)
+   IRQ_CAN0_BUSOFF : constant := 30;  --        0x0000_00B8     46      30      0       7       CAN0                            Bus Off
+   IRQ_CAN0_ERR    : constant := 31;  --        0x0000_00BC     47      31      0       7       CAN0                            Error
+   IRQ_CAN0_TXWARN : constant := 32;  --        0x0000_00C0     48      32      1       8       CAN0                            Transmit Warning
+   IRQ_CAN0_RXWARN : constant := 33;  --        0x0000_00C4     49      33      1       8       CAN0                            Receive Warning
+   IRQ_CAN0_WAKE   : constant := 34;  --        0x0000_00C8     50      34      1       8       CAN0                            Wake Up
+   IRQ_I2S0_TX     : constant := 35;  --        0x0000_00CC     51      35      1       8       I2S0                            Transmit
+   IRQ_I2S0_RX     : constant := 36;  --        0x0000_00D0     52      36      1       9       I2S0                            Receive
+   IRQ_CAN1_MSG    : constant := 37;  --        0x0000_00D4     53      37      1       9       CAN1                            OR'ed Message buffer (0-15)
+   IRQ_CAN1_BUSOFF : constant := 38;  --        0x0000_00D8     54      38      1       9       CAN1                            Bus off
+   IRQ_CAN1_ERR    : constant := 39;  --        0x0000_00DC     55      39      1       9       CAN1                            Error
+   IRQ_CAN1_TXWARN : constant := 40;  --        0x0000_00E0     56      40      1       10      CAN1                            Transmit Warning
+   IRQ_CAN1_RXWARN : constant := 41;  --        0x0000_00E4     57      41      1       10      CAN1                            Receive Warning
+   IRQ_CAN1_WAKE   : constant := 42;  --        0x0000_00E8     58      42      1       10      CAN1                            Wake Up
+   IRQ_UNKNOWN1    : constant := 43;  --        0x0000_00EC     59      43      1       10      —                               —
+   IRQ_UART0_LON   : constant := 44;  --        0x0000_00F0     60      44      1       11      UART0                           Single interrupt vector for UART LON sources
+   IRQ_UART0_STS   : constant := 45;  --        0x0000_00F4     61      45      1       11      UART0                           Single interrupt vector for UART status sources
+   IRQ_UART0_ERR   : constant := 46;  --        0x0000_00F8     62      46      1       11      UART0                           Single interrupt vector for UART error sources
+   IRQ_UART1_STS   : constant := 47;  --        0x0000_00FC     63      47      1       11      UART1                           Single interrupt vector for UART status sources
+   IRQ_UART1_ERR   : constant := 48;  --        0x0000_0100     64      48      1       12      UART1                           Single interrupt vector for UART error sources
+   IRQ_UART2_STS   : constant := 49;  --        0x0000_0104     65      49      1       12      UART2                           Single interrupt vector for UART status sources
+   IRQ_UART2_ERR   : constant := 50;  --        0x0000_0108     66      50      1       12      UART2                           Single interrupt vector for UART error sources
+   IRQ_UART3_STS   : constant := 51;  --        0x0000_010C     67      51      1       12      UART3                           Single interrupt vector for UART status sources
+   IRQ_UART3_ERR   : constant := 52;  --        0x0000_0110     68      52      1       13      UART3                           Single interrupt vector for UART error sources
+   IRQ_UART4_STS   : constant := 53;  --        0x0000_0114     69      53      1       13      UART4                           Single interrupt vector for UART status sources
+   IRQ_UART4_ERR   : constant := 54;  --        0x0000_0118     70      54      1       13      UART4                           Single interrupt vector for UART error sources
+   IRQ_UART5_STS   : constant := 55;  --        0x0000_011C     71      55      1       13      UART5                           Single interrupt vector for UART status sources
+   IRQ_UART6_ERR   : constant := 56;  --        0x0000_0120     72      56      1       14      UART5                           Single interrupt vector for UART error sources
+   IRQ_ADC0        : constant := 57;  --        0x0000_0124     73      57      1       14      ADC0                            —
+   IRQ_ADC1        : constant := 58;  --        0x0000_0128     74      58      1       14      ADC1                            —
+   IRQ_CMP0        : constant := 59;  --        0x0000_012C     75      59      1       14      CMP0                            —
+   IRQ_CMP1        : constant := 60;  --        0x0000_0130     76      60      1       15      CMP1                            —
+   IRQ_CMP2        : constant := 61;  --        0x0000_0134     77      61      1       15      CMP2                            —
+   IRQ_FTM0        : constant := 62;  --        0x0000_0138     78      62      1       15      FTM0                            Single interrupt vector for all sources
+   IRQ_FTM1        : constant := 63;  --        0x0000_013C     79      63      1       15      FTM1                            Single interrupt vector for all sources
+   IRQ_FTM2        : constant := 64;  --        0x0000_0140     80      64      2       16      FTM2                            Single interrupt vector for all sources
+   IRQ_CMT         : constant := 65;  --        0x0000_0144     81      65      2       16      CMT                             —
+   IRQ_RTC_ALRM    : constant := 66;  --        0x0000_0148     82      66      2       16      RTC                             Alarm interrupt
+   IRQ_RTC_SECS    : constant := 67;  --        0x0000_014C     83      67      2       16      RTC                             Seconds interrupt
+   IRQ_PIT_CH0     : constant := 68;  --        0x0000_0150     84      68      2       17      PIT                             Channel 0
+   IRQ_PIT_CH1     : constant := 69;  --        0x0000_0154     85      69      2       17      PIT                             Channel 1
+   IRQ_PIT_CH2     : constant := 70;  --        0x0000_0158     86      70      2       17      PIT                             Channel 2
+   IRQ_PIT_CH3     : constant := 71;  --        0x0000_015C     87      71      2       17      PIT                             Channel 3
+   IRQ_PDB         : constant := 72;  --        0x0000_0160     88      72      2       18      PDB                             —
+   IRQ_USBOTG      : constant := 73;  --        0x0000_0164     89      73      2       18      USB OTG                         —
+   IRQ_USBCHARGE   : constant := 74;  --        0x0000_0168     90      74      2       18      USB Charger Detect              —
+   IRQ_ETH_1588TMR : constant := 75;  --        0x0000_016C     91      75      2       18      Ethernet MAC                    IEEE 1588 Timer Interrupt
+   IRQ_ETH_TX      : constant := 76;  --        0x0000_0170     92      76      2       19      Ethernet MAC                    Transmit interrupt
+   IRQ_ETH_RX      : constant := 77;  --        0x0000_0174     93      77      2       19      Ethernet MAC                    Receive interrupt
+   IRQ_ETH_ERRMISC : constant := 78;  --        0x0000_0178     94      78      2       19      Ethernet MAC                    Error and miscellaneous interrupt
+   IRQ_UNKNOWN2    : constant := 79;  --        0x0000_017C     95      79      2       19      —                               —
+   IRQ_SDHC        : constant := 80;  --        0x0000_0180     96      80      2       20      SDHC                            —
+   IRQ_DAC0        : constant := 81;  --        0x0000_0184     97      81      2       20      DAC0                            —
+   IRQ_DAC1        : constant := 82;  --        0x0000_0188     98      82      2       20      DAC1                            —
+   IRQ_TSI         : constant := 83;  --        0x0000_018C     99      83      2       20      TSI                             Single interrupt vector for all sources
+   IRQ_MCG         : constant := 84;  --        0x0000_0190     100     84      2       21      MCG                             —
+   IRQ_LPT         : constant := 85;  --        0x0000_0194     101     85      2       21      Low Power Timer                 —
+   IRQ_UNKNOWN3    : constant := 86;  --        0x0000_0198     102     86      2       21      —                               —
+   IRQ_PORTA       : constant := 87;  --        0x0000_019C     103     87      2       21      Port control module             Pin detect (Port A)
+   IRQ_PORTB       : constant := 88;  --        0x0000_01A0     104     88      2       22      Port control module             Pin detect (Port B)
+   IRQ_PORTC       : constant := 89;  --        0x0000_01A4     105     89      2       22      Port control module             Pin detect (Port C)
+   IRQ_PORTD       : constant := 90;  --        0x0000_01A8     106     90      2       22      Port control module             Pin detect (Port D)
+   IRQ_PORTE       : constant := 91;  --        0x0000_01AC     107     91      2       22      Port control module             Pin detect (Port E)
+   IRQ_PORTF       : constant := 92;  --        0x0000_01B0     108     92      2       23      Port control module             Pin detect (Port F)
+   IRQ_DDR         : constant := 93;  --        0x0000_01B4     109     93      2       23      DDR controller                  —
+   IRQ_SOFT        : constant := 94;  --        0x0000_01B8     110     94      2       23      Software                        Software interrupt4
+   IRQ_NFC         : constant := 95;  --        0x0000_01BC     111     95      2       23      NAND flash controller (NFC)     —
+   IRQ_USBHS       : constant := 96;  --        0x0000_01C0     112     96      3       24      USB HS                          —
+   IRQ_UNKNOWN4    : constant := 97;  --        0x0000_01C4     113     97      3       24                                      —
+   IRQ_CMP3        : constant := 98;  --        0x0000_01C8     114     98      3       24      CMP3                            —
+   IRQ_UNKNOWN5    : constant := 99;  --        0x0000_01CC     115     99      3       24
+   IRQ_UNKNOWN6    : constant := 100; --        0x0000_01D0     116     100     3       25      —                               —
+   IRQ_FTM3        : constant := 101; --        0x0000_01D4     117     101     3       25      FTM3                            Single interrupt vector for all sources
+   IRQ_ADC2        : constant := 102; --        0x0000_01D8     118     102     3       25      ADC2                            —
+   IRQ_ADC3        : constant := 103; --        0x0000_01DC     119     103     3       25      ADC3                            —
+   IRQ_I2S1_TX     : constant := 104; --        0x0000_01E0     120     104     3       26      I2S1                            Transmit
+   IRQ_I2S1_RX     : constant := 105; --        0x0000_01E4     121     105     3       26      I2S1                            Receive
+
+   ----------------------------------------------------------------------------
    -- Chapter 11 Port Control and Interrupts (PORT)
    ----------------------------------------------------------------------------
 
@@ -3737,6 +3859,9 @@ pragma Style_Checks (Off);
 
    -- 55.3.3 I2C Control Register 1 (I2Cx_C1)
 
+   TXAK_ACK : constant := 0; -- An acknowledge signal is sent to the bus on the following receiving byte (if FACK is cleared) or the current receiving byte (if FACK is set).
+   TXAK_NAK : constant := 1; -- No acknowledge signal is sent to the bus on the following receiving data byte (if FACK is cleared) or the current receiving data byte (if FACK is set).
+
    TX_RX : constant := 0; -- Receive
    TX_TX : constant := 1; -- Transmit
 
@@ -3744,14 +3869,14 @@ pragma Style_Checks (Off);
    MST_MST : constant := 1; -- Master mode
 
    type I2Cx_C1_Type is record
-      DMAEN : Boolean := False;   -- DMA Enable
-      WUEN  : Boolean := False;   -- Wakeup Enable
-      RSTA  : Boolean := False;   -- Repeat START
-      TXAK  : Boolean := False;   -- Transmit Acknowledge Enable
-      TX    : Bits_1  := TX_RX;   -- Transmit Mode Select
-      MST   : Bits_1  := MST_MST; -- Master Mode Select
-      IICIE : Boolean := False;   -- I2C Interrupt Enable
-      IICEN : Boolean := False;   -- I2C Enable
+      DMAEN : Boolean := False;    -- DMA Enable
+      WUEN  : Boolean := False;    -- Wakeup Enable
+      RSTA  : Boolean := False;    -- Repeat START
+      TXAK  : Bits_1  := TXAK_ACK; -- Transmit Acknowledge Enable
+      TX    : Bits_1  := TX_RX;    -- Transmit Mode Select
+      MST   : Bits_1  := MST_MST;  -- Master Mode Select
+      IICIE : Boolean := False;    -- I2C Interrupt Enable
+      IICEN : Boolean := False;    -- I2C Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -3768,11 +3893,14 @@ pragma Style_Checks (Off);
 
    -- 55.3.4 I2C Status register (I2Cx_S)
 
+   RXAK_ACK : constant := 0; -- Acknowledge signal was received after the completion of one byte of data transmission on the bus
+   RXAK_NAK : constant := 1; -- No acknowledge signal detected
+
    SRW_MSTWR_SLVRX : constant := 0; -- Slave receive, master writing to slave
    SRW_MSTRD_SLVTX : constant := 1; -- Slave transmit, master reading from slave
 
    type I2Cx_S_Type is record
-      RXAK  : Boolean := False;           -- Receive Acknowledge
+      RXAK  : Bits_1  := RXAK_ACK;        -- Receive Acknowledge
       IICIF : Boolean := False;           -- Interrupt Flag
       SRW   : Bits_1  := SRW_MSTWR_SLVRX; -- Slave Read/Write
       RAM   : Boolean := False;           -- Range Address Match
