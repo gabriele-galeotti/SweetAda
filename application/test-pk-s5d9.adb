@@ -41,9 +41,9 @@ package body Application
          C := 16#20#;
          while True loop
             -- blink LED3 (yellow)
-            PORT (6).PODR.PODR02 := False;
+            PORT (6).PODR (2) := False;
             for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-            PORT (6).PODR.PODR02 := True;
+            PORT (6).PODR (2) := True;
             for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             BSP.Console_Putchar (Bits.To_Ch (C));
             C := @ + 1;
