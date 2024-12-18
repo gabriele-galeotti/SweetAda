@@ -63,11 +63,11 @@ endif
 ifeq      ($(OSTYPE),cmd)
 HOST_CC          ?= gcc
 HOST_CC_SWITCHES ?= -g -std=gnu99 -Wall -Wno-format-extra-args -Wno-format -Wno-pedantic-ms-format -mconsole
-HOST_LD_SWITCHES ?= -g -mconsole
+HOST_LD_SWITCHES ?= -g -mconsole -static
 else ifeq ($(OSTYPE),msys)
 HOST_CC          ?= gcc
 HOST_CC_SWITCHES ?= -g -std=gnu99 -Wall -Wno-format-extra-args -Wno-format -Wno-pedantic-ms-format -mconsole
-HOST_LD_SWITCHES ?= -g -mconsole
+HOST_LD_SWITCHES ?= -g -mconsole -static
 else ifeq ($(OSTYPE),darwin)
 HOST_CC          ?= gcc
 HOST_CC_SWITCHES ?= -g -std=gnu99 -Wall
