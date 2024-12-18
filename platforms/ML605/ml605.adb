@@ -75,17 +75,15 @@ package body ML605
    procedure INTC_Init
       is
    begin
-      INTC.ISR := [others => False];
-      INTC.IPR := [others => False];
-      INTC.IER := [others => False];
-      INTC.IAR := [others => False];
-      INTC.SIE := [others => False];
-      INTC.CIE := [others => False];
-      INTC.IVR := 0;
-      INTC.MER := (
-         HIE    => True,
-         ME     => True,
-         others => 0
+      INTC := (
+         ISR => [others => False],
+         IPR => [others => False],
+         IER => [others => False],
+         IAR => [others => False],
+         SIE => [others => False],
+         CIE => [others => False],
+         IVR => 0,
+         MER => (HIE => True, ME => True, others => 0)
          );
    end INTC_Init;
 
