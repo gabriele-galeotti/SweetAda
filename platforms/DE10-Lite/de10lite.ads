@@ -68,10 +68,10 @@ pragma Style_Checks (Off);
    -- 12.4.4.1. Data Register
 
    type JTAG_UART_data_Type is record
-      DATA     : Unsigned_8 := 0;  -- The value to transfer to/from the JTAG core.
-      Reserved : Bits_7 := 0;
-      RVALID   : Boolean := False; -- Indicates whether the DATA field is valid.
-      RAVAIL   : Unsigned_16 := 0; -- The number of characters remaining in the read FIFO (after the current read).
+      DATA     : Unsigned_8  := 0;     -- The value to transfer to/from the JTAG core.
+      Reserved : Bits_7      := 0;
+      RVALID   : Boolean     := False; -- Indicates whether the DATA field is valid.
+      RAVAIL   : Unsigned_16 := 0;     -- The number of characters remaining in the read FIFO (after the current read).
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -85,14 +85,14 @@ pragma Style_Checks (Off);
    -- 12.4.4.2. Control Register
 
    type JTAG_UART_control_Type is record
-      RE        : Boolean := False; -- Interrupt-enable bit for read interrupts.
-      WE        : Boolean := False; -- Interrupt-enable bit for write interrupts.
-      Reserved1 : Bits_6 := 0;
-      RI        : Boolean := False; -- Indicates that the read interrupt is pending.
-      WI        : Boolean := False; -- Indicates that the write interrupt is pending.
-      AC        : Boolean := False; -- Indicates that there has been JTAG activity since the bit was cleared.
-      Reserved2 : Bits_5 := 0;
-      WSPACE    : Unsigned_16 := 0; -- The number of spaces available in the write FIFO.
+      RE        : Boolean     := False; -- Interrupt-enable bit for read interrupts.
+      WE        : Boolean     := False; -- Interrupt-enable bit for write interrupts.
+      Reserved1 : Bits_6      := 0;
+      RI        : Boolean     := False; -- Indicates that the read interrupt is pending.
+      WI        : Boolean     := False; -- Indicates that the write interrupt is pending.
+      AC        : Boolean     := False; -- Indicates that there has been JTAG activity since the bit was cleared.
+      Reserved2 : Bits_5      := 0;
+      WSPACE    : Unsigned_16 := 0;     -- The number of spaces available in the write FIFO.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -136,9 +136,9 @@ pragma Style_Checks (Off);
    end record
       with Size => 16;
    for ITC_status_Type use record
-      TO       at 0 range  0 ..  0;
-      RUN      at 0 range  1 ..  1;
-      Reserved at 0 range  2 .. 15;
+      TO       at 0 range 0 ..  0;
+      RUN      at 0 range 1 ..  1;
+      Reserved at 0 range 2 .. 15;
    end record;
 
    type ITC_control_Type is record
@@ -150,11 +150,11 @@ pragma Style_Checks (Off);
    end record
       with Size => 16;
    for ITC_control_Type use record
-      ITO      at 0 range  0 ..  0;
-      CONT     at 0 range  1 ..  1;
-      START    at 0 range  2 ..  2;
-      STOP     at 0 range  3 ..  3;
-      Reserved at 0 range  4 .. 15;
+      ITO      at 0 range 0 ..  0;
+      CONT     at 0 range 1 ..  1;
+      START    at 0 range 2 ..  2;
+      STOP     at 0 range 3 ..  3;
+      Reserved at 0 range 4 .. 15;
    end record;
 
    type Interval_Timer32_Type is record
