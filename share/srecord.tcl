@@ -70,13 +70,11 @@ while {[gets $kernel_fd data] >= 0} {
     puts -nonewline stdout "."
     after $delay
     set srec_type [string range $data 0 1]
-    if {$srec_type eq "S7"} {
+    if       {$srec_type eq "S7"} {
         set start_address [string range $data 4 11]
-    }
-    if {$srec_type eq "S8"} {
+    } elseif {$srec_type eq "S8"} {
         set start_address [string range $data 4 9]
-    }
-    if {$srec_type eq "S9"} {
+    } elseif {$srec_type eq "S9"} {
         set start_address [string range $data 4 7]
     }
 }
