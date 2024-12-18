@@ -38,14 +38,6 @@ package body Android
    use Interfaces;
    use Definitions;
 
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Package subprograms                          --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
    --   arch    syscall#    return  arg0    arg1    arg2    arg3    arg4    arg5
    --   ARM     R7          R0      R0      R1      R2      R3      R4      R5
    --   ARM64   X8          X0      X0      X1      X2      X3      X4      X5
@@ -61,6 +53,26 @@ package body Android
    SYSCALL_EXECVE        : constant := 221;
 
    STDOUT_FILENO : constant := 1;
+
+   type Timeval_Type is record
+      tv_sec  : Unsigned_32;
+      tv_usec : Unsigned_32;
+   end record
+      with Pack => True;
+
+   type Timezone_Type is record
+      tz_minuteswest : Integer;
+      tz_dsttime     : Integer;
+   end record
+      with Pack => True;
+
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Package subprograms                          --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
 
    ----------------------------------------------------------------------------
    -- Print_Message
@@ -119,23 +131,23 @@ package body Android
            Clobber  => "x0,x8",
            Volatile => True
           );
-      Console.Print_ASCIIZ_String (Prefix => "nodename: ", String_Address => Uname.nodename'Address, NL => True);
-      Console.Print_ASCIIZ_String (Prefix => "release:  ", String_Address => Uname.release'Address,  NL => True);
-      Console.Print_ASCIIZ_String (Prefix => "version:  ", String_Address => Uname.version'Address,  NL => True);
-      Console.Print_ASCIIZ_String (Prefix => "machine:  ", String_Address => Uname.machine'Address,  NL => True);
+      Console.Print_ASCIIZ_String
+         (Prefix         => "nodename: ",
+          String_Address => Uname.nodename'Address,
+          NL             => True);
+      Console.Print_ASCIIZ_String
+         (Prefix         => "release:  ",
+          String_Address => Uname.release'Address,
+          NL => True);
+      Console.Print_ASCIIZ_String
+         (Prefix         => "version:  ",
+          String_Address => Uname.version'Address,
+          NL => True);
+      Console.Print_ASCIIZ_String
+         (Prefix         => "machine:  ",
+          String_Address => Uname.machine'Address,
+          NL => True);
    end Uname_Get;
-
-   type Timeval_Type is record
-      tv_sec  : Unsigned_32;
-      tv_usec : Unsigned_32;
-   end record
-      with Pack => True;
-
-   type Timezone_Type is record
-      tz_minuteswest : Integer;
-      tz_dsttime     : Integer;
-   end record
-      with Pack => True;
 
    ----------------------------------------------------------------------------
    -- Gettimeofday
