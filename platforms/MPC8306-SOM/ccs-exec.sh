@@ -18,6 +18,7 @@
 # LIBUTILS_DIRECTORY
 # PLATFORM_DIRECTORY
 # CCS_PREFIX
+# CCS_LIB32
 # CCS_NETSERVER_PORT
 # USBTAP_SN
 #
@@ -64,6 +65,11 @@ return 0
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
+
+# location of CCS X11 32-bit libraries
+if [ "x${CCS_LIB32}" != "x" ] ; then
+  export LD_LIBRARY_PATH=${CCS_LIB32}
+fi
 
 case "x$1" in
   "x-server")

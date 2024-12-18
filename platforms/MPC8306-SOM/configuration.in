@@ -12,6 +12,8 @@ RTS        := zfp
 PROFILE    := zfp
 USE_LIBADA := N
 
+USE_APPLICATION := test-mpc8306-som
+
 ################################################################################
 # CPU.                                                                         #
 #                                                                              #
@@ -39,7 +41,8 @@ LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 #                                                                              #
 ################################################################################
 
-export CCS_PREFIX=/root/project/hardware/PowerPC/USBTAP
+export CCS_PREFIX=/root/workspace/hardware/PowerPC/USBTAP
+export CCS_LIB32=/root/workspace/hardware/PowerPC/USBTAP/lib32/usr/lib
 export CCS_NETSERVER_PORT=41476
 export USBTAP_SN=11070407
 
