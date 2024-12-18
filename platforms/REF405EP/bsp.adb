@@ -85,28 +85,26 @@ package body BSP
       -------------------------------------------------------------------------
       Exceptions.Init;
       -- UARTs ----------------------------------------------------------------
-      UART1_Descriptor :=
-         (
-          Uart_Model    => UART16x50.UART16450,
-          Base_Address  => System'To_Address (UART1_BASEADDRESS),
-          Scale_Address => 0,
-          Baud_Clock    => CLK_UART1M8,
-          Read_8        => MMIO.Read'Access,
-          Write_8       => MMIO.Write'Access,
-          Data_Queue    => ([others => 0], 0, 0, 0),
-          others        => <>
+      UART1_Descriptor := (
+         Uart_Model    => UART16x50.UART16450,
+         Base_Address  => System'To_Address (UART1_BASEADDRESS),
+         Scale_Address => 0,
+         Baud_Clock    => CLK_UART1M8,
+         Read_8        => MMIO.Read'Access,
+         Write_8       => MMIO.Write'Access,
+         Data_Queue    => ([others => 0], 0, 0, 0),
+         others        => <>
          );
       UART16x50.Init (UART1_Descriptor);
-      UART2_Descriptor :=
-         (
-          Uart_Model    => UART16x50.UART16450,
-          Base_Address  => System'To_Address (UART2_BASEADDRESS),
-          Scale_Address => 0,
-          Baud_Clock    => CLK_UART1M8,
-          Read_8        => MMIO.Read'Access,
-          Write_8       => MMIO.Write'Access,
-          Data_Queue    => ([others => 0], 0, 0, 0),
-          others        => <>
+      UART2_Descriptor := (
+         Uart_Model    => UART16x50.UART16450,
+         Base_Address  => System'To_Address (UART2_BASEADDRESS),
+         Scale_Address => 0,
+         Baud_Clock    => CLK_UART1M8,
+         Read_8        => MMIO.Read'Access,
+         Write_8       => MMIO.Write'Access,
+         Data_Queue    => ([others => 0], 0, 0, 0),
+         others        => <>
          );
       UART16x50.Init (UART2_Descriptor);
       -- Console --------------------------------------------------------------
@@ -120,8 +118,8 @@ package body BSP
          Console.Print ("Debug_Flag: ENABLED", NL => True);
       end if;
       -------------------------------------------------------------------------
-      Console.Print (PVR_Read.Version, Prefix => "PVR version:  ", NL => True);
-      Console.Print (PVR_Read.Revision, Prefix => "PVR revision: ", NL => True);
+      Console.Print (Prefix => "PVR version:  ", Value => PVR_Read.Version, NL => True);
+      Console.Print (Prefix => "PVR revision: ", Value => PVR_Read.Revision, NL => True);
       -------------------------------------------------------------------------
       Tclk_Init;
       PPC405.Irq_Enable;

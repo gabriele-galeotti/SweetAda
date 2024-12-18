@@ -46,7 +46,9 @@ package body REF405EP
    ----------------------------------------------------------------------------
    procedure Tclk_Init
       is
-      Period    : constant := (Configure.TIMER_SYSCLK + Configure.TICK_FREQUENCY / 2) / Configure.TICK_FREQUENCY;
+      Period    : constant :=
+                     (Configure.TIMER_SYSCLK + Configure.TICK_FREQUENCY / 2) /
+                     Configure.TICK_FREQUENCY;
       TCR_Value : TCR_Register_Type;
    begin
       TCR_Value.PIE := True;
