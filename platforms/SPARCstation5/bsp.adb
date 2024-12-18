@@ -185,11 +185,11 @@ package body BSP
          Console.Print ("Debug_Flag: ENABLED", NL => True);
       end if;
       -------------------------------------------------------------------------
-      Console.Print (Natural (Nwindows),       Prefix => "Nwindows:         ", NL => True);
-      Console.Print (DMA2_INTERNAL_IDREGISTER, Prefix => "DMA2 ID Register: ", NL => True);
+      Console.Print (Prefix => "Nwindows:         ", Value => Natural (Nwindows), NL => True);
+      Console.Print (Prefix => "DMA2 ID Register: ", Value => DMA2_INTERNAL_IDREGISTER, NL => True);
       if Configure.USE_QEMU then
          QEMU := QEMU_Detect;
-         Console.Print (QEMU,                     Prefix => "QEMU:             ", NL => True);
+         Console.Print (Prefix => "QEMU: ", Value => QEMU, NL => True);
       end if;
       -- Am7990 ---------------------------------------------------------------
       Am7990_Descriptor.Base_Address  := System'To_Address (ETHERNET_CONTROLLER_REGISTERS_BASEADDRESS);

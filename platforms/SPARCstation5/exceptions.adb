@@ -59,8 +59,8 @@ package body Exceptions
       is
    begin
       Console.Print ("*** EXCEPTION", NL => True);
-      Console.Print (Code,         Prefix => "CODE:    ", NL => True);
-      Console.Print (Trap_Address, Prefix => "ADDRESS: ", NL => True);
+      Console.Print (Prefix => "CODE:    ", Value => Code, NL => True);
+      Console.Print (Prefix => "ADDRESS: ", Value => Trap_Address, NL => True);
       Abort_Library.System_Abort;
    end Exception_Process;
 
