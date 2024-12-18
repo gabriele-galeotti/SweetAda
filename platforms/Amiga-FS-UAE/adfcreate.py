@@ -83,8 +83,10 @@ while argv_idx < argc:
         adf_filename = sys.argv[argv_idx]
     else:
         errprintf('%s: *** Error: unknown argument.\n', SCRIPT_FILENAME)
+        exit(1)
     argv_idx += 1
 
+# check parameters
 if asmboot_filename == None or \
    kernel_filename == None  or \
    load_address == None     or \
@@ -97,6 +99,7 @@ if asmboot_filename == None or \
 kernel_sectors = (os.stat(kernel_filename).st_size + (512 - 1)) // 512
 kernel_start_sector = 2
 
+# create a boot binary object
 os.system(
     os.getenv('TOOLCHAIN_CC')            + ' ' +
     '-o ' + asmboot_filename + '.o'      + ' ' +
@@ -119,6 +122,7 @@ os.system(
     '> ' + asmboot_filename + '.lst'
     )
 
+# read the boot binary object
 fd_input = open(asmboot_filename + '.bin', 'rb')
 bootdata = fd_input.read(-1)
 fd_input.close()
@@ -128,6 +132,7 @@ if bootdatalength != 1024:
     errprintf('%s: *** Error: input file length is not 1024 bytes.\n', SCRIPT_FILENAME)
     exit(1)
 
+# compute checksum
 prechecksum = 0
 i = 0
 while i < bootdatalength:
@@ -139,8 +144,8 @@ while prechecksum > 0xFFFFFFFF:
     prechecksum = (prechecksum & 0xFFFFFFFF) + (prechecksum >> 32)
 checksum = 0xFFFFFFFF - prechecksum
 
+# create the floppy disk image
 printf('%s: creating floppy disk ...\n', SCRIPT_FILENAME)
-
 fd_adf = open(adf_filename, 'wb')
 fd_adf.write(bootdata[0:4])
 fd_adf.write(checksum.to_bytes(4, byteorder='big'))
@@ -148,11 +153,9 @@ fd_adf.write(bootdata[8:bootdatalength + 1])
 for i in range(bootdatalength, ADF_DISKSIZE):
     fd_adf.write(b'\x00')
 fd_adf.close()
-
 fd_data = open(kernel_filename, 'rb')
 data = fd_data.read(-1)
 fd_data.close()
-
 fd_adf = open(adf_filename, 'r+b')
 fd_adf.seek(kernel_start_sector * 512, 0)
 fd_adf.write(data)
