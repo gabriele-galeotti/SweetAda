@@ -403,8 +403,8 @@ pragma Style_Checks (Off);
       FB        : Boolean;      -- Force broadcast.
       BSU       : Bits_2;       -- Barrier Shareability upgrade.
       DC        : Boolean;      -- Default Cacheability.
-      TWI       : Boolean;      -- Traps EL0 and EL1 execution of WFI instructions to EL2, ...
-      TWE       : Boolean;      -- Traps EL0 and EL1 execution of WFE instructions to EL2, ...
+      TWI       : Boolean;      -- Traps EL0 and EL1 execution of WFI instructions to EL2, when EL2 is enabled in the current Security state, from both Execution states, reported using EC syndrome value 0x01.
+      TWE       : Boolean;      -- Traps EL0 and EL1 execution of WFE instructions to EL2, when EL2 is enabled in the current Security state, from both Execution states, reported using EC syndrome value 0x01.
       TID0      : Boolean;      -- Trap ID group 0.
       TID1      : Boolean;      -- Trap ID group 1.
       TID2      : Boolean;      -- Trap ID group 2.
@@ -895,7 +895,7 @@ pragma Style_Checks (Off);
       Aff0      : Unsigned_8; -- Affinity level 0.
       Aff1      : Unsigned_8; -- Affinity level 1.
       Aff2      : Unsigned_8; -- Affinity level 2.
-      MT        : Boolean;    -- Indicates whether the lowest level of affinity consists of logical PEs that are implemented ...
+      MT        : Boolean;    -- Indicates whether the lowest level of affinity consists of logical PEs that are implemented using a multithreading type approach. See the description of Aff0 for more information about affinity levels.
       Reserved1 : Bits_5;
       U         : Boolean;    -- Indicates a Uniprocessor system, as distinct from PE 0 in a multiprocessor system.
       Reserved2 : Bits_1;
@@ -959,9 +959,9 @@ pragma Style_Checks (Off);
       HCE       : Boolean;          -- Hypervisor Call instruction enable.
       SIF       : Boolean;          -- Secure instruction fetch.
       RW        : Boolean;          -- Execution state control for lower Exception levels.
-      ST        : Boolean;          -- Traps Secure EL1 accesses to the Counter-timer Physical Secure timer ...
-      TWI       : Boolean;          -- Traps EL2, EL1, and EL0 execution of WFI instructions to EL3, from any ...
-      TWE       : Boolean;          -- Traps EL2, EL1, and EL0 execution of WFE instructions to EL3, from any ...
+      ST        : Boolean;          -- Traps Secure EL1 accesses to the Counter-timer Physical Secure timer registers to EL3, from AArch64 state only, reported using an ESR_ELx.EC value of 0x18.
+      TWI       : Boolean;          -- Traps EL2, EL1, and EL0 execution of WFI instructions to EL3, from any Security state and both Execution states, reported using an ESR_ELx.EC value of 0x01 .
+      TWE       : Boolean;          -- Traps EL2, EL1, and EL0 execution of WFE instructions to EL3, from any Security state and both Execution states, reported using an ESR_ELx.EC value of 0x01 .
       TLOR      : Boolean;          -- Trap LOR registers.
       TERR      : Boolean;          -- Trap accesses of error record registers.
       APK       : Boolean;          -- Trap registers holding "key" values for Pointer Authentication.
@@ -977,7 +977,7 @@ pragma Style_Checks (Off);
       ECVEn     : Boolean;          -- ECV Enable.
       TWEDEn    : Boolean;          -- TWE Delay Enable.
       TWEDEL    : Bits_4;           -- TWE Delay.
-      TME       : Boolean;          -- Enables access to the TSTART, TCOMMIT, TTEST and TCANCEL instructions at ...
+      TME       : Boolean;          -- Enables access to the TSTART, TCOMMIT, TTEST and TCANCEL instructions at EL0, EL1 and EL2.
       AMVOFFEN  : Boolean;          -- Activity Monitors Virtual Offsets Enable.
       EnAS0     : Boolean;          -- Traps execution of an ST64BV0 instruction at EL0, EL1, or EL2 to EL3.
       ADEn      : Boolean;          -- Enables access to the ACCDATA_EL1 register at EL1 and EL2.
@@ -992,7 +992,7 @@ pragma Style_Checks (Off);
       GPF       : Boolean;          -- Controls the reporting of Granule protection faults at EL0, EL1 and EL2.
       MECEn     : Boolean;          -- Enables access to the following EL2 MECID registers, from EL2: ...
       Reserved7 : Bits_12 := 0;
-      NSE       : Bits_1;           -- This field, evaluated with SCR_EL3.NS, selects the Security state of EL2 and ...
+      NSE       : Bits_1;           -- This field, evaluated with SCR_EL3.NS, selects the Security state of EL2 and lower Exception levels.
       Reserved8 : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1086,31 +1086,31 @@ pragma Style_Checks (Off);
       EnRCTX     : Boolean;      -- Enable EL0 access to the following System instructions: ...
       EOS        : Boolean;      -- Exception Exit is Context Synchronizing.
       I          : Boolean;      -- Stage 1 instruction access Cacheability control, for accesses at EL0 and EL1: ...
-      EnDB       : Boolean;      -- Controls enabling of pointer authentication (using the APDBKey_EL1 key) of instruction ...
-      DZE        : Boolean;      -- Traps EL0 execution of DC ZVA instructions ...
-      UCT        : Boolean;      -- Traps EL0 accesses to the CTR_EL0 to EL1, or to EL2 when ...
-      nTWI       : Boolean;      -- Traps EL0 execution of WFI instructions to EL1, or to EL2 when ...
+      EnDB       : Boolean;      -- Controls enabling of pointer authentication (using the APDBKey_EL1 key) of instruction addresses in the EL1&0 translation regime.
+      DZE        : Boolean;      -- Traps EL0 execution of DC ZVA instructions to EL1, or to EL2 when it is implemented and enabled for the current Security state and HCR_EL2.TGE is 1, from AArch64 state only, reported using an ESR_ELx.EC value of 0x18.
+      UCT        : Boolean;      -- Traps EL0 accesses to the CTR_EL0 to EL1, or to EL2 when it is implemented and enabled for the current Security state and HCR_EL2.TGE is 1, from AArch64 state only, reported using an ESR_ELx.EC value of 0x18.
+      nTWI       : Boolean;      -- Traps EL0 execution of WFI instructions to EL1, or to EL2 when it is implemented and enabled for the current Security state and HCR_EL2.TGE is 1, from both Execution states, reported using an ESR_ELx.EC value of 0x01.
       Reserved1  : Bits_1  := 0;
-      nTWE       : Boolean;      -- Traps EL0 execution of WFE instructions to EL1, or to EL2 when ...
+      nTWE       : Boolean;      -- Traps EL0 execution of WFE instructions to EL1, or to EL2 when it is implemented and enabled for the current Security state and HCR_EL2.TGE is 1, from both Execution states, reported using an ESR_ELx.EC value of 0x01.
       WXN        : Boolean;      -- Write permission implies Execute Never (XN).
       TSCXT      : Boolean;      -- Trap EL0 Access to the SCXTNUM_EL0 register, when EL0 is using AArch64.
       IESB       : Boolean;      -- Implicit Error Synchronization event enable.
       EIS        : Boolean;      -- Exception Entry is Context Synchronizing.
       SPAN       : Boolean;      -- Set Privileged Access Never, on taking an exception to EL1.
       E0E        : Bits_1;       -- Endianness of data accesses at EL0.
-      EE         : Bits_1;       -- Endianness of data accesses at EL1, and stage 1 translation table walks in ...
+      EE         : Bits_1;       -- Endianness of data accesses at EL1, and stage 1 translation table walks in the EL1&0 translation regime.
       UCI        : Boolean;      -- Enables EL0 access to the DC CVAU, DC CIVAC, DC CVAC and IC IVAU instrs in AArch64 state.
-      EnDA       : Boolean;      -- Controls enabling of pointer authentication (using the APDAKey_EL1 key) of instruction ...
+      EnDA       : Boolean;      -- Controls enabling of pointer authentication (using the APDAKey_EL1 key) of instruction addresses in the EL1&0 translation regime.
       nTLSMD     : Boolean;      -- No Trap Load Multiple and Store Multiple to Device-nGRE/Device-nGnRE/Device-nGnRnE memory.
       LSMAOE     : Boolean;      -- Load Multiple and Store Multiple Atomicity and Ordering Enable.
-      EnIB       : Boolean;      -- Controls enabling of pointer authentication (using the APIBKey_EL1 key) of instruction ...
-      EnIA       : Boolean;      -- Controls enabling of pointer authentication (using the APIAKey_EL1 key) of instruction ...
-      CMOW       : Boolean;      -- Controls cache maintenance instruction permission for ...
+      EnIB       : Boolean;      -- Controls enabling of pointer authentication (using the APIBKey_EL1 key) of instruction addresses in the EL1&0 translation regime.
+      EnIA       : Boolean;      -- Controls enabling of pointer authentication (using the APIAKey_EL1 key) of instruction addresses in the EL1&0 translation regime.
+      CMOW       : Boolean;      -- Controls cache maintenance instruction permission for the following instructions executed at EL0. ...
       MSCEn      : Boolean;      -- Memory Copy and Memory Set instructions Enable.
       Reserved2  : Bits_1  := 0;
       BT0        : Boolean;      -- PAC Branch Type compatibility at EL0.
       BT1        : Boolean;      -- PAC Branch Type compatibility at EL1.
-      ITFSB      : Boolean;      -- When synchronous exceptions are not being generated by Tag Check Faults, ...
+      ITFSB      : Boolean;      -- When synchronous exceptions are not being generated by Tag Check Faults, this field controls whether on exception entry into EL1, all Tag Check Faults due to instructions executed before exception entry, that are reported asynchronously, are synchronized into TFSRE0_EL1 and TFSR_EL1 registers.
       TCF0       : Bits_2;       -- Tag Check Fault in EL0.
       TCF        : Bits_2;       -- Tag Check Fault in EL1.
       ATA0       : Boolean;      -- Allocation Tag Access in EL0.
@@ -1122,12 +1122,12 @@ pragma Style_Checks (Off);
       TMT        : Boolean;      -- Forces a trivial implementation of the Transactional Memory Extension at EL1.
       TME0       : Boolean;      -- Enables the Transactional Memory Extension at EL0.
       TME        : Boolean;      -- Enables the Transactional Memory Extension at EL1.
-      EnASR      : Boolean;      -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution ...
-      EnAS0      : Boolean;      -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution ...
-      EnALS      : Boolean;      -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution ...
+      EnASR      : Boolean;      -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution of an ST64BV instruction at EL0 to EL1.
+      EnAS0      : Boolean;      -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution of an ST64BV0 instruction at EL0 to EL1.
+      EnALS      : Boolean;      -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution of an LD64B or ST64B instruction at EL0 to EL1.
       EPAN       : Boolean;      -- Enhanced Privileged Access Never.
       Reserved3  : Bits_2  := 0;
-      EnTP2      : Boolean;      -- Traps instructions executed at EL0 that access ...
+      EnTP2      : Boolean;      -- Traps instructions executed at EL0 that access TPIDR2_EL0 to EL1, or to EL2 when EL2 is implemented and enabled for the current Security state and HCR_EL2.TGE is 1.
       NMI        : Boolean;      -- Non-maskable Interrupt enable.
       SPINTMASK  : Boolean;      -- SP Interrupt Mask enable.
       TIDCP      : Boolean;      -- Trap IMPLEMENTATION DEFINED functionality.
@@ -1388,8 +1388,8 @@ pragma Style_Checks (Off);
    -- D19.2.155 TTBR1_EL1, Translation Table Base Register 1 (EL1)
    -- D19.2.156 TTBR1_EL2, Translation Table Base Register 1 (EL2)
 
-   CnP_DIFFER : constant := 0; -- The translation table entries pointed to by ..., for the current translation ...
-   CnP_SAME   : constant := 1; -- The translation table entries pointed to by ... are the same as the translation ...
+   CnP_DIFFER : constant := 0; -- The translation table entries pointed to by TTBR1_EL2 for the current ASID are permitted to differ from corresponding entries for TTBR1_EL2 for other PEs in the Inner Shareable domain.
+   CnP_SAME   : constant := 1; -- The translation table entries pointed to by TTBR1_EL2 are the same as the translation table entries for every other PE in the Inner Shareable domain for which the value of TTBR1_EL2.CnP is 1 and all of the following apply: ...
 
    type TTBR0_EL1_Type is record
       CnP   : Bits_1;  -- Common not Private.
