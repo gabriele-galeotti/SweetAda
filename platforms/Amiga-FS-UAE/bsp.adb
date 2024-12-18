@@ -111,13 +111,13 @@ package body BSP is
             loop
                PIC := ZorroII.Read;
                exit when PIC.Board = 0;
-               Console.Print (PIC.Board,           Prefix => "Board:   ", NL => True);
-               Console.Print (PIC.ID_Product,      Prefix => "ID_Prod: ", NL => True);
-               Console.Print (PIC.ID_Manufacturer, Prefix => "ID_Manu: ", NL => True);
-               Console.Print (PIC.Serial_Number,   Prefix => "S/N:     ", NL => True);
-               Console.Print (PIC.Control_Status,  Prefix => "CTRL:    ", NL => True);
+               Console.Print (Prefix => "Board:   ", Value => PIC.Board, NL => True);
+               Console.Print (Prefix => "ID_Prod: ", Value => PIC.ID_Product, NL => True);
+               Console.Print (Prefix => "ID_Manu: ", Value => PIC.ID_Manufacturer, NL => True);
+               Console.Print (Prefix => "S/N:     ", Value => PIC.Serial_Number, NL => True);
+               Console.Print (Prefix => "CTRL:    ", Value => PIC.Control_Status, NL => True);
                ZorroII.Setup (16#00E9_0000#);
-               -- ZorroII.Shutup;
+               ZorroII.Shutup;
             end loop;
          end;
       end if;
@@ -132,12 +132,14 @@ package body BSP is
       -- end if;
       -- Gayle IDE ------------------------------------------------------------
       if False then
-         IDE_Descriptor.Base_Address  := System'To_Address (Gayle.GAYLE_IDE_BASEADDRESS);
-         IDE_Descriptor.Scale_Address := 2;
-         IDE_Descriptor.Read_8        := MMIO.Read'Access;
-         IDE_Descriptor.Write_8       := MMIO.Write'Access;
-         IDE_Descriptor.Read_16       := MMIO.ReadA'Access;
-         IDE_Descriptor.Write_16      := MMIO.WriteA'Access;
+         IDE_Descriptor := (
+            Base_Address  => System'To_Address (Gayle.GAYLE_IDE_BASEADDRESS),
+            Scale_Address => 2,
+            Read_8        => MMIO.Read'Access,
+            Write_8       => MMIO.Write'Access,
+            Read_16       => MMIO.ReadA'Access,
+            Write_16      => MMIO.WriteA'Access
+            );
          IDE.Init (IDE_Descriptor);
          -- disable IDE interrupts
          Gayle.IDE_Devcon.IRQDISABLE := True;
@@ -154,7 +156,11 @@ package body BSP is
       -- enable CPU interrupts
       Irq_Enable;
       -------------------------------------------------------------------------
-      Malloc.Init (System'To_Address (16#000C_0000#), 16#0001_0000#, True);
+      Malloc.Init (
+         Memory_Address => System'To_Address (16#000C_0000#),
+         Size           => kB64,
+         Debug_Flag     => True
+         );
       -------------------------------------------------------------------------
    end Setup;
 
