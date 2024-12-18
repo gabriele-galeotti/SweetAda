@@ -37,9 +37,12 @@ package S5D9
 
 pragma Style_Checks (Off);
 
-   -- S5D9 Microcontroller Group User''s Manual
+   ----------------------------------------------------------------------------
+   -- S5D9 Microcontroller Group User's Manual
    -- Renesas Synergy(TM) Platform
    -- Synergy Microcontrollers S5 Series
+   -- Rev.1.30 Aug 2019
+   ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
    -- 6. Resets
@@ -138,28 +141,28 @@ pragma Style_Checks (Off);
 
    -- 9.2.1 System Clock Division Control Register (SCKDIVCR)
 
-   CLOCK_NODIV  : constant := 2#000#; -- ×1/1
-   CLOCK_DIV_2  : constant := 2#001#; -- ×1/2
-   CLOCK_DIV_4  : constant := 2#010#; -- ×1/4
-   CLOCK_DIV_8  : constant := 2#011#; -- ×1/8
-   CLOCK_DIV_16 : constant := 2#100#; -- ×1/16
-   CLOCK_DIV_32 : constant := 2#101#; -- ×1/32
-   CLOCK_DIV_64 : constant := 2#110#; -- ×1/64.
+   SCKDIVCR_DIV1  : constant := 2#000#; -- ×1/1
+   SCKDIVCR_DIV2  : constant := 2#001#; -- ×1/2
+   SCKDIVCR_DIV4  : constant := 2#010#; -- ×1/4
+   SCKDIVCR_DIV8  : constant := 2#011#; -- ×1/8
+   SCKDIVCR_DIV16 : constant := 2#100#; -- ×1/16
+   SCKDIVCR_DIV32 : constant := 2#101#; -- ×1/32
+   SCKDIVCR_DIV64 : constant := 2#110#; -- ×1/64.
 
    type SCKDIVCR_Type is record
-      PCKD      : Bits_3;      -- Peripheral Module Clock D
+      PCKD      : Bits_3 := SCKDIVCR_DIV4; -- Peripheral Module Clock D
       Reserved1 : Bits_1 := 0;
-      PCKC      : Bits_3;      -- Peripheral Module Clock C
+      PCKC      : Bits_3 := SCKDIVCR_DIV4; -- Peripheral Module Clock C
       Reserved2 : Bits_1 := 0;
-      PCKB      : Bits_3;      -- Peripheral Module Clock B
+      PCKB      : Bits_3 := SCKDIVCR_DIV4; -- Peripheral Module Clock B
       Reserved3 : Bits_1 := 0;
-      PCKA      : Bits_3;      -- Peripheral Module Clock A
+      PCKA      : Bits_3 := SCKDIVCR_DIV4; -- Peripheral Module Clock A
       Reserved4 : Bits_1 := 0;
-      BCK       : Bits_3;      -- External Bus Clock
+      BCK       : Bits_3 := SCKDIVCR_DIV4; -- External Bus Clock
       Reserved5 : Bits_5 := 0;
-      ICK       : Bits_3;      -- System Clock
+      ICK       : Bits_3 := SCKDIVCR_DIV4; -- System Clock
       Reserved6 : Bits_1 := 0;
-      FCK       : Bits_3;      -- Flash Interface Clock
+      FCK       : Bits_3 := SCKDIVCR_DIV4; -- Flash Interface Clock
       Reserved7 : Bits_1 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -197,7 +200,7 @@ pragma Style_Checks (Off);
 
    type SCKDIVCR2_Type is record
       Reserved1 : Bits_4 := 0;
-      UCK       : Bits_3;      -- USB Clock (UCLK) Select
+      UCK       : Bits_3 := UCK_DIV5; -- USB Clock (UCLK) Select
       Reserved2 : Bits_1 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -218,15 +221,15 @@ pragma Style_Checks (Off);
 
    -- 9.2.3 System Clock Source Control Register (SCKSCR)
 
-   CLK_HOCO : constant := 2#000#; -- High-speed on-chip oscillator
-   CLK_MOCO : constant := 2#001#; -- Middle-speed on-chip oscillator
-   CLK_LOCO : constant := 2#010#; -- Low-speed on-chip oscillator
-   CLK_MOSC : constant := 2#011#; -- Main clock oscillator
-   CLK_SOSC : constant := 2#100#; -- Sub-clock oscillator
-   CLK_PLL  : constant := 2#101#; -- PLL
+   CKSEL_HOCO : constant := 2#000#; -- High-speed on-chip oscillator
+   CKSEL_MOCO : constant := 2#001#; -- Middle-speed on-chip oscillator
+   CKSEL_LOCO : constant := 2#010#; -- Low-speed on-chip oscillator
+   CKSEL_MOSC : constant := 2#011#; -- Main clock oscillator
+   CKSEL_SOSC : constant := 2#100#; -- Sub-clock oscillator
+   CKSEL_PLL  : constant := 2#101#; -- PLL
 
    type SCKSCR_Type is record
-      CKSEL     : Bits_3;      -- Clock Source Select
+      CKSEL     : Bits_3 := CKSEL_MOCO; -- Clock Source Select
       Reserved1 : Bits_5 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -246,9 +249,9 @@ pragma Style_Checks (Off);
 
    -- 9.2.4 PLL Clock Control Register (PLLCCR)
 
-   PLIDIV_1 : constant := 2#00#;
-   PLIDIV_2 : constant := 2#01#;
-   PLIDIV_3 : constant := 2#10#;
+   PLIDIV_DIV1 : constant := 2#00#;
+   PLIDIV_DIV2 : constant := 2#01#;
+   PLIDIV_DIV3 : constant := 2#10#;
 
    PLSRCSEL_MOSC : constant := 2#0#;
    PLSRCSEL_HOCO : constant := 2#1#;
@@ -296,11 +299,11 @@ pragma Style_Checks (Off);
    PLLMUL_x_30_0 : constant := 2#111011#;
 
    type PLLCCR_Type is record
-      PLIDIV    : Bits_2;      -- PLL Input Frequency Division Ratio Select
+      PLIDIV    : Bits_2 := PLIDIV_DIV1;   -- PLL Input Frequency Division Ratio Select
       Reserved1 : Bits_2 := 0;
-      PLSRCSEL  : Bits_1;      -- PLL Clock Source Select
+      PLSRCSEL  : Bits_1 := PLSRCSEL_MOSC; -- PLL Clock Source Select
       Reserved2 : Bits_3 := 0;
-      PLLMUL    : Bits_6;      -- PLL Frequency Multiplication Factor Select
+      PLLMUL    : Bits_6 := PLLMUL_x_10_0; -- PLL Frequency Multiplication Factor Select
       Reserved3 : Bits_2 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -325,7 +328,7 @@ pragma Style_Checks (Off);
    -- 9.2.5 PLL Control Register (PLLCR)
 
    type PLLCR_Type is record
-      PLLSTP   : Boolean;      -- PLL Stop Control
+      PLLSTP   : Boolean := True; -- PLL Stop Control
       Reserved : Bits_7  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -343,10 +346,34 @@ pragma Style_Checks (Off);
            Import               => True,
            Convention           => Ada;
 
+   -- 9.2.6 External Bus Clock Control Register (BCKCR)
+
+   BCLKDIV_DIV1 : constant := 0; -- BCLK
+   BCLKDIV_DIV2 : constant := 1; -- BCLK/2.
+
+   type BCKCR_Type is record
+      BCLKDIV  : Bits_1 := BCLKDIV_DIV1; -- EBCLK Pin Output Select
+      Reserved : Bits_7 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for BCKCR_Type use record
+      BCLKDIV  at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 7;
+   end record;
+
+   BCKCR_ADDRESS : constant := 16#4001_E030#;
+
+   BCKCR : aliased BCKCR_Type
+      with Address              => System'To_Address (BCKCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 9.2.7 Main Clock Oscillator Control Register (MOSCCR)
 
    type MOSCCR_Type is record
-      MOSTP    : Boolean;      -- Main Clock Oscillator Stop
+      MOSTP    : Boolean := True; -- Main Clock Oscillator Stop
       Reserved : Bits_7  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -367,7 +394,7 @@ pragma Style_Checks (Off);
    -- 9.2.8 Subclock Oscillator Control Register (SOSCCR)
 
    type SOSCCR_Type is record
-      SOSTP    : Boolean;      -- Sub-Clock Oscillator Stop
+      SOSTP    : Boolean := False; -- Sub-Clock Oscillator Stop
       Reserved : Bits_7  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -388,7 +415,7 @@ pragma Style_Checks (Off);
    -- 9.2.9 Low-Speed On-Chip Oscillator Control Register (LOCOCR)
 
    type LOCOCR_Type is record
-      LCSTP    : Boolean;      -- LOCO Stop
+      LCSTP    : Boolean := False; -- LOCO Stop
       Reserved : Bits_7  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -427,15 +454,99 @@ pragma Style_Checks (Off);
            Import               => True,
            Convention           => Ada;
 
+   -- 9.2.11 High-Speed On-Chip Oscillator Wait Control Register (HOCOWTCR)
+
+   type HOCOWTCR_Type is record
+      HSTS     : Bits_3 := 2#010#; -- HOCO Wait Time Setting
+      Reserved : Bits_5 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for HOCOWTCR_Type use record
+      HSTS     at 0 range 0 .. 2;
+      Reserved at 0 range 3 .. 7;
+   end record;
+
+   HOCOWTCR_ADDRESS : constant := 16#4001_E0A5#;
+
+   HOCOWTCR : aliased HOCOWTCR_Type
+      with Address              => System'To_Address (HOCOWTCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 9.2.12 Middle-Speed On-Chip Oscillator Control Register (MOCOCR)
+
+   type MOCOCR_Type is record
+      MCSTP    : Boolean := False; -- MOCO Stop
+      Reserved : Bits_7  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MOCOCR_Type use record
+      MCSTP    at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 7;
+   end record;
+
+   MOCOCR_ADDRESS : constant := 16#4001_E038#;
+
+   MOCOCR : aliased MOCOCR_Type
+      with Address              => System'To_Address (MOCOCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 9.2.13 FLL Control Register 1 (FLLCR1)
+
+   type FLLCR1_Type is record
+      FLLEN    : Boolean := False; -- FLL Enable
+      Reserved : Bits_7  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for FLLCR1_Type use record
+      FLLEN    at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 7;
+   end record;
+
+   FLLCR1_ADDRESS : constant := 16#4001_E039#;
+
+   FLLCR1 : aliased FLLCR1_Type
+      with Address              => System'To_Address (FLLCR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 9.2.14 FLL Control Register 2 (FLLCR2)
+
+   type FLLCR2_Type is record
+      FLLCNTL  : Bits_11 := 0; -- FLL Enable
+      Reserved : Bits_5  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for FLLCR2_Type use record
+      FLLCNTL  at 0 range  0 .. 10;
+      Reserved at 0 range 11 .. 15;
+   end record;
+
+   FLLCR2_ADDRESS : constant := 16#4001_E03A#;
+
+   FLLCR2 : aliased FLLCR2_Type
+      with Address              => System'To_Address (FLLCR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 9.2.15 Oscillation Stabilization Flag Register (OSCSF)
 
    type OSCSF_Type is record
-      HOCOSF    : Boolean;      -- HOCO Clock Oscillation Stabilization Flag
-      Reserved1 : Bits_2  := 0;
-      MOSCSF    : Boolean;      -- Main Clock Oscillation Stabilization Flag
-      Reserved2 : Bits_1  := 0;
-      PLLSF     : Boolean;      -- PLL Clock Oscillation Stabilization Flag
-      Reserved3 : Bits_2  := 0;
+      HOCOSF    : Boolean; -- HOCO Clock Oscillation Stabilization Flag
+      Reserved1 : Bits_2;
+      MOSCSF    : Boolean; -- Main Clock Oscillation Stabilization Flag
+      Reserved2 : Bits_1;
+      PLLSF     : Boolean; -- PLL Clock Oscillation Stabilization Flag
+      Reserved3 : Bits_2;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -456,6 +567,51 @@ pragma Style_Checks (Off);
            Import               => True,
            Convention           => Ada;
 
+   -- 9.2.16 Oscillation Stop Detection Control Register (OSTDCR)
+
+   type OSTDCR_Type is record
+      OSTDIE   : Boolean := False; -- Oscillation Stop Detection Interrupt Enable
+      Reserved : Bits_6  := 0;
+      OSTDE    : Boolean := False; -- Oscillation Stop Detection Function Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for OSTDCR_Type use record
+      OSTDIE   at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 6;
+      OSTDE    at 0 range 7 .. 7;
+   end record;
+
+   OSTDCR_ADDRESS : constant := 16#4001_E040#;
+
+   OSTDCR : aliased OSTDCR_Type
+      with Address              => System'To_Address (OSTDCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 9.2.17 Oscillation Stop Detection Status Register (OSTDSR)
+
+   type OSTDSR_Type is record
+      OSTDF    : Boolean := False; -- Oscillation Stop Detection Flag
+      Reserved : Bits_7  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for OSTDSR_Type use record
+      OSTDF    at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 7;
+   end record;
+
+   OSTDSR_ADDRESS : constant := 16#4001_E041#;
+
+   OSTDSR : aliased OSTDSR_Type
+      with Address              => System'To_Address (OSTDSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+
    -- 9.2.18 Main Clock Oscillator Wait Control Register (MOSCWTCR)
 
    --                                           MOMCR.AUTODRVEN = 0        MOMCR.AUTODRVEN
@@ -470,7 +626,7 @@ pragma Style_Checks (Off);
    MSTS_9 : constant := 2#1001#; -- Wait time = 8163 cycles (31139.4 μs).  8164 cycles (31143.2 μs).
 
    type MOSCWTCR_Type is record
-      MSTS      : Bits_4;      -- Main Clock Oscillator Wait Time Setting
+      MSTS      : Bits_4 := MSTS_5; -- Main Clock Oscillator Wait Time Setting
       Reserved  : Bits_4 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -500,9 +656,9 @@ pragma Style_Checks (Off);
 
    type MOMCR_Type is record
       Reserved  : Bits_4  := 0;
-      MODRV     : Bits_2;       -- Main Clock Oscillator Drive Capability 0 Switching
-      MOSEL     : Bits_1;       -- Main Clock Oscillator Switching
-      AUTODRVEN : Boolean;      -- PLL Clock Oscillation Stabilization Flag
+      MODRV     : Bits_2  := MODRV_20_24; -- Main Clock Oscillator Drive Capability 0 Switching
+      MOSEL     : Bits_1  := MOSEL_RES;   -- Main Clock Oscillator Switching
+      AUTODRVEN : Boolean := False;       -- PLL Clock Oscillation Stabilization Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -529,8 +685,8 @@ pragma Style_Checks (Off);
 
    type SBYCR_Type is record
       Reserved : Bits_14 := 0;
-      OPE      : Boolean;      -- Output Port Enable
-      SSBY     : Boolean;      -- Software Standby
+      OPE      : Boolean := True;  -- Output Port Enable
+      SSBY     : Boolean := False; -- Software Standby
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -551,14 +707,14 @@ pragma Style_Checks (Off);
    -- 11.2.2 Module Stop Control Register A (MSTPCRA)
 
    type MSTPCRA_Type is record
-      MSTPA0    : Boolean;             -- SRAM0 Module Stop
-      MSTPA1    : Boolean;             -- SRAM1 Module Stop
+      MSTPA0    : Boolean := False;    -- SRAM0 Module Stop
+      MSTPA1    : Boolean := False;    -- SRAM1 Module Stop
       Reserved1 : Bits_3  := 16#07#;
-      MSTPA5    : Boolean;             -- High-Speed SRAM Module Stop
-      MSTPA6    : Boolean;             -- ECC SRAM Module Stop
-      MSTPA7    : Boolean;             -- Standby SRAM Module Stop
+      MSTPA5    : Boolean := False;    -- High-Speed SRAM Module Stop
+      MSTPA6    : Boolean := False;    -- ECC SRAM Module Stop
+      MSTPA7    : Boolean := False;    -- Standby SRAM Module Stop
       Reserved2 : Bits_14 := 16#3FFF#;
-      MSTPA22   : Boolean;             -- DMA Controller/Data Transfer Controller Module Stop
+      MSTPA22   : Boolean := False;    -- DMA Controller/Data Transfer Controller Module Stop
       Reserved3 : Bits_9  := 16#1FF#;
    end record
       with Bit_Order => Low_Order_First,
@@ -587,34 +743,34 @@ pragma Style_Checks (Off);
 
    type MSTPCRB_Type is record
       Reserved1 : Bits_1  := 1;
-      MSTPB1    : Boolean;          -- Controller Area Network 1 Module Stop
-      MSTPB2    : Boolean;          -- Controller Area Network 0 Module Stop
+      MSTPB1    : Boolean := True;  -- Controller Area Network 1 Module Stop
+      MSTPB2    : Boolean := True;  -- Controller Area Network 0 Module Stop
       Reserved2 : Bits_2  := 2#11#;
-      MSTPB5    : Boolean;          -- IrDA Module Stop
-      MSTPB6    : Boolean;          -- Quad Serial Peripheral Interface Module Stop
-      MSTPB7    : Boolean;          -- I2C Bus Interface 2 Module Stop
-      MSTPB8    : Boolean;          -- I2C Bus Interface 1 Module Stop
-      MSTPB9    : Boolean;          -- I2C Bus Interface 0 Module Stop
+      MSTPB5    : Boolean := True;  -- IrDA Module Stop
+      MSTPB6    : Boolean := True;  -- Quad Serial Peripheral Interface Module Stop
+      MSTPB7    : Boolean := True;  -- I2C Bus Interface 2 Module Stop
+      MSTPB8    : Boolean := True;  -- I2C Bus Interface 1 Module Stop
+      MSTPB9    : Boolean := True;  -- I2C Bus Interface 0 Module Stop
       Reserved3 : Bits_1  := 1;
-      MSTPB11   : Boolean;          -- Universal Serial Bus 2.0 FS Interface Module Stop
-      MSTPB12   : Boolean;          -- Universal Serial Bus 2.0 HS Interface Module Stop
-      MSTPB13   : Boolean;          -- EPTPC and PTPEDMAC Module Stop
+      MSTPB11   : Boolean := True;  -- Universal Serial Bus 2.0 FS Interface Module Stop
+      MSTPB12   : Boolean := True;  -- Universal Serial Bus 2.0 HS Interface Module Stop
+      MSTPB13   : Boolean := True;  -- EPTPC and PTPEDMAC Module Stop
       Reserved4 : Bits_1  := 1;
-      MSTPB15   : Boolean;          -- ETHERC0 and EDMAC0 Controller Module Stop
+      MSTPB15   : Boolean := True;  -- ETHERC0 and EDMAC0 Controller Module Stop
       Reserved5 : Bits_2  := 2#11#;
-      MSTPB18   : Boolean;          -- Serial Peripheral Interface 1 Module Stop
-      MSTPB19   : Boolean;          -- Serial Peripheral Interface 0 Module Stop
+      MSTPB18   : Boolean := True;  -- Serial Peripheral Interface 1 Module Stop
+      MSTPB19   : Boolean := True;  -- Serial Peripheral Interface 0 Module Stop
       Reserved6 : Bits_2  := 2#11#;
-      MSTPB22   : Boolean;          -- Serial Communication Interface 9 Module Stop
-      MSTPB23   : Boolean;          -- Serial Communication Interface 8 Module Stop
-      MSTPB24   : Boolean;          -- Serial Communication Interface 7 Module Stop
-      MSTPB25   : Boolean;          -- Serial Communication Interface 6 Module Stop
-      MSTPB26   : Boolean;          -- Serial Communication Interface 5 Module Stop
-      MSTPB27   : Boolean;          -- Serial Communication Interface 4 Module Stop
-      MSTPB28   : Boolean;          -- Serial Communication Interface 3 Module Stop
-      MSTPB29   : Boolean;          -- Serial Communication Interface 2 Module Stop
-      MSTPB30   : Boolean;          -- Serial Communication Interface 1 Module Stop
-      MSTPB31   : Boolean;          -- Serial Communication Interface 0 Module Stop
+      MSTPB22   : Boolean := True;  -- Serial Communication Interface 9 Module Stop
+      MSTPB23   : Boolean := True;  -- Serial Communication Interface 8 Module Stop
+      MSTPB24   : Boolean := True;  -- Serial Communication Interface 7 Module Stop
+      MSTPB25   : Boolean := True;  -- Serial Communication Interface 6 Module Stop
+      MSTPB26   : Boolean := True;  -- Serial Communication Interface 5 Module Stop
+      MSTPB27   : Boolean := True;  -- Serial Communication Interface 4 Module Stop
+      MSTPB28   : Boolean := True;  -- Serial Communication Interface 3 Module Stop
+      MSTPB29   : Boolean := True;  -- Serial Communication Interface 2 Module Stop
+      MSTPB30   : Boolean := True;  -- Serial Communication Interface 1 Module Stop
+      MSTPB31   : Boolean := True;  -- Serial Communication Interface 0 Module Stop
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -661,24 +817,24 @@ pragma Style_Checks (Off);
    -- 11.2.4 Module Stop Control Register C (MSTPCRC)
 
    type MSTPCRC_Type is record
-      MSTPC0    : Boolean;             -- Clock Frequency Accuracy Measurement Circuit Module Stop
-      MSTPC1    : Boolean;             -- Cyclic Redundancy Check Calculator Module Stop
-      MSTPC2    : Boolean;             -- Parallel Data Capture Module Stop
-      MSTPC3    : Boolean;             -- Capacitive Touch Sensing Unit Module Stop
-      MSTPC4    : Boolean;             -- Graphics LCD Controller Module Stop
-      MSTPC5    : Boolean;             -- JPEG Codec Engine Module Stop
-      MSTPC6    : Boolean;             -- 2D Drawing Engine Module Stop
-      MSTPC7    : Boolean;             -- Serial Sound Interface Enhanced (channel 1) Module Stop
-      MSTPC8    : Boolean;             -- Serial Sound Interface Enhanced (channel 0) Module Stop
-      MSTPC9    : Boolean;             -- Sampling Rate Converter Module Stop
+      MSTPC0    : Boolean := True;     -- Clock Frequency Accuracy Measurement Circuit Module Stop
+      MSTPC1    : Boolean := True;     -- Cyclic Redundancy Check Calculator Module Stop
+      MSTPC2    : Boolean := True;     -- Parallel Data Capture Module Stop
+      MSTPC3    : Boolean := True;     -- Capacitive Touch Sensing Unit Module Stop
+      MSTPC4    : Boolean := True;     -- Graphics LCD Controller Module Stop
+      MSTPC5    : Boolean := True;     -- JPEG Codec Engine Module Stop
+      MSTPC6    : Boolean := True;     -- 2D Drawing Engine Module Stop
+      MSTPC7    : Boolean := True;     -- Serial Sound Interface Enhanced (channel 1) Module Stop
+      MSTPC8    : Boolean := True;     -- Serial Sound Interface Enhanced (channel 0) Module Stop
+      MSTPC9    : Boolean := True;     -- Sampling Rate Converter Module Stop
       Reserved1 : Bits_1  := 1;
-      MSTPC11   : Boolean;             -- Secure Digital Host IF/MultiMediaCard 1 Module Stop
-      MSTPC12   : Boolean;             -- Secure Digital Host IF/MultiMediaCard 0 Module Stop
-      MSTPC13   : Boolean;             -- Data Operation Circuit Module Stop
-      MSTPC14   : Boolean;             -- Event Link Controller Module Stop
+      MSTPC11   : Boolean := True;     -- Secure Digital Host IF/MultiMediaCard 1 Module Stop
+      MSTPC12   : Boolean := True;     -- Secure Digital Host IF/MultiMediaCard 0 Module Stop
+      MSTPC13   : Boolean := True;     -- Data Operation Circuit Module Stop
+      MSTPC14   : Boolean := True;     -- Event Link Controller Module Stop
       Reserved2 : Bits_1  := 1;
       Reserved3 : Bits_15 := 16#7FFF#;
-      MSTPC31   : Boolean;             -- SCE7 Module Stop
+      MSTPC31   : Boolean := True;     -- SCE7 Module Stop
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -715,25 +871,25 @@ pragma Style_Checks (Off);
 
    type MSTPCRD_Type is record
       Reserved1 : Bits_2  := 2#11#;
-      MSTPD2    : Boolean;           -- Asynchronous General Purpose Timer 1 Module Stop
-      MSTPD3    : Boolean;           -- Asynchronous General Purpose Timer 0 Module Stop
+      MSTPD2    : Boolean := True;   -- Asynchronous General Purpose Timer 1 Module Stop
+      MSTPD3    : Boolean := True;   -- Asynchronous General Purpose Timer 0 Module Stop
       Reserved2 : Bits_1  := 1;
-      MSTPD5    : Boolean;           -- General PWM Timer 32EH0 to 32EH3 and 32E4 to 32E7 and PWM Delay Gen Circuit Module Stop
-      MSTPD6    : Boolean;           -- General PWM Timer 328 to 3213 Module Stop
+      MSTPD5    : Boolean := True;   -- General PWM Timer 32EH0 to 32EH3 and 32E4 to 32E7 and PWM Delay Gen Circuit Module Stop
+      MSTPD6    : Boolean := True;   -- General PWM Timer 328 to 3213 Module Stop
       Reserved3 : Bits_7  := 16#7F#;
-      MSTPD14   : Boolean;           -- Port Output Enable for GPT Module Stop
-      MSTPD15   : Boolean;           -- 12-Bit A/D Converter 1 Module Stop
-      MSTPD16   : Boolean;           -- 12-Bit A/D Converter 0 Module Stop
+      MSTPD14   : Boolean := True;   -- Port Output Enable for GPT Module Stop
+      MSTPD15   : Boolean := True;   -- 12-Bit A/D Converter 1 Module Stop
+      MSTPD16   : Boolean := True;   -- 12-Bit A/D Converter 0 Module Stop
       Reserved4 : Bits_3  := 16#7#;
-      MSTPD20   : Boolean;           -- 12-Bit D/A Converter Module Stop
+      MSTPD20   : Boolean := True;   -- 12-Bit D/A Converter Module Stop
       Reserved5 : Bits_1  := 1;
-      MSTPD22   : Boolean;           -- Temperature Sensor Module Stop
-      MSTPD23   : Boolean;           -- High-Speed Analog Comparator 5 Module Stop
-      MSTPD24   : Boolean;           -- High-Speed Analog Comparator 4 Module Stop
-      MSTPD25   : Boolean;           -- High-Speed Analog Comparator 3 Module Stop
-      MSTPD26   : Boolean;           -- High-Speed Analog Comparator 2 Module Stop
-      MSTPD27   : Boolean;           -- High-Speed Analog Comparator 1 Module Stop
-      MSTPD28   : Boolean;           -- High-Speed Analog Comparator 0 Module Stop
+      MSTPD22   : Boolean := True;   -- Temperature Sensor Module Stop
+      MSTPD23   : Boolean := True;   -- High-Speed Analog Comparator 5 Module Stop
+      MSTPD24   : Boolean := True;   -- High-Speed Analog Comparator 4 Module Stop
+      MSTPD25   : Boolean := True;   -- High-Speed Analog Comparator 3 Module Stop
+      MSTPD26   : Boolean := True;   -- High-Speed Analog Comparator 2 Module Stop
+      MSTPD27   : Boolean := True;   -- High-Speed Analog Comparator 1 Module Stop
+      MSTPD28   : Boolean := True;   -- High-Speed Analog Comparator 0 Module Stop
       Reserved6 : Bits_3  := 16#7#;
    end record
       with Bit_Order => Low_Order_First,
@@ -779,12 +935,12 @@ pragma Style_Checks (Off);
    PRCR_KEY_CODE : constant := 16#A5#;
 
    type PRCR_Type is record
-      PRC0      : Boolean;         -- Protect Bit 0
-      PRC1      : Boolean;         -- Protect Bit 1
+      PRC0      : Boolean    := False; -- Protect Bit 0
+      PRC1      : Boolean    := False; -- Protect Bit 1
       Reserved1 : Bits_1     := 0;
-      PRC3      : Boolean;         -- Protect Bit 3
+      PRC3      : Boolean    := False; -- Protect Bit 3
       Reserved2 : Bits_4     := 0;
-      PRKEY     : Unsigned_8;      -- PRC Key Code
+      PRKEY     : Unsigned_8 := 0;     -- PRC Key Code
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -811,12 +967,22 @@ pragma Style_Checks (Off);
 
    -- 14.2.1 IRQ Control Register i (IRQCRi) (i = 0 to 15)
 
+   IRQMD_EDGEFALL : constant := 2#00#; -- Falling edge
+   IRQMD_EDGERISE : constant := 2#01#; -- Rising edge
+   IRQMD_EDGEBOTH : constant := 2#10#; -- Rising and falling edges
+   IRQMD_LOW      : constant := 2#11#; -- Low level.
+
+   FCLKSEL_DIV1  : constant := 2#00#; -- PCLKB
+   FCLKSEL_DIV8  : constant := 2#01#; -- PCLKB/8
+   FCLKSEL_DIV32 : constant := 2#10#; -- PCLKB/32
+   FCLKSEL_DIV64 : constant := 2#11#; -- PCLKB/64.
+
    type IRQCR_Type is record
-      IRQMD     : Bits_2;       -- IRQi Detection Sense Select
+      IRQMD     : Bits_2  := IRQMD_EDGEFALL; -- IRQi Detection Sense Select
       Reserved1 : Bits_2  := 0;
-      FCLKSEL   : Bits_2;       -- IRQi Digital Filter Sampling Clock Select
+      FCLKSEL   : Bits_2  := FCLKSEL_DIV1;   -- IRQi Digital Filter Sampling Clock Select
       Reserved2 : Bits_1  := 0;
-      FLTEN     : Boolean;      -- IRQi Digital Filter Enable
+      FLTEN     : Boolean := False;          -- IRQi Digital Filter Enable
    end record
       with Bit_Order            => Low_Order_First,
            Size                 => 8,
@@ -832,19 +998,19 @@ pragma Style_Checks (Off);
    -- 14.2.2 Non-Maskable Interrupt Status Register (NMISR)
 
    type NMISR_Type is record
-      IWDTST    : Boolean; -- IWDT Underflow/Refresh Error Status Flag
-      WDTST     : Boolean; -- WDT Underflow/Refresh Error Status Flag
-      LVD1ST    : Boolean; -- Voltage Monitor 1 Interrupt Status Flag
-      LVD2ST    : Boolean; -- Voltage Monitor 2 Interrupt Status Flag
-      Reserved1 : Bits_2;
-      OSTST     : Boolean; -- Main Oscillation Stop Detection Interrupt Status Flag
-      NMIST     : Boolean; -- NMI Status Flag
-      RPEST     : Boolean; -- SRAM Parity Error Interrupt Status Flag
-      RECCST    : Boolean; -- SRAM ECC Error Interrupt Status Flag
-      BUSSST    : Boolean; -- MPU Bus Slave Error Interrupt Status Flag
-      BUSMST    : Boolean; -- MPU Bus Master Error Interrupt Status Flag
-      SPEST     : Boolean; -- CPU Stack Pointer Monitor Interrupt Status Flag
-      Reserved2 : Bits_3;
+      IWDTST    : Boolean := False; -- IWDT Underflow/Refresh Error Status Flag
+      WDTST     : Boolean := False; -- WDT Underflow/Refresh Error Status Flag
+      LVD1ST    : Boolean := False; -- Voltage Monitor 1 Interrupt Status Flag
+      LVD2ST    : Boolean := False; -- Voltage Monitor 2 Interrupt Status Flag
+      Reserved1 : Bits_2  := 0;
+      OSTST     : Boolean := False; -- Main Oscillation Stop Detection Interrupt Status Flag
+      NMIST     : Boolean := False; -- NMI Status Flag
+      RPEST     : Boolean := False; -- SRAM Parity Error Interrupt Status Flag
+      RECCST    : Boolean := False; -- SRAM ECC Error Interrupt Status Flag
+      BUSSST    : Boolean := False; -- MPU Bus Slave Error Interrupt Status Flag
+      BUSMST    : Boolean := False; -- MPU Bus Master Error Interrupt Status Flag
+      SPEST     : Boolean := False; -- CPU Stack Pointer Monitor Interrupt Status Flag
+      Reserved2 : Bits_3  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -867,18 +1033,18 @@ pragma Style_Checks (Off);
    -- 14.2.3 Non-Maskable Interrupt Enable Register (NMIER)
 
    type NMIER_Type is record
-      IWDTEN    : Boolean;      -- IWDT Underflow/Refresh Error Interrupt Enable
-      WDTEN     : Boolean;      -- WDT Underflow/Refresh Error Interrupt Enable
-      LVD1EN    : Boolean;      -- Voltage Monitor 1 Interrupt Enable
-      LVD2EN    : Boolean;      -- Voltage Monitor 2 Interrupt Enable
+      IWDTEN    : Boolean := False; -- IWDT Underflow/Refresh Error Interrupt Enable
+      WDTEN     : Boolean := False; -- WDT Underflow/Refresh Error Interrupt Enable
+      LVD1EN    : Boolean := False; -- Voltage Monitor 1 Interrupt Enable
+      LVD2EN    : Boolean := False; -- Voltage Monitor 2 Interrupt Enable
       Reserved1 : Bits_2  := 0;
-      OSTEN     : Boolean;      -- Main Oscillation Stop Detection Interrupt Enable
-      NMIEN     : Boolean;      -- NMI Interrupt Enable
-      RPEEN     : Boolean;      -- SRAM Parity Error Interrupt Enable
-      RECCEN    : Boolean;      -- SRAM ECC Error Interrupt Enable
-      BUSSEN    : Boolean;      -- MPU Bus Slave Error Interrupt Enable
-      BUSMEN    : Boolean;      -- MPU Bus Master Error Interrupt Enable
-      SPEEN     : Boolean;      -- CPU Stack Pointer Monitor Interrupt Enable
+      OSTEN     : Boolean := False; -- Main Oscillation Stop Detection Interrupt Enable
+      NMIEN     : Boolean := False; -- NMI Interrupt Enable
+      RPEEN     : Boolean := False; -- SRAM Parity Error Interrupt Enable
+      RECCEN    : Boolean := False; -- SRAM ECC Error Interrupt Enable
+      BUSSEN    : Boolean := False; -- MPU Bus Slave Error Interrupt Enable
+      BUSMEN    : Boolean := False; -- MPU Bus Master Error Interrupt Enable
+      SPEEN     : Boolean := False; -- CPU Stack Pointer Monitor Interrupt Enable
       Reserved2 : Bits_3  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -902,18 +1068,18 @@ pragma Style_Checks (Off);
    -- 14.2.4 Non-Maskable Interrupt Status Clear Register (NMICLR)
 
    type NMICLR_Type is record
-      IWDTCLR   : Boolean;      -- IWDT Clear
-      WDTCLR    : Boolean;      -- WDT Clear
-      LVD1CLR   : Boolean;      -- LVD1 Clear
-      LVD2CLR   : Boolean;      -- LVD2 Clear
+      IWDTCLR   : Boolean := False; -- IWDT Clear
+      WDTCLR    : Boolean := False; -- WDT Clear
+      LVD1CLR   : Boolean := False; -- LVD1 Clear
+      LVD2CLR   : Boolean := False; -- LVD2 Clear
       Reserved1 : Bits_2  := 0;
-      OSTCLR    : Boolean;      -- OSR Clear
-      NMICLR    : Boolean;      -- NMI Clear
-      RPECLR    : Boolean;      -- SRAM Parity Error Clear
-      RECCCLR   : Boolean;      -- SRAM ECC Error Clear
-      BUSSCLR   : Boolean;      -- Bus Slave Error Clear
-      BUSMCLR   : Boolean;      -- Bus Master Error Clear
-      SPECLR    : Boolean;      -- CPU Stack Pointer Monitor Interrupt Clear
+      OSTCLR    : Boolean := False; -- OSR Clear
+      NMICLR    : Boolean := False; -- NMI Clear
+      RPECLR    : Boolean := False; -- SRAM Parity Error Clear
+      RECCCLR   : Boolean := False; -- SRAM ECC Error Clear
+      BUSSCLR   : Boolean := False; -- Bus Slave Error Clear
+      BUSMCLR   : Boolean := False; -- Bus Master Error Clear
+      SPECLR    : Boolean := False; -- CPU Stack Pointer Monitor Interrupt Clear
       Reserved2 : Bits_3  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -936,12 +1102,20 @@ pragma Style_Checks (Off);
 
    -- 14.2.5 NMI Pin Interrupt Control Register (NMICR)
 
+   NMIMD_FALL : constant := 0; -- Falling edge
+   NMIMD_RISE : constant := 1; -- Rising edge.
+
+   NFCLKSEL_DIV1  : constant := 2#00#; -- PCLKB
+   NFCLKSEL_DIV8  : constant := 2#01#; -- PCLKB/8
+   NFCLKSEL_DIV32 : constant := 2#10#; -- PCLKB/32
+   NFCLKSEL_DIV64 : constant := 2#11#; -- PCLKB/64.
+
    type NMICR_Type is record
-      NMIMD     : Bits_1;       -- NMI Detection Set
+      NMIMD     : Bits_1  := NMIMD_FALL;    -- NMI Detection Set
       Reserved1 : Bits_3  := 0;
-      NFCLKSEL  : Bits_2;       -- NMI Digital Filter Sampling Clock Select
+      NFCLKSEL  : Bits_2  := NFCLKSEL_DIV1; -- NMI Digital Filter Sampling Clock Select
       Reserved2 : Bits_1  := 0;
-      NFLTEN    : Boolean;      -- NMI Digital Filter Enable
+      NFLTEN    : Boolean := False;         -- NMI Digital Filter Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -955,12 +1129,14 @@ pragma Style_Checks (Off);
 
    -- 14.2.6 ICU Event Link Setting Register n (IELSRn) (n = 0 to 95)
 
+   IELS_DISABLE : constant := 0; -- Disable interrupts to the associated NVIC or DTC module
+
    type IELSR_Type is record
-      IELS      : Bits_9;       -- ICU Event Link Select
+      IELS      : Bits_9  := IELS_DISABLE; -- ICU Event Link Select
       Reserved1 : Bits_7  := 0;
-      IR        : Boolean;      -- Interrupt Status Flag
+      IR        : Boolean := False;        -- Interrupt Status Flag
       Reserved2 : Bits_7  := 0;
-      DTCE      : Boolean;      -- DTC Activation Enable
+      DTCE      : Boolean := False;        -- DTC Activation Enable
       Reserved3 : Bits_7  := 0;
    end record
       with Bit_Order            => Low_Order_First,
@@ -977,17 +1153,19 @@ pragma Style_Checks (Off);
 
    -- 14.2.7 DMAC Event Link Setting Register n (DELSRn) (n = 0 to 7)
 
+   DELS_DISABLE : constant := 0; -- Disable DMA start requests to the associated DMAC module
+
    type DELSR_Type is record
-      IELS      : Bits_9;       -- DMAC Event Link Select
+      DELS      : Bits_9  := DELS_DISABLE; -- DMAC Event Link Select
       Reserved1 : Bits_7  := 0;
-      IR        : Boolean;      -- Interrupt Status Flag for DMAC
+      IR        : Boolean := False;        -- Interrupt Status Flag for DMAC
       Reserved2 : Bits_15 := 0;
    end record
       with Bit_Order            => Low_Order_First,
            Size                 => 32,
            Volatile_Full_Access => True;
    for DELSR_Type use record
-      IELS      at 0 range  0 ..  8;
+      DELS      at 0 range  0 ..  8;
       Reserved1 at 0 range  9 .. 15;
       IR        at 0 range 16 .. 16;
       Reserved2 at 0 range 17 .. 31;
@@ -995,8 +1173,10 @@ pragma Style_Checks (Off);
 
    -- 14.2.8 SYS Event Link Setting Register (SELSR0)
 
+   SELS_DISABLE : constant := 0; -- Disable event output to the associated low power mode module
+
    type SELSR0_Type is record
-      SELS     : Bits_9;      -- SYS Event Link Select
+      SELS     : Bits_9 := SELS_DISABLE; -- SYS Event Link Select
       Reserved : Bits_7 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1009,22 +1189,22 @@ pragma Style_Checks (Off);
    -- 14.2.9 Wake Up Interrupt Enable Register (WUPEN)
 
    type WUPEN_Type is record
-      IRQWUPEN     : Bitmap_16;      -- IRQ Interrupt Software Standby Returns Enable
-      IWDTWUPEN    : Boolean;        -- IWDT Interrupt Software Standby Returns Enable
-      KEYWUPEN     : Boolean;        -- Key Interrupt Software Standby Returns Enable
-      LVD1WUPEN    : Boolean;        -- LVD1 Interrupt Software Standby Returns Enable
-      LVD2WUPEN    : Boolean;        -- LVD2 Interrupt Software Standby Returns Enable
+      IRQWUPEN     : Bitmap_16 := [others => False]; -- IRQ Interrupt Software Standby Returns Enable
+      IWDTWUPEN    : Boolean   := False;             -- IWDT Interrupt Software Standby Returns Enable
+      KEYWUPEN     : Boolean   := False;             -- Key Interrupt Software Standby Returns Enable
+      LVD1WUPEN    : Boolean   := False;             -- LVD1 Interrupt Software Standby Returns Enable
+      LVD2WUPEN    : Boolean   := False;             -- LVD2 Interrupt Software Standby Returns Enable
       Reserved1    : Bits_2    := 0;
-      ACMPHS0WUPEN : Boolean;        -- ACMPHS0 Interrupt Software Standby Returns Enable
+      ACMPHS0WUPEN : Boolean   := False;             -- ACMPHS0 Interrupt Software Standby Returns Enable
       Reserved2    : Bits_1    := 0;
-      RTCALMWUPEN  : Boolean;        -- RTC Alarm Interrupt Software Standby Returns Enable
-      RTCPRDWUPEN  : Boolean;        -- RTC Period Interrupt Software Standby Returns Enable
-      USBHSWUPEN   : Boolean;        -- USBHS Interrupt Software Standby Returns Enable
-      USBFSWUPEN   : Boolean;        -- USBFS Interrupt Software Standby Returns Enable
-      AGT1UDWUPEN  : Boolean;        -- AGT1 Underflow Interrupt Software Standby Returns Enable
-      AGT1CAWUPEN  : Boolean;        -- AGT1 Compare Match A Interrupt Software Standby Returns Enable
-      AGT1CBWUPEN  : Boolean;        -- AGT1 Compare Match B Interrupt Software Standby Returns Enable
-      IIC0WUPEN    : Boolean;        -- IIC0 Address Match Interrupt Software Standby Returns Enable
+      RTCALMWUPEN  : Boolean   := False;             -- RTC Alarm Interrupt Software Standby Returns Enable
+      RTCPRDWUPEN  : Boolean   := False;             -- RTC Period Interrupt Software Standby Returns Enable
+      USBHSWUPEN   : Boolean   := False;             -- USBHS Interrupt Software Standby Returns Enable
+      USBFSWUPEN   : Boolean   := False;             -- USBFS Interrupt Software Standby Returns Enable
+      AGT1UDWUPEN  : Boolean   := False;             -- AGT1 Underflow Interrupt Software Standby Returns Enable
+      AGT1CAWUPEN  : Boolean   := False;             -- AGT1 Compare Match A Interrupt Software Standby Returns Enable
+      AGT1CBWUPEN  : Boolean   := False;             -- AGT1 Compare Match B Interrupt Software Standby Returns Enable
+      IIC0WUPEN    : Boolean   := False;             -- IIC0 Address Match Interrupt Software Standby Returns Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -1049,6 +1229,7 @@ pragma Style_Checks (Off);
 
    -- 14.3.2 Event Numbers
 
+   EVENT_NONE          : constant := 16#000#;
    PORT_IRQ0           : constant := 16#001#;
    PORT_IRQ1           : constant := 16#002#;
    PORT_IRQ2           : constant := 16#003#;
@@ -1391,7 +1572,6 @@ pragma Style_Checks (Off);
       with Pack => True;
 
 pragma Warnings (Off);
-
    type ICU_Type is record
       IRQCR  : IRQCR_Array_Type;
       NMICR  : NMICR_Type        with Volatile_Full_Access => True;
@@ -1415,7 +1595,6 @@ pragma Warnings (Off);
       DELSR  at 16#0280# range 0 ..  8 * 32 - 1;
       IELSR  at 16#0300# range 0 .. 96 * 32 - 1;
    end record;
-
 pragma Warnings (On);
 
    ICU_ADDRESS : constant := 16#4000_6000#;
@@ -1430,98 +1609,20 @@ pragma Warnings (On);
    ----------------------------------------------------------------------------
 
    -- 20.2.1 Port Control Register 1 (PCNTR1/PODR/PDR)
-
-   type PODR_Type is record
-      PODR00 : Boolean;
-      PODR01 : Boolean;
-      PODR02 : Boolean;
-      PODR03 : Boolean;
-      PODR04 : Boolean;
-      PODR05 : Boolean;
-      PODR06 : Boolean;
-      PODR07 : Boolean;
-      PODR08 : Boolean;
-      PODR09 : Boolean;
-      PODR10 : Boolean;
-      PODR11 : Boolean;
-      PODR12 : Boolean;
-      PODR13 : Boolean;
-      PODR14 : Boolean;
-      PODR15 : Boolean;
-   end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
-   for PODR_Type use record
-      PODR00 at 0 range  0 ..  0;
-      PODR01 at 0 range  1 ..  1;
-      PODR02 at 0 range  2 ..  2;
-      PODR03 at 0 range  3 ..  3;
-      PODR04 at 0 range  4 ..  4;
-      PODR05 at 0 range  5 ..  5;
-      PODR06 at 0 range  6 ..  6;
-      PODR07 at 0 range  7 ..  7;
-      PODR08 at 0 range  8 ..  8;
-      PODR09 at 0 range  9 ..  9;
-      PODR10 at 0 range 10 .. 10;
-      PODR11 at 0 range 11 .. 11;
-      PODR12 at 0 range 12 .. 12;
-      PODR13 at 0 range 13 .. 13;
-      PODR14 at 0 range 14 .. 14;
-      PODR15 at 0 range 15 .. 15;
-   end record;
-
-   type PDR_Type is record
-      PDR00 : Boolean;
-      PDR01 : Boolean;
-      PDR02 : Boolean;
-      PDR03 : Boolean;
-      PDR04 : Boolean;
-      PDR05 : Boolean;
-      PDR06 : Boolean;
-      PDR07 : Boolean;
-      PDR08 : Boolean;
-      PDR09 : Boolean;
-      PDR10 : Boolean;
-      PDR11 : Boolean;
-      PDR12 : Boolean;
-      PDR13 : Boolean;
-      PDR14 : Boolean;
-      PDR15 : Boolean;
-   end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
-   for PDR_Type use record
-      PDR00 at 0 range  0 ..  0;
-      PDR01 at 0 range  1 ..  1;
-      PDR02 at 0 range  2 ..  2;
-      PDR03 at 0 range  3 ..  3;
-      PDR04 at 0 range  4 ..  4;
-      PDR05 at 0 range  5 ..  5;
-      PDR06 at 0 range  6 ..  6;
-      PDR07 at 0 range  7 ..  7;
-      PDR08 at 0 range  8 ..  8;
-      PDR09 at 0 range  9 ..  9;
-      PDR10 at 0 range 10 .. 10;
-      PDR11 at 0 range 11 .. 11;
-      PDR12 at 0 range 12 .. 12;
-      PDR13 at 0 range 13 .. 13;
-      PDR14 at 0 range 14 .. 14;
-      PDR15 at 0 range 15 .. 15;
-   end record;
-
-   -- PORT0 .. PORTB memory-mapped array
+   -- 20.2.2 Port Control Register 2 (PCNTR2/EIDR/PIDR)
+   -- 20.2.3 Port Control Register 3 (PCNTR3/PORR/POSR)
+   -- 20.2.4 Port Control Register 4 (PCNTR4/EORR/EOSR)
 
 pragma Warnings (Off);
-
    type PORT_Type is record
-      PODR : PODR_Type   with Volatile_Full_Access => True;
-      PDR  : PDR_Type    with Volatile_Full_Access => True;
-      EIDR : Unsigned_16 with Volatile_Full_Access => True;
-      PIDR : Unsigned_16 with Volatile_Full_Access => True;
-      POR  : Unsigned_16 with Volatile_Full_Access => True;
-      POSR : Unsigned_16 with Volatile_Full_Access => True;
-      EORR : Unsigned_16 with Volatile_Full_Access => True;
-      EOSR : Unsigned_16 with Volatile_Full_Access => True;
+      PODR : Bitmap_16 with Volatile_Full_Access => True;
+      PDR  : Bitmap_16 with Volatile_Full_Access => True;
+      EIDR : Bitmap_16 with Volatile_Full_Access => True;
+      PIDR : Bitmap_16 with Volatile_Full_Access => True;
+      POR  : Bitmap_16 with Volatile_Full_Access => True;
+      POSR : Bitmap_16 with Volatile_Full_Access => True;
+      EORR : Bitmap_16 with Volatile_Full_Access => True;
+      EOSR : Bitmap_16 with Volatile_Full_Access => True;
    end record
       with Size                    => 16#20# * 8,
            Suppress_Initialization => True;
@@ -1535,13 +1636,12 @@ pragma Warnings (Off);
       EORR at 16#0C# range 0 .. 15;
       EOSR at 16#0E# range 0 .. 15;
    end record;
-
 pragma Warnings (On);
 
-   PORT_ADDRESS : constant := 16#4004_0000#;
+   PORT_BASEADDRESS : constant := 16#4004_0000#;
 
    PORT : aliased array (0 .. 11) of PORT_Type
-      with Address    => System'To_Address (PORT_ADDRESS),
+      with Address    => System'To_Address (PORT_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -1702,10 +1802,10 @@ pragma Warnings (On);
    -- PB08 : constant := 184; PB09 : constant := 185; PB10 : constant := 186; PB11 : constant := 187;
    -- PB12 : constant := 188; PB13 : constant := 189; PB14 : constant := 190; PB15 : constant := 191;
 
-   PFSR_ADDRESS : constant := 16#4004_0800#;
+   PFSR_BASEADDRESS : constant := 16#4004_0800#;
 
    PFSR : aliased array (0 .. 191) of PFSR_Type
-      with Address    => System'To_Address (PFSR_ADDRESS),
+      with Address    => System'To_Address (PFSR_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -2480,10 +2580,10 @@ pragma Warnings (On);
       Reserved at 16#1D# range 0 .. 23;
    end record;
 
-   SCI_ADDRESS : constant := 16#4007_0000#;
+   SCI_BASEADDRESS : constant := 16#4007_0000#;
 
    SCI : aliased array (0 .. 9) of SCI_Type
-      with Address    => System'To_Address (SCI_ADDRESS),
+      with Address    => System'To_Address (SCI_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -2771,6 +2871,49 @@ pragma Warnings (On);
       Reserved at 0 range 3 .. 7;
    end record;
 
+   -- I2C
+
+pragma Warnings (Off);
+   type I2C_Type is record
+      ICCR1  : ICCR1_Type  with Volatile_Full_Access => True;
+      ICCR2  : ICCR2_Type  with Volatile_Full_Access => True;
+      ICMR1  : ICMR1_Type  with Volatile_Full_Access => True;
+      ICMR2  : ICMR2_Type  with Volatile_Full_Access => True;
+      ICMR3  : ICMR3_Type  with Volatile_Full_Access => True;
+      ICFER  : ICFER_Type  with Volatile_Full_Access => True;
+      ICSER  : ICSER_Type  with Volatile_Full_Access => True;
+      ICIER  : ICIER_Type  with Volatile_Full_Access => True;
+      ICSR1  : ICSR1_Type  with Volatile_Full_Access => True;
+      ICSR2  : ICSR2_Type  with Volatile_Full_Access => True;
+      ICWUR  : ICWUR_Type  with Volatile_Full_Access => True;
+      ICWUR2 : ICWUR2_Type with Volatile_Full_Access => True;
+   end record
+      with Size                    => 16#100# * 8,
+           Suppress_Initialization => True;
+   for I2C_Type use record
+      ICCR1  at 16#00# range 0 .. 7;
+      ICCR2  at 16#01# range 0 .. 7;
+      ICMR1  at 16#02# range 0 .. 7;
+      ICMR2  at 16#03# range 0 .. 7;
+      ICMR3  at 16#04# range 0 .. 7;
+      ICFER  at 16#05# range 0 .. 7;
+      ICSER  at 16#06# range 0 .. 7;
+      ICIER  at 16#07# range 0 .. 7;
+      ICSR1  at 16#08# range 0 .. 7;
+      ICSR2  at 16#09# range 0 .. 7;
+      ICWUR  at 16#16# range 0 .. 7;
+      ICWUR2 at 16#17# range 0 .. 7;
+   end record;
+pragma Warnings (On);
+
+   I2C_BASEADDRESS : constant := 16#4005_3000#;
+
+   I2C : aliased array (0 .. 2) of I2C_Type
+      with Address    => System'To_Address (I2C_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    ----------------------------------------------------------------------------
    -- 38. Serial Peripheral Interface (SPI)
    ----------------------------------------------------------------------------
@@ -2873,6 +3016,17 @@ pragma Warnings (On);
       Reserved2 at 0 range 6 .. 7;
    end record;
 
+   -- 38.2.5 SPI Data Register (SPDR/SPDR_HA)
+
+   type SPDR_Type is record
+      SPDR : Unsigned_32; -- SPDR/SPDR_HA is the interface with the buffers that hold data for transmission and reception by the SPI.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      =>32;
+   for SPDR_Type use record
+      SPDR at 0 range 0 .. 31;
+   end record;
+
    -- 38.2.4 SPI Status Register (SPSR)
 
    type SPSR_Type is record
@@ -2946,6 +3100,17 @@ pragma Warnings (On);
       Reserved2 at 0 range 7 .. 7;
    end record;
 
+   -- 38.2.8 SPI Bit Rate Register (SPBR)
+
+   type SPBR_Type is record
+      SPBR : Bits_8; -- SPBR sets the bit rate in master mode.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPBR_Type use record
+      SPBR at 0 range 0 .. 7;
+   end record;
+
    -- 38.2.9 SPI Data Control Register (SPDCR)
 
    SPFC_1 : constant := 2#00#; -- 1 frame
@@ -2981,9 +3146,224 @@ pragma Warnings (On);
       Reserved2 at 0 range 7 .. 7;
    end record;
 
+   -- SPI
+
+pragma Warnings (Off);
+   type SPI_Type is record
+      SPCR  : SPCR_Type  with Volatile_Full_Access => True;
+      SSLP  : SSLP_Type  with Volatile_Full_Access => True;
+      SPPCR : SPPCR_Type with Volatile_Full_Access => True;
+      SPSR  : SPSR_Type  with Volatile_Full_Access => True;
+      SPDR  : SPDR_Type  with Volatile_Full_Access => True;
+      SPSCR : SPSCR_Type with Volatile_Full_Access => True;
+      SPSSR : SPSSR_Type with Volatile_Full_Access => True;
+      SPBR  : SPBR_Type with Volatile_Full_Access => True;
+   end record
+      with Size                    => 16#100# * 8,
+           Suppress_Initialization => True;
+   for SPI_Type use record
+      SPCR  at 16#00# range 0 ..  7;
+      SSLP  at 16#01# range 0 ..  7;
+      SPPCR at 16#02# range 0 ..  7;
+      SPSR  at 16#03# range 0 ..  7;
+      SPDR  at 16#04# range 0 .. 31;
+      SPSCR at 16#08# range 0 ..  7;
+      SPSSR at 16#09# range 0 ..  7;
+      SPBR  at 16#0A# range 0 ..  7;
+   end record;
+pragma Warnings (On);
+
+   SPI_BASEADDRESS : constant := 16#4007_2000#;
+
+   SPI : aliased array (0 .. 1) of SPI_Type
+      with Address    => System'To_Address (SPI_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    ----------------------------------------------------------------------------
    -- 39. Quad Serial Peripheral Interface (QSPI)
    ----------------------------------------------------------------------------
+
+   -- 39.2.1 Transfer Mode Control Register (SFMSMD)
+
+   SFMRM_STD     : constant := 2#000#; -- Standard Read
+   SFMRM_FAST    : constant := 2#001#; -- Fast Read
+   SFMRM_FASTDO  : constant := 2#010#; -- Fast Read Dual Output
+   SFMRM_FASTDIO : constant := 2#011#; -- Fast Read Dual I/O
+   SFMRM_FASTQO  : constant := 2#100#; -- Fast Read Quad Output
+   SFMRM_FASTQIO : constant := 2#101#; -- Fast Read Quad I/O
+   SFMRM_RSVD1   : constant := 2#110#; -- Setting prohibited (unpredictable operation can result)
+   SFMRM_RSVD2   : constant := 2#111#; -- Setting prohibited (unpredictable operation can result).
+
+   SFMSE_NONE : constant := 2#00#; -- Do not extend QSSL
+   SFMSE_E33  : constant := 2#01#; -- Extend QSSL by 33 QSPCLK
+   SFMSE_E129 : constant := 2#10#; -- Extend QSSL by 129 QSPCLK
+   SFMSE_EINF : constant := 2#11#; -- Extend QSSL infinitely.
+
+   SFMMD3_MODE0 : constant := 0; -- SPI mode 0
+   SFMMD3_MODE3 : constant := 1; -- SPI mode 3.
+
+   SFMCCE_DEFAULT : constant := 0; -- Set default instruction code for each instruction
+   SFMCCE_SFMSIC  : constant := 1; -- Write instruction code in the SFMSIC register.
+
+   type SFMSMD_Type is record
+      SFMRM     : Bits_3  := SFMRM_STD;      -- Serial interface read mode select
+      Reserved1 : Bits_1  := 0;
+      SFMSE     : Bits_2  := SFMSE_NONE;     -- QSSL extension function select after SPI bus access
+      SFMPFE    : Boolean := False;          -- Prefetch function select
+      SFMPAE    : Boolean := False;          -- Function select for stopping prefetch at locations other than on byte boundaries
+      SFMMD3    : Bits_1  := SFMMD3_MODE0;   -- SPI mode select.
+      SFMOEX    : Boolean := False;          -- Extension select for the I/O buffer output enable signal for the serial interface
+      SFMOHW    : Boolean := False;          -- Hold time adjustment for serial transmission
+      SFMOSW    : Boolean := False;          -- Setup time adjustment for serial transmission
+      Reserved2 : Bits_3  := 0;
+      SFMCCE    : Bits_1  := SFMCCE_DEFAULT; -- Read instruction code select
+      Reserved3 : Bits_16 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SFMSMD_Type use record
+      SFMRM     at 0 range  0 ..  2;
+      Reserved1 at 0 range  3 ..  3;
+      SFMSE     at 0 range  4 ..  5;
+      SFMPFE    at 0 range  6 ..  6;
+      SFMPAE    at 0 range  7 ..  7;
+      SFMMD3    at 0 range  8 ..  8;
+      SFMOEX    at 0 range  9 ..  9;
+      SFMOHW    at 0 range 10 .. 10;
+      SFMOSW    at 0 range 11 .. 11;
+      Reserved2 at 0 range 12 .. 14;
+      SFMCCE    at 0 range 15 .. 15;
+      Reserved3 at 0 range 16 .. 31;
+   end record;
+
+   -- 39.2.2 Chip Selection Control Register (SFMSSC)
+
+   SFMSW_1  : constant := 2#0000#; -- 1 QSPCLK
+   SFMSW_2  : constant := 2#0001#; -- 2 QSPCLK
+   SFMSW_3  : constant := 2#0010#; -- 3 QSPCLK
+   SFMSW_4  : constant := 2#0011#; -- 4 QSPCLK
+   SFMSW_5  : constant := 2#0100#; -- 5 QSPCLK
+   SFMSW_6  : constant := 2#0101#; -- 6 QSPCLK
+   SFMSW_7  : constant := 2#0110#; -- 7 QSPCLK
+   SFMSW_8  : constant := 2#0111#; -- 8 QSPCLK
+   SFMSW_9  : constant := 2#1000#; -- 9 QSPCLK
+   SFMSW_10 : constant := 2#1001#; -- 10 QSPCLK
+   SFMSW_11 : constant := 2#1010#; -- 11 QSPCLK
+   SFMSW_12 : constant := 2#1011#; -- 12 QSPCLK
+   SFMSW_13 : constant := 2#1100#; -- 13 QSPCLK
+   SFMSW_14 : constant := 2#1101#; -- 14 QSPCLK
+   SFMSW_15 : constant := 2#1110#; -- 15 QSPCLK
+   SFMSW_16 : constant := 2#1111#; -- 16 QSPCLK.
+
+   SFMSHD_05 : constant := 0; -- Release QSSL 0.5 QSPCLK cycles after the last rising edge of QSPCLK
+   SFMSHD_15 : constant := 1; -- Release QSSL 1.5 QSPCLK cycles after the last rising edge of QSPCLK.
+
+   SFMSLD_05 : constant := 0; -- Output QSSL 0.5 QSPCLK cycles before the first rising edge of QSPCLK
+   SFMSLD_15 : constant := 1; -- Output QSSL 1.5 QSPCLK cycles before the first rising edge of QSPCLK.
+
+   type SFMSSC_Type is record
+      SFMSW    : Bits_4  := SFMSW_7;   -- Minimum high-level width select for QSSL signal
+      SFMSHD   : Bits_1  := SFMSHD_15; -- QSSL signal release timing select
+      SFMSLD   : Bits_1  := SFMSLD_15; -- QSSL signal output timing select
+      Reserved : Bits_26 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SFMSSC_Type use record
+      SFMSW    at 0 range 0 ..  3;
+      SFMSHD   at 0 range 4 ..  4;
+      SFMSLD   at 0 range 5 ..  5;
+      Reserved at 0 range 6 .. 31;
+   end record;
+
+   -- 39.2.3 Clock Control Register (SFMSKC)
+
+   SFMDV_2  : constant := 2#00000#; -- 2 PCLKA
+   SFMDV_3  : constant := 2#00001#; -- 3 PCLKA (multiplied by an odd number)*1
+   SFMDV_4  : constant := 2#00010#; -- 4 PCLKA
+   SFMDV_5  : constant := 2#00011#; -- 5 PCLKA (multiplied by an odd number)*1
+   SFMDV_6  : constant := 2#00100#; -- 6 PCLKA
+   SFMDV_7  : constant := 2#00101#; -- 7 PCLKA (multiplied by an odd number)*1
+   SFMDV_8  : constant := 2#00110#; -- 8 PCLKA
+   SFMDV_9  : constant := 2#00111#; -- 9 PCLKA (multiplied by an odd number)*1
+   SFMDV_10 : constant := 2#01000#; -- 10 PCLKA
+   SFMDV_11 : constant := 2#01001#; -- 11 PCLKA (multiplied by an odd number)*1
+   SFMDV_12 : constant := 2#01010#; -- 12 PCLKA
+   SFMDV_13 : constant := 2#01011#; -- 13 PCLKA (multiplied by an odd number)*1
+   SFMDV_14 : constant := 2#01100#; -- 14 PCLKA
+   SFMDV_15 : constant := 2#01101#; -- 15 PCLKA (multiplied by an odd number)*1
+   SFMDV_16 : constant := 2#01110#; -- 16 PCLKA
+   SFMDV_17 : constant := 2#01111#; -- 17 PCLKA (multiplied by an odd number)*1
+   SFMDV_18 : constant := 2#10000#; -- 18 PCLKA
+   SFMDV_20 : constant := 2#10001#; -- 20 PCLKA
+   SFMDV_22 : constant := 2#10010#; -- 22 PCLKA
+   SFMDV_24 : constant := 2#10011#; -- 24 PCLKA
+   SFMDV_26 : constant := 2#10100#; -- 26 PCLKA
+   SFMDV_28 : constant := 2#10101#; -- 28 PCLKA
+   SFMDV_30 : constant := 2#10110#; -- 30 PCLKA
+   SFMDV_32 : constant := 2#10111#; -- 32 PCLKA
+   SFMDV_34 : constant := 2#11000#; -- 34 PCLKA
+   SFMDV_36 : constant := 2#11001#; -- 36 PCLKA
+   SFMDV_38 : constant := 2#11010#; -- 38 PCLKA
+   SFMDV_40 : constant := 2#11011#; -- 40 PCLKA
+   SFMDV_42 : constant := 2#11100#; -- 42 PCLKA
+   SFMDV_44 : constant := 2#11101#; -- 44 PCLKA
+   SFMDV_46 : constant := 2#11110#; -- 46 PCLKA
+   SFMDV_48 : constant := 2#11111#; -- 48 PCLKA.
+
+   type SFMSKC_Type is record
+      SFMDV    : Bits_5  := SFMDV_10; -- Serial interface reference cycle select.
+      SFMDTY   : Boolean := False;    -- Duty ratio correction function select for the QSPCLK signal
+      Reserved : Bits_26 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SFMSKC_Type use record
+      SFMDV    at 0 range 0 ..  4;
+      SFMDTY   at 0 range 5 ..  5;
+      Reserved at 0 range 6 .. 31;
+   end record;
+
+   -- 39.2.4 Status Register (SFMSST)
+
+   PFCNT_0  : constant := 2#00000#; -- 0 bytes
+   PFCNT_1  : constant := 2#00001#; -- 1 byte
+   PFCNT_2  : constant := 2#00010#; -- 2 bytes
+   PFCNT_3  : constant := 2#00011#; -- 3 bytes
+   PFCNT_4  : constant := 2#00100#; -- 4 bytes
+   PFCNT_5  : constant := 2#00101#; -- 5 bytes
+   PFCNT_6  : constant := 2#00110#; -- 6 bytes
+   PFCNT_7  : constant := 2#00111#; -- 7 bytes
+   PFCNT_8  : constant := 2#01000#; -- 8 bytes
+   PFCNT_9  : constant := 2#01001#; -- 9 bytes
+   PFCNT_10 : constant := 2#01010#; -- 10 bytes
+   PFCNT_11 : constant := 2#01011#; -- 11 bytes
+   PFCNT_12 : constant := 2#01100#; -- 12 bytes
+   PFCNT_13 : constant := 2#01101#; -- 13 bytes
+   PFCNT_14 : constant := 2#01110#; -- 14 bytes
+   PFCNT_15 : constant := 2#01111#; -- 15 bytes
+   PFCNT_16 : constant := 2#10000#; -- 16 bytes
+   PFCNT_17 : constant := 2#10001#; -- 17 bytes
+   PFCNT_18 : constant := 2#10010#; -- 18 bytes.
+
+   type SFMSST_Type is record
+      PFCNT     : Bits_5;  -- Number of bytes of prefetched data
+      Reserved1 : Bits_1;
+      PFFUL     : Boolean; -- Prefetch buffer state
+      PFOFF     : Boolean; -- Prefetch function operating state
+      Reserved2 : Bits_24;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SFMSST_Type use record
+      PFCNT     at 0 range 0 ..  4;
+      Reserved1 at 0 range 5 ..  5;
+      PFFUL     at 0 range 6 ..  6;
+      PFOFF     at 0 range 7 ..  7;
+      Reserved2 at 0 range 8 .. 31;
+   end record;
 
    -- 39.2.5 Communication Port Register (SFMCOM)
 
@@ -3004,7 +3384,7 @@ pragma Warnings (On);
    DCOM_DIRECT : constant := 1; -- Direct communication mode.
 
    type SFMCMD_Type is record
-      DCOM     : Bits_1;       -- Mode select for communication with the SPI bus
+      DCOM     : Bits_1  := DCOM_ROM; -- Mode select for communication with the SPI bus
       Reserved : Bits_31 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -3014,21 +3394,118 @@ pragma Warnings (On);
       Reserved at 0 range 1 .. 31;
    end record;
 
+   -- 39.2.7 Communication Status Register (SFMCST)
+
+   type SFMCST_Type is record
+      Reserved : Bits_32 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SFMCST_Type use record
+      Reserved at 0 range 0 .. 31;
+   end record;
+
+   -- 39.2.8 Instruction Code Register (SFMSIC)
+
+   type SFMSIC_Type is record
+      Reserved : Bits_32 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SFMSIC_Type use record
+      Reserved at 0 range 0 .. 31;
+   end record;
+
+   -- 39.2.9 Address Mode Control Register (SFMSAC)
+
+   type SFMSAC_Type is record
+      Reserved : Bits_32 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SFMSAC_Type use record
+      Reserved at 0 range 0 .. 31;
+   end record;
+
+   -- 39.2.10 Dummy Cycle Control Register (SFMSDC)
+
+   type SFMSDC_Type is record
+      Reserved : Bits_32 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SFMSDC_Type use record
+      Reserved at 0 range 0 .. 31;
+   end record;
+
+   -- 39.2.11 SPI Protocol Control Register (SFMSPC)
+
+   type SFMSPC_Type is record
+      Reserved : Bits_32 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SFMSPC_Type use record
+      Reserved at 0 range 0 .. 31;
+   end record;
+
+   -- 39.2.12 Port Control Register (SFMPMD)
+
+   type SFMPMD_Type is record
+      Reserved : Bits_32 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SFMPMD_Type use record
+      Reserved at 0 range 0 .. 31;
+   end record;
+
+   -- 39.2.13 External QSPI Address Register (SFMCNT1)
+
+   type SFMCNT1_Type is record
+      Reserved : Bits_32 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SFMCNT1_Type use record
+      Reserved at 0 range 0 .. 31;
+   end record;
+
    -- QSPI
 
 pragma Warnings (Off);
-
    type QSPI_Type is record
-      SFMCOM : SFMCOM_Type with Volatile_Full_Access => True;
-      SFMCMD : SFMCMD_Type with Volatile_Full_Access => True;
+      SFMSMD  : SFMSMD_Type  with Volatile_Full_Access => True;
+      SFMSSC  : SFMSSC_Type  with Volatile_Full_Access => True;
+      SFMSKC  : SFMSKC_Type  with Volatile_Full_Access => True;
+      SFMSST  : SFMSST_Type  with Volatile_Full_Access => True;
+      SFMCOM  : SFMCOM_Type  with Volatile_Full_Access => True;
+      SFMCMD  : SFMCMD_Type  with Volatile_Full_Access => True;
+      SFMCST  : SFMCST_Type  with Volatile_Full_Access => True;
+      SFMSIC  : SFMSIC_Type  with Volatile_Full_Access => True;
+      SFMSAC  : SFMSAC_Type  with Volatile_Full_Access => True;
+      SFMSDC  : SFMSDC_Type  with Volatile_Full_Access => True;
+      SFMSPC  : SFMSPC_Type  with Volatile_Full_Access => True;
+      SFMPMD  : SFMPMD_Type  with Volatile_Full_Access => True;
+      SFMCNT1 : SFMCNT1_Type with Volatile_Full_Access => True;
    end record
-      with Size                    => 16#38# * 8,
+      with Size                    => 16#808# * 8,
            Suppress_Initialization => True;
    for QSPI_Type use record
-      SFMCOM at 16#10# range 0 .. 31;
-      SFMCMD at 16#14# range 0 .. 31;
+      SFMSMD  at 16#000# range 0 .. 31;
+      SFMSSC  at 16#004# range 0 .. 31;
+      SFMSKC  at 16#008# range 0 .. 31;
+      SFMSST  at 16#00C# range 0 .. 31;
+      SFMCOM  at 16#010# range 0 .. 31;
+      SFMCMD  at 16#014# range 0 .. 31;
+      SFMCST  at 16#018# range 0 .. 31;
+      SFMSIC  at 16#020# range 0 .. 31;
+      SFMSAC  at 16#024# range 0 .. 31;
+      SFMSDC  at 16#028# range 0 .. 31;
+      SFMSPC  at 16#030# range 0 .. 31;
+      SFMPMD  at 16#034# range 0 .. 31;
+      SFMCNT1 at 16#804# range 0 .. 31;
    end record;
-
 pragma Warnings (On);
 
    QSPI_ADDRESS : constant := 16#6400_0000#;

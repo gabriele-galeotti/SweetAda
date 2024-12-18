@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ exceptions.adb                                                                                            --
+-- __FLN__ clocks.adb                                                                                                --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,16 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
-with Bits;
-with LLutils;
-with Abort_Library;
-with ARMv7M;
-with CPU;
 with S5D9;
-with BSP;
 
-package body Exceptions
+package body Clocks
    is
 
    --========================================================================--
@@ -35,8 +28,6 @@ package body Exceptions
    --                                                                        --
    --========================================================================--
 
-   use Interfaces;
-   use Bits;
    use S5D9;
 
    --========================================================================--
@@ -48,37 +39,60 @@ package body Exceptions
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Exception_Process
-   ----------------------------------------------------------------------------
-   procedure Exception_Process
-      is
-   begin
-      Abort_Library.System_Abort;
-   end Exception_Process;
-
-   ----------------------------------------------------------------------------
-   -- Irq_Process
-   ----------------------------------------------------------------------------
-   procedure Irq_Process
-      is
-   begin
-      BSP.Tick_Count := @ + 1;
-      if BSP.Tick_Count mod 1_000 = 0 then
-         -- LED1 green
-         PORT (6).PODR (0) := not @;
-      end if;
-   end Irq_Process;
-
-   ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
       is
-      Vector_Table : constant Asm_Entry_Point
-         with Import        => True,
-              External_Name => "vectors";
    begin
-      ARMv7M.VTOR.TBLOFF := Bits_25 (LLutils.Select_Address_Bits (Vector_Table'Address, 7, 31));
+      -- select MOCO
+      SCKSCR.CKSEL := CKSEL_MOCO;
+      -- stop MOSC clock
+      MOSCCR.MOSTP := True;
+      -- confirm MOSC clock stopped
+      loop exit when not OSCSF.MOSCSF; end loop;
+      -- stop PLL
+      PLLCR.PLLSTP := True;
+      -- confirm PLL stopped
+      loop exit when not OSCSF.PLLSF; end loop;
+      -- setup MODRV = 24 MHz MOSEL = Resonator AUTODRVEN = Disable
+      MOMCR := (
+         MODRV     => MODRV_20_24,
+         MOSEL     => MOSEL_RES,
+         AUTODRVEN => False,
+         others    => <>
+         );
+      -- setup MOSCWTCR, conservative
+      MOSCWTCR.MSTS := MSTS_9;
+      -- start MOSC clock
+      MOSCCR.MOSTP := False;
+      -- wait for stabilization
+      loop exit when OSCSF.MOSCSF; end loop;
+      -- select MOSC clock
+      SCKSCR.CKSEL := CKSEL_MOSC;
+      -- use MOSC clock
+      PLLCCR := (
+         PLIDIV   => PLIDIV_DIV2,   -- PLL Input Frequency Division Ratio Select (24 MHz / 2 = 12 MHz)
+         PLSRCSEL => PLSRCSEL_MOSC, -- PLL Clock Source Select
+         PLLMUL   => PLLMUL_x_10_0, -- PLL Frequency Multiplication Factor Select (12 MHz x 10 = 120 MHz)
+         others   => <>
+         );
+      -- start PLL
+      PLLCR.PLLSTP := False;
+      -- wait for stabilization
+      loop exit when OSCSF.PLLSF; end loop;
+      -- select PLL
+      SCKSCR.CKSEL := CKSEL_PLL;
+      -- select module frequencies
+      SCKDIVCR := (
+         ICK    => SCKDIVCR_DIV1,  -- System Clock              -> 120     MHz
+         BCK    => SCKDIVCR_DIV4,  -- External Bus Clock        ->  30     MHz
+         FCK    => SCKDIVCR_DIV4,  -- Flash Interface Clock     ->  30     MHz
+         PCKA   => SCKDIVCR_DIV1,  -- Peripheral Module Clock A -> 120     MHz
+         PCKB   => SCKDIVCR_DIV64, -- Peripheral Module Clock B ->   1.875 MHz
+         PCKC   => SCKDIVCR_DIV4,  -- Peripheral Module Clock C ->  30     MHz
+         PCKD   => SCKDIVCR_DIV4,  -- Peripheral Module Clock D ->  30     MHz
+         others => <>
+         );
    end Init;
 
-end Exceptions;
+end Clocks;

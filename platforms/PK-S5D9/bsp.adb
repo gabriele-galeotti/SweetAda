@@ -23,6 +23,8 @@ with CortexM4;
 with S5D9;
 with Exceptions;
 with Console;
+with Clocks;
+with LCD;
 
 package body BSP
    is
@@ -40,7 +42,6 @@ package body BSP
    use Bits;
    use S5D9;
 
-   procedure CLK_Init;
    procedure SysTick_Init;
    procedure LED_Init;
    procedure Serial_Console_Init;
@@ -54,71 +55,6 @@ package body BSP
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- CLK_Init
-   ----------------------------------------------------------------------------
-   procedure CLK_Init
-      is
-   begin
-      -- select MOCO
-      SCKSCR.CKSEL := CLK_MOCO;
-      -- stop MOSC clock
-      MOSCCR.MOSTP := True;
-      -- confirm MOSC clock stopped
-      loop
-         exit when not OSCSF.MOSCSF;
-      end loop;
-      -- stop PLL
-      PLLCR.PLLSTP := True;
-      -- confirm PLL stopped
-      loop
-         exit when not OSCSF.PLLSF;
-      end loop;
-      -- setup MODRV = 24 MHz MOSEL = Resonator AUTODRVEN = Disable
-      MOMCR := (
-         MODRV     => MODRV_20_24,
-         MOSEL     => MOSEL_RES,
-         AUTODRVEN => False,
-         others    => <>
-         );
-      -- setup MOSCWTCR, conservative
-      MOSCWTCR.MSTS := MSTS_9;
-      -- start MOSC clock
-      MOSCCR.MOSTP := False;
-      -- wait for stabilization
-      loop
-         exit when OSCSF.MOSCSF;
-      end loop;
-      -- select MOSC clock
-      SCKSCR.CKSEL := CLK_MOSC;
-      -- use MOSC clock
-      PLLCCR := (
-         PLIDIV   => PLIDIV_2,      -- PLL Input Frequency Division Ratio Select (24 MHz / 2 = 12 MHz)
-         PLSRCSEL => PLSRCSEL_MOSC, -- PLL Clock Source Select
-         PLLMUL   => PLLMUL_x_10_0, -- PLL Frequency Multiplication Factor Select (12 MHz x 10 = 120 MHz)
-         others   => <>
-         );
-      -- start PLL
-      PLLCR.PLLSTP := False;
-      -- wait for stabilization
-      loop
-         exit when OSCSF.PLLSF;
-      end loop;
-      -- select PLL
-      SCKSCR.CKSEL := CLK_PLL;
-      -- select module frequencies
-      SCKDIVCR := (
-         ICK    => CLOCK_NODIV,  -- System Clock              -> 120     MHz
-         BCK    => CLOCK_DIV_4,  -- External Bus Clock        ->  30     MHz
-         FCK    => CLOCK_DIV_4,  -- Flash Interface Clock     ->  30     MHz
-         PCKA   => CLOCK_NODIV,  -- Peripheral Module Clock A -> 120     MHz
-         PCKB   => CLOCK_DIV_64, -- Peripheral Module Clock B ->   1.875 MHz
-         PCKC   => CLOCK_DIV_4,  -- Peripheral Module Clock C ->  30     MHz
-         PCKD   => CLOCK_DIV_4,  -- Peripheral Module Clock D ->  30     MHz
-         others => <>
-         );
-   end CLK_Init;
 
    ----------------------------------------------------------------------------
    -- SysTick_Init
@@ -146,16 +82,16 @@ package body BSP
    begin
       -- P600 output LED1 (green) OFF
       PFSR (P600).PMR := False;
-      PORT (6).PDR.PDR00 := True;
-      PORT (6).PODR.PODR00 := True;
+      PORT (6).PDR (0) := True;
+      PORT (6).PODR (0) := True;
       -- P601 output LED2 (red) OFF
       PFSR (P601).PMR := False;
-      PORT (6).PDR.PDR01 := True;
-      PORT (6).PODR.PODR01 := True;
+      PORT (6).PDR (1) := True;
+      PORT (6).PODR (1) := True;
       -- P602 output LED3 (yellow) OFF
       PFSR (P602).PMR := False;
-      PORT (6).PDR.PDR02 := True;
-      PORT (6).PODR.PODR02 := True;
+      PORT (6).PDR (2) := True;
+      PORT (6).PODR (2) := True;
    end LED_Init;
 
    ----------------------------------------------------------------------------
@@ -259,9 +195,9 @@ package body BSP
       mtype := QSPI.SFMCOM.SFMD;
       mcap  := QSPI.SFMCOM.SFMD;
       QSPI.SFMCMD := (DCOM => DCOM_DIRECT, others => <>);
-      Console.Print (mfid,  Prefix => "MFID  = 0x", NL => True);
-      Console.Print (mtype, Prefix => "MTYPE = 0x", NL => True);
-      Console.Print (mcap,  Prefix => "MCAP  = 0x", NL => True);
+      Console.Print (Prefix => "MFID  = 0x", Value => mfid, NL => True);
+      Console.Print (Prefix => "MTYPE = 0x", Value => mtype, NL => True);
+      Console.Print (Prefix => "MCAP  = 0x", Value => mcap, NL => True);
    end QSPI_Test;
 
    ----------------------------------------------------------------------------
@@ -273,9 +209,7 @@ package body BSP
       is
    begin
       -- wait for transmitter available
-      loop
-         exit when SCI (3).SSR.NORMAL.TDRE;
-      end loop;
+      loop exit when SCI (3).SSR.NORMAL.TDRE; end loop;
       SCI (3).TDR := To_U8 (C);
    end Console_Putchar;
 
@@ -285,9 +219,7 @@ package body BSP
       Data : Unsigned_8;
    begin
       -- wait for receiver available
-      loop
-         exit when SCI (3).SSR.NORMAL.RDRF;
-      end loop;
+      loop exit when SCI (3).SSR.NORMAL.RDRF; end loop;
       Data := SCI (3).RDR;
       C := To_Ch (Data);
    end Console_Getchar;
@@ -307,9 +239,10 @@ package body BSP
          others => <>
          );
       -- MCU clock: 120 MHz ---------------------------------------------------
-      CLK_Init;
+      Clocks.Init;
       -- power-on peripherals -------------------------------------------------
-      MSTPCRB.MSTPB31 := False; -- SCI0 on
+      -- MSTPCRB.MSTPB31 := False; -- SCI0 on
+      MSTPCRB.MSTPB18 := False; -- SPI0 on
       MSTPCRB.MSTPB28 := False; -- SCI3 on
       MSTPCRD.MSTPD3  := False; -- AGT0
       MSTPCRB.MSTPB6  := False; -- QSPI
@@ -332,14 +265,15 @@ package body BSP
       Console.Print ("Synergy PK-S5D9", NL => True);
       -------------------------------------------------------------------------
       pragma Warnings (Off);
-      Console.Print (ARMv7M.To_U32 (ARMv7M.CPUID), Prefix => "CPUID: ", NL => True);
+      Console.Print (Prefix => "CPUID: ", Value => ARMv7M.To_U32 (ARMv7M.CPUID), NL => True);
       pragma Warnings (On);
-      Console.Print (CortexM4.ACTLR.DISMCYCINT, Prefix => "ACTLR: DISMCYCINT: ", NL => True);
-      Console.Print (CortexM4.ACTLR.DISDEFWBUF, Prefix => "ACTLR: DISDEFWBUF: ", NL => True);
-      Console.Print (CortexM4.ACTLR.DISFOLD,    Prefix => "ACTLR: DISFOLD:    ", NL => True);
-      Console.Print (CortexM4.ACTLR.DISFPCA,    Prefix => "ACTLR: DISFPCA:    ", NL => True);
-      Console.Print (CortexM4.ACTLR.DISOOFP,    Prefix => "ACTLR: DISOOFP:    ", NL => True);
-      QSPI_Test;
+      Console.Print (Prefix => "ACTLR: DISMCYCINT: ", Value => CortexM4.ACTLR.DISMCYCINT, NL => True);
+      Console.Print (Prefix => "ACTLR: DISDEFWBUF: ", Value => CortexM4.ACTLR.DISDEFWBUF, NL => True);
+      Console.Print (Prefix => "ACTLR: DISFOLD:    ", Value => CortexM4.ACTLR.DISFOLD, NL => True);
+      Console.Print (Prefix => "ACTLR: DISFPCA:    ", Value => CortexM4.ACTLR.DISFPCA, NL => True);
+      Console.Print (Prefix => "ACTLR: DISOOFP:    ", Value => CortexM4.ACTLR.DISOOFP, NL => True);
+      LCD.Init;
+      -- QSPI_Test;
       -------------------------------------------------------------------------
       ARMv7M.Irq_Enable;
       ARMv7M.Fault_Irq_Enable;
