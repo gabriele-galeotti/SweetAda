@@ -15,7 +15,7 @@
 # $2 = kernel filename
 # $3 = kernel load address
 # $4 = kernel entry point
-# $3 = output ADF filename
+# $5 = output ADF filename
 #
 # Environment variables:
 # SWEETADA_PATH
