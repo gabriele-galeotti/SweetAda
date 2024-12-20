@@ -23,6 +23,7 @@ with ARMv7M;
 with CPU;
 with S5D9;
 with BSP;
+with Console;
 
 package body Exceptions
    is
@@ -53,6 +54,7 @@ package body Exceptions
    procedure Exception_Process
       is
    begin
+      Console.Print (Prefix => "*** EXCEPTION", NL => True);
       Abort_Library.System_Abort;
    end Exception_Process;
 
