@@ -17,6 +17,7 @@
 
 with System;
 with System.Storage_Elements;
+with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 with RISCV_Definitions;
@@ -153,6 +154,9 @@ package RISCV
    function mcause_Read
       return mcause_Type
       with Inline => True;
+
+   function To_MXLEN is new Ada.Unchecked_Conversion (mcause_Type, MXLEN_Type);
+   function To_mcause is new Ada.Unchecked_Conversion (MXLEN_Type, mcause_Type);
 
    ----------------------------------------------------------------------------
    -- 3.2.1 Machine Timer Registers (mtime and mtimecmp)

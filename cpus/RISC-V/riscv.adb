@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
-with Ada.Unchecked_Conversion;
 with Definitions;
 
 package body RISCV
