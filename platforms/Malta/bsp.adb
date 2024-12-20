@@ -153,7 +153,7 @@ package body BSP
          when others => null;
       end case;
       Console.Print_NewLine;
-      Console.Print (PRId.Revision, Prefix => "Revision       : ", NL => True);
+      Console.Print (Prefix => "Revision       : ", Value => PRId.Revision, NL => True);
       Console.Print ("Company ID     : ");
       case PRId.Company_ID is
          when ID_COMPANY_LEGACY   => Console.Print ("LEGACY");
@@ -162,7 +162,7 @@ package body BSP
          when others              => null;
       end case;
       Console.Print_NewLine;
-      Console.Print (PRId.Company_Options, Prefix => "Company Options: ", NL => True);
+      Console.Print (Prefix => "Company Options: ", Value => PRId.Company_Options, NL => True);
       -------------------------------------------------------------------------
       -- try to set coprocessor bits; if the bit can be set, the correspondent
       -- coprocessor is present
@@ -177,9 +177,9 @@ package body BSP
             with Address => S'Address;
       begin
          S := CP0_SR_Read;
-         Console.Print (X, Prefix => "Status: ", NL => True);
+         Console.Print (Prefix => "Status: ", Value => X, NL => True);
       end;
-      Console.Print (CP0_Config_Read, Prefix => "Config: ", NL => True);
+      Console.Print (Prefix => "Config: ", Value => CP0_Config_Read, NL => True);
       -- CBUS UART ------------------------------------------------------------
       CBUS_UART_Descriptor := (
          Uart_Model    => UART16x50.UART16450,
