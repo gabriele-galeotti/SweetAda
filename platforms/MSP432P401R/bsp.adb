@@ -78,9 +78,7 @@ package body BSP
       is
    begin
       -- wait for transmitter available
-      loop
-         exit when not eUSCI_A0.UCAxSTATW.UCBUSY;
-      end loop;
+      loop exit when not eUSCI_A0.UCAxSTATW.UCBUSY; end loop;
       eUSCI_A0.UCAxTXBUF.UCTXBUFx := To_U8 (C);
    end Console_Putchar;
 
@@ -108,9 +106,7 @@ package body BSP
          );
       -- PCM ------------------------------------------------------------------
       PCMCTL0.AMR := AMR_AM_LDO_VCORE0;
-      loop
-         exit when PCMCTL0.CPM = CPM_AM_LDO_VCORE0;
-      end loop;
+      loop exit when PCMCTL0.CPM = CPM_AM_LDO_VCORE0; end loop;
       -- port mapping initialization ------------------------------------------
       PMAPKEYID.PMAPKEYx := PMAPKEYx_KEY;
       PMAPCTL.PMAPRECFG := True;
