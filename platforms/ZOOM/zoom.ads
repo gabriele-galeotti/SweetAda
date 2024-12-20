@@ -99,9 +99,9 @@ package ZOOM
            Unchecked_Union => True;
 
    LATCH_U7 : aliased LATCH_U7_Type
-      with Address    => System'To_Address (16#1008_0000#),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
+      with Address              => System'To_Address (16#1008_0000#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
 end ZOOM;
