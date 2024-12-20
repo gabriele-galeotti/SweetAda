@@ -17,6 +17,7 @@
 
 with Definitions;
 with Bits;
+with Secondary_Stack;
 with MCF5373;
 with Console;
 
@@ -69,6 +70,8 @@ package body BSP
    procedure Setup
       is
    begin
+      -------------------------------------------------------------------------
+      Secondary_Stack.Init;
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor := (
          Write => Console_Putchar'Access,
@@ -77,8 +80,8 @@ package body BSP
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("ZOOM (MCF5373)", NL => True);
-      Console.Print (Unsigned_32 (MCF5373.CIR.PIN), Prefix => "PIN:    ", NL => True);
-      Console.Print (Unsigned_32 (MCF5373.CIR.PRN), Prefix => "PRN:    ", NL => True);
+      Console.Print (Prefix => "PIN: ", Value => Unsigned_32 (MCF5373.CIR.PIN), NL => True);
+      Console.Print (Prefix => "PRN: ", Value => Unsigned_32 (MCF5373.CIR.PRN), NL => True);
       -------------------------------------------------------------------------
    end Setup;
 
