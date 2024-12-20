@@ -13,6 +13,7 @@ package Configure
    CPU_MODEL : constant String := "@CPU_MODEL@";
 
    -- basic configuration parameters
+   XTAL_FREQUENCY : constant := 16 * MHz1;
    TICK_FREQUENCY : constant := 1 * kHz1;
 
 end Configure;
