@@ -63,7 +63,7 @@ package body Exceptions
          when others                => Message := MsgPtr_UNKNOWN_EXCEPTION;
       end case;
       Console.Print (Message.all, NL => True);
-      Console.Print (E_Address, Prefix => "ADDRESS: ", NL => True);
+      Console.Print (Prefix => "ADDRESS: ", Value => E_Address, NL => True);
       Abort_Library.System_Abort;
    end Exception_Process;
 
