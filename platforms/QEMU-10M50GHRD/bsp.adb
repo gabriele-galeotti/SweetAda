@@ -96,7 +96,7 @@ package body BSP
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("Altera 10M50GHRD (QEMU emulator)", NL => True);
-      Console.Print (NiosII.cpuid_Read, Prefix => "CPUID: ", NL => True);
+      Console.Print (Prefix => "CPUID: ", Value => NiosII.cpuid_Read, NL => True);
       -------------------------------------------------------------------------
       if Core.Debug_Flag then
          Console.Print ("Debug_Flag: ENABLED", NL => True);
