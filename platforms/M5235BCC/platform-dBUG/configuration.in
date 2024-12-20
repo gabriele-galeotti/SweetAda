@@ -46,9 +46,13 @@ LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
 
-RUN_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/srecord-dbug.py \
-                   "$(SWEETADA_PATH)"/$(KERNEL_BASENAME).srec /dev/ttyUSB0 19200
-#RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/srecord-dbug.tcl \
-#                   "$(SWEETADA_PATH)"/$(KERNEL_BASENAME).srec /dev/ttyUSB0 19200
+# Tcl:
+# $(TCLSH) instead of $(PYTHON)
+# srecord-dbug.tcl instead of srecord-dbug.py
+
+RUN_COMMAND   := "$(PYTHON)"                                             \
+                   "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/srecord-dbug.py \
+                   "$(SWEETADA_PATH)"/$(KERNEL_BASENAME).srec            \
+                   /dev/ttyUSB0 19200
 DEBUG_COMMAND := $(RUN_COMMAND)
 
