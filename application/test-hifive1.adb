@@ -2,6 +2,8 @@
 with Interfaces;
 with CPU;
 with HiFive1;
+with BSP;
+with Console;
 
 package body Application
    is
@@ -69,6 +71,7 @@ package body Application
             for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             output_val (21) := True;
             for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
+            Console.Print (Prefix => "Ticks: ", Value => BSP.Tick_Count, NL => True);
          end loop;
       end;
       -------------------------------------------------------------------------
