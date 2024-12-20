@@ -122,7 +122,7 @@ package body BSP
       else
          Console.Print ("Dreamcast", NL => True);
       end if;
-      Console.Print (Dreamcast.Video_Font, Prefix => "ROM font @ ", NL => True);
+      Console.Print (Prefix => "ROM font @ ", Value => Dreamcast.Video_Font, NL => True);
       -------------------------------------------------------------------------
       if True then
          declare
