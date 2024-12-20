@@ -57,20 +57,30 @@ pragma Style_Checks (Off);
 
       -- 6.3 Internal Trimmable Programmable 72 MHz Oscillator (HFROSC)
 
-      -- sample values, range is div1 .. div64
-      hfroscdiv_div1 : constant := 0;
-      hfroscdiv_div2 : constant := 1;
-      hfroscdiv_div3 : constant := 2;
-      hfroscdiv_div4 : constant := 3;
-      hfroscdiv_div5 : constant := 4;
+      hfroscdiv_div1  : constant := 0;  hfroscdiv_div2  : constant := 1;  hfroscdiv_div3  : constant := 2;  hfroscdiv_div4  : constant := 3;
+      hfroscdiv_div5  : constant := 4;  hfroscdiv_div6  : constant := 5;  hfroscdiv_div7  : constant := 6;  hfroscdiv_div8  : constant := 7;
+      hfroscdiv_div9  : constant := 8;  hfroscdiv_div10 : constant := 9;  hfroscdiv_div11 : constant := 10; hfroscdiv_div12 : constant := 11;
+      hfroscdiv_div13 : constant := 12; hfroscdiv_div14 : constant := 13; hfroscdiv_div15 : constant := 14; hfroscdiv_div16 : constant := 15;
+      hfroscdiv_div17 : constant := 16; hfroscdiv_div18 : constant := 17; hfroscdiv_div19 : constant := 18; hfroscdiv_div20 : constant := 19;
+      hfroscdiv_div21 : constant := 20; hfroscdiv_div22 : constant := 21; hfroscdiv_div23 : constant := 22; hfroscdiv_div24 : constant := 23;
+      hfroscdiv_div25 : constant := 24; hfroscdiv_div26 : constant := 25; hfroscdiv_div27 : constant := 26; hfroscdiv_div28 : constant := 27;
+      hfroscdiv_div29 : constant := 28; hfroscdiv_div30 : constant := 29; hfroscdiv_div31 : constant := 30; hfroscdiv_div32 : constant := 31;
+      hfroscdiv_div33 : constant := 32; hfroscdiv_div34 : constant := 33; hfroscdiv_div35 : constant := 34; hfroscdiv_div36 : constant := 35;
+      hfroscdiv_div37 : constant := 36; hfroscdiv_div38 : constant := 37; hfroscdiv_div39 : constant := 38; hfroscdiv_div40 : constant := 39;
+      hfroscdiv_div41 : constant := 40; hfroscdiv_div42 : constant := 41; hfroscdiv_div43 : constant := 42; hfroscdiv_div44 : constant := 43;
+      hfroscdiv_div45 : constant := 44; hfroscdiv_div46 : constant := 45; hfroscdiv_div47 : constant := 46; hfroscdiv_div48 : constant := 47;
+      hfroscdiv_div49 : constant := 48; hfroscdiv_div50 : constant := 49; hfroscdiv_div51 : constant := 50; hfroscdiv_div52 : constant := 51;
+      hfroscdiv_div53 : constant := 52; hfroscdiv_div54 : constant := 53; hfroscdiv_div55 : constant := 54; hfroscdiv_div56 : constant := 55;
+      hfroscdiv_div57 : constant := 56; hfroscdiv_div58 : constant := 57; hfroscdiv_div59 : constant := 58; hfroscdiv_div60 : constant := 59;
+      hfroscdiv_div61 : constant := 60; hfroscdiv_div62 : constant := 61; hfroscdiv_div63 : constant := 62; hfroscdiv_div64 : constant := 63;
 
       type hfrosccfg_Type is record
-         hfroscdiv  : Bits_6;           -- Ring Oscillator Divider Register
+         hfroscdiv  : Bits_6  := hfroscdiv_div5; -- Ring Oscillator Divider Register
          Reserved1  : Bits_10 := 0;
-         hfrosctrim : Bits_5;           -- Ring Oscillator Trim Register
+         hfrosctrim : Bits_5  := 16#10#;         -- Ring Oscillator Trim Register
          Reserved2  : Bits_9  := 0;
-         hfroscen   : Boolean;          -- Ring Oscillator Enable
-         hfroscrdy  : Boolean := False; -- Ring Oscillator Ready
+         hfroscen   : Boolean := True;           -- Ring Oscillator Enable
+         hfroscrdy  : Boolean := False;          -- Ring Oscillator Ready
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
@@ -87,7 +97,7 @@ pragma Style_Checks (Off);
 
       type hfxosccfg_Type is record
          Reserved  : Bits_30 := 0;
-         hfxoscen  : Boolean;          -- Crystal Oscillator Enable
+         hfxoscen  : Boolean := True;  -- Crystal Oscillator Enable
          hfxoscrdy : Boolean := False; -- Crystal Oscillator Ready
       end record
          with Bit_Order => Low_Order_First,
@@ -105,14 +115,22 @@ pragma Style_Checks (Off);
       pllr_div3 : constant := 2#10#;
       pllr_div4 : constant := 2#11#;
 
-      -- sample values, range is x2 .. x128 in even steps
-      pllf_x2   : constant := 0;
-      pllf_x4   : constant := 1;
-      pllf_x8   : constant := 3;
-      pllf_x16  : constant := 7;
-      pllf_x32  : constant := 15;
-      pllf_x64  : constant := 31;
-      pllf_x128 : constant := 63;
+      pllf_x2   : constant := 16#00#; pllf_x4   : constant := 16#01#; pllf_x6   : constant := 16#02#; pllf_x8   : constant := 16#03#;
+      pllf_x10  : constant := 16#04#; pllf_x12  : constant := 16#05#; pllf_x14  : constant := 16#06#; pllf_x16  : constant := 16#07#;
+      pllf_x18  : constant := 16#08#; pllf_x20  : constant := 16#09#; pllf_x22  : constant := 16#0A#; pllf_x24  : constant := 16#0B#;
+      pllf_x26  : constant := 16#0C#; pllf_x28  : constant := 16#0D#; pllf_x30  : constant := 16#0E#; pllf_x32  : constant := 16#0F#;
+      pllf_x34  : constant := 16#10#; pllf_x36  : constant := 16#11#; pllf_x38  : constant := 16#12#; pllf_x40  : constant := 16#13#;
+      pllf_x42  : constant := 16#14#; pllf_x44  : constant := 16#15#; pllf_x46  : constant := 16#16#; pllf_x48  : constant := 16#17#;
+      pllf_x50  : constant := 16#18#; pllf_x52  : constant := 16#19#; pllf_x54  : constant := 16#1A#; pllf_x56  : constant := 16#1B#;
+      pllf_x58  : constant := 16#1C#; pllf_x60  : constant := 16#1D#; pllf_x62  : constant := 16#1E#; pllf_x64  : constant := 16#1F#;
+      pllf_x66  : constant := 16#20#; pllf_x68  : constant := 16#21#; pllf_x70  : constant := 16#22#; pllf_x72  : constant := 16#23#;
+      pllf_x74  : constant := 16#24#; pllf_x76  : constant := 16#25#; pllf_x78  : constant := 16#26#; pllf_x80  : constant := 16#27#;
+      pllf_x82  : constant := 16#28#; pllf_x84  : constant := 16#29#; pllf_x86  : constant := 16#2A#; pllf_x88  : constant := 16#2B#;
+      pllf_x90  : constant := 16#2C#; pllf_x92  : constant := 16#2D#; pllf_x94  : constant := 16#2E#; pllf_x96  : constant := 16#2F#;
+      pllf_x98  : constant := 16#30#; pllf_x100 : constant := 16#31#; pllf_x102 : constant := 16#32#; pllf_x104 : constant := 16#33#;
+      pllf_x106 : constant := 16#34#; pllf_x108 : constant := 16#35#; pllf_x110 : constant := 16#36#; pllf_x112 : constant := 16#37#;
+      pllf_x114 : constant := 16#38#; pllf_x116 : constant := 16#39#; pllf_x118 : constant := 16#3A#; pllf_x120 : constant := 16#3B#;
+      pllf_x122 : constant := 16#3C#; pllf_x124 : constant := 16#3D#; pllf_x126 : constant := 16#3E#; pllf_x128 : constant := 16#3F#;
 
       pllq_div2 : constant := 2#01#;
       pllq_div4 : constant := 2#10#;
@@ -125,16 +143,16 @@ pragma Style_Checks (Off);
       pllrefsel_HFXOSC : constant := 1; -- PLL driven by HFXOSC
 
       type pllcfg_Type is record
-         pllr      : Bits_3;           -- PLL R Value
+         pllr      : Bits_3  := pllr_div2;        -- PLL R Value
          Reserved1 : Bits_1  := 0;
-         pllf      : Bits_6;           -- PLL F Value
-         pllq      : Bits_2;           -- PLL Q Value
+         pllf      : Bits_6  := pllf_x64;         -- PLL F Value
+         pllq      : Bits_2  := pllq_div8;        -- PLL Q Value
          Reserved2 : Bits_4  := 0;
-         pllsel    : Bits_1;           -- PLL Select
-         pllrefsel : Bits_1;           -- PLL Reference Select
-         pllbypass : Boolean;          -- PLL Bypass
+         pllsel    : Bits_1  := pllsel_HFROSC;    -- PLL Select
+         pllrefsel : Bits_1  := pllrefsel_HFXOSC; -- PLL Reference Select
+         pllbypass : Boolean := True;             -- PLL Bypass
          Reserved3 : Bits_12 := 0;
-         plllock   : Boolean := False; -- PLL Lock (RO)
+         plllock   : Boolean := False;            -- PLL Lock (RO)
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
@@ -153,21 +171,30 @@ pragma Style_Checks (Off);
 
       -- 6.6 PLL Output Divider
 
-      -- sample values, range is div2 .. div128 in even steps
-      plloutdiv_div2   : constant := 0;
-      plloutdiv_div4   : constant := 1;
-      plloutdiv_div6   : constant := 2;
-      plloutdiv_div8   : constant := 3;
-      plloutdiv_div16  : constant := 7;
-      plloutdiv_div128 : constant := 63;
+      plloutdiv_div2   : constant := 16#00#; plloutdiv_div4   : constant := 16#01#; plloutdiv_div6   : constant := 16#02#; plloutdiv_div8   : constant := 16#03#;
+      plloutdiv_div10  : constant := 16#04#; plloutdiv_div12  : constant := 16#05#; plloutdiv_div14  : constant := 16#06#; plloutdiv_div16  : constant := 16#07#;
+      plloutdiv_div18  : constant := 16#08#; plloutdiv_div20  : constant := 16#09#; plloutdiv_div22  : constant := 16#0A#; plloutdiv_div24  : constant := 16#0B#;
+      plloutdiv_div26  : constant := 16#0C#; plloutdiv_div28  : constant := 16#0D#; plloutdiv_div30  : constant := 16#0E#; plloutdiv_div32  : constant := 16#0F#;
+      plloutdiv_div34  : constant := 16#10#; plloutdiv_div36  : constant := 16#11#; plloutdiv_div38  : constant := 16#12#; plloutdiv_div40  : constant := 16#13#;
+      plloutdiv_div42  : constant := 16#14#; plloutdiv_div44  : constant := 16#15#; plloutdiv_div46  : constant := 16#16#; plloutdiv_div48  : constant := 16#17#;
+      plloutdiv_div50  : constant := 16#18#; plloutdiv_div52  : constant := 16#19#; plloutdiv_div54  : constant := 16#1A#; plloutdiv_div56  : constant := 16#1B#;
+      plloutdiv_div58  : constant := 16#1C#; plloutdiv_div60  : constant := 16#1D#; plloutdiv_div62  : constant := 16#1E#; plloutdiv_div64  : constant := 16#1F#;
+      plloutdiv_div66  : constant := 16#20#; plloutdiv_div68  : constant := 16#21#; plloutdiv_div70  : constant := 16#22#; plloutdiv_div72  : constant := 16#23#;
+      plloutdiv_div74  : constant := 16#24#; plloutdiv_div76  : constant := 16#25#; plloutdiv_div78  : constant := 16#26#; plloutdiv_div80  : constant := 16#27#;
+      plloutdiv_div82  : constant := 16#28#; plloutdiv_div84  : constant := 16#29#; plloutdiv_div86  : constant := 16#2A#; plloutdiv_div88  : constant := 16#2B#;
+      plloutdiv_div90  : constant := 16#2C#; plloutdiv_div92  : constant := 16#2D#; plloutdiv_div94  : constant := 16#2E#; plloutdiv_div96  : constant := 16#2F#;
+      plloutdiv_div98  : constant := 16#30#; plloutdiv_div100 : constant := 16#31#; plloutdiv_div102 : constant := 16#32#; plloutdiv_div104 : constant := 16#33#;
+      plloutdiv_div106 : constant := 16#34#; plloutdiv_div108 : constant := 16#35#; plloutdiv_div110 : constant := 16#36#; plloutdiv_div112 : constant := 16#37#;
+      plloutdiv_div114 : constant := 16#38#; plloutdiv_div116 : constant := 16#39#; plloutdiv_div118 : constant := 16#3A#; plloutdiv_div120 : constant := 16#3B#;
+      plloutdiv_div122 : constant := 16#3C#; plloutdiv_div124 : constant := 16#3D#; plloutdiv_div126 : constant := 16#3E#; plloutdiv_div128 : constant := 16#3F#;
 
       plloutdivby1_CLR : constant := 0; -- PLL Final Divide By plloutdiv_...
       plloutdivby1_SET : constant := 1; -- PLL Final Divide By 1
 
       type plloutdiv_Type is record
-         plloutdiv    : Bits_6  := 0; -- PLL Final Divider Value (default = divide by 2)
+         plloutdiv    : Bits_6  := plloutdiv_div2;   -- PLL Final Divider Value
          Reserved1    : Bits_2  := 0;
-         plloutdivby1 : Bits_6;       -- PLL Final Divide By 1
+         plloutdivby1 : Bits_6  := plloutdivby1_SET; -- PLL Final Divide By 1
          Reserved2    : Bits_18 := 0;
       end record
          with Bit_Order => Low_Order_First,
@@ -181,20 +208,30 @@ pragma Style_Checks (Off);
 
       -- 6.7 Internal Programmable Low-Frequency Ring Oscillator (LFROSC)
 
-      -- sample values, range is div1 .. div64
-      lfroscdiv_div1 : constant := 0;
-      lfroscdiv_div2 : constant := 1;
-      lfroscdiv_div3 : constant := 2;
-      lfroscdiv_div4 : constant := 3;
-      lfroscdiv_div5 : constant := 4;
+      lfroscdiv_div1  : constant := 16#00#; lfroscdiv_div2  : constant := 16#01#; lfroscdiv_div3  : constant := 16#02#; lfroscdiv_div4  : constant := 16#03#;
+      lfroscdiv_div5  : constant := 16#04#; lfroscdiv_div6  : constant := 16#05#; lfroscdiv_div7  : constant := 16#06#; lfroscdiv_div8  : constant := 16#07#;
+      lfroscdiv_div9  : constant := 16#08#; lfroscdiv_div10 : constant := 16#09#; lfroscdiv_div11 : constant := 16#0A#; lfroscdiv_div12 : constant := 16#0B#;
+      lfroscdiv_div13 : constant := 16#0C#; lfroscdiv_div14 : constant := 16#0D#; lfroscdiv_div15 : constant := 16#0E#; lfroscdiv_div16 : constant := 16#0F#;
+      lfroscdiv_div17 : constant := 16#10#; lfroscdiv_div18 : constant := 16#11#; lfroscdiv_div19 : constant := 16#12#; lfroscdiv_div20 : constant := 16#13#;
+      lfroscdiv_div21 : constant := 16#14#; lfroscdiv_div22 : constant := 16#15#; lfroscdiv_div23 : constant := 16#16#; lfroscdiv_div24 : constant := 16#17#;
+      lfroscdiv_div25 : constant := 16#18#; lfroscdiv_div26 : constant := 16#19#; lfroscdiv_div27 : constant := 16#1A#; lfroscdiv_div28 : constant := 16#1B#;
+      lfroscdiv_div29 : constant := 16#1C#; lfroscdiv_div30 : constant := 16#1D#; lfroscdiv_div31 : constant := 16#1E#; lfroscdiv_div32 : constant := 16#1F#;
+      lfroscdiv_div33 : constant := 16#20#; lfroscdiv_div34 : constant := 16#21#; lfroscdiv_div35 : constant := 16#22#; lfroscdiv_div36 : constant := 16#23#;
+      lfroscdiv_div37 : constant := 16#24#; lfroscdiv_div38 : constant := 16#25#; lfroscdiv_div39 : constant := 16#26#; lfroscdiv_div40 : constant := 16#27#;
+      lfroscdiv_div41 : constant := 16#28#; lfroscdiv_div42 : constant := 16#29#; lfroscdiv_div43 : constant := 16#2A#; lfroscdiv_div44 : constant := 16#2B#;
+      lfroscdiv_div45 : constant := 16#2C#; lfroscdiv_div46 : constant := 16#2D#; lfroscdiv_div47 : constant := 16#2E#; lfroscdiv_div48 : constant := 16#2F#;
+      lfroscdiv_div49 : constant := 16#30#; lfroscdiv_div50 : constant := 16#31#; lfroscdiv_div51 : constant := 16#32#; lfroscdiv_div52 : constant := 16#33#;
+      lfroscdiv_div53 : constant := 16#34#; lfroscdiv_div54 : constant := 16#35#; lfroscdiv_div55 : constant := 16#36#; lfroscdiv_div56 : constant := 16#37#;
+      lfroscdiv_div57 : constant := 16#38#; lfroscdiv_div58 : constant := 16#39#; lfroscdiv_div59 : constant := 16#3A#; lfroscdiv_div60 : constant := 16#3B#;
+      lfroscdiv_div61 : constant := 16#3C#; lfroscdiv_div62 : constant := 16#3D#; lfroscdiv_div63 : constant := 16#3E#; lfroscdiv_div64 : constant := 16#3F#;
 
       type lfrosccfg_Type is record
-         lfroscdiv  : Bits_6;           -- Ring Oscillator Divider Register
+         lfroscdiv  : Bits_6  := lfroscdiv_div5; -- Ring Oscillator Divider Register
          Reserved1  : Bits_10 := 0;
-         lfrosctrim : Bits_5;           -- Ring Oscillator Trim Register
+         lfrosctrim : Bits_5  := 16#10#;         -- Ring Oscillator Trim Register
          Reserved2  : Bits_9  := 0;
-         lfroscen   : Boolean;          -- Ring Oscillator Enable
-         lfroscrdy  : Boolean := False; -- Ring Oscillator Ready
+         lfroscen   : Boolean := True;           -- Ring Oscillator Enable
+         lfroscrdy  : Boolean := False;          -- Ring Oscillator Ready
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
@@ -213,9 +250,9 @@ pragma Style_Checks (Off);
       lfextclk_sel_EXT    : constant := 1; -- low-frequency clock source = psdlfaltclk pad
 
       type lfclkmux_Type is record
-         lfextclk_sel        : Bits_1;           -- Low Frequency Clock Source Selector
+         lfextclk_sel        : Bits_1  := lfextclk_sel_LFROSC; -- Low Frequency Clock Source Selector
          Reserved            : Bits_30 := 0;
-         lfextclk_mux_status : Boolean := False; -- Setting of the aon_lfclksel pin (RO)
+         lfextclk_mux_status : Boolean := False;               -- Setting of the aon_lfclksel pin (RO)
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
