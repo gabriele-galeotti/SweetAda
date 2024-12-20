@@ -1985,16 +1985,16 @@ pragma Warnings (On);
       AGTIOSEL at 16#0F# range 0 ..  7;
    end record;
 
-   AGT_ADDRESS : constant := 16#4008_4000#;
+   AGT_BASEADDRESS : constant := 16#4008_4000#;
 
    AGT0 : aliased AGT_Type
-      with Address    => System'To_Address (AGT_ADDRESS),
+      with Address    => System'To_Address (AGT_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    AGT1 : aliased AGT_Type
-      with Address    => System'To_Address (AGT_ADDRESS + 16#0100#),
+      with Address    => System'To_Address (AGT_BASEADDRESS + 16#0100#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
