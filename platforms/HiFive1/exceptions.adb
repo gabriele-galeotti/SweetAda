@@ -19,6 +19,7 @@ with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Definitions;
+with Abort_Library;
 with Bits;
 with LLutils;
 with RISCV;
@@ -67,12 +68,8 @@ package body Exceptions
          BSP.Timer_Value := @ + BSP.Timer_Constant;
          mtimecmp_Write (BSP.Timer_Value);
       else
-         declare
-            function To_U32 is new Ada.Unchecked_Conversion (mcause_Type, Unsigned_32);
-         begin
-            Console.Print (To_U32 (mcause), Prefix => "*** EXCEPTION: ", NL => True);
-         end;
-         loop null; end loop;
+         Console.Print (Prefix => "*** EXCEPTION: ", Value => To_MXLEN (mcause), NL => True);
+         Abort_Library.System_Abort;
       end if;
    end Exception_Process;
 
