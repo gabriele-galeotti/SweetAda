@@ -115,7 +115,7 @@ package body BSP
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("OpenRISC " & Configure.CPU_MODEL & " (QEMU emulator)", NL => True);
-      Console.Print (OpenRISC.To_U32 (OpenRISC.VR_Read), Prefix => "VR: ", NL => True);
+      Console.Print (Prefix => "VR: ", Value => OpenRISC.To_U32 (OpenRISC.VR_Read), NL => True);
       -------------------------------------------------------------------------
       OpenRISC.TEE_Enable (True);
       Tick_Timer_Init;
