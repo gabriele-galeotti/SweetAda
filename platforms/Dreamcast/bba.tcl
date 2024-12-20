@@ -107,12 +107,6 @@ if {[catch {exec >@stdout 2>@stderr arp -s $DREAMCAST_IP_ADDRESS $BBA_MAC_ADDRES
     exit 1
 }
 
-# *** NOTE ***
-# previously the dc-tool-ip utility was used to download a binary image
-# *** NOTE ***
-#exec >@stdout 2>@stderr dc-tool-ip -t $DREAMCAST_IP_ADDRESS -x $KERNEL_OUTFILE -a $START_ADDRESS
-#exit 0
-
 # create UDP socket
 set s [udp_open]
 fconfigure $s -remote [list $DREAMCAST_IP_ADDRESS $DREAMCAST_UDP_PORT]
