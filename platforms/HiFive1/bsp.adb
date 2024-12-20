@@ -21,6 +21,7 @@ with RISCV;
 with MTIME;
 with HiFive1;
 with Exceptions;
+with Clocks;
 with QSPI;
 with Console;
 
@@ -41,8 +42,6 @@ package body BSP
    use MTIME;
    use HiFive1;
 
-   procedure CLK_Init;
-
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -50,36 +49,6 @@ package body BSP
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- CLK_Init
-   ----------------------------------------------------------------------------
-   procedure CLK_Init
-      is
-      use PRCI;
-   begin
-      -- external clock frequency = 16 MHz
-      plloutdiv := (
-         plloutdivby1 => plloutdivby1_SET, -- PLL Final Divide By 1
-         others       => <>
-         );
-      pllcfg := (
-         pllr      => pllr_div2,        -- divide by 2, PLL drive = 8 MHz
-         -- pllf      => pllf_x8,          -- x8 multiply factor = 64 MHz --> 16 MHz
-         -- pllf      => pllf_x16,         -- x16 multiply factor = 128 MHz --> 32 MHz
-         pllf      => pllf_x32,         -- x32 multiply factor = 256 MHz --> 64 MHz
-         pllq      => pllq_div4,        -- divide by 4
-         pllsel    => pllsel_PLL,
-         pllrefsel => pllrefsel_HFXOSC, -- PLL driven by external clock
-         pllbypass => False,            -- enable PLL
-         others    => <>
-         );
-      -- wait for PLL to settle down
-      loop
-         for Delay_Loop_Count in 1 .. 10_000_000 loop CPU.NOP; end loop;
-         exit when pllcfg.plllock;
-      end loop;
-   end CLK_Init;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -91,9 +60,7 @@ package body BSP
       use UART;
    begin
       -- wait for transmitter available
-      loop
-         exit when UART0.ip.txwm;
-      end loop;
+      loop exit when not UART0.txdata.full; end loop;
       UART0.txdata.txdata := To_U8 (C);
    end Console_Putchar;
 
@@ -101,14 +68,14 @@ package body BSP
       (C : out Character)
       is
       use UART;
-      Data : Unsigned_8;
+      rxdata : rxdata_Type;
    begin
       -- wait for receiver available
       loop
-         exit when UART0.ip.rxwm;
+         rxdata := UART0.rxdata;
+         exit when not rxdata.empty;
       end loop;
-      Data := UART0.rxdata.rxdata;
-      C := To_Ch (Data);
+      C := To_Ch (rxdata.rxdata);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
@@ -119,8 +86,8 @@ package body BSP
       use GPIO;
       use UART;
    begin
-      -- CLK ------------------------------------------------------------------
-      CLK_Init;
+      -- Clock setup ----------------------------------------------------------
+      Clocks.Init;
       -- Initialize GPIO, enable UARTs ----------------------------------------
       -- 16 -> UART0_RX, 17 -> UART0_TX, 18 -> UART1_TX, 23 -> UART1_RX
       iof_sel   := [16 | 17 | 18 | 23 => False, others => <>];
