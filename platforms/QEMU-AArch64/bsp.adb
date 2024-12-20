@@ -113,8 +113,8 @@ package body BSP
       -------------------------------------------------------------------------
       Console.Print ("AArch64 Cortex-A53 (QEMU emulator)", NL => True);
       EL := ARMv8A.CurrentEL_Read.EL;
-      Console.Print (Natural (EL), Prefix => "Current EL: ", NL => True);
-      Console.Print (ARMv8A.CNTFRQ_EL0_Read.Clock_frequency, Prefix => "CNTFRQ_EL0: ", NL => True);
+      Console.Print (Prefix => "Current EL: ", Value => Natural (EL), NL => True);
+      Console.Print (Prefix => "CNTFRQ_EL0: ", Value => ARMv8A.CNTFRQ_EL0_Read.Clock_frequency, NL => True);
       -------------------------------------------------------------------------
       if Core.Debug_Flag then
          Console.Print ("Debug_Flag: ENABLED", NL => True);
