@@ -1171,15 +1171,10 @@ pragma Style_Checks (Off);
 
       -- 19.4 Serial Clock Divisor Register (sckdiv)
 
-      -- sample values, range is div2 .. div8192 in even steps
-      sckdiv_div2  : constant := 0;
-      sckdiv_div4  : constant := 1;
-      sckdiv_div6  : constant := 2;
-      sckdiv_div8  : constant := 3;
-      sckdiv_div10 : constant := 4;
+      sckdiv_div8 : constant := 3;
 
       type sckdiv_Type is record
-         div      : Bits_12 := 16#03#;
+         div      : Bits_12 := sckdiv_div8;
          Reserved : Bits_20 := 0;
       end record
          with Bit_Order => Low_Order_First,
@@ -1188,6 +1183,13 @@ pragma Style_Checks (Off);
          div      at 0 range  0 .. 11;
          Reserved at 0 range 12 .. 31;
       end record;
+
+      type sckdiv_divisor_Type is range 2 .. 8192;
+
+      function sckdiv
+         (Divisor : sckdiv_divisor_Type)
+         return Bits_12
+         with Inline => True;
 
       -- 19.5 Serial Clock Mode Register (sckmode)
 
