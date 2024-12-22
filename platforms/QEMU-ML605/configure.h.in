@@ -2,7 +2,7 @@
 #ifndef _CONFIGURE_H
 #define _CONFIGURE_H 1
 
-#define PLATFORM "ML605"
+#define PLATFORM "QEMU-ML605"
 #define CPU      "@CPU@"
 
 #endif /* _CONFIGURE_H */

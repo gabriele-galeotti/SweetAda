@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# ML605 (QEMU emulator).
+# QEMU-ML605 (QEMU emulator).
 #
 # Copyright (C) 2020-2024 Gabriele Galeotti
 #

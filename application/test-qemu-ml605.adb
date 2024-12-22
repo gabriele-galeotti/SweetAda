@@ -38,8 +38,7 @@ package body Application
       -------------------------------------------------------------------------
       if True then
          declare
-            Delay_Count : constant := 100_000_000; -- normal
-            -- Delay_Count : constant := 10; -- debug
+            Delay_Count : constant := 100_000_000;
          begin
             loop
                Console.Print ("hello, SweetAda", NL => True);
