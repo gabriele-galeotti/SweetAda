@@ -19,6 +19,7 @@ package body Application
 
    use System.Storage_Elements;
    use Interfaces;
+   use NETARM;
 
    --========================================================================--
    --                                                                        --
@@ -35,14 +36,19 @@ package body Application
       is
    begin
       -------------------------------------------------------------------------
-      if False then
+      if True then
+         --- RJ45 LED port enable ------------------------------------------------
+         -- C6: CSF = 0, CDIR = 1 (OUT), CMODE = 0
+         PORTC.CSF (bi6) := False;
+         PORTC.CDIR (bi6) := True;
+         PORTC.CMODE (bi6) := False;
          declare
             Delay_Count : constant := 1_000_000;
          begin
             loop
-               NETARM.PORTC := NETARM.PORTC and 16#FFFF_FFBF#;
+               PORTC.CDATA (bi6) := False;
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-               NETARM.PORTC := NETARM.PORTC or 16#0000_0040#;
+               PORTC.CDATA (bi6) := True;
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;
