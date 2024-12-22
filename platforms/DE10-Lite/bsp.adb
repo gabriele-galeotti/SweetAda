@@ -54,23 +54,17 @@ package body BSP
       is
    begin
       -- wait for transmitter available
-      loop
-         exit when JTAG_UART.control.WSPACE /= 0;
-      end loop;
+      loop exit when JTAG_UART.control.WSPACE /= 0; end loop;
       JTAG_UART.data.DATA := To_U8 (C);
    end Console_Putchar;
 
    procedure Console_Getchar
       (C : out Character)
       is
-      Data : Unsigned_8;
    begin
       -- wait for receiver available
-      loop
-         exit when JTAG_UART.data.RVALID;
-      end loop;
-      Data := JTAG_UART.data.DATA;
-      C := To_Ch (Data);
+      loop exit when JTAG_UART.data.RVALID; end loop;
+      C := To_Ch (JTAG_UART.data.DATA);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
