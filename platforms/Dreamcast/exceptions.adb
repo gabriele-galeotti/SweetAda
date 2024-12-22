@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Abort_Library;
 with Console;
 
 package body Exceptions
@@ -35,6 +36,7 @@ package body Exceptions
       is
    begin
       Console.Print ("*** EXCEPTION", NL => True);
+      Abort_Library.System_Abort;
    end Exception_Process;
 
    ----------------------------------------------------------------------------
