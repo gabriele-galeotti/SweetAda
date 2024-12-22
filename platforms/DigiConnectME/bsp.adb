@@ -39,6 +39,7 @@ package body BSP
    use Interfaces;
    use Definitions;
    use Bits;
+   use NETARM;
 
    --========================================================================--
    --                                                                        --
@@ -58,9 +59,9 @@ package body BSP
    begin
       -- wait for transmitter available
       loop
-         exit when NETARM.SCSR.TXRDY;
+         exit when SCSR.TXRDY;
       end loop;
-      NETARM.SCFIFOR.DATA (0) := To_U8 (C);
+      SCFIFOR.DATA (0) := To_U8 (C);
    end Console_Putchar;
 
    procedure Console_Getchar
@@ -68,12 +69,12 @@ package body BSP
       is
       Data : Unsigned_8;
    begin
-      NETARM.SCSR.RXBC := True;
+      SCSR.RXBC := True;
       -- wait for receiver available
       loop
-         exit when NETARM.SCSR.RXRDY;
+         exit when SCSR.RXRDY;
       end loop;
-      Data := NETARM.SCFIFOR.DATA (0);
+      Data := SCFIFOR.DATA (0);
       C := To_Ch (Data);
    end Console_Getchar;
 
@@ -87,52 +88,45 @@ package body BSP
       -- FXTAL = 18.432 MHz/ 5 = 3.6864 MHz
       -- 16X mode, 9600 8N1
       -- NREG * 16 = FXTAL / [2 * (N + 1)] --> NREG = 11 @ 9600 bps
-      NETARM.SCBRGR.CLKMUX := NETARM.BRG_FXTALE;
-      NETARM.SCBRGR.TMODE  := NETARM.TMODE_16X;
-      NETARM.SCBRGR.NREG   := 11;
-      NETARM.SCCRA.ERXDSR  := False;
-      NETARM.SCCRA.ERXRI   := False;
-      NETARM.SCCRA.ERXDCD  := False;
-      NETARM.SCCRA.ERXDMA  := False;
-      NETARM.SCCRA.ERXBC   := False;
-      NETARM.SCCRA.ERXHALF := False;
-      NETARM.SCCRA.ERXDRDY := False;
-      NETARM.SCCRA.ERXORUN := False;
-      NETARM.SCCRA.ERXPE   := False;
-      NETARM.SCCRA.ERXFE   := False;
-      NETARM.SCCRA.ERXBRK  := False;
+      SCBRGR.CLKMUX := BRG_FXTALE;
+      SCBRGR.TMODE  := TMODE_16X;
+      SCBRGR.NREG   := 11;
+      SCCRA.ERXDSR  := False;
+      SCCRA.ERXRI   := False;
+      SCCRA.ERXDCD  := False;
+      SCCRA.ERXDMA  := False;
+      SCCRA.ERXBC   := False;
+      SCCRA.ERXHALF := False;
+      SCCRA.ERXDRDY := False;
+      SCCRA.ERXORUN := False;
+      SCCRA.ERXPE   := False;
+      SCCRA.ERXFE   := False;
+      SCCRA.ERXBRK  := False;
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read  := Console_Getchar'Access;
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print (Configure.PLATFORM, NL => True);
-      Console.Print (NETARM.SSR,          Prefix => "System Status: ", NL => True);
-      Console.Print (NETARM.PLL_Settings, Prefix => "PLL Settings:  ", NL => True);
-      Console.Print (NETARM.PLL_Control,  Prefix => "PLL Control:   ", NL => True);
-      Console.Print (NETARM.MMCR,         Prefix => "MMCR:          ", NL => True);
-      Console.Print (NETARM.CSBAR0,       Prefix => "CSBAR0:        ", NL => True);
-      Console.Print (NETARM.CSOR0A,       Prefix => "CSOR0A:        ", NL => True);
-      Console.Print (NETARM.CSOR0B,       Prefix => "CSOR0B:        ", NL => True);
-      Console.Print (NETARM.CSBAR1,       Prefix => "CSBAR1:        ", NL => True);
-      Console.Print (NETARM.CSOR1A,       Prefix => "CSOR1A:        ", NL => True);
-      Console.Print (NETARM.CSOR1B,       Prefix => "CSOR1B:        ", NL => True);
+      Console.Print (Prefix => "System Status: ", Value => SSR, NL => True);
+      Console.Print (Prefix => "PLL Settings:  ", Value => PLL_Settings, NL => True);
+      -- Console.Print (Prefix => "PLL Control:   ", Value => PLL_Control, NL => True);
+      Console.Print (Prefix => "MMCR:          ", Value => MMCR, NL => True);
+      Console.Print (Prefix => "CSBAR0:        ", Value => CSBAR0, NL => True);
+      Console.Print (Prefix => "CSOR0A:        ", Value => CSOR0A, NL => True);
+      Console.Print (Prefix => "CSOR0B:        ", Value => CSOR0B, NL => True);
+      Console.Print (Prefix => "CSBAR1:        ", Value => CSBAR1, NL => True);
+      Console.Print (Prefix => "CSOR1A:        ", Value => CSOR1A, NL => True);
+      Console.Print (Prefix => "CSOR1B:        ", Value => CSOR1B, NL => True);
       -------------------------------------------------------------------------
-      Console.Print (NETARM.SCBRGR.EBIT,                 Prefix => "EBIT:   ", NL => True);
-      Console.Print (Unsigned_16 (NETARM.SCBRGR.TMODE),  Prefix => "TMODE:  ", NL => True);
-      Console.Print (Unsigned_16 (NETARM.SCBRGR.CLKMUX), Prefix => "CLKMUX: ", NL => True);
-      Console.Print (Unsigned_16 (NETARM.SCBRGR.NREG),   Prefix => "NREG:   ", NL => True);
-      --- RJ45 LED port enable ------------------------------------------------
-      declare
-         Value : Unsigned_32;
-      begin
-         Value := NETARM.PORTC;
-         Value := Value and 16#BFFF_BFFF#; -- C6 CMODE = 0, C6 CSF = 0
-         Value := Value or 16#0040_0000#;  -- C6 CDIR = 1 (OUT)
-         NETARM.PORTC := Value;
-      end;
+      Console.Print (Prefix => "EBIT:   ", Value => SCBRGR.EBIT, NL => True);
+      Console.Print (Prefix => "TMODE:  ", Value => Unsigned_16 (SCBRGR.TMODE), NL => True);
+      Console.Print (Prefix => "CLKMUX: ", Value => Unsigned_16 (SCBRGR.CLKMUX), NL => True);
+      Console.Print (Prefix => "NREG:   ", Value => Unsigned_16 (SCBRGR.NREG), NL => True);
       -- unlock Flash memory WP -----------------------------------------------
-      NETARM.CSBAR0 := NETARM.CSBAR0 and 16#FFFF_FFFD#;
+      CSBAR0 := @ and 16#FFFF_FFFD#;
    end Setup;
 
 end BSP;
