@@ -2930,14 +2930,14 @@ pragma Warnings (On);
    MSTR_MASTER : constant := 1; -- Select master mode.
 
    type SPCR_Type is record
-      SPMS   : Bits_1;  -- SPI Mode Select
-      TXMD   : Bits_1;  -- Communications Operating Mode Select
-      MODFEN : Boolean; -- Mode Fault Error Detection Enable
-      MSTR   : Bits_1;  -- SPI Master/Slave Mode Select
-      SPEIE  : Boolean; -- SPI Error Interrupt Enable
-      SPTIE  : Boolean; -- Transmit Buffer Empty Interrupt Enable
-      SPE    : Boolean; -- SPI Function Enable
-      SPRIE  : Boolean; -- SPI Receive Buffer Full Interrupt Enable
+      SPMS   : Bits_1  := SPMS_SPI4;  -- SPI Mode Select
+      TXMD   : Bits_1  := TXMD_FD;    -- Communications Operating Mode Select
+      MODFEN : Boolean := False;      -- Mode Fault Error Detection Enable
+      MSTR   : Bits_1  := MSTR_SLAVE; -- SPI Master/Slave Mode Select
+      SPEIE  : Boolean := False;      -- SPI Error Interrupt Enable
+      SPTIE  : Boolean := False;      -- Transmit Buffer Empty Interrupt Enable
+      SPE    : Boolean := False;      -- SPI Function Enable
+      SPRIE  : Boolean := False;      -- SPI Receive Buffer Full Interrupt Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2967,10 +2967,10 @@ pragma Warnings (On);
    SSL3P_HIGH : constant := 1; -- Set SSL3 signal to active high.
 
    type SSLP_Type is record
-      SSL0P    : Bits_1;      -- SSL0 Signal Polarity Setting
-      SSL1P    : Bits_1;      -- SSL1 Signal Polarity Setting
-      SSL2P    : Bits_1;      -- SSL2 Signal Polarity Setting
-      SSL3P    : Bits_1;      -- SSL3 Signal Polarity Setting
+      SSL0P    : Bits_1 := SSL0P_LOW; -- SSL0 Signal Polarity Setting
+      SSL1P    : Bits_1 := SSL1P_LOW; -- SSL1 Signal Polarity Setting
+      SSL2P    : Bits_1 := SSL2P_LOW; -- SSL2 Signal Polarity Setting
+      SSL3P    : Bits_1 := SSL3P_LOW; -- SSL3 Signal Polarity Setting
       Reserved : Bits_4 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2994,15 +2994,15 @@ pragma Warnings (On);
    MOIFV_LOW  : constant := 0; -- Set level output on MOSIn pin during MOSI idling to correspond to low
    MOIFV_HIGH : constant := 1; -- Set level output on MOSIn pin during MOSI idling to correspond to high.
 
-   MOIFE_PREVIOUS : constant := 0; -- Set MOSI output value to equal final data from previous transfer
-   MOIFE_MOIFV    : constant := 1; -- Set MOSI output value to equal value set in the MOIFV bit.
+   MOIFE_PREV  : constant := 0; -- Set MOSI output value to equal final data from previous transfer
+   MOIFE_MOIFV : constant := 1; -- Set MOSI output value to equal value set in the MOIFV bit.
 
    type SPPCR_Type is record
-      SPLP      : Bits_1;      -- SPI Loopback
-      SPLP2     : Bits_1;      -- SPI Loopback 2
+      SPLP      : Bits_1 := SPLP_NORMAL;  -- SPI Loopback
+      SPLP2     : Bits_1 := SPLP2_NORMAL; -- SPI Loopback 2
       Reserved1 : Bits_2 := 0;
-      MOIFV     : Bits_1;      -- MOSI Idle Fixed Value
-      MOIFE     : Bits_1;      -- MOSI Idle Value Fixing Enable
+      MOIFV     : Bits_1 := MOIFV_LOW;    -- MOSI Idle Fixed Value
+      MOIFE     : Bits_1 := MOIFE_PREV;   -- MOSI Idle Value Fixing Enable
       Reserved2 : Bits_2 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -3016,28 +3016,17 @@ pragma Warnings (On);
       Reserved2 at 0 range 6 .. 7;
    end record;
 
-   -- 38.2.5 SPI Data Register (SPDR/SPDR_HA)
-
-   type SPDR_Type is record
-      SPDR : Unsigned_32; -- SPDR/SPDR_HA is the interface with the buffers that hold data for transmission and reception by the SPI.
-   end record
-      with Bit_Order => Low_Order_First,
-           Size      =>32;
-   for SPDR_Type use record
-      SPDR at 0 range 0 .. 31;
-   end record;
-
    -- 38.2.4 SPI Status Register (SPSR)
 
    type SPSR_Type is record
-      OVRF     : Boolean;      -- Overrun Error Flag
-      IDLNF    : Boolean;      -- SPI Idle Flag
-      MODF     : Boolean;      -- Mode Fault Error Flag
-      PERF     : Boolean;      -- Parity Error Flag
-      UDRF     : Boolean;      -- Underrun Error Flag
-      SPTEF    : Boolean;      -- SPI Transmit Buffer Empty Flag
+      OVRF     : Boolean := False; -- Overrun Error Flag
+      IDLNF    : Boolean := False; -- SPI Idle Flag
+      MODF     : Boolean := False; -- Mode Fault Error Flag
+      PERF     : Boolean := False; -- Parity Error Flag
+      UDRF     : Boolean := False; -- Underrun Error Flag
+      SPTEF    : Boolean := True;  -- SPI Transmit Buffer Empty Flag
       Reserved : Bits_1  := 0;
-      SPRF     : Boolean;      -- SPI Receive Buffer Full Flag
+      SPRF     : Boolean := False; -- SPI Receive Buffer Full Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -3052,6 +3041,17 @@ pragma Warnings (On);
       SPRF     at 0 range 7 .. 7;
    end record;
 
+   -- 38.2.5 SPI Data Register (SPDR/SPDR_HA)
+
+   type SPDR_Type is record
+      SPDR : Unsigned_32; -- SPDR/SPDR_HA is the interface with the buffers that hold data for transmission and reception by the SPI.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SPDR_Type use record
+      SPDR at 0 range 0 .. 31;
+   end record;
+
    -- 38.2.6 SPI Sequence Control Register (SPSCR)
 
    SPSLN0 : constant := 2#000#; -- 0-->0
@@ -3064,7 +3064,7 @@ pragma Warnings (On);
    SPSLN7 : constant := 2#111#; -- 0-->...>7-->0
 
    type SPSCR_Type is record
-      SPSLN    : Bits_3;      -- SPI Sequence Length Specification
+      SPSLN    : Bits_3 := SPSLN0; -- SPI Sequence Length Specification
       Reserved : Bits_5 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -3086,9 +3086,9 @@ pragma Warnings (On);
    SPCMD7 : constant := 2#111#;
 
    type SPSSR_Type is record
-      SPCP      : Bits_3;      -- SPI Command Pointer
+      SPCP      : Bits_3 := SPCMD0; -- SPI Command Pointer
       Reserved1 : Bits_1 := 0;
-      SPECM     : Bits_3;      -- SPI Error Command
+      SPECM     : Bits_3 := SPCMD0; -- SPI Error Command
       Reserved2 : Bits_1 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -3103,7 +3103,7 @@ pragma Warnings (On);
    -- 38.2.8 SPI Bit Rate Register (SPBR)
 
    type SPBR_Type is record
-      SPBR : Bits_8; -- SPBR sets the bit rate in master mode.
+      SPBR : Bits_8 := 16#FF#; -- SPBR sets the bit rate in master mode.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -3128,11 +3128,11 @@ pragma Warnings (On);
    SPBYT_BYTE : constant := 1; -- SPDR is accessed in byte (SPLW is invalid).
 
    type SPDCR_Type is record
-      SPFC      : Bits_2;      -- Number of Frames Specification
+      SPFC      : Bits_2 := SPFC_1;     -- Number of Frames Specification
       Reserved1 : Bits_2 := 0;
-      SPRDTD    : Bits_1;      -- SPI Receive/Transmit Data Select
-      SPLW      : Bits_1;      -- SPI Word Access/Halfword Access Specification
-      SPBYT     : Bits_1;      -- SPI Byte Access Specification
+      SPRDTD    : Bits_1 := SPRDTD_RB;  -- SPI Receive/Transmit Data Select
+      SPLW      : Bits_1 := SPLW_HALFW; -- SPI Word Access/Halfword Access Specification
+      SPBYT     : Bits_1 := SPBYT_WORD; -- SPI Byte Access Specification
       Reserved2 : Bits_1 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -3146,30 +3146,219 @@ pragma Warnings (On);
       Reserved2 at 0 range 7 .. 7;
    end record;
 
+   -- 38.2.10 SPI Clock Delay Register (SPCKD)
+
+   SCKDL_1RSPCK : constant := 2#000#; -- 1 RSPCK
+   SCKDL_2RSPCK : constant := 2#001#; -- 2 RSPCK
+   SCKDL_3RSPCK : constant := 2#010#; -- 3 RSPCK
+   SCKDL_4RSPCK : constant := 2#011#; -- 4 RSPCK
+   SCKDL_5RSPCK : constant := 2#100#; -- 5 RSPCK
+   SCKDL_6RSPCK : constant := 2#101#; -- 6 RSPCK
+   SCKDL_7RSPCK : constant := 2#110#; -- 7 RSPCK
+   SCKDL_8RSPCK : constant := 2#111#; -- 8 RSPCK.
+
+   type SPCKD_Type is record
+      SCKDL    : Bits_3 := SCKDL_1RSPCK; -- RSPCK Delay Setting
+      Reserved : Bits_5 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPCKD_Type use record
+      SCKDL    at 0 range 0 .. 2;
+      Reserved at 0 range 3 .. 7;
+   end record;
+
+   -- 38.2.11 SPI Slave Select Negation Delay Register (SSLND)
+
+   SLNDL_1RSPCK : constant := 2#000#; -- 1 RSPCK
+   SLNDL_2RSPCK : constant := 2#001#; -- 2 RSPCK
+   SLNDL_3RSPCK : constant := 2#010#; -- 3 RSPCK
+   SLNDL_4RSPCK : constant := 2#011#; -- 4 RSPCK
+   SLNDL_5RSPCK : constant := 2#100#; -- 5 RSPCK
+   SLNDL_6RSPCK : constant := 2#101#; -- 6 RSPCK
+   SLNDL_7RSPCK : constant := 2#110#; -- 7 RSPCK
+   SLNDL_8RSPCK : constant := 2#111#; -- 8 RSPCK.
+
+   type SSLND_Type is record
+      SLNDL    : Bits_3 := SLNDL_1RSPCK; -- SSL Negation Delay Setting
+      Reserved : Bits_5 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SSLND_Type use record
+      SLNDL    at 0 range 0 .. 2;
+      Reserved at 0 range 3 .. 7;
+   end record;
+
+   -- 38.2.12 SPI Next-Access Delay Register (SPND)
+
+   SPNDL_1RSPCK : constant := 2#000#; -- 1 RSPCK
+   SPNDL_2RSPCK : constant := 2#001#; -- 2 RSPCK
+   SPNDL_3RSPCK : constant := 2#010#; -- 3 RSPCK
+   SPNDL_4RSPCK : constant := 2#011#; -- 4 RSPCK
+   SPNDL_5RSPCK : constant := 2#100#; -- 5 RSPCK
+   SPNDL_6RSPCK : constant := 2#101#; -- 6 RSPCK
+   SPNDL_7RSPCK : constant := 2#110#; -- 7 RSPCK
+   SPNDL_8RSPCK : constant := 2#111#; -- 8 RSPCK.
+
+   type SPND_Type is record
+      SPNDL    : Bits_3 := SPNDL_1RSPCK; -- SPI Next-Access Delay Setting
+      Reserved : Bits_5 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPND_Type use record
+      SPNDL    at 0 range 0 .. 2;
+      Reserved at 0 range 3 .. 7;
+   end record;
+
+   -- 38.2.13 SPI Control Register 2 (SPCR2)
+
+   SPOE_EVEN : constant := 0; -- Select even parity for transmission and reception
+   SPOE_ODD  : constant := 1; -- Select odd parity for transmission and reception.
+
+   type SPCR2_Type is record
+      SPPE     : Boolean := False;     -- Parity Enable
+      SPOE     : Bits_1  := SPOE_EVEN; -- Parity Mode
+      SPIIE    : Boolean := False;     -- SPI Idle Interrupt Enable
+      PTE      : Boolean := False;     -- Parity Self-Testing
+      SCKASE   : Boolean := False;     -- RSPCK Auto-Stop Function Enable
+      Reserved : Bits_3  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPCR2_Type use record
+      SPPE     at 0 range 0 .. 0;
+      SPOE     at 0 range 1 .. 1;
+      SPIIE    at 0 range 2 .. 2;
+      PTE      at 0 range 3 .. 3;
+      SCKASE   at 0 range 4 .. 4;
+      Reserved at 0 range 5 .. 7;
+   end record;
+
+   -- 38.2.14 SPI Command Registers 0 to 7 (SPCMD0 to SPCMD7)
+
+   CPHA_LEAD  : constant := 0; -- Select data sampling on leading edge, data change on trailing edge
+   CPHA_TRAIL : constant := 1; -- Select data change on leading edge, data sampling on trailing edge.
+
+   CPOL_LOW  : constant := 0; -- Set RSPCK low during idle
+   CPOL_HIGH : constant := 1; -- Set RSPCK high during idle.
+
+   BRDV_BASE : constant := 2#00#; -- Base bit rate
+   BRDV_DIV2 : constant := 2#01#; -- Base bit rate divided by 2
+   BRDV_DIV4 : constant := 2#10#; -- Base bit rate divided by 4
+   BRDV_DIV8 : constant := 2#11#; -- Base bit rate divided by 8.
+
+   SSLA_SSL0 : constant := 2#000#; -- SSL0
+   SSLA_SSL1 : constant := 2#001#; -- SSL1
+   SSLA_SSL2 : constant := 2#010#; -- SSL2
+   SSLA_SSL3 : constant := 2#011#; -- SSL3
+
+   SSLKP_NEGATE : constant := 0; -- Negate all SSL signals on completion of transfer
+   SSLKP_KEEP   : constant := 1; -- Keep SSL signal level from the end of transfer until the beginning of the next access.
+
+   SPB_8    : constant := 2#0100#; -- 8 bits
+   SPB_8_2  : constant := 2#0101#; -- 8 bits
+   SPB_8_3  : constant := 2#0110#; -- 8 bits
+   SPB_8_4  : constant := 2#0111#; -- 8 bits
+   SPB_9    : constant := 2#1000#; -- 9 bits
+   SPB_10   : constant := 2#1001#; -- 10 bits
+   SPB_11   : constant := 2#1010#; -- 11 bits
+   SPB_12   : constant := 2#1011#; -- 12 bits
+   SPB_13   : constant := 2#1100#; -- 13 bits
+   SPB_14   : constant := 2#1101#; -- 14 bits
+   SPB_15   : constant := 2#1110#; -- 15 bits
+   SPB_16   : constant := 2#1111#; -- 16 bits
+   SPB_20   : constant := 2#0000#; -- 20 bits
+   SPB_24   : constant := 2#0001#; -- 24 bits
+   SPB_32   : constant := 2#0010#; -- 32 bits.
+   SPB_32_2 : constant := 2#0011#; -- 32 bits.
+
+   LSBF_MSB : constant := 0; -- MSB first
+   LSBF_LSB : constant := 1; -- LSB first.
+
+   type SPCMD_Type is record
+      CPHA   : Bits_1  := CPHA_TRAIL;   -- RSPCK Phase Setting
+      CPOL   : Bits_1  := CPOL_HIGH;    -- RSPCK Polarity Setting
+      BRDV   : Bits_2  := BRDV_DIV8;    -- Bit Rate Division Setting
+      SSLA   : Bits_3  := SSLA_SSL0;    -- SSL Signal Assertion Setting
+      SSLKP  : Bits_1  := SSLKP_NEGATE; -- SSL Signal Level Keeping
+      SPB    : Bits_4  := SPB_8_4;      -- SPI Data Length Setting
+      LSBF   : Bits_1  := LSBF_MSB;     -- SPI LSB First
+      SPNDEN : Boolean := False;        -- SPI Next-Access Delay Enable
+      SLNDEN : Boolean := False;        -- SSL Negation Delay Setting Enable
+      SCKDEN : Boolean := False;        -- RSPCK Delay Setting Enable
+   end record
+      with Bit_Order            => Low_Order_First,
+           Size                 => 16,
+           Volatile_Full_Access => True;
+   for SPCMD_Type use record
+      CPHA   at 0 range  0 ..  0;
+      CPOL   at 0 range  1 ..  1;
+      BRDV   at 0 range  2 ..  3;
+      SSLA   at 0 range  4 ..  6;
+      SSLKP  at 0 range  7 ..  7;
+      SPB    at 0 range  8 .. 11;
+      LSBF   at 0 range 12 .. 12;
+      SPNDEN at 0 range 13 .. 13;
+      SLNDEN at 0 range 14 .. 14;
+      SCKDEN at 0 range 15 .. 15;
+   end record;
+
+   type SPCMD_Array_Type is array (0 .. 7) of SPCMD_Type
+      with Pack => True;
+
+   -- 38.2.15 SPI Data Control Register 2 (SPDCR2)
+
+   type SPDCR2_Type is record
+      BYSW     : Boolean := False; -- Byte Swap Operating Mode Select
+      Reserved : Bits_7  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPDCR2_Type use record
+      BYSW     at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 7;
+   end record;
+
    -- SPI
 
 pragma Warnings (Off);
    type SPI_Type is record
-      SPCR  : SPCR_Type  with Volatile_Full_Access => True;
-      SSLP  : SSLP_Type  with Volatile_Full_Access => True;
-      SPPCR : SPPCR_Type with Volatile_Full_Access => True;
-      SPSR  : SPSR_Type  with Volatile_Full_Access => True;
-      SPDR  : SPDR_Type  with Volatile_Full_Access => True;
-      SPSCR : SPSCR_Type with Volatile_Full_Access => True;
-      SPSSR : SPSSR_Type with Volatile_Full_Access => True;
-      SPBR  : SPBR_Type with Volatile_Full_Access => True;
+      SPCR   : SPCR_Type        with Volatile_Full_Access => True;
+      SSLP   : SSLP_Type        with Volatile_Full_Access => True;
+      SPPCR  : SPPCR_Type       with Volatile_Full_Access => True;
+      SPSR   : SPSR_Type        with Volatile_Full_Access => True;
+      SPDR   : SPDR_Type        with Volatile_Full_Access => True;
+      SPSCR  : SPSCR_Type       with Volatile_Full_Access => True;
+      SPSSR  : SPSSR_Type       with Volatile_Full_Access => True;
+      SPBR   : SPBR_Type        with Volatile_Full_Access => True;
+      SPDCR  : SPDCR_Type       with Volatile_Full_Access => True;
+      SPCKD  : SPCKD_Type       with Volatile_Full_Access => True;
+      SSLND  : SSLND_Type       with Volatile_Full_Access => True;
+      SPND   : SPND_Type        with Volatile_Full_Access => True;
+      SPCR2  : SPCR2_Type       with Volatile_Full_Access => True;
+      SPCMD  : SPCMD_Array_Type;
+      SPDCR2 : SPDCR2_Type      with Volatile_Full_Access => True;
    end record
       with Size                    => 16#100# * 8,
            Suppress_Initialization => True;
    for SPI_Type use record
-      SPCR  at 16#00# range 0 ..  7;
-      SSLP  at 16#01# range 0 ..  7;
-      SPPCR at 16#02# range 0 ..  7;
-      SPSR  at 16#03# range 0 ..  7;
-      SPDR  at 16#04# range 0 .. 31;
-      SPSCR at 16#08# range 0 ..  7;
-      SPSSR at 16#09# range 0 ..  7;
-      SPBR  at 16#0A# range 0 ..  7;
+      SPCR   at 16#00# range 0 ..  7;
+      SSLP   at 16#01# range 0 ..  7;
+      SPPCR  at 16#02# range 0 ..  7;
+      SPSR   at 16#03# range 0 ..  7;
+      SPDR   at 16#04# range 0 .. 31;
+      SPSCR  at 16#08# range 0 ..  7;
+      SPSSR  at 16#09# range 0 ..  7;
+      SPBR   at 16#0A# range 0 ..  7;
+      SPDCR  at 16#0B# range 0 ..  7;
+      SPCKD  at 16#0C# range 0 ..  7;
+      SSLND  at 16#0D# range 0 ..  7;
+      SPND   at 16#0E# range 0 ..  7;
+      SPCR2  at 16#0F# range 0 ..  7;
+      SPCMD  at 16#10# range 0 ..  16 * 8 - 1;
+      SPDCR2 at 16#20# range 0 ..  7;
    end record;
 pragma Warnings (On);
 
