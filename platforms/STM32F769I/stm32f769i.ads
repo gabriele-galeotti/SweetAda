@@ -44,12 +44,12 @@ pragma Style_Checks (Off);
    -- 3.7.1 FLASH registers Flash access control register (FLASH_ACR)
 
    type FLASH_ACR_Type is record
-      LATENCY   : Bits_4;       -- Latency
+      LATENCY   : Bits_4  := 0;     -- Latency
       Reserved1 : Bits_4  := 0;
-      PRFTEN    : Boolean;      -- Prefetch enable
-      ARTEN     : Boolean;      -- ART Accelerator Enable
+      PRFTEN    : Boolean := False; -- Prefetch enable
+      ARTEN     : Boolean := False; -- ART Accelerator Enable
       Reserved2 : Bits_1  := 0;
-      ARTRST    : Boolean;      -- ART Accelerator reset
+      ARTRST    : Boolean := False; -- ART Accelerator reset
       Reserved3 : Bits_20 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -119,15 +119,15 @@ pragma Style_Checks (Off);
    -- 3.7.4 Flash status register (FLASH_SR)
 
    type FLASH_SR_Type is record
-      EOP       : Boolean;      -- End of operation
-      OPERR     : Boolean;      -- Operation error
+      EOP       : Boolean := False; -- End of operation
+      OPERR     : Boolean := False; -- Operation error
       Reserved1 : Bits_2  := 0;
-      WRPERR    : Boolean;      -- Write protection error
-      PGAERR    : Boolean;      -- Programming alignment error
-      PGPERR    : Boolean;      -- Programming parallelism error
-      ERSERR    : Boolean;      -- Erase Sequence Error
+      WRPERR    : Boolean := False; -- Write protection error
+      PGAERR    : Boolean := False; -- Programming alignment error
+      PGPERR    : Boolean := False; -- Programming parallelism error
+      ERSERR    : Boolean := False; -- Erase Sequence Error
       Reserved2 : Bits_8  := 0;
-      BSY       : Boolean;      -- Busy
+      BSY       : Boolean := False; -- Busy
       Reserved3 : Bits_15 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -161,19 +161,19 @@ pragma Style_Checks (Off);
    PSIZE_x64 : constant := 2#11#; -- program x64
 
    type FLASH_CR_Type is record
-      PG        : Boolean;      -- Programming
-      SER       : Boolean;      -- Sector Erase
-      MER_MER1  : Boolean;      -- Mass Erase/Bank 1 Mass Erase
-      SNB       : Bits_5;       -- Sector number
-      PSIZE     : Bits_2;       -- Program size
+      PG        : Boolean := False;    -- Programming
+      SER       : Boolean := False;    -- Sector Erase
+      MER_MER1  : Boolean := False;    -- Mass Erase/Bank 1 Mass Erase
+      SNB       : Bits_5  := 0;        -- Sector number
+      PSIZE     : Bits_2  := PSIZE_x8; -- Program size
       Reserved1 : Bits_5  := 0;
-      MER2      : Boolean;      -- Bank 2 Mass Erase
-      STRT      : Boolean;      -- Start
+      MER2      : Boolean := False;    -- Bank 2 Mass Erase
+      STRT      : Boolean := False;    -- Start
       Reserved2 : Bits_7  := 0;
-      EOPIE     : Boolean;      -- End of operation interrupt enable
-      ERRIE     : Boolean;      -- Error interrupt enable
+      EOPIE     : Boolean := False;    -- End of operation interrupt enable
+      ERRIE     : Boolean := False;    -- Error interrupt enable
       Reserved3 : Bits_5  := 0;
-      LOCK      : Boolean;      -- Lock
+      LOCK      : Boolean := True;     -- Lock
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -208,20 +208,23 @@ pragma Style_Checks (Off);
    BOR_LEV_1   : constant := 2#10#; -- BOR Level 1 (VBOR1), brownout threshold level 1
    BOR_LEV_off : constant := 2#11#; -- BOR off, POR/PDR reset threshold level is applied
 
+   RDP_LEV_0 : constant := 16#AA#; -- Level 0, read protection not active
+   RDP_LEV_2 : constant := 16#CC#; -- Level 2, chip read protection active
+
    type FLASH_OPTCR_Type is record
-      OPTLOCK    : Boolean; -- Option lock
-      OPTSTRT    : Boolean; -- Option start
-      BOR_LEV    : Bits_2;  -- BOR reset Level
-      WWDG_SW    : Boolean;
-      IWDG_SW    : Boolean;
-      nRST_STOP  : Boolean;
-      nRST_STDBY : Boolean;
-      RDP        : Bits_8;  -- Read protect
-      nWRP       : Bits_12; -- Not write protect
-      nDBOOT     : Boolean; -- Dual Boot mode
-      nDBANK     : Boolean; -- Not dual bank mode
-      IWDG_STDBY : Boolean; -- Independent watchdog counter freeze in standby mode
-      IWDG_STOP  : Boolean; -- Independent watchdog counter freeze in Stop mode
+      OPTLOCK    : Boolean   := True;             -- Option lock
+      OPTSTRT    : Boolean   := False;            -- Option start
+      BOR_LEV    : Bits_2    := BOR_LEV_3;        -- BOR reset Level
+      WWDG_SW    : Boolean   := True;
+      IWDG_SW    : Boolean   := True;
+      nRST_STOP  : Boolean   := True;
+      nRST_STDBY : Boolean   := True;
+      RDP        : Bits_8    := RDP_LEV_0;        -- Read protect
+      nWRP       : Bitmap_12 := [others => True]; -- Not write protect
+      nDBOOT     : Boolean   := True;             -- Dual Boot mode
+      nDBANK     : Boolean   := True;             -- Not dual bank mode
+      IWDG_STDBY : Boolean   := True;             -- Independent watchdog counter freeze in standby mode
+      IWDG_STOP  : Boolean   := True;             -- Independent watchdog counter freeze in Stop mode
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -251,17 +254,17 @@ pragma Style_Checks (Off);
 
    -- 3.7.7 Flash option control register (FLASH_OPTCR1)
 
-   BOOT_ADD_ITCMRAM      : constant := 16#0000#; -- Boot from ITCM RAM (0x0000 0000)
-   BOOT_ADD_SysMemBL     : constant := 16#0040#; -- Boot from System memory bootloader (0x0010 0000)
-   BOOT_ADD_ITCMIntFlash : constant := 16#0080#; -- Boot from Flash on ITCM interface (0x0020 0000)
-   BOOT_ADD_AXIMInt      : constant := 16#2000#; -- Boot from Flash on AXIM interface (0x0800 0000)
-   BOOT_ADD_DTCMRAM      : constant := 16#8000#; -- Boot from DTCM RAM (0x2000 0000)
-   BOOT_ADD_SRAM1        : constant := 16#8004#; -- Boot from SRAM1 (0x2002 0000)
-   BOOT_ADD_SRAM2        : constant := 16#8013#; -- Boot from SRAM2 (0x2004 C000)
+   BOOT_ADD_ITCMRAM        : constant := 16#0000#; -- Boot from ITCM RAM (0x0000 0000)
+   BOOT_ADD_SysMBootLoader : constant := 16#0040#; -- Boot from System memory bootloader (0x0010 0000)
+   BOOT_ADD_ITCMIntFlash   : constant := 16#0080#; -- Boot from Flash on ITCM interface (0x0020 0000)
+   BOOT_ADD_AXIMInt        : constant := 16#2000#; -- Boot from Flash on AXIM interface (0x0800 0000)
+   BOOT_ADD_DTCMRAM        : constant := 16#8000#; -- Boot from DTCM RAM (0x2000 0000)
+   BOOT_ADD_SRAM1          : constant := 16#8004#; -- Boot from SRAM1 (0x2002 0000)
+   BOOT_ADD_SRAM2          : constant := 16#8013#; -- Boot from SRAM2 (0x2004 C000)
 
    type FLASH_OPTCR1_Type is record
-      BOOT_ADD0 : Unsigned_16; -- Boot base address when Boot pin =0
-      BOOT_ADD1 : Unsigned_16; -- Boot base address when Boot pin =1
+      BOOT_ADD0 : Unsigned_16 := BOOT_ADD_ITCMIntFlash;   -- Boot base address when Boot pin =0
+      BOOT_ADD1 : Unsigned_16 := BOOT_ADD_SysMBootLoader; -- Boot base address when Boot pin =1
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -293,33 +296,33 @@ pragma Style_Checks (Off);
    PLS_2V8 : constant := 2#110#; -- 2.8 V
    PLS_2V9 : constant := 2#111#; -- 2.9 V
 
-   VOS_RESERVED : constant := 2#00#; -- Reserved (Scale 3 mode selected)
-   VOS_SCALE3   : constant := 2#01#; -- Scale 3 mode
-   VOS_SCALE2   : constant := 2#10#; -- Scale 2 mode
-   VOS_SCALE1   : constant := 2#11#; -- Scale 1 mode (reset value)
+   VOS_RSVD   : constant := 2#00#; -- Reserved (Scale 3 mode selected)
+   VOS_SCALE3 : constant := 2#01#; -- Scale 3 mode
+   VOS_SCALE2 : constant := 2#10#; -- Scale 2 mode
+   VOS_SCALE1 : constant := 2#11#; -- Scale 1 mode (reset value)
 
-   UDEN_DISABLE   : constant := 2#00#; -- Under-drive disable
-   UDEN_RESERVED1 : constant := 2#01#; -- Reserved
-   UDEN_RESERVED2 : constant := 2#10#; -- Reserved
-   UDEN_ENABLE    : constant := 2#11#; -- Under-drive enable
+   UDEN_DISABLE : constant := 2#00#; -- Under-drive disable
+   UDEN_RSVD1   : constant := 2#01#; -- Reserved
+   UDEN_RSVD2   : constant := 2#10#; -- Reserved
+   UDEN_ENABLE  : constant := 2#11#; -- Under-drive enable
 
    type PWR_CR1_Type is record
-      LPDS      : Boolean;      -- Low-power deepsleep
-      PDDS      : Boolean;      -- Power-down deepsleep
+      LPDS      : Boolean := False;        -- Low-power deepsleep
+      PDDS      : Boolean := False;        -- Power-down deepsleep
       Reserved1 : Bits_1  := 0;
-      CSBF      : Boolean;      -- Clear standby flag
-      PVDE      : Boolean;      -- Power voltage detector enable
-      PLS       : Bits_3;       -- PVD level selection
-      DBP       : Boolean;      -- Disable backup domain write protection
-      FPDS      : Boolean;      -- Flash power-down in Stop mode
-      LPUDS     : Boolean;      -- Low-power regulator in deepsleep under-drive mode
-      MRUDS     : Boolean;      -- Main regulator in deepsleep under-drive mode
+      CSBF      : Boolean := False;        -- Clear standby flag
+      PVDE      : Boolean := False;        -- Power voltage detector enable
+      PLS       : Bits_3  := PLS_2V0;      -- PVD level selection
+      DBP       : Boolean := False;        -- Disable backup domain write protection
+      FPDS      : Boolean := False;        -- Flash power-down in Stop mode
+      LPUDS     : Boolean := False;        -- Low-power regulator in deepsleep under-drive mode
+      MRUDS     : Boolean := False;        -- Main regulator in deepsleep under-drive mode
       Reserved2 : Bits_1  := 0;
-      ADCDC1    : Bits_1;       -- Refer to AN4073 for details on how to use this bit.
-      VOS       : Bits_2;       -- Regulator voltage scaling output selection
-      ODEN      : Boolean;      -- Over-drive enable
-      ODSWEN    : Boolean;      -- Over-drive switching enabled.
-      UDEN      : Bits_2;       -- Under-drive enable in stop mode
+      ADCDC1    : Bits_1  := 0;            -- Refer to AN4073 for details on how to use this bit.
+      VOS       : Bits_2  := VOS_SCALE1;   -- Regulator voltage scaling output selection
+      ODEN      : Boolean := False;        -- Over-drive enable
+      ODSWEN    : Boolean := False;        -- Over-drive switching enabled.
+      UDEN      : Bits_2  := UDEN_DISABLE; -- Under-drive enable in stop mode
       Reserved3 : Bits_12 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -357,24 +360,24 @@ pragma Style_Checks (Off);
    PVDO_HIGHER : constant := 0; -- VDD is higher than the PVD threshold selected with the PLS[2:0] bits.
    PVDO_LOWER  : constant := 1; -- VDD is lower than the PVD threshold selected with the PLS[2:0] bits.
 
-   UDRDY_DISABLED  : constant := 2#00#; -- Under-drive is disabled
-   UDRDY_RESERVED1 : constant := 2#01#; -- Reserved
-   UDRDY_RESERVED2 : constant := 2#10#; -- Reserved
-   UDRDY_STOP      : constant := 2#11#; -- Under-drive mode is activated in Stop mode.
+   UDRDY_DISABLED : constant := 2#00#; -- Under-drive is disabled
+   UDRDY_RSVD1    : constant := 2#01#; -- Reserved
+   UDRDY_RSVD2    : constant := 2#10#; -- Reserved
+   UDRDY_STOP     : constant := 2#11#; -- Under-drive mode is activated in Stop mode.
 
    type PWR_CSR1_Type is record
-      WUIF      : Boolean;      -- Wakeup internal flag
-      SBF       : Boolean;      -- Standby flag
-      PVDO      : Bits_1;       -- This bit is set and cleared by hardware. It is valid only if PVD is enabled by the PVDE bit.
-      BRR       : Boolean;      -- Backup regulator ready
+      WUIF      : Boolean := False;          -- Wakeup internal flag
+      SBF       : Boolean := False;          -- Standby flag
+      PVDO      : Bits_1  := PVDO_HIGHER;    -- This bit is set and cleared by hardware. It is valid only if PVD is enabled by the PVDE bit.
+      BRR       : Boolean := False;          -- Backup regulator ready
       Reserved1 : Bits_5  := 0;
-      BRE       : Boolean;      -- Backup regulator enable
+      BRE       : Boolean := False;          -- Backup regulator enable
       Reserved2 : Bits_4  := 0;
-      VOSRDY    : Boolean;      -- Regulator voltage scaling output selection ready bit
+      VOSRDY    : Boolean := False;          -- Regulator voltage scaling output selection ready bit
       Reserved3 : Bits_1  := 0;
-      ODRDY     : Boolean;      -- Over-drive mode ready
-      ODSWRDY   : Boolean;      -- Over-drive mode switching ready
-      UDRDY     : Bits_2;       -- Under-drive ready flag
+      ODRDY     : Boolean := False;          -- Over-drive mode ready
+      ODSWRDY   : Boolean := False;          -- Over-drive mode switching ready
+      UDRDY     : Bits_2  := UDRDY_DISABLED; -- Under-drive ready flag
       Reserved4 : Bits_12 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -409,19 +412,19 @@ pragma Style_Checks (Off);
    WUPP_FALLING : constant := 1; -- Detection on falling edge
 
    type PWR_CR2_Type is record
-      CWUPF1    : Boolean;      -- Clear Wakeup Pin flag for PA0
-      CWUPF2    : Boolean;      -- Clear Wakeup Pin flag for PA2
-      CWUPF3    : Boolean;      -- Clear Wakeup Pin flag for PC1
-      CWUPF4    : Boolean;      -- Clear Wakeup Pin flag for PC13
-      CWUPF5    : Boolean;      -- Clear Wakeup Pin flag for PI8
-      CWUPF6    : Boolean;      -- Clear Wakeup Pin flag for PI11
+      CWUPF1    : Boolean := False;       -- Clear Wakeup Pin flag for PA0
+      CWUPF2    : Boolean := False;       -- Clear Wakeup Pin flag for PA2
+      CWUPF3    : Boolean := False;       -- Clear Wakeup Pin flag for PC1
+      CWUPF4    : Boolean := False;       -- Clear Wakeup Pin flag for PC13
+      CWUPF5    : Boolean := False;       -- Clear Wakeup Pin flag for PI8
+      CWUPF6    : Boolean := False;       -- Clear Wakeup Pin flag for PI11
       Reserved1 : Bits_2  := 0;
-      WUPP1     : Bits_1;       -- Wakeup pin polarity bit for PA0
-      WUPP2     : Bits_1;       -- Wakeup pin polarity bit for PA2
-      WUPP3     : Bits_1;       -- Wakeup pin polarity bit for PC1
-      WUPP4     : Bits_1;       -- Wakeup pin polarity bit for PC13
-      WUPP5     : Bits_1;       -- Wakeup pin polarity bit for PI8
-      WUPP6     : Bits_1;       -- Wakeup pin polarity bit for PI11
+      WUPP1     : Bits_1  := WUPP_RISING; -- Wakeup pin polarity bit for PA0
+      WUPP2     : Bits_1  := WUPP_RISING; -- Wakeup pin polarity bit for PA2
+      WUPP3     : Bits_1  := WUPP_RISING; -- Wakeup pin polarity bit for PC1
+      WUPP4     : Bits_1  := WUPP_RISING; -- Wakeup pin polarity bit for PC13
+      WUPP5     : Bits_1  := WUPP_RISING; -- Wakeup pin polarity bit for PI8
+      WUPP6     : Bits_1  := WUPP_RISING; -- Wakeup pin polarity bit for PI11
       Reserved2 : Bits_18 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -454,19 +457,19 @@ pragma Style_Checks (Off);
    -- 4.4.4 PWR power control register 2 (PWR_CSR2)
 
    type PWR_CSR2_Type is record
-      WUPF1     : Boolean;      -- Wakeup Pin flag for PA0
-      WUPF2     : Boolean;      -- Wakeup Pin flag for PA2
-      WUPF3     : Boolean;      -- Wakeup Pin flag for PC1
-      WUPF4     : Boolean;      -- Wakeup Pin flag for PC13
-      WUPF5     : Boolean;      -- Wakeup Pin flag for PI8
-      WUPF6     : Boolean;      -- Wakeup Pin flag for PI11
+      WUPF1     : Boolean := False; -- Wakeup Pin flag for PA0
+      WUPF2     : Boolean := False; -- Wakeup Pin flag for PA2
+      WUPF3     : Boolean := False; -- Wakeup Pin flag for PC1
+      WUPF4     : Boolean := False; -- Wakeup Pin flag for PC13
+      WUPF5     : Boolean := False; -- Wakeup Pin flag for PI8
+      WUPF6     : Boolean := False; -- Wakeup Pin flag for PI11
       Reserved1 : Bits_2  := 0;
-      EWUP1     : Boolean;      -- Enable Wakeup pin for PA0
-      EWUP2     : Boolean;      -- Enable Wakeup pin for PA2
-      EWUP3     : Boolean;      -- Enable Wakeup pin for PC1
-      EWUP4     : Boolean;      -- Enable Wakeup pin for PC13
-      EWUP5     : Boolean;      -- Enable Wakeup pin for PI8
-      EWUP6     : Boolean;      -- Enable Wakeup pin for PI11
+      EWUP1     : Boolean := False; -- Enable Wakeup pin for PA0
+      EWUP2     : Boolean := False; -- Enable Wakeup pin for PA2
+      EWUP3     : Boolean := False; -- Enable Wakeup pin for PC1
+      EWUP4     : Boolean := False; -- Enable Wakeup pin for PC13
+      EWUP5     : Boolean := False; -- Enable Wakeup pin for PI8
+      EWUP6     : Boolean := False; -- Enable Wakeup pin for PI11
       Reserved2 : Bits_18 := 0;
    end record
       with Bit_Order => Low_Order_First,
