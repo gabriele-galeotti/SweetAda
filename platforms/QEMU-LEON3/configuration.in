@@ -1,0 +1,62 @@
+
+#
+# QEMU-LEON3 (QEMU emulator)
+#
+# SPARC V8 BE
+#
+
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+USE_APPLICATION := test-qemu-leon3
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
+CPU       := SPARC
+CPU_MODEL := LEON3
+
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+GCC_SWITCHES_PLATFORM     := -mcpu=leon3 -m32
+LD_SWITCHES_PLATFORM      :=
+OBJDUMP_SWITCHES_PLATFORM :=
+OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
+POSTBUILD_ROMFILE         := Y
+
+CONFIGURE_FILES_PLATFORM := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
+
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+ifeq      ($(OSTYPE),cmd)
+export PUTTY := "C:\Program Files"\PuTTY\putty-w64.exe
+RUN_COMMAND   := "$(SWEETADA_PATH)"\$(PLATFORM_DIRECTORY_CMD)\qemu$(SCREXT)
+DEBUG_COMMAND := "$(SWEETADA_PATH)"\$(PLATFORM_DIRECTORY_CMD)\qemu$(SCREXT) -debug
+else ifeq ($(OSTYPE),msys)
+export PUTTY := "C:\Program Files"\PuTTY\putty-w64.exe
+RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT_cmd)
+DEBUG_COMMAND := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT_cmd) -debug
+else
+RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT)
+DEBUG_COMMAND := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT) -debug
+endif
+
