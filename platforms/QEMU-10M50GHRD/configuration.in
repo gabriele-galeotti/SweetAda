@@ -1,0 +1,70 @@
+
+#
+# Altera 10M50GHRD board (QEMU emulator)
+#
+# Nios® II
+#
+
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+RTS        := zfp
+PROFILE    := zfp
+USE_LIBADA := N
+
+USE_APPLICATION := test-qemu-10m50ghrd
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
+CPU := NiosII
+
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+GCC_SWITCHES_PLATFORM     :=
+LD_SWITCHES_PLATFORM      := --undefined=irq_entry --no-warn-rwx-segments
+OBJDUMP_SWITCHES_PLATFORM :=
+OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
+POSTBUILD_ROMFILE         := Y
+
+CONFIGURE_FILES_PLATFORM := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
+
+# qemu-.../hw/nios2/10m50_devboard.c
+export RESET_ADDRESS         := 16\#D400_0000\#
+export EXCEPTION_ADDRESS     := 16\#C800_0120\#
+export FAST_TLB_MISS_ADDRESS := 16\#C000_0100\#
+
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+
+ifeq      ($(OSTYPE),cmd)
+export PUTTY := "C:\Program Files"\PuTTY\putty-w64.exe
+RUN_COMMAND   := "$(SWEETADA_PATH)"\$(PLATFORM_DIRECTORY_CMD)\qemu$(SCREXT)
+DEBUG_COMMAND := "$(SWEETADA_PATH)"\$(PLATFORM_DIRECTORY_CMD)\qemu$(SCREXT) -debug
+else ifeq ($(OSTYPE),msys)
+export PUTTY := "C:\Program Files"\PuTTY\putty-w64.exe
+RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT_cmd)
+DEBUG_COMMAND := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT_cmd) -debug
+else
+RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT)
+DEBUG_COMMAND := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/qemu$(SCREXT) -debug
+endif
+
