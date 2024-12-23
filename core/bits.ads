@@ -342,12 +342,21 @@ package Bits
    Bits_64_NMask : constant := 2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000#;
 
    -- Bitmaps
+   type Bitmap_4 is array (0 .. 3) of Boolean
+      with Component_Size => 1,
+           Size           => 4;
    type Bitmap_8 is array (0 .. 7) of Boolean
       with Component_Size => 1,
            Size           => 8;
+   type Bitmap_12 is array (0 .. 11) of Boolean
+      with Component_Size => 1,
+           Size           => 12;
    type Bitmap_16 is array (0 .. 15) of Boolean
       with Component_Size => 1,
            Size           => 16;
+   type Bitmap_24 is array (0 .. 23) of Boolean
+      with Component_Size => 1,
+           Size           => 24;
    type Bitmap_32 is array (0 .. 31) of Boolean
       with Component_Size => 1,
            Size           => 32;
