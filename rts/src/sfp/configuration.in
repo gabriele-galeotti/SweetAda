@@ -40,16 +40,6 @@ LIBGNAT_SRCS_COMMON += ../common/s-unstyp.ads
 LIBGNARL_SRCS_COMMON += s-musplo.ads s-musplo.adb
 
 #
-# system.ads default configuration.
-#
-export COMMAND_LINE_ARGS         := False
-export CONFIGURABLE_RUN_TIME     := True
-export SUPPRESS_STANDARD_LIBRARY := True
-export EXIT_STATUS_SUPPORTED     := False
-export USE_ADA_MAIN_PROGRAM_NAME := False
-export ZCX_BY_DEFAULT            := False
-
-#
 # s-parame.ads default configuration.
 #
 export SIZE_TYPE_ASPECTS              :=
