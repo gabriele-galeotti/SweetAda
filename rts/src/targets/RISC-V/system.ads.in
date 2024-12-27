@@ -5,7 +5,7 @@
 --                               S Y S T E M                                --
 --                                                                          --
 --                                 S p e c                                  --
---                          (GNU-Linux/RISC-V Version)                      --
+--                           (SweetAda version)                             --
 --                                                                          --
 --          Copyright (C) 1992-2022, Free Software Foundation, Inc.         --
 --                                                                          --
@@ -32,8 +32,6 @@
 -- GNAT was originally developed  by the GNAT team at  New York University. --
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
-------------------------------------------------------------------------------
---  SweetAda version, original is GNU-Linux/RISC-V                          --
 ------------------------------------------------------------------------------
 
 package System is
@@ -120,28 +118,28 @@ private
    --  whose source should be consulted for more detailed descriptions
    --  of the individual switch values.
 
-   Backend_Divide_Checks     : constant Boolean := False;
-   Backend_Overflow_Checks   : constant Boolean := True;
+   Backend_Divide_Checks     : constant Boolean := @BACKEND_DIVIDE_CHECKS@;
+   Backend_Overflow_Checks   : constant Boolean := @BACKEND_OVERFLOW_CHECKS@;
    Command_Line_Args         : constant Boolean := @COMMAND_LINE_ARGS@;
    Configurable_Run_Time     : constant Boolean := @CONFIGURABLE_RUN_TIME@;
-   Denorm                    : constant Boolean := True;
-   Duration_32_Bits          : constant Boolean := False;
+   Denorm                    : constant Boolean := @DENORM@;
+   Duration_32_Bits          : constant Boolean := @DURATION_32_BITS@;
    Exit_Status_Supported     : constant Boolean := @EXIT_STATUS_SUPPORTED@;
-   Machine_Overflows         : constant Boolean := False;
-   Machine_Rounds            : constant Boolean := True;
-   Preallocated_Stacks       : constant Boolean := False;
-   Signed_Zeros              : constant Boolean := True;
-   Stack_Check_Default       : constant Boolean := False;
-   Stack_Check_Probes        : constant Boolean := False;
-   Stack_Check_Limits        : constant Boolean := False;
-   Support_Aggregates        : constant Boolean := True;
-   Support_Composite_Assign  : constant Boolean := True;
-   Support_Composite_Compare : constant Boolean := True;
-   Support_Long_Shifts       : constant Boolean := True;
-   Always_Compatible_Rep     : constant Boolean := False;
+   Machine_Overflows         : constant Boolean := @MACHINE_OVERFLOWS@;
+   Machine_Rounds            : constant Boolean := @MACHINE_ROUNDS@;
+   Preallocated_Stacks       : constant Boolean := @PREALLOCATED_STACKS@;
+   Signed_Zeros              : constant Boolean := @SIGNED_ZEROS@;
+   Stack_Check_Default       : constant Boolean := @STACK_CHECK_DEFAULT@;
+   Stack_Check_Probes        : constant Boolean := @STACK_CHECK_PROBES@;
+   Stack_Check_Limits        : constant Boolean := @STACK_CHECK_LIMITS@;
+   Support_Aggregates        : constant Boolean := @SUPPORT_AGGREGATES@;
+   Support_Atomic_Primitives : constant Boolean := @SUPPORT_ATOMIC_PRIMITIVES@;
+   Support_Composite_Assign  : constant Boolean := @SUPPORT_COMPOSITE_ASSIGN@;
+   Support_Composite_Compare : constant Boolean := @SUPPORT_COMPOSITE_COMPARE@;
+   Support_Long_Shifts       : constant Boolean := @SUPPORT_LONG_SHIFTS@;
+   Always_Compatible_Rep     : constant Boolean := @ALWAYS_COMPATIBLE_REP@;
    Suppress_Standard_Library : constant Boolean := @SUPPRESS_STANDARD_LIBRARY@;
    Use_Ada_Main_Program_Name : constant Boolean := @USE_ADA_MAIN_PROGRAM_NAME@;
-   Frontend_Exceptions       : constant Boolean := False;
    ZCX_By_Default            : constant Boolean := @ZCX_BY_DEFAULT@;
 
 end System;
