@@ -8,7 +8,7 @@ package Configure
    use Definitions;
 
    -- PLATFORM and CPU definitions
-   PLATFORM  : constant String := "XilinxZynqA9";
+   PLATFORM  : constant String := "QEMU-XilinxZynqA9";
    CPU       : constant String := "@CPU@";
    CPU_MODEL : constant String := "@CPU_MODEL@";
 

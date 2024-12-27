@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# Xilinx® Zynq® A9 (QEMU emulator).
+# QEMU-XilinxZynqA9 (QEMU emulator).
 #
 # Copyright (C) 2020-2024 Gabriele Galeotti
 #

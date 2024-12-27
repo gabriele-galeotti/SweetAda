@@ -1,7 +1,7 @@
 @ECHO OFF
 
 REM
-REM Xilinx Zynq A9 (QEMU emulator).
+REM QEMU-XilinxZynqA9 (QEMU emulator).
 REM
 REM Copyright (C) 2020-2024 Gabriele Galeotti
 REM
