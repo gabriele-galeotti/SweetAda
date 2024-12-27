@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# SBC5206 (QEMU emulator).
+# QEMU-SBC5206 (QEMU emulator).
 #
 # Copyright (C) 2020-2024 Gabriele Galeotti
 #

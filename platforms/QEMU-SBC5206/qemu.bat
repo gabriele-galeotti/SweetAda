@@ -1,7 +1,7 @@
 @ECHO OFF
 
 REM
-REM SBC5206 (QEMU emulator).
+REM QEMU-SBC5206 (QEMU emulator).
 REM
 REM Copyright (C) 2020-2024 Gabriele Galeotti
 REM

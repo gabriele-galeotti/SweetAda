@@ -4,7 +4,7 @@ package Configure
    is
 
    -- PLATFORM and CPU definitions
-   PLATFORM  : constant String := "SBC5206";
+   PLATFORM  : constant String := "QEMU-SBC5206";
    CPU       : constant String := "@CPU@";
    CPU_MODEL : constant String := "@CPU_MODEL@";
 
