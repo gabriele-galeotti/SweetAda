@@ -1,5 +1,29 @@
 
 LIBGNAT_SRCS_TARGET += system.ads
 
+export BACKEND_DIVIDE_CHECKS     := False
+export BACKEND_OVERFLOW_CHECKS   := True
+export COMMAND_LINE_ARGS         := False
+export CONFIGURABLE_RUN_TIME     := True
+export DENORM                    := True
+export DURATION_32_BITS          := False
+export EXIT_STATUS_SUPPORTED     := False
+export MACHINE_OVERFLOWS         := False
+export MACHINE_ROUNDS            := True
+export PREALLOCATED_STACKS       := False
+export SIGNED_ZEROS              := True
+export STACK_CHECK_DEFAULT       := False
+export STACK_CHECK_PROBES        := True
+export STACK_CHECK_LIMITS        := False
+export SUPPORT_AGGREGATES        := True
+export SUPPORT_ATOMIC_PRIMITIVES := True
+export SUPPORT_COMPOSITE_ASSIGN  := True
+export SUPPORT_COMPOSITE_COMPARE := True
+export SUPPORT_LONG_SHIFTS       := True
+export ALWAYS_COMPATIBLE_REP     := False
+export SUPPRESS_STANDARD_LIBRARY := True
+export USE_ADA_MAIN_PROGRAM_NAME := False
+export ZCX_BY_DEFAULT            := False
+
 export SIZE_TYPE_ASPECTS := with Alignment => 16
 
