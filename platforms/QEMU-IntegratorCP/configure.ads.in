@@ -8,7 +8,7 @@ package Configure
    use Definitions;
 
    -- PLATFORM and CPU definitions
-   PLATFORM  : constant String := "IntegratorCP";
+   PLATFORM  : constant String := "QEMU-IntegratorCP";
    CPU       : constant String := "@CPU@";
    CPU_MODEL : constant String := "@CPU_MODEL@";
 

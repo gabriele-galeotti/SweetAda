@@ -1,7 +1,7 @@
 @ECHO OFF
 
 REM
-REM Integrator/CP (QEMU emulator).
+REM QEMU-IntegratorCP (QEMU emulator).
 REM
 REM Copyright (C) 2020-2024 Gabriele Galeotti
 REM

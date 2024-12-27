@@ -2,7 +2,7 @@
 #ifndef _CONFIGURE_H
 #define _CONFIGURE_H 1
 
-#define PLATFORM  "IntegratorCP"
+#define PLATFORM  "QEMU-IntegratorCP"
 #define CPU       "@CPU@"
 #define CPU_MODEL "@CPU_MODEL@"
 

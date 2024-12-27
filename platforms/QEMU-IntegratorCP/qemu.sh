@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 #
-# Integrator/CP (QEMU emulator).
+# QEMU-IntegratorCP (QEMU emulator).
 #
 # Copyright (C) 2020-2024 Gabriele Galeotti
 #
