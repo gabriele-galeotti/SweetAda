@@ -1,7 +1,7 @@
 @ECHO OFF
 
 REM
-REM STM32VLDISCOVERY (QEMU emulator).
+REM QEMU-STM32VLDISCOVERY (QEMU emulator).
 REM
 REM Copyright (C) 2020-2024 Gabriele Galeotti
 REM
