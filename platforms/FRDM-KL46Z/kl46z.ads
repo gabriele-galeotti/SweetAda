@@ -159,7 +159,7 @@ pragma Style_Checks (Off);
    -- 11.5.4 Interrupt Status Flag Register (PORTx_ISFR)
 
    type PORTx_ISFR_Type is record
-      ISF : Bitmap_32; -- Interrupt Status Flag
+      ISF : Bitmap_32 := [others => False]; -- Interrupt Status Flag
    end record
       with Bit_Order            => Low_Order_First,
            Size                 => 32,
