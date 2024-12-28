@@ -33,7 +33,7 @@ package Gayle
    use System;
    use Bits;
 
-   GAYLE_IDE_BASEADDRESS : constant := 16#00DD_2020#;
+   IDE_BASEADDRESS : constant := 16#00DD_2020#;
 
    type IDE_Devcon_Type is record
       Unused1    : Bits_1;
