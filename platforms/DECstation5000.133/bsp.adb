@@ -154,20 +154,16 @@ package body BSP
             when 7      => Console.Print ("R3041", NL => True);
             when others => Console.Print ("CPU unknown", NL => True);
          end case;
-         Console.Print ("PRId: ", NL => False);
-         Console.Print (PRId.Imp, NL => False);
-         Console.Print (".", NL => False);
-         Console.Print (PRId.Rev, NL => False);
-         Console.Print_NewLine;
+         Console.Print ("PRId: " & PRId.Imp'Image & "." & PRId.Rev'Image, NL => True);
          Console.Print (
             Prefix => "D cache size (kB): ",
-            Value => Natural (R3000.Cache_Size (ICache => False) / 1024),
-            NL => True
+            Value  => Natural (R3000.Cache_Size (ICache => False) / 1024),
+            NL     => True
             );
          Console.Print (
             Prefix => "I cache size (kB): ",
-            Value => Natural (R3000.Cache_Size (ICache => True) / 1024),
-            NL => True
+            Value  => Natural (R3000.Cache_Size (ICache => True) / 1024),
+            NL     => True
             );
       end;
       -------------------------------------------------------------------------
