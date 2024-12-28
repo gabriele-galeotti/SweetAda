@@ -133,7 +133,7 @@ package body BSP is
       -- Gayle IDE ------------------------------------------------------------
       if False then
          IDE_Descriptor := (
-            Base_Address  => System'To_Address (Gayle.GAYLE_IDE_BASEADDRESS),
+            Base_Address  => System'To_Address (Gayle.IDE_BASEADDRESS),
             Scale_Address => 2,
             Read_8        => MMIO.Read'Access,
             Write_8       => MMIO.Write'Access,
