@@ -63,7 +63,11 @@ package body MBR
                when PARTITION4 => Offset := 16#01EE#;
             end case;
             -- explicit assignment could cause misaligned access (e.g., MIPS)
-            Memory_Functions.Cpymem (Block'Address + Offset, Partition'Address, PARTITION_ENTRY_SIZE);
+            Memory_Functions.Cpymem (
+               Block'Address + Offset,
+               Partition'Address,
+               PARTITION_ENTRY_SIZE
+               );
             if BigEndian then
                Partition.LBA_Start := Byte_Swap (@);
                Partition.LBA_Size  := Byte_Swap (@);
