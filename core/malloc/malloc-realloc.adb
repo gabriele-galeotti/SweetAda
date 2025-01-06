@@ -73,7 +73,7 @@ begin
                Memory_Block.Size + Q.all.Size >= RSize
             then
                -- expand the block in-place
-               Memory_Block.Size := Memory_Block.Size + Q.all.Size;
+               Memory_Block.Size := @ + Q.all.Size;
                P.all.Next_Ptr := Q.all.Next_Ptr;
                Q.all.Size     := 0;
                Q.all.Next_Ptr := null;
@@ -85,10 +85,11 @@ begin
                   New_Memory_Block_Address := Malloc (RSize);
                   if New_Memory_Block_Address /= Null_Address then
                      New_Memory_Block_Address :=
-                        Memory_Functions.Memcpy
-                           (New_Memory_Block_Address,
-                            Memory_Block_Address,
-                            Memory_Block.Size - MEMORYBLOCKTYPE_SIZE);
+                        Memory_Functions.Memcpy (
+                           @,
+                           Memory_Block_Address,
+                           Memory_Block.Size - MEMORYBLOCKTYPE_SIZE
+                           );
                      Free (Memory_Block_Address);
                      -- update address
                      Memory_Block_Address := New_Memory_Block_Address;

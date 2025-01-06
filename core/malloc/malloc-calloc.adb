@@ -27,7 +27,7 @@ begin
    Nbytes := Nmemb * Size;
    Memory_Address := Malloc (Nbytes);
    if Memory_Address /= Null_Address then
-      Memory_Address := Memory_Functions.Memset (Memory_Address, 0, Nbytes);
+      Memory_Address := Memory_Functions.Memset (@, 0, Nbytes);
    end if;
    return Memory_Address;
 end Calloc;
