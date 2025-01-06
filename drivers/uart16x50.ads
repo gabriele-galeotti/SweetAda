@@ -46,14 +46,14 @@ package UART16x50
    type Port_Write_8_Ptr is access procedure (Port : in Address; Value : in Unsigned_8);
 
    type Descriptor_Type is record
-      Uart_Model    : Model_Type;
-      Base_Address  : Address;
-      Scale_Address : Address_Shift;
-      Baud_Clock    : Positive;
+      Uart_Model    : Model_Type                := UARTNONE;
+      Base_Address  : Address                   := Null_Address;
+      Scale_Address : Address_Shift             := 0;
+      Baud_Clock    : Positive                  := 1;
       Flags         : Flags_Type                := (PC_UART => False);
       Read_8        : not null Port_Read_8_Ptr  := MMIO.ReadN_U8'Access;
       Write_8       : not null Port_Write_8_Ptr := MMIO.WriteN_U8'Access;
-      Data_Queue    : aliased FIFO.Queue_Type;
+      Data_Queue    : aliased FIFO.Queue_Type   := ([others => 0], 0, 0, 0) with Volatile => True;
    end record;
 
    DESCRIPTOR_INVALID : constant Descriptor_Type :=
