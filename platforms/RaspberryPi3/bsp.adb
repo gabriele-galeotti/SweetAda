@@ -86,9 +86,7 @@ package body BSP
       is
    begin
       -- wait for transmitter available
-      loop
-         exit when RPI3.AUX_MU_LSR_REG.Transmitter_Empty;
-      end loop;
+      loop exit when RPI3.AUX_MU_LSR_REG.Transmitter_Empty; end loop;
       RPI3.AUX_MU_IO_REG.DATA := To_U8 (C);
    end Console_Putchar;
 
@@ -97,9 +95,7 @@ package body BSP
       is
    begin
       -- wait for receiver available
-      loop
-         exit when RPI3.AUX_MU_LSR_REG.Data_Ready;
-      end loop;
+      loop exit when RPI3.AUX_MU_LSR_REG.Data_Ready; end loop;
       C := To_Ch (RPI3.AUX_MU_IO_REG.DATA);
    end Console_Getchar;
 
@@ -150,8 +146,8 @@ package body BSP
          );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       Console.Print ("Raspberry Pi 3", NL => True);
-      Console.Print (Natural (ARMv8A.CurrentEL_Read.EL), Prefix => "Current EL:   ", NL => True);
-      Console.Print (RPI3.ARMTIMER_IRQ_ClrAck,           Prefix => "ARM Timer ID: ", NL => True); -- "TMRA"
+      Console.Print (Prefix => "Current EL:   ", Value => Natural (ARMv8A.CurrentEL_Read.EL), NL => True);
+      Console.Print (Prefix => "ARM Timer ID: ", Value => RPI3.ARMTIMER_IRQ_ClrAck, NL => True); -- "TMRA"
       -- handle IRQs at EL2 ---------------------------------------------------
       if ARMv8A.CurrentEL_Read.EL = 2 then
          declare
