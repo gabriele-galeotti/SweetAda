@@ -24,6 +24,7 @@ with S5D9;
 with Exceptions;
 with Console;
 with Clocks;
+with W25Q64FV;
 with LCD;
 
 package body BSP
@@ -45,8 +46,6 @@ package body BSP
    procedure SysTick_Init;
    procedure LED_Init;
    procedure Serial_Console_Init;
-   procedure QSPI_Init;
-   procedure QSPI_Test;
 
    --========================================================================--
    --                                                                        --
@@ -140,7 +139,7 @@ package body BSP
          others  => <>
          );
       SCI (3).SMR.NORMAL := (
-         CKS  => SMR_CKS_PCLKA4, -- n=1 -> CKS=1
+         CKS  => SMR_CKS_PCLKA,
          MP   => False,
          STOP => SMR_STOP_1,
          PM   => SMR_PM_EVEN,
@@ -149,7 +148,7 @@ package body BSP
          CM   => SMR_CM_ASYNC
          );
       -- Table 34.10 Examples of BRR settings for different bit rates in asynchronous mode (2)
-      SCI (3).BRR := 97; -- 9600 bps @ 120 MHz
+      SCI (3).BRR := 97; -- 9600 bps @ 30 MHz (n = 0)
       -- pin 706 function = SCI2, RxD
       PFSR (P706) := (PMR => True, PSEL => PSEL_SCI2, others => <>);
       -- pin 707 function = SCI2, TxD
@@ -165,40 +164,6 @@ package body BSP
       SCI (3).SSR.NORMAL.FER  := False;
       SCI (3).SSR.NORMAL.ORER := False;
    end Serial_Console_Init;
-
-   ----------------------------------------------------------------------------
-   -- QSPI_Init
-   ----------------------------------------------------------------------------
-   procedure QSPI_Init
-      is
-   begin
-      -- pins 500..505 function = QSPI
-      for P5x in P500 .. P505 loop
-         PFSR (P5x) := (PMR => True, PSEL => PSEL_QSPI, others => <>);
-      end loop;
-   end QSPI_Init;
-
-   ----------------------------------------------------------------------------
-   -- QSPI_Test
-   ----------------------------------------------------------------------------
-   procedure QSPI_Test
-      is
-      RDID  : constant := 16#9F#;
-      mfid  : Unsigned_8; -- “Manufacturer Identification”
-      mtype : Unsigned_8; -- “Memory Type”
-      mcap  : Unsigned_8; -- “Memory Capacity”
-   begin
-      -- QSPI Read Identification
-      QSPI.SFMCMD := (DCOM => DCOM_DIRECT, others => <>);
-      QSPI.SFMCOM := (SFMD => RDID, others => <>);
-      mfid  := QSPI.SFMCOM.SFMD;
-      mtype := QSPI.SFMCOM.SFMD;
-      mcap  := QSPI.SFMCOM.SFMD;
-      QSPI.SFMCMD := (DCOM => DCOM_DIRECT, others => <>);
-      Console.Print (Prefix => "MFID  = 0x", Value => mfid, NL => True);
-      Console.Print (Prefix => "MTYPE = 0x", Value => mtype, NL => True);
-      Console.Print (Prefix => "MCAP  = 0x", Value => mcap, NL => True);
-   end QSPI_Test;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -242,19 +207,17 @@ package body BSP
       Clocks.Init;
       -- power-on peripherals -------------------------------------------------
       -- MSTPCRB.MSTPB31 := False; -- SCI0 on
-      MSTPCRB.MSTPB18 := False; -- SPI0 on
+      MSTPCRB.MSTPB19 := False; -- SPI0 on
       MSTPCRB.MSTPB28 := False; -- SCI3 on
-      MSTPCRD.MSTPD3  := False; -- AGT0
-      MSTPCRB.MSTPB6  := False; -- QSPI
+      MSTPCRD.MSTPD3  := False; -- AGT0 on
+      MSTPCRB.MSTPB6  := False; -- QSPI on
       -- enable writing to the PmnPFS register --------------------------------
       PWPR.B0WI  := False;
       PWPR.PFSWE := True;
       -------------------------------------------------------------------------
       Exceptions.Init;
       -------------------------------------------------------------------------
-      LED_Init;
       Serial_Console_Init;
-      QSPI_Init;
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor := (
          Write => Console_Putchar'Access,
@@ -272,8 +235,11 @@ package body BSP
       Console.Print (Prefix => "ACTLR: DISFOLD:    ", Value => CortexM4.ACTLR.DISFOLD, NL => True);
       Console.Print (Prefix => "ACTLR: DISFPCA:    ", Value => CortexM4.ACTLR.DISFPCA, NL => True);
       Console.Print (Prefix => "ACTLR: DISOOFP:    ", Value => CortexM4.ACTLR.DISOOFP, NL => True);
+      -------------------------------------------------------------------------
+      LED_Init;
+      W25Q64FV.Init;
+      W25Q64FV.Device_Detect;
       LCD.Init;
-      -- QSPI_Test;
       -------------------------------------------------------------------------
       ARMv7M.Irq_Enable;
       ARMv7M.Fault_Irq_Enable;
