@@ -38,9 +38,9 @@ APP_BIN=neorv32_exe.bin
 SERIALPORT_DEVICE=/dev/ttyUSB-PL2303
 
 # generate a pure binary image out of .text/.rodata/.data sections
-${OBJCOPY}                                     \
-  -j .text -j .rodata -j .data                 \
-  -I elf32-little ${KERNEL_OUTFILE}            \
+${OBJCOPY} \
+  -j .text -j .rodata -j .data \
+  -I elf32-little ${KERNEL_OUTFILE} \
   -O binary ${PLATFORM_DIRECTORY}/sweetada.bin
 # elaborate a SweetAda executable
 cd ${PLATFORM_DIRECTORY}
