@@ -65,6 +65,7 @@ package body Exceptions
       is
    begin
       Console.Print ("*** EXCEPTION", NL => True);
+      -- Console.Print (Prefix => "ELR_EL2: ", Value => ARMv8A.ELR_EL2Read, NL => True);
       Abort_Library.System_Abort;
    end Exception_Process;
 
