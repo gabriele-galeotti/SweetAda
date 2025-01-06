@@ -45,23 +45,17 @@ package body BSP
       is
    begin
       -- wait for transmitter available
-      loop
-         exit when MCF5373.USR0.TXRDY;
-      end loop;
+      loop exit when MCF5373.USR0.TXRDY; end loop;
       MCF5373.UTB0 := To_U8 (C);
    end Console_Putchar;
 
    procedure Console_Getchar
       (C : out Character)
       is
-      Data : Unsigned_8;
    begin
       -- wait for receiver available
-      loop
-         exit when MCF5373.USR0.RXRDY;
-      end loop;
-      Data := MCF5373.URB0;
-      C := To_Ch (Data);
+      loop exit when MCF5373.USR0.RXRDY; end loop;
+      C := To_Ch (MCF5373.URB0);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
