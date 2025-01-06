@@ -7,4 +7,6 @@
 #define CPU         "@CPU@"
 #define CPU_MODEL   "@CPU_MODEL@"
 
+#define IPSBAR 0x40000000
+
 #endif /* _CONFIGURE_H */
