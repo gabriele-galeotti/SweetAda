@@ -51,10 +51,30 @@ LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 #                                                                              #
 ################################################################################
 
-export OPENOCD_PREFIX := /usr/local
+ifeq      ($(OSTYPE),cmd)
+OPENOCD_PREFIX := C:\Program Files\OpenOCD-20231002-0.12.0
+else ifeq ($(OSTYPE),msys)
+OPENOCD_PREFIX := C:/Program Files/OpenOCD-20231002-0.12.0
+else
+OPENOCD_PREFIX := /opt/OpenOCD
+endif
 
-SESSION_START_COMMAND := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -server
-SESSION_END_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -shutdown
+# Tcl:
+# $(TCLSH) instead of $(PYTHON)
+# openocd.tcl instead of openocd.py
+
+SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
+                           -p "$(OPENOCD_PREFIX)"                                     \
+                           -c "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cfg    \
+                           -server
+SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
+                           -shutdown
+
+
+#export OPENOCD_PREFIX := /usr/local
+
+#SESSION_START_COMMAND := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -server
+#SESSION_END_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -shutdown
 
 RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl
 DEBUG_COMMAND :=
