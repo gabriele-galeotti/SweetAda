@@ -78,7 +78,7 @@ proc do_command {fd command_string} {
     # check if reply string end with "ack" + NUL
     set idx [string last ack\x00 $fd_data [expr [string length $fd_data] - 1]]
     if {$idx < 0} {
-        puts "$SCRIPT_FILENAME: *** Error: no ack received."
+        puts stderr "$SCRIPT_FILENAME: *** Error: no ack received."
         close $fd
         exit 1
     } else {
@@ -166,12 +166,12 @@ if {$PLATFORM ne "unix"} {
 }
 
 if {$FPGA_BITSTREAM eq ""} {
-    puts "$SCRIPT_FILENAME: *** Error: no FPGA_BITSTREAM."
+    puts stderr "$SCRIPT_FILENAME: *** Error: no FPGA_BITSTREAM."
     exit 1
 }
 
 if {$PSOC_COMMDEVICE eq ""} {
-    puts "$SCRIPT_FILENAME: *** Error: no PSOC_COMMDEVICE."
+    puts stderr "$SCRIPT_FILENAME: *** Error: no PSOC_COMMDEVICE."
     exit 1
 }
 
@@ -217,21 +217,21 @@ set bitstream_size [file size $FPGA_BITSTREAM]
 do_command $fd "ss_program $bitstream_size"
 # 10. Send bytes from .bit file
 if {[download_bitstream $fd $FPGA_BITSTREAM] < 0} {
-    puts "$SCRIPT_FILENAME: *** Error: no successful download."
+    puts stderr "$SCRIPT_FILENAME: *** Error: no successful download."
     close $fd
     exit 1
 }
 # 11. Check INIT is still high
 set response [do_command $fd "read_init"]
 if {$response ne "\x01"} {
-    puts "$SCRIPT_FILENAME: *** Error: INIT not high after programming."
+    puts stderr "$SCRIPT_FILENAME: *** Error: INIT not high after programming."
     close $fd
     exit 1
 }
 # 12. Check DONE is high
 set response [do_command $fd "read_done"]
 if {$response ne "\x01"} {
-    puts "$SCRIPT_FILENAME: *** Error: DONE not high after programming."
+    puts stderr "$SCRIPT_FILENAME: *** Error: DONE not high after programming."
     close $fd
     exit 1
 }
