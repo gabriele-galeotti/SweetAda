@@ -3338,7 +3338,7 @@ pragma Warnings (Off);
       SSLND  : SSLND_Type       with Volatile_Full_Access => True;
       SPND   : SPND_Type        with Volatile_Full_Access => True;
       SPCR2  : SPCR2_Type       with Volatile_Full_Access => True;
-      SPCMD  : SPCMD_Array_Type;
+      SPCMD  : SPCMD_Array_Type with Volatile => True;
       SPDCR2 : SPDCR2_Type      with Volatile_Full_Access => True;
    end record
       with Size                    => 16#100# * 8,
