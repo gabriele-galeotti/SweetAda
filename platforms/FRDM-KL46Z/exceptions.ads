@@ -30,54 +30,22 @@ package Exceptions
 
    use Bits;
 
-   SP_Main      : aliased Asm_Entry_Point
-      with Import        => True,
-           External_Name => "SP_Main";
-   Reset        : aliased Asm_Entry_Point
-      with Import        => True,
-           External_Name => "Reset";
-   NMI          : aliased Asm_Entry_Point
-      with Import        => True,
-           External_Name => "NMI";
-   HardFault    : aliased Asm_Entry_Point
-      with Import        => True,
-           External_Name => "HardFault";
-   ReservedExc4 : aliased Asm_Entry_Point
-      with Import        => True,
-           External_Name => "ReservedExc4";
-   ReservedExc5 : aliased Asm_Entry_Point
-      with Import        => True,
-           External_Name => "ReservedExc5";
-   ReservedExc6 : aliased Asm_Entry_Point
-      with Import        => True,
-           External_Name => "ReservedExc6";
-   ReservedExc7 : aliased Asm_Entry_Point
-      with Import        => True,
-           External_Name => "ReservedExc7";
-   ReservedExc8 : aliased Asm_Entry_Point
-      with Import        => True,
-           External_Name => "ReservedExc8";
-   ReservedExc9 : aliased Asm_Entry_Point
-      with Import        => True,
-           External_Name => "ReservedExc9";
-   ReservedExcA : aliased Asm_Entry_Point
-      with Import        => True,
-           External_Name => "ReservedExcA";
-   SVCall       : aliased Asm_Entry_Point
-      with Import        => True,
-           External_Name => "SVCall";
-   ReservedExcC : aliased Asm_Entry_Point
-      with Import        => True,
-           External_Name => "ReservedExcC";
-   ReservedExcD : aliased Asm_Entry_Point
-      with Import        => True,
-           External_Name => "ReservedExcD";
-   PendSV       : aliased Asm_Entry_Point
-      with Import        => True,
-           External_Name => "PendSV";
-   SysTick      : aliased Asm_Entry_Point
-      with Import        => True,
-           External_Name => "SysTick";
+   SP_Main      : aliased Asm_Entry_Point with Import => True, External_Name => "SP_Main";
+   Reset        : aliased Asm_Entry_Point with Import => True, External_Name => "Reset";
+   NMI          : aliased Asm_Entry_Point with Import => True, External_Name => "NMI";
+   HardFault    : aliased Asm_Entry_Point with Import => True, External_Name => "HardFault";
+   ReservedExc4 : aliased Asm_Entry_Point with Import => True, External_Name => "ReservedExc4";
+   ReservedExc5 : aliased Asm_Entry_Point with Import => True, External_Name => "ReservedExc5";
+   ReservedExc6 : aliased Asm_Entry_Point with Import => True, External_Name => "ReservedExc6";
+   ReservedExc7 : aliased Asm_Entry_Point with Import => True, External_Name => "ReservedExc7";
+   ReservedExc8 : aliased Asm_Entry_Point with Import => True, External_Name => "ReservedExc8";
+   ReservedExc9 : aliased Asm_Entry_Point with Import => True, External_Name => "ReservedExc9";
+   ReservedExcA : aliased Asm_Entry_Point with Import => True, External_Name => "ReservedExcA";
+   SVCall       : aliased Asm_Entry_Point with Import => True, External_Name => "SVCall";
+   ReservedExcC : aliased Asm_Entry_Point with Import => True, External_Name => "ReservedExcC";
+   ReservedExcD : aliased Asm_Entry_Point with Import => True, External_Name => "ReservedExcD";
+   PendSV       : aliased Asm_Entry_Point with Import => True, External_Name => "PendSV";
+   SysTick      : aliased Asm_Entry_Point with Import => True, External_Name => "SysTick";
 
    procedure Exception_Process
       with Export        => True,
