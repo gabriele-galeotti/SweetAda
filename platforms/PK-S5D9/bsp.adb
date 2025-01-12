@@ -61,7 +61,7 @@ package body BSP
    procedure SysTick_Init
       is
    begin
-      ARMv7M.SYST_RVR.RELOAD := Bits_24 (120_000_000 / 2_000);
+      ARMv7M.SYST_RVR.RELOAD := Bits_24 (120 * MHz1 / 2_000);
       ARMv7M.SHPR3.PRI_15 := 16#FF#;
       ARMv7M.SYST_CVR.CURRENT := 0;
       ARMv7M.SYST_CSR := (
