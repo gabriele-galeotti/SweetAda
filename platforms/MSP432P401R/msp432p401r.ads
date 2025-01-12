@@ -51,10 +51,10 @@ pragma Style_Checks (Off);
    RSTCTL_RESET_REQ_RSTKEY : constant := 16#69#;
 
    type RSTCTL_RESET_REQ_Type is record
-      SOFT_REQ  : Boolean;      -- If written with 1, generates a Hard Reset request to the Reset Controller
-      HARD_REQ  : Boolean;      -- If written with 1, generates a Soft Reset request to the Reset Controller
+      SOFT_REQ  : Boolean := False; -- If written with 1, generates a Hard Reset request to the Reset Controller
+      HARD_REQ  : Boolean := False; -- If written with 1, generates a Soft Reset request to the Reset Controller
       Reserved1 : Bits_6  := 0;
-      RSTKEY    : Bits_8;       -- Must be written with 69h to enable writes to bits 1-0 (in the same write operation), else writes to bits 1-0 are ignored
+      RSTKEY    : Bits_8  := 0;     -- Must be written with 69h to enable writes to bits 1-0 (in the same write operation), else writes to bits 1-0 are ignored
       Reserved2 : Bits_16 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -126,8 +126,8 @@ pragma Style_Checks (Off);
    -- 3.3.9 RSTCTL_PSSRESET_CLR Register
 
    type RSTCTL_PSSRESET_CLR_Type is record
-      CLR      : Boolean; -- Write 1 clears all PSS Reset Flags in the RSTCTL_PSSRESET_STAT
-      Reserved : Bits_31;
+      CLR      : Boolean := False; -- Write 1 clears all PSS Reset Flags in the RSTCTL_PSSRESET_STAT
+      Reserved : Bits_31 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -203,9 +203,9 @@ pragma Style_Checks (Off);
    SYS_REBOOT_CTL_WKEY : constant := 16#69#;
 
    type SYS_REBOOT_CTL_Type is record
-      REBOOT    : Boolean;      -- Write 1 initiates a Reboot of the device
+      REBOOT    : Boolean := False; -- Write 1 initiates a Reboot of the device
       Reserved1 : Bits_7  := 0;
-      WKEY      : Bits_8;       -- Key to enable writes to bit 0.
+      WKEY      : Bits_8  := 0;     -- Key to enable writes to bit 0.
       Reserved2 : Bits_16 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -435,9 +435,9 @@ pragma Style_Checks (Off);
    -- 4.11.16 SYS_RESET_STATOVER Register
 
    type SYS_RESET_STATOVER_Type is record
-      SOFT      : Boolean;          -- Indicates if SOFT Reset is asserted
-      HARD      : Boolean;          -- Indicates if HARD Reset is asserted
-      REBOOT    : Boolean;          -- Indicates if Reboot Reset is asserted
+      SOFT      : Boolean := False; -- Indicates if SOFT Reset is asserted
+      HARD      : Boolean := False; -- Indicates if HARD Reset is asserted
+      REBOOT    : Boolean := False; -- Indicates if Reboot Reset is asserted
       Reserved1 : Bits_5  := 0;
       SOFT_OVER : Boolean := False; -- When 1, activates the override request for the SOFT Reset output of the Reset Controller.
       HARD_OVER : Boolean := False; -- When 1, activates the override request for the HARD Reset output of the Reset Controller.
@@ -731,7 +731,7 @@ pragma Style_Checks (Off);
    CSKEY_CSKEY : constant := 16#695A#;
 
    type CSKEY_Type is record
-      CSKEY    : Unsigned_16;      -- Write CSKEY = xxxx_695Ah to unlock CS registers. All 16 LSBs need to be written together.
+      CSKEY    : Unsigned_16 := 16#A596#; -- Write CSKEY = xxxx_695Ah to unlock CS registers. All 16 LSBs need to be written together.
       Reserved : Bits_16     := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -753,13 +753,13 @@ pragma Style_Checks (Off);
    DCORSEL_RSVD1OR2 : constant := 2#111#; -- Nominal DCO Frequency Range (MHz): Reserved--defaults to 1 to 2 when selected.
 
    type CSCTL0_Type is record
-      DCOTUNE   : Bits_10;      -- DCO frequency tuning select.
+      DCOTUNE   : Bits_10 := 0;          -- DCO frequency tuning select.
       Reserved1 : Bits_3  := 0;
       Reserved2 : Bits_3  := 0;
-      DCORSEL   : Bits_3;       -- DCO frequency range select.
+      DCORSEL   : Bits_3  := DCORSEL_3M; -- DCO frequency range select.
       Reserved3 : Bits_3  := 0;
-      DCORES    : Boolean;      -- Enables the DCO external resistor mode.
-      DCOEN     : Boolean;      -- Enables the DCO oscillator regardless if used as a clock resource.
+      DCORES    : Boolean := False;      -- Enables the DCO external resistor mode.
+      DCOEN     : Boolean := False;      -- Enables the DCO oscillator regardless if used as a clock resource.
       Reserved4 : Bits_1  := 0;
       Reserved5 : Bits_7  := 0;
    end record
@@ -846,22 +846,22 @@ pragma Style_Checks (Off);
    DIVS_DIV128 : constant := 2#111#; -- f(SCLK)/128
 
    type CSCTL1_Type is record
-      SELM      : Bits_3;      -- Selects the MCLK source.
+      SELM      : Bits_3 := SELM_DCOCLK;  -- Selects the MCLK source.
       Reserved1 : Bits_1 := 0;
-      SELS      : Bits_3;      -- Selects the SMCLK and HSMCLK source.
+      SELS      : Bits_3 := SELS_DCOCLK;  -- Selects the SMCLK and HSMCLK source.
       Reserved2 : Bits_1 := 0;
-      SELA      : Bits_3;      -- Selects the ACLK source.
+      SELA      : Bits_3 := SELA_LFXTCLK; -- Selects the ACLK source.
       Reserved3 : Bits_1 := 0;
-      SELB      : Bits_1;      -- Selects the BCLK source.
+      SELB      : Bits_1 := SELB_LFXTCLK; -- Selects the BCLK source.
       Reserved4 : Bits_2 := 0;
       Reserved5 : Bits_1 := 0;
-      DIVM      : Bits_3;      -- MCLK source divider.
+      DIVM      : Bits_3 := DIVM_DIV1;    -- MCLK source divider.
       Reserved6 : Bits_1 := 0;
-      DIVHS     : Bits_3;      -- HSMCLK source divider.
+      DIVHS     : Bits_3 := DIVHS_DIV1;   -- HSMCLK source divider.
       Reserved7 : Bits_1 := 0;
-      DIVA      : Bits_3;      -- ACLK source divider.
+      DIVA      : Bits_3 := DIVA_DIV1;    -- ACLK source divider.
       Reserved8 : Bits_1 := 0;
-      DIVS      : Bits_3;      -- SMCLK source divider.
+      DIVS      : Bits_3 := DIVS_DIV1;    -- SMCLK source divider.
       Reserved9 : Bits_1 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -912,20 +912,20 @@ pragma Style_Checks (Off);
    HFXTBYPASS_SQRWV : constant := 1; -- HFXT sourced by external square wave.
 
    type CSCTL2_Type is record
-      LFXTDRIVE  : Bits_2;       -- The LFXT oscillator current can be adjusted to its drive needs.
+      LFXTDRIVE  : Bits_2  := LFXTDRIVE_3;      -- The LFXT oscillator current can be adjusted to its drive needs.
       Reserved1  : Bits_1  := 0;
       Reserved2  : Bits_4  := 0;
       Reserved3  : Bits_1  := 0;
-      LFXT_EN    : Boolean;      -- Turns on the LFXT oscillator regardless if used as a clock resource.
-      LFXTBYPASS : Bits_1;       -- LFXT bypass select.
+      LFXT_EN    : Boolean := False;            -- Turns on the LFXT oscillator regardless if used as a clock resource.
+      LFXTBYPASS : Bits_1  := LFXTBYPASS_EXTAL; -- LFXT bypass select.
       Reserved4  : Bits_6  := 0;
-      HFXTDRIVE  : Bits_1;       -- HFXT oscillator drive selection.
+      HFXTDRIVE  : Bits_1  := HFXTDRIVE_5_48;   -- HFXT oscillator drive selection.
       Reserved5  : Bits_2  := 0;
       Reserved6  : Bits_1  := 0;
-      HFXTFREQ   : Bits_3;       -- HFXT frequency selection.
+      HFXTFREQ   : Bits_3  := HFXTFREQ_1_4;     -- HFXT frequency selection.
       Reserved7  : Bits_1  := 0;
-      HFXT_EN    : Boolean;      -- Turns on the HFXT oscillator regardless if used as a clock resource.
-      HFXTBYPASS : Bits_1;       -- HFXT bypass select.
+      HFXT_EN    : Boolean := False;            -- Turns on the HFXT oscillator regardless if used as a clock resource.
+      HFXTBYPASS : Bits_1  := HFXTBYPASS_EXTAL; -- HFXT bypass select.
       Reserved8  : Bits_6  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -961,12 +961,12 @@ pragma Style_Checks (Off);
    FCNTHF_32k : constant := 2#11#; -- 32768 cycles
 
    type CSCTL3_Type is record
-      FCNTLF    : Bits_2;       -- Start flag counter for LFXT.
-      RFCNTLF   : Boolean;      -- Reset start fault counter for LFXT.
-      FCNTLF_EN : Boolean;      -- Enable start fault counter for LFXT.
-      FCNTHF    : Bits_2;       -- Start flag counter for HFXT.
-      RFCNTHF   : Boolean;      -- Reset start fault counter for HFXT.
-      FCNTHF_EN : Boolean;      -- Enable start fault counter for HFXT.
+      FCNTLF    : Bits_2  := FCNTLF_32k; -- Start flag counter for LFXT.
+      RFCNTLF   : Boolean := False;      -- Reset start fault counter for LFXT.
+      FCNTLF_EN : Boolean := True;       -- Enable start fault counter for LFXT.
+      FCNTHF    : Bits_2  := FCNTHF_32k; -- Start flag counter for HFXT.
+      RFCNTHF   : Boolean := False;      -- Reset start fault counter for HFXT.
+      FCNTHF_EN : Boolean := True;       -- Enable start fault counter for HFXT.
       Reserved  : Bits_24 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -987,16 +987,16 @@ pragma Style_Checks (Off);
    REFOFSEL_128k : constant := 1; -- 128 kHz
 
    type CSCLKEN_Type is record
-      ACLK_EN   : Boolean;      -- ACLK system clock conditional request enable
-      MCLK_EN   : Boolean;      -- MCLK system clock conditional request enable
-      HSMCLK_EN : Boolean;      -- HSMCLK system clock conditional request enable
-      SMCLK_EN  : Boolean;      -- SMCLK system clock conditional request enable
+      ACLK_EN   : Boolean := True;         -- ACLK system clock conditional request enable
+      MCLK_EN   : Boolean := True;         -- MCLK system clock conditional request enable
+      HSMCLK_EN : Boolean := True;         -- HSMCLK system clock conditional request enable
+      SMCLK_EN  : Boolean := True;         -- SMCLK system clock conditional request enable
       Reserved1 : Bits_4  := 0;
-      VLO_EN    : Boolean;      -- Turns on the VLO oscillator regardless if used as a clock resource.
-      REFO_EN   : Boolean;      -- Turns on the REFO oscillator regardless if used as a clock resource.
-      MODOSC_EN : Boolean;      -- Turns on the MODOSC oscillator regardless if used as a clock resource.
+      VLO_EN    : Boolean := False;        -- Turns on the VLO oscillator regardless if used as a clock resource.
+      REFO_EN   : Boolean := False;        -- Turns on the REFO oscillator regardless if used as a clock resource.
+      MODOSC_EN : Boolean := False;        -- Turns on the MODOSC oscillator regardless if used as a clock resource.
       Reserved2 : Bits_4  := 0;
-      REFOFSEL  : Bits_1;       -- Selects REFO nominal frequency.
+      REFOFSEL  : Bits_1  := REFOFSEL_32k; -- Selects REFO nominal frequency.
       Reserved3 : Bits_16 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1073,16 +1073,16 @@ pragma Style_Checks (Off);
    -- 6.3.8 CSIE Register Clock System Interrupt Enable Register
 
    type CSIE_Type is record
-      LFXTIE     : Boolean;      -- LFXT oscillator fault flag interrupt enable.
-      HFXTIE     : Boolean;      -- HFXT oscillator fault flag interrupt enable.
+      LFXTIE     : Boolean := False; -- LFXT oscillator fault flag interrupt enable.
+      HFXTIE     : Boolean := False; -- HFXT oscillator fault flag interrupt enable.
       Reserved1  : Bits_1  := 0;
       Reserved2  : Bits_1  := 0;
       Reserved3  : Bits_1  := 0;
       Reserved4  : Bits_1  := 0;
-      DCOR_OPNIE : Boolean;      -- DCO external resistor open circuit fault flag interrupt enable.
+      DCOR_OPNIE : Boolean := False; -- DCO external resistor open circuit fault flag interrupt enable.
       Reserved5  : Bits_1  := 0;
-      FCNTLFIE   : Boolean;      -- Start fault counter interrupt enable LFXT.
-      FCNTHFIE   : Boolean;      -- Start fault counter interrupt enable HFXT.
+      FCNTLFIE   : Boolean := False; -- Start fault counter interrupt enable LFXT.
+      FCNTHFIE   : Boolean := False; -- Start fault counter interrupt enable HFXT.
       Reserved6  : Bits_22 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1166,16 +1166,16 @@ pragma Style_Checks (Off);
    -- 6.3.11 CSSETIFG Register Clock System Clear Interrupt Flag Register
 
    type CSSETIFG_Type is record
-      SET_LFXTIFG     : Boolean;      -- Set LFXT oscillator fault interrupt flag.
-      SET_HFXTIFG     : Boolean;      -- Set HFXT oscillator fault interrupt flag.
+      SET_LFXTIFG     : Boolean := False; -- Set LFXT oscillator fault interrupt flag.
+      SET_HFXTIFG     : Boolean := False; -- Set HFXT oscillator fault interrupt flag.
       Reserved1       : Bits_1  := 0;
       Reserved2       : Bits_1  := 0;
       Reserved3       : Bits_1  := 0;
       Reserved4       : Bits_1  := 0;
-      SET_DCOR_OPNIFG : Boolean;      -- Set DCO external resistor open circuit fault interrupt flag.
+      SET_DCOR_OPNIFG : Boolean := False; -- Set DCO external resistor open circuit fault interrupt flag.
       Reserved5       : Bits_1  := 0;
-      SET_FCNTLFIFG   : Boolean;      -- Start fault counter set interrupt flag LFXT.
-      SET_FCNTHFIFG   : Boolean;      -- Start fault counter set interrupt flag HFXT.
+      SET_FCNTLFIFG   : Boolean := False; -- Start fault counter set interrupt flag LFXT.
+      SET_FCNTHFIFG   : Boolean := False; -- Start fault counter set interrupt flag HFXT.
       Reserved6       : Bits_22 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1197,9 +1197,9 @@ pragma Style_Checks (Off);
    -- 6.3.12 CSDCOERCAL0 Register DCO External Resistor Calibration 0 Register
 
    type CSDCOERCAL0_Type is record
-      DCO_TCCAL       : Bits_2;       -- DCO Temperature compensation calibration.
+      DCO_TCCAL       : Bits_2  := 0;       -- DCO Temperature compensation calibration.
       Reserved1       : Bits_14 := 0;
-      DCO_FCAL_RSEL04 : Bits_10;      -- DCO frequency calibration for DCO frequency range (DCORSEL) 0 to 4.
+      DCO_FCAL_RSEL04 : Bits_10 := 16#100#; -- DCO frequency calibration for DCO frequency range (DCORSEL) 0 to 4.
       Reserved2       : Bits_6  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1214,7 +1214,7 @@ pragma Style_Checks (Off);
    -- 6.3.13 CSDCOERCAL1 Register DCO External Resistor Calibration 1 Register
 
    type CSDCOERCAL1_Type is record
-      DCO_FCAL_RSEL5 : Bits_10;      -- DCO frequency calibration for DCO frequency range (DCORSEL) 5.
+      DCO_FCAL_RSEL5 : Bits_10 := 16#100#; -- DCO frequency calibration for DCO frequency range (DCORSEL) 5.
       Reserved       : Bits_22 := 0;
    end record
       with Bit_Order => Low_Order_First,
