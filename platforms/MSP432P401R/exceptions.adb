@@ -78,7 +78,9 @@ package body Exceptions
          with Import        => True,
               External_Name => "vectors";
    begin
-      ARMv7M.VTOR.TBLOFF := Bits_25 (LLutils.Select_Address_Bits (Vector_Table'Address, 7, 31));
+      ARMv7M.VTOR.TBLOFF := Bits_25 (LLutils.Select_Address_Bits (
+                               Vector_Table'Address, 7, 31
+                               ));
    end Init;
 
 end Exceptions;
