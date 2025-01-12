@@ -32,9 +32,9 @@ extern ldiv_t         ldiv(long, long);
 extern long           strtol(const char *, char **, int);
 extern unsigned long  strtoul(const char *, char **, int);
 extern void          *malloc(size_t);
-extern void           free(void *);
 extern void          *calloc(size_t, size_t);
 extern void          *realloc(void *, size_t);
+extern void           free(void *);
 
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
