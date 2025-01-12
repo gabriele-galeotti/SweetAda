@@ -93,9 +93,7 @@ package body BSP
       is
    begin
       -- wait for transmitter available
-      loop
-         exit when USR0.TXRDY;
-      end loop;
+      loop exit when USR0.TXRDY; end loop;
       UTB0 := To_U8 (C);
    end Console_Putchar;
 
@@ -105,9 +103,7 @@ package body BSP
       Data : Unsigned_8;
    begin
       -- wait for receiver available
-      loop
-         exit when USR0.RXRDY;
-      end loop;
+      loop exit when USR0.RXRDY; end loop;
       Data := URB0;
       C := To_Ch (Data);
    end Console_Getchar;
