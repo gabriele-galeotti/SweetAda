@@ -95,7 +95,9 @@ package body MMU.Amiga
              UDT      => UDT_RESIDENT,
              W        => False,
              U        => False,
-             PTA4     => Bits_24 (Select_Address_Bits (Memory_Space (Idx).Descriptor_Ptr.all (0)'Address, 8, 31)),
+             PTA4     => Bits_24 (Select_Address_Bits (
+                            Memory_Space (Idx).Descriptor_Ptr.all (0)'Address, 8, 31
+                            )),
              others   => <>
             );
       end loop;
