@@ -57,7 +57,7 @@ package body BSP
    begin
       -- The LED is toggled every 1000 ticks, so that in 2000 ticks a complete
       -- 1s-cycle can be observed @ 24 MHz CPU clock (MCLK)
-      ARMv7M.SYST_RVR.RELOAD := Bits_24 (24_000_000 / 2_000);
+      ARMv7M.SYST_RVR.RELOAD := Bits_24 (24 * MHz1 / 2_000);
       ARMv7M.SHPR3.PRI_15 := 16#01#;
       ARMv7M.SYST_CVR.CURRENT := 0;
       ARMv7M.SYST_CSR := (
