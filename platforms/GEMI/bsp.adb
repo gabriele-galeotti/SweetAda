@@ -71,9 +71,7 @@ package body BSP
       Value := 16#F0#;
       loop
          GEMI.LEDPORT := Value;
-         for Delay_Loop_Count in 1 .. Delay_Count loop
-            SH.NOP;
-         end loop;
+         for Delay_Loop_Count in 1 .. Delay_Count loop SH.NOP; end loop;
          Value := Value xor 16#10#;
       end loop;
    end GEMI_Last_Chance_Handler;
