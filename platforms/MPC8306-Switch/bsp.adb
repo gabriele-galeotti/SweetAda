@@ -119,11 +119,11 @@ package body BSP
       Console.Print ("MPC8306 Switch", NL => True);
       -------------------------------------------------------------------------
       CPU_PVR := PowerPC.PVR_Read;
-      Console.Print (CPU_PVR.Version, Prefix => "PVR (ver): ", NL => True);
-      Console.Print (CPU_PVR.Revision, Prefix => "PVR (rev): ", NL => True);
-      Console.Print (e300.SVR_Read, Prefix => "SVR: ", NL => True);
-      Console.Print (MPC83XX.RCWLR, Prefix => "RCWLR: ", NL => True);
-      Console.Print (MPC83XX.RCWHR, Prefix => "RCWHR: ", NL => True);
+      Console.Print (Prefix => "PVR (ver): ", Value => CPU_PVR.Version, NL => True);
+      Console.Print (Prefix => "PVR (rev): ", Value => CPU_PVR.Revision, NL => True);
+      Console.Print (Prefix => "SVR:       ", Value => e300.SVR_Read, NL => True);
+      Console.Print (Prefix => "RCWLR:     ", Value => MPC83XX.RCWLR, NL => True);
+      Console.Print (Prefix => "RCWHR:     ", Value => MPC83XX.RCWHR, NL => True);
       -------------------------------------------------------------------------
    end Setup;
 
