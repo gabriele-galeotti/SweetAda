@@ -173,7 +173,7 @@ package body VGA
        16#00#, -- 04 Read Map Select:
        16#10#, -- 05 Graphics Mode:
        16#0E#, -- 06 Miscellaneous Graphics:
-       16#0F#, -- 07 Color "don''t care":
+       16#0F#, -- 07 Color "don't care":
        16#FF#  -- 08 Bit Mask:
       ];
 
@@ -186,7 +186,7 @@ package body VGA
        16#00#, -- 04 Read Map Select:
        16#00#, -- 05 Graphics Mode:
        16#05#, -- 06 Miscellaneous Graphics:
-       16#0F#, -- 07 Color "don''t care":
+       16#0F#, -- 07 Color "don't care":
        16#FF#  -- 08 Bit Mask:
       ];
 
