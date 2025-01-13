@@ -75,9 +75,7 @@ package body BSP
       is
    begin
       -- wait for transmitter available
-      loop
-         exit when UCSR0A.UDRE0;
-      end loop;
+      loop exit when UCSR0A.UDRE0; end loop;
       UDR0 := To_U8 (C);
    end Console_Putchar;
 
@@ -86,9 +84,7 @@ package body BSP
       is
    begin
       -- wait for receiver available
-      loop
-         exit when UCSR0A.RXC0;
-      end loop;
+      loop exit when UCSR0A.RXC0; end loop;
       C := To_Ch (UDR0);
    end Console_Getchar;
 
