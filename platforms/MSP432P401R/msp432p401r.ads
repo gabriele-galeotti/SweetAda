@@ -1312,10 +1312,10 @@ pragma Style_Checks (Off);
 
    -- 7.3.1 PSSKEY Register PSS Key Register
 
-   PSSKEY_KEY : constant := 16#A596#;
+   PSSKEY_KEY : constant := 16#695A#;
 
    type PSSKEY_Type is record
-      PSSKEY   : Unsigned_16;      -- PSS key.
+      PSSKEY   : Unsigned_16 := 16#A596#; -- PSS key.
       Reserved : Bits_16     := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1340,16 +1340,16 @@ pragma Style_Checks (Off);
    SVSMHTH_7 : constant := 2#111#; -- ''
 
    type PSSCTL0_Type is record
-      SVSMHOFF     : Boolean;      -- SVSM high-side off
-      SVSMHLP      : Boolean;      -- SVSM high-side low power normal performance mode
-      SVSMHS       : Bits_1;       -- Supply supervisor or monitor selection for the high-side
-      SVSMHTH      : Bits_3;       -- SVSM high-side reset voltage level.
-      SVMHOE       : Boolean;      -- SVSM high-side output enable
-      SVMHOUTPOLAL : Boolean;      -- SVMHOUT pin polarity active low.
+      SVSMHOFF     : Boolean := False;       -- SVSM high-side off
+      SVSMHLP      : Boolean := False;       -- SVSM high-side low power normal performance mode
+      SVSMHS       : Bits_1  := SVSMHS_SVSH; -- Supply supervisor or monitor selection for the high-side
+      SVSMHTH      : Bits_3  := SVSMHTH_0;       -- SVSM high-side reset voltage level.
+      SVMHOE       : Boolean := False;       -- SVSM high-side output enable
+      SVMHOUTPOLAL : Boolean := False;       -- SVMHOUT pin polarity active low.
       Reserved1    : Bits_2  := 0;
-      DCDC_FORCE   : Boolean;      -- Force DC/DC regulator operation.
+      DCDC_FORCE   : Boolean := False;       -- Force DC/DC regulator operation.
       Reserved2    : Bits_1  := 0;
-      Reserved3    : Bits_2  := 2;
+      Reserved3    : Bits_2  := 2#10#;
       Reserved4    : Bits_18 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1372,7 +1372,7 @@ pragma Style_Checks (Off);
 
    type PSSIE_Type is record
       Reserved1 : Bits_1  := 0;
-      SVSMHIE   : Boolean;      -- High-side SVSM interrupt enable, when set as a monitor (SVSMHS = 1).
+      SVSMHIE   : Boolean := False; -- High-side SVSM interrupt enable, when set as a monitor (SVSMHS = 1).
       Reserved2 : Bits_30 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1386,9 +1386,9 @@ pragma Style_Checks (Off);
    -- 7.3.4 PSSIFG Register PSS Interrupt Flag Register
 
    type PSSIFG_Type is record
-      Reserved1 : Bits_1  := 0;
-      SVSMHIFG  : Boolean;      -- High-side SVSM interrupt flag.
-      Reserved2 : Bits_30 := 0;
+      Reserved1 : Bits_1;
+      SVSMHIFG  : Boolean; -- High-side SVSM interrupt flag.
+      Reserved2 : Bits_30;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -1402,7 +1402,7 @@ pragma Style_Checks (Off);
 
    type PSSCLRIFG_Type is record
       Reserved1   : Bits_1  := 0;
-      CLRSVSMHIFG : Boolean;      -- SVSMH clear interrupt flag
+      CLRSVSMHIFG : Boolean := False; -- SVSMH clear interrupt flag
       Reserved2   : Bits_30 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1504,11 +1504,11 @@ pragma Style_Checks (Off);
    CPM_LPM3             : constant := 16#20#; -- LPM3
 
    type PCMCTL0_Type is record
-      AMR      : Bits_4;                    -- Active Mode Request.
-      LPMR     : Bits_4;                    -- Low Power Mode Request.
-      CPM      : Bits_6;                    -- Current Power Mode.
+      AMR      : Bits_4      := AMR_AM_LDO_VCORE0; -- Active Mode Request.
+      LPMR     : Bits_4      := LPMR_LPM3;         -- Low Power Mode Request.
+      CPM      : Bits_6      := CPM_AM_LDO_VCORE0; -- Current Power Mode.
       Reserved : Bits_2      := 0;
-      PCMKEY   : Unsigned_16 := PCMKEY_KEY; -- PCM key.
+      PCMKEY   : Unsigned_16 := 16#A596#;          -- PCM key.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -1523,13 +1523,13 @@ pragma Style_Checks (Off);
    -- 8.26.2 PCMCTL1 Register PCM Control 1 Register
 
    type PCMCTL1_Type is record
-      LOCKLPM5        : Boolean;          -- Lock LPM5.
-      LOCKBKUP        : Boolean;          -- Lock Backup.
-      FORCE_LPM_ENTRY : Boolean;          -- Bit selection for the application to determine whether the entry into LPM3/LPMx.5 should be forced even if there are active system clocks running which do not meet the LPM3/LPMx.5 criteria.
+      LOCKLPM5        : Boolean     := False;    -- Lock LPM5.
+      LOCKBKUP        : Boolean     := False;    -- Lock Backup.
+      FORCE_LPM_ENTRY : Boolean     := False;    -- Bit selection for the application to determine whether the entry into LPM3/LPMx.5 should be forced even if there are active system clocks running which do not meet the LPM3/LPMx.5 criteria.
       Reserved1       : Bits_5      := 0;
-      PMR_BUSY        : Boolean;          -- Power mode request busy flag.
+      PMR_BUSY        : Boolean     := False;    -- Power mode request busy flag.
       Reserved2       : Bits_7      := 0;
-      PCMKEY          : Unsigned_16;      -- PCM key.
+      PCMKEY          : Unsigned_16 := 16#A596#; -- PCM key.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -1546,11 +1546,11 @@ pragma Style_Checks (Off);
    -- 8.26.3 PCMIE Register PCM Interrupt Enable Register
 
    type PCMIE_Type is record
-      LPM_INVALID_TR_IE  : Boolean;      -- LPM invalid transition interrupt enable.
-      LPM_INVALID_CLK_IE : Boolean;      -- LPM invalid clock interrupt enable.
-      AM_INVALID_TR_IE   : Boolean;      -- Active mode invalid transition interrupt enable.
+      LPM_INVALID_TR_IE  : Boolean := False; -- LPM invalid transition interrupt enable.
+      LPM_INVALID_CLK_IE : Boolean := False; -- LPM invalid clock interrupt enable.
+      AM_INVALID_TR_IE   : Boolean := False; -- Active mode invalid transition interrupt enable.
       Reserved1          : Bits_3  := 0;
-      DCDC_ERROR_IE      : Boolean;      -- DC-DC error interrupt enable.
+      DCDC_ERROR_IE      : Boolean := False; -- DC-DC error interrupt enable.
       Reserved2          : Bits_25 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1567,11 +1567,11 @@ pragma Style_Checks (Off);
    -- 8.26.4 PCMIFG Register PCM Interrupt Flag Register
 
    type PCMIFG_Type is record
-      LPM_INVALID_TR_IFG  : Boolean;      -- LPM invalid transition flag.
-      LPM_INVALID_CLK_IFG : Boolean;      -- LPM invalid clock flag.
-      AM_INVALID_TR_IFG   : Boolean;      -- Active mode invalid transition flag.
+      LPM_INVALID_TR_IFG  : Boolean := False; -- LPM invalid transition flag.
+      LPM_INVALID_CLK_IFG : Boolean := False; -- LPM invalid clock flag.
+      AM_INVALID_TR_IFG   : Boolean := False; -- Active mode invalid transition flag.
       Reserved1           : Bits_3  := 0;
-      DCDC_ERROR_IFG      : Boolean;      -- DC-DC error flag.
+      DCDC_ERROR_IFG      : Boolean := False; -- DC-DC error flag.
       Reserved2           : Bits_25 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1793,7 +1793,7 @@ pragma Style_Checks (Off);
    PMAPKEYx_KEY : constant := 16#2D52#;
 
    type PMAPKEYID_Type is record
-      PMAPKEYx : Unsigned_16; -- Port mapping controller write access key.
+      PMAPKEYx : Unsigned_16 := 16#96A5#; -- Port mapping controller write access key.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -1922,12 +1922,12 @@ pragma Style_Checks (Off);
    WDTPW_PASSWD : constant := 16#5A#;
 
    type WDTCTL_Type is record
-      WDTIS    : Bits_3;  -- Watchdog timer interval select.
-      WDTCNTCL : Boolean; -- Watchdog timer counter clear.
-      WDTTMSEL : Bits_1;  -- Watchdog timer mode select
-      WDTSSEL  : Bits_2;  -- Watchdog timer clock source select
-      WDTHOLD  : Boolean; -- Watchdog timer hold.
-      WDTPW    : Bits_8;  -- Watchdog timer password.
+      WDTIS    : Bits_3     := WDTIS_DIV2E15;     -- Watchdog timer interval select.
+      WDTCNTCL : Boolean    := False;             -- Watchdog timer counter clear.
+      WDTTMSEL : Bits_1     := WDTTMSEL_WATCHDOG; -- Watchdog timer mode select
+      WDTSSEL  : Bits_2     := WDTSSEL_SMCLK;     -- Watchdog timer clock source select
+      WDTHOLD  : Boolean    := False;             -- Watchdog timer hold.
+      WDTPW    : Unsigned_8 := 16#69#;            -- Watchdog timer password.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -2021,7 +2021,7 @@ pragma Style_Checks (Off);
    UCGLITx_50ns : constant := 2#11#; -- Approximately 50 ns
 
    type UCAxCTLW1_Type is record
-      UCGLITx  : Bits_2;       -- Deglitch time
+      UCGLITx  : Bits_2  := UCGLITx_50ns; -- Deglitch time
       Reserved : Bits_14 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2034,10 +2034,10 @@ pragma Style_Checks (Off);
    -- 24.4.4 UCAxMCTLW Register Modulation Control Word Register
 
    type UCAxMCTLW_Type is record
-      UCOS16   : Boolean;      -- Oversampling mode enabled
+      UCOS16   : Boolean := False; -- Oversampling mode enabled
       Reserved : Bits_3  := 0;
-      UCBRFx   : Bits_4;       -- First modulation stage select.
-      UCBRSx   : Bits_8;       -- Second modulation stage select.
+      UCBRFx   : Bits_4  := 0;     -- First modulation stage select.
+      UCBRSx   : Bits_8  := 0;     -- Second modulation stage select.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -2051,14 +2051,14 @@ pragma Style_Checks (Off);
    -- 24.4.5 UCAxSTATW Register Status Register
 
    type UCAxSTATW_Type is record
-      UCBUSY        : Boolean;      -- eUSCI_A busy.
-      UCADDR_UCIDLE : Boolean;      -- UCADDR: Address received in address-bit multiprocessor mode. UCADDR is cleared when UCAxRXBUF is read. UCIDLE: Idle line detected in idle-line multiprocessor mode. UCIDLE is cleared when UCAxRXBUF is read.
-      UCRXERR       : Boolean;      -- Receive error flag.
-      UCBRK         : Boolean;      -- Break detect flag.
-      UCPE          : Boolean;      -- Parity error flag.
-      UCOE          : Boolean;      -- Overrun error flag.
-      UCFE          : Boolean;      -- Framing error flag.
-      UCLISTEN      : Boolean;      -- Listen enable.
+      UCBUSY        : Boolean := False; -- eUSCI_A busy.
+      UCADDR_UCIDLE : Boolean := False; -- UCADDR: Address received in address-bit multiprocessor mode. UCADDR is cleared when UCAxRXBUF is read. UCIDLE: Idle line detected in idle-line multiprocessor mode. UCIDLE is cleared when UCAxRXBUF is read.
+      UCRXERR       : Boolean := False; -- Receive error flag.
+      UCBRK         : Boolean := False; -- Break detect flag.
+      UCPE          : Boolean := False; -- Parity error flag.
+      UCOE          : Boolean := False; -- Overrun error flag.
+      UCFE          : Boolean := False; -- Framing error flag.
+      UCLISTEN      : Boolean := False; -- Listen enable.
       Reserved      : Bits_8  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2109,11 +2109,11 @@ pragma Style_Checks (Off);
    UCDELIMx_4 : constant := 2#11#; -- 4 bit times
 
    type UCAxABCTL_Type is record
-      UCABDEN   : Boolean;      -- Automatic baud-rate detect enable
+      UCABDEN   : Boolean := False;      -- Automatic baud-rate detect enable
       Reserved1 : Bits_1  := 0;
-      UCBTOE    : Boolean;      -- Break time out error
-      UCSTOE    : Boolean;      -- Synch field time out error
-      UCDELIMx  : Bits_2;       -- Break/synch delimiter length
+      UCBTOE    : Boolean := False;      -- Break time out error
+      UCSTOE    : Boolean := False;      -- Synch field time out error
+      UCDELIMx  : Bits_2  := UCDELIMx_1; -- Break/synch delimiter length
       Reserved2 : Bits_10 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2157,10 +2157,10 @@ pragma Style_Checks (Off);
    -- 24.4.10 UCAxIE Register Interrupt Enable Register
 
    type UCAxIE_Type is record
-      UCRXIE    : Boolean;      -- Receive interrupt enable
-      UCTXIE    : Boolean;      -- Transmit interrupt enable
-      UCSTTIE   : Boolean;      -- Start bit interrupt enable
-      UCTXCPTIE : Boolean;      -- Transmit complete interrupt enable
+      UCRXIE    : Boolean := False; -- Receive interrupt enable
+      UCTXIE    : Boolean := False; -- Transmit interrupt enable
+      UCSTTIE   : Boolean := False; -- Start bit interrupt enable
+      UCTXCPTIE : Boolean := False; -- Transmit complete interrupt enable
       Reserved  : Bits_12 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2176,10 +2176,10 @@ pragma Style_Checks (Off);
    -- 24.4.11 UCAxIFG Register Interrupt Flag Register
 
    type UCAxIFG_Type is record
-      UCRXIFG    : Boolean;      -- Receive interrupt flag.
-      UCTXIFG    : Boolean;      -- Transmit interrupt flag.
-      UCSTTIFG   : Boolean;      -- Start bit interrupt flag.
-      UCTXCPTIFG : Boolean;      -- Transmit complete interrupt flag.
+      UCRXIFG    : Boolean := False; -- Receive interrupt flag.
+      UCTXIFG    : Boolean := False; -- Transmit interrupt flag.
+      UCSTTIFG   : Boolean := False; -- Start bit interrupt flag.
+      UCTXCPTIFG : Boolean := False; -- Transmit complete interrupt flag.
       Reserved   : Bits_12 := 0;
    end record
       with Bit_Order => Low_Order_First,
