@@ -77,7 +77,7 @@ package body Ethernet
             end if;
          when ARP_REPLY =>
             -- "gratuitous" ARP, check for:
-            -- sender''s hardware and protocol addresses (SHA and SPA)
+            -- sender's hardware and protocol addresses (SHA and SPA)
             -- duplicated in the target fields (TPA=SPA, THA=SHA)
             -- action: update ARP cache
             -- Console.Print ("ARP_REPLY (gratuitous ARP)", NL => True);
