@@ -58,9 +58,7 @@ package body BSP
       is
    begin
       -- wait for transmitter available
-      loop
-         exit when SCSR.TXRDY;
-      end loop;
+      loop exit when SCSR.TXRDY; end loop;
       SCFIFOR.DATA (0) := To_U8 (C);
    end Console_Putchar;
 
@@ -71,9 +69,7 @@ package body BSP
    begin
       SCSR.RXBC := True;
       -- wait for receiver available
-      loop
-         exit when SCSR.RXRDY;
-      end loop;
+      loop exit when SCSR.RXRDY; end loop;
       Data := SCFIFOR.DATA (0);
       C := To_Ch (Data);
    end Console_Getchar;
