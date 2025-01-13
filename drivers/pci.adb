@@ -261,15 +261,15 @@ package body PCI
       Data : Unsigned_32;
    begin
       Data := Cfg_Read (Bus_Number, Device_Number, Function_Number, BAR0_Register_Offset);
-      Console.Print (Data, Prefix => "BAR0: ", NL => True);
+      Console.Print (Prefix => "BAR0: ", Value => Data, NL => True);
       Data := Cfg_Read (Bus_Number, Device_Number, Function_Number, BAR1_Register_Offset);
-      Console.Print (Data, Prefix => "BAR1: ", NL => True);
+      Console.Print (Prefix => "BAR1: ", Value => Data, NL => True);
       Data := Cfg_Read (Bus_Number, Device_Number, Function_Number, BAR2_Register_Offset);
-      Console.Print (Data, Prefix => "BAR2: ", NL => True);
+      Console.Print (Prefix => "BAR2: ", Value => Data, NL => True);
       Data := Cfg_Read (Bus_Number, Device_Number, Function_Number, BAR3_Register_Offset);
-      Console.Print (Data, Prefix => "BAR3: ", NL => True);
+      Console.Print (Prefix => "BAR3: ", Value => Data, NL => True);
       Data := Cfg_Read (Bus_Number, Device_Number, Function_Number, BAR4_Register_Offset);
-      Console.Print (Data, Prefix => "BAR4: ", NL => True);
+      Console.Print (Prefix => "BAR4: ", Value => Data, NL => True);
    end BARs_Dump;
 
 end PCI;
