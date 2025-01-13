@@ -35,6 +35,13 @@ package ATmega328P
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
+   -- 8-bit Microcontroller with 4/8/16/32K Bytes In-System Programmable Flash
+   -- Rev. 8161D–AVR–10/09
+   ----------------------------------------------------------------------------
+
    ----------------------------------------------------------------------------
    -- 6. AVR CPU Core
    ----------------------------------------------------------------------------
@@ -42,14 +49,14 @@ package ATmega328P
    -- 6.3.1 SREG – AVR Status Register
 
    type SREG_Type is record
-      C : Boolean; -- Carry flag
-      Z : Boolean; -- Zero flag
-      N : Boolean; -- Negative flag
-      V : Boolean; -- Two's Complement Overflow flag
-      S : Boolean; -- Sign bit
-      H : Boolean; -- Half Carry flag
-      T : Boolean; -- Bit Copy Storage
-      I : Boolean; -- Global Interrupt Enable
+      C : Boolean := False; -- Carry flag
+      Z : Boolean := False; -- Zero flag
+      N : Boolean := False; -- Negative flag
+      V : Boolean := False; -- Two's Complement Overflow flag
+      S : Boolean := False; -- Sign bit
+      H : Boolean := False; -- Half Carry flag
+      T : Boolean := False; -- Bit Copy Storage
+      I : Boolean := False; -- Global Interrupt Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -79,11 +86,11 @@ package ATmega328P
    -- 7.6.3 EECR - The EEPROM Control Register
 
    type EECR_Type is record
-      EERE     : Boolean;      -- EEPROM Read Enable
-      EEPE     : Boolean;      -- EEPROM Write Enable
-      EEMPE    : Boolean;      -- EEPROM Master Write Enable
-      EERIE    : Boolean;      -- EEPROM Ready Interrupt Enable
-      EEPM01   : Boolean;      -- EEPROM Programming Mode Bits
+      EERE     : Boolean := False; -- EEPROM Read Enable
+      EEPE     : Boolean := False; -- EEPROM Write Enable
+      EEMPE    : Boolean := False; -- EEPROM Master Write Enable
+      EERIE    : Boolean := False; -- EEPROM Ready Interrupt Enable
+      EEPM01   : Boolean := False; -- EEPROM Programming Mode Bits
       Reserved : Bits_2  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -179,20 +186,20 @@ package ATmega328P
 
    -- 8.12.2 CLKPR – Clock Prescale Register
 
-   Clock_Prescaler_1   : constant := 2#0000#;
-   Clock_Prescaler_2   : constant := 2#0001#;
-   Clock_Prescaler_4   : constant := 2#0010#;
-   Clock_Prescaler_8   : constant := 2#0011#;
-   Clock_Prescaler_16  : constant := 2#0100#;
-   Clock_Prescaler_32  : constant := 2#0101#;
-   Clock_Prescaler_64  : constant := 2#0110#;
-   Clock_Prescaler_128 : constant := 2#0111#;
-   Clock_Prescaler_256 : constant := 2#1000#;
+   CLKPS_Clock_Prescaler_1   : constant := 2#0000#;
+   CLKPS_Clock_Prescaler_2   : constant := 2#0001#;
+   CLKPS_Clock_Prescaler_4   : constant := 2#0010#;
+   CLKPS_Clock_Prescaler_8   : constant := 2#0011#;
+   CLKPS_Clock_Prescaler_16  : constant := 2#0100#;
+   CLKPS_Clock_Prescaler_32  : constant := 2#0101#;
+   CLKPS_Clock_Prescaler_64  : constant := 2#0110#;
+   CLKPS_Clock_Prescaler_128 : constant := 2#0111#;
+   CLKPS_Clock_Prescaler_256 : constant := 2#1000#;
 
    type CLKPR_Type is record
-      CLKPS    : Bits_4;       -- Clock Prescaler Select bit 0 .. 3
+      CLKPS    : Bits_4  := CLKPS_Clock_Prescaler_1; -- Clock Prescaler Select bit 0 .. 3
       Reserved : Bits_3  := 0;
-      CLKPCE   : Boolean;      -- Clock Prescaler Change Enable
+      CLKPCE   : Boolean := False;                   -- Clock Prescaler Change Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -216,16 +223,16 @@ package ATmega328P
 
    -- 9.11.1 SMCR – Sleep Mode Control Register
 
-   Idle                : constant := 2#000#;
-   ADC_Noise_Reduction : constant := 2#001#;
-   Power_Down          : constant := 2#010#;
-   Power_Save          : constant := 2#011#;
-   Standby             : constant := 2#110#;
-   External_Standby    : constant := 2#111#;
+   SM_Idle                : constant := 2#000#;
+   SM_ADC_Noise_Reduction : constant := 2#001#;
+   SM_Power_Down          : constant := 2#010#;
+   SM_Power_Save          : constant := 2#011#;
+   SM_Standby             : constant := 2#110#;
+   SM_External_Standby    : constant := 2#111#;
 
    type SMCR_Type is record
-      SE       : Boolean;      -- Sleep Enable
-      SM       : Bits_3;       -- Sleep Mode Select
+      SE       : Boolean := False;   -- Sleep Enable
+      SM       : Bits_3  := SM_Idle; -- Sleep Mode Select
       Reserved : Bits_4  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -248,12 +255,12 @@ package ATmega328P
    -- 11.5.2 MCUCR – MCU Control Register
 
    type MCUCR_Type is record
-      IVCE      : Boolean;      -- Interrupt Vector Change Enable
-      IVSEL     : Boolean;      -- Interrupt Vector Select
+      IVCE      : Boolean := False; -- Interrupt Vector Change Enable
+      IVSEL     : Boolean := False; -- Interrupt Vector Select
       Reserved1 : Bits_2  := 0;
-      PUD       : Boolean;      -- Pull-up Disable
-      BODSE     : Boolean;      -- BOD Sleep Enable
-      BODS      : Boolean;      -- BOD Sleep
+      PUD       : Boolean := False; -- Pull-up Disable
+      BODSE     : Boolean := False; -- BOD Sleep Enable
+      BODS      : Boolean := False; -- BOD Sleep
       Reserved2 : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -279,14 +286,14 @@ package ATmega328P
    -- 9.11.3 PRR – Power Reduction Register
 
    type PRR_Type is record
-      PRADC    : Boolean;      -- Power Reduction ADC
-      PRUSART0 : Boolean;      -- Power Reduction USART
-      PRSPI    : Boolean;      -- Power Reduction Serial Peripheral Interface
-      PRTIM1   : Boolean;      -- Power Reduction Timer/Counter1
+      PRADC    : Boolean := False; -- Power Reduction ADC
+      PRUSART0 : Boolean := False; -- Power Reduction USART
+      PRSPI    : Boolean := False; -- Power Reduction Serial Peripheral Interface
+      PRTIM1   : Boolean := False; -- Power Reduction Timer/Counter1
       Reserved : Bits_1  := 0;
-      PRTIM0   : Boolean;      -- Power Reduction Timer/Counter0
-      PRTIM2   : Boolean;      -- Power Reduction Timer/Counter2
-      PRTWI    : Boolean;      -- Power Reduction TWI
+      PRTIM0   : Boolean := False; -- Power Reduction Timer/Counter0
+      PRTIM2   : Boolean := False; -- Power Reduction Timer/Counter2
+      PRTWI    : Boolean := False; -- Power Reduction TWI
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -316,10 +323,10 @@ package ATmega328P
    -- 10.9.1 MCUSR – MCU Status Register
 
    type MCUSR_Type is record
-      PORF     : Boolean;      -- Power-on reset flag
-      EXTRF    : Boolean;      -- External Reset flag
-      BORF     : Boolean;      -- Brown-out Reset flag
-      WDRF     : Boolean;      -- Watchdog Reset flag
+      PORF     : Boolean := False; -- Power-on reset flag
+      EXTRF    : Boolean := False; -- External Reset flag
+      BORF     : Boolean := False; -- Brown-out Reset flag
+      WDRF     : Boolean := False; -- Watchdog Reset flag
       Reserved : Bits_4  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -359,12 +366,12 @@ package ATmega328P
    WDT_1024K : constant WDT_Prescaler_Type := (2#001#, 1);
 
    type WDTCSR_Type is record
-      WDP012 : Bits_3;  -- Watchdog Timer Prescaler bit 0 .. 2
-      WDE    : Boolean; -- Watchdog Enable
-      WDCE   : Boolean; -- Watchdog Change Enable
-      WDP3   : Bits_1;  -- Watchdog Timer Prescaler bit 3
-      WDIE   : Boolean; -- Watchdog Timeout Interrupt Enable
-      WDIF   : Boolean; -- Watchdog Timeout Interrupt flag
+      WDP012 : Bits_3  := WDT_2K.WDP012; -- Watchdog Timer Prescaler bit 0 .. 2
+      WDE    : Boolean := False;         -- Watchdog Enable
+      WDCE   : Boolean := False;         -- Watchdog Change Enable
+      WDP3   : Bits_1  := WDT_2K.WDP3;   -- Watchdog Timer Prescaler bit 3
+      WDIE   : Boolean := False;         -- Watchdog Timeout Interrupt Enable
+      WDIF   : Boolean := False;         -- Watchdog Timeout Interrupt flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -498,12 +505,12 @@ package ATmega328P
    TC0_WGM_PWM_Fast2    : constant TC0_WGM_Type := (2#11#, 1);
 
    type TCCR0A_Type is record
-      WGM01    : Bits_2;       -- Waveform Generation Mode bit 0 .. 1
+      WGM01    : Bits_2  := TC0_WGM_Normal.WGM01; -- Waveform Generation Mode bit 0 .. 1
       Reserved : Bits_2  := 0;
-      COM0B0   : Boolean;      -- Compare Match Output B Mode bit 0
-      COM0B1   : Boolean;      -- Compare Match Output B Mode bit 1
-      COM0A0   : Boolean;      -- Compare Match Output A Mode bit 0
-      COM0A1   : Boolean;      -- Compare Match Output A Mode bit 1
+      COM0B0   : Boolean := False;                -- Compare Match Output B Mode bit 0
+      COM0B1   : Boolean := False;                -- Compare Match Output B Mode bit 1
+      COM0A0   : Boolean := False;                -- Compare Match Output A Mode bit 0
+      COM0A1   : Boolean := False;                -- Compare Match Output A Mode bit 1
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -536,11 +543,11 @@ package ATmega328P
    TC0_Clock_Select_CLK1024 : constant := 2#111#;
 
    type TCCR0B_Type is record
-      CS0      : Bits_3;       -- Clock Select
-      WGM2     : Bits_1;       -- Waveform Generation Mode bit 2
+      CS0      : Bits_3  := TC0_Clock_Select_NOCLK; -- Clock Select
+      WGM2     : Bits_1  := TC0_WGM_Normal.WGM2;    -- Waveform Generation Mode bit 2
       Reserved : Bits_2  := 0;
-      FOC0B    : Boolean;      -- Force Output Compare B
-      FOC0A    : Boolean;      -- Force Output Compare A
+      FOC0B    : Boolean := False;                  -- Force Output Compare B
+      FOC0A    : Boolean := False;                  -- Force Output Compare A
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -593,9 +600,9 @@ package ATmega328P
    -- 14.9.6 TIMSK0 – Timer/Counter Interrupt Mask Register
 
    type TIMSK0_Type is record
-      TOIE0    : Boolean;      -- Timer/Counter0 Overflow Interrupt Enable
-      OCIE0A   : Boolean;      -- Timer/Counter0 Output Compare Match A Interrupt Enable
-      OCIE0B   : Boolean;      -- Timer/Counter0 Output Compare Match B Interrupt Enable
+      TOIE0    : Boolean := False; -- Timer/Counter0 Overflow Interrupt Enable
+      OCIE0A   : Boolean := False; -- Timer/Counter0 Output Compare Match A Interrupt Enable
+      OCIE0B   : Boolean := False; -- Timer/Counter0 Output Compare Match B Interrupt Enable
       Reserved : Bits_5  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -618,9 +625,9 @@ package ATmega328P
    -- 14.9.7 TIFR0 - Timer/Counter0 Interrupt Flag Register
 
    type TIFR0_Type is record
-      TOV0     : Boolean;      -- Timer/Counter0 Overflow Flag
-      OCF0A    : Boolean;      -- Timer/Counter0 Output Compare A Match Flag
-      OCF0B    : Boolean;      -- Timer/Counter0 Output Compare B Match Flag
+      TOV0     : Boolean := False; -- Timer/Counter0 Overflow Flag
+      OCF0A    : Boolean := False; -- Timer/Counter0 Output Compare A Match Flag
+      OCF0B    : Boolean := False; -- Timer/Counter0 Output Compare B Match Flag
       Reserved : Bits_5  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -668,12 +675,12 @@ package ATmega328P
    TC1_WGM_PWM_Fast2         : constant TC1_WGM_Type := (2#11#, 2#11#);
 
    type TCCR1A_Type is record
-      WGM01    : Bits_2;       -- Waveform Generation Mode bit 0 .. 1
+      WGM01    : Bits_2  := TC1_WGM_Normal.WGM01; -- Waveform Generation Mode bit 0 .. 1
       Reserved : Bits_2  := 0;
-      COM1B0   : Boolean;      -- Compare Match Output B Mode bit 0
-      COM1B1   : Boolean;      -- Compare Match Output B Mode bit 1
-      COM1A0   : Boolean;      -- Compare Match Output A Mode bit 0
-      COM1A1   : Boolean;      -- Compare Match Output A Mode bit 1
+      COM1B0   : Boolean := False;                -- Compare Match Output B Mode bit 0
+      COM1B1   : Boolean := False;                -- Compare Match Output B Mode bit 1
+      COM1A0   : Boolean := False;                -- Compare Match Output A Mode bit 0
+      COM1A1   : Boolean := False;                -- Compare Match Output A Mode bit 1
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -706,11 +713,11 @@ package ATmega328P
    TC1_Clock_Select_EXT_T1R : constant := 2#111#;
 
    type TCCR1B_Type is record
-      CS1      : Bits_3;       -- Clock Select
-      WGM23    : Bits_2;       -- Waveform Generation Mode bit 2 .. 3
+      CS1      : Bits_3  := TC1_Clock_Select_NOCLK; -- Clock Select
+      WGM23    : Bits_2  := TC1_WGM_Normal.WGM23;   -- Waveform Generation Mode bit 2 .. 3
       Reserved : Bits_1  := 0;
-      ICES1    : Boolean;      -- Force Output Compare B
-      ICNC1    : Boolean;      -- Force Output Compare A
+      ICES1    : Boolean := False;                  -- Force Output Compare B
+      ICNC1    : Boolean := False;                  -- Force Output Compare A
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -734,8 +741,8 @@ package ATmega328P
 
    type TCCR1C_Type is record
       Reserved : Bits_6  := 0;
-      FOC1B    : Boolean;      -- Force Output Compare B
-      FOC1A    : Boolean;      -- Force Output Compare A
+      FOC1B    : Boolean := False; -- Force Output Compare B
+      FOC1A    : Boolean := False; -- Force Output Compare A
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -828,11 +835,11 @@ package ATmega328P
    -- 15.11.8 TIMSK1 - Timer/Counter1 Interrupt Mask Register
 
    type TIMSK1_Type is record
-      TOIE1     : Boolean;      -- Timer/Counter1 Overflow Interrupt Enable
-      OCIE1A    : Boolean;      -- Timer/Counter1 Output Compare Match A Interrupt Enable
-      OCIE1B    : Boolean;      -- Timer/Counter1 Output Compare Match B Interrupt Enable
+      TOIE1     : Boolean := False; -- Timer/Counter1 Overflow Interrupt Enable
+      OCIE1A    : Boolean := False; -- Timer/Counter1 Output Compare Match A Interrupt Enable
+      OCIE1B    : Boolean := False; -- Timer/Counter1 Output Compare Match B Interrupt Enable
       Reserved1 : Bits_2  := 0;
-      ICIE1     : Boolean;      -- Timer/Counter1 Input Capture Interrupt Enable
+      ICIE1     : Boolean := False; -- Timer/Counter1 Input Capture Interrupt Enable
       Reserved2 : Bits_2  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -857,11 +864,11 @@ package ATmega328P
    -- 15.11.9 TIFR1 – Timer/Counter1 Interrupt Flag Register
 
    type TIFR1_Type is record
-      TOV1      : Boolean;      -- Timer/Counter1 Overflow Flag
-      OCF1A     : Boolean;      -- Timer/Counter1 Output Compare A Match Flag
-      OCF1B     : Boolean;      -- Timer/Counter1 Output Compare B Match Flag
+      TOV1      : Boolean := False; -- Timer/Counter1 Overflow Flag
+      OCF1A     : Boolean := False; -- Timer/Counter1 Output Compare A Match Flag
+      OCF1B     : Boolean := False; -- Timer/Counter1 Output Compare B Match Flag
       Reserved1 : Bits_2  := 0;
-      ICF1      : Boolean;      -- Timer/Counter1 Input Capture Flag
+      ICF1      : Boolean := False; -- Timer/Counter1 Input Capture Flag
       Reserved2 : Bits_2  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -902,12 +909,12 @@ package ATmega328P
    TC2_WGM2_PWM_Fast2    : constant TC2_WGM_Type := (2#11#, 1);
 
    type TCCR2A_Type is record
-      WGM01    : Bits_2;       -- Waveform Generation Mode bit 0 .. 1
+      WGM01    : Bits_2  := TC2_WGM2_Normal.WGM01; -- Waveform Generation Mode bit 0 .. 1
       Reserved : Bits_2  := 0;
-      COM2B0   : Boolean;      -- Compare Match Output B Mode bit 0
-      COM2B1   : Boolean;      -- Compare Match Output B Mode bit 1
-      COM2A0   : Boolean;      -- Compare Match Output A Mode bit 0
-      COM2A1   : Boolean;      -- Compare Match Output A Mode bit 1
+      COM2B0   : Boolean := False;                 -- Compare Match Output B Mode bit 0
+      COM2B1   : Boolean := False;                 -- Compare Match Output B Mode bit 1
+      COM2A0   : Boolean := False;                 -- Compare Match Output A Mode bit 0
+      COM2A1   : Boolean := False;                 -- Compare Match Output A Mode bit 1
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -940,11 +947,11 @@ package ATmega328P
    TC2_Clock_Select_CLK1024 : constant := 2#111#;
 
    type TCCR2B_Type is record
-      CS2      : Bits_3;       -- Clock Select
-      WGM2     : Bits_1;       -- Waveform Generation Mode bit 2
+      CS2      : Bits_3  := TC2_Clock_Select_NOCLK; -- Clock Select
+      WGM2     : Bits_1  := TC2_WGM2_Normal.WGM2;   -- Waveform Generation Mode bit 2
       Reserved : Bits_2  := 0;
-      FOC2B    : Boolean;      -- Force Output Compare B
-      FOC2A    : Boolean;      -- Force Output Compare A
+      FOC2B    : Boolean := False;                  -- Force Output Compare B
+      FOC2A    : Boolean := False;                  -- Force Output Compare A
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -997,9 +1004,9 @@ package ATmega328P
    -- 17.11.6 TIMSK2 – Timer/Counter2 Interrupt Mask Register
 
    type TIMSK2_Type is record
-      TOIE2    : Boolean;      -- Timer/Counter2 Overflow Interrupt Enable
-      OCIE2A   : Boolean;      -- Timer/Counter2 Output Compare Match A Interrupt Enable
-      OCIE2B   : Boolean;      -- Timer/Counter2 Output Compare Match B Interrupt Enable
+      TOIE2    : Boolean := False; -- Timer/Counter2 Overflow Interrupt Enable
+      OCIE2A   : Boolean := False; -- Timer/Counter2 Output Compare Match A Interrupt Enable
+      OCIE2B   : Boolean := False; -- Timer/Counter2 Output Compare Match B Interrupt Enable
       Reserved : Bits_5  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1022,9 +1029,9 @@ package ATmega328P
    -- 17.11.7 TIFR2 – Timer/Counter2 Interrupt Flag Register
 
    type TIFR2_Type is record
-      TOV2     : Boolean;      -- Timer/Counter2 Overflow Flag
-      OCF2A    : Boolean;      -- Timer/Counter2 Output Compare A Match Flag
-      OCF2B    : Boolean;      -- Timer/Counter2 Output Compare B Match Flag
+      TOV2     : Boolean := False; -- Timer/Counter2 Overflow Flag
+      OCF2A    : Boolean := False; -- Timer/Counter2 Output Compare A Match Flag
+      OCF2B    : Boolean := False; -- Timer/Counter2 Output Compare B Match Flag
       Reserved : Bits_5  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1047,13 +1054,13 @@ package ATmega328P
    -- 17.11.8 ASSR – Asynchronous Status Register
 
    type ASSR_Type is record
-      TCR2BUB  : Boolean;      -- Timer/Counter Control Register2 Update Busy
-      TCR2AUB  : Boolean;      -- Timer/Counter Control Register2 Update Busy
-      OCR2BUB  : Boolean;      -- Output Compare Register2 Update Busy
-      OCR2AUB  : Boolean;      -- Output Compare Register2 Update Busy
-      TCN2UB   : Boolean;      -- Timer/Counter2 Update Busy
-      AS2      : Boolean;      -- Asynchronous Timer/Counter2
-      EXCLK    : Boolean;      -- Enable External Clock Input
+      TCR2BUB  : Boolean := False; -- Timer/Counter Control Register2 Update Busy
+      TCR2AUB  : Boolean := False; -- Timer/Counter Control Register2 Update Busy
+      OCR2BUB  : Boolean := False; -- Output Compare Register2 Update Busy
+      OCR2AUB  : Boolean := False; -- Output Compare Register2 Update Busy
+      TCN2UB   : Boolean := False; -- Timer/Counter2 Update Busy
+      AS2      : Boolean := False; -- Asynchronous Timer/Counter2
+      EXCLK    : Boolean := False; -- Enable External Clock Input
       Reserved : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1080,10 +1087,10 @@ package ATmega328P
    -- 17.11.9 GTCCR – General Timer/Counter Control Register
 
    type GTCCR_Type is record
-      PSRSYNC  : Boolean;      -- Prescaler Reset Timer/Counter1 and Timer/Counter0
-      PSRASY   : Boolean;      -- Prescaler Reset Timer/Counter2
+      PSRSYNC  : Boolean := False; -- Prescaler Reset Timer/Counter1 and Timer/Counter0
+      PSRASY   : Boolean := False; -- Prescaler Reset Timer/Counter2
       Reserved : Bits_5  := 0;
-      TSM      : Boolean;      -- Timer/Counter Synchronization Mode
+      TSM      : Boolean := False; -- Timer/Counter Synchronization Mode
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1126,13 +1133,13 @@ package ATmega328P
    DORD_LSB : constant := 1; -- LSB first
 
    type SPCR_Type is record
-      SPR  : Bits_2;  -- SPI Clock Rate Select 1 and 0
-      CPHA : Bits_1;  -- Clock Phase
-      CPOL : Bits_1;  -- Clock Polarity
-      MSTR : Bits_1;  -- Master/Slave Select
-      DORD : Bits_1;  -- Data Order
-      SPE  : Boolean; -- SPI Enable
-      SPIE : Boolean; -- SPI Interrupt Enable
+      SPR  : Bits_2  := SPR_DIV4;               -- SPI Clock Rate Select 1 and 0
+      CPHA : Bits_1  := CPHA_LSample_TSetup;    -- Clock Phase
+      CPOL : Bits_1  := CPOL_LRaising_TFalling; -- Clock Polarity
+      MSTR : Bits_1  := MSTR_SLAVE;             -- Master/Slave Select
+      DORD : Bits_1  := DORD_MSB;               -- Data Order
+      SPE  : Boolean := False;                  -- SPI Enable
+      SPIE : Boolean := False;                  -- SPI Interrupt Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1157,10 +1164,10 @@ package ATmega328P
    -- 18.5.2 SPSR – SPI Status Register
 
    type SPSR_Type is record
-      SPI2X    : Boolean;      -- Double SPI Speed Bit
+      SPI2X    : Boolean := False; -- Double SPI Speed Bit
       Reserved : Bits_5  := 0;
-      WCOL     : Boolean;      -- Write COLlision Flag
-      SPIF     : Boolean;      -- SPI Interrupt Flag
+      WCOL     : Boolean := False; -- Write COLlision Flag
+      SPIF     : Boolean := False; -- SPI Interrupt Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1340,5 +1347,7 @@ package ATmega328P
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
+pragma Style_Checks (On);
 
 end ATmega328P;
