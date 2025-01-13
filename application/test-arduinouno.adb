@@ -21,6 +21,7 @@ package body Application
    --========================================================================--
 
    use Ada.Characters.Latin_1;
+   use Interfaces;
    use ATmega328P;
 
    procedure Delay_Simple
@@ -33,10 +34,10 @@ package body Application
    -- function To_USART_Buffer_Ptr is new Ada.Unchecked_Conversion (System.Address, USART_Buffer_Ptr);
 
    Hello : constant USART_Buffer := [
-                                     'h', 'e', 'l', 'l', 'o', ',', ' ',
-                                     'S', 'w', 'e', 'e', 't', 'A', 'd', 'a',
-                                     CR, LF
-                                    ];
+      'h', 'e', 'l', 'l', 'o', ',', ' ',
+      'S', 'w', 'e', 'e', 't', 'A', 'd', 'a',
+      CR, LF
+      ];
 
    --========================================================================--
    --                                                                        --
@@ -109,7 +110,9 @@ package body Application
       -- USART test -----------------------------------------------------------
       if True then
          -- set baud rate: CLOCK_XTAL / (16 * BAUD_RATE) - 1 = 16E+6 / (16 * 19200) - 1 = 51
-         UBRR0L := Interfaces.Unsigned_8 ((Configure.CLOCK_XTAL + (16 * 19_200 / 2)) / (16 * 19_200) - 1);
+         UBRR0L := Unsigned_8 (
+            (Configure.CLOCK_XTAL + (16 * 19_200 / 2)) / (16 * 19_200) - 1
+            );
          UBRR0H := 0;
          -- TX, RX, 8N1
          UCSR0B := (
@@ -130,9 +133,7 @@ package body Application
             );
          while True loop
             for Idx in Hello'First .. Hello'Last loop
-               loop
-                  exit when UCSR0A.UDRE0;
-               end loop;
+               loop exit when UCSR0A.UDRE0; end loop;
                UDR0 := Bits.To_U8 (Hello (Idx));
                if True then
                   -- "confirm" a TX in case a terminal is not open (the MCU is
