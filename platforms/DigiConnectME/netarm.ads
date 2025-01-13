@@ -39,10 +39,14 @@ package NETARM
    use Definitions;
    use Bits;
 
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
    -- Part number/version: 90000353_G
    -- Release date: September 2007
    -- www.digiembedded.com
    -- NS7520 Hardware Reference
+   ----------------------------------------------------------------------------
 
    -- base address of the hardware in the NCC ASIC
    EFE_BASEADDRESS   : constant := 16#FF80_0000#;
@@ -159,9 +163,9 @@ package NETARM
    -- PORTA/PORTC registers
    ----------------------------------------------------------------------------
 
-   type Port_Bit_Index is (bi7, bi6, bi5, bi4, bi3, bi2, bi1, bi0);
+   type LEBitmap_8_Idx_Type is (bi7, bi6, bi5, bi4, bi3, bi2, bi1, bi0);
 
-   type LEBitmap_8 is array (Port_Bit_Index) of Boolean
+   type LEBitmap_8 is array (LEBitmap_8_Idx_Type) of Boolean
       with Component_Size => 1,
            Size           => 8;
 
@@ -550,6 +554,8 @@ package NETARM
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+pragma Style_Checks (On);
 
    ----------------------------------------------------------------------------
    -- subprograms
