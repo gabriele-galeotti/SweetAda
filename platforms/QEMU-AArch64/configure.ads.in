@@ -4,7 +4,7 @@ package Configure
    is
 
    -- PLATFORM and CPU definitions
-   PLATFORM  : constant String := "AArch64-QEMU-virt";
+   PLATFORM  : constant String := "QEMU-AArch64";
    CPU       : constant String := "@CPU@";
    CPU_MODEL : constant String := "@CPU_MODEL@";
 

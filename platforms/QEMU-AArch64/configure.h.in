@@ -2,7 +2,7 @@
 #ifndef _CONFIGURE_H
 #define _CONFIGURE_H 1
 
-#define PLATFORM  "AArch64-QEMU-virt"
+#define PLATFORM  "QEMU-AArch64"
 #define CPU       "@CPU@"
 #define CPU_MODEL "@CPU_MODEL@"
 
