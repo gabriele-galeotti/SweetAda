@@ -39,8 +39,16 @@ OBJECTS :=
 all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: configure
-configure:
+configure: armv8a.adb armv8a.ads
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+
+armv8a.adb: armv8a.adbp $(CPU_DEF)
+	$(info preprocess armv8a.adbp)
+	$(GNATPREP) armv8a.adbp armv8a.adb $(CPU_DEF)
+
+armv8a.ads: armv8a.adsp $(CPU_DEF)
+	$(info preprocess armv8a.adsp)
+	$(GNATPREP) armv8a.adsp armv8a.ads $(CPU_DEF)
 
 .PHONY: clean
 clean:
@@ -48,7 +56,8 @@ clean:
 
 .PHONY: distclean
 distclean: clean
-	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON) \
+        armv8a.adb armv8a.ads
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 

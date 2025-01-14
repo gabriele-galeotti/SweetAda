@@ -44,34 +44,6 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
-   -- CurrentEL
-   ----------------------------------------------------------------------------
-
-   EL0 : constant := 2#00#;
-   EL1 : constant := 2#01#;
-   EL2 : constant := 2#10#;
-   EL3 : constant := 2#11#;
-
-   type EL_Type is record
-      Reserved1 : Bits_2;
-      EL        : Bits_2;  -- Current Exception level.
-      Reserved2 : Bits_28;
-      Reserved3 : Bits_32;
-   end record
-      with Bit_Order => Low_Order_First,
-           Size      => 64;
-   for EL_Type use record
-      Reserved1 at 0 range  0 ..  1;
-      EL        at 0 range  2 ..  3;
-      Reserved2 at 0 range  4 .. 31;
-      Reserved3 at 0 range 32 .. 63;
-   end record;
-
-   function CurrentEL_Read
-      return EL_Type
-      with Inline => True;
-
-   ----------------------------------------------------------------------------
    -- Memory attributes (D19.2.100 .. D19.2.102)
    ----------------------------------------------------------------------------
 
@@ -125,6 +97,89 @@ pragma Style_Checks (Off);
    -- C5.2 Special-purpose registers
    ----------------------------------------------------------------------------
 
+#if ALLINT then
+   -- C5.2.1 ALLINT, All Interrupt Mask Bit
+
+   type ALLINT_Type is record
+      Reserved1 : Bits_13 := 0;
+      ALLINT    : Boolean := False; -- All interrupt mask.
+      Reserved2 : Bits_50 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for ALLINT_Type use record
+      Reserved1 at 0 range  0 .. 12;
+      ALLINT    at 0 range 13 .. 13;
+      Reserved2 at 0 range 14 .. 63;
+   end record;
+
+   function ALLINT_Read
+      return ALLINT_Type
+      with Inline => True;
+   procedure ALLINT_Write
+      (Value : in ALLINT_Type)
+      with Inline => True;
+#end if;
+
+   -- C5.2.2 CurrentEL, Current Exception Level
+
+   EL0 : constant := 2#00#;
+   EL1 : constant := 2#01#;
+   EL2 : constant := 2#10#;
+   EL3 : constant := 2#11#;
+
+   type EL_Type is record
+      Reserved1 : Bits_2;
+      EL        : Bits_2;  -- Current Exception level.
+      Reserved2 : Bits_28;
+      Reserved3 : Bits_32;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for EL_Type use record
+      Reserved1 at 0 range  0 ..  1;
+      EL        at 0 range  2 ..  3;
+      Reserved2 at 0 range  4 .. 31;
+      Reserved3 at 0 range 32 .. 63;
+   end record;
+
+   function CurrentEL_Read
+      return EL_Type
+      with Inline => True;
+
+   -- C5.2.3 DAIF, Interrupt Mask Bits
+
+   type DAIF_Type is record
+      Reserved1 : Bits_6  := 0;
+      F         : Boolean := True; -- FIQ mask bit.
+      I         : Boolean := True; -- IRQ mask bit.
+      A         : Boolean := True; -- SError interrupt mask bit.
+      D         : Boolean := True; -- Process state D mask.
+      Reserved2 : Bits_54 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for DAIF_Type use record
+      Reserved1 at 0 range  0 ..  5;
+      F         at 0 range  6 ..  6;
+      I         at 0 range  7 ..  7;
+      A         at 0 range  8 ..  8;
+      D         at 0 range  9 ..  9;
+      Reserved2 at 0 range 10 .. 63;
+   end record;
+
+   function DAIF_Read
+      return DAIF_Type
+      with Inline => True;
+   procedure DAIF_Write
+      (Value : in DAIF_Type)
+      with Inline => True;
+
+   -- C5.2.4 DIT, Data Independent Timing
+   -- C5.2.5 ELR_EL1, Exception Link Register (EL1)
+   -- C5.2.6 ELR_EL2, Exception Link Register (EL2)
+   -- C5.2.7 ELR_EL3, Exception Link Register (EL3)
+
    -- C5.2.8 FPCR, Floating-point Control Register
 
    RMode_RN : constant := 2#00#; -- Round to Nearest (RN) mode.
@@ -133,24 +188,24 @@ pragma Style_Checks (Off);
    RMode_RZ : constant := 2#11#; -- Round towards Zero (RZ) mode.
 
    type FPCR_Type is record
-      FIZ       : Boolean;      -- Flush Inputs to Zero.
-      AH        : Boolean;      -- Alternate Handling.
-      NEP       : Boolean;      -- Controls how the output elements other than the lowest element of the vector are determined for Advanced SIMD scalar instructions.
+      FIZ       : Boolean := False;    -- Flush Inputs to Zero.
+      AH        : Boolean := False;    -- Alternate Handling.
+      NEP       : Boolean := False;    -- Controls how the output elements other than the lowest element of the vector are determined for Advanced SIMD scalar instructions.
       Reserved1 : Bits_5  := 0;
-      IOE       : Boolean;      -- Invalid Operation floating-point exception trap enable.
-      DZE       : Boolean;      -- Divide by Zero floating-point exception trap enable.
-      OFE       : Boolean;      -- Overflow floating-point exception trap enable.
-      UFE       : Boolean;      -- Underflow floating-point exception trap enable.
-      IXE       : Boolean;      -- Inexact floating-point exception trap enable.
+      IOE       : Boolean := False;    -- Invalid Operation floating-point exception trap enable.
+      DZE       : Boolean := False;    -- Divide by Zero floating-point exception trap enable.
+      OFE       : Boolean := False;    -- Overflow floating-point exception trap enable.
+      UFE       : Boolean := False;    -- Underflow floating-point exception trap enable.
+      IXE       : Boolean := False;    -- Inexact floating-point exception trap enable.
       Reserved2 : Bits_2  := 0;
-      IDE       : Boolean;      -- Input Denormal floating-point exception trap enable.
-      Len       : Bits_3  := 0; -- This field has no function in AArch64 state, and nonzero values are ignored during execution in AArch64 state.
-      FZ16      : Boolean;      -- Flushing denormalized numbers to zero control bit on half-precision data-processing instructions.
-      Stride    : Bits_2  := 0; -- This field has no function in AArch64 state, and nonzero values are ignored during execution in AArch64 state.
-      RMode     : Bits_2;       -- Rounding Mode control field.
-      FZ        : Boolean;      -- Flushing denormalized numbers to zero control bit.
-      DN        : Boolean;      -- Default NaN use for NaN propagation.
-      AHP       : Boolean;      -- Alternative half-precision control bit.
+      IDE       : Boolean := False;    -- Input Denormal floating-point exception trap enable.
+      Len       : Bits_3  := 0;        -- This field has no function in AArch64 state, and nonzero values are ignored during execution in AArch64 state.
+      FZ16      : Boolean := False;    -- Flushing denormalized numbers to zero control bit on half-precision data-processing instructions.
+      Stride    : Bits_2  := 0;        -- This field has no function in AArch64 state, and nonzero values are ignored during execution in AArch64 state.
+      RMode     : Bits_2  := RMode_RN; -- Rounding Mode control field.
+      FZ        : Boolean := False;    -- Flushing denormalized numbers to zero control bit.
+      DN        : Boolean := False;    -- Default NaN use for NaN propagation.
+      AHP       : Boolean := False;    -- Alternative half-precision control bit.
       Reserved3 : Bits_5  := 0;
       Reserved4 : Bits_32 := 0;
    end record
@@ -189,20 +244,20 @@ pragma Style_Checks (Off);
    -- C5.2.9 FPSR, Floating-point Status Register
 
    type FPSR_Type is record
-      IOC       : Boolean;      -- Invalid Operation cumulative exception bit.
-      DZC       : Boolean;      -- Division by Zero cumulative exception bit.
-      OFC       : Boolean;      -- Overflow cumulative exception bit.
-      UFC       : Boolean;      -- Underflow cumulative exception bit.
-      IXC       : Boolean;      -- Inexact cumulative exception bit.
-      Reserved1 : Bits_2  := 0;
-      IDC       : Boolean;      -- Input Denormal cumulative exception bit.
-      Reserved2 : Bits_19 := 0;
-      QC        : Boolean;      -- Cumulative saturation bit, Advanced SIMD only.
-      V         : Boolean;      -- Overflow condition flag.
-      C         : Boolean;      -- Carry condition flag.
-      Z         : Boolean;      -- Zero condition flag.
-      N         : Boolean;      -- Negative condition flag.
-      Reserved3 : Bits_32 := 0;
+      IOC       : Boolean; -- Invalid Operation cumulative exception bit.
+      DZC       : Boolean; -- Division by Zero cumulative exception bit.
+      OFC       : Boolean; -- Overflow cumulative exception bit.
+      UFC       : Boolean; -- Underflow cumulative exception bit.
+      IXC       : Boolean; -- Inexact cumulative exception bit.
+      Reserved1 : Bits_2;
+      IDC       : Boolean; -- Input Denormal cumulative exception bit.
+      Reserved2 : Bits_19;
+      QC        : Boolean; -- Cumulative saturation bit, Advanced SIMD only.
+      V         : Boolean; -- Overflow condition flag.
+      C         : Boolean; -- Carry condition flag.
+      Z         : Boolean; -- Zero condition flag.
+      N         : Boolean; -- Negative condition flag.
+      Reserved3 : Bits_32;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 64;
@@ -796,9 +851,387 @@ pragma Style_Checks (Off);
    -- D19.2.66 ID_AA64MMFR2_EL1, AArch64 Memory Model Feature Register 2
    -- D19.2.67 ID_AA64MMFR3_EL1, AArch64 Memory Model Feature Register 3
    -- D19.2.68 ID_AA64MMFR4_EL1, AArch64 Memory Model Feature Register 4
+
    -- D19.2.69 ID_AA64PFR0_EL1, AArch64 Processor Feature Register 0
+
+   EL0_64   : constant := 2#0001#; -- EL0 can be executed in AArch64 state only.
+   EL0_3264 : constant := 2#0010#; -- EL0 can be executed in either AArch64 or AArch32 state.
+
+   String_EL0      : aliased constant String := "EL0 Exception level handling";
+   String_EL0_64   : aliased constant String := "EL0_64";
+   String_EL0_3264 : aliased constant String := "EL0_3264";
+   MsgPtr_EL0      : constant access constant String := String_EL0'Access;
+   MsgPtr_EL0_64   : constant access constant String := String_EL0_64'Access;
+   MsgPtr_EL0_3264 : constant access constant String := String_EL0_3264'Access;
+
+   EL1_64   : constant := 2#0001#; -- EL1 can be executed in AArch64 state only.
+   EL1_3264 : constant := 2#0010#; -- EL1 can be executed in either AArch64 or AArch32 state.
+
+   String_EL1      : aliased constant String := "EL1 Exception level handling";
+   String_EL1_64   : aliased constant String := "EL1_64";
+   String_EL1_3264 : aliased constant String := "EL1_3264";
+   MsgPtr_EL1      : constant access constant String := String_EL1'Access;
+   MsgPtr_EL1_64   : constant access constant String := String_EL1_64'Access;
+   MsgPtr_EL1_3264 : constant access constant String := String_EL1_3264'Access;
+
+   EL2_NONE : constant := 2#0000#; -- EL2 is not implemented.
+   EL2_64   : constant := 2#0001#; -- EL2 can be executed in AArch64 state only.
+   EL2_3264 : constant := 2#0010#; -- EL2 can be executed in either AArch64 or AArch32 state.
+
+   String_EL2      : aliased constant String := "EL2 Exception level handling";
+   String_EL2_NONE : aliased constant String := "EL2_NONE";
+   String_EL2_64   : aliased constant String := "EL2_64";
+   String_EL2_3264 : aliased constant String := "EL2_3264";
+   MsgPtr_EL2      : constant access constant String := String_EL2'Access;
+   MsgPtr_EL2_NONE : constant access constant String := String_EL2_NONE'Access;
+   MsgPtr_EL2_64   : constant access constant String := String_EL2_64'Access;
+   MsgPtr_EL2_3264 : constant access constant String := String_EL2_3264'Access;
+
+   EL3_NONE : constant := 2#0000#; -- EL3 is not implemented.
+   EL3_64   : constant := 2#0001#; -- EL3 can be executed in AArch64 state only.
+   EL3_3264 : constant := 2#0010#; -- EL3 can be executed in either AArch64 or AArch32 state.
+
+   String_EL3      : aliased constant String := "EL3 Exception level handling";
+   String_EL3_NONE : aliased constant String := "EL3_NONE";
+   String_EL3_64   : aliased constant String := "EL3_64";
+   String_EL3_3264 : aliased constant String := "EL3_3264";
+   MsgPtr_EL3      : constant access constant String := String_EL3'Access;
+   MsgPtr_EL3_NONE : constant access constant String := String_EL3_NONE'Access;
+   MsgPtr_EL3_64   : constant access constant String := String_EL3_64'Access;
+   MsgPtr_EL3_3264 : constant access constant String := String_EL3_3264'Access;
+
+   FP_YES           : constant := 2#0000#; -- Floating-point is implemented, and includes support for: • Single-precision and double-precision floating-point types.• Conversions between single-precision and half-precision data types, and double-precision and half-precision data types.
+   FP_HALFPRECISION : constant := 2#0001#; -- As for 0b0000, and also includes support for half-precision floating-point arithmetic.
+   FP_NONE          : constant := 2#1111#; -- Floating-point is not implemented.
+
+   String_FP               : aliased constant String := "FP Floating-point";
+   String_FP_YES           : aliased constant String := "FP_YES";
+   String_FP_HALFPRECISION : aliased constant String := "FP_HALFPRECISION";
+   String_FP_NONE          : aliased constant String := "FP_NONE";
+   MsgPtr_FP               : constant access constant String := String_FP'Access;
+   MsgPtr_FP_YES           : constant access constant String := String_FP_YES'Access;
+   MsgPtr_FP_HALFPRECISION : constant access constant String := String_FP_HALFPRECISION'Access;
+   MsgPtr_FP_NONE          : constant access constant String := String_FP_NONE'Access;
+
+   AdvSIMD_YES           : constant := 2#0000#; -- Advanced SIMD is implemented, including support for the following SISD and SIMD operations: • Integer byte, halfword, word and doubleword element operations.• Single-precision and double-precision floating-point arithmetic.• Conversions between single-precision and half-precision data types, and double-precision and half-precision data types.
+   AdvSIMD_HALFPRECISION : constant := 2#0001#; -- As for 0b0000, and also includes support for half-precision floating-point arithmetic.
+   AdvSIMD_NONE          : constant := 2#1111#; -- Advanced SIMD is not implemented.
+
+   String_AdvSIMD               : aliased constant String := "AdvSIMD Advanced SIMD";
+   String_AdvSIMD_YES           : aliased constant String := "AdvSIMD_YES";
+   String_AdvSIMD_HALFPRECISION : aliased constant String := "AdvSIMD_HALFPRECISION";
+   String_AdvSIMD_NONE          : aliased constant String := "AdvSIMD_NONE";
+   MsgPtr_AdvSIMD               : constant access constant String := String_AdvSIMD'Access;
+   MsgPtr_AdvSIMD_YES           : constant access constant String := String_AdvSIMD_YES'Access;
+   MsgPtr_AdvSIMD_HALFPRECISION : constant access constant String := String_AdvSIMD_HALFPRECISION'Access;
+   MsgPtr_AdvSIMD_NONE          : constant access constant String := String_AdvSIMD_NONE'Access;
+
+   GIC_NONE  : constant := 2#0000#; -- GIC CPU interface system registers not implemented.
+   GIC_30_40 : constant := 2#0001#; -- System register interface to versions 3.0 and 4.0 of the GIC CPU interface is supported.
+   GIC_41    : constant := 2#0011#; -- System register interface to version 4.1 of the GIC CPU interface is supported.
+
+   String_GIC       : aliased constant String := "GIC System register GIC CPU interface";
+   String_GIC_NONE  : aliased constant String := "GIC_NONE";
+   String_GIC_30_40 : aliased constant String := "GIC_30_40";
+   String_GIC_41    : aliased constant String := "GIC_41";
+   MsgPtr_GIC       : constant access constant String := String_GIC'Access;
+   MsgPtr_GIC_NONE  : constant access constant String := String_GIC_NONE'Access;
+   MsgPtr_GIC_30_40 : constant access constant String := String_GIC_30_40'Access;
+   MsgPtr_GIC_41    : constant access constant String := String_GIC_41'Access;
+
+   RAS_NONE : constant := 2#0000#; -- No RAS Extension.
+   RAS_YES  : constant := 2#0001#; -- RAS Extension implemented.
+   RAS_v1p1 : constant := 2#0010#; -- FEAT_RASv1p1 implemented and, if EL3 is implemented, FEAT_DoubleFault implemented. As 0b0001, and adds support for:• If EL3 is implemented, FEAT_DoubleFault.• Additional ERXMISC<m>_EL1 System registers.• Additional System registers ERXPFGCDN_EL1, ERXPFGCTL_EL1, and ERXPFGF_EL1, and the SCR_EL3.FIEN and HCR_EL2.FIEN trap controls, to support the optional RAS Common Fault Injection Model Extension.
+
+   String_RAS      : aliased constant String := "RAS RAS Extension version";
+   String_RAS_NONE : aliased constant String := "RAS_NONE";
+   String_RAS_YES  : aliased constant String := "RAS_YES";
+   String_RAS_v1p1 : aliased constant String := "RAS_v1p1";
+   MsgPtr_RAS      : constant access constant String := String_RAS'Access;
+   MsgPtr_RAS_NONE : constant access constant String := String_RAS_NONE'Access;
+   MsgPtr_RAS_YES  : constant access constant String := String_RAS_YES'Access;
+   MsgPtr_RAS_v1p1 : constant access constant String := String_RAS_v1p1'Access;
+
+   SVE_NONE : constant := 2#0000#; -- SVE architectural state and programmers' model are not implemented.
+   SVE_YES  : constant := 2#0001#; -- SVE architectural state and programmers' model are implemented.
+
+   String_SVE      : aliased constant String := "SVE Scalable Vector Extension";
+   String_SVE_NONE : aliased constant String := "SVE_NONE";
+   String_SVE_YES  : aliased constant String := "SVE_YES";
+   MsgPtr_SVE      : constant access constant String := String_SVE'Access;
+   MsgPtr_SVE_NONE : constant access constant String := String_SVE_NONE'Access;
+   MsgPtr_SVE_YES  : constant access constant String := String_SVE_YES'Access;
+
+   SEL2_NONE : constant := 2#0000#; -- Secure EL2 is not implemented.
+   SEL2_YES  : constant := 2#0001#; -- Secure EL2 is implemented.
+
+   String_SEL2      : aliased constant String := "SEL2 Secure EL2";
+   String_SEL2_NONE : aliased constant String := "SEL2_NONE";
+   String_SEL2_YES  : aliased constant String := "SEL2_YES";
+   MsgPtr_SEL2      : constant access constant String := String_SEL2'Access;
+   MsgPtr_SEL2_NONE : constant access constant String := String_SEL2_NONE'Access;
+   MsgPtr_SEL2_YES  : constant access constant String := String_SEL2_YES'Access;
+
+   MPAM_0 : constant := 2#0000#; -- The major version number of the MPAM extension is 0.
+   MPAM_1 : constant := 2#0001#; -- The major version number of the MPAM extension is 1.
+
+   String_MPAM   : aliased constant String := "MPAM MPAM major version number";
+   String_MPAM_0 : aliased constant String := "MPAM_0";
+   String_MPAM_1 : aliased constant String := "MPAM_1";
+   MsgPtr_MPAM   : constant access constant String := String_MPAM'Access;
+   MsgPtr_MPAM_0 : constant access constant String := String_MPAM_0'Access;
+   MsgPtr_MPAM_1 : constant access constant String := String_MPAM_1'Access;
+
+   AMU_NONE : constant := 2#0000#; -- Activity Monitors Extension is not implemented.
+   AMU_v1   : constant := 2#0001#; -- FEAT_AMUv1 is implemented.
+   AMU_v1p1 : constant := 2#0010#; -- FEAT_AMUv1p1 is implemented. As 0b0001 and adds support for virtualization of the activity monitor event counters.
+
+   String_AMU      : aliased constant String := "AMU Activity Monitors Extension";
+   String_AMU_NONE : aliased constant String := "AMU_NONE";
+   String_AMU_v1   : aliased constant String := "AMU_v1";
+   String_AMU_v1p1 : aliased constant String := "AMU_v1p1";
+   MsgPtr_AMU      : constant access constant String := String_AMU'Access;
+   MsgPtr_AMU_NONE : constant access constant String := String_AMU_NONE'Access;
+   MsgPtr_AMU_v1   : constant access constant String := String_AMU_v1'Access;
+   MsgPtr_AMU_v1p1 : constant access constant String := String_AMU_v1p1'Access;
+
+   DIT_NONE : constant := 2#0000#; -- AArch64 does not guarantee constant execution time of any instructions.
+   DIT_YES  : constant := 2#0001#; -- AArch64 provides the PSTATE.DIT mechanism to guarantee constant execution time of certain instructions.
+
+   String_DIT      : aliased constant String := "DIT Data Independent Timing";
+   String_DIT_NONE : aliased constant String := "DIT_NONE";
+   String_DIT_YES  : aliased constant String := "DIT_YES";
+   MsgPtr_DIT      : constant access constant String := String_DIT'Access;
+   MsgPtr_DIT_NONE : constant access constant String := String_DIT_NONE'Access;
+   MsgPtr_DIT_YES  : constant access constant String := String_DIT_YES'Access;
+
+   RME_NONE : constant := 2#0000#; -- Realm Management Extension not implemented.
+   RME_v1   : constant := 2#0001#; -- RMEv1 is implemented.
+
+   String_RME      : aliased constant String := "RME Realm Management Extension";
+   String_RME_NONE : aliased constant String := "RME_NONE";
+   String_RME_v1   : aliased constant String := "RME_v1";
+   MsgPtr_RME      : constant access constant String := String_RME'Access;
+   MsgPtr_RME_NONE : constant access constant String := String_RME_NONE'Access;
+   MsgPtr_RME_v1   : constant access constant String := String_RME_v1'Access;
+
+   CSV2_NONE   : constant := 2#0000#; -- The implementation does not disclose whether FEAT_CSV2 is implemented.
+   CSV2_YES    : constant := 2#0001#; -- FEAT_CSV2 is implemented, but FEAT_CSV2_2 and FEAT_CSV2_3 are not implemented. ID_AA64PFR1_EL1.CSV2_frac determines whether either or both of FEAT_CSV2_1p1 or FEAT_CSV2_1p2 are implemented.
+   CSV2_CSV2_2 : constant := 2#0010#; -- FEAT_CSV2_2 is implemented, but FEAT_CSV2_3 is not implemented.
+   CSV2_CSV2_3 : constant := 2#0011#; -- FEAT_CSV2_3 is implemented.
+
+   String_CSV2        : aliased constant String := "CSV2 Speculative OOC branch targets";
+   String_CSV2_NONE   : aliased constant String := "CSV2_NONE";
+   String_CSV2_YES    : aliased constant String := "CSV2_YES";
+   String_CSV2_CSV2_2 : aliased constant String := "CSV2_CSV2_2";
+   String_CSV2_CSV2_3 : aliased constant String := "CSV2_CSV2_3";
+   MsgPtr_CSV2        : constant access constant String := String_CSV2'Access;
+   MsgPtr_CSV2_NONE   : constant access constant String := String_CSV2_NONE'Access;
+   MsgPtr_CSV2_YES    : constant access constant String := String_CSV2_YES'Access;
+   MsgPtr_CSV2_CSV2_2 : constant access constant String := String_CSV2_CSV2_2'Access;
+   MsgPtr_CSV2_CSV2_3 : constant access constant String := String_CSV2_CSV2_3'Access;
+
+   CSV3_NONE      : constant := 2#0000#; -- This PE does not disclose whether data loaded under speculation with a permission or domain fault can be used to form an address or generate condition codes or SVE predicate values to be used by other instructions in the speculative sequence.
+   CSV3_DATAnADDR : constant := 2#0001#; -- Data loaded under speculation with a permission or domain fault cannot be used to form an address, generate condition codes, or generate SVE predicate values to be used by other instructions in the speculative sequence. The execution timing of any other instructions in the speculative sequence is not a function of the data loaded under speculation.
+
+   String_CSV3           : aliased constant String := "CSV3 Speculative use of faulting data";
+   String_CSV3_NONE      : aliased constant String := "CSV3_NONE";
+   String_CSV3_DATAnADDR : aliased constant String := "CSV3_DATAnADDR";
+   MsgPtr_CSV3           : constant access constant String := String_CSV3'Access;
+   MsgPtr_CSV3_NONE      : constant access constant String := String_CSV3_NONE'Access;
+   MsgPtr_CSV3_DATAnADDR : constant access constant String := String_CSV3_DATAnADDR'Access;
+
+   type ID_AA64PFR0_EL1_Type is record
+      EL0     : Bits_4; -- EL0 Exception level handling.
+      EL1     : Bits_4; -- EL1 Exception level handling.
+      EL2     : Bits_4; -- EL2 Exception level handling.
+      EL3     : Bits_4; -- EL3 Exception level handling.
+      FP      : Bits_4; -- Floating-point.
+      AdvSIMD : Bits_4; -- Advanced SIMD.
+      GIC     : Bits_4; -- System register GIC CPU interface.
+      RAS     : Bits_4; -- RAS Extension version.
+      SVE     : Bits_4; -- Scalable Vector Extension.
+      SEL2    : Bits_4; -- Secure EL2.
+      MPAM    : Bits_4; -- Indicates the major version number of support for the MPAM Extension.
+      AMU     : Bits_4; -- Indicates support for Activity Monitors Extension.
+      DIT     : Bits_4; -- Data Independent Timing.
+      RME     : Bits_4; -- Realm Management Extension (RME).
+      CSV2    : Bits_4; -- Speculative use of out of context branch targets.
+      CSV3    : Bits_4; -- Speculative use of faulting data.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for ID_AA64PFR0_EL1_Type use record
+      EL0     at 0 range  0 ..  3;
+      EL1     at 0 range  4 ..  7;
+      EL2     at 0 range  8 .. 11;
+      EL3     at 0 range 12 .. 15;
+      FP      at 0 range 16 .. 19;
+      AdvSIMD at 0 range 20 .. 23;
+      GIC     at 0 range 24 .. 27;
+      RAS     at 0 range 28 .. 31;
+      SVE     at 0 range 32 .. 35;
+      SEL2    at 0 range 36 .. 39;
+      MPAM    at 0 range 40 .. 43;
+      AMU     at 0 range 44 .. 47;
+      DIT     at 0 range 48 .. 51;
+      RME     at 0 range 52 .. 55;
+      CSV2    at 0 range 56 .. 59;
+      CSV3    at 0 range 60 .. 63;
+   end record;
+
+   function ID_AA64PFR0_EL1_Read
+      return ID_AA64PFR0_EL1_Type
+      with Inline => True;
+
    -- D19.2.70 ID_AA64PFR1_EL1, AArch64 Processor Feature Register 1
+
+   BT_NONE : constant := 2#0000#; -- The Branch Target Identification mechanism is not implemented.
+   BT_YES  : constant := 2#0001#; -- The Branch Target Identification mechanism is implemented.
+
+   String_BT      : aliased constant String := "BT Branch Target Identification";
+   String_BT_NONE : aliased constant String := "BT_NONE";
+   String_BT_YES  : aliased constant String := "BT_YES";
+   MsgPtr_BT      : constant access constant String := String_BT'Access;
+   MsgPtr_BT_NONE : constant access constant String := String_BT_NONE'Access;
+   MsgPtr_BT_YES  : constant access constant String := String_BT_YES'Access;
+
+   SSBS_NONE   : constant := 2#0000#; -- AArch64 provides no mechanism to control the use of Speculative Store Bypassing.
+   SSBS_YES    : constant := 2#0001#; -- AArch64 provides the PSTATE.SSBS mechanism to mark regions that are Speculative Store Bypass Safe.
+   SSBS_MSRMRS : constant := 2#0010#; -- As 0b0001, and adds the MSR and MRS instructions to directly read and write the PSTATE.SSBS field.
+
+   String_SSBS        : aliased constant String := "SSBS Speculative Store Bypassing";
+   String_SSBS_NONE   : aliased constant String := "SSBS_NONE";
+   String_SSBS_YES    : aliased constant String := "SSBS_YES";
+   String_SSBS_MSRMRS : aliased constant String := "SSBS_MSRMRS";
+   MsgPtr_SSBS        : constant access constant String := String_SSBS'Access;
+   MsgPtr_SSBS_NONE   : constant access constant String := String_SSBS_NONE'Access;
+   MsgPtr_SSBS_YES    : constant access constant String := String_SSBS_YES'Access;
+   MsgPtr_SSBS_MSRMRS : constant access constant String := String_SSBS_MSRMRS'Access;
+
+   MTE_NONE      : constant := 2#0000#; -- Memory Tagging Extension is not implemented.
+   MTE_INSTR     : constant := 2#0001#; -- Instruction-only Memory Tagging Extension is implemented.
+   MTE_MEM       : constant := 2#0010#; -- Full Memory Tagging Extension is implemented.
+   MTE_ASYMTAGCF : constant := 2#0011#; -- Memory Tagging Extension is implemented with support for asymmetric Tag Check Fault handling.
+
+   String_MTE           : aliased constant String := "MTE Memory Tagging Extension";
+   String_MTE_NONE      : aliased constant String := "MTE_NONE";
+   String_MTE_INSTR     : aliased constant String := "MTE_INSTR";
+   String_MTE_MEM       : aliased constant String := "MTE_MEM";
+   String_MTE_ASYMTAGCF : aliased constant String := "MTE_ASYMTAGCF";
+   MsgPtr_MTE           : constant access constant String := String_MTE'Access;
+   MsgPtr_MTE_NONE      : constant access constant String := String_MTE_NONE'Access;
+   MsgPtr_MTE_INSTR     : constant access constant String := String_MTE_INSTR'Access;
+   MsgPtr_MTE_MEM       : constant access constant String := String_MTE_MEM'Access;
+   MsgPtr_MTE_ASYMTAGCF : constant access constant String := String_MTE_ASYMTAGCF'Access;
+
+   RAS_frac_RAS      : constant := 2#0000#; -- If ID_AA64PFR0_EL1.RAS == 0b0001, RAS Extension implemented.
+   RAS_frac_EXTENDED : constant := 2#0001#; -- If ID_AA64PFR0_EL1.RAS == 0b0001, as 0b0000 and adds support for:• Additional ERXMISC<m>_EL1 System registers.• Additional System registers ERXPFGCDN_EL1, ERXPFGCTL_EL1, and ERXPFGF_EL1, and the SCR_EL3.FIEN and HCR_EL2.FIEN trap controls, to support the optional RAS Common Fault Injection Model Extension.
+
+   String_RAS_frac          : aliased constant String := "RAS_frac Extension fractional field";
+   String_RAS_frac_RAS      : aliased constant String := "RAS_frac_RAS";
+   String_RAS_frac_EXTENDED : aliased constant String := "RAS_frac_EXTENDED";
+   MsgPtr_RAS_frac          : constant access constant String := String_RAS_frac'Access;
+   MsgPtr_RAS_frac_RAS      : constant access constant String := String_RAS_frac_RAS'Access;
+   MsgPtr_RAS_frac_EXTENDED : constant access constant String := String_RAS_frac_EXTENDED'Access;
+
+   MPAM_frac_0 : constant := 2#0000#; -- The minor version number of the MPAM extension is 0.
+   MPAM_frac_1 : constant := 2#0001#; -- The minor version number of the MPAM extension is 1.
+
+   String_MPAM_frac   : aliased constant String := "MPAM_frac MPAM major version number";
+   String_MPAM_frac_0 : aliased constant String := "MPAM_frac_0";
+   String_MPAM_frac_1 : aliased constant String := "MPAM_frac_1";
+   MsgPtr_MPAM_frac   : constant access constant String := String_MPAM_frac'Access;
+   MsgPtr_MPAM_frac_0 : constant access constant String := String_MPAM_frac_0'Access;
+   MsgPtr_MPAM_frac_1 : constant access constant String := String_MPAM_frac_1'Access;
+
+   SME_NONE    : constant := 2#0000#; -- SME architectural state and programmers' model are not implemented.
+   SME_YES     : constant := 2#0001#; -- SME architectural state and programmers' model are implemented.
+   SME_SME2ZT0 : constant := 2#0010#; -- As 0b0001, plus the SME2 ZT0 register.
+
+   String_SME         : aliased constant String := "SME Scalable Matrix Extension";
+   String_SME_NONE    : aliased constant String := "SME_NONE";
+   String_SME_YES     : aliased constant String := "SME_YES";
+   String_SME_SME2ZT0 : aliased constant String := "SME_SME2ZT0";
+   MsgPtr_SME         : constant access constant String := String_SME'Access;
+   MsgPtr_SME_NONE    : constant access constant String := String_SME_NONE'Access;
+   MsgPtr_SME_YES     : constant access constant String := String_SME_YES'Access;
+   MsgPtr_SME_SME2ZT0 : constant access constant String := String_SME_SME2ZT0'Access;
+
+   RNDR_trap_NONE : constant := 2#0000#; -- Trapping of RNDR and RNDRRS to EL3 is not supported.
+   RNDR_trap_YES  : constant := 2#0001#; -- Trapping of RNDR and RNDRRS to EL3 is supported.
+
+   String_RNDR_trap      : aliased constant String := "RNDR_trap Random Number trap";
+   String_RNDR_trap_NONE : aliased constant String := "RNDR_trap_NONE";
+   String_RNDR_trap_YES  : aliased constant String := "RNDR_trap_YES";
+   MsgPtr_RNDR_trap      : constant access constant String := String_RNDR_trap'Access;
+   MsgPtr_RNDR_trap_NONE : constant access constant String := String_RNDR_trap_NONE'Access;
+   MsgPtr_RNDR_trap_YES  : constant access constant String := String_RNDR_trap_YES'Access;
+
+   CSV2_frac_NONE : constant := 2#0000#; -- Either ID_AA64PFR0_EL1.CSV2 is not 0b0001, or the implementation does not disclose whether FEAT_CSV2_1p1 is implemented. FEAT_CSV2_1p2 is not implemented.
+   CSV2_frac_1p1  : constant := 2#0001#; -- FEAT_CSV2_1p1 is implemented, but FEAT_CSV2_1p2 is not implemented.
+   CSV2_frac_1p2  : constant := 2#0010#; -- FEAT_CSV2_1p2 is implemented.
+
+   String_CSV2_frac      : aliased constant String := "CSV2_frac CSV2 fractional";
+   String_CSV2_frac_NONE : aliased constant String := "CSV2_frac_NONE";
+   String_CSV2_frac_1p1  : aliased constant String := "CSV2_frac_1p1";
+   String_CSV2_frac_1p2  : aliased constant String := "CSV2_frac_1p2";
+   MsgPtr_CSV2_frac      : constant access constant String := String_CSV2_frac'Access;
+   MsgPtr_CSV2_frac_NONE : constant access constant String := String_CSV2_frac_NONE'Access;
+   MsgPtr_CSV2_frac_1p1  : constant access constant String := String_CSV2_frac_1p1'Access;
+   MsgPtr_CSV2_frac_1p2  : constant access constant String := String_CSV2_frac_1p2'Access;
+
+   NMI_NONE : constant := 2#0000#; -- SCTLR_ELx.{SPINTMASK, NMI} and PSTATE.ALLINT with its associated instructions are not supported.
+   NMI_YES  : constant := 2#0001#; -- SCTLR_ELx.{SPINTMASK, NMI} and PSTATE.ALLINT with its associated instructions are supported.
+
+   String_NMI      : aliased constant String := "NMI Non-maskable Interrupt";
+   String_NMI_NONE : aliased constant String := "NMI_NONE";
+   String_NMI_YES  : aliased constant String := "NMI_YES";
+   MsgPtr_NMI      : constant access constant String := String_NMI'Access;
+   MsgPtr_NMI_NONE : constant access constant String := String_NMI_NONE'Access;
+   MsgPtr_NMI_YES  : constant access constant String := String_NMI_YES'Access;
+
+   type ID_AA64PFR1_EL1_Type is record
+      BT        : Bits_4;  -- Branch Target Identification mechanism support in AArch64 state.
+      SSBS      : Bits_4;  -- Speculative Store Bypassing controls in AArch64 state.
+      MTE       : Bits_4;  -- Support for the Memory Tagging Extension.
+      RAS_frac  : Bits_4;  -- RAS Extension fractional field.
+      MPAM_frac : Bits_4;  -- Indicates the minor version number of support for the MPAM Extension.
+      Reserved1 : Bits_4;
+      SME       : Bits_4;  -- Scalable Matrix Extension.
+      RNDR_trap : Bits_4;  -- Random Number trap to EL3 field.
+      CSV2_frac : Bits_4;  -- CSV2 fractional field.
+      NMI       : Bits_4;  -- Non-maskable Interrupt.
+      Reserved2 : Bits_24;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for ID_AA64PFR1_EL1_Type use record
+      BT        at 0 range  0 ..  3;
+      SSBS      at 0 range  4 ..  7;
+      MTE       at 0 range  8 .. 11;
+      RAS_frac  at 0 range 12 .. 15;
+      MPAM_frac at 0 range 16 .. 19;
+      Reserved1 at 0 range 20 .. 23;
+      SME       at 0 range 24 .. 27;
+      RNDR_trap at 0 range 28 .. 31;
+      CSV2_frac at 0 range 32 .. 35;
+      NMI       at 0 range 36 .. 39;
+      Reserved2 at 0 range 40 .. 63;
+   end record;
+
+   function ID_AA64PFR1_EL1_Read
+      return ID_AA64PFR1_EL1_Type
+      with Inline => True;
+
+
    -- D19.2.71 ID_AA64PFR2_EL1, AArch64 Processor Feature Register 2
+   -- Reserved for future expansion of information about implemented PE features in AArch64 state.
+
+   -- Maximum string length of the messages above, useful for aligned printout.
+
+   ID_AA64PFRx_EL1_Max_String_Length : constant := 37;
+
    -- D19.2.72 ID_AA64SMFR0_EL1, SME Feature ID register 0
    -- D19.2.73 ID_AA64ZFR0_EL1, SVE Feature ID register 0
    -- D19.2.74 ID_AFR0_EL1, AArch32 Auxiliary Feature Register 0
@@ -1204,6 +1637,7 @@ pragma Style_Checks (Off);
 
    -- D19.2.125 SCTLR_EL2, System Control Register (EL2)
    -- D19.2.126 SCTLR_EL3, System Control Register (EL3)
+
    -- D19.2.127 SCXTNUM_EL0, EL0 Read/Write Software Context Number
    -- D19.2.128 SCXTNUM_EL1, EL1 Read/Write Software Context Number
    -- D19.2.129 SCXTNUM_EL2, EL2 Read/Write Software Context Number
@@ -1215,31 +1649,36 @@ pragma Style_Checks (Off);
    -- D19.2.135 SMPRIMAP_EL2, Streaming Mode Priority Mapping Register
    -- D19.2.136 SMPRI_EL1, Streaming Mode Priority Register
 
-   -- TCR2_EL1/2 are unknown in Cortex A-53
 
    -- D19.2.137 TCR2_EL1, Extended Translation Control Register (EL1)
 
-   -- type TCR2_EL1_Type is new Bits.Bitmap_64;
+#if TCR2_EL12 then
+   type TCR2_EL1_Type is new Bits.Bitmap_64;
 
-   -- function TCR2_EL1_Read
-   --    return TCR2_EL1_Type
-   --    with Inline => True;
-   -- procedure TCR2_EL1_Write
-   --    (Value : in TCR2_EL1_Type)
-   --    with Inline => True;
+   function TCR2_EL1_Read
+      return TCR2_EL1_Type
+      with Inline => True;
+   procedure TCR2_EL1_Write
+      (Value : in TCR2_EL1_Type)
+      with Inline => True;
+#end if;
 
    -- D19.2.138 TCR2_EL2, Extended Translation Control Register (EL2)
 
-   -- type TCR2_EL2_Type is new Bits.Bitmap_64;
+#if TCR2_EL12 then
+   type TCR2_EL2_Type is new Bits.Bitmap_64;
 
-   -- function TCR2_EL2_Read
-   --    return TCR2_EL2_Type
-   --    with Inline => True;
-   -- procedure TCR2_EL2_Write
-   --    (Value : in TCR2_EL2_Type)
-   --    with Inline => True;
+   function TCR2_EL2_Read
+      return TCR2_EL2_Type
+      with Inline => True;
+   procedure TCR2_EL2_Write
+      (Value : in TCR2_EL2_Type)
+      with Inline => True;
+#end if;
 
    -- D19.2.139 TCR_EL1, Translation Control Register (EL1)
+   -- D19.2.140 TCR_EL2, Translation Control Register (EL2)
+   -- D19.2.141 TCR_EL3, Translation Control Register (EL3)
 
    IRGN_NM          : constant := 2#00#; -- Normal memory, Inner Non-cacheable.
    IRGN_NM_IWBRAWAC : constant := 2#01#; -- Normal memory, Inner Write-Back Read-Allocate Write-Allocate Cacheable.
@@ -1259,6 +1698,14 @@ pragma Style_Checks (Off);
    TG_64 : constant := 2#01#; -- 64KB
    TG_16 : constant := 2#10#; -- 16KB
 
+   PS_GB4   : constant := 2#000#; -- 32 bits, 4GB.
+   PS_GB64  : constant := 2#001#; -- 36 bits, 64GB.
+   PS_TB1   : constant := 2#010#; -- 40 bits, 1TB.
+   PS_TB4   : constant := 2#011#; -- 42 bits, 4TB.
+   PS_TB16  : constant := 2#100#; -- 44 bits, 16TB.
+   PS_TB256 : constant := 2#101#; -- 48 bits, 256TB.
+   PS_PB4   : constant := 2#110#; -- 52 bits, 4PB.
+
    A1_TTBR0 : constant := 0; -- TTBR0_EL1.ASID defines the ASID.
    A1_TTBR1 : constant := 1; -- TTBR1_EL1.ASID defines the ASID.
 
@@ -1274,46 +1721,46 @@ pragma Style_Checks (Off);
    AS_16 : constant := 1; -- 16 bit - the upper 16 bits of TTBR0_EL1 and TTBR1_EL1 are used for allocation and matching in the TLB.
 
    type TCR_EL1_Type is record
-      T0SZ      : Bits_6  := 0;     -- The size offset of the memory region addressed by TTBR0_EL1.
+      T0SZ      : Bits_6  := 0;          -- The size offset of the memory region addressed by TTBR0_EL1.
       Reserved1 : Bits_1  := 0;
-      EPD0      : Boolean := False; -- Translation table walk disable for translations using TTBR0_EL1.
-      IRGN0     : Bits_2  := 0;     -- Inner cacheability attribute for memory associated with translation table walks using TTBR0_EL1.
-      ORGN0     : Bits_2  := 0;     -- Outer cacheability attribute for memory associated with translation table walks using TTBR0_EL1.
-      SH0       : Bits_2  := 0;     -- Shareability attribute for memory associated with translation table walks using TTBR0_EL1.
-      TG0       : Bits_2  := 0;     -- Granule size for the TTBR0_EL1.
-      T1SZ      : Bits_6  := 0;     -- The size offset of the memory region addressed by TTBR1_EL1.
-      A1        : Bits_1  := 0;     -- Selects whether TTBR0_EL1 or TTBR1_EL1 defines the ASID.
-      EPD1      : Boolean := False; -- Translation table walk disable for translations using TTBR1_EL1.
-      IRGN1     : Bits_2  := 0;     -- Inner cacheability attribute for memory associated with translation table walks using TTBR1_EL1.
-      ORGN1     : Bits_2  := 0;     -- Outer cacheability attribute for memory associated with translation table walks using TTBR1_EL1.
-      SH1       : Bits_2  := 0;     -- Shareability attribute for memory associated with translation table walks using TTBR1_EL1.
-      TG1       : Bits_2  := 0;     -- Granule size for the TTBR1_EL1.
-      IPS       : Bits_3  := 0;     -- Intermediate Physical Address Size.
+      EPD0      : Boolean := False;      -- Translation table walk disable for translations using TTBR0_EL1.
+      IRGN0     : Bits_2  := IRGN_NM;    -- Inner cacheability attribute for memory associated with translation table walks using TTBR0_EL1.
+      ORGN0     : Bits_2  := ORGN_NM;    -- Outer cacheability attribute for memory associated with translation table walks using TTBR0_EL1.
+      SH0       : Bits_2  := SH_NOSHARE; -- Shareability attribute for memory associated with translation table walks using TTBR0_EL1.
+      TG0       : Bits_2  := TG_4;       -- Granule size for the TTBR0_EL1.
+      T1SZ      : Bits_6  := 0;          -- The size offset of the memory region addressed by TTBR1_EL1.
+      A1        : Bits_1  := A1_TTBR0;   -- Selects whether TTBR0_EL1 or TTBR1_EL1 defines the ASID.
+      EPD1      : Boolean := False;      -- Translation table walk disable for translations using TTBR1_EL1.
+      IRGN1     : Bits_2  := IRGN_NM;    -- Inner cacheability attribute for memory associated with translation table walks using TTBR1_EL1.
+      ORGN1     : Bits_2  := ORGN_NM;    -- Outer cacheability attribute for memory associated with translation table walks using TTBR1_EL1.
+      SH1       : Bits_2  := SH_NOSHARE; -- Shareability attribute for memory associated with translation table walks using TTBR1_EL1.
+      TG1       : Bits_2  := TG_4;       -- Granule size for the TTBR1_EL1.
+      IPS       : Bits_3  := 0;          -- Intermediate Physical Address Size.
       Reserved2 : Bits_1  := 0;
-      AS        : Boolean := False; -- ASID Size.
-      TBI0      : Boolean := False; -- Top Byte ignored. Indicates whether the top byte of an address is used for address match for the TTBR0_EL1 region, or ignored and used for tagged addresses.
-      TBI1      : Boolean := False; -- Top Byte ignored. Indicates whether the top byte of an address is used for address match for the TTBR1_EL1 region, or ignored and used for tagged addresses.
-      HA        : Boolean := False; -- Hardware Access flag update in stage 1 translations from EL0 and EL1.
-      HD        : Boolean := False; -- Hardware management of dirty state in stage 1 translations from EL0 and EL1.
-      HPD0      : Boolean := False; -- Hierarchical Permission Disables. This affects the hierarchical control bits, APTable, PXNTable, and UXNTable, except NSTable, in the translation tables pointed to by TTBR0_EL1.
-      HPD1      : Boolean := False; -- Hierarchical Permission Disables. This affects the hierarchical control bits, APTable, PXNTable, and UXNTable, except NSTable, in the translation tables pointed to by TTBR1_EL1.
-      HWU059    : Boolean := False; -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[59] of the stage 1 translation table Block or Page entry for translations using TTBR0_EL1.
-      HWU060    : Boolean := False; -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[60] of the stage 1 translation table Block or Page entry for translations using TTBR0_EL1.
-      HWU061    : Boolean := False; -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[61] of the stage 1 translation table Block or Page entry for translations using TTBR0_EL1.
-      HWU062    : Boolean := False; -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[62] of the stage 1 translation table Block or Page entry for translations using TTBR0_EL1.
-      HWU159    : Boolean := False; -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[59] of the stage 1 translation table Block or Page entry for translations using TTBR1_EL1.
-      HWU160    : Boolean := False; -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[60] of the stage 1 translation table Block or Page entry for translations using TTBR1_EL1.
-      HWU161    : Boolean := False; -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[61] of the stage 1 translation table Block or Page entry for translations using TTBR1_EL1.
-      HWU162    : Boolean := False; -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[62] of the stage 1 translation table Block or Page entry for translations using TTBR1_EL1.
-      TBID0     : Boolean := False; -- Controls the use of the top byte of instruction addresses for address matching.
-      TBID1     : Boolean := False; -- Controls the use of the top byte of instruction addresses for address matching.
-      NFD0      : Boolean := False; -- Non-fault translation timing disable for stage 1 translations using TTBR0_EL1.
-      NFD1      : Boolean := False; -- Non-fault translation timing disable for stage 1 translations using TTBR1_EL1.
-      E0PD0     : Boolean := False; -- Faulting control for Unprivileged access to any address translated by TTBR0_EL1.
-      E0PD1     : Boolean := False; -- Faulting control for Unprivileged access to any address translated by TTBR1_EL1.
-      TCMA0     : Boolean := False; -- Controls the generation of Unchecked accesses at EL1, and at EL0 if HCR_EL2.{E2H,TGE}!={1,1}, when address[59:55] = 0b00000.
-      TCMA1     : Boolean := False; -- Controls the generation of Unchecked accesses at EL1, and at EL0 if HCR_EL2.{E2H,TGE}!={1,1}, when address[59:55] = 0b11111.
-      DS        : Boolean := False; -- This field affects whether a 52-bit output address can be described by the translation tables of the 4KB or 16KB translation granules.
+      AS        : Boolean := False;      -- ASID Size.
+      TBI0      : Boolean := False;      -- Top Byte ignored. Indicates whether the top byte of an address is used for address match for the TTBR0_EL1 region, or ignored and used for tagged addresses.
+      TBI1      : Boolean := False;      -- Top Byte ignored. Indicates whether the top byte of an address is used for address match for the TTBR1_EL1 region, or ignored and used for tagged addresses.
+      HA        : Boolean := False;      -- Hardware Access flag update in stage 1 translations from EL0 and EL1.
+      HD        : Boolean := False;      -- Hardware management of dirty state in stage 1 translations from EL0 and EL1.
+      HPD0      : Boolean := False;      -- Hierarchical Permission Disables. This affects the hierarchical control bits, APTable, PXNTable, and UXNTable, except NSTable, in the translation tables pointed to by TTBR0_EL1.
+      HPD1      : Boolean := False;      -- Hierarchical Permission Disables. This affects the hierarchical control bits, APTable, PXNTable, and UXNTable, except NSTable, in the translation tables pointed to by TTBR1_EL1.
+      HWU059    : Boolean := False;      -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[59] of the stage 1 translation table Block or Page entry for translations using TTBR0_EL1.
+      HWU060    : Boolean := False;      -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[60] of the stage 1 translation table Block or Page entry for translations using TTBR0_EL1.
+      HWU061    : Boolean := False;      -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[61] of the stage 1 translation table Block or Page entry for translations using TTBR0_EL1.
+      HWU062    : Boolean := False;      -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[62] of the stage 1 translation table Block or Page entry for translations using TTBR0_EL1.
+      HWU159    : Boolean := False;      -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[59] of the stage 1 translation table Block or Page entry for translations using TTBR1_EL1.
+      HWU160    : Boolean := False;      -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[60] of the stage 1 translation table Block or Page entry for translations using TTBR1_EL1.
+      HWU161    : Boolean := False;      -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[61] of the stage 1 translation table Block or Page entry for translations using TTBR1_EL1.
+      HWU162    : Boolean := False;      -- Hardware Use. Indicates IMPLEMENTATION DEFINED hardware use of bit[62] of the stage 1 translation table Block or Page entry for translations using TTBR1_EL1.
+      TBID0     : Boolean := False;      -- Controls the use of the top byte of instruction addresses for address matching.
+      TBID1     : Boolean := False;      -- Controls the use of the top byte of instruction addresses for address matching.
+      NFD0      : Boolean := False;      -- Non-fault translation timing disable for stage 1 translations using TTBR0_EL1.
+      NFD1      : Boolean := False;      -- Non-fault translation timing disable for stage 1 translations using TTBR1_EL1.
+      E0PD0     : Boolean := False;      -- Faulting control for Unprivileged access to any address translated by TTBR0_EL1.
+      E0PD1     : Boolean := False;      -- Faulting control for Unprivileged access to any address translated by TTBR1_EL1.
+      TCMA0     : Boolean := False;      -- Controls the generation of Unchecked accesses at EL1, and at EL0 if HCR_EL2.{E2H,TGE}!={1,1}, when address[59:55] = 0b00000.
+      TCMA1     : Boolean := False;      -- Controls the generation of Unchecked accesses at EL1, and at EL0 if HCR_EL2.{E2H,TGE}!={1,1}, when address[59:55] = 0b11111.
+      DS        : Boolean := False;      -- This field affects whether a 52-bit output address can be described by the translation tables of the 4KB or 16KB translation granules.
       Reserved3 : Bits_4  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1369,8 +1816,122 @@ pragma Style_Checks (Off);
       (Value : in TCR_EL1_Type)
       with Inline => True;
 
-   -- D19.2.140 TCR_EL2, Translation Control Register (EL2)
-   -- D19.2.141 TCR_EL3, Translation Control Register (EL3)
+   type TCR_EL2_Type is record
+      T0SZ      : Bits_6  := 0;          -- The size offset of the memory region addressed by TTBR0_EL2.
+      Reserved1 : Bits_2  := 0;
+      IRGN0     : Bits_2  := IRGN_NM;    -- Inner cacheability attribute for memory associated with translation table walks using TTBR0_EL2.
+      ORGN0     : Bits_2  := ORGN_NM;    -- Outer cacheability attribute for memory associated with translation table walks using TTBR0_EL2.
+      SH0       : Bits_2  := SH_NOSHARE; -- Shareability attribute for memory associated with translation table walks using TTBR0_EL2.
+      TG0       : Bits_2  := TG_4;       -- Granule size for the TTBR0_EL2.
+      PS        : Bits_3  := PS_GB4;     -- Physical Address Size.
+      Reserved2 : Bits_1  := 0;
+      TBI       : Boolean := False;      -- Top Byte Ignored.
+      HA        : Boolean := False;      -- Hardware Access flag update in stage 1 translations from EL2.
+      HD        : Boolean := False;      -- Hardware management of dirty state in stage 1 translations from EL2.
+      Reserved3 : Bits_1  := 0;
+      HPD       : Boolean := False;      -- Hierarchical Permission Disables.
+      HWU59     : Boolean := False;      -- Hardware Use.
+      HWU60     : Boolean := False;      -- Hardware Use.
+      HWU61     : Boolean := False;      -- Hardware Use.
+      HWU62     : Boolean := False;      -- Hardware Use.
+      TBID      : Boolean := False;      -- Controls the use of the top byte of instruction addresses for address matching.
+      TCMA      : Boolean := False;      -- Controls the generation of Unchecked accesses at EL2 when address [59:56] = 0b0000.
+      Reserved4 : Bits_1  := 0;
+      DS        : Boolean := False;      -- This field affects whether a 52-bit output address can be described by the translation tables of the 4KB or 16KB translation granules.
+      Reserved5 : Bits_31 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for TCR_EL2_Type use record
+      T0SZ      at 0 range  0 ..  5;
+      Reserved1 at 0 range  6 ..  7;
+      IRGN0     at 0 range  8 ..  9;
+      ORGN0     at 0 range 10 .. 11;
+      SH0       at 0 range 12 .. 13;
+      TG0       at 0 range 14 .. 15;
+      PS        at 0 range 16 .. 18;
+      Reserved2 at 0 range 19 .. 19;
+      TBI       at 0 range 20 .. 20;
+      HA        at 0 range 21 .. 21;
+      HD        at 0 range 22 .. 22;
+      Reserved3 at 0 range 23 .. 23;
+      HPD       at 0 range 24 .. 24;
+      HWU59     at 0 range 25 .. 25;
+      HWU60     at 0 range 26 .. 26;
+      HWU61     at 0 range 27 .. 27;
+      HWU62     at 0 range 28 .. 28;
+      TBID      at 0 range 29 .. 29;
+      TCMA      at 0 range 30 .. 30;
+      Reserved4 at 0 range 31 .. 31;
+      DS        at 0 range 32 .. 32;
+      Reserved5 at 0 range 33 .. 63;
+   end record;
+
+   function TCR_EL2_Read
+      return TCR_EL2_Type
+      with Inline => True;
+   procedure TCR_EL2_Write
+      (Value : in TCR_EL2_Type)
+      with Inline => True;
+
+   type TCR_EL3_Type is record
+      T0SZ      : Bits_6  := 0;          -- The size offset of the memory region addressed by TTBR0_EL3.
+      Reserved1 : Bits_2  := 0;
+      IRGN0     : Bits_2  := IRGN_NM;    -- Inner cacheability attribute for memory associated with translation table walks using TTBR0_EL3.
+      ORGN0     : Bits_2  := ORGN_NM;    -- Outer cacheability attribute for memory associated with translation table walks using TTBR0_EL3.
+      SH0       : Bits_2  := SH_NOSHARE; -- Shareability attribute for memory associated with translation table walks using TTBR0_EL3.
+      TG0       : Bits_2  := TG_4;       -- Granule size for the TTBR0_EL3.
+      PS        : Bits_3  := PS_GB4;     -- Physical Address Size.
+      Reserved2 : Bits_1  := 0;
+      TBI       : Boolean := False;      -- Top Byte Ignored.
+      HA        : Boolean := False;      -- Hardware Access flag update in stage 1 translations from EL3.
+      HD        : Boolean := False;      -- Hardware management of dirty state in stage 1 translations from EL3.
+      Reserved3 : Bits_1  := 0;
+      HPD       : Boolean := False;      -- Hierarchical Permission Disables.
+      HWU59     : Boolean := False;      -- Hardware Use.
+      HWU60     : Boolean := False;      -- Hardware Use.
+      HWU61     : Boolean := False;      -- Hardware Use.
+      HWU62     : Boolean := False;      -- Hardware Use.
+      TBID      : Boolean := False;      -- Controls the use of the top byte of instruction addresses for address matching.
+      TCMA      : Boolean := False;      -- Controls the generation of Unchecked accesses at EL3 when address [59:56] = 0b0000.
+      Reserved4 : Bits_1  := 0;
+      DS        : Boolean := False;      -- This field affects whether a 52-bit output address can be described by the translation tables of the 4KB or 16KB translation granules.
+      Reserved5 : Bits_31 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for TCR_EL3_Type use record
+      T0SZ      at 0 range  0 ..  5;
+      Reserved1 at 0 range  6 ..  7;
+      IRGN0     at 0 range  8 ..  9;
+      ORGN0     at 0 range 10 .. 11;
+      SH0       at 0 range 12 .. 13;
+      TG0       at 0 range 14 .. 15;
+      PS        at 0 range 16 .. 18;
+      Reserved2 at 0 range 19 .. 19;
+      TBI       at 0 range 20 .. 20;
+      HA        at 0 range 21 .. 21;
+      HD        at 0 range 22 .. 22;
+      Reserved3 at 0 range 23 .. 23;
+      HPD       at 0 range 24 .. 24;
+      HWU59     at 0 range 25 .. 25;
+      HWU60     at 0 range 26 .. 26;
+      HWU61     at 0 range 27 .. 27;
+      HWU62     at 0 range 28 .. 28;
+      TBID      at 0 range 29 .. 29;
+      TCMA      at 0 range 30 .. 30;
+      Reserved4 at 0 range 31 .. 31;
+      DS        at 0 range 32 .. 32;
+      Reserved5 at 0 range 33 .. 63;
+   end record;
+
+   function TCR_EL3_Read
+      return TCR_EL3_Type
+      with Inline => True;
+   procedure TCR_EL3_Write
+      (Value : in TCR_EL3_Type)
+      with Inline => True;
+
    -- D19.2.142 TFSRE0_EL1, Tag Fault Status Register (EL0).
    -- D19.2.143 TFSR_EL1, Tag Fault Status Register (EL1)
    -- D19.2.144 TFSR_EL2, Tag Fault Status Register (EL2)
@@ -1449,16 +2010,16 @@ pragma Style_Checks (Off);
       (Value : in TTBR1_EL1_Type)
       with Inline => True;
 
-   -- TTBR1_EL2 is not implemented in Cortex A-53
+#if TTBR1_EL2
+   type TTBR1_EL2_Type is new TTBR0_EL1_Type;
 
-   -- type TTBR1_EL2_Type is new TTBR0_EL1_Type;
-
-   -- function TTBR1_EL2_Read
-   --    return TTBR1_EL2_Type
-   --    with Inline => True;
-   -- procedure TTBR1_EL2_Write
-   --    (Value : in TTBR1_EL2_Type)
-   --    with Inline => True;
+   function TTBR1_EL2_Read
+      return TTBR1_EL2_Type
+      with Inline => True;
+   procedure TTBR1_EL2_Write
+      (Value : in TTBR1_EL2_Type)
+      with Inline => True;
+#end if;
 
    -- D19.2.157 VBAR_EL1, Vector Base Address Register (EL1)
    -- D19.2.158 VBAR_EL2, Vector Base Address Register (EL2)

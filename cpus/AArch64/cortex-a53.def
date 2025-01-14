@@ -1,0 +1,9 @@
+
+-- not available
+ALLINT := False
+
+-- TCR2_EL1/2 are not implemented in Cortex A-53
+TCR2_EL12 := False
+
+-- TTBR1_EL2 is not implemented in Cortex A-53
+TTBR1_EL2 := False
