@@ -1224,7 +1224,6 @@ pragma Style_Checks (Off);
       return ID_AA64PFR1_EL1_Type
       with Inline => True;
 
-
    -- D19.2.71 ID_AA64PFR2_EL1, AArch64 Processor Feature Register 2
    -- Reserved for future expansion of information about implemented PE features in AArch64 state.
 
