@@ -62,7 +62,7 @@ official package providers.
 Binutils
 --------------------------------------------------------------------------------
 
-Binutils is rather simple to build and does not require external support or
+Binutils is rather simple to build and does not require external support nor
 particular handlings.
 
 GCC
@@ -88,7 +88,7 @@ and have them decompressed so that the following layout exists:
 
 /usr/local/src
   |
-  +- gcc-13.2.0
+  +- gcc-14.2.0
   |   |
   |   +-- INSTALL
   |   +-- c++tools
