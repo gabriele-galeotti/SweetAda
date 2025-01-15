@@ -207,7 +207,7 @@ package body ARMv8A
 
 pragma Style_Checks (Off);
 
-#if ALLINT then
+#if ALLINT
    function ALLINT_Read return ALLINT_Type is function MRS_Read is new MRS ("allint", ALLINT_Type); begin return MRS_Read; end ALLINT_Read;
    procedure ALLINT_Write (Value : in ALLINT_Type) is procedure MSR_Write is new MSR ("allint", ALLINT_Type); begin MSR_Write (Value); end ALLINT_Write;
 #end if;
@@ -217,15 +217,52 @@ pragma Style_Checks (Off);
    function DAIF_Read return DAIF_Type is function MRS_Read is new MRS ("daif", DAIF_Type); begin return MRS_Read; end DAIF_Read;
    procedure DAIF_Write (Value : in DAIF_Type) is procedure MSR_Write is new MSR ("daif", DAIF_Type); begin MSR_Write (Value); end DAIF_Write;
 
+#if DIT
+   function DIT_Read return DIT_Type is function MRS_Read is new MRS ("dit", DIT_Type); begin return MRS_Read; end DIT_Read;
+   procedure DIT_Write (Value : in DIT_Type) is procedure MSR_Write is new MSR ("dit", DIT_Type); begin MSR_Write (Value); end DIT_Write;
+#end if;
+
+   function ELR_EL1_Read return Unsigned_64 is function MRS_Read is new MRS ("elr_el1", Unsigned_64); begin return MRS_Read; end ELR_EL1_Read;
+   procedure ELR_EL1_Write (Value : in Unsigned_64) is procedure MSR_Write is new MSR ("elr_el1", Unsigned_64); begin MSR_Write (Value); end ELR_EL1_Write;
+#if ELR_EL12
+   function ELR_EL12_Read return Unsigned_64 is function MRS_Read is new MRS ("elr_el12", Unsigned_64); begin return MRS_Read; end ELR_EL12_Read;
+   procedure ELR_EL12_Write (Value : in Unsigned_64) is procedure MSR_Write is new MSR ("elr_el12", Unsigned_64); begin MSR_Write (Value); end ELR_EL12_Write;
+#end if;
+   function ELR_EL2_Read return Unsigned_64 is function MRS_Read is new MRS ("elr_el2", Unsigned_64); begin return MRS_Read; end ELR_EL2_Read;
+   procedure ELR_EL2_Write (Value : in Unsigned_64) is procedure MSR_Write is new MSR ("elr_el2", Unsigned_64); begin MSR_Write (Value); end ELR_EL2_Write;
+   function ELR_EL3_Read return Unsigned_64 is function MRS_Read is new MRS ("elr_el3", Unsigned_64); begin return MRS_Read; end ELR_EL3_Read;
+   procedure ELR_EL3_Write (Value : in Unsigned_64) is procedure MSR_Write is new MSR ("elr_el3", Unsigned_64); begin MSR_Write (Value); end ELR_EL3_Write;
+
    function FPCR_Read return FPCR_Type is function MRS_Read is new MRS ("fpcr", FPCR_Type); begin return MRS_Read; end FPCR_Read;
    procedure FPCR_Write (Value : in FPCR_Type) is procedure MSR_Write is new MSR ("fpcr", FPCR_Type); begin MSR_Write (Value); end FPCR_Write;
 
    function FPSR_Read return FPSR_Type is function MRS_Read is new MRS ("fpsr", FPSR_Type); begin return MRS_Read; end FPSR_Read;
    procedure FPSR_Write (Value : in FPSR_Type) is procedure MSR_Write is new MSR ("fpsr", FPSR_Type); begin MSR_Write (Value); end FPSR_Write;
 
+   function NZCV_Read return NZCV_Type is function MRS_Read is new MRS ("nzcv", NZCV_Type); begin return MRS_Read; end NZCV_Read;
+   procedure NZCV_Write (Value : in NZCV_Type) is procedure MSR_Write is new MSR ("nzcv", NZCV_Type); begin MSR_Write (Value); end NZCV_Write;
+
+   function ACCDATA_EL1_Read return ACCDATA_EL1_Type is function MRS_Read is new MRS ("accdata_el1", ACCDATA_EL1_Type); begin return MRS_Read; end ACCDATA_EL1_Read;
+   procedure ACCDATA_EL1_Write (Value : in ACCDATA_EL1_Type) is procedure MSR_Write is new MSR ("accdata_el1", ACCDATA_EL1_Type); begin MSR_Write (Value); end ACCDATA_EL1_Write;
+
+#if CCSIDR2_EL1
+   function CCSIDR2_EL1_Read return CCSIDR2_EL1_Type is function MRS_Read is new MRS ("ccsidr2_el1", CCSIDR2_EL1_Type); begin return MRS_Read; end CCSIDR2_EL1_Read;
+#end if;
+
+   function CCSIDR_EL1_Read return CCSIDR_EL1_Type is function MRS_Read is new MRS ("ccsidr_el1", CCSIDR_EL1_Type); begin return MRS_Read; end CCSIDR_EL1_Read;
+
+   function CLIDR_EL1_Read return CLIDR_EL1_Type is function MRS_Read is new MRS ("clidr_el1", CLIDR_EL1_Type); begin return MRS_Read; end CLIDR_EL1_Read;
+
    function FAR_EL1_Read return Unsigned_64 is function MRS_Read is new MRS ("far_el1", Unsigned_64); begin return MRS_Read; end FAR_EL1_Read;
+   procedure FAR_EL1_Write (Value : in Unsigned_64) is procedure MSR_Write is new MSR ("far_el1", Unsigned_64); begin MSR_Write (Value); end FAR_EL1_Write;
+#if FAR_EL12
+   function FAR_EL12_Read return Unsigned_64 is function MRS_Read is new MRS ("far_el12", Unsigned_64); begin return MRS_Read; end FAR_EL12_Read;
+   procedure FAR_EL12_Write (Value : in Unsigned_64) is procedure MSR_Write is new MSR ("far_el12", Unsigned_64); begin MSR_Write (Value); end FAR_EL12_Write;
+#end if;
    function FAR_EL2_Read return Unsigned_64 is function MRS_Read is new MRS ("far_el2", Unsigned_64); begin return MRS_Read; end FAR_EL2_Read;
+   procedure FAR_EL2_Write (Value : in Unsigned_64) is procedure MSR_Write is new MSR ("far_el2", Unsigned_64); begin MSR_Write (Value); end FAR_EL2_Write;
    function FAR_EL3_Read return Unsigned_64 is function MRS_Read is new MRS ("far_el3", Unsigned_64); begin return MRS_Read; end FAR_EL3_Read;
+   procedure FAR_EL3_Write (Value : in Unsigned_64) is procedure MSR_Write is new MSR ("far_el3", Unsigned_64); begin MSR_Write (Value); end FAR_EL3_Write;
 
    function FPEXC32_EL2_Read return FPEXC32_EL2_Type is function MRS_Read is new MRS ("fpexc32_el2", FPEXC32_EL2_Type); begin return MRS_Read; end FPEXC32_EL2_Read;
    procedure FPEXC32_EL2_Write (Value : in FPEXC32_EL2_Type) is procedure MSR_Write is new MSR ("fpexc32_el2", FPEXC32_EL2_Type); begin MSR_Write (Value); end FPEXC32_EL2_Write;
@@ -249,6 +286,8 @@ pragma Style_Checks (Off);
    function MAIR_EL3_Read return MAIR_ELx_Type is function MRS_Read is new MRS ("mair_el3", MAIR_ELx_Type); begin return MRS_Read; end MAIR_EL3_Read;
    procedure MAIR_EL3_Write (Value : in MAIR_ELx_Type) is procedure MSR_Write is new MSR ("mair_el3", MAIR_ELx_Type); begin MSR_Write (Value); end MAIR_EL3_Write;
 
+   function MIDR_EL1_Read return MIDR_EL1_Type is function MRS_Read is new MRS ("midr_el1", MIDR_EL1_Type); begin return MRS_Read; end MIDR_EL1_Read;
+
    function MPIDR_EL1_Read return MPIDR_EL1_Type is function MRS_Read is new MRS ("mpidr_el1", MPIDR_EL1_Type); begin return MRS_Read; end MPIDR_EL1_Read;
 
    function SCR_EL3_Read return SCR_EL3_Type is function MRS_Read is new MRS ("scr_el3", SCR_EL3_Type); begin return MRS_Read; end SCR_EL3_Read;
@@ -257,9 +296,11 @@ pragma Style_Checks (Off);
    function SCTLR_EL1_Read return SCTLR_EL1_Type is function MRS_Read is new MRS ("sctlr_el1", SCTLR_EL1_Type); begin return MRS_Read; end SCTLR_EL1_Read;
    procedure SCTLR_EL1_Write (Value : in SCTLR_EL1_Type) is procedure MSR_Write is new MSR ("sctlr_el1", SCTLR_EL1_Type); begin MSR_Write (Value); end SCTLR_EL1_Write;
 
-#if TCR2_EL12
+#if TCR2_EL1
    function TCR2_EL1_Read return TCR2_EL1_Type is function MRS_Read is new MRS ("tcr2_el1", TCR2_EL1_Type); begin return MRS_Read; end TCR2_EL1_Read;
    procedure TCR2_EL1_Write (Value : in TCR2_EL1_Type) is procedure MSR_Write is new MSR ("tcr2_el1", TCR2_EL1_Type); begin MSR_Write (Value); end TCR2_EL1_Write;
+#end if;
+#if TCR2_EL2
    function TCR2_EL2_Read return TCR2_EL2_Type is function MRS_Read is new MRS ("tcr2_el2", TCR2_EL2_Type); begin return MRS_Read; end TCR2_EL2_Read;
    procedure TCR2_EL2_Write (Value : in TCR2_EL2_Type) is procedure MSR_Write is new MSR ("tcr2_el2", TCR2_EL2_Type); begin MSR_Write (Value); end TCR2_EL2_Write;
 #end if;

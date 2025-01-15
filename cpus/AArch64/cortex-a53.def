@@ -1,9 +1,9 @@
 
--- not available
-ALLINT := False
-
--- TCR2_EL1/2 are not implemented in Cortex-A53
-TCR2_EL12 := False
-
--- TTBR1_EL2 is not implemented in Cortex-A53
-TTBR1_EL2 := False
+ALLINT      := False
+DIT         := False
+ELR_EL12    := False
+CCSIDR2_EL1 := False
+FAR_EL12    := False
+TCR2_EL1    := False
+TCR2_EL2    := False
+TTBR1_EL2   := False

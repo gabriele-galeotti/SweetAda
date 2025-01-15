@@ -97,7 +97,7 @@ pragma Style_Checks (Off);
    -- C5.2 Special-purpose registers
    ----------------------------------------------------------------------------
 
-#if ALLINT then
+#if ALLINT
    -- C5.2.1 ALLINT, All Interrupt Mask Bit
 
    type ALLINT_Type is record
@@ -175,10 +175,65 @@ pragma Style_Checks (Off);
       (Value : in DAIF_Type)
       with Inline => True;
 
+#if DIT
    -- C5.2.4 DIT, Data Independent Timing
+
+   type DIT_Type is record
+      Reserved1 : Bits_24 := 0;
+      DIT       : Boolean := False; -- Data Independent Timing.
+      Reserved2 : Bits_39 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for DIT_Type use record
+      Reserved1 at 0 range  0 .. 23;
+      DIT       at 0 range 24 .. 24;
+      Reserved2 at 0 range 25 .. 63;
+   end record;
+
+   function DIT_Read
+      return DIT_Type
+      with Inline => True;
+   procedure DIT_Write
+      (Value : in DIT_Type)
+      with Inline => True;
+#end if;
+
    -- C5.2.5 ELR_EL1, Exception Link Register (EL1)
+
+   function ELR_EL1_Read
+      return Unsigned_64
+      with Inline => True;
+   procedure ELR_EL1_Write
+      (Value : in Unsigned_64)
+      with Inline => True;
+
+#if ELR_EL12
+   function ELR_EL12_Read
+      return Unsigned_64
+      with Inline => True;
+   procedure ELR_EL12_Write
+      (Value : in Unsigned_64)
+      with Inline => True;
+#end if;
+
    -- C5.2.6 ELR_EL2, Exception Link Register (EL2)
+
+   function ELR_EL2_Read
+      return Unsigned_64
+      with Inline => True;
+   procedure ELR_EL2_Write
+      (Value : in Unsigned_64)
+      with Inline => True;
+
    -- C5.2.7 ELR_EL3, Exception Link Register (EL3)
+
+   function ELR_EL3_Read
+      return Unsigned_64
+      with Inline => True;
+   procedure ELR_EL3_Write
+      (Value : in Unsigned_64)
+      with Inline => True;
 
    -- C5.2.8 FPCR, Floating-point Control Register
 
@@ -285,6 +340,34 @@ pragma Style_Checks (Off);
       (Value : in FPSR_Type)
       with Inline => True;
 
+   -- C5.2.10 NZCV, Condition Flags
+
+   type NZCV_Type is record
+      Reserved1 : Bits_28 := 0;
+      V         : Boolean := False; -- Overflow condition flag.
+      C         : Boolean := False; -- Carry condition flag.
+      Z         : Boolean := False; -- Zero condition flag.
+      N         : Boolean := False; -- Negative condition flag.
+      Reserved2 : Bits_32 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for NZCV_Type use record
+      Reserved1 at 0 range  0 .. 27;
+      V         at 0 range 28 .. 28;
+      C         at 0 range 29 .. 29;
+      Z         at 0 range 30 .. 30;
+      N         at 0 range 31 .. 31;
+      Reserved2 at 0 range 32 .. 63;
+   end record;
+
+   function NZCV_Read
+      return NZCV_Type
+      with Inline => True;
+   procedure NZCV_Write
+      (Value : in NZCV_Type)
+      with Inline => True;
+
    ----------------------------------------------------------------------------
    -- D19.2 General system control registers
    ----------------------------------------------------------------------------
@@ -301,6 +384,13 @@ pragma Style_Checks (Off);
       ACCDATA  at 0 range  0 .. 31;
       Reserved at 0 range 32 .. 63;
    end record;
+
+   function ACCDATA_EL1_Read
+      return ACCDATA_EL1_Type
+      with Inline => True;
+   procedure ACCDATA_EL1_Write
+      (Value : in ACCDATA_EL1_Type)
+      with Inline => True;
 
    -- D19.2.2 ACTLR_EL1, Auxiliary Control Register (EL1)
    -- D19.2.3 ACTLR_EL2, Auxiliary Control Register (EL2)
@@ -326,6 +416,7 @@ pragma Style_Checks (Off);
    -- D19.2.23 APIBKeyHi_EL1, Pointer Authentication Key B for Instruction (bits[127:64])
    -- D19.2.24 APIBKeyLo_EL1, Pointer Authentication Key B for Instruction (bits[63:0])
 
+#if CCSIDR2_EL1
    -- D19.2.25 CCSIDR2_EL1, Current Cache Size ID Register 2
 
    type CCSIDR2_EL1_Type is record
@@ -338,6 +429,11 @@ pragma Style_Checks (Off);
       NumSets  at 0 range  0 .. 23;
       Reserved at 0 range 24 .. 63;
    end record;
+
+   function CCSIDR2_EL1_Read
+      return CCSIDR2_EL1_Type
+      with Inline => True;
+#end if;
 
    -- D19.2.26 CCSIDR_EL1, Current Cache Size ID Register
 
@@ -358,7 +454,94 @@ pragma Style_Checks (Off);
       Reserved2     at 0 range 56 .. 63;
    end record;
 
+   function CCSIDR_EL1_Read
+      return CCSIDR_EL1_Type
+      with Inline => True;
+
    -- D19.2.27 CLIDR_EL1, Cache Level ID Register
+
+   type Cache_Level_Type is (
+      NOCACHELEVEL,
+      CACHELEVEL1,
+      CACHELEVEL2,
+      CACHELEVEL3,
+      CACHELEVEL4,
+      CACHELEVEL5,
+      CACHELEVEL6,
+      CACHELEVEL7
+      )
+      with Size => 3;
+   for Cache_Level_Type use (2#000#, 2#001#, 2#010#, 2#011#,
+                             2#100#, 2#101#, 2#110#, 2#111#);
+
+   type Cache_Type is (
+      NOCACHE, -- 0b000 No cache.
+      ICACHE,  -- 0b001 Instruction cache only.
+      DCACHE,  -- 0b010 Data cache only.
+      SCACHE,  -- 0b011 Separate instruction and data caches.
+      UCACHE   -- 0b100 Unified cache.
+      )
+      with Size => 3;
+   for Cache_Type use (2#000#, 2#001#, 2#010#, 2#011#, 2#100#);
+
+   type Tag_Cache_Type is (
+      NOTAGCACHE,   -- 0b00 No Tag Cache.
+      SEPALLOCTAG,  -- 0b01 Separate Allocation Tag Cache.
+      UALLOCULINES, -- 0b10 Unified Allocation Tag and Data cache, Allocation Tags and Data in unified lines.
+      UALLOCSLINES  -- 0b11 Unified Allocation Tag and Data cache, Allocation Tags and Data in separate lines.
+      )
+      with Size => 2;
+   for Tag_Cache_Type use (2#00#, 2#01#, 2#10#, 2#11#);
+
+   type CLIDR_EL1_Type is record
+      Ctype1   : Cache_Type;       -- Cache Type fields.
+      Ctype2   : Cache_Type;       -- ''
+      Ctype3   : Cache_Type;       -- ''
+      Ctype4   : Cache_Type;       -- ''
+      Ctype5   : Cache_Type;       -- ''
+      Ctype6   : Cache_Type;       -- ''
+      Ctype7   : Cache_Type;       -- ''
+      LoUIS    : Cache_Level_Type; -- Level of Unification Inner Shareable for the cache hierarchy.
+      LoC      : Cache_Level_Type; -- Level of Coherence for the cache hierarchy.
+      LoUU     : Cache_Level_Type; -- Level of Unification Uniprocessor for the cache hierarchy.
+      ICB      : Cache_Level_Type; -- Inner cache boundary.
+      Ttype1   : Tag_Cache_Type;   -- Tag cache type.
+      Ttype2   : Tag_Cache_Type;   -- ''
+      Ttype3   : Tag_Cache_Type;   -- ''
+      Ttype4   : Tag_Cache_Type;   -- ''
+      Ttype5   : Tag_Cache_Type;   -- ''
+      Ttype6   : Tag_Cache_Type;   -- ''
+      Ttype7   : Tag_Cache_Type;   -- ''
+      Reserved : Bits_17;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for CLIDR_EL1_Type use record
+      Ctype1   at 0 range  0 ..  2;
+      Ctype2   at 0 range  3 ..  5;
+      Ctype3   at 0 range  6 ..  8;
+      Ctype4   at 0 range  9 .. 11;
+      Ctype5   at 0 range 12 .. 14;
+      Ctype6   at 0 range 15 .. 17;
+      Ctype7   at 0 range 18 .. 20;
+      LoUIS    at 0 range 21 .. 23;
+      LoC      at 0 range 24 .. 26;
+      LoUU     at 0 range 27 .. 29;
+      ICB      at 0 range 30 .. 32;
+      Ttype1   at 0 range 33 .. 34;
+      Ttype2   at 0 range 35 .. 36;
+      Ttype3   at 0 range 37 .. 38;
+      Ttype4   at 0 range 39 .. 40;
+      Ttype5   at 0 range 41 .. 42;
+      Ttype6   at 0 range 43 .. 44;
+      Ttype7   at 0 range 45 .. 46;
+      Reserved at 0 range 47 .. 63;
+   end record;
+
+   function CLIDR_EL1_Read
+      return CLIDR_EL1_Type
+      with Inline => True;
+
    -- D19.2.28 CONTEXTIDR_EL1, Context ID Register (EL1)
    -- D19.2.29 CONTEXTIDR_EL2, Context ID Register (EL2)
    -- D19.2.30 CPACR_EL1, Architectural Feature Access Control Register
@@ -377,17 +560,35 @@ pragma Style_Checks (Off);
    function FAR_EL1_Read
       return Unsigned_64
       with Inline => True;
+   procedure FAR_EL1_Write
+      (Value : in Unsigned_64)
+      with Inline => True;
+
+#if FAR_EL12
+   function FAR_EL12_Read
+      return Unsigned_64
+      with Inline => True;
+   procedure FAR_EL12_Write
+      (Value : in Unsigned_64)
+      with Inline => True;
+#end if;
 
    -- D19.2.41 FAR_EL2, Fault Address Register (EL2)
 
    function FAR_EL2_Read
       return Unsigned_64
       with Inline => True;
+   procedure FAR_EL2_Write
+      (Value : in Unsigned_64)
+      with Inline => True;
 
    -- D19.2.42 FAR_EL3, Fault Address Register (EL3)
 
    function FAR_EL3_Read
       return Unsigned_64
+      with Inline => True;
+   procedure FAR_EL3_Write
+      (Value : in Unsigned_64)
       with Inline => True;
 
    -- D19.2.43 FPEXC32_EL2, Floating-Point Exception Control register
@@ -1224,12 +1425,12 @@ pragma Style_Checks (Off);
       return ID_AA64PFR1_EL1_Type
       with Inline => True;
 
-   -- D19.2.71 ID_AA64PFR2_EL1, AArch64 Processor Feature Register 2
-   -- Reserved for future expansion of information about implemented PE features in AArch64 state.
-
-   -- Maximum string length of the messages above, useful for aligned printout.
+   -- Maximum string length of the messages above, useful for aligned printout
 
    ID_AA64PFRx_EL1_Max_String_Length : constant := 37;
+
+   -- D19.2.71 ID_AA64PFR2_EL1, AArch64 Processor Feature Register 2
+   -- Reserved for future expansion of information about implemented PE features in AArch64 state.
 
    -- D19.2.72 ID_AA64SMFR0_EL1, SME Feature ID register 0
    -- D19.2.73 ID_AA64ZFR0_EL1, SVE Feature ID register 0
@@ -1320,6 +1521,91 @@ pragma Style_Checks (Off);
       with Inline => True;
 
    -- D19.2.103 MIDR_EL1, Main ID Register
+
+   type Architecture_Type is record
+      CODE        : Bits_4;
+      DESCRIPTION : access constant String;
+   end record;
+
+   Architecture_Armv4    : aliased constant String := "Armv4";
+   Architecture_Armv4T   : aliased constant String := "Armv4T";
+   Architecture_Armv5    : aliased constant String := "Armv5";
+   Architecture_Armv5T   : aliased constant String := "Armv5T";
+   Architecture_Armv5TE  : aliased constant String := "Armv5TE";
+   Architecture_Armv5TEJ : aliased constant String := "Armv5TEJ";
+   Architecture_Armv6    : aliased constant String := "Armv6";
+   Architecture_ID       : aliased constant String := "ID_*";
+
+   Architectures : constant array (1 .. 8) of Architecture_Type := [
+      (2#0001#, Architecture_Armv4'Access),
+      (2#0010#, Architecture_Armv4T'Access),
+      (2#0011#, Architecture_Armv5'Access),
+      (2#0100#, Architecture_Armv5T'Access),
+      (2#0101#, Architecture_Armv5TE'Access),
+      (2#0110#, Architecture_Armv5TEJ'Access),
+      (2#0111#, Architecture_Armv6'Access),
+      (2#1111#, Architecture_ID'Access)
+      ];
+
+   type Implementer_Type is record
+      CODE        : Bits_8;
+      DESCRIPTION : access constant String;
+   end record;
+
+   Implementer_Software  : aliased constant String := "Software";
+   Implementer_Arm       : aliased constant String := "Arm Limited";
+   Implementer_Broadcom  : aliased constant String := "Broadcom Corporation";
+   Implementer_Cavium    : aliased constant String := "Cavium Inc";
+   Implementer_DEC       : aliased constant String := "Digital Equipment Corporation";
+   Implementer_Fujitsu   : aliased constant String := "Fujitsu Ltd";
+   Implementer_Infineon  : aliased constant String := "Infineon Technologies AG";
+   Implementer_Freescale : aliased constant String := "Motorola or Freescale Semiconductor Inc";
+   Implementer_NVIDIA    : aliased constant String := "NVIDIA Corporation";
+   Implementer_AMCC      : aliased constant String := "Applied Micro Circuits Corporation";
+   Implementer_Qualcomm  : aliased constant String := "Qualcomm Inc";
+   Implementer_Marvell   : aliased constant String := "Marvell International Ltd";
+   Implementer_Intel     : aliased constant String := "Intel Corporation";
+   Implementer_Ampere    : aliased constant String := "Ampere Computing";
+
+   Implementers : constant array (1 .. 14) of Implementer_Type := [
+      (16#00#, Implementer_Software'Access),
+      (16#41#, Implementer_Arm'Access),
+      (16#42#, Implementer_Broadcom'Access),
+      (16#43#, Implementer_Cavium'Access),
+      (16#44#, Implementer_DEC'Access),
+      (16#46#, Implementer_Fujitsu'Access),
+      (16#49#, Implementer_Infineon'Access),
+      (16#4D#, Implementer_Freescale'Access),
+      (16#4E#, Implementer_NVIDIA'Access),
+      (16#50#, Implementer_AMCC'Access),
+      (16#51#, Implementer_Qualcomm'Access),
+      (16#56#, Implementer_Marvell'Access),
+      (16#69#, Implementer_Intel'Access),
+      (16#C0#, Implementer_Ampere'Access)
+      ];
+
+   type MIDR_EL1_Type is record
+      Revision     : Bits_4;  -- Revision number for the device.
+      PartNum      : Bits_12; -- Primary Part Number for the device.
+      Architecture : Bits_4;  -- Architecture version.
+      Variant      : Bits_4;  -- Variant number.
+      Implementer  : Bits_8;  -- The Implementer code.
+      Reserved     : Bits_32;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for MIDR_EL1_Type use record
+      Revision     at 0 range  0 ..  3;
+      PartNum      at 0 range  4 .. 15;
+      Architecture at 0 range 16 .. 19;
+      Variant      at 0 range 20 .. 23;
+      Implementer  at 0 range 24 .. 31;
+      Reserved     at 0 range 32 .. 63;
+   end record;
+
+   function MIDR_EL1_Read
+      return MIDR_EL1_Type
+      with Inline => True;
 
    -- D19.2.104 MPIDR_EL1, Multiprocessor Affinity Register
 
@@ -1648,10 +1934,9 @@ pragma Style_Checks (Off);
    -- D19.2.135 SMPRIMAP_EL2, Streaming Mode Priority Mapping Register
    -- D19.2.136 SMPRI_EL1, Streaming Mode Priority Register
 
-
+#if TCR2_EL1
    -- D19.2.137 TCR2_EL1, Extended Translation Control Register (EL1)
 
-#if TCR2_EL12 then
    type TCR2_EL1_Type is new Bits.Bitmap_64;
 
    function TCR2_EL1_Read
@@ -1662,9 +1947,9 @@ pragma Style_Checks (Off);
       with Inline => True;
 #end if;
 
+#if TCR2_EL2
    -- D19.2.138 TCR2_EL2, Extended Translation Control Register (EL2)
 
-#if TCR2_EL12 then
    type TCR2_EL2_Type is new Bits.Bitmap_64;
 
    function TCR2_EL2_Read
