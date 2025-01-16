@@ -62,7 +62,7 @@ package body Clocks
       MCG_C1 := (
          -- IRCLKEN => True,
          IREFS   => IREFS_EXT,
-         FRDIV   => FRDIV_64_1280, -- 50 / 1280 = 39.0625 kHz
+         FRDIV   => FRDIV_64_1280, -- 50 MHz / 1280 = 39.0625 kHz
          -- CLKS    => CLKS_FLLPLLCS, -- go to FEE
          CLKS    => CLKS_EXT,      -- go to FBE
          others  => <>
@@ -70,14 +70,14 @@ package body Clocks
       loop exit when MCG_S.IREFST = IREFST_EXT; end loop;
       loop exit when MCG_S.CLKST = CLKST_EXT; end loop;
       MCG_C5 := (
-         PRDIV0     => PRDIV0_DIV4,     -- 50 / 4 = 12.5 MHz
+         PRDIV0     => PRDIV0_DIV4,     -- 50 MHz / 4 = 12.5 MHz
          PLLCLKEN0  => True,
          PLLREFSEL0 => PLLREFSEL0_OSC0,
          others     => <>
          );
       -- FBE mode established
       MCG_C6 := (
-         VDIV0  => VDIV0_x24,  -- 12.5 * 24 = 300 MHz (VCO)
+         VDIV0  => VDIV0_x24,  -- 12.5 MHz * 24 = 300 MHz (VCO)
          PLLS   => PLLS_PLLCS,
          others => <>
          );
