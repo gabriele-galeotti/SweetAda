@@ -42,11 +42,12 @@ package body BSP
    use Interfaces;
    use Definitions;
    use Bits;
+   use ARMv8A;
    use Virt;
 
    Timer_Constant : Unsigned_32;
 
-   procedure Features_Dump;
+   procedure CPU_Detect;
 
    --========================================================================--
    --                                                                        --
@@ -62,260 +63,308 @@ package body BSP
    procedure Timer_Reload
       is
    begin
-      ARMv8A.CNTP_TVAL_EL0_Write ((TimerValue => Timer_Constant, others => <>));
+      CNTP_TVAL_EL0_Write ((TimerValue => Timer_Constant, others => <>));
    end Timer_Reload;
 
    ----------------------------------------------------------------------------
-   -- Features_Dump
+   -- CPU_Detect
    ----------------------------------------------------------------------------
-   procedure Features_Dump
+   procedure CPU_Detect
       is
-      ID_AA64PFR0_EL1 : ARMv8A.ID_AA64PFR0_EL1_Type;
-      ID_AA64PFR1_EL1 : ARMv8A.ID_AA64PFR1_EL1_Type;
+      MIDR            : MIDR_EL1_Type;
+      ID_AA64PFR0_EL1 : ID_AA64PFR0_EL1_Type;
+      ID_AA64PFR1_EL1 : ID_AA64PFR1_EL1_Type;
       MsgPtr          : access constant String;
-      String_UNKNOWN  : aliased String := "UNKNOWN";
+      Max_StrLen      : constant := ID_AA64PFRx_EL1_Max_String_Length;
+      Pad_Spaces      : constant String (1 .. 1 + Max_StrLen) := [others => ' '];
+      String_UNKNOWN  : aliased constant String := "UNKNOWN";
       MsgPtr_UNKNOWN  : constant access constant String := String_UNKNOWN'Access;
-      procedure Print_Feature_Align
-         (S : in String);
-      procedure Print_Feature_Align
-         (S : in String)
+      function Architecture
+         return access constant String;
+      function Architecture
+         return access constant String
          is
       begin
-         declare
-            Padding_Length : constant Natural :=
-               ARMv8A.ID_AA64PFRx_EL1_Max_String_Length - S'Length;
-            Padding        : constant String (1 .. 1 + Padding_Length) :=
-               [others => ' '];
-         begin
-            Console.Print (S & ":" & Padding);
-         end;
-      end Print_Feature_Align;
+         for Index in Architectures'Range loop
+            if MIDR.Architecture = Architectures (Index).CODE then
+               return Architectures (Index).DESCRIPTION;
+            end if;
+         end loop;
+         return MsgPtr_UNKNOWN;
+      end Architecture;
+      function Implementer
+         return access constant String;
+      function Implementer
+         return access constant String
+         is
+      begin
+         for Index in Implementers'Range loop
+            if MIDR.Implementer = Implementers (Index).CODE then
+               return Implementers (Index).DESCRIPTION;
+            end if;
+         end loop;
+         return MsgPtr_UNKNOWN;
+      end Implementer;
    begin
+      -------------------------------------------------------------------------
+      -- MIDR_EL1
+      -------------------------------------------------------------------------
+      MIDR := MIDR_EL1_Read;
+      Console.Print (Prefix => "Revision:     ", Value => Natural (MIDR.Revision), NL => True);
+      Console.Print (Prefix => "Part Number:  ", Value => Unsigned_16 (MIDR.PartNum), NL => True);
+      Console.Print (Prefix => "Architecture: ", Value => Architecture.all, NL => True);
+      Console.Print (Prefix => "Variant:      ", Value => Natural (MIDR.Variant), NL => True);
+      Console.Print (Prefix => "Implementer:  ", Value => Implementer.all, NL => True);
       -------------------------------------------------------------------------
       -- ID_AA64PFR0_EL1
       -------------------------------------------------------------------------
-      ID_AA64PFR0_EL1 := ARMv8A.ID_AA64PFR0_EL1_Read;
+      ID_AA64PFR0_EL1 := ID_AA64PFR0_EL1_Read;
       Console.Print ("ID_AA64PFR0_EL1:", NL => True);
       -- EL0
-      Print_Feature_Align (ARMv8A.MsgPtr_EL0.all);
+      Console.Print (MsgPtr_EL0.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_EL0.all'Length));
       case ID_AA64PFR0_EL1.EL0 is
-         when ARMv8A.EL0_64   => MsgPtr := ARMv8A.MsgPtr_EL0_64;
-         when ARMv8A.EL0_3264 => MsgPtr := ARMv8A.MsgPtr_EL0_3264;
-         when others          => MsgPtr := MsgPtr_UNKNOWN;
+         when EL0_64   => MsgPtr := MsgPtr_EL0_64;
+         when EL0_3264 => MsgPtr := MsgPtr_EL0_3264;
+         when others   => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- EL1
-      Print_Feature_Align (ARMv8A.MsgPtr_EL1.all);
+      Console.Print (MsgPtr_EL1.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_EL1.all'Length));
       case ID_AA64PFR0_EL1.EL1 is
-         when ARMv8A.EL1_64   => MsgPtr := ARMv8A.MsgPtr_EL1_64;
-         when ARMv8A.EL1_3264 => MsgPtr := ARMv8A.MsgPtr_EL1_3264;
-         when others          => MsgPtr := MsgPtr_UNKNOWN;
+         when EL1_64   => MsgPtr := MsgPtr_EL1_64;
+         when EL1_3264 => MsgPtr := MsgPtr_EL1_3264;
+         when others   => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- EL2
-      Print_Feature_Align (ARMv8A.MsgPtr_EL2.all);
+      Console.Print (MsgPtr_EL2.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_EL2.all'Length));
       case ID_AA64PFR0_EL1.EL2 is
-         when ARMv8A.EL2_NONE => MsgPtr := ARMv8A.MsgPtr_EL2_NONE;
-         when ARMv8A.EL2_64   => MsgPtr := ARMv8A.MsgPtr_EL2_64;
-         when ARMv8A.EL2_3264 => MsgPtr := ARMv8A.MsgPtr_EL2_3264;
-         when others          => MsgPtr := MsgPtr_UNKNOWN;
+         when EL2_NONE => MsgPtr := MsgPtr_EL2_NONE;
+         when EL2_64   => MsgPtr := MsgPtr_EL2_64;
+         when EL2_3264 => MsgPtr := MsgPtr_EL2_3264;
+         when others   => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- EL3
-      Print_Feature_Align (ARMv8A.MsgPtr_EL3.all);
+      Console.Print (MsgPtr_EL3.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_EL3.all'Length));
       case ID_AA64PFR0_EL1.EL3 is
-         when ARMv8A.EL3_NONE => MsgPtr := ARMv8A.MsgPtr_EL3_NONE;
-         when ARMv8A.EL3_64   => MsgPtr := ARMv8A.MsgPtr_EL3_64;
-         when ARMv8A.EL3_3264 => MsgPtr := ARMv8A.MsgPtr_EL3_3264;
-         when others          => MsgPtr := MsgPtr_UNKNOWN;
+         when EL3_NONE => MsgPtr := MsgPtr_EL3_NONE;
+         when EL3_64   => MsgPtr := MsgPtr_EL3_64;
+         when EL3_3264 => MsgPtr := MsgPtr_EL3_3264;
+         when others   => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- FP
-      Print_Feature_Align (ARMv8A.MsgPtr_FP.all);
+      Console.Print (MsgPtr_FP.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_FP.all'Length));
       case ID_AA64PFR0_EL1.FP is
-         when ARMv8A.FP_YES           => MsgPtr := ARMv8A.MsgPtr_FP_YES;
-         when ARMv8A.FP_HALFPRECISION => MsgPtr := ARMv8A.MsgPtr_FP_HALFPRECISION;
-         when ARMv8A.FP_NONE          => MsgPtr := ARMv8A.MsgPtr_FP_NONE;
-         when others                  => MsgPtr := MsgPtr_UNKNOWN;
+         when FP_YES           => MsgPtr := MsgPtr_FP_YES;
+         when FP_HALFPRECISION => MsgPtr := MsgPtr_FP_HALFPRECISION;
+         when FP_NONE          => MsgPtr := MsgPtr_FP_NONE;
+         when others           => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- AdvSIMD
-      Print_Feature_Align (ARMv8A.MsgPtr_AdvSIMD.all);
+      Console.Print (MsgPtr_AdvSIMD.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_AdvSIMD.all'Length));
       case ID_AA64PFR0_EL1.AdvSIMD is
-         when ARMv8A.AdvSIMD_YES           => MsgPtr := ARMv8A.MsgPtr_AdvSIMD_YES;
-         when ARMv8A.AdvSIMD_HALFPRECISION => MsgPtr := ARMv8A.MsgPtr_AdvSIMD_HALFPRECISION;
-         when ARMv8A.AdvSIMD_NONE          => MsgPtr := ARMv8A.MsgPtr_AdvSIMD_NONE;
-         when others                       => MsgPtr := MsgPtr_UNKNOWN;
+         when AdvSIMD_YES           => MsgPtr := MsgPtr_AdvSIMD_YES;
+         when AdvSIMD_HALFPRECISION => MsgPtr := MsgPtr_AdvSIMD_HALFPRECISION;
+         when AdvSIMD_NONE          => MsgPtr := MsgPtr_AdvSIMD_NONE;
+         when others                => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- GIC
-      Print_Feature_Align (ARMv8A.MsgPtr_GIC.all);
+      Console.Print (MsgPtr_GIC.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_GIC.all'Length));
       case ID_AA64PFR0_EL1.GIC is
-         when ARMv8A.GIC_NONE  => MsgPtr := ARMv8A.MsgPtr_GIC_NONE;
-         when ARMv8A.GIC_30_40 => MsgPtr := ARMv8A.MsgPtr_GIC_30_40;
-         when ARMv8A.GIC_41    => MsgPtr := ARMv8A.MsgPtr_GIC_41;
-         when others           => MsgPtr := MsgPtr_UNKNOWN;
+         when GIC_NONE  => MsgPtr := MsgPtr_GIC_NONE;
+         when GIC_30_40 => MsgPtr := MsgPtr_GIC_30_40;
+         when GIC_41    => MsgPtr := MsgPtr_GIC_41;
+         when others    => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- RAS
-      Print_Feature_Align (ARMv8A.MsgPtr_RAS.all);
+      Console.Print (MsgPtr_RAS.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_RAS.all'Length));
       case ID_AA64PFR0_EL1.RAS is
-         when ARMv8A.RAS_NONE => MsgPtr := ARMv8A.MsgPtr_RAS_NONE;
-         when ARMv8A.RAS_YES  => MsgPtr := ARMv8A.MsgPtr_RAS_YES;
-         when ARMv8A.RAS_v1p1 => MsgPtr := ARMv8A.MsgPtr_RAS_v1p1;
-         when others          => MsgPtr := MsgPtr_UNKNOWN;
+         when RAS_NONE => MsgPtr := MsgPtr_RAS_NONE;
+         when RAS_YES  => MsgPtr := MsgPtr_RAS_YES;
+         when RAS_v1p1 => MsgPtr := MsgPtr_RAS_v1p1;
+         when others   => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- SVE
-      Print_Feature_Align (ARMv8A.MsgPtr_SVE.all);
+      Console.Print (MsgPtr_SVE.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_SVE.all'Length));
       case ID_AA64PFR0_EL1.SVE is
-         when ARMv8A.SVE_NONE => MsgPtr := ARMv8A.MsgPtr_SVE_NONE;
-         when ARMv8A.SVE_YES  => MsgPtr := ARMv8A.MsgPtr_SVE_YES;
-         when others          => MsgPtr := MsgPtr_UNKNOWN;
+         when SVE_NONE => MsgPtr := MsgPtr_SVE_NONE;
+         when SVE_YES  => MsgPtr := MsgPtr_SVE_YES;
+         when others   => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- SEL2
-      Print_Feature_Align (ARMv8A.MsgPtr_SEL2.all);
+      Console.Print (MsgPtr_SEL2.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_SEL2.all'Length));
       case ID_AA64PFR0_EL1.SEL2 is
-         when ARMv8A.SEL2_NONE => MsgPtr := ARMv8A.MsgPtr_SEL2_NONE;
-         when ARMv8A.SEL2_YES  => MsgPtr := ARMv8A.MsgPtr_SEL2_YES;
-         when others           => MsgPtr := MsgPtr_UNKNOWN;
+         when SEL2_NONE => MsgPtr := MsgPtr_SEL2_NONE;
+         when SEL2_YES  => MsgPtr := MsgPtr_SEL2_YES;
+         when others    => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- MPAM
-      Print_Feature_Align (ARMv8A.MsgPtr_MPAM.all);
+      Console.Print (MsgPtr_MPAM.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_MPAM.all'Length));
       case ID_AA64PFR0_EL1.MPAM is
-         when ARMv8A.MPAM_0 => MsgPtr := ARMv8A.MsgPtr_MPAM_0;
-         when ARMv8A.MPAM_1 => MsgPtr := ARMv8A.MsgPtr_MPAM_1;
-         when others        => MsgPtr := MsgPtr_UNKNOWN;
+         when MPAM_0 => MsgPtr := MsgPtr_MPAM_0;
+         when MPAM_1 => MsgPtr := MsgPtr_MPAM_1;
+         when others => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- AMU
-      Print_Feature_Align (ARMv8A.MsgPtr_AMU.all);
+      Console.Print (MsgPtr_AMU.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_AMU.all'Length));
       case ID_AA64PFR0_EL1.AMU is
-         when ARMv8A.AMU_NONE => MsgPtr := ARMv8A.MsgPtr_AMU_NONE;
-         when ARMv8A.AMU_v1   => MsgPtr := ARMv8A.MsgPtr_AMU_v1;
-         when ARMv8A.AMU_v1p1 => MsgPtr := ARMv8A.MsgPtr_AMU_v1p1;
-         when others          => MsgPtr := MsgPtr_UNKNOWN;
+         when AMU_NONE => MsgPtr := MsgPtr_AMU_NONE;
+         when AMU_v1   => MsgPtr := MsgPtr_AMU_v1;
+         when AMU_v1p1 => MsgPtr := MsgPtr_AMU_v1p1;
+         when others   => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- DIT
-      Print_Feature_Align (ARMv8A.MsgPtr_DIT.all);
+      Console.Print (MsgPtr_DIT.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_DIT.all'Length));
       case ID_AA64PFR0_EL1.DIT is
-         when ARMv8A.DIT_NONE => MsgPtr := ARMv8A.MsgPtr_DIT_NONE;
-         when ARMv8A.DIT_YES  => MsgPtr := ARMv8A.MsgPtr_DIT_YES;
-         when others          => MsgPtr := MsgPtr_UNKNOWN;
+         when DIT_NONE => MsgPtr := MsgPtr_DIT_NONE;
+         when DIT_YES  => MsgPtr := MsgPtr_DIT_YES;
+         when others   => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- RME
-      Print_Feature_Align (ARMv8A.MsgPtr_RME.all);
+      Console.Print (MsgPtr_RME.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_RME.all'Length));
       case ID_AA64PFR0_EL1.RME is
-         when ARMv8A.RME_NONE => MsgPtr := ARMv8A.MsgPtr_RME_NONE;
-         when ARMv8A.RME_v1   => MsgPtr := ARMv8A.MsgPtr_RME_v1;
-         when others          => MsgPtr := MsgPtr_UNKNOWN;
+         when RME_NONE => MsgPtr := MsgPtr_RME_NONE;
+         when RME_v1   => MsgPtr := MsgPtr_RME_v1;
+         when others   => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- CSV2
-      Print_Feature_Align (ARMv8A.MsgPtr_CSV2.all);
+      Console.Print (MsgPtr_CSV2.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_CSV2.all'Length));
       case ID_AA64PFR0_EL1.CSV2 is
-         when ARMv8A.CSV2_NONE   => MsgPtr := ARMv8A.MsgPtr_CSV2_NONE;
-         when ARMv8A.CSV2_YES    => MsgPtr := ARMv8A.MsgPtr_CSV2_YES;
-         when ARMv8A.CSV2_CSV2_2 => MsgPtr := ARMv8A.MsgPtr_CSV2_CSV2_2;
-         when ARMv8A.CSV2_CSV2_3 => MsgPtr := ARMv8A.MsgPtr_CSV2_CSV2_3;
-         when others             => MsgPtr := MsgPtr_UNKNOWN;
+         when CSV2_NONE   => MsgPtr := MsgPtr_CSV2_NONE;
+         when CSV2_YES    => MsgPtr := MsgPtr_CSV2_YES;
+         when CSV2_CSV2_2 => MsgPtr := MsgPtr_CSV2_CSV2_2;
+         when CSV2_CSV2_3 => MsgPtr := MsgPtr_CSV2_CSV2_3;
+         when others      => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- CSV3
-      Print_Feature_Align (ARMv8A.MsgPtr_CSV3.all);
+      Console.Print (MsgPtr_CSV3.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_CSV3.all'Length));
       case ID_AA64PFR0_EL1.CSV3 is
-         when ARMv8A.CSV3_NONE      => MsgPtr := ARMv8A.MsgPtr_CSV3_NONE;
-         when ARMv8A.CSV3_DATAnADDR => MsgPtr := ARMv8A.MsgPtr_CSV3_DATAnADDR;
-         when others                => MsgPtr := MsgPtr_UNKNOWN;
+         when CSV3_NONE      => MsgPtr := MsgPtr_CSV3_NONE;
+         when CSV3_DATAnADDR => MsgPtr := MsgPtr_CSV3_DATAnADDR;
+         when others         => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -------------------------------------------------------------------------
       -- ID_AA64PFR1_EL1
       -------------------------------------------------------------------------
-      ID_AA64PFR1_EL1 := ARMv8A.ID_AA64PFR1_EL1_Read;
+      ID_AA64PFR1_EL1 := ID_AA64PFR1_EL1_Read;
       Console.Print ("ID_AA64PFR1_EL1:", NL => True);
       -- BT
-      Print_Feature_Align (ARMv8A.MsgPtr_BT.all);
+      Console.Print (MsgPtr_BT.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_BT.all'Length));
       case ID_AA64PFR1_EL1.BT is
-         when ARMv8A.BT_NONE => MsgPtr := ARMv8A.MsgPtr_BT_NONE;
-         when ARMv8A.BT_YES  => MsgPtr := ARMv8A.MsgPtr_BT_YES;
-         when others         => MsgPtr := MsgPtr_UNKNOWN;
+         when BT_NONE => MsgPtr := MsgPtr_BT_NONE;
+         when BT_YES  => MsgPtr := MsgPtr_BT_YES;
+         when others  => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- SSBS
-      Print_Feature_Align (ARMv8A.MsgPtr_SSBS.all);
+      Console.Print (MsgPtr_SSBS.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_SSBS.all'Length));
       case ID_AA64PFR1_EL1.SSBS is
-         when ARMv8A.SSBS_NONE   => MsgPtr := ARMv8A.MsgPtr_SSBS_NONE;
-         when ARMv8A.SSBS_YES    => MsgPtr := ARMv8A.MsgPtr_SSBS_YES;
-         when ARMv8A.SSBS_MSRMRS => MsgPtr := ARMv8A.MsgPtr_SSBS_MSRMRS;
-         when others             => MsgPtr := MsgPtr_UNKNOWN;
+         when SSBS_NONE   => MsgPtr := MsgPtr_SSBS_NONE;
+         when SSBS_YES    => MsgPtr := MsgPtr_SSBS_YES;
+         when SSBS_MSRMRS => MsgPtr := MsgPtr_SSBS_MSRMRS;
+         when others      => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- MTE
-      Print_Feature_Align (ARMv8A.MsgPtr_MTE.all);
+      Console.Print (MsgPtr_MTE.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_MTE.all'Length));
       case ID_AA64PFR1_EL1.MTE is
-         when ARMv8A.MTE_NONE      => MsgPtr := ARMv8A.MsgPtr_MTE_NONE;
-         when ARMv8A.MTE_INSTR     => MsgPtr := ARMv8A.MsgPtr_MTE_INSTR;
-         when ARMv8A.MTE_MEM       => MsgPtr := ARMv8A.MsgPtr_MTE_MEM;
-         when ARMv8A.MTE_ASYMTAGCF => MsgPtr := ARMv8A.MsgPtr_MTE_ASYMTAGCF;
-         when others               => MsgPtr := MsgPtr_UNKNOWN;
+         when MTE_NONE      => MsgPtr := MsgPtr_MTE_NONE;
+         when MTE_INSTR     => MsgPtr := MsgPtr_MTE_INSTR;
+         when MTE_MEM       => MsgPtr := MsgPtr_MTE_MEM;
+         when MTE_ASYMTAGCF => MsgPtr := MsgPtr_MTE_ASYMTAGCF;
+         when others        => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- RAS_frac
-      Print_Feature_Align (ARMv8A.MsgPtr_RAS_frac.all);
+      Console.Print (MsgPtr_RAS_frac.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_RAS_frac.all'Length));
       case ID_AA64PFR1_EL1.RAS_frac is
-         when ARMv8A.RAS_frac_RAS      => MsgPtr := ARMv8A.MsgPtr_RAS_frac_RAS;
-         when ARMv8A.RAS_frac_EXTENDED => MsgPtr := ARMv8A.MsgPtr_RAS_frac_EXTENDED;
-         when others                   => MsgPtr := MsgPtr_UNKNOWN;
+         when RAS_frac_RAS      => MsgPtr := MsgPtr_RAS_frac_RAS;
+         when RAS_frac_EXTENDED => MsgPtr := MsgPtr_RAS_frac_EXTENDED;
+         when others            => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- MPAM_frac
-      Print_Feature_Align (ARMv8A.MsgPtr_MPAM_frac.all);
+      Console.Print (MsgPtr_MPAM_frac.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_MPAM_frac.all'Length));
       case ID_AA64PFR1_EL1.MPAM_frac is
-         when ARMv8A.MPAM_frac_0 => MsgPtr := ARMv8A.MsgPtr_MPAM_frac_0;
-         when ARMv8A.MPAM_frac_1 => MsgPtr := ARMv8A.MsgPtr_MPAM_frac_1;
-         when others             => MsgPtr := MsgPtr_UNKNOWN;
+         when MPAM_frac_0 => MsgPtr := MsgPtr_MPAM_frac_0;
+         when MPAM_frac_1 => MsgPtr := MsgPtr_MPAM_frac_1;
+         when others      => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- SME
-      Print_Feature_Align (ARMv8A.MsgPtr_SME.all);
+      Console.Print (MsgPtr_SME.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_SME.all'Length));
       case ID_AA64PFR1_EL1.SME is
-         when ARMv8A.SME_NONE    => MsgPtr := ARMv8A.MsgPtr_SME_NONE;
-         when ARMv8A.SME_YES     => MsgPtr := ARMv8A.MsgPtr_SME_YES;
-         when ARMv8A.SME_SME2ZT0 => MsgPtr := ARMv8A.MsgPtr_SME_SME2ZT0;
-         when others             => MsgPtr := MsgPtr_UNKNOWN;
+         when SME_NONE    => MsgPtr := MsgPtr_SME_NONE;
+         when SME_YES     => MsgPtr := MsgPtr_SME_YES;
+         when SME_SME2ZT0 => MsgPtr := MsgPtr_SME_SME2ZT0;
+         when others      => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- RNDR_trap
-      Print_Feature_Align (ARMv8A.MsgPtr_RNDR_trap.all);
+      Console.Print (MsgPtr_RNDR_trap.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_RNDR_trap.all'Length));
       case ID_AA64PFR1_EL1.RNDR_trap is
-         when ARMv8A.RNDR_trap_NONE => MsgPtr := ARMv8A.MsgPtr_RNDR_trap_NONE;
-         when ARMv8A.RNDR_trap_YES  => MsgPtr := ARMv8A.MsgPtr_RNDR_trap_YES;
-         when others                => MsgPtr := MsgPtr_UNKNOWN;
+         when RNDR_trap_NONE => MsgPtr := MsgPtr_RNDR_trap_NONE;
+         when RNDR_trap_YES  => MsgPtr := MsgPtr_RNDR_trap_YES;
+         when others         => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- CSV2_frac
-      Print_Feature_Align (ARMv8A.MsgPtr_CSV2_frac.all);
+      Console.Print (MsgPtr_CSV2_frac.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_CSV2_frac.all'Length));
       case ID_AA64PFR1_EL1.CSV2_frac is
-         when ARMv8A.CSV2_frac_NONE => MsgPtr := ARMv8A.MsgPtr_CSV2_frac_NONE;
-         when ARMv8A.CSV2_frac_1p1  => MsgPtr := ARMv8A.MsgPtr_CSV2_frac_1p1;
-         when ARMv8A.CSV2_frac_1p2  => MsgPtr := ARMv8A.MsgPtr_CSV2_frac_1p2;
-         when others                => MsgPtr := MsgPtr_UNKNOWN;
+         when CSV2_frac_NONE => MsgPtr := MsgPtr_CSV2_frac_NONE;
+         when CSV2_frac_1p1  => MsgPtr := MsgPtr_CSV2_frac_1p1;
+         when CSV2_frac_1p2  => MsgPtr := MsgPtr_CSV2_frac_1p2;
+         when others         => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
       -- NMI
-      Print_Feature_Align (ARMv8A.MsgPtr_NMI.all);
+      Console.Print (MsgPtr_NMI.all & ":" &
+                     Pad_Spaces (1 .. 1 + Max_StrLen - MsgPtr_NMI.all'Length));
       case ID_AA64PFR1_EL1.NMI is
-         when ARMv8A.NMI_NONE => MsgPtr := ARMv8A.MsgPtr_NMI_NONE;
-         when ARMv8A.NMI_YES  => MsgPtr := ARMv8A.MsgPtr_NMI_YES;
-         when others                => MsgPtr := MsgPtr_UNKNOWN;
+         when NMI_NONE => MsgPtr := MsgPtr_NMI_NONE;
+         when NMI_YES  => MsgPtr := MsgPtr_NMI_YES;
+         when others   => MsgPtr := MsgPtr_UNKNOWN;
       end case;
       Console.Print (MsgPtr.all, NL => True);
-   end Features_Dump;
+   end CPU_Detect;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -366,11 +415,11 @@ package body BSP
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("AArch64 Cortex-A53 (QEMU emulator)", NL => True);
-      EL := ARMv8A.CurrentEL_Read.EL;
-      Console.Print (Prefix => "Current EL: ", Value => Natural (EL), NL => True);
-      Console.Print (Prefix => "CNTFRQ_EL0: ", Value => ARMv8A.CNTFRQ_EL0_Read.Clock_frequency, NL => True);
       -------------------------------------------------------------------------
-      Features_Dump;
+      CPU_Detect;
+      EL := CurrentEL_Read.EL;
+      Console.Print (Prefix => "Current EL: ", Value => Natural (EL), NL => True);
+      Console.Print (Prefix => "CNTFRQ_EL0: ", Value => CNTFRQ_EL0_Read.Clock_frequency, NL => True);
       -------------------------------------------------------------------------
       if Core.Debug_Flag then
          Console.Print ("Debug_Flag: ENABLED", NL => True);
@@ -382,36 +431,36 @@ package body BSP
       GICC.GICC_CTLR.EnableGrp0   := True;
       GICC.GICC_PMR.Priority      := 16#FF#;
       Timer_Constant :=
-         (ARMv8A.CNTFRQ_EL0_Read.Clock_frequency + Configure.TICK_FREQUENCY / 2) /
+         (CNTFRQ_EL0_Read.Clock_frequency + Configure.TICK_FREQUENCY / 2) /
          Configure.TICK_FREQUENCY;
       Timer_Reload;
-      ARMv8A.CNTP_CTL_EL0_Write ((
+      CNTP_CTL_EL0_Write ((
          ENABLE  => True,
          IMASK   => False,
          ISTATUS => False,
          others  => <>
          ));
       -- handle IRQs at EL3
-      if EL = ARMv8A.EL3 then
+      if EL = EL3 then
          declare
-            SCR_EL3 : ARMv8A.SCR_EL3_Type;
+            SCR_EL3 : SCR_EL3_Type;
          begin
-            SCR_EL3 := ARMv8A.SCR_EL3_Read;
+            SCR_EL3 := SCR_EL3_Read;
             SCR_EL3.IRQ := True;
-            ARMv8A.SCR_EL3_Write (SCR_EL3);
+            SCR_EL3_Write (SCR_EL3);
          end;
       end if;
       -- handle IRQs at EL2
-      if EL = ARMv8A.EL2 then
+      if EL = EL2 then
          declare
-            HCR_EL2 : ARMv8A.HCR_EL2_Type;
+            HCR_EL2 : HCR_EL2_Type;
          begin
-            HCR_EL2 := ARMv8A.HCR_EL2_Read;
+            HCR_EL2 := HCR_EL2_Read;
             HCR_EL2.IMO := True;
-            ARMv8A.HCR_EL2_Write (HCR_EL2);
+            HCR_EL2_Write (HCR_EL2);
          end;
       end if;
-      ARMv8A.Irq_Enable;
+      Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;
 
