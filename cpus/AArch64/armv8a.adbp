@@ -290,11 +290,24 @@ pragma Style_Checks (Off);
 
    function MPIDR_EL1_Read return MPIDR_EL1_Type is function MRS_Read is new MRS ("mpidr_el1", MPIDR_EL1_Type); begin return MRS_Read; end MPIDR_EL1_Read;
 
+   function RMR_EL1_Read return RMR_EL1_Type is function MRS_Read is new MRS ("rmr_el1", RMR_EL1_Type); begin return MRS_Read; end RMR_EL1_Read;
+   procedure RMR_EL1_Write (Value : in RMR_EL1_Type) is procedure MSR_Write is new MSR ("rmr_el1", RMR_EL1_Type); begin MSR_Write (Value); end RMR_EL1_Write;
+   function RMR_EL2_Read return RMR_EL2_Type is function MRS_Read is new MRS ("rmr_el2", RMR_EL2_Type); begin return MRS_Read; end RMR_EL2_Read;
+   procedure RMR_EL2_Write (Value : in RMR_EL2_Type) is procedure MSR_Write is new MSR ("rmr_el2", RMR_EL2_Type); begin MSR_Write (Value); end RMR_EL2_Write;
+   function RMR_EL3_Read return RMR_EL3_Type is function MRS_Read is new MRS ("rmr_el3", RMR_EL3_Type); begin return MRS_Read; end RMR_EL3_Read;
+   procedure RMR_EL3_Write (Value : in RMR_EL3_Type) is procedure MSR_Write is new MSR ("rmr_el3", RMR_EL3_Type); begin MSR_Write (Value); end RMR_EL3_Write;
+
    function SCR_EL3_Read return SCR_EL3_Type is function MRS_Read is new MRS ("scr_el3", SCR_EL3_Type); begin return MRS_Read; end SCR_EL3_Read;
    procedure SCR_EL3_Write (Value : in SCR_EL3_Type) is procedure MSR_Write is new MSR ("scr_el3", SCR_EL3_Type); begin MSR_Write (Value); end SCR_EL3_Write;
 
    function SCTLR_EL1_Read return SCTLR_EL1_Type is function MRS_Read is new MRS ("sctlr_el1", SCTLR_EL1_Type); begin return MRS_Read; end SCTLR_EL1_Read;
    procedure SCTLR_EL1_Write (Value : in SCTLR_EL1_Type) is procedure MSR_Write is new MSR ("sctlr_el1", SCTLR_EL1_Type); begin MSR_Write (Value); end SCTLR_EL1_Write;
+   function SCTLR_EL12_Read return SCTLR_EL1_Type is function MRS_Read is new MRS ("sctlr_el12", SCTLR_EL1_Type); begin return MRS_Read; end SCTLR_EL12_Read;
+   procedure SCTLR_EL12_Write (Value : in SCTLR_EL1_Type) is procedure MSR_Write is new MSR ("sctlr_el12", SCTLR_EL1_Type); begin MSR_Write (Value); end SCTLR_EL12_Write;
+   function SCTLR_EL2_Read return SCTLR_EL2_Type is function MRS_Read is new MRS ("sctlr_el2", SCTLR_EL2_Type); begin return MRS_Read; end SCTLR_EL2_Read;
+   procedure SCTLR_EL2_Write (Value : in SCTLR_EL2_Type) is procedure MSR_Write is new MSR ("sctlr_el2", SCTLR_EL2_Type); begin MSR_Write (Value); end SCTLR_EL2_Write;
+   function SCTLR_EL3_Read return SCTLR_EL3_Type is function MRS_Read is new MRS ("sctlr_el3", SCTLR_EL3_Type); begin return MRS_Read; end SCTLR_EL3_Read;
+   procedure SCTLR_EL3_Write (Value : in SCTLR_EL3_Type) is procedure MSR_Write is new MSR ("sctlr_el3", SCTLR_EL3_Type); begin MSR_Write (Value); end SCTLR_EL3_Write;
 
 #if TCR2_EL1
    function TCR2_EL1_Read return TCR2_EL1_Type is function MRS_Read is new MRS ("tcr2_el1", TCR2_EL1_Type); begin return MRS_Read; end TCR2_EL1_Read;

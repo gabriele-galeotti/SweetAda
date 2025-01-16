@@ -1644,9 +1644,71 @@ pragma Style_Checks (Off);
    -- D19.2.108 PAR_EL1, Physical Address Register
    -- D19.2.109 REVIDR_EL1, Revision ID Register
    -- D19.2.110 RGSR_EL1, Random Allocation Tag Seed Register.
+
    -- D19.2.111 RMR_EL1, Reset Management Register (EL1)
    -- D19.2.112 RMR_EL2, Reset Management Register (EL2)
    -- D19.2.113 RMR_EL3, Reset Management Register (EL3)
+
+   type RMR_EL1_Type is record
+      AA64     : Boolean := False; -- When EL1 can use AArch32, determines which Execution state the PE boots into after a Warm reset:
+      RR       : Boolean := False; -- Reset Request.
+      Reserved : Bits_62 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for RMR_EL1_Type use record
+      AA64     at 0 range 0 ..  0;
+      RR       at 0 range 1 ..  1;
+      Reserved at 0 range 2 .. 63;
+   end record;
+
+   function RMR_EL1_Read
+      return RMR_EL1_Type
+      with Inline => True;
+   procedure RMR_EL1_Write
+      (Value : in RMR_EL1_Type)
+      with Inline => True;
+
+   type RMR_EL2_Type is record
+      AA64     : Boolean := False; -- When EL2 can use AArch32, determines which Execution state the PE boots into after a Warm reset:
+      RR       : Boolean := False; -- Reset Request.
+      Reserved : Bits_62 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for RMR_EL2_Type use record
+      AA64     at 0 range 0 ..  0;
+      RR       at 0 range 1 ..  1;
+      Reserved at 0 range 2 .. 63;
+   end record;
+
+   function RMR_EL2_Read
+      return RMR_EL2_Type
+      with Inline => True;
+   procedure RMR_EL2_Write
+      (Value : in RMR_EL2_Type)
+      with Inline => True;
+
+   type RMR_EL3_Type is record
+      AA64     : Boolean := False; -- When EL3 can use AArch32, determines which Execution state the PE boots into after a Warm reset:
+      RR       : Boolean := False; -- Reset Request.
+      Reserved : Bits_62 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for RMR_EL3_Type use record
+      AA64     at 0 range 0 ..  0;
+      RR       at 0 range 1 ..  1;
+      Reserved at 0 range 2 .. 63;
+   end record;
+
+   function RMR_EL3_Read
+      return RMR_EL3_Type
+      with Inline => True;
+   procedure RMR_EL3_Write
+      (Value : in RMR_EL3_Type)
+      with Inline => True;
+
    -- D19.2.114 RNDR, Random Number
    -- D19.2.115 RNDRRS, Reseeded Random Number
    -- D19.2.116 RVBAR_EL1, Reset Vector Base Address Register (if EL2 and EL3 not implemented)
@@ -1801,9 +1863,9 @@ pragma Style_Checks (Off);
       ITD        : Boolean;      -- IT disable.
       SED        : Boolean;      -- SETEND instruction disable.
       UMA        : Boolean;      -- User Mask Access.
-      EnRCTX     : Boolean;      -- Enable EL0 access to the following System instructions: ...
+      EnRCTX     : Boolean;      -- Enable EL0 access to the following System instructions:• CFPRCTX, DVPRCTX and CPPRCTX instructions.• CFP RCTX, DVP RCTX and CPP RCTX instructions.
       EOS        : Boolean;      -- Exception Exit is Context Synchronizing.
-      I          : Boolean;      -- Stage 1 instruction access Cacheability control, for accesses at EL0 and EL1: ...
+      I          : Boolean;      -- Stage 1 instruction access Cacheability control, for accesses at EL0 and EL1:
       EnDB       : Boolean;      -- Controls enabling of pointer authentication (using the APDBKey_EL1 key) of instruction addresses in the EL1&0 translation regime.
       DZE        : Boolean;      -- Traps EL0 execution of DC ZVA instructions to EL1, or to EL2 when it is implemented and enabled for the current Security state and HCR_EL2.TGE is 1, from AArch64 state only, reported using an ESR_ELx.EC value of 0x18.
       UCT        : Boolean;      -- Traps EL0 accesses to the CTR_EL0 to EL1, or to EL2 when it is implemented and enabled for the current Security state and HCR_EL2.TGE is 1, from AArch64 state only, reported using an ESR_ELx.EC value of 0x18.
@@ -1823,7 +1885,7 @@ pragma Style_Checks (Off);
       LSMAOE     : Boolean;      -- Load Multiple and Store Multiple Atomicity and Ordering Enable.
       EnIB       : Boolean;      -- Controls enabling of pointer authentication (using the APIBKey_EL1 key) of instruction addresses in the EL1&0 translation regime.
       EnIA       : Boolean;      -- Controls enabling of pointer authentication (using the APIAKey_EL1 key) of instruction addresses in the EL1&0 translation regime.
-      CMOW       : Boolean;      -- Controls cache maintenance instruction permission for the following instructions executed at EL0. ...
+      CMOW       : Boolean;      -- Controls cache maintenance instruction permission for the following instructions executed at EL0.• IC IVAU, DC CIVAC, DC CIGDVAC and DC CIGVAC.
       MSCEn      : Boolean;      -- Memory Copy and Memory Set instructions Enable.
       Reserved2  : Bits_1  := 0;
       BT0        : Boolean;      -- PAC Branch Type compatibility at EL0.
@@ -1840,7 +1902,7 @@ pragma Style_Checks (Off);
       TMT        : Boolean;      -- Forces a trivial implementation of the Transactional Memory Extension at EL1.
       TME0       : Boolean;      -- Enables the Transactional Memory Extension at EL0.
       TME        : Boolean;      -- Enables the Transactional Memory Extension at EL1.
-      EnASR      : Boolean;      -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution of an ST64BV instruction at EL0 to EL1.
+      EnASR      : Boolean;      -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution of an ST64BV instruction at EL0 to EL1
       EnAS0      : Boolean;      -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution of an ST64BV0 instruction at EL0 to EL1.
       EnALS      : Boolean;      -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution of an LD64B or ST64B instruction at EL0 to EL1.
       EPAN       : Boolean;      -- Enhanced Privileged Access Never.
@@ -1921,7 +1983,236 @@ pragma Style_Checks (Off);
       with Inline => True;
 
    -- D19.2.125 SCTLR_EL2, System Control Register (EL2)
+
+   type SCTLR_EL2_Type is record
+      M          : Boolean;      -- MMU enable for EL2 or EL2&0 stage 1 address translation.
+      A          : Boolean;      -- Alignment check enable.
+      C          : Boolean;      -- Data access Cacheability control, for accesses at EL2 and, when EL2 is enabled in the current Security state and HCR_EL2.{E2H, TGE} == {1, 1}, EL0
+      SA         : Boolean;      -- SP Alignment check enable.
+      SA0        : Boolean;      -- SP Alignment check enable for EL0.
+      CP15BEN    : Boolean;      -- System instruction memory barrier enable.
+      nAA        : Boolean;      -- Non-aligned access.
+      ITD        : Boolean;      -- IT disable.
+      SED        : Boolean;      -- SETEND instruction disable.
+      Reserved1  : Bits_1  := 0;
+      EnRCTX     : Boolean;      -- Enable EL0 access to the following System instructions:• CFPRCTX, DVPRCTX and CPPRCTX instructions.• CFP RCTX, DVP RCTX and CPP RCTX instructions.
+      EOS        : Boolean;      -- Exception exit is a context synchronization event.
+      I          : Boolean;      -- Instruction access Cacheability control, for accesses at EL2 and, when EL2 is enabled in the current Security state and HCR_EL2.{E2H,TGE} == {1,1}, EL0.
+      EnDB       : Boolean;      -- Controls enabling of pointer authentication (using the APDBKey_EL1 key) of instruction addresses in the EL2 or EL2&0 translation regime.
+      DZE        : Boolean;      -- Traps execution of DC ZVA instructions at EL0 to EL2, from AArch64 state only.
+      UCT        : Boolean;      -- Traps EL0 accesses to the CTR_EL0 to EL2, from AArch64 state only.
+      nTWI       : Boolean;      -- Traps execution of WFI instructions at EL0 to EL2, from both Execution states.
+      Reserved2  : Bits_1  := 0;
+      nTWE       : Boolean;      -- Traps execution of WFE instructions at EL0 to EL2, from both Execution states.
+      WXN        : Boolean;      -- Write permission implies XN (Execute-never).
+      TSCXT      : Boolean;      -- Trap EL0 Access to the SCXTNUM_EL0 register, when EL0 is using AArch64.
+      IESB       : Boolean;      -- Implicit Error Synchronization event enable.
+      EIS        : Boolean;      -- Exception entry is a context synchronization event.
+      SPAN       : Boolean;      -- Set Privileged Access Never, on taking an exception to EL2.
+      E0E        : Bits_1;       -- Endianness of data accesses at EL0.
+      EE         : Bits_1;       -- Endianness of data accesses at EL2, stage 1 translation table walks in the EL2 or EL2&0 translation regime, and stage 2 translation table walks in the EL1&0 translation regime.
+      UCI        : Boolean;      -- Traps execution of cache maintenance instructions at EL0 to EL2, from AArch64 state only. This applies to DC CVAU, DC CIVAC, DC CVAC, DC CVAP, and IC IVAU.
+      EnDA       : Boolean;      -- Controls enabling of pointer authentication (using the APDAKey_EL1 key) of instruction addressesin the EL2 or EL2&0 translation regime.
+      nTLSMD     : Boolean;      -- No Trap Load Multiple and Store Multiple to Device-nGRE/Device-nGnRE/Device-nGnRnE memory.
+      LSMAOE     : Boolean;      -- Load Multiple and Store Multiple Atomicity and Ordering Enable.
+      EnIB       : Boolean;      -- Controls enabling of pointer authentication (using the APIBKey_EL1 key) of instruction addresses in the EL2 or EL2&0 translation regime.
+      EnIA       : Boolean;      -- Controls enabling of pointer authentication (using the APIAKey_EL1 key) of instruction addresses in the EL2 or EL2&0 translation regime.
+      CMOW       : Boolean;      -- Controls cache maintenance instruction permission for the following instructions executed at EL0.• IC IVAU, DC CIVAC, DC CIGDVAC and DC CIGVAC.
+      MSCEn      : Boolean;      -- Memory Copy and Memory Set instructions Enable. Enables execution of the Memory Copy and Memory Set instructions at EL0.
+      Reserved3  : Bits_1  := 0;
+      BT0        : Boolean;      -- PAC Branch Type compatibility at EL0.
+      BT         : Boolean;      -- PAC Branch Type compatibility at EL2.
+      ITFSB      : Boolean;      -- When synchronous exceptions are not being generated by Tag Check Faults, this field controls whether on exception entry into EL2, all Tag Check Faults due to instructions executed before exception entry, that are reported asynchronously, are synchronized into TFSRE0_EL1, TFSR_EL1 and TFSR_EL2 registers.
+      TCF0       : Bits_2;       -- Tag Check Fault in EL0. Controls the effect of Tag Check Faults due to Loads and Stores in EL0.
+      TCF        : Bits_2;       -- Tag Check Fault in EL2. Controls the effect of Tag Check Faults due to Loads and Stores in EL2.
+      ATA0       : Boolean;      -- Allocation Tag Access in EL0.
+      ATA        : Boolean;      -- Allocation Tag Access in EL2.
+      DSSBS      : Bits_1;       -- Default PSTATE.SSBS value on Exception Entry.
+      TWEDEn     : Boolean;      -- TWE Delay Enable.
+      TWEDEL     : Bits_4;       -- TWE Delay.
+      TMT0       : Boolean;      -- Forces a trivial implementation of the Transactional Memory Extension at EL0.
+      TMT        : Boolean;      -- Forces a trivial implementation of the Transactional Memory Extension at EL2.
+      TME0       : Boolean;      -- Enables the Transactional Memory Extension at EL0.
+      TME        : Boolean;      -- Enables the Transactional Memory Extension at EL2.
+      EnASR      : Boolean;      -- Traps execution of an ST64BV instruction at EL0 to EL2.
+      EnAS0      : Boolean;      -- Traps execution of an ST64BV0 instruction at EL0 to EL2.
+      EnALS      : Boolean;      -- Traps execution of an LD64B or ST64B instruction at EL0 to EL2.
+      EPAN       : Boolean;      -- Enhanced Privileged Access Never.
+      Reserved4  : Bits_2  := 0;
+      EnTP2      : Boolean;      -- Traps instructions executed at EL0 that access TPIDR2_EL0 to EL2 when EL2 is implemented and enabled for the current Security state.
+      NMI        : Boolean;      -- Non-maskable Interrupt enable.
+      SPINTMASK  : Boolean;      -- SP Interrupt Mask enable.
+      TIDCP      : Boolean;      -- Trap IMPLEMENTATION DEFINED functionality.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for SCTLR_EL2_Type use record
+      M          at 0 range  0 ..  0;
+      A          at 0 range  1 ..  1;
+      C          at 0 range  2 ..  2;
+      SA         at 0 range  3 ..  3;
+      SA0        at 0 range  4 ..  4;
+      CP15BEN    at 0 range  5 ..  5;
+      nAA        at 0 range  6 ..  6;
+      ITD        at 0 range  7 ..  7;
+      SED        at 0 range  8 ..  8;
+      Reserved1  at 0 range  9 ..  9;
+      EnRCTX     at 0 range 10 .. 10;
+      EOS        at 0 range 11 .. 11;
+      I          at 0 range 12 .. 12;
+      EnDB       at 0 range 13 .. 13;
+      DZE        at 0 range 14 .. 14;
+      UCT        at 0 range 15 .. 15;
+      nTWI       at 0 range 16 .. 16;
+      Reserved2  at 0 range 17 .. 17;
+      nTWE       at 0 range 18 .. 18;
+      WXN        at 0 range 19 .. 19;
+      TSCXT      at 0 range 20 .. 20;
+      IESB       at 0 range 21 .. 21;
+      EIS        at 0 range 22 .. 22;
+      SPAN       at 0 range 23 .. 23;
+      E0E        at 0 range 24 .. 24;
+      EE         at 0 range 25 .. 25;
+      UCI        at 0 range 26 .. 26;
+      EnDA       at 0 range 27 .. 27;
+      nTLSMD     at 0 range 28 .. 28;
+      LSMAOE     at 0 range 29 .. 29;
+      EnIB       at 0 range 30 .. 30;
+      EnIA       at 0 range 31 .. 31;
+      CMOW       at 0 range 32 .. 32;
+      MSCEn      at 0 range 33 .. 33;
+      Reserved3  at 0 range 34 .. 34;
+      BT0        at 0 range 35 .. 35;
+      BT         at 0 range 36 .. 36;
+      ITFSB      at 0 range 37 .. 37;
+      TCF0       at 0 range 38 .. 39;
+      TCF        at 0 range 40 .. 41;
+      ATA0       at 0 range 42 .. 42;
+      ATA        at 0 range 43 .. 43;
+      DSSBS      at 0 range 44 .. 44;
+      TWEDEn     at 0 range 45 .. 45;
+      TWEDEL     at 0 range 46 .. 49;
+      TMT0       at 0 range 50 .. 50;
+      TMT        at 0 range 51 .. 51;
+      TME0       at 0 range 52 .. 52;
+      TME        at 0 range 53 .. 53;
+      EnASR      at 0 range 54 .. 54;
+      EnAS0      at 0 range 55 .. 55;
+      EnALS      at 0 range 56 .. 56;
+      EPAN       at 0 range 57 .. 57;
+      Reserved4  at 0 range 58 .. 59;
+      EnTP2      at 0 range 60 .. 60;
+      NMI        at 0 range 61 .. 61;
+      SPINTMASK  at 0 range 62 .. 62;
+      TIDCP      at 0 range 63 .. 63;
+   end record;
+
+   function SCTLR_EL2_Read
+      return SCTLR_EL2_Type
+      with Inline => True;
+   procedure SCTLR_EL2_Write
+      (Value : in SCTLR_EL2_Type)
+      with Inline => True;
+
    -- D19.2.126 SCTLR_EL3, System Control Register (EL3)
+
+   type SCTLR_EL3_Type is record
+      M          : Boolean;      -- MMU enable for EL3 stage 1 address translation.
+      A          : Boolean;      -- Alignment check enable.
+      C          : Boolean;      -- Cacheability control, for data accesses.
+      SA         : Boolean;      -- SP Alignment check enable.
+      Reserved1  : Bits_2  := 0;
+      nAA        : Boolean;      -- Non-aligned access.
+      Reserved2  : Bits_4  := 0;
+      EOS        : Boolean;      -- Exception Exit is Context Synchronizing.
+      I          : Boolean;      -- Instruction access Cacheability control, for accesses at EL3:
+      EnDB       : Boolean;      -- Controls enabling of pointer authentication (using the APDBKey_EL1 key) of instruction addresses in the EL3 translation regime.
+      Reserved3  : Bits_2  := 0;
+      Reserved4  : Bits_1  := 0;
+      Reserved5  : Bits_1  := 0;
+      Reserved6  : Bits_1  := 0;
+      WXN        : Boolean;      -- Write permission implies XN (Execute-never).
+      Reserved7  : Bits_1  := 0;
+      IESB       : Boolean;      -- Implicit Error Synchronization event enable.
+      EIS        : Boolean;      -- Exception Entry is Context Synchronizing.
+      Reserved8  : Bits_1  := 0;
+      Reserved9  : Bits_1  := 0;
+      EE         : Bits_1;       -- Endianness of data accesses at EL3, and stage 1 translation table walks in the EL3 translation regime.
+      Reserved10 : Bits_1  := 0;
+      EnDA       : Boolean;      -- Controls enabling of pointer authentication (using the APDAKey_EL1 key) of instruction addresses in the EL3 translation regime.
+      Reserved11 : Bits_2  := 0;
+      EnIB       : Boolean;      -- Controls enabling of pointer authentication (using the APIBKey_EL1 key) of instruction addresses in the EL3 translation regime.
+      EnIA       : Boolean;      -- Controls enabling of pointer authentication (using the APIAKey_EL1 key) of instruction addresses in the EL3 translation regime.
+      Reserved12 : Bits_4  := 0;
+      BT         : Boolean;      -- PAC Branch Type compatibility at EL3.
+      ITFSB      : Boolean;      -- When synchronous exceptions are not being generated by Tag Check Faults, this field controls whether on exception entry into EL3, all Tag Check Faults due to instructions executed before exception entry, that are reported asynchronously, are synchronized into TFSRE0_EL1 and TFSR_ELx registers.      TCF0       : Bits_2;       --
+      Reserved13 : Bits_2  := 0;
+      TCF        : Bits_2;       -- Tag Check Fault in EL3. Controls the effect of Tag Check Faults due to Loads and Stores in EL3.
+      Reserved14 : Bits_1  := 0;
+      ATA        : Boolean;      -- Allocation Tag Access in EL3.
+      DSSBS      : Bits_1;       -- Default PSTATE.SSBS value on Exception Entry.
+      Reserved15 : Bits_6  := 0;
+      TMT        : Boolean;      -- Forces a trivial implementation of the Transactional Memory Extension at EL3.
+      Reserved16 : Bits_1  := 0;
+      TME        : Boolean;      -- Enables the Transactional Memory Extension at EL3.
+      Reserved17 : Bits_7  := 0;
+      NMI        : Boolean;      -- Non-maskable Interrupt enable.
+      SPINTMASK  : Boolean;      -- SP Interrupt Mask enable.
+      Reserved18 : Bits_1  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for SCTLR_EL3_Type use record
+      M          at 0 range  0 ..  0;
+      A          at 0 range  1 ..  1;
+      C          at 0 range  2 ..  2;
+      SA         at 0 range  3 ..  3;
+      Reserved1  at 0 range  4 ..  5;
+      nAA        at 0 range  6 ..  6;
+      Reserved2  at 0 range  7 .. 10;
+      EOS        at 0 range 11 .. 11;
+      I          at 0 range 12 .. 12;
+      EnDB       at 0 range 13 .. 13;
+      Reserved3  at 0 range 14 .. 15;
+      Reserved4  at 0 range 16 .. 16;
+      Reserved5  at 0 range 17 .. 17;
+      Reserved6  at 0 range 18 .. 18;
+      WXN        at 0 range 19 .. 19;
+      Reserved7  at 0 range 20 .. 20;
+      IESB       at 0 range 21 .. 21;
+      EIS        at 0 range 22 .. 22;
+      Reserved8  at 0 range 23 .. 23;
+      Reserved9  at 0 range 24 .. 24;
+      EE         at 0 range 25 .. 25;
+      Reserved10 at 0 range 26 .. 26;
+      EnDA       at 0 range 27 .. 27;
+      Reserved11 at 0 range 28 .. 29;
+      EnIB       at 0 range 30 .. 30;
+      EnIA       at 0 range 31 .. 31;
+      Reserved12 at 0 range 32 .. 35;
+      BT         at 0 range 36 .. 36;
+      ITFSB      at 0 range 37 .. 37;
+      Reserved13 at 0 range 38 .. 39;
+      TCF        at 0 range 40 .. 41;
+      Reserved14 at 0 range 42 .. 42;
+      ATA        at 0 range 43 .. 43;
+      DSSBS      at 0 range 44 .. 44;
+      Reserved15 at 0 range 45 .. 50;
+      TMT        at 0 range 51 .. 51;
+      Reserved16 at 0 range 52 .. 52;
+      TME        at 0 range 53 .. 53;
+      Reserved17 at 0 range 54 .. 60;
+      NMI        at 0 range 61 .. 61;
+      SPINTMASK  at 0 range 62 .. 62;
+      Reserved18 at 0 range 63 .. 63;
+   end record;
+
+   function SCTLR_EL3_Read
+      return SCTLR_EL3_Type
+      with Inline => True;
+   procedure SCTLR_EL3_Write
+      (Value : in SCTLR_EL3_Type)
+      with Inline => True;
 
    -- D19.2.127 SCXTNUM_EL0, EL0 Read/Write Software Context Number
    -- D19.2.128 SCXTNUM_EL1, EL1 Read/Write Software Context Number
