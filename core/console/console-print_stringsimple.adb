@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ console-print_string.adb                                                                                  --
+-- __FLN__ console-print_stringsimple.adb                                                                            --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -16,22 +16,22 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Console)
-procedure Print_String
-   (Value  : in String;
+procedure Print_StringSimple
+   (S      : in String;
     Limit  : in Natural := Maximum_String_Length;
-    NL     : in Boolean := False;
-    Prefix : in String := "";
-    Suffix : in String := "")
+    NL     : in Boolean := False)
    is
+   String_Index_Limit : Integer;
 begin
-   if Prefix'Length /= 0 then
-      Print_StringSimple (Prefix);
+   if S'Length > Limit then
+      String_Index_Limit := S'First + Limit;
+   else
+      String_Index_Limit := S'Last;
    end if;
-   Print_StringSimple (Value, Limit, False);
-   if Suffix'Length /= 0 then
-      Print_StringSimple (Suffix);
-   end if;
+   for Index in S'First .. String_Index_Limit loop
+      Print (S (Index));
+   end loop;
    if NL then
       Print_NewLine;
    end if;
-end Print_String;
+end Print_StringSimple;

@@ -94,12 +94,24 @@ package body Console
    separate;
 
    ----------------------------------------------------------------------------
-   -- Print_String
+   -- Print_StringSimple
    ----------------------------------------------------------------------------
-   procedure Print_String
+   procedure Print_StringSimple
       (S     : in String;
        Limit : in Natural := Maximum_String_Length;
        NL    : in Boolean := False)
+      is
+   separate;
+
+   ----------------------------------------------------------------------------
+   -- Print_String
+   ----------------------------------------------------------------------------
+   procedure Print_String
+      (Value  : in String;
+       Limit  : in Natural := Maximum_String_Length;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
       is
    separate;
 
