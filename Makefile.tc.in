@@ -364,7 +364,7 @@ export GCC_WRAPPER_ASSEMBLER_OUTPUT
 ################################################################################
 
 # brief command name label (see brief-command function in Makefile.fn.in)
-GNAT_WRAPPER_GCC_BRIEFTEXT := $(call substring,[GCC-WRAP]$(BRIEFTEXT_SPACES),1,$(BRIEFTEXT_NSPACE)) (+)
+GNAT_WRAPPER_GCC_BRIEFTEXT := $(shell $(call brief-text,[GCC-WRAP],(+)))
 export GNAT_WRAPPER_GCC_BRIEFTEXT
 
 # VERBOSE for GNAT-wrapper

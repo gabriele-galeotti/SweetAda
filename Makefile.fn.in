@@ -25,10 +25,6 @@ __CHARACTERS__ += P  Q  R  S  T  U  V  W  X  Y  Z  [  \  ]  ^  _
 __CHARACTERS__ += `  a  b  c  d  e  f  g  h  i  j  k  l  m  n  o
 __CHARACTERS__ += p  q  r  s  t  u  v  w  x  y  z  {  |  }  ~
 
-BRIEFTEXT_NSPACE := 12
-#                          123456789012
-BRIEFTEXT_SPACES := $(NULL)            $(NULL)
-
 #
 # substring
 #
@@ -48,22 +44,6 @@ substring = $(strip \
                )\
               $(eval __t__ := $(wordlist $2,$3,$(__t__)))\
              )$(subst ,$(SPACE),$(subst $(SPACE),,$(__t__)))
-
-#
-# variable list handling
-#
-# Usage:
-# $(call list-add,<variable_name>,item)
-# $(call list-append,<variable_name>,item)
-# $(call list-del,<variable_name>,item)
-#
-# list-add:    head-insert an item into a list.
-# list-append: tail-insert an item into a list.
-# list-del:    delete an item from a list.
-#
-list-add    = $(eval $$1 := $$2 $$($$1))
-list-append = $(eval $$1 := $$($$1) $$2)
-list-del    = $(eval $$1 := $$(filter-out $$2,$$($$1)))
 
 #
 # unquote
@@ -91,18 +71,22 @@ else
 echo-print = printf "%s\n" "$(call unquote,$1)"
 endif
 
+BRIEFTEXT_WIDTH := 12
+#                          123456789012
+BRIEFTEXT_SPACES := $(NULL)            $(NULL)
+
 #
 # brief-text
 #
 # Usage:
-# $(call brief-text,"text1","text2")
+# $(call brief-text,text1,text2)
 #
 # Print the two arguments in brief-mode:
-# - 1st argument, maximum BRIEFTEXT_NSPACE characters with padding
+# - 1st argument, maximum BRIEFTEXT_WIDTH characters with padding
 # - a space
 # - 2nd argument
 #
-brief-text = $(call echo-print,"$(call substring,$1$(BRIEFTEXT_SPACES),1,$(BRIEFTEXT_NSPACE)) $2")
+brief-text = $(call echo-print,"$(call substring,$1$(BRIEFTEXT_SPACES),1,$(BRIEFTEXT_WIDTH)) $2")
 
 #
 # brief-command
@@ -111,7 +95,7 @@ brief-text = $(call echo-print,"$(call substring,$1$(BRIEFTEXT_SPACES),1,$(BRIEF
 # $(call brief-command,<command_and_arguments>,"NAME","arguments to print")
 #
 # NAME:
-# should be a short name of the command, maximum BRIEFTEXT_NSPACE letters
+# should be a short name of the command, maximum BRIEFTEXT_WIDTH letters
 #
 # This function will run "command and arguments", and either:
 # - if VERBOSE=Y print the whole command and arguments
@@ -180,4 +164,20 @@ create-emptyfile = TYPE nul > $1
 else
 create-emptyfile = touch $1
 endif
+
+#
+# variable list handling
+#
+# Usage:
+# $(call list-add,<variable_name>,item)
+# $(call list-append,<variable_name>,item)
+# $(call list-del,<variable_name>,item)
+#
+# list-add:    head-insert an item into a list.
+# list-append: tail-insert an item into a list.
+# list-del:    delete an item from a list.
+#
+list-add    = $(eval $$1 := $$2 $$($$1))
+list-append = $(eval $$1 := $$($$1) $$2)
+list-del    = $(eval $$1 := $$(filter-out $$2,$$($$1)))
 
