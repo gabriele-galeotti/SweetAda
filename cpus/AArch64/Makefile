@@ -42,13 +42,16 @@ all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 configure: armv8a.adb armv8a.ads
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 
-armv8a.adb: armv8a.adbp $(CPU_DEF)
-	$(info preprocessing: armv8a.adbp)
-	$(GNATPREP) armv8a.adbp armv8a.adb $(CPU_DEF)
-
-armv8a.ads: armv8a.adsp $(CPU_DEF)
-	$(info preprocessing: armv8a.adsp)
-	$(GNATPREP) armv8a.adsp armv8a.ads $(CPU_DEF)
+%.adb: %.adbp $(CPU_DEF)
+	$(call brief-command, \
+        $(GNATPREP)                  \
+                    $< $@ $(CPU_DEF) \
+        ,[GNATPREP],$@)
+%.ads: %.adsp $(CPU_DEF)
+	$(call brief-command, \
+        $(GNATPREP)                  \
+                    $< $@ $(CPU_DEF) \
+        ,[GNATPREP],$@)
 
 .PHONY: clean
 clean:

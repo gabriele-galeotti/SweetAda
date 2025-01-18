@@ -420,8 +420,8 @@ pragma Style_Checks (Off);
    -- D19.2.25 CCSIDR2_EL1, Current Cache Size ID Register 2
 
    type CCSIDR2_EL1_Type is record
-      NumSets  : Bits_24;      -- (Number of sets in cache) - 1, therefore a value of 0 indicates 1 set in the cache. The number of sets does not have to be a power of 2.
-      Reserved : Bits_40 := 0;
+      NumSets  : Bits_24; -- (Number of sets in cache) - 1, therefore a value of 0 indicates 1 set in the cache. The number of sets does not have to be a power of 2.
+      Reserved : Bits_40;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 64;
@@ -438,11 +438,11 @@ pragma Style_Checks (Off);
    -- D19.2.26 CCSIDR_EL1, Current Cache Size ID Register
 
    type CCSIDR_EL1_Type is record
-      LineSize      : Bits_3;       -- (Log2(Number of bytes in cache line)) - 4.
-      Associativity : Bits_21;      -- (Associativity of cache) - 1, therefore a value of 0 indicates an associativity of 1.
-      Reserved1     : Bits_8  := 0;
-      NumSets       : Bits_24;      -- (Number of sets in cache) - 1, therefore a value of 0 indicates 1 set in the cache. The number of sets does not have to be a power of 2.
-      Reserved2     : Bits_8  := 0;
+      LineSize      : Bits_3;  -- (Log2(Number of bytes in cache line)) - 4.
+      Associativity : Bits_21; -- (Associativity of cache) - 1, therefore a value of 0 indicates an associativity of 1.
+      Reserved1     : Bits_8;
+      NumSets       : Bits_24; -- (Number of sets in cache) - 1, therefore a value of 0 indicates 1 set in the cache. The number of sets does not have to be a power of 2.
+      Reserved2     : Bits_8;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 64;
