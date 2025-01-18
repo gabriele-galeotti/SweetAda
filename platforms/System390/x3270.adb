@@ -136,7 +136,7 @@ pragma Warnings (On, "size is not a multiple of alignment");
    procedure Line_Feed
       is
    begin
-      Current_Row    := Current_Row + 1;
+      Current_Row    := @ + 1;
       Current_Column := 0;
    end Line_Feed;
 
@@ -193,7 +193,7 @@ pragma Warnings (On, "size is not a multiple of alignment");
    begin
       Write_Message_RC (Message, Current_Row, Current_Column);
       Line_Feed;
-      -- Current_Column := Current_Column + Message'Length;
+      -- Current_Column := @ + Message'Length;
    end Write_Message;
 
 end X3270;
