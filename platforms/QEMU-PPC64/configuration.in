@@ -3,6 +3,10 @@
 # PowerPC POWER8 (QEMU emulator)
 #
 
+ifneq ($(BUILD_MODE),GNATMAKE)
+$(warning *** Warning: this platform is supported only when BUILD_MODE = GNATMAKE.)
+endif
+
 ################################################################################
 # Basic system parameters.                                                     #
 #                                                                              #
