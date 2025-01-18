@@ -63,7 +63,7 @@ package body Exceptions
    begin
       BSP.Tick_Count := @ + 1;
       -- blink on-board RED LED
-      if (BSP.Tick_Count and 16#FFF#) = 0 then
+      if (BSP.Tick_Count mod 1_000) = 0 then
          GPIOE.PTOR (29) := True;
       end if;
    end Irq_Process;

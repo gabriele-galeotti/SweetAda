@@ -56,7 +56,7 @@ package body BSP
    procedure SysTick_Init
       is
    begin
-      ARMv6M.SYST_RVR.RELOAD := Bits_24 (16#3FFF#);
+      ARMv6M.SYST_RVR.RELOAD := Bits_24 (CORE_Clock / 1_000);
       ARMv6M.SHPR3.PRI_15 := 16#1#;
       ARMv6M.SYST_CVR.CURRENT := 0;
       ARMv6M.SYST_CSR := (
