@@ -77,9 +77,7 @@ package body BSP
       is
    begin
       -- wait for transmitter available
-      loop
-         exit when UART0.S1.TDRE;
-      end loop;
+      loop exit when UART0.S1.TDRE; end loop;
       UART0.D.RT := To_U8 (C);
    end Console_Putchar;
 
@@ -133,7 +131,7 @@ package body BSP
          MAEN2  => False,
          MAEN1  => False
          );
-      UART0.BDL.SBR := Bits_8 ((8 * MHz1 / 16) / 9_600);
+      UART0.BDL.SBR := Bits_8 ((UART_Clock / 16) / 9_600);
       UART0.BDH.SBR := 0;
       UART0.C2.TE := True;
       -- Console --------------------------------------------------------------
@@ -146,7 +144,7 @@ package body BSP
       Console.Print ("FRDM-KL46Z", NL => True);
       -------------------------------------------------------------------------
       ARMv6M.Irq_Enable;
-      -- ARMv6M.Fault_Irq_Enable;
+      ARMv6M.Fault_Irq_Enable;
       SysTick_Init;
       -------------------------------------------------------------------------
    end Setup;

@@ -740,7 +740,7 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_16 := 0;
       OUTDIV4   : Bits_3  := OUTDIV4_DIV2; -- Clock 4 Output Divider value
       Reserved2 : Bits_9  := 0;
-      OUTDIV1   : Bits_4;                  -- Clock 1 Output Divider value
+      OUTDIV1   : Bits_4  := OUTDIV1_DIV1; -- Clock 1 Output Divider value
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -768,10 +768,10 @@ pragma Style_Checks (Off);
    PFSIZE_256_2 : constant := 2#1111#; -- 256 KB of program flash memory, 8 KB protection region
 
    type SIM_FCFG1_Type is record
-      FLASHDIS  : Boolean := False; -- Flash Disable
-      FLASHDOZE : Boolean := False; -- Flash Doze
+      FLASHDIS  : Boolean := False;    -- Flash Disable
+      FLASHDOZE : Boolean := False;    -- Flash Doze
       Reserved1 : Bits_22 := 0;
-      PFSIZE    : Bits_4;           -- Program Flash Size
+      PFSIZE    : Bits_4  := PFSIZE_8; -- Program Flash Size
       Reserved2 : Bits_4  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1342,17 +1342,17 @@ pragma Style_Checks (Off);
    FRDIV_64_1280  : constant := 2#110#; -- If RANGE 0 = 0 or OSCSEL=1 , Divide Factor is 64; for all other RANGE 0 values, Divide Factor is 1280 .
    FRDIV_128_1536 : constant := 2#111#; -- If RANGE 0 = 0 or OSCSEL=1 , Divide Factor is 128; for all other RANGE 0 values, Divide Factor is 1536 .
 
-   CLKS_FLLPLL : constant := 2#00#; -- Encoding 0 — Output of FLL or PLL is selected (depends on PLLS control bit).
-   CLKS_INT    : constant := 2#01#; -- Encoding 1 — Internal reference clock is selected.
-   CLKS_EXT    : constant := 2#10#; -- Encoding 2 — External reference clock is selected.
-   CLKS_RSVD   : constant := 2#11#; -- Encoding 3 — Reserved.
+   CLKS_FLLPLLCS : constant := 2#00#; -- Encoding 0 — Output of FLL or PLL is selected (depends on PLLS control bit).
+   CLKS_INT      : constant := 2#01#; -- Encoding 1 — Internal reference clock is selected.
+   CLKS_EXT      : constant := 2#10#; -- Encoding 2 — External reference clock is selected.
+   CLKS_RSVD     : constant := 2#11#; -- Encoding 3 — Reserved.
 
    type MCG_C1_Type is record
-      IREFSTEN : Boolean := False;       -- Internal Reference Stop Enable
-      IRCLKEN  : Boolean := False;       -- Internal Reference Clock Enable
-      IREFS    : Bits_1  := IREFS_INT;   -- Internal Reference Select
-      FRDIV    : Bits_3  := FRDIV_1_32;  -- FLL External Reference Divider
-      CLKS     : Bits_2  := CLKS_FLLPLL; -- Clock Source Select
+      IREFSTEN : Boolean := False;         -- Internal Reference Stop Enable
+      IRCLKEN  : Boolean := False;         -- Internal Reference Clock Enable
+      IREFS    : Bits_1  := IREFS_INT;     -- Internal Reference Select
+      FRDIV    : Bits_3  := FRDIV_1_32;    -- FLL External Reference Divider
+      CLKS     : Bits_2  := CLKS_FLLPLLCS; -- Clock Source Select
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1547,8 +1547,8 @@ pragma Style_Checks (Off);
    VDIV0_x54 : constant := 2#11110#; -- Multiply Factor 54
    VDIV0_x55 : constant := 2#11111#; -- Multiply Factor 55
 
-   PLLS_FLL : constant := 0; -- FLL is selected.
-   PLLS_PLL : constant := 1; -- PLL is selected.
+   PLLS_FLL   : constant := 0; -- FLL is selected.
+   PLLS_PLLCS : constant := 1; -- PLL is selected.
 
    type MCG_C6_Type is record
       VDIV0  : Bits_5  := VDIV0_x24; -- VCO 0 Divider
@@ -1584,8 +1584,8 @@ pragma Style_Checks (Off);
    IREFST_EXT : constant := 0; -- Source of FLL reference clock is the external reference clock.
    IREFST_INT : constant := 1; -- Source of FLL reference clock is the internal reference clock.
 
-   PLLST_FLL : constant := 0; -- Source of PLLS clock is FLL clock.
-   PLLST_PLL : constant := 1; -- Source of PLLS clock is PLL output clock.
+   PLLST_FLL   : constant := 0; -- Source of PLLS clock is FLL clock.
+   PLLST_PLLCS : constant := 1; -- Source of PLLS clock is PLL output clock.
 
    type MCG_S_Type is record
       IRCST    : Bits_1;  -- Internal Reference Clock Status
