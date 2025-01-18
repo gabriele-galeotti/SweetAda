@@ -47,8 +47,8 @@ package body Clocks
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   -- Starting from 8 MHz crystal, generates 48 MHz core clock and peripherals
-   -- at 24 MHz.
+   -- Starting from 8 MHz crystal, generates 48 MHz core clock and 24 MHz for
+   -- peripheral clocks.
    ----------------------------------------------------------------------------
    procedure Init
       is
