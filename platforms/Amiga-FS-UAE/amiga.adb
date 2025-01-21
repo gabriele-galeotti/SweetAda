@@ -315,9 +315,7 @@ package body Amiga
       (C : in Character)
       is
    begin
-      loop
-         exit when CUSTOM.SERDATR.TBE;
-      end loop;
+      loop exit when CUSTOM.SERDATR.TBE; end loop;
       CUSTOM.SERDAT := (D => To_U8 (C), S => 16#01#);
    end Serialport_TX;
 
