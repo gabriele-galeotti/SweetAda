@@ -56,9 +56,7 @@ package body BSP
       is
    begin
       -- wait for transmitter available
-      loop
-         exit when VMIPS.SPIMCONSOLE.DISPLAY1_CONTROL.CTL_RDY;
-      end loop;
+      loop exit when VMIPS.SPIMCONSOLE.DISPLAY1_CONTROL.CTL_RDY; end loop;
       VMIPS.SPIMCONSOLE.DISPLAY1_DATA.DATA := To_U8 (C);
    end Console_Putchar;
 
@@ -68,9 +66,7 @@ package body BSP
       Data : Unsigned_8;
    begin
       -- wait for receiver available
-      loop
-         exit when VMIPS.SPIMCONSOLE.KEYBOARD1_CONTROL.CTL_RDY;
-      end loop;
+      loop exit when VMIPS.SPIMCONSOLE.KEYBOARD1_CONTROL.CTL_RDY; end loop;
       Data := VMIPS.SPIMCONSOLE.KEYBOARD1_DATA.DATA;
       C := To_Ch (Data);
    end Console_Getchar;
