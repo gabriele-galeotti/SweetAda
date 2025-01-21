@@ -144,10 +144,13 @@ package body PCI
       is
       Confadd_Value : Confadd_Type;
    begin
-      Confadd_Value.REGNUM  := Register_Number and 16#FC#;
-      Confadd_Value.FUNCNUM := Function_Number;
-      Confadd_Value.DEVNUM  := Device_Number;
-      Confadd_Value.BUSNUM  := Bus_Number;
+      Confadd_Value := (
+         REGNUM  => Register_Number and 16#FC#,
+         FUNCNUM => Function_Number,
+         DEVNUM  => Device_Number,
+         BUSNUM  => Bus_Number,
+         others  => <>
+         );
       Cfg_Access_Descriptor.Write_32 (CONFADD, To_U32 (Confadd_Value));
       return Cfg_Access_Descriptor.Read_32 (CONFDATA);
    end Cfg_Read;
@@ -161,10 +164,13 @@ package body PCI
       is
       Confadd_Value : Confadd_Type;
    begin
-      Confadd_Value.REGNUM  := Register_Number and 16#FC#;
-      Confadd_Value.FUNCNUM := Function_Number;
-      Confadd_Value.DEVNUM  := Device_Number;
-      Confadd_Value.BUSNUM  := Bus_Number;
+      Confadd_Value := (
+         REGNUM  => Register_Number and 16#FC#,
+         FUNCNUM => Function_Number,
+         DEVNUM  => Device_Number,
+         BUSNUM  => Bus_Number,
+         others  => <>
+         );
       Cfg_Access_Descriptor.Write_32 (CONFADD, To_U32 (Confadd_Value));
       Cfg_Access_Descriptor.Write_32 (CONFDATA, Value);
    end Cfg_Write;

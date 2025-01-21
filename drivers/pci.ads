@@ -127,11 +127,11 @@ package PCI
    type Register_Number_Type is new Bits_8;
 
    type Confadd_Type is record
-      REGNUM   : Register_Number_Type;
-      FUNCNUM  : Function_Number_Type;
-      DEVNUM   : Device_Number_Type;
-      BUSNUM   : Bus_Number_Type;
-      Reserved : Bits_7;
+      REGNUM   : Register_Number_Type := 0;
+      FUNCNUM  : Function_Number_Type := 0;
+      DEVNUM   : Device_Number_Type   := 0;
+      BUSNUM   : Bus_Number_Type      := 0;
+      Reserved : Bits_7               := 0;
       CONE     : Boolean              := True;
    end record
       with Bit_Order => Low_Order_First,
