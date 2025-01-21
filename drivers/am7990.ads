@@ -237,7 +237,7 @@ package Am7990
 
    type TMD2_Type is record
       BCNT : Bits_12;
-      ONES : Bits_4 := 2#1111#;
+      ONES : Bits_4  := 2#1111#;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -392,7 +392,7 @@ package Am7990
       Base_Address  : Address;
       Scale_Address : Address_Shift;
       Flags         : Flags_Type;
-      Read_16       : not null Port_Read_16_Ptr := MMIO.ReadN_U16'Access;
+      Read_16       : not null Port_Read_16_Ptr  := MMIO.ReadN_U16'Access;
       Write_16      : not null Port_Write_16_Ptr := MMIO.WriteN_U16'Access;
    end record;
 

@@ -167,8 +167,8 @@ package Ethernet
 
    type Queue_Type is record
       Queue : Queue_Array;
-      Head  : Queue_Index_Type := 0;
-      Tail  : Queue_Index_Type := 0;
+      Head  : Queue_Index_Type              := 0;
+      Tail  : Queue_Index_Type              := 0;
       Count : Natural range 0 .. QUEUE_SIZE := 0;
    end record
       with Volatile => True;
