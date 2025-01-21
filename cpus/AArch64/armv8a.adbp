@@ -274,6 +274,9 @@ pragma Style_Checks (Off);
    function ID_AA64ISAR1_EL1_Read return ID_AA64ISAR1_EL1_Type is function MRS_Read is new MRS ("id_aa64isar1_el1", ID_AA64ISAR1_EL1_Type); begin return MRS_Read; end ID_AA64ISAR1_EL1_Read;
    function ID_AA64ISAR2_EL1_Read return ID_AA64ISAR2_EL1_Type is function MRS_Read is new MRS ("id_aa64isar2_el1", ID_AA64ISAR2_EL1_Type); begin return MRS_Read; end ID_AA64ISAR2_EL1_Read;
 
+   function ID_AA64MMFR0_EL1_Read return ID_AA64MMFR0_EL1_Type is function MRS_Read is new MRS ("id_aa64mmfr0_el1", ID_AA64MMFR0_EL1_Type); begin return MRS_Read; end ID_AA64MMFR0_EL1_Read;
+   function ID_AA64MMFR1_EL1_Read return ID_AA64MMFR1_EL1_Type is function MRS_Read is new MRS ("id_aa64mmfr1_el1", ID_AA64MMFR1_EL1_Type); begin return MRS_Read; end ID_AA64MMFR1_EL1_Read;
+
    function ID_AA64PFR0_EL1_Read return ID_AA64PFR0_EL1_Type is function MRS_Read is new MRS ("id_aa64pfr0_el1", ID_AA64PFR0_EL1_Type); begin return MRS_Read; end ID_AA64PFR0_EL1_Read;
    function ID_AA64PFR1_EL1_Read return ID_AA64PFR1_EL1_Type is function MRS_Read is new MRS ("id_aa64pfr1_el1", ID_AA64PFR1_EL1_Type); begin return MRS_Read; end ID_AA64PFR1_EL1_Read;
 
@@ -296,6 +299,11 @@ pragma Style_Checks (Off);
    procedure RMR_EL2_Write (Value : in RMR_EL2_Type) is procedure MSR_Write is new MSR ("rmr_el2", RMR_EL2_Type); begin MSR_Write (Value); end RMR_EL2_Write;
    function RMR_EL3_Read return RMR_EL3_Type is function MRS_Read is new MRS ("rmr_el3", RMR_EL3_Type); begin return MRS_Read; end RMR_EL3_Read;
    procedure RMR_EL3_Write (Value : in RMR_EL3_Type) is procedure MSR_Write is new MSR ("rmr_el3", RMR_EL3_Type); begin MSR_Write (Value); end RMR_EL3_Write;
+
+#if CPUECTLR_EL1
+   function CPUECTLR_EL1_Read return CPUECTLR_EL1_Type is function MRS_Read is new MRS ("s3_1_c15_c2_1", CPUECTLR_EL1_Type); begin return MRS_Read; end CPUECTLR_EL1_Read;
+   procedure CPUECTLR_EL1_Write (Value : in CPUECTLR_EL1_Type) is procedure MSR_Write is new MSR ("s3_1_c15_c2_1", CPUECTLR_EL1_Type); begin MSR_Write (Value); end CPUECTLR_EL1_Write;
+#end if;
 
    function SCR_EL3_Read return SCR_EL3_Type is function MRS_Read is new MRS ("scr_el3", SCR_EL3_Type); begin return MRS_Read; end SCR_EL3_Read;
    procedure SCR_EL3_Write (Value : in SCR_EL3_Type) is procedure MSR_Write is new MSR ("scr_el3", SCR_EL3_Type); begin MSR_Write (Value); end SCR_EL3_Write;
@@ -386,6 +394,23 @@ pragma Style_Checks (On);
    end NOP;
 
    ----------------------------------------------------------------------------
+   -- BREAKPOINT
+   ----------------------------------------------------------------------------
+   procedure BREAKPOINT
+      is
+   begin
+      Asm (
+           Template => ""                   & CRLF &
+                       "        brk     #0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end BREAKPOINT;
+
+   ----------------------------------------------------------------------------
    -- Asm_Call
    ----------------------------------------------------------------------------
    procedure Asm_Call
@@ -402,6 +427,74 @@ pragma Style_Checks (On);
            Volatile => True
           );
    end Asm_Call;
+
+   ----------------------------------------------------------------------------
+   -- WFE
+   ----------------------------------------------------------------------------
+   procedure WFE
+      is
+   begin
+      Asm (
+           Template => ""            & CRLF &
+                       "        wfe" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end WFE;
+
+   ----------------------------------------------------------------------------
+   -- WFI
+   ----------------------------------------------------------------------------
+   procedure WFI
+      is
+   begin
+      Asm (
+           Template => ""            & CRLF &
+                       "        wfi" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end WFI;
+
+   ----------------------------------------------------------------------------
+   -- DSB
+   ----------------------------------------------------------------------------
+   procedure DSB
+      is
+   begin
+      Asm (
+           Template => ""                   & CRLF &
+                       "        dsb     #0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end DSB;
+
+   ----------------------------------------------------------------------------
+   -- ISB
+   ----------------------------------------------------------------------------
+   procedure ISB
+      is
+   begin
+      Asm (
+           Template => ""            & CRLF &
+                       "        isb" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end ISB;
 
    ----------------------------------------------------------------------------
    -- Irq_Enable

@@ -33,15 +33,29 @@ package CPU
    use System;
 
    ----------------------------------------------------------------------------
-   -- CPU helper subprograms
+   -- Generic definitions
    ----------------------------------------------------------------------------
 
    procedure NOP
       renames ARMv8A.NOP;
-
+   procedure BREAKPOINT
+      renames ARMv8A.BREAKPOINT;
    procedure Asm_Call
       (Target_Address : in Address)
       renames ARMv8A.Asm_Call;
+
+   ----------------------------------------------------------------------------
+   -- Specific definitions
+   ----------------------------------------------------------------------------
+
+   procedure WFE
+      renames ARMv8A.WFE;
+   procedure WFI
+      renames ARMv8A.WFI;
+   procedure DSB
+      renames ARMv8A.DSB;
+   procedure ISB
+      renames ARMv8A.ISB;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts

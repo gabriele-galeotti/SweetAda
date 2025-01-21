@@ -1048,7 +1048,197 @@ pragma Style_Checks (Off);
       with Inline => True;
 
    -- D19.2.64 ID_AA64MMFR0_EL1, AArch64 Memory Model Feature Register 0
+
+   PARange_4GB   : constant := 2#0000#; -- 32 bits, 4GB.
+   PARange_64GB  : constant := 2#0001#; -- 36 bits, 64GB.
+   PARange_1TB   : constant := 2#0010#; -- 40 bits, 1TB.
+   PARange_4TB   : constant := 2#0011#; -- 42 bits, 4TB.
+   PARange_16TB  : constant := 2#0100#; -- 44 bits, 16TB.
+   PARange_256TB : constant := 2#0101#; -- 48 bits, 256TB.
+   PARange_4PB   : constant := 2#0110#; -- When FEAT_LPA is implemented or FEAT_LPA2 is implemented: 52 bits, 4PB.
+
+   ASIDBits_8  : constant := 2#0000#; -- 8 bits.
+   ASIDBits_16 : constant := 2#0010#; -- 16 bits.
+
+   BigEnd_NONE  : constant := 2#0000#; -- No mixed-endian support.
+   BigEnd_MIXED : constant := 2#0001#; -- Mixed-endian support.
+
+   SNSMem_NONE : constant := 2#0000#; -- Does not support a distinction between Secure and Non-secure Memory.
+   SNSMem_YES  : constant := 2#0001#; -- Does support a distinction between Secure and Non-secure Memory.
+
+   BigEndEL0_NONE : constant := 2#0000#; -- No mixed-endian support at EL0. The SCTLR_EL1.E0E bit has a fixed value.
+   BigEndEL0_YES  : constant := 2#0001#; -- Mixed-endian support at EL0. The SCTLR_EL1.E0E bit can be configured.
+
+   TGran16_NONE : constant := 2#0000#; -- 16KB granule not supported.
+   TGran16_YES  : constant := 2#0001#; -- 16KB granule supported.
+   TGran16_52   : constant := 2#0010#; -- When FEAT_LPA2 is implemented: 16KB granule supports 52-bit input addresses and can describe 52-bit output addresses.
+
+   TGran64_NONE : constant := 2#0000#; -- 64KB granule supported.
+   TGran64_YES  : constant := 2#1111#; -- 64KB granule not supported.
+
+   TGran4_YES  : constant := 2#0000#; -- 4KB granule supported.
+   TGran4_52   : constant := 2#0001#; -- When FEAT_LPA2 is implemented: 4KB granule supports 52-bit input addresses and can describe 52-bit output addresses.
+   TGran4_NONE : constant := 2#1111#; -- 4KB granule not supported.
+
+   TGran16_2_TGran16 : constant := 2#0000#; -- Support for 16KB granule at stage 2 is identified in the ID_AA64MMFR0_EL1.TGran16 field.
+   TGran16_2_NONE    : constant := 2#0001#; -- 16KB granule not supported at stage 2.
+   TGran16_2_YES     : constant := 2#0010#; -- 16KB granule supported at stage 2.
+   TGran16_2_52      : constant := 2#0011#; -- When FEAT_LPA2 is implemented: 16KB granule at stage 2 supports 52-bit input addresses and can describe 52-bit output addresses.
+
+   TGran64_2_TGran64 : constant := 2#0000#; -- Support for 64KB granule at stage 2 is identified in the ID_AA64MMFR0_EL1.TGran64 field.
+   TGran64_2_NONE    : constant := 2#0001#; -- 64KB granule not supported at stage 2.
+   TGran64_2_YES     : constant := 2#0010#; -- 64KB granule supported at stage 2.
+
+   TGran4_2_TGran4 : constant := 2#0000#; -- Support for 4KB granule at stage 2 is identified in the ID_AA64MMFR0_EL1.TGran4 field.
+   TGran4_2_NONE   : constant := 2#0001#; -- 4KB granule not supported at stage 2.
+   TGran4_2_YES    : constant := 2#0010#; -- 4KB granule supported at stage 2.
+   TGran4_2_52     : constant := 2#0011#; -- When FEAT_LPA2 is implemented: 4KB granule at stage 2 supports 52-bit input addresses and can describe 52-bit output addresses.
+
+   ExS_ALL        : constant := 2#0000#; -- All exception entries and exits are context synchronization events.
+   ExS_NONCONTEXT : constant := 2#0001#; -- Non-context synchronizing exception entry and exit are supported.
+
+   FGT_NONE : constant := 2#0000#; -- Fine-grained trap controls are not implemented.
+   FGT_YES  : constant := 2#0001#; -- Fine-grained trap controls are implemented.
+
+   ECV_NONE     : constant := 2#0000#; -- Enhanced Counter Virtualization is not implemented.
+   ECV_YES      : constant := 2#0001#; -- Enhanced Counter Virtualization is implemented.
+   ECV_ENHANCED : constant := 2#0010#; -- As 0b0001, and also includes support for CNTHCTL_EL2.ECV and CNTPOFF_EL2.
+
+   type ID_AA64MMFR0_EL1_Type is record
+      PARange   : Bits_4; -- Physical Address range supported.
+      ASIDBits  : Bits_4; -- Number of ASID bits.
+      BigEnd    : Bits_4; -- Indicates support for mixed-endian configuration.
+      SNSMem    : Bits_4; -- Indicates support for a distinction between Secure and Non-secure Memory.
+      BigEndEL0 : Bits_4; -- Indicates support for mixed-endian at EL0 only.
+      TGran16   : Bits_4; -- Indicates support for 16KB memory translation granule size.
+      TGran64   : Bits_4; -- Indicates support for 64KB memory translation granule size.
+      TGran4    : Bits_4; -- Indicates support for 4KB memory translation granule size.
+      TGran16_2 : Bits_4; -- Indicates support for 16KB memory granule size at stage 2.
+      TGran64_2 : Bits_4; -- Indicates support for 64KB memory granule size at stage 2.
+      TGran4_2  : Bits_4; -- Indicates support for 4KB memory granule size at stage 2.
+      ExS       : Bits_4; -- Indicates support for disabling context synchronizing exception entry and exit.
+      Reserved  : Bits_8;
+      FGT       : Bits_4; -- Indicates presence of the Fine-Grained Trap controls.
+      ECV       : Bits_4; -- Indicates presence of Enhanced Counter Virtualization.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for ID_AA64MMFR0_EL1_Type use record
+      PARange   at 0 range  0 ..  3;
+      ASIDBits  at 0 range  4 ..  7;
+      BigEnd    at 0 range  8 .. 11;
+      SNSMem    at 0 range 12 .. 15;
+      BigEndEL0 at 0 range 16 .. 19;
+      TGran16   at 0 range 20 .. 23;
+      TGran64   at 0 range 24 .. 27;
+      TGran4    at 0 range 28 .. 31;
+      TGran16_2 at 0 range 32 .. 35;
+      TGran64_2 at 0 range 36 .. 39;
+      TGran4_2  at 0 range 40 .. 43;
+      ExS       at 0 range 44 .. 47;
+      Reserved  at 0 range 48 .. 55;
+      FGT       at 0 range 56 .. 59;
+      ECV       at 0 range 60 .. 63;
+   end record;
+
+   function ID_AA64MMFR0_EL1_Read
+      return ID_AA64MMFR0_EL1_Type
+      with Inline => True;
+
    -- D19.2.65 ID_AA64MMFR1_EL1, AArch64 Memory Model Feature Register 1
+
+   HAFDBS_NONE  : constant := 2#0000#; -- Hardware update of the Access flag and dirty state are not supported.
+   HAFDBS_AF    : constant := 2#0001#; -- Support for hardware update of the Access flag for Block and Page descriptors.
+   HAFDBS_DIRTY : constant := 2#0010#; -- As 0b0001, and adds support for hardware update of the Access flag for Block and Page descriptors. Hardware update of dirty state is supported.
+
+   VMIDBits_8 : constant := 2#0000#; -- 8 bits
+   VMIDBits_16 : constant := 2#0010#; -- 16 bits
+
+   VH_NONE : constant := 2#0000#; -- Virtualization Host Extensions not supported.
+   VH_YES  : constant := 2#0001#; -- Virtualization Host Extensions supported.
+
+   HPDS_NONE     : constant := 2#0000#; -- Disabling of hierarchical controls not supported.
+   HPDS_YES      : constant := 2#0001#; -- Disabling of hierarchical controls supported with the TCR_EL1.{HPD1, HPD0}, TCR_EL2.HPD or TCR_EL2.{HPD1, HPD0}, and TCR_EL3.HPD bits.
+   HPDS_ENHANCED : constant := 2#0010#; -- As for value 0b0001, and adds possible hardware allocation of bits[62:59] of the Translation table descriptors from the final lookup level for IMPLEMENTATION DEFINED use.
+
+   LO_NONE : constant := 2#0000#; -- LORegions not supported.
+   LO_YES  : constant := 2#0001#; -- LORegions supported.
+
+   PAN_NONE : constant := 2#0000#; -- PAN not supported.
+   PAN_YES  : constant := 2#0001#; -- PAN supported.
+   PAN_ENH1 : constant := 2#0010#; -- PAN supported and AT S1E1RP and AT S1E1WP instructions supported.
+   PAN_ENH2 : constant := 2#0011#; -- PAN supported, AT S1E1RP and AT S1E1WP instructions supported, and SCTLR_EL1.EPAN and SCTLR_EL2.EPAN bits supported.
+
+   SpecSEI_NONE : constant := 2#0000#; -- The PE never generates an SError interrupt due to an External abort on a speculative read.
+   SpecSEI_YES  : constant := 2#0001#; -- The PE might generate an SError interrupt due to an External abort on a speculative read.
+
+   XNX_NONE : constant := 2#0000#; -- Distinction between EL0 and EL1 execute-never control at stage 2 not supported.
+   XNX_YES  : constant := 2#0001#; -- Distinction between EL0 and EL1 execute-never control at stage 2 supported.
+
+   TWED_NONE : constant := 2#0000#; -- Configurable delayed trapping of WFE is not supported.
+   TWED_YES  : constant := 2#0001#; -- Configurable delayed trapping of WFE is supported.
+
+   ETS_NONE : constant := 2#0000#; -- Enhanced Translation Synchronization is not supported.
+   ETS_YES  : constant := 2#0001#; -- Enhanced Translation Synchronization is supported.
+
+   HCX_NONE : constant := 2#0000#; -- HCRX_EL2 and its associated EL3 trap are not supported.
+   HCX_YES  : constant := 2#0001#; -- HCRX_EL2 and its associated EL3 trap are supported.
+
+   AFP_NONE : constant := 2#0000#; -- The FPCR.{AH, FIZ, NEP} fields are not supported.
+   AFP_YES  : constant := 2#0001#; -- The FPCR.{AH, FIZ, NEP} fields are supported.
+
+   nTLBPA_WNC  : constant := 2#0000#; -- The intermediate caching of translation table walks might include non-coherent physical translation caches.
+   nTLBPA_WONC : constant := 2#0001#; -- The intermediate caching of translation table walks does not include non-coherent physical translation caches.
+
+   TIDCP1_NONE : constant := 2#0000#; -- SCTLR_EL1.TIDCP and SCTLR_EL2.TIDCP bits are not implemented and are RES0.
+   TIDCP1_YES  : constant := 2#0001#; -- SCTLR_EL1.TIDCP bit is implemented. If EL2 is implemented, SCTLR_EL2.TIDCP bit is implemented.
+
+   CMOW_NONE : constant := 2#0000#; -- SCTLR_EL1.CMOW, SCTLR_EL2.CMOW, and HCRX_EL2.CMOW bits are not implemented.
+   CMOW_YES  : constant := 2#0001#; -- SCTLR_EL1.CMOW is implemented. If EL2 is implemented, SCTLR_EL2.CMOW and HCRX_EL2.CMOW bits are implemented.
+
+   type ID_AA64MMFR1_EL1_Type is record
+      HAFDBS   : Bits_4; -- Hardware updates to Access flag and Dirty state in translation tables.
+      VMIDBits : Bits_4; -- Number of VMID bits.
+      VH       : Bits_4; -- Virtualization Host Extensions.
+      HPDS     : Bits_4; -- Hierarchical Permission Disables.
+      LO       : Bits_4; -- LORegions.
+      PAN      : Bits_4; -- Privileged Access Never.
+      SpecSEI  : Bits_4; -- Describes whether the PE can generate SError interrupt exceptions from speculative reads of memory, including speculative instruction fetches.
+      XNX      : Bits_4; -- Indicates support for execute-never control distinction by Exception level at stage 2.
+      TWED     : Bits_4; -- Indicates support for the configurable delayed trapping of WFE.
+      ETS      : Bits_4; -- Indicates support for Enhanced Translation Synchronization.
+      HCX      : Bits_4; -- Indicates support for HCRX_EL2 and its associated EL3 trap.
+      AFP      : Bits_4; -- Indicates support for FPCR.{AH, FIZ, NEP}.
+      nTLBPA   : Bits_4; -- Indicates support for intermediate caching of translation table walks.
+      TIDCP1   : Bits_4; -- Indicates whether SCTLR_EL1.TIDCP and SCTLR_EL2.TIDCP are implemented in AArch64 state.
+      CMOW     : Bits_4; -- Indicates support for cache maintenance instruction permission.
+      Reserved : Bits_4;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for ID_AA64MMFR1_EL1_Type use record
+      HAFDBS   at 0 range  0 ..  3;
+      VMIDBits at 0 range  4 ..  7;
+      VH       at 0 range  8 .. 11;
+      HPDS     at 0 range 12 .. 15;
+      LO       at 0 range 16 .. 19;
+      PAN      at 0 range 20 .. 23;
+      SpecSEI  at 0 range 24 .. 27;
+      XNX      at 0 range 28 .. 31;
+      TWED     at 0 range 32 .. 35;
+      ETS      at 0 range 36 .. 39;
+      HCX      at 0 range 40 .. 43;
+      AFP      at 0 range 44 .. 47;
+      nTLBPA   at 0 range 48 .. 51;
+      TIDCP1   at 0 range 52 .. 55;
+      CMOW     at 0 range 56 .. 59;
+      Reserved at 0 range 60 .. 63;
+   end record;
+
+   function ID_AA64MMFR1_EL1_Read
+      return ID_AA64MMFR1_EL1_Type
+      with Inline => True;
+
    -- D19.2.66 ID_AA64MMFR2_EL1, AArch64 Memory Model Feature Register 2
    -- D19.2.67 ID_AA64MMFR3_EL1, AArch64 Memory Model Feature Register 3
    -- D19.2.68 ID_AA64MMFR4_EL1, AArch64 Memory Model Feature Register 4
@@ -1714,7 +1904,52 @@ pragma Style_Checks (Off);
    -- D19.2.116 RVBAR_EL1, Reset Vector Base Address Register (if EL2 and EL3 not implemented)
    -- D19.2.117 RVBAR_EL2, Reset Vector Base Address Register (if EL3 not implemented)
    -- D19.2.118 RVBAR_EL3, Reset Vector Base Address Register (if EL3 implemented)
+
    -- D19.2.119 S3_<op1>_<Cn>_<Cm>_<op2>, IMPLEMENTATION DEFINED registers
+
+#if CPUECTLR_EL1
+   -- CPU Extended Control Register, EL1
+
+   CPURETCTL_NONE : constant := 2#000#; -- Disable the retention circuit. This is the reset value.
+   CPURETCTL_2    : constant := 2#001#; -- 2 Architectural Timer ticks are required before retention entry.
+   CPURETCTL_8    : constant := 2#010#; -- 8 Architectural Timer ticks are required before retention entry.
+   CPURETCTL_32   : constant := 2#011#; -- 32 Architectural Timer ticks are required before retention entry.
+   CPURETCTL_64   : constant := 2#100#; -- 64 Architectural Timer ticks are required before retention entry.
+   CPURETCTL_128  : constant := 2#101#; -- 128 Architectural Timer ticks are required before retention entry.
+   CPURETCTL_256  : constant := 2#110#; -- 256 Architectural Timer ticks are required before retention entry.
+   CPURETCTL_512  : constant := 2#111#; -- 512 Architectural Timer ticks are required before retention entry.
+
+   FPRETCTL_NONE : constant := 2#000#; -- Disable the retention circuit. This is the reset value.
+   FPRETCTL_2    : constant := 2#001#; -- 2 Architectural Timer ticks are required before retention entry.
+   FPRETCTL_8    : constant := 2#010#; -- 8 Architectural Timer ticks are required before retention entry.
+   FPRETCTL_32   : constant := 2#011#; -- 32 Architectural Timer ticks are required before retention entry.
+   FPRETCTL_64   : constant := 2#100#; -- 64 Architectural Timer ticks are required before retention entry.
+   FPRETCTL_128  : constant := 2#101#; -- 128 Architectural Timer ticks are required before retention entry.
+   FPRETCTL_256  : constant := 2#110#; -- 256 Architectural Timer ticks are required before retention entry.
+   FPRETCTL_512  : constant := 2#111#; -- 512 Architectural Timer ticks are required before retention entry.
+
+   type CPUECTLR_EL1_Type is record
+      CPURETCTL : Bits_3  := CPURETCTL_NONE; -- CPU retention control.
+      FPRETCTL  : Bits_3  := FPRETCTL_NONE;  -- Advanced SIMD and Floating-point retention control.
+      SMPEN     : Boolean := False;          -- Enable hardware management of data coherency with other cores in the cluster.
+      Reserved  : Bits_57 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for CPUECTLR_EL1_Type use record
+      CPURETCTL at 0 range 0 ..  2;
+      FPRETCTL  at 0 range 3 ..  5;
+      SMPEN     at 0 range 6 ..  6;
+      Reserved  at 0 range 7 .. 63;
+   end record;
+
+   function CPUECTLR_EL1_Read
+      return CPUECTLR_EL1_Type
+      with Inline => True;
+   procedure CPUECTLR_EL1_Write
+      (Value : in CPUECTLR_EL1_Type)
+      with Inline => True;
+#end if;
 
    -- D19.2.120 SCR_EL3, Secure Configuration Register
 
@@ -2741,13 +2976,28 @@ pragma Style_Checks (Off);
    -- D19.12.30 CNTVOFF_EL2, Counter-timer Virtual Offset register
 
    ----------------------------------------------------------------------------
-   -- CPU helper subprograms
+   -- Generic definitions
    ----------------------------------------------------------------------------
 
    procedure NOP
       with Inline => True;
+   procedure BREAKPOINT
+      with Inline => True;
    procedure Asm_Call
       (Target_Address : in Address)
+      with Inline => True;
+
+   ----------------------------------------------------------------------------
+   -- Specific definitions
+   ----------------------------------------------------------------------------
+
+   procedure WFE
+      with Inline => True;
+   procedure WFI
+      with Inline => True;
+   procedure DSB
+      with Inline => True;
+   procedure ISB
       with Inline => True;
 
    ----------------------------------------------------------------------------
