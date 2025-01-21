@@ -34,9 +34,7 @@ package body ZynqA9
       is
    begin
       -- wait for transmitter available
-      loop
-         exit when UART0.SR.TXEMPTY;
-      end loop;
+      loop exit when UART0.SR.TXEMPTY; end loop;
       UART0.FIFO.FIFO := Data;
    end UART_TX;
 
@@ -48,9 +46,7 @@ package body ZynqA9
       is
    begin
       -- wait for receiver available
-      loop
-         exit when not UART0.SR.RXEMPTY;
-      end loop;
+      loop exit when not UART0.SR.RXEMPTY; end loop;
       Data := UART0.FIFO.FIFO;
    end UART_RX;
 
