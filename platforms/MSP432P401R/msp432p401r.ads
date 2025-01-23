@@ -1951,6 +1951,303 @@ pragma Style_Checks (Off);
            Convention => Ada;
 
    ----------------------------------------------------------------------------
+   -- 20 Real-Time Clock (RTC_C)
+   ----------------------------------------------------------------------------
+
+   -- 20.3.1 RTCCTL0_L Register
+
+   type RTCCTL0_L_Type is record
+      RTCRDYIFG : Boolean := False; -- Real-time clock ready interrupt flag
+      RTCAIFG   : Boolean := False; -- Real-time clock alarm interrupt flag.
+      RTCTEVIFG : Boolean := False; -- Real-time clock time event interrupt flag.
+      RTCOFIFG  : Boolean := True;  -- 32-kHz crystal oscillator fault interrupt flag.
+      RTCRDYIE  : Boolean := False; -- Real-time clock ready interrupt enable
+      RTCAIE    : Boolean := False; -- Real-time clock alarm interrupt enable.
+      RTCTEVIE  : Boolean := False; -- Real-time clock time event interrupt enable.
+      RTCOFIE   : Boolean := False; -- 32-kHz crystal oscillator fault interrupt enable.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCCTL0_L_Type use record
+      RTCRDYIFG at 0 range 0 .. 0;
+      RTCAIFG   at 0 range 1 .. 1;
+      RTCTEVIFG at 0 range 2 .. 2;
+      RTCOFIFG  at 0 range 3 .. 3;
+      RTCRDYIE  at 0 range 4 .. 4;
+      RTCAIE    at 0 range 5 .. 5;
+      RTCTEVIE  at 0 range 6 .. 6;
+      RTCOFIE   at 0 range 7 .. 7;
+   end record;
+
+   -- 20.3.2 RTCCTL0_H Register
+
+   RTCKEY_KEY : constant := 16#A5#;
+
+   type RTCCTL0_H_Type is record
+      RTCKEY : Bits_8 := 16#96#; -- Real-time clock key.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCCTL0_H_Type use record
+      RTCKEY at 0 range 0 .. 7;
+   end record;
+
+   -- 20.3.3 RTCCTL1 Register
+
+   RTCTEVx_MIN      : constant := 2#00#; -- Minute changed
+   RTCTEVx_HOUR     : constant := 2#01#; -- Hour changed
+   RTCTEVx_MIDNIGHT : constant := 2#10#; -- Every day at midnight (00:00)
+   RTCTEVx_NOON     : constant := 2#11#; -- Every day at noon (12:00)
+
+   RTCSSELx_BCLK  : constant := 2#00#; -- BCLK
+   RTCSSELx_RSVD1 : constant := 2#01#; -- Reserved. Defaults to BCLK.
+   RTCSSELx_RSVD2 : constant := 2#10#; -- Reserved. Defaults to BCLK.
+   RTCSSELx_RSVD3 : constant := 2#11#; -- Reserved. Defaults to BCLK
+
+   RTCMODE_RSVD     : constant := 0; -- Reserved
+   RTCMODE_CALENDAR : constant := 1; -- Calendar mode.
+
+   RTCBCD_BIN : constant := 0; -- Binary (hexadecimal) code selected
+   RTCBCD_BCD : constant := 1; -- Binary coded decimal (BCD) code selected
+
+   type RTCCTL1_Type is record
+      RTCTEVx  : Bits_2  := RTCTEVx_MIN;      -- Real-time clock time event
+      RTCSSELx : Bits_2  := RTCSSELx_BCLK;    -- Real-time clock source select.
+      RTCRDY   : Boolean := True;             -- Real-time clock ready
+      RTCMODE  : Bits_1  := RTCMODE_CALENDAR; -- Real-time clock mode.
+      RTCHOLD  : Boolean := True;             -- Real-time clock hold
+      RTCBCD   : Bits_1  := RTCBCD_BIN;       -- Real-time clock BCD select.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCCTL1_Type use record
+      RTCTEVx  at 0 range 0 .. 1;
+      RTCSSELx at 0 range 2 .. 3;
+      RTCRDY   at 0 range 4 .. 4;
+      RTCMODE  at 0 range 5 .. 5;
+      RTCHOLD  at 0 range 6 .. 6;
+      RTCBCD   at 0 range 7 .. 7;
+   end record;
+
+   -- 20.3.4 RTCCTL3 Register
+
+   RTCCALFx_NONE : constant := 2#00#; -- No frequency output to RTCCLK pin
+   RTCCALFx_512  : constant := 2#01#; -- 512 Hz
+   RTCCALFx_256  : constant := 2#10#; -- 256 Hz
+   RTCCALFx_1    : constant := 2#11#; -- 1 Hz
+
+   type RTCCTL3_Type is record
+      RTCCALFx : Bits_2 := RTCCALFx_NONE; -- Real-time clock calibration frequency.
+      Reserved : Bits_6 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCCTL3_Type use record
+      RTCCALFx at 0 range 0 .. 1;
+      Reserved at 0 range 2 .. 7;
+   end record;
+
+   -- 20.3.5 RTCOCAL Register
+
+   RTCOCALS_DOWN : constant := 0; -- Down calibration.
+   RTCOCALS_UP   : constant := 1; -- Up calibration.
+
+   type RTCOCAL_Type is record
+      RTCOCALx : Unsigned_8 := 0;             -- Real-time clock offset error calibration.
+      Reserved : Bits_7     := 0;
+      RTCOCALS : Bits_1     := RTCOCALS_DOWN; -- Real-time clock offset error calibration sign.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for RTCOCAL_Type use record
+      RTCOCALx at 0 range  0 ..  7;
+      Reserved at 0 range  8 .. 14;
+      RTCOCALS at 0 range 15 .. 15;
+   end record;
+
+   -- 20.3.6 RTCTCMP Register
+
+   RTCTCMPS_DOWN : constant := 0; -- Down calibration.
+   RTCTCMPS_UP   : constant := 1; -- Up calibration.
+
+   type RTCTCMP_Type is record
+      RTCTCMPx : Unsigned_8 := 0;             -- Real-time clock temperature compensation.
+      Reserved : Bits_5     := 0;
+      RTCTCOK  : Boolean    := False;         -- Real-time clock temperature compensation write OK.
+      RTCTCRDY : Boolean    := True;          -- Real-time clock temperature compensation ready.
+      RTCTCMPS : Bits_1     := RTCTCMPS_DOWN; -- Real-time clock temperature compensation sign.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for RTCTCMP_Type use record
+      RTCTCMPx at 0 range  0 ..  7;
+      Reserved at 0 range  8 .. 12;
+      RTCTCOK  at 0 range 13 .. 13;
+      RTCTCRDY at 0 range 14 .. 14;
+      RTCTCMPS at 0 range 15 .. 15;
+   end record;
+
+   -- 20.3.7 RTCSEC Register – Hexadecimal Format
+
+   type RTCSEC_HEX_Type is record
+      Seconds  : Bits_6;      -- Seconds (0 to 59)
+      Reserved : Bits_2 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCSEC_HEX_Type use record
+      Seconds  at 0 range 0 .. 5;
+      Reserved at 0 range 6 .. 7;
+   end record;
+
+   -- 20.3.8 RTCSEC Register – BCD Format
+
+   type RTCSEC_BCD_Type is record
+      Seconds_LOW : Bits_4;      -- Seconds – low digit (0 to 9)
+      Seconds_HI  : Bits_3;      -- Seconds – high digit (0 to 5)
+      Reserved    : Bits_1 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCSEC_BCD_Type use record
+      Seconds_LOW at 0 range 0 .. 3;
+      Seconds_HI  at 0 range 4 .. 6;
+      Reserved    at 0 range 7 .. 7;
+   end record;
+
+   -- 20.3.9 RTCMIN Register – Hexadecimal Format
+
+   type RTCMIN_HEX_Type is record
+      Minutes  : Bits_6;      -- Minutes (0 to 59)
+      Reserved : Bits_2 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCMIN_HEX_Type use record
+      Minutes  at 0 range 0 .. 5;
+      Reserved at 0 range 6 .. 7;
+   end record;
+
+   -- 20.3.10 RTCMIN Register – BCD Format
+
+   type RTCMIN_BCD_Type is record
+      Minutes_LOW : Bits_4;      -- Minutes – low digit (0 to 9)
+      Minutes_HI  : Bits_3;      -- Minutes – high digit (0 to 5)
+      Reserved    : Bits_1 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCMIN_BCD_Type use record
+      Minutes_LOW at 0 range 0 .. 3;
+      Minutes_HI  at 0 range 4 .. 6;
+      Reserved    at 0 range 7 .. 7;
+   end record;
+
+   -- 20.3.11 RTCHOUR Register – Hexadecimal Format
+
+   type RTCHOUR_HEX_Type is record
+      Hours    : Bits_5;      -- Hours (0 to 23)
+      Reserved : Bits_3 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCHOUR_HEX_Type use record
+      Hours    at 0 range 0 .. 4;
+      Reserved at 0 range 5 .. 7;
+   end record;
+
+   -- 20.3.12 RTCHOUR Register – BCD Format
+
+   type RTCHOUR_BCD_Type is record
+      Hours_LOW : Bits_4;      -- Hours – low digit (0 to 9)
+      Hours_HI  : Bits_2;      -- Hours – high digit (0 to 2)
+      Reserved  : Bits_2 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCHOUR_BCD_Type use record
+      Hours_LOW at 0 range 0 .. 3;
+      Hours_HI  at 0 range 4 .. 5;
+      Reserved  at 0 range 6 .. 7;
+   end record;
+
+   -- Table 20-1. RTC_C Registers
+
+   RTC_BASEADDRESS : constant := 16#4000_4400#;
+
+   RTCCTL0_L : aliased RTCCTL0_L_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCCTL0_H : aliased RTCCTL0_H_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#01#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCCTL1 : aliased RTCCTL1_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#02#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCCTL3 : aliased RTCCTL3_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#03#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCOCAL : aliased RTCOCAL_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#04#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCTCMP : aliased RTCTCMP_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#06#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCSEC_HEX : aliased RTCSEC_HEX_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#10#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCSEC_BCD : aliased RTCSEC_BCD_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#10#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCMIN_HEX : aliased RTCMIN_HEX_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#11#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCMIN_BCD : aliased RTCMIN_BCD_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#11#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCHOUR_HEX : aliased RTCHOUR_HEX_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#12#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCHOUR_BCD : aliased RTCHOUR_BCD_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#12#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
    -- 24 Enhanced Universal Serial Communication Interface (eUSCI) – UART Mode
    ----------------------------------------------------------------------------
 
