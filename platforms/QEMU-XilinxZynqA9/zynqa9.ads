@@ -35,6 +35,13 @@ package ZynqA9
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
+   -- Zynq-7000 SoC Technical Reference Manual
+   -- UG585 (v1.13) April 2, 2021
+   ----------------------------------------------------------------------------
+
    ----------------------------------------------------------------------------
    -- Interrupt Controller CPU (ICC)
    ----------------------------------------------------------------------------
@@ -42,11 +49,11 @@ package ZynqA9
    -- ICCICR
 
    type ICCICR_Type is record
-      EnableS  : Boolean;      -- Global enable for the signaling of Secure interrupts by the CPU interfaces to the ...
-      EnableNS : Boolean;      -- An alias of the Enable bit in the Non-secure ICCICR.
-      AckCtl   : Boolean;      -- Controls whether a Secure read of the ICCIAR, when the highest priority pending ...
-      FIQEn    : Boolean;      -- Controls whether the GIC signals Secure interrupts to a target processor using the FIQ or ...
-      SBPR     : Boolean;      -- Controls whether the CPU interface uses the Secure or Non-secure Binary Point Register ...
+      EnableS  : Boolean := False; -- Global enable for the signaling of Secure interrupts by the CPU interfaces to the connected processors.
+      EnableNS : Boolean := False; -- An alias of the Enable bit in the Non-secure ICCICR.
+      AckCtl   : Boolean := False; -- Controls whether a Secure read of the ICCIAR, when the highest priority pending interrupt is Non-secure, causes the CPU interface to acknowledge the interrupt.
+      FIQEn    : Boolean := False; -- Controls whether the GIC signals Secure interrupts to a target processor using the FIQ or the IRQ signal.
+      SBPR     : Boolean := False; -- Controls whether the CPU interface uses the Secure or Non-secure Binary Point Register for preemption.
       Reserved : Bits_27 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -63,7 +70,7 @@ package ZynqA9
    -- ICCPMR
 
    type ICCPMR_Type is record
-      Priority : Unsigned_8;      -- The priority mask level for the CPU interface.
+      Priority : Unsigned_8 := 0; -- The priority mask level for the CPU interface.
       Reserved : Bits_24    := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -76,7 +83,7 @@ package ZynqA9
    -- ICCBPR
 
    type ICCBPR_Type is record
-      Binary_point : Bits_3;       -- The value of this field controls the 8-bit interrupt priority field ...
+      Binary_point : Bits_3  := 16#2#; -- The value of this field controls the 8-bit interrupt priority field is split into a group priority field, used to determine interrupt preemption, and a subpriority field.
       Reserved     : Bits_29 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -89,8 +96,8 @@ package ZynqA9
    -- ICCAR
 
    type ICCAR_Type is record
-      ACKINTID : Bits_10;      -- Identifies the processor that requested the interrupt.
-      CPUID    : Bits_3;       -- The interrupt ID.
+      ACKINTID : Bits_10 := 16#3FF#; -- Identifies the processor that requested the interrupt.
+      CPUID    : Bits_3  := 0;       -- The interrupt ID.
       Reserved : Bits_19 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -104,8 +111,8 @@ package ZynqA9
    -- ICCEOIR
 
    type ICCEOIR_Type is record
-      EOIINTID : Bits_10;      -- The ACKINTID value from the corresponding ICCIAR access.
-      CPUID    : Bits_3;       -- On completion of the processing of an SGI, this field contains the CPUID value from ...
+      EOIINTID : Bits_10 := 0; -- The ACKINTID value from the corresponding ICCIAR access.
+      CPUID    : Bits_3  := 0; -- On completion of the processing of an SGI, this field contains the CPUID value from the corresponding ICCIAR access.
       Reserved : Bits_19 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -119,7 +126,7 @@ package ZynqA9
    -- ICCRPR
 
    type ICCRPR_Type is record
-      Priority : Unsigned_8;      -- The priority value of the highest priority interrupt that is active on the CPU interface.
+      Priority : Unsigned_8 := 16#FF#; -- The priority value of the highest priority interrupt that is active on the CPU interface.
       Reserved : Bits_24    := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -132,8 +139,8 @@ package ZynqA9
    -- ICCHPIR
 
    type ICCHPIR_Type is record
-      PENDINTID : Bits_10;      -- The interrupt ID of the highest priority pending interrupt.
-      CPUID     : Bits_3;       -- If the PENDINTID field returns the ID of an SGI, this field contains the CPUID value ...
+      PENDINTID : Bits_10 := 16#3FF#; -- The interrupt ID of the highest priority pending interrupt.
+      CPUID     : Bits_3  := 0;       -- If the PENDINTID field returns the ID of an SGI, this field contains the CPUID value for that interrupt.
       Reserved  : Bits_19 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -147,7 +154,7 @@ package ZynqA9
    -- ICCABPR
 
    type ICCABPR_Type is record
-      Binary_point : Bits_3;       -- Provides an alias of the Non-secure ICCBPR.
+      Binary_point : Bits_3  := 16#3#; -- Provides an alias of the Non-secure ICCBPR.
       Reserved     : Bits_29 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -160,7 +167,7 @@ package ZynqA9
    -- ICCIDR
 
    type ICCIDR_Type is record
-      Implementer          : Bits_12; -- Returns the JEP106 code of the company that implemented the Cortex-A9 processor ...
+      Implementer          : Bits_12; -- Returns the JEP106 code of the company that implemented the Cortex-A9 processor interface RTL.
       Revision_number      : Bits_4;  -- Returns the revision number of the Interrupt Controller.
       Architecture_version : Bits_4;  -- Identifies the architecture version
       Part_number          : Bits_12; -- Identifies the peripheral
@@ -181,8 +188,8 @@ package ZynqA9
    -- ICDDCR
 
    type ICDDCR_Type is record
-      Enable_secure     : Boolean;
-      Enable_Non_secure : Boolean;
+      Enable_secure     : Boolean := False; -- 0 = disables all Secure interrupt control bits in the distributor from changing state because of any external stimulus change that occurs on the corresponding SPI or PPI signals. 1 = enables the distributor to update register locations for Secure interrupts.
+      Enable_Non_secure : Boolean := False; -- 0 = disables all Non-secure interrupts control bits in the distributor from changing state because of any external stimulus change that occurs on the corresponding SPI or PPI signals 1 = enables the distributor to update register locations for Non-secure interrupts
       Reserved          : Bits_30 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -195,12 +202,28 @@ package ZynqA9
 
    -- ICDICTR
 
+   IT_Lines_Number_32_0    : constant := 2#00000#; -- the distributor provides 32 interrupts, no external interrupt lines.
+   IT_Lines_Number_64_32   : constant := 2#00001#; -- the distributor provides 64 interrupts, 32 external interrupt lines.
+   IT_Lines_Number_96_64   : constant := 2#00010#; -- the distributor provides 96 interrupts, 64 external interrupt lines.
+   IT_Lines_Number_128_96  : constant := 2#00011#; -- the distributor provide 128 interrupts, 96 external interrupt lines.
+   IT_Lines_Number_160_128 : constant := 2#00100#; -- the distributor provides 160 interrupts, 128 external interrupt lines.
+   IT_Lines_Number_192_160 : constant := 2#00101#; -- the distributor provides 192 interrupts, 160 external interrupt lines.
+   IT_Lines_Number_224_192 : constant := 2#00110#; -- the distributor provides 224 interrupts, 192 external interrupt lines.
+   IT_Lines_Number_256_224 : constant := 2#00111#; -- the distributor provides 256 interrupts, 224 external interrupt lines.
+
+   CPU_Number_1 : constant := 2#000#; -- the Cortex-A9 MPCore configuration contains one Cortex-A9 processor.
+   CPU_Number_2 : constant := 2#001#; -- the Cortex-A9 MPCore configuration contains two Cortex-A9 processors.
+   CPU_Number_3 : constant := 2#010#; -- the Cortex-A9 MPCore configuration contains three Cortex-A9 processors.
+   CPU_Number_4 : constant := 2#011#; -- the Cortex-A9 MPCore configuration contains four Cortex-A9 processors.
+
+   LSPI_31 : constant := 2#11111#; -- 31 LSPIs, which are the interrupts of IDs 32-62.
+
    type ICDICTR_Type is record
-      IT_Lines_Number : Bits_5;  -- the distributor provides ...
-      CPU_Number      : Bits_3;  -- the Cortex-A9 MPCore configuration contains ...
+      IT_Lines_Number : Bits_5;  -- IT_Lines_Number
+      CPU_Number      : Bits_3;  -- CPU_Number
       SBZ             : Bits_2;  -- Reserved
-      SecurityExtn    : Boolean; -- Returns the number of security domains that the controller contains
-      LSPI            : Bits_5;  -- Returns the number of Lockable Shared Peripheral Interrupts (LSPIs) that ...
+      SecurityExtn    : Boolean; -- Returns the number of security domains that the controller contains: 1 = the controller contains two security domains. This bit always returns the value one.
+      LSPI            : Bits_5;  -- Returns the number of Lockable Shared Peripheral Interrupts (LSPIs) that the controller contains.
       Reserved        : Bits_16;
    end record
       with Bit_Order => Low_Order_First,
@@ -317,7 +340,7 @@ package ZynqA9
    -- SCL
 
    type SCL_Type is record
-      LOCK     : Boolean;      -- Secure configuration lock for these slcr registers: SCL, PSS_RST_CTRL, APU_CTRL, and WDT_CLK_SEL.
+      LOCK     : Boolean := False; -- Secure configuration lock for these slcr registers: SCL, PSS_RST_CTRL, APU_CTRL, and WDT_CLK_SEL.
       Reserved : Bits_31 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -332,7 +355,7 @@ package ZynqA9
    LOCK_KEY_VALUE : constant := 16#767B#;
 
    type SLCR_LOCK_Type is record
-      LOCK_KEY : Unsigned_16;      -- Write the lock key, 0x767B, to write protect the slcr registers
+      LOCK_KEY : Unsigned_16 := 0; -- Write the lock key, 0x767B, to write protect the slcr registers
       Reserved : Bits_16     := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -347,7 +370,7 @@ package ZynqA9
    UNLOCK_KEY_VALUE : constant := 16#DF0D#;
 
    type SLCR_UNLOCK_Type is record
-      UNLOCK_KEY : Unsigned_16;      -- Write the unlock key, 0xDF0D, to enable writes to the slcr registers.
+      UNLOCK_KEY : Unsigned_16 := 0; -- Write the unlock key, 0xDF0D, to enable writes to the slcr registers.
       Reserved   : Bits_16     := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -622,23 +645,23 @@ package ZynqA9
    -- B.33 UART Controller (UART)
    ----------------------------------------------------------------------------
 
-   -- XUARTPS_CR
+   -- XUARTPS_CR_OFFSET
 
-   type XUARTPS_CR_Type is record
-      RXRST    : Boolean;
-      TXRST    : Boolean;
-      RX_EN    : Boolean;
-      RX_DIS   : Boolean;
-      TX_EN    : Boolean;
-      TX_DIS   : Boolean;
-      TORST    : Boolean;
-      STARTBRK : Boolean;
-      STOPBRK  : Boolean;
+   type XUARTPS_CR_OFFSET_Type is record
+      RXRST    : Boolean := False; -- Software reset for Rx data path: 0: no affect 1: receiver logic is reset and all pending receiver data is discarded.
+      TXRST    : Boolean := False; -- Software reset for Tx data path: 0: no affect 1: transmitter logic is reset and all pending transmitter data is discarded
+      RX_EN    : Boolean := False; -- Receive enable: 0: disable 1: enable
+      RX_DIS   : Boolean := True;  -- Receive disable: 0: enable 1: disable, regardless of the value of RXEN
+      TX_EN    : Boolean := False; -- Transmit enable: 0: disable transmitter 1: enable transmitter, provided the TXDIS field is set to 0.
+      TX_DIS   : Boolean := True;  -- Transmit disable: 0: enable transmitter 1: disable transmitter
+      TORST    : Boolean := False; -- Restart receiver timeout counter: 1: receiver timeout counter is restarted.
+      STARTBRK : Boolean := False; -- Start transmitter break: 0: no affect 1: start to transmit a break after the characters currently present in the FIFO and the transmit shift register have been transmitted.
+      STOPBRK  : Boolean := True;  -- Stop transmitter break: 0: no affect 1: stop transmission of the break after a minimum of one character length and transmit a high level during 12 bit periods.
       Reserved : Bits_23 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_CR_Type use record
+   for XUARTPS_CR_OFFSET_Type use record
       RXRST    at 0 range 0 ..  0;
       TXRST    at 0 range 1 ..  1;
       RX_EN    at 0 range 2 ..  2;
@@ -651,70 +674,74 @@ package ZynqA9
       Reserved at 0 range 9 .. 31;
    end record;
 
-   -- XUARTPS_MR
+   -- XUARTPS_MR_OFFSET
 
-   CLKSEL_REFCLK     : constant := 0;
-   CLKSEL_REFCLKDIV8 : constant := 1;
+   CLKSEL_REFCLK     : constant := 0; -- clock source is uart_ref_clk
+   CLKSEL_REFCLKDIV8 : constant := 1; -- clock source is uart_ref_clk/8
 
-   CHRL_8 : constant := 2#00#;
-   CHRL_7 : constant := 2#10#;
-   CHRL_6 : constant := 2#11#;
+   CHRL_8   : constant := 2#00#; -- 8 bits
+   CHRL_7   : constant := 2#10#; -- 7 bits
+   CHRL_6   : constant := 2#11#; -- 6 bits
 
-   PAR_EVEN     : constant := 2#000#;
-   PAR_ODD      : constant := 2#001#;
-   PAR_SPACE    : constant := 2#010#;
-   PAR_MARK     : constant := 2#011#;
-   PAR_NOPARITY : constant := 2#100#;
+   PAR_EVEN     : constant := 2#000#; -- even parity
+   PAR_ODD      : constant := 2#001#; -- odd parity
+   PAR_SPACE    : constant := 2#010#; -- forced to 0 parity (space)
+   PAR_MARK     : constant := 2#011#; -- forced to 1 parity (mark)
+   PAR_NOPARITY : constant := 2#100#; -- no parity
 
-   NBSTOP_1  : constant := 2#00#;
-   NBSTOP_15 : constant := 2#01#;
-   NBSTOP_2  : constant := 2#10#;
+   NBSTOP_1  : constant := 2#00#; -- 1 stop bit
+   NBSTOP_15 : constant := 2#01#; -- 1.5 stop bits
+   NBSTOP_2  : constant := 2#10#; -- 2 stop bits
 
-   CHMODE_NORMAL          : constant := 2#00#;
-   CHMODE_AUTOECHO        : constant := 2#01#;
-   CHMODE_LOOPBACK_LOCAL  : constant := 2#10#;
-   CHMODE_LOOPBACK_REMOTE : constant := 2#11#;
+   CHMODE_NORMAL          : constant := 2#00#; -- normal
+   CHMODE_AUTOECHO        : constant := 2#01#; -- automatic echo
+   CHMODE_LOOPBACK_LOCAL  : constant := 2#10#; -- local loopback
+   CHMODE_LOOPBACK_REMOTE : constant := 2#11#; -- remote loopback
 
-   type XUARTPS_MR_Type is record
-      CLKSEL   : Bits_1;
-      CHRL     : Bits_2;
-      PAR      : Bits_3;
-      NBSTOP   : Bits_2;
-      CHMODE   : Bits_2;
-      Reserved : Bits_22 := 0;
+   type XUARTPS_MR_OFFSET_Type is record
+      CLKSEL    : Bits_1  := CLKSEL_REFCLK; -- Clock source select: This field defines whether a pre-scalar of 8 is applied to the baud rate generator input clock.
+      CHRL      : Bits_2  := CHRL_8;        -- Character length select: Defines the number of bits in each character.
+      PAR       : Bits_3  := PAR_EVEN;      -- Parity type select: Defines the expected parity to check on receive and the parity to generate on transmit.
+      NBSTOP    : Bits_2  := NBSTOP_1;      -- Number of stop bits: Defines the number of stop bits to detect on receive and to generate on transmit.
+      CHMODE    : Bits_2  := CHMODE_NORMAL; -- Channel mode: Defines the mode of operation of the UART.
+      Reserved1 : Bits_1  := 0;
+      Reserved2 : Bits_1  := 0;
+      Reserved3 : Bits_20 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_MR_Type use record
-      CLKSEL   at 0 range  0 ..  0;
-      CHRL     at 0 range  1 ..  2;
-      PAR      at 0 range  3 ..  5;
-      NBSTOP   at 0 range  6 ..  7;
-      CHMODE   at 0 range  8 ..  9;
-      Reserved at 0 range 10 .. 31;
+   for XUARTPS_MR_OFFSET_Type use record
+      CLKSEL    at 0 range  0 ..  0;
+      CHRL      at 0 range  1 ..  2;
+      PAR       at 0 range  3 ..  5;
+      NBSTOP    at 0 range  6 ..  7;
+      CHMODE    at 0 range  8 ..  9;
+      Reserved1 at 0 range 10 .. 10;
+      Reserved2 at 0 range 11 .. 11;
+      Reserved3 at 0 range 12 .. 31;
    end record;
 
-   -- XUARTPS_I[EDMS]R
+   -- XUARTPS_I[EDMS]R_OFFSET
 
-   type XUARTPS_IEDMSR_Type is record
-      IXR_RXOVR   : Boolean;
-      IXR_RXEMPTY : Boolean;
-      IXR_RXFULL  : Boolean;
-      IXR_TXEMPTY : Boolean;
-      IXR_TXFULL  : Boolean;
-      IXR_OVER    : Boolean;
-      IXR_FRAMING : Boolean;
-      IXR_PARITY  : Boolean;
-      IXR_TOUT    : Boolean;
-      IXR_DMS     : Boolean;
-      TTRIG       : Boolean;
-      TNFUL       : Boolean;
-      TOVR        : Boolean;
+   type XUARTPS_IEDMSR_OFFSET_Type is record
+      IXR_RXOVR   : Boolean := False; -- Receiver FIFO Trigger interrupt
+      IXR_RXEMPTY : Boolean := False; -- Receiver FIFO Empty interrupt
+      IXR_RXFULL  : Boolean := False; -- Receiver FIFO Full interrupt
+      IXR_TXEMPTY : Boolean := False; -- Transmitter FIFO Empty interrupt
+      IXR_TXFULL  : Boolean := False; -- Transmitter FIFO Full interrupt
+      IXR_OVER    : Boolean := False; -- Receiver Overflow Error interrupt
+      IXR_FRAMING : Boolean := False; -- Receiver Framing Error interrupt
+      IXR_PARITY  : Boolean := False; -- Receiver Parity Error interrupt
+      IXR_TOUT    : Boolean := False; -- Receiver Timeout Error interrupt
+      IXR_DMS     : Boolean := False; -- Delta Modem Status Indicator interrupt
+      TTRIG       : Boolean := False; -- Transmitter FIFO Trigger interrupt
+      TNFUL       : Boolean := False; -- Transmitter FIFO Nearly Full interrupt
+      TOVR        : Boolean := False; -- Transmitter FIFO Overflow interrupt
       Reserved    : Bits_19 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_IEDMSR_Type use record
+   for XUARTPS_IEDMSR_OFFSET_Type use record
       IXR_RXOVR   at 0 range  0 ..  0;
       IXR_RXEMPTY at 0 range  1 ..  1;
       IXR_RXFULL  at 0 range  2 ..  2;
@@ -731,57 +758,64 @@ package ZynqA9
       Reserved    at 0 range 13 .. 31;
    end record;
 
-   -- XUARTPS_BAUDGEN
+   -- XUARTPS_BAUDGEN_OFFSET
 
-   type XUARTPS_BAUDGEN_Type is record
-      CD       : Unsigned_16;  -- Baud Rate Clock Divisor Value
-      Reserved : Bits_16 := 0;
+   CD_DISABLE : constant := 0; -- Disables baud_sample
+   CD_BYPASS  : constant := 1; -- Clock divisor bypass (baud_sample = sel_clk)
+
+   type XUARTPS_BAUDGEN_OFFSET_Type is record
+      CD       : Unsigned_16 := 16#28B#; -- Baud Rate Clock Divisor Value
+      Reserved : Bits_16     := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_BAUDGEN_Type use record
+   for XUARTPS_BAUDGEN_OFFSET_Type use record
       CD       at 0 range  0 .. 15;
       Reserved at 0 range 16 .. 31;
    end record;
 
-   -- XUARTPS_RXTOUT
+   -- XUARTPS_RXTOUT_OFFSET
 
-   type XUARTPS_RXTOUT_Type is record
-      RTO      : Unsigned_8;      -- Receiver timeout value
+   RTO_DISABLE : constant := 0; -- Disables receiver timeout counter
+
+   type XUARTPS_RXTOUT_OFFSET_Type is record
+      RTO      : Unsigned_8 := RTO_DISABLE; -- Receiver timeout value
       Reserved : Bits_24    := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_RXTOUT_Type use record
+   for XUARTPS_RXTOUT_OFFSET_Type use record
       RTO      at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
    end record;
 
-   -- XUARTPS_RXWM
+   -- XUARTPS_RXWM_OFFSET
 
-   type XUARTPS_RXWM_Type is record
-      RTRIG    : Bits_6;
+   RTRIG_DISABLE : constant := 0; -- Disables receiver FIFO trigger level function
+
+   type XUARTPS_RXWM_OFFSET_Type is record
+      RTRIG    : Bits_6  := 16#20#; -- Receiver FIFO trigger level value
       Reserved : Bits_26 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_RXWM_Type use record
+   for XUARTPS_RXWM_OFFSET_Type use record
       RTRIG    at 0 range 0 ..  5;
       Reserved at 0 range 6 .. 31;
    end record;
 
-   -- XUARTPS_MODEMCR
+   -- XUARTPS_MODEMCR_OFFSET
 
-   type XUARTPS_MODEMCR_Type is record
-      DTR       : Boolean;
-      RTS       : Boolean;
+   type XUARTPS_MODEMCR_OFFSET_Type is record
+      DTR       : Boolean := False; -- Data Terminal Ready
+      RTS       : Boolean := False; -- Request to send output control
       Reserved1 : Bits_3  := 0;
-      FCM       : Boolean;
+      FCM       : Boolean := False; -- Automatic flow control mode
       Reserved2 : Bits_26 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_MODEMCR_Type use record
+   for XUARTPS_MODEMCR_OFFSET_Type use record
       DTR       at 0 range 0 ..  0;
       RTS       at 0 range 1 ..  1;
       Reserved1 at 0 range 2 ..  4;
@@ -789,23 +823,23 @@ package ZynqA9
       Reserved2 at 0 range 6 .. 31;
    end record;
 
-   -- XUARTPS_MODEMSR
+   -- XUARTPS_MODEMSR_OFFSET
 
-   type XUARTPS_MODEMSR_Type is record
-      MEDEMSR_CTSX : Boolean;
-      MEDEMSR_DSRX : Boolean;
-      MEDEMSR_RIX  : Boolean;
-      MEDEMSR_DCDX : Boolean;
-      CTS          : Boolean;
-      DSR          : Boolean;
-      RI           : Boolean;
-      DCD          : Boolean;
-      FCMS         : Boolean;
+   type XUARTPS_MODEMSR_OFFSET_Type is record
+      MEDEMSR_CTSX : Boolean := False; -- Delta Clear To Send status
+      MEDEMSR_DSRX : Boolean := False; -- Delta Data Set Ready status
+      MEDEMSR_RIX  : Boolean := False; -- Trailing Edge Ring Indicator status
+      MEDEMSR_DCDX : Boolean := False; -- Delta Data Carrier Detect status
+      CTS          : Boolean := False; -- Clear to Send (CTS) input signal from PL (EMIOUARTxCTSN) status
+      DSR          : Boolean := False; -- Data Set Ready (DSR) input signal from PL (EMIOUARTxDSRN) status
+      RI           : Boolean := False; -- Ring Indicator (RI) input signal from PL (EMIOUARTxRIN) status
+      DCD          : Boolean := False; -- Data Carrier Detect (DCD) input signal from PL(EMIOUARTxDCDN) status
+      FCMS         : Boolean := False; -- Flow Control Mode
       Reserved     : Bits_23 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_MODEMSR_Type use record
+   for XUARTPS_MODEMSR_OFFSET_Type use record
       MEDEMSR_CTSX at 0 range 0 ..  0;
       MEDEMSR_DSRX at 0 range 1 ..  1;
       MEDEMSR_RIX  at 0 range 2 ..  2;
@@ -818,68 +852,130 @@ package ZynqA9
       Reserved     at 0 range 9 .. 31;
    end record;
 
-   -- XUARTPS_SR
+   -- XUARTPS_SR_OFFSET
 
-   type XUARTPS_SR_Type is record
-      RXOVR     : Boolean;
-      RXEMPTY   : Boolean;
-      RXFULL    : Boolean;
-      TXEMPTY   : Boolean;
-      TXFULL    : Boolean;
-      Reserved1 : Bits_5  := 0;
-      RACTIVE   : Boolean;
-      TACTIVE   : Boolean;
-      FLOWDEL   : Boolean;
-      TTRIG     : Boolean;
-      TNFUL     : Boolean;
-      Reserved2 : Bits_17 := 0;
+   type XUARTPS_SR_OFFSET_Type is record
+      RXOVR     : Boolean; -- Receiver FIFO Trigger continuous status
+      RXEMPTY   : Boolean; -- Receiver FIFO Full continuous status
+      RXFULL    : Boolean; -- Receiver FIFO Full continuous status
+      TXEMPTY   : Boolean; -- Transmitter FIFO Empty continuous status
+      TXFULL    : Boolean; -- Transmitter FIFO Full continuous status
+      Reserved1 : Bits_1;
+      Reserved2 : Bits_1;
+      Reserved3 : Bits_1;
+      Reserved4 : Bits_1;
+      Reserved5 : Bits_1;
+      RACTIVE   : Boolean; -- Receiver state machine active status
+      TACTIVE   : Boolean; -- Transmitter state machine active status
+      FLOWDEL   : Boolean; -- Receiver flow delay trigger continuous status
+      TTRIG     : Boolean; -- Transmitter FIFO Trigger continuous status
+      TNFUL     : Boolean; -- Transmitter FIFO Nearly Full continuous status
+      Reserved6 : Bits_17;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_SR_Type use record
+   for XUARTPS_SR_OFFSET_Type use record
       RXOVR     at 0 range  0 ..  0;
       RXEMPTY   at 0 range  1 ..  1;
       RXFULL    at 0 range  2 ..  2;
       TXEMPTY   at 0 range  3 ..  3;
       TXFULL    at 0 range  4 ..  4;
-      Reserved1 at 0 range  5 ..  9;
+      Reserved1 at 0 range  5 ..  5;
+      Reserved2 at 0 range  6 ..  6;
+      Reserved3 at 0 range  7 ..  7;
+      Reserved4 at 0 range  8 ..  8;
+      Reserved5 at 0 range  9 ..  9;
       RACTIVE   at 0 range 10 .. 10;
       TACTIVE   at 0 range 11 .. 11;
       FLOWDEL   at 0 range 12 .. 12;
       TTRIG     at 0 range 13 .. 13;
       TNFUL     at 0 range 14 .. 14;
-      Reserved2 at 0 range 15 .. 31;
+      Reserved6 at 0 range 15 .. 31;
    end record;
 
-   -- XUARTPS_FIFO
+   -- XUARTPS_FIFO_OFFSET
 
-   type XUARTPS_FIFO_Type is record
+   type XUARTPS_FIFO_OFFSET_Type is record
       FIFO     : Unsigned_8;
       Reserved : Bits_24    := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_FIFO_Type use record
+   for XUARTPS_FIFO_OFFSET_Type use record
       FIFO     at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
+   end record;
+
+   -- Baud_rate_divider_reg0
+
+   BDIV_IGNORED   : constant := 0;
+   BDIV_IGNORED_1 : constant := 1;
+   BDIV_IGNORED_2 : constant := 2;
+   BDIV_IGNORED_3 : constant := 3;
+
+   type Baud_rate_divider_reg0_Type is record
+      BDIV     : Unsigned_8 := 16#F#; -- Baud rate divider value
+      Reserved : Bits_24    := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for Baud_rate_divider_reg0_Type use record
+      BDIV     at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   -- Flow_delay_reg0
+
+   FDEL_DISABLE   : constant := 0;
+   FDEL_DISABLE_1 : constant := 1;
+   FDEL_DISABLE_2 : constant := 2;
+   FDEL_DISABLE_3 : constant := 3;
+
+   type Flow_delay_reg0_Type is record
+      FDEL     : Bits_6  := 0; -- RxFIFO trigger level for Ready To Send (RTS) output signal (EMIOUARTxRTSN) de-assertion
+      Reserved : Bits_26 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for Flow_delay_reg0_Type use record
+      FDEL     at 0 range 0 ..  5;
+      Reserved at 0 range 6 .. 31;
+   end record;
+
+   -- Tx_FIFO_trigger_level0
+
+   TTRIG_DISABLE : constant := 0; -- Disables transmitter FIFO trigger level function
+
+   type Tx_FIFO_trigger_level0_Type is record
+      TTRIG    : Bits_6  := 16#20#; -- Transmitter FIFO trigger level
+      Reserved : Bits_26 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for Tx_FIFO_trigger_level0_Type use record
+      TTRIG    at 0 range 0 ..  5;
+      Reserved at 0 range 6 .. 31;
    end record;
 
    -- UART layout
 
    type UART_Type is record
-      CR      : XUARTPS_CR_Type      with Volatile_Full_Access => True;
-      MR      : XUARTPS_MR_Type      with Volatile_Full_Access => True;
-      IER     : XUARTPS_IEDMSR_Type  with Volatile_Full_Access => True;
-      IDR     : XUARTPS_IEDMSR_Type  with Volatile_Full_Access => True;
-      IMR     : XUARTPS_IEDMSR_Type  with Volatile_Full_Access => True;
-      ISR     : XUARTPS_IEDMSR_Type  with Volatile_Full_Access => True;
-      BAUDGEN : XUARTPS_BAUDGEN_Type with Volatile_Full_Access => True;
-      RXTOUT  : XUARTPS_RXTOUT_Type  with Volatile_Full_Access => True;
-      RXWM    : XUARTPS_RXWM_Type    with Volatile_Full_Access => True;
-      MODEMCR : XUARTPS_MODEMCR_Type with Volatile_Full_Access => True;
-      MODEMSR : XUARTPS_MODEMSR_Type with Volatile_Full_Access => True;
-      SR      : XUARTPS_SR_Type      with Volatile_Full_Access => True;
-      FIFO    : XUARTPS_FIFO_Type    with Volatile_Full_Access => True;
+      CR      : XUARTPS_CR_OFFSET_Type      with Volatile_Full_Access => True;
+      MR      : XUARTPS_MR_OFFSET_Type      with Volatile_Full_Access => True;
+      IER     : XUARTPS_IEDMSR_OFFSET_Type  with Volatile_Full_Access => True;
+      IDR     : XUARTPS_IEDMSR_OFFSET_Type  with Volatile_Full_Access => True;
+      IMR     : XUARTPS_IEDMSR_OFFSET_Type  with Volatile_Full_Access => True;
+      ISR     : XUARTPS_IEDMSR_OFFSET_Type  with Volatile_Full_Access => True;
+      BAUDGEN : XUARTPS_BAUDGEN_OFFSET_Type with Volatile_Full_Access => True;
+      RXTOUT  : XUARTPS_RXTOUT_OFFSET_Type  with Volatile_Full_Access => True;
+      RXWM    : XUARTPS_RXWM_OFFSET_Type    with Volatile_Full_Access => True;
+      MODEMCR : XUARTPS_MODEMCR_OFFSET_Type with Volatile_Full_Access => True;
+      MODEMSR : XUARTPS_MODEMSR_OFFSET_Type with Volatile_Full_Access => True;
+      SR      : XUARTPS_SR_OFFSET_Type      with Volatile_Full_Access => True;
+      FIFO    : XUARTPS_FIFO_OFFSET_Type    with Volatile_Full_Access => True;
+      BRDR0   : Baud_rate_divider_reg0_Type with Volatile_Full_Access => True;
+      FDR0    : Flow_delay_reg0_Type        with Volatile_Full_Access => True;
+      TXFTL0  : Tx_FIFO_trigger_level0_Type with Volatile_Full_Access => True;
    end record
       with Alignment => 4;
    for UART_Type use record
@@ -896,6 +992,9 @@ package ZynqA9
       MODEMSR at 16#28# range 0 .. 31;
       SR      at 16#2C# range 0 .. 31;
       FIFO    at 16#30# range 0 .. 31;
+      BRDR0   at 16#34# range 0 .. 31;
+      FDR0    at 16#38# range 0 .. 31;
+      TXFTL0  at 16#44# range 0 .. 31;
    end record;
 
    UART0_BASEADDRESS : constant := 16#E000_0000#;
@@ -911,5 +1010,7 @@ package ZynqA9
    procedure UART_RX
       (Data : out Unsigned_8);
    procedure UART_Init;
+
+pragma Style_Checks (On);
 
 end ZynqA9;
