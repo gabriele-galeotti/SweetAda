@@ -276,6 +276,8 @@ pragma Style_Checks (Off);
 
    function ID_AA64MMFR0_EL1_Read return ID_AA64MMFR0_EL1_Type is function MRS_Read is new MRS ("id_aa64mmfr0_el1", ID_AA64MMFR0_EL1_Type); begin return MRS_Read; end ID_AA64MMFR0_EL1_Read;
    function ID_AA64MMFR1_EL1_Read return ID_AA64MMFR1_EL1_Type is function MRS_Read is new MRS ("id_aa64mmfr1_el1", ID_AA64MMFR1_EL1_Type); begin return MRS_Read; end ID_AA64MMFR1_EL1_Read;
+   function ID_AA64MMFR2_EL1_Read return ID_AA64MMFR2_EL1_Type is function MRS_Read is new MRS ("id_aa64mmfr2_el1", ID_AA64MMFR2_EL1_Type); begin return MRS_Read; end ID_AA64MMFR2_EL1_Read;
+   function ID_AA64MMFR3_EL1_Read return ID_AA64MMFR3_EL1_Type is function MRS_Read is new MRS ("id_aa64mmfr3_el1", ID_AA64MMFR3_EL1_Type); begin return MRS_Read; end ID_AA64MMFR3_EL1_Read;
 
    function ID_AA64PFR0_EL1_Read return ID_AA64PFR0_EL1_Type is function MRS_Read is new MRS ("id_aa64pfr0_el1", ID_AA64PFR0_EL1_Type); begin return MRS_Read; end ID_AA64PFR0_EL1_Read;
    function ID_AA64PFR1_EL1_Read return ID_AA64PFR1_EL1_Type is function MRS_Read is new MRS ("id_aa64pfr1_el1", ID_AA64PFR1_EL1_Type); begin return MRS_Read; end ID_AA64PFR1_EL1_Read;
