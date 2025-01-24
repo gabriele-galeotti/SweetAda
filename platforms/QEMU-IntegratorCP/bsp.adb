@@ -110,7 +110,9 @@ package body BSP
          );
       PL031.Init (PL031_Descriptor);
       -- PL110 LCD ------------------------------------------------------------
-      PL110_Descriptor.Base_Address := System'To_Address (PL110_BASEADDRESS);
+      PL110_Descriptor := (
+         Base_Address => System'To_Address (PL110_BASEADDRESS
+         );
       PL110.Init (PL110_Descriptor);
       -- Timer ----------------------------------------------------------------
       -- Timer0 runs @ 40 MHz, prescale 16 = 2.5 MHz
