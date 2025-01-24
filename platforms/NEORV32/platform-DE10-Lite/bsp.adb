@@ -58,9 +58,7 @@ package body BSP
       is
    begin
       -- wait for transmitter available
-      loop
-         exit when not UART0.CTRL.UART_CTRL_TX_FULL;
-      end loop;
+      loop exit when not UART0.CTRL.UART_CTRL_TX_FULL; end loop;
       UART0.DATA.UART_DATA_RTX := To_U8 (C);
    end Console_Putchar;
 
@@ -70,9 +68,7 @@ package body BSP
       Data : Unsigned_8;
    begin
       -- wait for receiver available
-      loop
-         exit when UART0.CTRL.UART_CTRL_RX_NEMPTY;
-      end loop;
+      loop exit when UART0.CTRL.UART_CTRL_RX_NEMPTY; end loop;
       Data := UART0.DATA.UART_DATA_RTX;
       C := To_Ch (Data);
    end Console_Getchar;

@@ -116,14 +116,14 @@ package NEORV32
    WDT_CTRL_RCAUSE_WDTRST : constant := 2#10#; -- watchdog reset
 
    type WDT_CTRL_Type is record
-      WDT_CTRL_EN      : Boolean;     -- watchdog enable
-      WDT_CTRL_LOCK    : Boolean;     -- lock configuration
-      WDT_CTRL_DBEN    : Boolean;     -- set to allow WDT to continue operation even when CPU is in debug mode
-      WDT_CTRL_SEN     : Boolean;     -- set to allow WDT to continue operation even when CPU is in sleep mode
-      WDT_CTRL_STRICT  : Boolean;     -- set to enable strict mode
-      WDT_CTRL_RCAUSE  : Bits_2;      -- cause of last system reset
-      Reserved         : Bits_1 := 0;
-      WDT_CTRL_TIMEOUT : Bits_24;     -- 24-bit watchdog timeout value
+      WDT_CTRL_EN      : Boolean;      -- watchdog enable
+      WDT_CTRL_LOCK    : Boolean;      -- lock configuration
+      WDT_CTRL_DBEN    : Boolean;      -- set to allow WDT to continue operation even when CPU is in debug mode
+      WDT_CTRL_SEN     : Boolean;      -- set to allow WDT to continue operation even when CPU is in sleep mode
+      WDT_CTRL_STRICT  : Boolean;      -- set to enable strict mode
+      WDT_CTRL_RCAUSE  : Bits_2;       -- cause of last system reset
+      Reserved         : Bits_1  := 0;
+      WDT_CTRL_TIMEOUT : Bits_24;      -- 24-bit watchdog timeout value
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -171,25 +171,25 @@ package NEORV32
    UART_CTRL_PRSC_DIV4096 : constant := 2#111#; -- Resulting clock_prescaler = 4096
 
    type UART_CTRL_Type is record
-      UART_CTRL_EN            : Boolean;     -- UART global enable
-      UART_CTRL_SIM_MODE      : Boolean;     -- Simulation output override enable
-      UART_CTRL_HWFC_EN       : Boolean;     -- Enable RTS/CTS hardware flow-control
-      UART_CTRL_PRSC          : Bits_3;      -- clock prescaler select
-      UART_CTRL_BAUD          : Bits_10;     -- BAUD rate divisor
-      UART_CTRL_RX_NEMPTY     : Boolean;     -- RX FIFO not empty
-      UART_CTRL_RX_HALF       : Boolean;     -- RX FIFO at least half-full
-      UART_CTRL_RX_FULL       : Boolean;     -- RX FIFO full
-      UART_CTRL_TX_EMPTY      : Boolean;     -- TX FIFO empty
-      UART_CTRL_TX_NHALF      : Boolean;     -- TX FIFO not at least half-full
-      UART_CTRL_TX_FULL       : Boolean;     -- TX FIFO full
-      UART_CTRL_IRQ_RX_NEMPTY : Boolean;     -- Fire IRQ if RX FIFO not empty
-      UART_CTRL_IRQ_RX_HALF   : Boolean;     -- Fire IRQ if RX FIFO at least half-full
-      UART_CTRL_IRQ_RX_FULL   : Boolean;     -- Fire IRQ if RX FIFO full
-      UART_CTRL_IRQ_TX_EMPTY  : Boolean;     -- Fire IRQ if TX FIFO empty
-      UART_CTRL_IRQ_TX_NHALF  : Boolean;     -- Fire IRQ if TX FIFO not at least half-full
-      Reserved                : Bits_3 := 0;
-      UART_CTRL_RX_OVER       : Boolean;     -- RX FIFO overflow
-      UART_CTRL_TX_BUSY       : Boolean;     -- Transmitter busy or TX FIFO not empty
+      UART_CTRL_EN            : Boolean;      -- UART global enable
+      UART_CTRL_SIM_MODE      : Boolean;      -- Simulation output override enable
+      UART_CTRL_HWFC_EN       : Boolean;      -- Enable RTS/CTS hardware flow-control
+      UART_CTRL_PRSC          : Bits_3;       -- clock prescaler select
+      UART_CTRL_BAUD          : Bits_10;      -- BAUD rate divisor
+      UART_CTRL_RX_NEMPTY     : Boolean;      -- RX FIFO not empty
+      UART_CTRL_RX_HALF       : Boolean;      -- RX FIFO at least half-full
+      UART_CTRL_RX_FULL       : Boolean;      -- RX FIFO full
+      UART_CTRL_TX_EMPTY      : Boolean;      -- TX FIFO empty
+      UART_CTRL_TX_NHALF      : Boolean;      -- TX FIFO not at least half-full
+      UART_CTRL_TX_FULL       : Boolean;      -- TX FIFO full
+      UART_CTRL_IRQ_RX_NEMPTY : Boolean;      -- Fire IRQ if RX FIFO not empty
+      UART_CTRL_IRQ_RX_HALF   : Boolean;      -- Fire IRQ if RX FIFO at least half-full
+      UART_CTRL_IRQ_RX_FULL   : Boolean;      -- Fire IRQ if RX FIFO full
+      UART_CTRL_IRQ_TX_EMPTY  : Boolean;      -- Fire IRQ if TX FIFO empty
+      UART_CTRL_IRQ_TX_NHALF  : Boolean;      -- Fire IRQ if TX FIFO not at least half-full
+      Reserved                : Bits_3  := 0;
+      UART_CTRL_RX_OVER       : Boolean;      -- RX FIFO overflow
+      UART_CTRL_TX_BUSY       : Boolean;      -- Transmitter busy or TX FIFO not empty
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -216,10 +216,10 @@ package NEORV32
    end record;
 
    type UART_DATA_Type is record
-      UART_DATA_RTX          : Unsigned_8;   -- UART receive/transmit data
-      UART_DATA_RX_FIFO_SIZE : Bits_4 := 0;  -- log2(RX FIFO size)
-      UART_DATA_TX_FIFO_SIZE : Bits_4 := 0;  -- log2(TX FIFO size)
-      Reserved               : Bits_16 := 0;
+      UART_DATA_RTX          : Unsigned_8;      -- UART receive/transmit data
+      UART_DATA_RX_FIFO_SIZE : Bits_4     := 0; -- log2(RX FIFO size)
+      UART_DATA_TX_FIFO_SIZE : Bits_4     := 0; -- log2(TX FIFO size)
+      Reserved               : Bits_16    := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
