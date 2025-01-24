@@ -68,6 +68,15 @@ package Definitions
    GB1    : constant := MB1024;
    GB2    : constant := 2**31;
    GB4    : constant := 2**32;
+   GB8    : constant := 2**33;
+   GB16   : constant := 2**34;
+   GB32   : constant := 2**35;
+   GB64   : constant := 2**36;
+   GB128  : constant := 2**37;
+   GB256  : constant := 2**38;
+   GB512  : constant := 2**39;
+   GB1024 : constant := 2**40;
+   TB1    : constant := GB1024;
 
    -- various constants
    kHz1 : constant := 1_000;
@@ -77,15 +86,16 @@ package Definitions
    -- common known clock rates in Hz
    CLK_RTC32k   : constant :=     32_768; -- 2**15
    CLK_RTC1M    : constant :=  1_048_576; -- 2**20
-   CLK_UART1M8  : constant :=  1_843_200; -- 3**2 * 5**2 * 2**13
+   CLK_UART1M8  : constant :=  1_843_200; -- 115_200 * 16
    CLK_RTC2M    : constant :=  2_097_152; -- 2**21
-   CLK_UART2M4  : constant :=  2_457_600; -- CLK_UART1M8 * 4/3
-   CLK_NTSC     : constant :=  3_579_545; -- 5 * 10**6 * 63/88
+   CLK_UART2M4  : constant :=  2_457_600; -- 9_600 * 16**2 = CLK_UART1M8 * 4/3
+   CLK_NTSC     : constant :=  3_579_545; -- 315_000_000 / 88
    CLK_UART3M6  : constant :=  3_686_400; -- CLK_UART1M8 * 2
    CLK_RTC4M    : constant :=  4_194_304; -- 2**22
    CLK_PAL      : constant :=  4_433_619; -- 283.75 * 15625 + 25
+   CLK_PC5150   : constant :=  4_772_727; -- CLK_NTSC * 4/3
    CLK_UART4M9  : constant :=  4_915_200; -- CLK_UART1M8 * 8/3
-   CLK_PALAmiga : constant :=  7_093_790; -- CLK_PAL28M / 4
+   CLK_PALAmiga : constant :=  7_093_790; -- CLK_PAL * 8/5 = CLK_PAL28M / 4
    CLK_NTSCx2   : constant :=  7_159_090; -- CLK_NTSC * 2
    CLK_UART7M3  : constant :=  7_372_800; -- CLK_UART1M8 * 4
    CLK_NTSCx4   : constant := 14_318_182; -- CLK_NTSC * 4
@@ -95,26 +105,52 @@ package Definitions
 
    -- serial port baud rates
    type Baud_Rate_Type is
-      (BR_300,
+      (BR_50,
+       BR_75,
+       BR_110,
+       BR_134,
+       BR_150,
+       BR_200,
+       BR_300,
+       BR_600,
        BR_1200,
+       BR_1800,
        BR_2400,
        BR_4800,
        BR_9600,
        BR_19200,
+       BR_28800,
        BR_38400,
        BR_57600,
+       BR_76800,
        BR_115200,
-       BR_230400);
+       BR_230400,
+       BR_460800,
+       BR_576000,
+       BR_921600);
    for Baud_Rate_Type use
-      (300,
+      (50,
+       75,
+       110,
+       134,
+       150,
+       200,
+       300,
+       600,
        1_200,
+       1_800,
        2_400,
        4_800,
        9_600,
        19_200,
+       28_800,
        38_400,
        57_600,
+       76_800,
        115_200,
-       230_400);
+       230_400,
+       460_800,
+       576_000,
+       921_600);
 
 end Definitions;
