@@ -2103,16 +2103,16 @@ pragma Style_Checks (Off);
    -- 20.3.8 RTCSEC Register – BCD Format
 
    type RTCSEC_BCD_Type is record
-      Seconds_LOW : Bits_4;      -- Seconds – low digit (0 to 9)
-      Seconds_HI  : Bits_3;      -- Seconds – high digit (0 to 5)
-      Reserved    : Bits_1 := 0;
+      Seconds_LO : Bits_4;      -- Seconds – low digit (0 to 9)
+      Seconds_HI : Bits_3;      -- Seconds – high digit (0 to 5)
+      Reserved   : Bits_1 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
    for RTCSEC_BCD_Type use record
-      Seconds_LOW at 0 range 0 .. 3;
-      Seconds_HI  at 0 range 4 .. 6;
-      Reserved    at 0 range 7 .. 7;
+      Seconds_LO at 0 range 0 .. 3;
+      Seconds_HI at 0 range 4 .. 6;
+      Reserved   at 0 range 7 .. 7;
    end record;
 
    -- 20.3.9 RTCMIN Register – Hexadecimal Format
@@ -2131,16 +2131,16 @@ pragma Style_Checks (Off);
    -- 20.3.10 RTCMIN Register – BCD Format
 
    type RTCMIN_BCD_Type is record
-      Minutes_LOW : Bits_4;      -- Minutes – low digit (0 to 9)
-      Minutes_HI  : Bits_3;      -- Minutes – high digit (0 to 5)
-      Reserved    : Bits_1 := 0;
+      Minutes_LO : Bits_4;      -- Minutes – low digit (0 to 9)
+      Minutes_HI : Bits_3;      -- Minutes – high digit (0 to 5)
+      Reserved   : Bits_1 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
    for RTCMIN_BCD_Type use record
-      Minutes_LOW at 0 range 0 .. 3;
-      Minutes_HI  at 0 range 4 .. 6;
-      Reserved    at 0 range 7 .. 7;
+      Minutes_LO at 0 range 0 .. 3;
+      Minutes_HI at 0 range 4 .. 6;
+      Reserved   at 0 range 7 .. 7;
    end record;
 
    -- 20.3.11 RTCHOUR Register – Hexadecimal Format
@@ -2159,16 +2159,335 @@ pragma Style_Checks (Off);
    -- 20.3.12 RTCHOUR Register – BCD Format
 
    type RTCHOUR_BCD_Type is record
-      Hours_LOW : Bits_4;      -- Hours – low digit (0 to 9)
-      Hours_HI  : Bits_2;      -- Hours – high digit (0 to 2)
-      Reserved  : Bits_2 := 0;
+      Hours_LO : Bits_4;      -- Hours – low digit (0 to 9)
+      Hours_HI : Bits_2;      -- Hours – high digit (0 to 2)
+      Reserved : Bits_2 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
    for RTCHOUR_BCD_Type use record
-      Hours_LOW at 0 range 0 .. 3;
-      Hours_HI  at 0 range 4 .. 5;
-      Reserved  at 0 range 6 .. 7;
+      Hours_LO at 0 range 0 .. 3;
+      Hours_HI at 0 range 4 .. 5;
+      Reserved at 0 range 6 .. 7;
+   end record;
+
+   -- 20.3.13 RTCDOW Register
+
+   type RTCDOW_Type is record
+      Day_of_week : Bits_3;      -- Day of week (0 to 6)
+      Reserved    : Bits_5 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCDOW_Type use record
+      Day_of_week at 0 range 0 .. 2;
+      Reserved    at 0 range 3 .. 7;
+   end record;
+
+   -- 20.3.14 RTCDAY Register – Hexadecimal Format
+
+   type RTCDAY_HEX_Type is record
+      Day_of_month : Bits_5;      -- Day of month (1 to 28, 29, 30, 31)
+      Reserved     : Bits_3 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCDAY_HEX_Type use record
+      Day_of_month at 0 range 0 .. 4;
+      Reserved     at 0 range 5 .. 7;
+   end record;
+
+   -- 20.3.15 RTCDAY Register – BCD Format
+
+   type RTCDAY_BCD_Type is record
+      Day_of_month_LO : Bits_4;      -- Day of month – low digit (0 to 9)
+      Day_of_month_HI : Bits_2;      -- Day of month – high digit (0 to 3)
+      Reserved        : Bits_2 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCDAY_BCD_Type use record
+      Day_of_month_LO at 0 range 0 .. 3;
+      Day_of_month_HI at 0 range 4 .. 5;
+      Reserved        at 0 range 6 .. 7;
+   end record;
+
+   -- 20.3.16 RTCMON Register – Hexadecimal Format
+
+   type RTCMON_HEX_Type is record
+      Month    : Bits_4;      -- Month (1 to 12)
+      Reserved : Bits_4 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCMON_HEX_Type use record
+      Month    at 0 range 0 .. 3;
+      Reserved at 0 range 4 .. 7;
+   end record;
+
+   -- 20.3.17 RTCMON Register – BCD Format
+
+   type RTCMON_BCD_Type is record
+      Month_LO : Bits_4;      -- Month – low digit (0 to 9)
+      Month_HI : Bits_1;      -- Month – high digit (0 or 1)
+      Reserved : Bits_3 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCMON_BCD_Type use record
+      Month_LO at 0 range 0 .. 3;
+      Month_HI at 0 range 4 .. 4;
+      Reserved at 0 range 5 .. 7;
+   end record;
+
+   -- 20.3.18 RTCYEAR Register – Hexadecimal Format
+
+   type RTCYEAR_HEX_Type is record
+      Year_LO  : Bits_8;      -- Year – low byte.
+      Year_HI  : Bits_4;      -- Year – high byte.
+      Reserved : Bits_4 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for RTCYEAR_HEX_Type use record
+      Year_LO  at 0 range  0 ..  7;
+      Year_HI  at 0 range  8 .. 11;
+      Reserved at 0 range 12 .. 15;
+   end record;
+
+   -- 20.3.19 RTCYEAR Register – BCD Format
+
+   type RTCYEAR_BCD_Type is record
+      Year       : Bits_4;      -- Year – lowest digit (0 to 9)
+      Decade     : Bits_4;      -- Decade (0 to 9)
+      Century_LO : Bits_4;      -- Century – low digit (0 to 9)
+      Century_HI : Bits_3;      -- Century – high digit (0 to 4)
+      Reserved   : Bits_1 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for RTCYEAR_BCD_Type use record
+      Year       at 0 range  0 ..  3;
+      Decade     at 0 range  4 ..  7;
+      Century_LO at 0 range  8 .. 11;
+      Century_HI at 0 range 12 .. 14;
+      Reserved   at 0 range 15 .. 15;
+   end record;
+
+   -- 20.3.20 RTCAMIN Register – Hexadecimal Format
+
+   type RTCAMIN_HEX_Type is record
+      Minutes  : Bits_6;           -- Minutes (0 to 59)
+      Reserved : Bits_1  := 0;
+      AE       : Boolean := False; -- Alarm enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCAMIN_HEX_Type use record
+      Minutes  at 0 range 0 .. 5;
+      Reserved at 0 range 6 .. 6;
+      AE       at 0 range 7 .. 7;
+   end record;
+
+   -- 20.3.21 RTCAMIN Register – BCD Format
+
+   type RTCAMIN_BCD_Type is record
+      Minutes_LO : Bits_4;           -- Minutes – low digit (0 to 9)
+      Minutes_HI : Bits_3;           -- Minutes – high digit (0 to 5)
+      AE         : Boolean := False; -- Alarm enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCAMIN_BCD_Type use record
+      Minutes_LO at 0 range 0 .. 3;
+      Minutes_HI at 0 range 4 .. 6;
+      AE         at 0 range 7 .. 7;
+   end record;
+
+   -- 20.3.22 RTCAHOUR Register – Hexadecimal Format
+
+   type RTCAHOUR_HEX_Type is record
+      Hours    : Bits_5;           -- Hours (0 to 23)
+      Reserved : Bits_2 := 0;
+      AE       : Boolean := False; -- Alarm enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCAHOUR_HEX_Type use record
+      Hours    at 0 range 0 .. 4;
+      Reserved at 0 range 5 .. 6;
+      AE       at 0 range 7 .. 7;
+   end record;
+
+   -- 20.3.23 RTCAHOUR Register – BCD Format
+
+   type RTCAHOUR_BCD_Type is record
+      Hours_LO : Bits_4;           -- Hours – low digit (0 to 9)
+      Hours_HI : Bits_2;           -- Hours – high digit (0 to 2)
+      Reserved : Bits_1  := 0;
+      AE       : Boolean := False; -- Alarm enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCAHOUR_BCD_Type use record
+      Hours_LO at 0 range 0 .. 3;
+      Hours_HI at 0 range 4 .. 5;
+      Reserved at 0 range 6 .. 6;
+      AE       at 0 range 7 .. 7;
+   end record;
+
+   -- 20.3.24 RTCADOW Register – Calendar Mode
+
+   type RTCADOW_Type is record
+      Day_of_week : Bits_3;           -- Day of week (0 to 6)
+      Reserved    : Bits_4  := 0;
+      AE          : Boolean := False; -- Alarm enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCADOW_Type use record
+      Day_of_week at 0 range 0 .. 2;
+      Reserved    at 0 range 3 .. 6;
+      AE          at 0 range 7 .. 7;
+   end record;
+
+   -- 20.3.25 RTCADAY Register – Hexadecimal Format
+
+   type RTCADAY_HEX_Type is record
+      Day_of_month : Bits_5;           -- Day of month (1 to 28, 29, 30, 31)
+      Reserved     : Bits_2  := 0;
+      AE           : Boolean := False; -- Alarm enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCADAY_HEX_Type use record
+      Day_of_month at 0 range 0 .. 4;
+      Reserved     at 0 range 5 .. 6;
+      AE           at 0 range 7 .. 7;
+   end record;
+
+   -- 20.3.26 RTCADAY Register – BCD Format
+
+   type RTCADAY_BCD_Type is record
+      Day_of_month_LO : Bits_4;           -- Day of month – low digit (0 to 9)
+      Day_of_month_HI : Bits_2;           -- Day of month – high digit (0 to 3)
+      Reserved        : Bits_1  := 0;
+      AE              : Boolean := False; -- Alarm enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCADAY_BCD_Type use record
+      Day_of_month_LO at 0 range 0 .. 3;
+      Day_of_month_HI at 0 range 4 .. 5;
+      Reserved        at 0 range 6 .. 6;
+      AE              at 0 range 7 .. 7;
+   end record;
+
+   -- 20.3.27 RTCPS0CTL Register
+   -- 20.3.28 RTCPS1CTL Register
+
+   RTxIP_DIV2   : constant := 2#000#; -- Divide by 2
+   RTxIP_DIV4   : constant := 2#001#; -- Divide by 4
+   RTxIP_DIV8   : constant := 2#010#; -- Divide by 8
+   RTxIP_DIV16  : constant := 2#011#; -- Divide by 16
+   RTxIP_DIV32  : constant := 2#100#; -- Divide by 32
+   RTxIP_DIV64  : constant := 2#101#; -- Divide by 64
+   RTxIP_DIV128 : constant := 2#110#; -- Divide by 128
+   RTxIP_DIV256 : constant := 2#111#; -- Divide by 256
+
+   type RTCPS0CTL_Type is record
+      RT0PSIFG : Boolean := False;      -- Prescale timer 0 interrupt flag.
+      RT0PSIE  : Boolean := False;      -- Prescale timer 0 interrupt enable
+      RT0IP    : Bits_3  := RTxIP_DIV2; -- Prescale timer 0 interrupt interval
+      Reserved : Bits_11 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for RTCPS0CTL_Type use record
+      RT0PSIFG at 0 range 0 ..  0;
+      RT0PSIE  at 0 range 1 ..  1;
+      RT0IP    at 0 range 2 ..  4;
+      Reserved at 0 range 5 .. 15;
+   end record;
+
+   type RTCPS1CTL_Type is record
+      RT1PSIFG : Boolean := False;      -- Prescale timer 1 interrupt flag.
+      RT1PSIE  : Boolean := False;      -- Prescale timer 1 interrupt enable
+      RT1IPx   : Bits_3  := RTxIP_DIV2; -- Prescale timer 1 interrupt interval
+      Reserved : Bits_11 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for RTCPS1CTL_Type use record
+      RT1PSIFG at 0 range 0 ..  0;
+      RT1PSIE  at 0 range 1 ..  1;
+      RT1IPx   at 0 range 2 ..  4;
+      Reserved at 0 range 5 .. 15;
+   end record;
+
+   -- 20.3.29 RTCPS0 Register
+
+   type RTCPS0_Type is record
+      RT0PS : Unsigned_8 := 0; -- Prescale timer 0 counter value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCPS0_Type use record
+      RT0PS at 0 range 0 .. 7;
+   end record;
+
+   -- 20.3.30 RTCPS1 Register
+
+   type RTCPS1_Type is record
+      RT1PS : Unsigned_8 := 0; -- Prescale timer 1 counter value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RTCPS1_Type use record
+      RT1PS at 0 range 0 .. 7;
+   end record;
+
+   -- 20.3.31 RTCIV Register
+
+   RTCIVx_NONE      : constant := 16#00#; -- No interrupt pending
+   RTCIVx_RTCOFIFG  : constant := 16#02#; -- Interrupt Source: RTC oscillator failure; Interrupt Flag: RTCOFIFG; Interrupt Priority: Highest
+   RTCIVx_RTCRDYIFG : constant := 16#04#; -- Interrupt Source: RTC ready; Interrupt Flag: RTCRDYIFG
+   RTCIVx_RTCTEVIFG : constant := 16#06#; -- Interrupt Source: RTC interval timer; Interrupt Flag: RTCTEVIFG
+   RTCIVx_RTCAIFG   : constant := 16#08#; -- Interrupt Source: RTC user alarm; Interrupt Flag: RTCAIFG
+   RTCIVx_RT0PSIFG  : constant := 16#0A#; -- Interrupt Source: RTC prescaler 0; Interrupt Flag: RT0PSIFG
+   RTCIVx_RT1PSIFG  : constant := 16#0C#; -- Interrupt Source: RTC prescaler 1; Interrupt Flag: RT1PSIFG
+   RTCIVx_RSVD      : constant := 16#0E#; -- Reserved
+   RTCIVx_RSVD_IPL  : constant := 16#10#; -- Reserved ; Interrupt Priority: Lowest
+
+   type RTCIV_Type is record
+      RTCIVx : Bits_16; -- Real-time clock interrupt vector value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for RTCIV_Type use record
+      RTCIVx at 0 range 0 .. 15;
+   end record;
+
+   -- 20.3.32 RTCBIN2BCD Register
+
+   type RTCBIN2BCD_Type is record
+      BIN2BCDx : Unsigned_16; -- Read: 16-bit BCD conversion of previously written 12-bit binary number. Write: 12-bit binary number to be converted.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for RTCBIN2BCD_Type use record
+      BIN2BCDx at 0 range 0 .. 15;
+   end record;
+
+   -- 20.3.33 RTCBCD2BIN Register
+
+   type RTCBCD2BIN_Type is record
+      BCD2BINx : Unsigned_16; -- Read: 12-bit binary conversion of previously written 16-bit BCD number. Write: 16-bit BCD number to be converted.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for RTCBCD2BIN_Type use record
+      BCD2BINx at 0 range 0 .. 15;
    end record;
 
    -- Table 20-1. RTC_C Registers
@@ -2243,6 +2562,132 @@ pragma Style_Checks (Off);
 
    RTCHOUR_BCD : aliased RTCHOUR_BCD_Type
       with Address              => System'To_Address (RTC_BASEADDRESS + 16#12#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCDOW : aliased RTCDOW_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#13#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCDAY_HEX : aliased RTCDAY_HEX_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#14#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCDAY_BCD : aliased RTCDAY_BCD_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#14#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCMON_HEX : aliased RTCMON_HEX_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#15#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCMON_BCD : aliased RTCMON_BCD_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#15#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCYEAR_HEX : aliased RTCYEAR_HEX_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#16#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCYEAR_BCD : aliased RTCYEAR_BCD_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#16#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCAMIN_HEX : aliased RTCAMIN_HEX_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#18#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCAMIN_BCD : aliased RTCAMIN_BCD_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#18#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCAHOUR_HEX : aliased RTCAHOUR_HEX_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#19#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCAHOUR_BCD : aliased RTCAHOUR_BCD_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#19#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCADOW : aliased RTCADOW_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#1A#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCADAY_HEX : aliased RTCADAY_HEX_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#1B#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCADAY_BCD : aliased RTCADAY_BCD_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#1B#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCPS0CTL : aliased RTCPS0CTL_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#08#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCPS1CTL : aliased RTCPS1CTL_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#0A#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCPS0 : aliased RTCPS0_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#0C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCPS1 : aliased RTCPS1_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#0D#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCIV : aliased RTCIV_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#0E#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCBIN2BCD : aliased RTCBIN2BCD_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#1C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   RTCBCD2BIN : aliased RTCBCD2BIN_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#1E#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
