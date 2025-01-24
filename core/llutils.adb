@@ -166,26 +166,26 @@ package body LLutils
    separate;
 
    ----------------------------------------------------------------------------
-   -- BCD2U8
+   -- BCD_To_U8
    ----------------------------------------------------------------------------
-   function BCD2U8
+   function BCD_To_U8
       (V : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8
       is
    begin
       return (V and 16#0F#) + Bits.ShR (V, 4) * 10;
-   end BCD2U8;
+   end BCD_To_U8;
 
    ----------------------------------------------------------------------------
-   -- U82BCD
+   -- U8_To_BCD
    ----------------------------------------------------------------------------
-   function U82BCD
+   function U8_To_BCD
       (V : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8
       is
    begin
       return Bits.ShL (V / 10, 4) + V mod 10;
-   end U82BCD;
+   end U8_To_BCD;
 
    ----------------------------------------------------------------------------
    -- To_Ch

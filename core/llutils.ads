@@ -141,14 +141,14 @@ package LLutils
    ----------------------------------------------------------------------------
    -- Transform an Unsigned_8 from BCD form.
    ----------------------------------------------------------------------------
-   function BCD2U8
+   function BCD_To_U8
       (V : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8;
 
    ----------------------------------------------------------------------------
    -- Transform an Unsigned_8 in BCD form.
    ----------------------------------------------------------------------------
-   function U82BCD
+   function U8_To_BCD
       (V : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8;
 
