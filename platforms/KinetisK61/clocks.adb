@@ -60,7 +60,6 @@ package body Clocks
          others => <>
          );
       MCG_C1 := (
-         -- IRCLKEN => True,
          IREFS   => IREFS_EXT,
          FRDIV   => FRDIV_64_1280, -- 50 MHz / 1280 = 39.0625 kHz
          -- CLKS    => CLKS_FLLPLLCS, -- go to FEE
