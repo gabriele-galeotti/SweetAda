@@ -37,6 +37,13 @@ startcode:
                 msr     cpacr_el1,x0
 
                 //
+                // Enable CPUECTLR_EL1.SMPEN.
+                //
+                mrs     x0,s3_1_c15_c2_1
+                orr     x0,x0,#0x40
+                msr     s3_1_c15_c2_1,x0
+
+                //
                 // Ensure completion of previous instructions.
                 //
                 isb
