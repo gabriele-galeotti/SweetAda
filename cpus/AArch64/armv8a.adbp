@@ -253,6 +253,13 @@ pragma Style_Checks (Off);
 
    function CLIDR_EL1_Read return CLIDR_EL1_Type is function MRS_Read is new MRS ("clidr_el1", CLIDR_EL1_Type); begin return MRS_Read; end CLIDR_EL1_Read;
 
+   function CPACR_EL1_Read return CPACR_EL1_Type is function MRS_Read is new MRS ("cpacr_el1", CPACR_EL1_Type); begin return MRS_Read; end CPACR_EL1_Read;
+   procedure CPACR_EL1_Write (Value : in CPACR_EL1_Type) is procedure MSR_Write is new MSR ("cpacr_el1", CPACR_EL1_Type); begin MSR_Write (Value); end CPACR_EL1_Write;
+#if CPACR_EL12
+   function CPACR_EL12_Read return CPACR_EL1_Type is function MRS_Read is new MRS ("cpacr_el12", CPACR_EL1_Type); begin return MRS_Read; end CPACR_EL12_Read;
+   procedure CPACR_EL12_Write (Value : in CPACR_EL1_Type) is procedure MSR_Write is new MSR ("cpacr_el12", CPACR_EL1_Type); begin MSR_Write (Value); end CPACR_EL12_Write;
+#end if;
+
    function FAR_EL1_Read return Unsigned_64 is function MRS_Read is new MRS ("far_el1", Unsigned_64); begin return MRS_Read; end FAR_EL1_Read;
    procedure FAR_EL1_Write (Value : in Unsigned_64) is procedure MSR_Write is new MSR ("far_el1", Unsigned_64); begin MSR_Write (Value); end FAR_EL1_Write;
 #if FAR_EL12
