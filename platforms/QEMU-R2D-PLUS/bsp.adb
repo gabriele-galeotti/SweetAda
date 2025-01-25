@@ -55,9 +55,7 @@ package body BSP
       is
    begin
       -- wait for transmitter available
-      loop
-         exit when SCIF.SCFDR2.T < 16#10#;
-      end loop;
+      loop exit when SCIF.SCFDR2.T < 16#10#; end loop;
       SCIF.SCFTDR2 := To_U8 (C);
    end Console_Putchar;
 
@@ -67,9 +65,7 @@ package body BSP
       Data : Unsigned_8;
    begin
       -- wait for receiver available
-      loop
-         exit when SCIF.SCFDR2.R > 0;
-      end loop;
+      loop exit when SCIF.SCFDR2.R > 0; end loop;
       Data := SCIF.SCFRDR2;
       SCIF.SCFSR2.RDF := False;
       C := To_Ch (Data);
