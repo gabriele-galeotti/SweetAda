@@ -50,6 +50,7 @@ package body Exceptions
    procedure Exception_Process
       is
    begin
+      Console.Print ("*** EXCEPTION", NL => True);
       Abort_Library.System_Abort;
    end Exception_Process;
 
