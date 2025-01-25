@@ -157,7 +157,8 @@ gccdefines=""
 
 gccdefines=${gccdefines}${NL}
 gccdefines=${gccdefines}$(printf "%s\n" "package ${PACKAGE_NAME}")${NL}
-gccdefines=${gccdefines}$(printf "%s%s\n" "${indent}" "with Pure => True")${NL}
+gccdefines=${gccdefines}$(printf "%s%s\n" "${indent}" "with Pure       => True,")${NL}
+gccdefines=${gccdefines}$(printf "%s%s\n" "${indent}" "     SPARK_Mode => On")${NL}
 gccdefines=${gccdefines}$(printf "%s%s\n" "${indent}" "is")${NL}
 gccdefines=${gccdefines}${NL}
 
