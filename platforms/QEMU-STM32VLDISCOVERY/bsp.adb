@@ -78,9 +78,7 @@ package body BSP
       is
    begin
       -- wait for transmitter available
-      loop
-         exit when USART1.USART_SR.TXE;
-      end loop;
+      loop exit when USART1.USART_SR.TXE; end loop;
       USART1.USART_DR.DR := To_U8 (C);
    end Console_Putchar;
 
@@ -90,9 +88,7 @@ package body BSP
       Data : Unsigned_8;
    begin
       -- wait for receiver available
-      loop
-         exit when USART1.USART_SR.RXNE;
-      end loop;
+      loop exit when USART1.USART_SR.RXNE; end loop;
       Data := USART1.USART_DR.DR;
       C := To_Ch (Data);
    end Console_Getchar;
