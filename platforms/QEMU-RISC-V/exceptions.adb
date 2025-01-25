@@ -69,7 +69,11 @@ package body Exceptions
                -- Machine external interrupt
                null;
             when others       =>
-               Console.Print (MXLEN_Type (mcause.Exception_Code), Prefix => "*** EXCEPTION #", NL => True);
+               Console.Print (
+                  Prefix => "*** EXCEPTION",
+                  Value  => MXLEN_Type (mcause.Exception_Code),
+                  NL     => True
+                  );
                Abort_Library.System_Abort;
          end case;
       else
@@ -89,9 +93,13 @@ package body Exceptions
                when EXC_ENVCALLMMODE  => MsgPtr := MsgPtr_EXC_ENVCALLMMODE;
                when others            => MsgPtr := MsgPtr_EXC_UNKNOWN;
             end case;
-            Console.Print (MXLEN_Type (mcause.Exception_Code), Prefix => "*** EXCEPTION #", NL => True);
+            Console.Print (
+               Prefix => "*** EXCEPTION",
+               Value  => MXLEN_Type (mcause.Exception_Code),
+               NL     => True
+               );
             Console.Print (MsgPtr.all, NL => True);
-            Console.Print (mepc_Read, Prefix => "MEPC: ", NL => True);
+            Console.Print (Prefix => "MEPC: ", Value => mepc_Read, NL => True);
             Abort_Library.System_Abort;
          end;
       end if;
