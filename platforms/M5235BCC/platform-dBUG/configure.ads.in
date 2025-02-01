@@ -1,12 +1,23 @@
 
+with Definitions;
+
 package Configure
    with Pure => True
    is
+
+   use Definitions;
 
    -- PLATFORM and CPU definitions
    PLATFORM    : constant String := "M5235BCC";
    SUBPLATFORM : constant String := "dBUG";
    CPU         : constant String := "@CPU@";
    CPU_MODEL   : constant String := "@CPU_MODEL@";
+
+   -- basic configuration parameters
+   FREF_FREQUENCY : constant := 25 * MHz1;
+   FSYS_FREQUENCY : constant := 150 * MHz1;
+
+   -- MII
+   MII_ADDRESS : constant := 1;
 
 end Configure;
