@@ -35,6 +35,8 @@ package M68k
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
    -- Generic definitions
    ----------------------------------------------------------------------------
@@ -568,5 +570,7 @@ package M68k
       with Inline => True;
    procedure Irq_Disable
       with Inline => True;
+
+pragma Style_Checks (On);
 
 end M68k;
