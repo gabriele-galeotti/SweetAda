@@ -312,6 +312,7 @@ USE_APPLICATION    := dummy
 OPTIMIZATION_LEVEL :=
 STACK_LIMIT        := 4096
 POSTBUILD_ROMFILE  :=
+KERNEL_ENTRY_POINT := _start
 
 IMPLICIT_ALI_UNITS :=
 EXTERNAL_OBJECTS   :=
@@ -754,6 +755,7 @@ export                           \
        TOOLCHAIN_CC              \
        TOOLCHAIN_GDB             \
        TOOLCHAIN_LD              \
+       TOOLCHAIN_NM              \
        TOOLCHAIN_OBJDUMP         \
        TOOLCHAIN_RANLIB          \
        GCC_VERSION               \
@@ -809,7 +811,8 @@ export                                \
        EXTERNAL_OBJECTS               \
        STACK_LIMIT                    \
        GNATBIND_SECSTACK              \
-       POSTBUILD_COMMAND
+       POSTBUILD_COMMAND              \
+       KERNEL_ENTRY_POINT
 
 export USE_ELFTOOL
 ifeq ($(USE_ELFTOOL),Y)
@@ -1171,8 +1174,14 @@ endif
 	@$(call echo-print,"")
 ifeq ($(USE_ELFTOOL),Y)
 	@$(ELFTOOL) -c dumpsections $@
+	@$(call echo-print,"")
 else
 	@$(SIZE) $@
+endif
+ifeq ($(USE_ELFTOOL),Y)
+	@$(ELFTOOL) -p "Kernel entry point: " -c findsymbol=$(KERNEL_ENTRY_POINT) $@
+else
+	@$(ELFSYMBOL) -p "Kernel entry point: " $(KERNEL_ENTRY_POINT) $@
 endif
 	@$(call echo-print,"")
 
@@ -1406,6 +1415,7 @@ endif
 ifneq ($(EXTERNAL_OBJECTS),)
 	@$(call echo-print,"EXTERNAL OBJECTS:        $(EXTERNAL_OBJECTS)")
 endif
+	@$(call echo-print,"KERNEL ENTRY POINT:      $(KERNEL_ENTRY_POINT)")
 	@$(call echo-print,"")
 
 #
