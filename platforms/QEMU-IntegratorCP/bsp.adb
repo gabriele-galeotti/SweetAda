@@ -111,7 +111,7 @@ package body BSP
       PL031.Init (PL031_Descriptor);
       -- PL110 LCD ------------------------------------------------------------
       PL110_Descriptor := (
-         Base_Address => System'To_Address (PL110_BASEADDRESS
+         Base_Address => System'To_Address (PL110_BASEADDRESS)
          );
       PL110.Init (PL110_Descriptor);
       -- Timer ----------------------------------------------------------------
