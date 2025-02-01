@@ -21,6 +21,7 @@ with Configure;
 with MIPS;
 with PCI;
 with GT64120;
+with PIIX4;
 with MC146818A;
 with UART16x50;
 with IDE;
@@ -50,8 +51,6 @@ package Malta
    CBUS_UART_BASEADDRESS  : constant := KSEG1_ADDRESS + 16#1F00_0900#;
    -- GT64120 default base address = 0x14000000
    GT64120_BASEADDRESS    : constant := KSEG1_ADDRESS + 16#1400_0000#;
-   -- PCI devices I/O space
-   PIIX4_BASEADDRESS      : constant := KSEG1_ADDRESS + 16#1800_0000#;
 
    ----------------------------------------------------------------------------
    -- Malta peripherals

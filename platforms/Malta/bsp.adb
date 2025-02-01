@@ -24,6 +24,7 @@ with Secondary_Stack;
 with MIPS;
 with MIPS32;
 with Core;
+with PIIX4;
 with Malta;
 with VGA;
 with Exceptions;
@@ -102,7 +103,7 @@ package body BSP
       PIIX4_PIC_Init;
       -- PIIX4 MC146818A RTC --------------------------------------------------
       PIIX4_RTC_Descriptor := (
-         Base_Address  => System'To_Address (PIIX4_BASEADDRESS + 16#0000_0070#),
+         Base_Address  => System'To_Address (PIIX4.BASEADDRESS + 16#0000_0070#),
          Scale_Address => 0,
          Flags         => (null record),
          Read_8        => Malta.RTC_Register_Read'Access,
@@ -112,7 +113,7 @@ package body BSP
       -- PIIX4 UARTs ----------------------------------------------------------
       PIIX4_UART1_Descriptor := (
          Uart_Model    => UART16x50.UART16450,
-         Base_Address  => System'To_Address (PIIX4_BASEADDRESS + 16#0000_03F8#),
+         Base_Address  => System'To_Address (PIIX4.BASEADDRESS + 16#0000_03F8#),
          Scale_Address => 0,
          Baud_Clock    => CLK_UART1M8,
          Flags         => (PC_UART => True),
@@ -123,7 +124,7 @@ package body BSP
       UART16x50.Init (PIIX4_UART1_Descriptor);
       PIIX4_UART2_Descriptor := (
          Uart_Model    => UART16x50.UART16450,
-         Base_Address  => System'To_Address (PIIX4_BASEADDRESS + 16#0000_02F8#),
+         Base_Address  => System'To_Address (PIIX4.BASEADDRESS + 16#0000_02F8#),
          Scale_Address => 0,
          Baud_Clock    => CLK_UART1M8,
          Flags         => (PC_UART => True),
@@ -194,7 +195,7 @@ package body BSP
       UART16x50.Init (CBUS_UART_Descriptor);
       -- PIIX4 IDE ------------------------------------------------------------
       PIIX4_IDE_Descriptor := (
-         Base_Address  => System'To_Address (PIIX4_BASEADDRESS + 16#0000_01F0#),
+         Base_Address  => System'To_Address (PIIX4.BASEADDRESS + 16#0000_01F0#),
          Scale_Address => 0,
          Read_8        => MMIO.Read'Access,
          Write_8       => MMIO.Write'Access,
