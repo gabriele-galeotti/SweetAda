@@ -36,11 +36,18 @@ package MCF523x
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
-   -- MCF523x definitions
+   -- MCF5235 Reference Manual
+   -- Document Number: MCF5235RM Rev. 2 07/2006
    ----------------------------------------------------------------------------
 
    IPSBAR_BASEADDRESS : constant := 16#4000_0000#;
+
+   ----------------------------------------------------------------------------
+   -- Chapter 7 Clock Module
+   ----------------------------------------------------------------------------
 
    -- 7.3.1.1 Synthesizer Control Register (SYNCR)
 
@@ -70,19 +77,19 @@ package MCF523x
    MFD_18X : constant := 2#111#;
 
    type SYNCR_Type is record
-      EXP       : Bits_10; -- Expected difference value
-      DEPTH     : Bits_2;  -- Frequency modulation depth and enable
-      RATE      : Bits_1;  -- Modulation rate
-      LOCIRQ    : Boolean; -- Loss-of-clock interrupt request
-      LOLIRQ    : Boolean; -- Loss-of-lock interrupt request
-      DISCLK    : Boolean; -- Disable CLKOUT
-      LOCRE     : Boolean; -- Loss-of-clock reset enable
-      LOLRE     : Boolean; -- Loss-of-lock reset enable
-      LOCEN     : Boolean; -- Enables the loss-of-clock function
-      RFD       : Bits_3;  -- Reduced frequency divider field
-      Reserved1 : Bits_2;
-      MFD       : Bits_3;  -- Multiplication factor divider
-      Reserved2 : Bits_5;
+      EXP       : Bits_10 := 0;          -- Expected difference value
+      DEPTH     : Bits_2  := DEPTH_0;    -- Frequency modulation depth and enable
+      RATE      : Bits_1  := RATE_DIV80; -- Modulation rate
+      LOCIRQ    : Boolean := False;      -- Loss-of-clock interrupt request
+      LOLIRQ    : Boolean := False;      -- Loss-of-lock interrupt request
+      DISCLK    : Boolean := False;      -- Disable CLKOUT
+      LOCRE     : Boolean := False;      -- Loss-of-clock reset enable
+      LOLRE     : Boolean := False;      -- Loss-of-lock reset enable
+      LOCEN     : Boolean := False;      -- Enables the loss-of-clock function
+      RFD       : Bits_3  := RFD_DIV4;   -- Reduced frequency divider field
+      Reserved1 : Bits_2  := 0;
+      MFD       : Bits_3  := MFD_6X;     -- Multiplication factor divider
+      Reserved2 : Bits_5  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -108,6 +115,9 @@ package MCF523x
            Import     => True,
            Convention => Ada;
 
+   function To_U32 is new Ada.Unchecked_Conversion (SYNCR_Type, Unsigned_32);
+   function To_SYNCR is new Ada.Unchecked_Conversion (Unsigned_32, SYNCR_Type);
+
    -- 7.3.1.2 Synthesizer Status Register (SYNSR)
 
    PLLREF_EXT  : constant := 0; -- External clock reference
@@ -120,17 +130,17 @@ package MCF523x
    PLLMODE_PLL : constant := 1; -- PLL clock mode
 
    type SYNSR_Type is record
-      CALPASS  : Boolean; -- Calibration passed
-      CALDONE  : Boolean; -- Calibration complete
-      LOCF     : Boolean; -- Loss-of-clock flag
-      LOCK     : Boolean; -- PLL lock status bit
-      LOCKS    : Boolean; -- Sticky indication of PLL lock status
-      PLLREF   : Bits_1;  -- PLL clock reference source
-      PLLSEL   : Bits_1;  -- PLL mode select
-      PLLMODE  : Bits_1;  -- Clock mode
-      LOC      : Boolean; -- Loss-of-clock status
-      LOLF     : Boolean; -- Loss-of-lock flag
-      Reserved : Bits_22;
+      CALPASS  : Boolean := False;       -- Calibration passed
+      CALDONE  : Boolean := False;       -- Calibration complete
+      LOCF     : Boolean := False;       -- Loss-of-clock flag
+      LOCK     : Boolean := False;       -- PLL lock status bit
+      LOCKS    : Boolean := False;       -- Sticky indication of PLL lock status
+      PLLREF   : Bits_1  := PLLREF_EXT;  -- PLL clock reference source
+      PLLSEL   : Bits_1  := PLLSEL_11;   -- PLL mode select
+      PLLMODE  : Bits_1  := PLLMODE_EXT; -- Clock mode
+      LOC      : Boolean := False;       -- Loss-of-clock status
+      LOLF     : Boolean := False;       -- Loss-of-lock flag
+      Reserved : Bits_22 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -154,6 +164,72 @@ package MCF523x
            Import     => True,
            Convention => Ada;
 
+   function To_U32 is new Ada.Unchecked_Conversion (SYNSR_Type, Unsigned_32);
+   function To_SYNSR is new Ada.Unchecked_Conversion (Unsigned_32, SYNSR_Type);
+
+   ----------------------------------------------------------------------------
+   -- Chapter 8 Power Management
+   ----------------------------------------------------------------------------
+
+   -- 8.2.1.1 Low-Power Interrupt Control Register (LPICR)
+
+   XLPM_IPL_ANY : constant := 2#000#; -- Any interrupt request exits low-power mode
+   XLPM_IPL_2_7 : constant := 2#001#; -- Interrupt request levels [2-7] exit low-power mode
+   XLPM_IPL_3_7 : constant := 2#010#; -- Interrupt request levels [3-7] exit low-power mode
+   XLPM_IPL_4_7 : constant := 2#011#; -- Interrupt request levels [4-7] exit low-power mode
+   XLPM_IPL_5_7 : constant := 2#100#; -- Interrupt request levels [5-7] exit low-power mode
+   XLPM_IPL_6_7 : constant := 2#101#; -- Interrupt request levels [6-7] exit low-power mode
+   XLPM_IPL_7   : constant := 2#110#; -- Interrupt request level [7] exits low-power mode
+   XLPM_IPL_7_2 : constant := 2#111#; -- Interrupt request level [7] exits low-power mode
+
+   type LPICR_Type is record
+      Reserved : Bits_4  := 0;
+      XLPM_IPL : Bits_3  := XLPM_IPL_ANY; -- Exit low-power mode interrupt priority level.
+      ENBSTOP  : Boolean := False;        -- Enable low-power stop mode.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LPICR_Type use record
+      Reserved at 0 range 0 .. 3;
+      XLPM_IPL at 0 range 4 .. 6;
+      ENBSTOP  at 0 range 7 .. 7;
+   end record;
+
+   LPICR : aliased LPICR_Type
+      with Address    => System'To_Address (IPSBAR_BASEADDRESS + 16#0000_0012#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   -- 8.2.1.2 Low-Power Control Register (LPCR)
+
+   STPMD_ENABLE  : constant := 0; -- CLKOUT enabled during stop mode.
+   STPMD_DISABLE : constant := 1; -- CLKOUT disabled during stop mode.
+
+   LPMD_RUN  : constant := 2#00#; -- RUN
+   LPMD_DOZE : constant := 2#01#; -- DOZE
+   LPMD_WAIT : constant := 2#10#; -- WAIT
+   LPMD_STOP : constant := 2#11#; -- STOP
+
+   type LPCR_Type is record
+      Reserved1 : Bits_3 := 0;
+      STPMD     : Bits_1 := STPMD_ENABLE; -- CLKOUT stop mode.
+      Reserved2 : Bits_2 := 0;
+      LPMD      : Bits_2 := LPMD_RUN;     -- Low-power mode select.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LPCR_Type use record
+      Reserved1 at 0 range 0 .. 2;
+      STPMD     at 0 range 3 .. 3;
+      Reserved2 at 0 range 4 .. 5;
+      LPMD      at 0 range 6 .. 7;
+   end record;
+
+   ----------------------------------------------------------------------------
+   -- Chapter 9 Chip Configuration Module (CCM)
+   ----------------------------------------------------------------------------
+
    -- 9.3.3.3 Chip Identification Register (CIR)
 
    type CIR_Type is record
@@ -173,6 +249,10 @@ package MCF523x
            Import     => True,
            Convention => Ada;
 
+   ----------------------------------------------------------------------------
+   -- Chapter 11 System Control Module (SCM)
+   ----------------------------------------------------------------------------
+
    -- 11.2.1.1 Internal Peripheral System Base Address Register (IPSBAR)
 
    BA_0 : constant := 2#00#; -- internal peripherals @ 0x0000_0000
@@ -181,9 +261,9 @@ package MCF523x
    BA_3 : constant := 2#11#; -- internal peripherals @ 0xC000_0000
 
    type IPSBAR_Type is record
-      V        : Boolean; -- Valid
-      Reserved : Bits_29;
-      BA       : Bits_2;  -- Base address
+      V        : Boolean := True; -- Valid
+      Reserved : Bits_29 := 0;
+      BA       : Bits_2  := BA_1; -- Base address
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -201,6 +281,167 @@ package MCF523x
 
    function To_U32 is new Ada.Unchecked_Conversion (IPSBAR_Type, Unsigned_32);
    function To_IPSBAR is new Ada.Unchecked_Conversion (Unsigned_32, IPSBAR_Type);
+
+   ----------------------------------------------------------------------------
+   -- Chapter 12 General Purpose I/O Module
+   ----------------------------------------------------------------------------
+
+   -- 0x10_0007 (PODR_FECI2C)
+   -- 0x10_0017 (PDDR_FECI2C)
+   -- 0x10_0027 (PPDSDR_FECI2C)
+   -- 0x10_0037 (PCLRR_FECI2C)
+
+   -- 12.3.1.5.6 FEC/I2C Pin Assignment Register (PAR_FECI2C)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 19 Fast Ethernet Controller (FEC)
+   ----------------------------------------------------------------------------
+
+   -- 19.2.4.1 Ethernet Interrupt Event Register (EIR)
+
+   type EIR_Type is record
+      Reserved : Bits_19 := 0;
+      UN       : Boolean := False; -- Transmit FIFO underrun.
+      RL       : Boolean := False; -- Collision retry limit.
+      LC       : Boolean := False; -- Late collision.
+      EBERR    : Boolean := False; -- Ethernet bus error.
+      MII      : Boolean := False; -- MII interrupt.
+      RXB      : Boolean := False; -- Receive buffer interrupt.
+      RXF      : Boolean := False; -- Receive frame interrupt.
+      TXB      : Boolean := False; -- Transmit buffer interrupt.
+      TXF      : Boolean := False; -- Transmit frame interrupt.
+      GRA      : Boolean := False; -- Graceful stop complete.
+      BABT     : Boolean := False; -- Babbling transmit error.
+      BABR     : Boolean := False; -- Babbling receive error.
+      HBERR    : Boolean := False; -- Heartbeat error.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for EIR_Type use record
+      Reserved at 0 range  0 .. 18;
+      UN       at 0 range 19 .. 19;
+      RL       at 0 range 20 .. 20;
+      LC       at 0 range 21 .. 21;
+      EBERR    at 0 range 22 .. 22;
+      MII      at 0 range 23 .. 23;
+      RXB      at 0 range 24 .. 24;
+      RXF      at 0 range 25 .. 25;
+      TXB      at 0 range 26 .. 26;
+      TXF      at 0 range 27 .. 27;
+      GRA      at 0 range 28 .. 28;
+      BABT     at 0 range 29 .. 29;
+      BABR     at 0 range 30 .. 30;
+      HBERR    at 0 range 31 .. 31;
+   end record;
+
+   EIR : aliased EIR_Type
+      with Address    => System'To_Address (IPSBAR_BASEADDRESS + 16#0000_1004#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   -- 19.2.4.2 Interrupt Mask Register (EIMR)
+
+   type EIMR_Type is record
+      Reserved : Bits_19 := 0;
+      UN       : Boolean := False; -- Transmit FIFO underrun.
+      RL       : Boolean := False; -- Collision retry limit.
+      LC       : Boolean := False; -- Late collision.
+      EBERR    : Boolean := False; -- Ethernet bus error.
+      MII      : Boolean := False; -- MII interrupt.
+      RXB      : Boolean := False; -- Receive buffer interrupt.
+      RXF      : Boolean := False; -- Receive frame interrupt.
+      TXB      : Boolean := False; -- Transmit buffer interrupt.
+      TXF      : Boolean := False; -- Transmit frame interrupt.
+      GRA      : Boolean := False; -- Graceful stop complete.
+      BABT     : Boolean := False; -- Babbling transmit error.
+      BABR     : Boolean := False; -- Babbling receive error.
+      HBERR    : Boolean := False; -- Heartbeat error.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for EIMR_Type use record
+      Reserved at 0 range  0 .. 18;
+      UN       at 0 range 19 .. 19;
+      RL       at 0 range 20 .. 20;
+      LC       at 0 range 21 .. 21;
+      EBERR    at 0 range 22 .. 22;
+      MII      at 0 range 23 .. 23;
+      RXB      at 0 range 24 .. 24;
+      RXF      at 0 range 25 .. 25;
+      TXB      at 0 range 26 .. 26;
+      TXF      at 0 range 27 .. 27;
+      GRA      at 0 range 28 .. 28;
+      BABT     at 0 range 29 .. 29;
+      BABR     at 0 range 30 .. 30;
+      HBERR    at 0 range 31 .. 31;
+   end record;
+
+   EIMR : aliased EIMR_Type
+      with Address    => System'To_Address (IPSBAR_BASEADDRESS + 16#0000_1008#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   -- 19.2.4.6 MII Management Frame Register (MMFR)
+
+   OP_WRITE : constant := 2#01#; -- OP write
+   OP_READ  : constant := 2#10#; -- OP read
+
+   type MMFR_Type is record
+      DATA : Bits_16 := 0;     -- Management frame data.
+      TA   : Bits_2  := 2#10#; -- Turn around.
+      RA   : Bits_5;           -- Register address.
+      PA   : Bits_5;           -- PHY address.
+      OP   : Bits_2;           -- Operation code.
+      ST   : Bits_2  := 2#01#; -- Start of frame delimiter.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for MMFR_Type use record
+      DATA at 0 range  0 .. 15;
+      TA   at 0 range 16 .. 17;
+      RA   at 0 range 18 .. 22;
+      PA   at 0 range 23 .. 27;
+      OP   at 0 range 28 .. 29;
+      ST   at 0 range 30 .. 31;
+   end record;
+
+   -- "MDATA"
+   MMFR : aliased MMFR_Type
+      with Address    => System'To_Address (IPSBAR_BASEADDRESS + 16#0000_1040#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   -- 19.2.4.7 MII Speed Control Register (MSCR)
+
+   MII_SPEED_TURNOFF : constant := 0;
+
+   type MSCR_Type is record
+      Reserved1 : Bits_1  := 0;
+      MII_SPEED : Bits_6  := MII_SPEED_TURNOFF; -- MII_SPEED controls the frequency of the MII management interface clock (EMDC) relative to the system clock.
+      DIS_PRE   : Boolean := False;             -- Asserting this bit will cause preamble (321’s) not to be prepended to the MII management frame.
+      Reserved2 : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for MSCR_Type use record
+      Reserved1 at 0 range 0 ..  0;
+      MII_SPEED at 0 range 1 ..  6;
+      DIS_PRE   at 0 range 7 ..  7;
+      Reserved2 at 0 range 8 .. 31;
+   end record;
+
+   MSCR : aliased MSCR_Type
+      with Address    => System'To_Address (IPSBAR_BASEADDRESS + 16#0000_1044#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- Chapter 26 UART Modules
+   ----------------------------------------------------------------------------
 
    -- 26.3.3 UART Status Registers (USRn)
 
@@ -248,5 +489,7 @@ package MCF523x
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+pragma Style_Checks (On);
 
 end MCF523x;
