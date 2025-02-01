@@ -1416,7 +1416,7 @@ pragma Style_Checks (Off);
    -- 24.3.3 MCG Control 3 Register (MCG_C3)
 
    type MCG_C3_Type is record
-      SCTRIM : Bits_8; -- Slow Internal Reference Clock Trim Setting
+      SCTRIM : Bits_8 := 0; -- Slow Internal Reference Clock Trim Setting
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1443,8 +1443,8 @@ pragma Style_Checks (Off);
                                    -- 1      32.768 kHz         2929        96 MHz
 
    type MCG_C4_Type is record
-      SCFTRIM  : Boolean;               -- Slow Internal Reference Clock Fine Trim
-      FCTRIM   : Bits_4;                -- Fast Internal Reference Clock Trim Setting
+      SCFTRIM  : Boolean := False;      -- Slow Internal Reference Clock Fine Trim
+      FCTRIM   : Bits_4  := 0;          -- Fast Internal Reference Clock Trim Setting
       DRST_DRS : Bits_2  := DRST_DRS_1; -- DCO Range Select
       DMX32    : Boolean := False;      -- DCO Maximum Frequency with 32.768 kHz Reference
    end record
@@ -2122,13 +2122,13 @@ pragma Style_Checks (Off);
    -- 34.2.8 RTC Interrupt Enable Register (RTC_IER)
 
    type RTC_IER_Type is record
-      TIIE      : Boolean := True; -- Time Invalid Interrupt Enable
-      TOIE      : Boolean := True; -- Time Overflow Interrupt Enable
-      TAIE      : Boolean := True; -- Time Alarm Interrupt Enable
+      TIIE      : Boolean := True;  -- Time Invalid Interrupt Enable
+      TOIE      : Boolean := True;  -- Time Overflow Interrupt Enable
+      TAIE      : Boolean := True;  -- Time Alarm Interrupt Enable
       Reserved1 : Bits_1  := 0;
-      TSIE      : Boolean;         -- Time Seconds Interrupt Enable
+      TSIE      : Boolean := False; -- Time Seconds Interrupt Enable
       Reserved2 : Bits_2  := 0;
-      WPON      : Boolean;         -- Wakeup Pin On
+      WPON      : Boolean := False; -- Wakeup Pin On
       Reserved3 : Bits_24 := 0;
    end record
       with Bit_Order => Low_Order_First,
