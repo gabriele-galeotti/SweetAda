@@ -2,6 +2,7 @@
 with CPU;
 with MCF5373;
 with ZOOM;
+with Console;
 
 package body Application
    is
@@ -43,6 +44,7 @@ package body Application
             others => 0
             );
          loop
+            Console.Print ("hello, SweetAda", NL => True);
             for Delay_Loop_Count in 1 .. 1_000_000 loop CPU.NOP; end loop;
             ZOOM.LATCH_U7.WRITE := (
                USB1_PWR_EN => True,
