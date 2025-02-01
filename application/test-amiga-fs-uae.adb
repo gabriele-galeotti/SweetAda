@@ -140,12 +140,13 @@ package body Application
                -- end if;
                if Tick_Count_Expired (TC3, 1000) then
                   RTC.Read_Clock (TM);
-                  Console.Print (TM.Year + 1_900);
-                  Console.Print (TM.Mon, Prefix => "-");
-                  Console.Print (TM.MDay, Prefix => "-");
-                  Console.Print (TM.Hour, Prefix => " ");
-                  Console.Print (TM.Min, Prefix => ":");
-                  Console.Print (TM.Sec, Prefix => ":", NL => True);
+                  Console.Print (Prefix => "",  Value => TM.Year + 1_900);
+                  Console.Print (Prefix => "-", Value => TM.Mon);
+                  Console.Print (Prefix => "-", Value => TM.MDay);
+                  Console.Print (Prefix => " ", Value => TM.Hour);
+                  Console.Print (Prefix => ":", Value => TM.Min);
+                  Console.Print (Prefix => ":", Value => TM.Sec);
+                  Console.Print_NewLine;
                   TC3 := BSP.Tick_Count;
                end if;
             end loop;
