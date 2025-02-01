@@ -10,6 +10,7 @@
 
 #
 # Arguments:
+# optional initial -p <prefix_string>
 # $1 = symbol name
 # $2 = input filename
 #
