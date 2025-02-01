@@ -33,6 +33,8 @@ package MIPS
    use System;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
    -- MIPS PRId values
    ----------------------------------------------------------------------------
@@ -125,5 +127,7 @@ package MIPS
       Lock : aliased CPU_Unsigned := LOCK_UNLOCK with Atomic => True;
    end record
       with Size => CPU_Unsigned'Size;
+
+pragma Style_Checks (On);
 
 end MIPS;
