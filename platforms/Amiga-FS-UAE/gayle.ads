@@ -33,8 +33,6 @@ package Gayle
    use System;
    use Bits;
 
-   IDE_BASEADDRESS : constant := 16#00DD_2020#;
-
    type IDE_Devcon_Type is record
       Unused1    : Bits_1;
       IRQDISABLE : Boolean;
@@ -50,8 +48,9 @@ package Gayle
       Unused2    at 0 range 3 .. 7;
    end record;
 
+   IDE_BASEADDRESS : constant := 16#00DD_2020#;
    -- address shift = 2
-   IDE_DEVCON_ADDRESS : constant := GAYLE_IDE_BASEADDRESS + 16#0406# * 2**2;
+   IDE_DEVCON_ADDRESS : constant := IDE_BASEADDRESS + 16#0406# * 2**2;
 
    IDE_Devcon : aliased IDE_Devcon_Type
       with Address    => System'To_Address (IDE_DEVCON_ADDRESS),
