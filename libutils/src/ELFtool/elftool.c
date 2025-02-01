@@ -132,6 +132,7 @@ typedef struct {
         size_t      scn_max_string_length;
         const char *symbol_name;
         uint64_t    symbol_value;
+        const char *symbol_prefix;
         uint8_t     debug_flag_value;
         } Application_t;
 
@@ -826,6 +827,10 @@ command_findsymbol(void)
         efs_status = elf_find_symbol(application.pelf, application.symbol_name, &application.symbol_value);
         if (efs_status == 0)
         {
+                if (application.symbol_prefix != NULL)
+                {
+                        fprintf(stdout, "%s", application.symbol_prefix);
+                }
                 print_value();
         }
 
@@ -973,7 +978,23 @@ process_arguments(int argc, char **argv, Application_t *p, const char **error_me
                                                 }
                                         }
                                         break;
+                                case 'p':
+                                        if (number_of_arguments-- > 0)
+                                        {
+                                                ++idx;
+                                                p->symbol_prefix = argv[idx];
+                                        }
+                                        else
+                                        {
+                                                error_flag = true;
+                                                if (error_message != NULL)
+                                                {
+                                                        *error_message = "no prefix supplied";
+                                                }
+                                        }
+                                        break;
                                 case 'v':
+                                        --number_of_arguments;
                                         p->command = COMMAND_VERSION;
                                         break;
                                 default:
@@ -1032,6 +1053,7 @@ main(int argc, char **argv)
         application.endianness_swap       = false;
         application.scn_max_string_length = 0;
         application.symbol_name           = NULL;
+        application.symbol_prefix         = NULL;
 
         /*
          * Extract the program name.
