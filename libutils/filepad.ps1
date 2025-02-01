@@ -80,7 +80,7 @@ if ([string]::IsNullOrEmpty($filename))
 $padstring = [string]$args[1]
 if ([string]::IsNullOrEmpty($padstring))
 {
-  Write-Stderr "$($scriptname): *** Error: no padding specified."
+  Write-Stderr "$($scriptname): *** Error: no file length specified."
   ExitWithCode 1
 }
 

@@ -69,11 +69,11 @@ return 0
 # Basic input parameters check.
 #
 if [ "x$1" = "x" ] ; then
-  log_print_error "${SCRIPT_FILENAME}: *** Error: no object file specified."
+  log_print_error "${SCRIPT_FILENAME}: *** Error: no input file specified."
   exit 1
 fi
 if [ "x$2" = "x" ] ; then
-  log_print_error "${SCRIPT_FILENAME}: *** Error: no file length supplied."
+  log_print_error "${SCRIPT_FILENAME}: *** Error: no file length specified."
   exit 1
 fi
 
@@ -84,7 +84,7 @@ else
 fi
 
 #
-# Parse a number (eventually in units of kilobyte).
+# Parse a number (eventually in units of kB).
 # The strange "s + 0" is a workaround for Darwin awk which lacks strtonum().
 #
 AWK_SCRIPT_FUNCTION='\

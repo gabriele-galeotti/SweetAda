@@ -73,15 +73,15 @@ return 0
 # Basic input parameters check.
 #
 if [ "x$1" = "x" ] ; then
-  log_print_error "${SCRIPT_FILENAME}: *** Error: no file specified."
+  log_print_error "${SCRIPT_FILENAME}: *** Error: no input file specified."
   exit 1
 fi
 if [ "x$2" = "x" ] ; then
-  log_print_error "${SCRIPT_FILENAME}: *** Error: no offset supplied."
+  log_print_error "${SCRIPT_FILENAME}: *** Error: no offset specified."
   exit 1
 fi
 if [ "x$3" = "x" ] ; then
-  log_print_error "${SCRIPT_FILENAME}: *** Error: no data supplied."
+  log_print_error "${SCRIPT_FILENAME}: *** Error: no patchstring specified."
   exit 1
 fi
 
