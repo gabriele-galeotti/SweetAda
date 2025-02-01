@@ -50,7 +50,6 @@ If you want optimized executables, add -O2 to the flags for the host compiler
 when configuring:
 
   CONFIGURE_VARS+=("CFLAGS=\"-g -O2\"")
-  CONFIGURE_VARS+=("LDFLAGS=\"-g -O2\"")
 
 In the same way, if you want smaller executables, remove the "-g" flag so to
 avoid large executables filled with debug informations.
