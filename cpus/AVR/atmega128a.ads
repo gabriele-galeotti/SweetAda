@@ -35,6 +35,8 @@ package ATmega128A
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
    -- 11. AVR CPU Core
    ----------------------------------------------------------------------------
@@ -327,5 +329,7 @@ package ATmega128A
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
+pragma Style_Checks (On);
 
 end ATmega128A;
