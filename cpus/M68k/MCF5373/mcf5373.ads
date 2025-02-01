@@ -35,8 +35,15 @@ package MCF5373
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
-   -- MCF5373 definitions
+   -- MCF5373 Reference Manual
+   -- Document Number: MCF5373RM Rev. 3 12/2008
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- Chapter 5 Cache
    ----------------------------------------------------------------------------
 
    -- 5.2.1 Cache Control Register (CACR)
@@ -123,6 +130,10 @@ package MCF5373
       Address_Base at 0 range 24 .. 31;
    end record;
 
+   ----------------------------------------------------------------------------
+   -- Chapter 9 Chip Configuration Module (CCM)
+   ----------------------------------------------------------------------------
+
    -- 9.3.3 Chip Identification Register (CIR)
 
    type CIR_Type is record
@@ -141,6 +152,10 @@ package MCF5373
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- Chapter 13 General Purpose I/O Module
+   ----------------------------------------------------------------------------
 
    -- 13.3.1 Port Output Data Registers (PODR_x)
 
@@ -260,6 +275,10 @@ package MCF5373
            Import               => True,
            Convention           => Ada;
 
+   ----------------------------------------------------------------------------
+   -- Chapter 26 Watchdog Timer Module
+   ----------------------------------------------------------------------------
+
    -- 26.2.1 Watchdog Control Register (WCR)
 
    type WCR_Type is record
@@ -284,6 +303,10 @@ package MCF5373
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- Chapter 30 UART Modules
+   ----------------------------------------------------------------------------
 
    -- 30.3.3 UART Status Registers (USRn)
 
@@ -331,5 +354,7 @@ package MCF5373
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
+pragma Style_Checks (On);
 
 end MCF5373;
