@@ -43,35 +43,12 @@ package body Gdbstub.CPU
 
    Register_Size : constant array (D0 .. FPIADDR) of Positive :=
       [
-       D0        => 4,
-       D1        => 4,
-       D2        => 4,
-       D3        => 4,
-       D4        => 4,
-       D5        => 4,
-       D6        => 4,
-       D7        => 4,
-       A0        => 4,
-       A1        => 4,
-       A2        => 4,
-       A3        => 4,
-       A4        => 4,
-       A5        => 4,
-       A6        => 4,
-       A7        => 4,
-       SR        => 4,
-       PC        => 4,
-       FP0       => 12,
-       FP1       => 12,
-       FP2       => 12,
-       FP3       => 12,
-       FP4       => 12,
-       FP5       => 12,
-       FP6       => 12,
-       FP7       => 12,
-       FPCONTROL => 4,
-       FPSTATUS  => 4,
-       FPIADDR   => 4
+       D0 => 4, D1 => 4, D2 => 4, D3 => 4, D4 => 4, D5 => 4, D6 => 4, D7 => 4,
+       A0 => 4, A1 => 4, A2 => 4, A3 => 4, A4 => 4, A5 => 4, A6 => 4, A7 => 4,
+       SR => 4, PC => 4,
+       FP0 => 12, FP1 => 12, FP2 => 12, FP3 => 12,
+       FP4 => 12, FP5 => 12, FP6 => 12, FP7 => 12,
+       FPCONTROL => 4, FPSTATUS => 4, FPIADDR => 4
       ];
 
    subtype FP_Register_Type is Byte_Array (0 .. Register_Size (FP0) - 1);
