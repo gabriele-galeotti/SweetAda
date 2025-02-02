@@ -47,8 +47,8 @@
  * Application headers.                                                       *
  ******************************************************************************/
 
-#include "elf.h"
 #include "library.h"
+#include "elf.h"
 
 /******************************************************************************
  * Private definitions.                                                       *
@@ -890,10 +890,29 @@ command_setdebugflag(void)
 static int
 process_arguments(int argc, char **argv, Application_t *p, const char **error_message)
 {
-        bool error_flag;
-        int  number_of_arguments;
-        bool plain_token_flag;
-        int  idx;
+        const char *dumpsections_option;
+        const char *sectionvaddr_option;
+        const char *sectionsize_option;
+        const char *findsymbol_option;
+        const char *setdebugflag_option;
+        size_t      sectionvaddr_optionlength;
+        size_t      sectionsize_optionlength;
+        size_t      findsymbol_optionlength;
+        size_t      setdebugflag_optionlength;
+        bool        error_flag;
+        int         number_of_arguments;
+        bool        plain_token_flag;
+        int         idx;
+
+        dumpsections_option = "dumpsections";
+        sectionvaddr_option = "sectionvaddr=";
+        sectionsize_option = "sectionsize=";
+        findsymbol_option = "findsymbol=";
+        setdebugflag_option = "setdebugflag=";
+        sectionvaddr_optionlength = STRING_LENGTH(sectionvaddr_option);
+        sectionsize_optionlength = STRING_LENGTH(sectionsize_option);
+        findsymbol_optionlength = STRING_LENGTH(findsymbol_option);
+        setdebugflag_optionlength = STRING_LENGTH(setdebugflag_option);
 
         error_flag = false;
         number_of_arguments = argc;
@@ -912,15 +931,6 @@ process_arguments(int argc, char **argv, Application_t *p, const char **error_me
                 if (argv[idx][0] == '-')
                 {
                         char c;
-                        const char *dumpsections_option = "dumpsections";
-                        const char *sectionvaddr_option = "sectionvaddr=";
-                        const char *sectionsize_option = "sectionsize=";
-                        const char *findsymbol_option = "findsymbol=";
-                        const char *setdebugflag_option = "setdebugflag=";
-                        size_t sectionvaddr_optionlength = STRING_LENGTH(sectionvaddr_option);
-                        size_t sectionsize_optionlength = STRING_LENGTH(sectionsize_option);
-                        size_t findsymbol_optionlength = STRING_LENGTH(findsymbol_option);
-                        size_t setdebugflag_optionlength = STRING_LENGTH(setdebugflag_option);
                         if (STRING_LENGTH(argv[idx]) != 2)
                         {
                                 error_flag = true;
