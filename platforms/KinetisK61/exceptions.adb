@@ -17,7 +17,6 @@
 
 with Interfaces;
 with Configure;
-with Bits;
 with LLutils;
 with Abort_Library;
 with ARMv7M;
@@ -38,7 +37,6 @@ package body Exceptions
    --========================================================================--
 
    use Interfaces;
-   use Bits;
    use K61;
 
    --========================================================================--
