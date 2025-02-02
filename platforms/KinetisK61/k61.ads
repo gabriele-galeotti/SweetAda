@@ -932,21 +932,21 @@ pragma Style_Checks (Off);
    -- 12.2.13 System Clock Gating Control Register 5 (SIM_SCGC5)
 
    type SIM_SCGC5_Type is record
-      LPTIMER      : Boolean;      -- LPTMR clock gate control
+      LPTIMER      : Boolean := False; -- LPTMR clock gate control
       Reserved1    : Bits_1  := 1;
-      DRYICE       : Boolean;      -- Dryice clock gate control
-      DRYICESECREG : Boolean;      -- Dryice secure storage clock gate control
+      DRYICE       : Boolean := False; -- Dryice clock gate control
+      DRYICESECREG : Boolean := False; -- Dryice secure storage clock gate control
       Reserved2    : Bits_1  := 0;
-      TSI          : Boolean;      -- TSI clock gate control
+      TSI          : Boolean := False; -- TSI clock gate control
       Reserved3    : Bits_1  := 0;
       Reserved4    : Bits_1  := 1;
       Reserved5    : Bits_1  := 1;
-      PORTA        : Boolean;      -- PORTA clock gate control
-      PORTB        : Boolean;      -- PORTB clock gate control
-      PORTC        : Boolean;      -- PORTC clock gate control
-      PORTD        : Boolean;      -- PORTD clock gate control
-      PORTE        : Boolean;      -- PORTE clock gate control
-      PORTF        : Boolean;      -- PORTF clock gate control
+      PORTA        : Boolean := False; -- PORTA clock gate control
+      PORTB        : Boolean := False; -- PORTB clock gate control
+      PORTC        : Boolean := False; -- PORTC clock gate control
+      PORTD        : Boolean := False; -- PORTD clock gate control
+      PORTE        : Boolean := False; -- PORTE clock gate control
+      PORTF        : Boolean := False; -- PORTF clock gate control
       Reserved6    : Bits_3  := 0;
       Reserved7    : Bits_1  := 1;
       Reserved8    : Bits_13 := 0;
