@@ -36,7 +36,7 @@ package body Application
             Delay_Count : constant := 20_000_000;
          begin
             -- LED3 (RED) -----------------------------------------------------
-            PORTF_MUXCTRL.PCR (12).MUX := MUX_ALT1_GPIO;
+            PORTF_MUXCTRL.PCR (12).MUX := MUX_GPIO;
             GPIOF.PDDR (12) := True;
             loop
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
