@@ -24,7 +24,6 @@ with Bits;
 with Secondary_Stack;
 with x86_64;
 with CPU.IO;
-with PCI;
 with PIIX;
 with PC;
 with VGA;
@@ -163,7 +162,7 @@ package body BSP
          Prefix => "APIC_Base:          ", NL => True
          );
       -- PCI ------------------------------------------------------------------
-      PCI.Cfg_Access_Descriptor := (
+      PCI_Descriptor := (
          Read_32  => CPU.IO.PortIn'Access,
          Write_32 => CPU.IO.PortOut'Access
          );
@@ -174,7 +173,7 @@ package body BSP
             Success   : Boolean;
          begin
             for Index in PCI.Device_Number_Type'Range loop
-               PCI.Cfg_Detect_Device (0, Index, Vendor_Id, Device_Id, Success);
+               PCI.Cfg_Detect_Device (PCI_Descriptor, 0, Index, Vendor_Id, Device_Id, Success);
                if Success then
                   Console.Print (Unsigned_16 (Index), Prefix => "PCI Device #");
                   Console.Print (Character'(' '));
@@ -187,16 +186,16 @@ package body BSP
          end;
       end if;
       -- PIIX3 ----------------------------------------------------------------
-      if PIIX.Probe then
+      if PIIX.Probe (PCI_Descriptor) then
          Console.Print ("PIIX3 detected", NL => True);
-         PIIX.Init;
+         PIIX.Init (PCI_Descriptor);
       end if;
       -- detect if running under QEMU -----------------------------------------
       declare
          Success       : Boolean;
          Device_Number : PCI.Device_Number_Type with Unreferenced => True;
       begin
-         PCI.Cfg_Find_Device_By_Id (0, PCI.VENDOR_ID_QEMU, PCI.DEVICE_ID_QEMU_VGA, Device_Number, Success);
+         PCI.Cfg_Find_Device_By_Id (PCI_Descriptor, 0, PCI.VENDOR_ID_QEMU, PCI.DEVICE_ID_QEMU_VGA, Device_Number, Success);
          if Success then
             QEMU := True;
          end if;

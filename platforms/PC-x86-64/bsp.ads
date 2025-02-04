@@ -17,6 +17,7 @@
 
 with Interfaces;
 with UART16x50;
+with PCI;
 
 package BSP
    is
@@ -37,6 +38,8 @@ package BSP
 
    UART_Descriptors : array (1 .. 2) of aliased UART16x50.Descriptor_Type :=
                       [others => UART16x50.DESCRIPTOR_INVALID];
+
+   PCI_Descriptor : aliased PCI.Descriptor_Type;
 
    QEMU : Boolean := False;
 
