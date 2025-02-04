@@ -1169,6 +1169,315 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- Chapter 15 Low-Leakage Wakeup Unit (LLWU)
+   ----------------------------------------------------------------------------
+
+   -- 15.3.1 LLWU Pin Enable 1 register (LLWU_PE1)
+   -- 15.3.2 LLWU Pin Enable 2 register (LLWU_PE2)
+   -- 15.3.3 LLWU Pin Enable 3 register (LLWU_PE3)
+   -- 15.3.4 LLWU Pin Enable 4 register (LLWU_PE4)
+
+   WUPEx_EXTDISABLE : constant := 2#00#; -- External input pin disabled as wakeup input
+   WUPEx_EXTRISE    : constant := 2#01#; -- External input pin enabled with rising edge detection
+   WUPEx_EXTFALL    : constant := 2#10#; -- External input pin enabled with falling edge detection
+   WUPEx_EXTANYCHG  : constant := 2#11#; -- External input pin enabled with any change detection
+
+   type LLWU_PE1_Type is record
+      WUPE0 : Bits_2 := WUPEx_EXTDISABLE; -- Wakeup Pin Enable For LLWU_P0
+      WUPE1 : Bits_2 := WUPEx_EXTDISABLE; -- Wakeup Pin Enable For LLWU_P0
+      WUPE2 : Bits_2 := WUPEx_EXTDISABLE; -- Wakeup Pin Enable For LLWU_P0
+      WUPE3 : Bits_2 := WUPEx_EXTDISABLE; -- Wakeup Pin Enable For LLWU_P0
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LLWU_PE1_Type use record
+      WUPE0 at 0 range 0 .. 1;
+      WUPE1 at 0 range 2 .. 3;
+      WUPE2 at 0 range 4 .. 5;
+      WUPE3 at 0 range 6 .. 7;
+   end record;
+
+   type LLWU_PE2_Type is record
+      WUPE4 : Bits_2 := WUPEx_EXTDISABLE; -- Wakeup Pin Enable For LLWU_P4
+      WUPE5 : Bits_2 := WUPEx_EXTDISABLE; -- Wakeup Pin Enable For LLWU_P5
+      WUPE6 : Bits_2 := WUPEx_EXTDISABLE; -- Wakeup Pin Enable For LLWU_P6
+      WUPE7 : Bits_2 := WUPEx_EXTDISABLE; -- Wakeup Pin Enable For LLWU_P7
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LLWU_PE2_Type use record
+      WUPE4 at 0 range 0 .. 1;
+      WUPE5 at 0 range 2 .. 3;
+      WUPE6 at 0 range 4 .. 5;
+      WUPE7 at 0 range 6 .. 7;
+   end record;
+
+   type LLWU_PE3_Type is record
+      WUPE8  : Bits_2 := WUPEx_EXTDISABLE; -- Wakeup Pin Enable For LLWU_P8
+      WUPE9  : Bits_2 := WUPEx_EXTDISABLE; -- Wakeup Pin Enable For LLWU_P9
+      WUPE10 : Bits_2 := WUPEx_EXTDISABLE; -- Wakeup Pin Enable For LLWU_P10
+      WUPE11 : Bits_2 := WUPEx_EXTDISABLE; -- Wakeup Pin Enable For LLWU_P11
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LLWU_PE3_Type use record
+      WUPE8  at 0 range 0 .. 1;
+      WUPE9  at 0 range 2 .. 3;
+      WUPE10 at 0 range 4 .. 5;
+      WUPE11 at 0 range 6 .. 7;
+   end record;
+
+   type LLWU_PE4_Type is record
+      WUPE12 : Bits_2 := WUPEx_EXTDISABLE; -- Wakeup Pin Enable For LLWU_P12
+      WUPE13 : Bits_2 := WUPEx_EXTDISABLE; -- Wakeup Pin Enable For LLWU_P13
+      WUPE14 : Bits_2 := WUPEx_EXTDISABLE; -- Wakeup Pin Enable For LLWU_P14
+      WUPE15 : Bits_2 := WUPEx_EXTDISABLE; -- Wakeup Pin Enable For LLWU_P15
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LLWU_PE4_Type use record
+      WUPE12 at 0 range 0 .. 1;
+      WUPE13 at 0 range 2 .. 3;
+      WUPE14 at 0 range 4 .. 5;
+      WUPE15 at 0 range 6 .. 7;
+   end record;
+
+   LLWU_PE1_ADDRESS : constant := 16#4007_C000#;
+
+   LLWU_PE1 : aliased LLWU_PE1_Type
+      with Address              => System'To_Address (LLWU_PE1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   LLWU_PE2_ADDRESS : constant := 16#4007_C001#;
+
+   LLWU_PE2 : aliased LLWU_PE2_Type
+      with Address              => System'To_Address (LLWU_PE2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   LLWU_PE3_ADDRESS : constant := 16#4007_C002#;
+
+   LLWU_PE3 : aliased LLWU_PE3_Type
+      with Address              => System'To_Address (LLWU_PE3_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   LLWU_PE4_ADDRESS : constant := 16#4007_C003#;
+
+   LLWU_PE4 : aliased LLWU_PE4_Type
+      with Address              => System'To_Address (LLWU_PE4_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 15.3.5 LLWU Module Enable register (LLWU_ME)
+
+   type LLWU_ME_Type is record
+      WUME0 : Boolean := False; -- Wakeup Module Enable For Module 0
+      WUME1 : Boolean := False; -- Wakeup Module Enable For Module 1
+      WUME2 : Boolean := False; -- Wakeup Module Enable For Module 2
+      WUME3 : Boolean := False; -- Wakeup Module Enable For Module 3
+      WUME4 : Boolean := False; -- Wakeup Module Enable For Module 4
+      WUME5 : Boolean := False; -- Wakeup Module Enable For Module 5
+      WUME6 : Boolean := False; -- Wakeup Module Enable For Module 6
+      WUME7 : Boolean := False; -- Wakeup Module Enable For Module 7
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LLWU_ME_Type use record
+      WUME0 at 0 range 0 .. 0;
+      WUME1 at 0 range 1 .. 1;
+      WUME2 at 0 range 2 .. 2;
+      WUME3 at 0 range 3 .. 3;
+      WUME4 at 0 range 4 .. 4;
+      WUME5 at 0 range 5 .. 5;
+      WUME6 at 0 range 6 .. 6;
+      WUME7 at 0 range 7 .. 7;
+   end record;
+
+   LLWU_ME_ADDRESS : constant := 16#4007_C004#;
+
+   LLWU_ME : aliased LLWU_ME_Type
+      with Address              => System'To_Address (LLWU_ME_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 15.3.6 LLWU Flag 1 register (LLWU_F1)
+
+   type LLWU_F1_Type is record
+      WUF0 : Boolean := False; -- Wakeup Flag For LLWU_P0
+      WUF1 : Boolean := False; -- Wakeup Flag For LLWU_P1
+      WUF2 : Boolean := False; -- Wakeup Flag For LLWU_P2
+      WUF3 : Boolean := False; -- Wakeup Flag For LLWU_P3
+      WUF4 : Boolean := False; -- Wakeup Flag For LLWU_P4
+      WUF5 : Boolean := False; -- Wakeup Flag For LLWU_P5
+      WUF6 : Boolean := False; -- Wakeup Flag For LLWU_P6
+      WUF7 : Boolean := False; -- Wakeup Flag For LLWU_P7
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LLWU_F1_Type use record
+      WUF0 at 0 range 0 .. 0;
+      WUF1 at 0 range 1 .. 1;
+      WUF2 at 0 range 2 .. 2;
+      WUF3 at 0 range 3 .. 3;
+      WUF4 at 0 range 4 .. 4;
+      WUF5 at 0 range 5 .. 5;
+      WUF6 at 0 range 6 .. 6;
+      WUF7 at 0 range 7 .. 7;
+   end record;
+
+   LLWU_F1_ADDRESS : constant := 16#4007_C005#;
+
+   LLWU_F1 : aliased LLWU_F1_Type
+      with Address              => System'To_Address (LLWU_F1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 15.3.7 LLWU Flag 2 register (LLWU_F2)
+
+   type LLWU_F2_Type is record
+      WUF8  : Boolean := False; -- Wakeup Flag For LLWU_P8
+      WUF9  : Boolean := False; -- Wakeup Flag For LLWU_P9
+      WUF10 : Boolean := False; -- Wakeup Flag For LLWU_P10
+      WUF11 : Boolean := False; -- Wakeup Flag For LLWU_P11
+      WUF12 : Boolean := False; -- Wakeup Flag For LLWU_P12
+      WUF13 : Boolean := False; -- Wakeup Flag For LLWU_P13
+      WUF14 : Boolean := False; -- Wakeup Flag For LLWU_P14
+      WUF15 : Boolean := False; -- Wakeup Flag For LLWU_P15
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LLWU_F2_Type use record
+      WUF8  at 0 range 0 .. 0;
+      WUF9  at 0 range 1 .. 1;
+      WUF10 at 0 range 2 .. 2;
+      WUF11 at 0 range 3 .. 3;
+      WUF12 at 0 range 4 .. 4;
+      WUF13 at 0 range 5 .. 5;
+      WUF14 at 0 range 6 .. 6;
+      WUF15 at 0 range 7 .. 7;
+   end record;
+
+   LLWU_F2_ADDRESS : constant := 16#4007_C006#;
+
+   LLWU_F2 : aliased LLWU_F2_Type
+      with Address              => System'To_Address (LLWU_F2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 15.3.8 LLWU Flag 3 register (LLWU_F3)
+
+   type LLWU_F3_Type is record
+      MWUF0 : Boolean := False; -- Wakeup flag For module 0
+      MWUF1 : Boolean := False; -- Wakeup flag For module 1
+      MWUF2 : Boolean := False; -- Wakeup flag For module 2
+      MWUF3 : Boolean := False; -- Wakeup flag For module 3
+      MWUF4 : Boolean := False; -- Wakeup flag For module 4
+      MWUF5 : Boolean := False; -- Wakeup flag For module 5
+      MWUF6 : Boolean := False; -- Wakeup flag For module 6
+      MWUF7 : Boolean := False; -- Wakeup flag For module 7
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LLWU_F3_Type use record
+      MWUF0 at 0 range 0 .. 0;
+      MWUF1 at 0 range 1 .. 1;
+      MWUF2 at 0 range 2 .. 2;
+      MWUF3 at 0 range 3 .. 3;
+      MWUF4 at 0 range 4 .. 4;
+      MWUF5 at 0 range 5 .. 5;
+      MWUF6 at 0 range 6 .. 6;
+      MWUF7 at 0 range 7 .. 7;
+   end record;
+
+   LLWU_F3_ADDRESS : constant := 16#4007_C007#;
+
+   LLWU_F3 : aliased LLWU_F3_Type
+      with Address              => System'To_Address (LLWU_F3_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 15.3.9 LLWU Pin Filter 1 register (LLWU_FILT1)
+   -- 15.3.10 LLWU Pin Filter 2 register (LLWU_FILT2)
+
+   FILTSEL_LLWU_P0  : constant := 2#0000#; -- Select LLWU_P0 for filter
+   FILTSEL_LLWU_P1  : constant := 2#0001#; -- Select LLWU_P1 for filter
+   FILTSEL_LLWU_P2  : constant := 2#0010#; -- Select LLWU_P2 for filter
+   FILTSEL_LLWU_P3  : constant := 2#0011#; -- Select LLWU_P3 for filter
+   FILTSEL_LLWU_P4  : constant := 2#0100#; -- Select LLWU_P4 for filter
+   FILTSEL_LLWU_P5  : constant := 2#0101#; -- Select LLWU_P5 for filter
+   FILTSEL_LLWU_P6  : constant := 2#0110#; -- Select LLWU_P6 for filter
+   FILTSEL_LLWU_P7  : constant := 2#0111#; -- Select LLWU_P7 for filter
+   FILTSEL_LLWU_P8  : constant := 2#1000#; -- Select LLWU_P8 for filter
+   FILTSEL_LLWU_P9  : constant := 2#1001#; -- Select LLWU_P9 for filter
+   FILTSEL_LLWU_P10 : constant := 2#1010#; -- Select LLWU_P10 for filter
+   FILTSEL_LLWU_P11 : constant := 2#1011#; -- Select LLWU_P11 for filter
+   FILTSEL_LLWU_P12 : constant := 2#1100#; -- Select LLWU_P12 for filter
+   FILTSEL_LLWU_P13 : constant := 2#1101#; -- Select LLWU_P13 for filter
+   FILTSEL_LLWU_P14 : constant := 2#1110#; -- Select LLWU_P14 for filter
+   FILTSEL_LLWU_P15 : constant := 2#1111#; -- Select LLWU_P15 for filter
+
+   FILTE_DISABLE : constant := 2#00#; -- Filter disabled
+   FILTE_POSEDGE : constant := 2#01#; -- Filter posedge detect enabled
+   FILTE_NEGEDGE : constant := 2#10#; -- Filter negedge detect enabled
+   FILTE_ANYEDGE : constant := 2#11#; -- Filter any edge detect enabled
+
+   type LLWU_FILT1_Type is record
+      FILTSEL  : Bits_4  := FILTSEL_LLWU_P0; -- Filter Pin Select
+      Reserved : Bits_1  := 0;
+      FILTE    : Bits_2  := FILTE_DISABLE;   -- Digital Filter On External Pin
+      FILTF    : Boolean := False;           -- Filter Detect Flag
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LLWU_FILT1_Type use record
+      FILTSEL  at 0 range 0 .. 3;
+      Reserved at 0 range 4 .. 4;
+      FILTE    at 0 range 5 .. 6;
+      FILTF    at 0 range 7 .. 7;
+   end record;
+
+   type LLWU_FILT2_Type is record
+      FILTSEL  : Bits_4  := FILTSEL_LLWU_P0; -- Filter Pin Select
+      Reserved : Bits_1  := 0;
+      FILTE    : Bits_2  := FILTE_DISABLE;   -- Digital Filter On External Pin
+      FILTF    : Boolean := False;           -- Filter Detect Flag
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LLWU_FILT2_Type use record
+      FILTSEL  at 0 range 0 .. 3;
+      Reserved at 0 range 4 .. 4;
+      FILTE    at 0 range 5 .. 6;
+      FILTF    at 0 range 7 .. 7;
+   end record;
+
+   LLWU_FILT1_ADDRESS : constant := 16#4007_C008#;
+
+   LLWU_FILT1 : aliased LLWU_FILT1_Type
+      with Address              => System'To_Address (LLWU_FILT1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   LLWU_FILT2_ADDRESS : constant := 16#4007_C009#;
+
+   LLWU_FILT2 : aliased LLWU_FILT2_Type
+      with Address              => System'To_Address (LLWU_FILT2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
    -- Chapter 16 Reset Control Module (RCM)
    ----------------------------------------------------------------------------
 
