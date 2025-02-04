@@ -40,7 +40,6 @@ package Malta
    use System;
    use Interfaces;
    use MIPS;
-   use PCI;
    use GT64120;
 
    -- patch in BIOS ROM space, board ID = 0x420 (Malta board with CoreLV)
@@ -80,8 +79,8 @@ package Malta
    -- GT-64120A bridge
    ----------------------------------------------------------------------------
 
-   GT64120_BUS_NUMBER    : constant Bus_Number_Type := 0;
-   GT64120_DEVICE_NUMBER : constant Device_Number_Type := 0;
+   GT64120_BUS_NUMBER    : constant PCI.Bus_Number_Type := 0;
+   GT64120_DEVICE_NUMBER : constant PCI.Device_Number_Type := 0;
 
    GT_64120 : aliased GT64120_Type
       with Address    => System'To_Address (GT64120_BASEADDRESS),

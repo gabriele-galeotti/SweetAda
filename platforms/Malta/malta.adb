@@ -37,6 +37,8 @@ package body Malta
    use System.Storage_Elements;
    use Bits;
 
+   PCI_Descriptor : PCI.Descriptor_Type;
+
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -81,8 +83,10 @@ package body Malta
       is
       CPUIC : CPU_Interface_Configuration_Type;
    begin
-      Cfg_Access_Descriptor.Read_32 := PCI_PortIn'Access;
-      Cfg_Access_Descriptor.Write_32 := PCI_PortOut'Access;
+      PCI_Descriptor := (
+         Read_32  => PCI_PortIn'Access,
+         Write_32 => PCI_PortOut'Access
+         );
       -- 4.5 CPU Interface Endianess, pg 47
       CPUIC_Read (GT_64120.CPU_Interface_Configuration'Address, CPUIC);
       CPUIC.Endianness := Endianness_BIG;
@@ -105,13 +109,13 @@ package body Malta
    procedure PCI_Devices_Detect
       is
       Success       : Boolean;
-      Device_Number : Device_Number_Type;
+      Device_Number : PCI.Device_Number_Type;
       procedure Print_Device
          (DevName : in String;
-          DevNum  : in Device_Number_Type);
+          DevNum  : in PCI.Device_Number_Type);
       procedure Print_Device
          (DevName : in String;
-          DevNum  : in Device_Number_Type)
+          DevNum  : in PCI.Device_Number_Type)
          is
       begin
          Console.Print ("PCI device: ");
@@ -120,10 +124,11 @@ package body Malta
       end Print_Device;
    begin
       -- Galileo GT-64120A - VID/DID/Devnum = 0x11AB/0x4620/0
-      Cfg_Find_Device_By_Id (
+      PCI.Cfg_Find_Device_By_Id (
+         PCI_Descriptor,
          GT64120_BUS_NUMBER,
-         Vendor_Id_Type (Byte_Swap (Unsigned_16 (DEVICE_ID_GT64120))),
-         Device_Id_Type (Byte_Swap (Unsigned_16 (VENDOR_ID_MARVELL))),
+         PCI.Vendor_Id_Type (Byte_Swap (Unsigned_16 (PCI.DEVICE_ID_GT64120))),
+         PCI.Device_Id_Type (Byte_Swap (Unsigned_16 (PCI.VENDOR_ID_MARVELL))),
          Device_Number,
          Success
          );
@@ -131,10 +136,11 @@ package body Malta
          Print_Device ("Galileo GT-64120", 0);
       end if;
       -- Intel PIIX4E - VID/DID/Devnum = 0x8086/0x7110/0xA
-      Cfg_Find_Device_By_Id (
+      PCI.Cfg_Find_Device_By_Id (
+         PCI_Descriptor,
          GT64120_BUS_NUMBER,
-         VENDOR_ID_INTEL,
-         DEVICE_ID_PIIX4,
+         PCI.VENDOR_ID_INTEL,
+         PCI.DEVICE_ID_PIIX4,
          Device_Number,
          Success
          );
@@ -142,10 +148,11 @@ package body Malta
          Print_Device ("i82371E PIIX4", Device_Number);
       end if;
       -- AMD Am79C973 - VID/DID/Devnum = 0x1022/0x2000/0xB
-      Cfg_Find_Device_By_Id (
+      PCI.Cfg_Find_Device_By_Id (
+         PCI_Descriptor,
          GT64120_BUS_NUMBER,
-         VENDOR_ID_AMD,
-         DEVICE_ID_Am79C973,
+         PCI.VENDOR_ID_AMD,
+         PCI.DEVICE_ID_Am79C973,
          Device_Number,
          Success
          );
@@ -154,10 +161,11 @@ package body Malta
       end if;
       -- Cirrus CLGD5446 VGA - VID/DID/Devnum = 0x1013/0x00B8/0x12
       -- QEMU default
-      Cfg_Find_Device_By_Id (
+      PCI.Cfg_Find_Device_By_Id (
+         PCI_Descriptor,
          GT64120_BUS_NUMBER,
-         VENDOR_ID_CIRRUS,
-         DEVICE_ID_CLGD5446,
+         PCI.VENDOR_ID_CIRRUS,
+         PCI.DEVICE_ID_CLGD5446,
          Device_Number,
          Success
          );
@@ -166,10 +174,11 @@ package body Malta
       end if;
       -- QEMU VGA - VID/DID/Devnum = 0x1234/0x1111/0x12
       -- triggered by "-vga std" option
-      Cfg_Find_Device_By_Id (
+      PCI.Cfg_Find_Device_By_Id (
+         PCI_Descriptor,
          GT64120_BUS_NUMBER,
-         VENDOR_ID_QEMU,
-         DEVICE_ID_QEMU_VGA,
+         PCI.VENDOR_ID_QEMU,
+         PCI.DEVICE_ID_QEMU_VGA,
          Device_Number,
          Success
          );
