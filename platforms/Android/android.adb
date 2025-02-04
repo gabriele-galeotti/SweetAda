@@ -183,18 +183,13 @@ package body Android
          TM : Time.TM_Time;
       begin
          Time.Make_Time (tv.tv_sec, TM);
-         Console.Print ("Current date: ", NL => False);
-         Console.Print (TM.Year + 1_900, NL => False);
-         Console.Print ("-", NL => False);
-         Console.Print (TM.Mon + 1, NL => False);
-         Console.Print ("-", NL => False);
-         Console.Print (TM.MDay, NL => False);
-         Console.Print (" ", NL => False);
-         Console.Print (TM.Hour, NL => False);
-         Console.Print (":", NL => False);
-         Console.Print (TM.Min, NL => False);
-         Console.Print (":", NL => False);
-         Console.Print (TM.Sec, NL => False);
+         Console.Print ("Current date: ");
+         Console.Print (Prefix => "",  Value => TM.Year + 1_900);
+         Console.Print (Prefix => "-", Value => TM.Mon + 1);
+         Console.Print (Prefix => "-", Value => TM.MDay);
+         Console.Print (Prefix => " ", Value => TM.Hour);
+         Console.Print (Prefix => ":", Value => TM.Min);
+         Console.Print (Prefix => ":", Value => TM.Sec);
          Console.Print_NewLine;
       end;
    end Gettimeofday;
