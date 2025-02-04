@@ -32,7 +32,6 @@ with MMU;
 with Exceptions;
 with Interrupts;
 with PC;
-with PCI;
 with PIIX;
 with PCICAN;
 with VGA;
@@ -219,7 +218,7 @@ package body BSP
          end;
       end if;
       -- PCI ------------------------------------------------------------------
-      PCI.Cfg_Access_Descriptor := (
+      PCI_Descriptor := (
          Read_32  => CPU.IO.PortIn'Access,
          Write_32 => CPU.IO.PortOut'Access
          );
@@ -230,7 +229,7 @@ package body BSP
             Success   : Boolean;
          begin
             for Index in PCI.Device_Number_Type'Range loop
-               PCI.Cfg_Detect_Device (0, Index, Vendor_Id, Device_Id, Success);
+               PCI.Cfg_Detect_Device (PCI_Descriptor, 0, Index, Vendor_Id, Device_Id, Success);
                if Success then
                   Console.Print (Unsigned_16 (Index), Prefix => "PCI Device #");
                   Console.Print (Character'(' '));
@@ -248,6 +247,7 @@ package body BSP
          Device_Number : PCI.Device_Number_Type with Unreferenced => True;
       begin
          PCI.Cfg_Find_Device_By_Id (
+            PCI_Descriptor,
             0,
             PCI.VENDOR_ID_QEMU,
             PCI.DEVICE_ID_QEMU_VGA,
@@ -259,9 +259,9 @@ package body BSP
          end if;
       end;
       -- PIIX3 ----------------------------------------------------------------
-      if PIIX.Probe then
+      if PIIX.Probe (PCI_Descriptor) then
          Console.Print ("PIIX3 detected", NL => True);
-         PIIX.Init;
+         PIIX.Init (PCI_Descriptor);
       end if;
       -- PPI ------------------------------------------------------------------
       PC.PPI_Init;
@@ -287,14 +287,14 @@ package body BSP
       -- NE2000 (PCI) ---------------------------------------------------------
       if True then
          declare
-            PCI_Device_Number : PCI.Device_Number_Type;
-            Success         : Boolean;
+            Device_Number : PCI.Device_Number_Type;
+            Success       : Boolean;
          begin
-            NE2000.Probe (PCI_Device_Number, Success);
+            NE2000.Probe (PCI_Descriptor, Device_Number, Success);
             if Success then
                NE2000_Descriptors (1) := (
                   NE2000PCI     => True,
-                  Device_Number => PCI_Device_Number,
+                  Device_Number => Device_Number,
                   BAR           => 0,
                   PCI_Irq_Line  => 5,
                   Base_Address  => System'To_Address (16#C000#),
@@ -307,7 +307,7 @@ package body BSP
                   Write_32      => PortOut'Access,
                   Next_Ptr      => 0
                   );
-               NE2000.Init_PCI (NE2000_Descriptors (1));
+               NE2000.Init_PCI (PCI_Descriptor, NE2000_Descriptors (1));
             end if;
          end;
       end if;
@@ -325,9 +325,9 @@ package body BSP
          Device_Number : PCI.Device_Number_Type with Unreferenced => True;
          Success       : Boolean;
       begin
-         PCICAN.Probe (Device_Number, Success);
+         PCICAN.Probe (PCI_Descriptor, Device_Number, Success);
          if Success then
-            PCICAN.Init;
+            PCICAN.Init (PCI_Descriptor);
          end if;
       end;
       -------------------------------------------------------------------------
@@ -357,7 +357,7 @@ package body BSP
          CPU.IO.PortOut (16#04D0#, Unsigned_8'(16#20#)); -- RTL8029 bit5, Irq5
          CPU.IO.PortOut (16#04D1#, Unsigned_8'(16#00#));
          -- QEMU RTL8029 Irq5
-         PCI.Cfg_Write (PCI.BUS0, 1, 0, PIIX.PIRQRCC, Unsigned_8'(PIIX.To_U8 (Pirqc)));
+         PCI.Cfg_Write (PCI_Descriptor, PCI.BUS0, 1, 0, PIIX.PIRQRCC, Unsigned_8'(PIIX.To_U8 (Pirqc)));
       end;
       -- final IRQ enable
       Irq_Enable;

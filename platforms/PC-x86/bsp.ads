@@ -21,6 +21,7 @@ with UART16x50;
 with IDE;
 with NE2000;
 with Ethernet;
+with PCI;
 
 package BSP
    is
@@ -47,6 +48,7 @@ package BSP
    NE2000_Descriptors  : array (1 .. 1) of aliased NE2000.Descriptor_Type :=
                          [others => NE2000.DESCRIPTOR_INVALID];
    Ethernet_Descriptor : aliased Ethernet.Descriptor_Type := Ethernet.DESCRIPTOR_INVALID;
+   PCI_Descriptor      : aliased PCI.Descriptor_Type;
 
    QEMU : Boolean := False;
 
