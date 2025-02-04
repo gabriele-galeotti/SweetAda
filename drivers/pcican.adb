@@ -131,11 +131,12 @@ package body PCICAN
    -- Probe
    ----------------------------------------------------------------------------
    procedure Probe
-      (Device_Number : out Device_Number_Type;
-       Success       : out Boolean)
+      (Descriptor    : in     PCI.Descriptor_Type;
+       Device_Number :    out PCI.Device_Number_Type;
+       Success       :    out Boolean)
       is
    begin
-      Cfg_Find_Device_By_Id (BUS0, VENDOR_ID_AMCC, DEVICE_ID_PCICAN, Device_Number, Success);
+      PCI.Cfg_Find_Device_By_Id (Descriptor, PCI.BUS0, PCI.VENDOR_ID_AMCC, PCI.DEVICE_ID_PCICAN, Device_Number, Success);
       if Success then
          Console.Print (Unsigned_8 (Device_Number), Prefix => "AMCC PCIcanx/PCIcan @ PCI DevNum ", NL => True);
       end if;
@@ -145,14 +146,15 @@ package body PCICAN
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
+      (Descriptor : in PCI.Descriptor_Type)
       is
    begin
       -- initialize PCI interface, setup BAR __FIX__ device number hardwired @ 4
-      Cfg_Write (BUS0, 4, 0, BAR0_Register_Offset, Unsigned_32'(16#D000#)); -- S5920
-      Cfg_Write (BUS0, 4, 0, BAR1_Register_Offset, Unsigned_32'(16#D100#)); -- SJA100
-      Cfg_Write (BUS0, 4, 0, BAR2_Register_Offset, Unsigned_32'(16#D200#)); -- Xilinx FPGA
+      PCI.Cfg_Write (Descriptor, PCI.BUS0, 4, 0, PCI.BAR0_Register_Offset, Unsigned_32'(16#D000#)); -- S5920
+      PCI.Cfg_Write (Descriptor, PCI.BUS0, 4, 0, PCI.BAR1_Register_Offset, Unsigned_32'(16#D100#)); -- SJA100
+      PCI.Cfg_Write (Descriptor, PCI.BUS0, 4, 0, PCI.BAR2_Register_Offset, Unsigned_32'(16#D200#)); -- Xilinx FPGA
       -- enable IOEN
-      Cfg_Write (BUS0, 4, 0, CR_Register_Offset, Unsigned_8'(16#03#));
+      PCI.Cfg_Write (Descriptor, PCI.BUS0, 4, 0, PCI.CR_Register_Offset, Unsigned_8'(16#03#));
    end Init;
 
    ----------------------------------------------------------------------------

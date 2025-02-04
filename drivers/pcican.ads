@@ -28,11 +28,9 @@ package PCICAN
    --                                                                        --
    --========================================================================--
 
-   use PCI;
-
    type Descriptor_Type is record
-      Bus_Number    : Bus_Number_Type;
-      Device_Number : Device_Number_Type;
+      Bus_Number    : PCI.Bus_Number_Type;
+      Device_Number : PCI.Device_Number_Type;
    end record;
 
    DESCRIPTOR_INVALID : constant Descriptor_Type :=
@@ -42,9 +40,12 @@ package PCICAN
       );
 
    procedure Probe
-      (Device_Number : out Device_Number_Type;
-       Success       : out Boolean);
-   procedure Init;
+      (Descriptor    : in     PCI.Descriptor_Type;
+       Device_Number :    out PCI.Device_Number_Type;
+       Success       :    out Boolean);
+   procedure Init
+      (Descriptor : in PCI.Descriptor_Type);
+
    procedure TX;
 
 end PCICAN;
