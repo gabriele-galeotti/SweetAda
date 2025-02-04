@@ -30,6 +30,8 @@ package body LLutils
    use type SSE.Storage_Offset;
    use type SSE.Integer_Address;
    use type Interfaces.Unsigned_8;
+   use type Bits.C.char;
+   use type Bits.C.size_t;
 
    --========================================================================--
    --                                                                        --
@@ -245,6 +247,15 @@ package body LLutils
          C := Character'Val (Character'Pos ('0') + Digit);
       end if;
    end To_HexDigit;
+
+   ----------------------------------------------------------------------------
+   -- CString_Length
+   ----------------------------------------------------------------------------
+   function CString_Length
+      (String_Address : System.Address)
+      return Bits.C.size_t
+      is
+   separate;
 
    ----------------------------------------------------------------------------
    -- Atomic_Clear

@@ -21,6 +21,7 @@ with System;
 with System.Storage_Elements;
 with Interfaces;
 with Bits;
+with Bits.C;
 
 package LLutils
    with Preelaborate => True,
@@ -187,6 +188,13 @@ package LLutils
        MSD   : in     Boolean;
        LCase : in     Boolean;
        C     :    out Character);
+
+   ----------------------------------------------------------------------------
+   -- Compute the length of a C string.
+   ----------------------------------------------------------------------------
+   function CString_Length
+      (String_Address : System.Address)
+      return Bits.C.size_t;
 
    ----------------------------------------------------------------------------
    -- Synchronization primitives
