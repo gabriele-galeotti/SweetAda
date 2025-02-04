@@ -20,6 +20,7 @@ with Interfaces;
 with Bits;
 
 package PCI
+   with Preelaborate => True
    is
 
    --========================================================================--
@@ -170,14 +171,10 @@ package PCI
    type Cfg_Read_32_Ptr is access function (Port : Unsigned_16) return Unsigned_32;
    type Cfg_Write_32_Ptr is access procedure (Port : in Unsigned_16; Value : in Unsigned_32);
 
-   type Cfg_Access_Descriptor_Type is record
+   type Descriptor_Type is record
       Read_32  : Cfg_Read_32_Ptr;
       Write_32 : Cfg_Write_32_Ptr;
    end record;
-
-   CFG_DESCRIPTOR_INVALID : constant Cfg_Access_Descriptor_Type := (null, null);
-
-   Cfg_Access_Descriptor : Cfg_Access_Descriptor_Type := CFG_DESCRIPTOR_INVALID;
 
    ----------------------------------------------------------------------------
    -- subprograms
@@ -185,14 +182,16 @@ package PCI
 
    -- Unsigned_8
    function Cfg_Read
-      (Bus_Number      : Bus_Number_Type;
+      (Descriptor      : Descriptor_Type;
+       Bus_Number      : Bus_Number_Type;
        Device_Number   : Device_Number_Type;
        Function_Number : Function_Number_Type;
        Register_Number : Register_Number_Type)
       return Unsigned_8
       with Inline => True;
    procedure Cfg_Write
-      (Bus_Number      : in Bus_Number_Type;
+      (Descriptor      : in Descriptor_Type;
+       Bus_Number      : in Bus_Number_Type;
        Device_Number   : in Device_Number_Type;
        Function_Number : in Function_Number_Type;
        Register_Number : in Register_Number_Type;
@@ -201,14 +200,16 @@ package PCI
 
    -- Unsigned_16
    function Cfg_Read
-      (Bus_Number      : Bus_Number_Type;
+      (Descriptor      : Descriptor_Type;
+       Bus_Number      : Bus_Number_Type;
        Device_Number   : Device_Number_Type;
        Function_Number : Function_Number_Type;
        Register_Number : Register_Number_Type)
       return Unsigned_16
       with Inline => True;
    procedure Cfg_Write
-      (Bus_Number      : in Bus_Number_Type;
+      (Descriptor      : in Descriptor_Type;
+       Bus_Number      : in Bus_Number_Type;
        Device_Number   : in Device_Number_Type;
        Function_Number : in Function_Number_Type;
        Register_Number : in Register_Number_Type;
@@ -217,14 +218,16 @@ package PCI
 
    -- Unsigned_32
    function Cfg_Read
-      (Bus_Number      : Bus_Number_Type;
+      (Descriptor      : Descriptor_Type;
+       Bus_Number      : Bus_Number_Type;
        Device_Number   : Device_Number_Type;
        Function_Number : Function_Number_Type;
        Register_Number : Register_Number_Type)
       return Unsigned_32
       with Inline => True;
    procedure Cfg_Write
-      (Bus_Number      : in Bus_Number_Type;
+      (Descriptor      : in Descriptor_Type;
+       Bus_Number      : in Bus_Number_Type;
        Device_Number   : in Device_Number_Type;
        Function_Number : in Function_Number_Type;
        Register_Number : in Register_Number_Type;
@@ -232,27 +235,19 @@ package PCI
       with Inline => True;
 
    procedure Cfg_Detect_Device
-      (Bus_Number    : in     Bus_Number_Type;
+      (Descriptor    : in     Descriptor_Type;
+       Bus_Number    : in     Bus_Number_Type;
        Device_Number : in     Device_Number_Type;
        Vendor_Id     :    out Vendor_Id_Type;
        Device_Id     :    out Device_Id_Type;
        Success       :    out Boolean);
 
    procedure Cfg_Find_Device_By_Id
-      (Bus_Number    : in     Bus_Number_Type;
+      (Descriptor    : in     Descriptor_Type;
+       Bus_Number    : in     Bus_Number_Type;
        Vendor_Id     : in     Vendor_Id_Type;
        Device_Id     : in     Device_Id_Type;
        Device_Number :    out Device_Number_Type;
        Success       :    out Boolean);
-
-   procedure Cfg_Dump
-      (Bus_Number      : in Bus_Number_Type;
-       Device_Number   : in Device_Number_Type;
-       Function_Number : in Function_Number_Type);
-
-   procedure BARs_Dump
-      (Bus_Number      : in Bus_Number_Type;
-       Device_Number   : in Device_Number_Type;
-       Function_Number : in Function_Number_Type);
 
 end PCI;
