@@ -102,6 +102,8 @@ package Definitions
    CLK_UART14M  : constant := 14_745_600; -- CLK_UART1M8 * 8
    CLK_UART18M  : constant := 18_432_000; -- CLK_UART1M8 * 10
    CLK_PAL28M   : constant := 28_375_160; -- CLK_PAL * 64/10
+   CLK_33M33    : constant := 33_330_000; -- PCI
+   CLK_66M66    : constant := 66_667_000; -- PCI
 
    -- serial port baud rates
    type Baud_Rate_Type is
