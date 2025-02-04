@@ -35,6 +35,8 @@ package SH7750
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
    -- Generic definitions
    ----------------------------------------------------------------------------
@@ -591,5 +593,7 @@ pragma Warnings (On, "* bits of ""SCIF_Type"" unused");
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+pragma Style_Checks (On);
 
 end SH7750;
