@@ -2319,11 +2319,11 @@ pragma Warnings (On);
    SWP_FMC_SDRAM : constant := 2#01#; -- NOR/RAM and SDRAM memory mapping swapped
 
    type SYSCFG_MEMRMP_Type is record
-      MEM_BOOT  : Bits_1;       -- Memory boot mapping
+      MEM_BOOT  : Bits_1  := MEM_BOOT_ADD0; -- Memory boot mapping
       Reserved1 : Bits_7  := 0;
-      SWP_FB    : Boolean;      -- Flash Bank swap
+      SWP_FB    : Boolean := False;         -- Flash Bank swap
       Reserved2 : Bits_1  := 0;
-      SWP_FMC   : Bits_2;       -- FMC memory mapping swap
+      SWP_FMC   : Bits_2  := SWP_FMC_NONE;  -- FMC memory mapping swap
       Reserved3 : Bits_20 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2351,20 +2351,20 @@ pragma Warnings (On);
    MII_RMII_SEL_RMII : constant := 1; -- RMII PHY interface is selected
 
    type SYSCFG_PMC_Type is record
-      I2C1_FMP     : Boolean;      -- I2C1_FMP I2C1 Fast Mode + Enable
-      I2C2_FMP     : Boolean;      -- I2C2_FMP I2C2 Fast Mode + Enable
-      I2C3_FMP     : Boolean;      -- I2C3_FMP I2C3 Fast Mode + Enable
-      I2C4_FMP     : Boolean;      -- I2C4_FMP I2C4 Fast Mode + Enable
-      PB6_FMP      : Boolean;      -- PB6_FMP Fast Mode + Enable
-      PB7_FMP      : Boolean;      -- PB7_FMP Fast Mode + Enable
-      PB8_FMP      : Boolean;      -- PB8_FMP Fast Mode + Enable
-      PB9_FMP      : Boolean;      -- Fast Mode + Enable
+      I2C1_FMP     : Boolean := False;            -- I2C1_FMP I2C1 Fast Mode + Enable
+      I2C2_FMP     : Boolean := False;            -- I2C2_FMP I2C2 Fast Mode + Enable
+      I2C3_FMP     : Boolean := False;            -- I2C3_FMP I2C3 Fast Mode + Enable
+      I2C4_FMP     : Boolean := False;            -- I2C4_FMP I2C4 Fast Mode + Enable
+      PB6_FMP      : Boolean := False;            -- PB6_FMP Fast Mode + Enable
+      PB7_FMP      : Boolean := False;            -- PB7_FMP Fast Mode + Enable
+      PB8_FMP      : Boolean := False;            -- PB8_FMP Fast Mode + Enable
+      PB9_FMP      : Boolean := False;            -- Fast Mode + Enable
       Reserved1    : Bits_8  := 0;
-      ADC1DC2      : Boolean;      -- ADC accuracy Option 2
-      ADC2DC2      : Boolean;      -- ADC accuracy Option 2
-      ADC3DC2      : Boolean;      -- ADC accuracy Option 2
+      ADC1DC2      : Boolean := False;            -- ADC accuracy Option 2
+      ADC2DC2      : Boolean := False;            -- ADC accuracy Option 2
+      ADC3DC2      : Boolean := False;            -- ADC accuracy Option 2
       Reserved2    : Bits_4  := 0;
-      MII_RMII_SEL : Bits_1;       -- Ethernet PHY interface selection
+      MII_RMII_SEL : Bits_1  := MII_RMII_SEL_MII; -- Ethernet PHY interface selection
       Reserved3    : Bits_8  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2413,10 +2413,10 @@ pragma Warnings (On);
    EXTI_PK : constant := 2#1010#; -- PK[x] pin
 
    type SYSCFG_EXTICR1_Type is record
-      EXTI0    : Bits_4;       -- EXTI 0 configuration
-      EXTI1    : Bits_4;       -- EXTI 1 configuration
-      EXTI2    : Bits_4;       -- EXTI 2 configuration
-      EXTI3    : Bits_4;       -- EXTI 3 configuration
+      EXTI0    : Bits_4  := EXTI_PA; -- EXTI 0 configuration
+      EXTI1    : Bits_4  := EXTI_PA; -- EXTI 1 configuration
+      EXTI2    : Bits_4  := EXTI_PA; -- EXTI 2 configuration
+      EXTI3    : Bits_4  := EXTI_PA; -- EXTI 3 configuration
       Reserved : Bits_16 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2438,10 +2438,10 @@ pragma Warnings (On);
            Convention           => Ada;
 
    type SYSCFG_EXTICR2_Type is record
-      EXTI4    : Bits_4;       -- EXTI 4 configuration
-      EXTI5    : Bits_4;       -- EXTI 5 configuration
-      EXTI6    : Bits_4;       -- EXTI 6 configuration
-      EXTI7    : Bits_4;       -- EXTI 7 configuration
+      EXTI4    : Bits_4  := EXTI_PA; -- EXTI 4 configuration
+      EXTI5    : Bits_4  := EXTI_PA; -- EXTI 5 configuration
+      EXTI6    : Bits_4  := EXTI_PA; -- EXTI 6 configuration
+      EXTI7    : Bits_4  := EXTI_PA; -- EXTI 7 configuration
       Reserved : Bits_16 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2463,10 +2463,10 @@ pragma Warnings (On);
            Convention           => Ada;
 
    type SYSCFG_EXTICR3_Type is record
-      EXTI8    : Bits_4;       -- EXTI 8 configuration
-      EXTI9    : Bits_4;       -- EXTI 9 configuration
-      EXTI10   : Bits_4;       -- EXTI 10 configuration
-      EXTI11   : Bits_4;       -- EXTI 11 configuration
+      EXTI8    : Bits_4  := EXTI_PA; -- EXTI 8 configuration
+      EXTI9    : Bits_4  := EXTI_PA; -- EXTI 9 configuration
+      EXTI10   : Bits_4  := EXTI_PA; -- EXTI 10 configuration
+      EXTI11   : Bits_4  := EXTI_PA; -- EXTI 11 configuration
       Reserved : Bits_16 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2488,10 +2488,10 @@ pragma Warnings (On);
            Convention           => Ada;
 
    type SYSCFG_EXTICR4_Type is record
-      EXTI12   : Bits_4;       -- EXTI 12 configuration
-      EXTI13   : Bits_4;       -- EXTI 13 configuration
-      EXTI14   : Bits_4;       -- EXTI 14 configuration
-      EXTI15   : Bits_4;       -- EXTI 15 configuration
+      EXTI12   : Bits_4  := EXTI_PA; -- EXTI 12 configuration
+      EXTI13   : Bits_4  := EXTI_PA; -- EXTI 13 configuration
+      EXTI14   : Bits_4  := EXTI_PA; -- EXTI 14 configuration
+      EXTI15   : Bits_4  := EXTI_PA; -- EXTI 15 configuration
       Reserved : Bits_16 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2515,9 +2515,9 @@ pragma Warnings (On);
    -- 7.2.7 Class B register (SYSCFG_CBR)
 
    type SYSCFG_CBR_Type is record
-      CLL       : Boolean;      -- Core Lockup Lock
+      CLL       : Boolean := False; -- Core Lockup Lock
       Reserved1 : Bits_1  := 0;
-      PVDL      : Boolean;      -- PVD Lock
+      PVDL      : Boolean := False; -- PVD Lock
       Reserved2 : Bits_29 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2540,9 +2540,9 @@ pragma Warnings (On);
    -- 7.2.8 Compensation cell control register (SYSCFG_CMPCR)
 
    type SYSCFG_CMPCR_Type is record
-      CMP_PD    : Boolean;      -- Compensation cell power-down
+      CMP_PD    : Boolean := False; -- Compensation cell power-down
       Reserved1 : Bits_7  := 0;
-      READY     : Boolean;      -- Compensation cell ready flag
+      READY     : Boolean := False; -- Compensation cell ready flag
       Reserved2 : Bits_23 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2689,14 +2689,14 @@ pragma Warnings (On);
    URS_COUNTER_OFUF : constant := 1; -- Only counter overflow/underflow generates ..
 
    type TIMx_CR1_Type is record
-      CEN       : Boolean;      -- Counter enable
-      UDIS      : Boolean;      -- Update disable
-      URS       : Bits_1;       -- Update request source
-      OPM       : Boolean;      -- One-pulse mode
+      CEN       : Boolean := False;   -- Counter enable
+      UDIS      : Boolean := False;   -- Update disable
+      URS       : Bits_1  := URS_ANY; -- Update request source
+      OPM       : Boolean := False;   -- One-pulse mode
       Reserved1 : Bits_3  := 0;
-      ARPE      : Boolean;      -- Auto-reload preload enable
+      ARPE      : Boolean := False;   -- Auto-reload preload enable
       Reserved2 : Bits_3  := 0;
-      UIFREMAP  : Boolean;      -- UIF status bit remapping
+      UIFREMAP  : Boolean := False;   -- UIF status bit remapping
       Reserved3 : Bits_4  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2721,7 +2721,7 @@ pragma Warnings (On);
 
    type TIMx_CR2_Type is record
       Reserved1 : Bits_4 := 0;
-      MMS       : Bits_3;      -- Master mode selection
+      MMS       : Bits_3 := MMS_RESET; -- Master mode selection
       Reserved2 : Bits_9 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2735,9 +2735,9 @@ pragma Warnings (On);
    -- 28.4.3 TIM6/TIM7 DMA/Interrupt enable register (TIMx_DIER)
 
    type TIMx_DIER_Type is record
-      UIE       : Boolean;      -- Update interrupt enable
+      UIE       : Boolean := False; -- Update interrupt enable
       Reserved1 : Bits_7  := 0;
-      UDE       : Boolean;      -- Update DMA request enable
+      UDE       : Boolean := False; -- Update DMA request enable
       Reserved2 : Bits_7  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2752,7 +2752,7 @@ pragma Warnings (On);
    -- 28.4.4 TIM6/TIM7 status register (TIMx_SR)
 
    type TIMx_SR_Type is record
-      UIF      : Boolean;      -- Update interrupt flag
+      UIF      : Boolean := False; -- Update interrupt flag
       Reserved : Bits_15 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2765,7 +2765,7 @@ pragma Warnings (On);
    -- 28.4.5 TIM6/TIM7 event generation register (TIMx_EGR)
 
    type TIMx_EGR_Type is record
-      UG       : Boolean;      -- Update generation
+      UG       : Boolean := False; -- Update generation
       Reserved : Bits_15 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2778,9 +2778,9 @@ pragma Warnings (On);
    -- 28.4.6 TIM6/TIM7 counter (TIMx_CNT)
 
    type TIMx_CNT_Type is record
-      CNT      : Unsigned_16;      -- Counter value
+      CNT      : Unsigned_16 := 0;     -- Counter value
       Reserved : Bits_15     := 0;
-      UIFCPY   : Boolean;          -- UIF Copy
+      UIFCPY   : Boolean     := False; -- UIF Copy
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
