@@ -597,12 +597,12 @@ package body NE2000
    -- Probe
    ----------------------------------------------------------------------------
    procedure Probe
-      (Device_Number : out PCI.Device_Number_Type;
-       Success       : out Boolean)
+      (PCI_Descriptor : in     PCI.Descriptor_Type;
+       Device_Number  :    out PCI.Device_Number_Type;
+       Success        :    out Boolean)
       is
-      use PCI;
    begin
-      Cfg_Find_Device_By_Id (BUS0, VENDOR_ID_REALTEK, DEVICE_ID_RTL8029, Device_Number, Success);
+      PCI.Cfg_Find_Device_By_Id (PCI_Descriptor, PCI.BUS0, PCI.VENDOR_ID_REALTEK, PCI.DEVICE_ID_RTL8029, Device_Number, Success);
       if Success then
          Console.Print (Unsigned_8 (Device_Number), Prefix => "RTL8029 @ PCI DevNum ", NL => True);
       end if;
@@ -993,17 +993,17 @@ pragma Warnings (Off, "types for unchecked conversion have different sizes");
    -- Init_PCI
    ----------------------------------------------------------------------------
    procedure Init_PCI
-      (D : in out Descriptor_Type)
+      (PCI_Descriptor : in     PCI.Descriptor_Type;
+       D              : in out Descriptor_Type)
       is
-      use PCI;
       function To_U16 is new Ada.Unchecked_Conversion (Address, Unsigned_16);
    begin
       -- initialize PCI interface, setup BAR
-      Cfg_Write (BUS0, D.Device_Number, 0, BAR0_Register_Offset, To_U16 (D.Base_Address));
+      PCI.Cfg_Write (PCI_Descriptor, PCI.BUS0, D.Device_Number, 0, PCI.BAR0_Register_Offset, To_U16 (D.Base_Address));
       -- enable MEMEN/IOEN
-      Cfg_Write (BUS0, D.Device_Number, 0, CR_Register_Offset, Unsigned_8'(16#03#));
+      PCI.Cfg_Write (PCI_Descriptor, PCI.BUS0, D.Device_Number, 0, PCI.CR_Register_Offset, Unsigned_8'(16#03#));
       -- interrupt routing line
-      Cfg_Write (BUS0, D.Device_Number, 0, ILR_Register_Offset, D.PCI_Irq_Line);
+      PCI.Cfg_Write (PCI_Descriptor, PCI.BUS0, D.Device_Number, 0, PCI.ILR_Register_Offset, D.PCI_Irq_Line);
       -- initialize NE2000
       D.NE2000PCI := True;
       D.BAR       := To_U16 (D.Base_Address) and 16#FFE0#;

@@ -81,8 +81,9 @@ package NE2000
    RAM_Size    : constant := Definitions.kB16;
 
    procedure Probe
-      (Device_Number : out PCI.Device_Number_Type;
-       Success       : out Boolean);
+      (PCI_Descriptor : in     PCI.Descriptor_Type;
+       Device_Number  :    out PCI.Device_Number_Type;
+       Success        :    out Boolean);
 
    procedure Interrupt_Handler
       (Descriptor_Address : in Address);
@@ -100,6 +101,7 @@ package NE2000
       (D : in out Descriptor_Type);
 
    procedure Init_PCI
-      (D : in out Descriptor_Type);
+      (PCI_Descriptor : in     PCI.Descriptor_Type;
+       D              : in out Descriptor_Type);
 
 end NE2000;
