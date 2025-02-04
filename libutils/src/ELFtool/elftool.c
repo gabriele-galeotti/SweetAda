@@ -10,6 +10,7 @@
 
 /*
  * Arguments:
+ * optional -p <prefix_string> for findsymbol
  * $1 = -c | -v
  * if $1 = "-c":
  * $2 = command
