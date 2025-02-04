@@ -84,23 +84,29 @@ else
 fi
 
 #
-# Parse a number (eventually in units of kB).
-# The strange "s + 0" is a workaround for Darwin awk which lacks strtonum().
+# Parse padding size (eventually in units of kB/MB).
 #
-AWK_SCRIPT_FUNCTION='\
-$1 ~ /^[0-9]+[k|K]?$/               \
-{                                   \
-        s = toupper($1);            \
-        l = length($1);             \
-        n = s + 0;                  \
-        if (substr(s, l, 1) == "K") \
-        {                           \
-                n = n * 1024;       \
-        }                           \
-        printf "%d\n", n            \
-}                                   \
-'
-REQUESTEDSIZE=$(printf "%s\n" "$2" | awk "${AWK_SCRIPT_FUNCTION}")
+REQUESTEDSIZE=$2
+SUFFIX=$(printf "%s\n" "$2" | sed -e "s/.*\(.\)\$/\1/")
+case ${SUFFIX} in
+  [0-9])
+    MULTIPLIER=1
+    ;;
+  k|K)
+    MULTIPLIER=1024
+    ;;
+  m|M)
+    MULTIPLIER=1048576
+    ;;
+  *)
+    log_print_error "${SCRIPT_FILENAME}: *** Error: invalid padding size."
+    exit 1
+    ;;
+esac
+if [ "x${MULTIPLIER}" != "x1" ] ; then
+  REQUESTEDSIZE=$(printf "%s\n" "$2" | sed -e "s/\(.*\).\$/\1/")
+  REQUESTEDSIZE=$((REQUESTEDSIZE*MULTIPLIER))
+fi
 
 #
 # If the supplied file length is less than the current file size, it is
