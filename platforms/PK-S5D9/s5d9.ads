@@ -2000,6 +2000,56 @@ pragma Warnings (On);
            Convention => Ada;
 
    ----------------------------------------------------------------------------
+   -- 29. Ethernet MAC Controller (ETHERC)
+   ----------------------------------------------------------------------------
+
+   -- 29.2.5 PHY Interface Register (PIR)
+
+   type PIR_Type is record
+      MDC      : Bits_1  := 0; -- MII/RMII Management Data Clock
+      MMD      : Bits_1  := 0; -- MII/RMII Management Mode
+      MDO      : Bits_1  := 0; -- MII/RMII Management Data-Out
+      MDI      : Bits_1  := 0; -- MII/RMII Management Data-In
+      Reserved : Bits_28 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PIR_Type use record
+      MDC      at 0 range 0 ..  0;
+      MMD      at 0 range 1 ..  1;
+      MDO      at 0 range 2 ..  2;
+      MDI      at 0 range 3 ..  3;
+      Reserved at 0 range 4 .. 31;
+   end record;
+
+   -- 29.2.6 PHY Status Register (PSR)
+
+   type PSR_Type is record
+      LMON     : Boolean; -- ET0_LINKSTA Pin Status Flag
+      Reserved : Bits_31;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PSR_Type use record
+      LMON     at 0 range 0 ..  0;
+      Reserved at 0 range 1 .. 31;
+   end record;
+
+   ETHERC_BASEADDRESS : constant := 16#4006_4100#;
+
+   PIR : aliased PIR_Type
+      with Address              => System'To_Address (ETHERC_BASEADDRESS + 16#20#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   PSR : aliased PSR_Type
+      with Address              => System'To_Address (ETHERC_BASEADDRESS + 16#28#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
    -- 34. Serial Communications Interface (SCI)
    ----------------------------------------------------------------------------
 
