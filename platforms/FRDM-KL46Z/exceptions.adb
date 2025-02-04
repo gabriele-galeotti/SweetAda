@@ -81,7 +81,7 @@ package body Exceptions
       ARMv6M.VTOR.TBLOFF := Bits_25 (LLutils.Select_Address_Bits (Vector_Table'Address, 7, 31));
       -- LED2 (RED)
       SIM_SCGC5.PORTE := True;
-      PORTE_MUXCTRL.PCR (29).MUX := MUX_ALT1_GPIO;
+      PORTE_MUXCTRL.PCR (29).MUX := MUX_GPIO;
       GPIOE.PDDR (29) := True;
    end Init;
 

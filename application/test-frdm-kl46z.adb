@@ -38,7 +38,7 @@ package body Application
          Delay_Count : constant := 10_000_000;
       begin
          -- LED1 (GREEN)
-         PORTD_MUXCTRL.PCR (5).MUX := MUX_ALT1_GPIO;
+         PORTD_MUXCTRL.PCR (5).MUX := MUX_GPIO;
          GPIOD.PDDR (5) := True;
          while True loop
             GPIOD.PTOR (5) := True;
