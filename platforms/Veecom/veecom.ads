@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ bsp.adb                                                                                                   --
+-- __FLN__ veecom.ads                                                                                                --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -16,68 +16,26 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with Definitions;
-with Bits;
-with Veecom;
-with Console;
+with Interfaces;
 
-package body BSP
+package Veecom
+   with Preelaborate => True
    is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                           Local declarations                           --
+   --                               Public part                              --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
    use Interfaces;
-   use Definitions;
-   use Bits;
-   use Veecom;
 
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Package subprograms                          --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
+   PA0 : aliased Unsigned_8
+      with Address    => System'To_Address (16#FFF8#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   ----------------------------------------------------------------------------
-   -- Console wrappers
-   ----------------------------------------------------------------------------
-
-   procedure Console_Putchar
-      (C : in Character)
-      is
-   begin
-      PA0 := To_U8 (C) or 16#80#;
-      PA0 := 0;
-   end Console_Putchar;
-
-   procedure Console_Getchar
-      (C : out Character)
-      is
-   begin
-      C := Character'Val (0);
-   end Console_Getchar;
-
-   ----------------------------------------------------------------------------
-   -- Setup
-   ----------------------------------------------------------------------------
-   procedure Setup
-      is
-   begin
-      -- Console --------------------------------------------------------------
-      Console.Console_Descriptor := (
-         Write => Console_Putchar'Access,
-         Read  => Console_Getchar'Access
-         );
-      -------------------------------------------------------------------------
-      Console.Print ("Veecom", NL => True);
-      -------------------------------------------------------------------------
-   end Setup;
-
-end BSP;
+end Veecom;

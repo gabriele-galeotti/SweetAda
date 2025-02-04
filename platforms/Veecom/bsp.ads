@@ -34,9 +34,6 @@ package BSP
            Convention    => Asm,
            External_Name => "tick_count";
 
-   Timer_Constant : constant := 16#0001_0000#;
-   Timer_Value    : Interfaces.Unsigned_64;
-
    procedure Console_Putchar
       (C : in Character);
    procedure Console_Getchar
