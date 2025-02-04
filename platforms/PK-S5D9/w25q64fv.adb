@@ -61,6 +61,9 @@ package body W25Q64FV
       Console.Print (Prefix => "MFID  = 0x", Value => mfid, NL => True);
       Console.Print (Prefix => "MTYPE = 0x", Value => mtype, NL => True);
       Console.Print (Prefix => "MCAP  = 0x", Value => mcap, NL => True);
+      if mfid = 16#EF# and then mtype = 16#40# and then mcap = 16#17# then
+         Console.Print ("W25Q64FV (SPI)", NL => True);
+      end if;
    end Device_Detect;
 
    ----------------------------------------------------------------------------
