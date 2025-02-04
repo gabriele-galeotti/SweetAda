@@ -19,6 +19,7 @@ with System;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
+with PCI;
 
 package PIIX
    is
@@ -329,8 +330,10 @@ package PIIX
    ----------------------------------------------------------------------------
 
    function Probe
+      (D : PCI.Descriptor_Type)
       return Boolean;
 
-   procedure Init;
+   procedure Init
+      (D : in PCI.Descriptor_Type);
 
 end PIIX;

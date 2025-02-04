@@ -15,20 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with PCI;
-
 package body PIIX
    is
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Local declarations                           --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   use PCI;
 
    --========================================================================--
    --                                                                        --
@@ -42,17 +30,19 @@ package body PIIX
    -- Probe
    ----------------------------------------------------------------------------
    function Probe
+      (D : PCI.Descriptor_Type)
       return Boolean
       is
       Success       : Boolean;
-      Device_Number : Device_Number_Type with Unreferenced => True;
+      Device_Number : PCI.Device_Number_Type with Unreferenced => True;
    begin
-      Cfg_Find_Device_By_Id (
-         BUS0,
-         VENDOR_ID_INTEL,
-         DEVICE_ID_PIIX3,
-         Device_Number,
-         Success
+      PCI.Cfg_Find_Device_By_Id (
+         Descriptor    => D,
+         Bus_Number    => PCI.BUS0,
+         Vendor_Id     => PCI.VENDOR_ID_INTEL,
+         Device_Id     => PCI.DEVICE_ID_PIIX3,
+         Device_Number => Device_Number,
+         Success       => Success
          );
       return Success;
    end Probe;
@@ -61,18 +51,34 @@ package body PIIX
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
+      (D : in PCI.Descriptor_Type)
       is
-      Pirqc : constant PIRQC_Type := (
+      PIRQC : constant PIRQC_Type := (
          IRQROUTE   => IRQROUTE_RESERVED1,
          IRQROUTEEN => NFalse,
          others     => <>
          );
    begin
-      -- Bus_Number, Device_Number, Function_Number, Register_Number, Value
-      Cfg_Write (BUS0, 1, 0, PIRQRCA, To_U8 (Pirqc));
-      Cfg_Write (BUS0, 1, 0, PIRQRCB, To_U8 (Pirqc));
-      Cfg_Write (BUS0, 1, 0, PIRQRCC, To_U8 (Pirqc));
-      Cfg_Write (BUS0, 1, 0, PIRQRCD, To_U8 (Pirqc));
+      PCI.Cfg_Write (
+         Descriptor => D, Bus_Number => PCI.BUS0, Device_Number => 1, Function_Number => 0,
+         Register_Number => PIRQRCA,
+         Value           => To_U8 (PIRQC)
+         );
+      PCI.Cfg_Write (
+         Descriptor => D, Bus_Number => PCI.BUS0, Device_Number => 1, Function_Number => 0,
+         Register_Number => PIRQRCB,
+         Value           => To_U8 (PIRQC)
+         );
+      PCI.Cfg_Write (
+         Descriptor => D, Bus_Number => PCI.BUS0, Device_Number => 1, Function_Number => 0,
+         Register_Number => PIRQRCC,
+         Value           => To_U8 (PIRQC)
+         );
+      PCI.Cfg_Write (
+         Descriptor => D, Bus_Number => PCI.BUS0, Device_Number => 1, Function_Number => 0,
+         Register_Number => PIRQRCD,
+         Value           => To_U8 (PIRQC)
+         );
    end Init;
 
 end PIIX;
