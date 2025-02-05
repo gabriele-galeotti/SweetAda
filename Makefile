@@ -130,6 +130,14 @@ export TMPDIR
 #
 # List of recognized goals:
 #
+# C  = cleaning goal
+# I  = info goal
+# L  = libutils goal
+# NP = not-platform goal
+# P  = platform goal
+# R  = RTS goal
+# S  = service goal
+#
 # libutils-elftool      L       S       NP
 # libutils-gcc-wrapper  L       S       NP
 # libutils-gnat-wrapper L       S       NP
