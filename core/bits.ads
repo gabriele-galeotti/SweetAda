@@ -999,6 +999,8 @@ package Bits
    -- L/M/N/O/P/Q/R/HByte
    ----------------------------------------------------------------------------
    -- Extract an Unsigned_8-component from a word.
+   -- L is always the LS byte, H is always the MS byte; M comes next to L,
+   -- then other letters represent increasing bytes.
    ----------------------------------------------------------------------------
 
    function LByte
@@ -1105,6 +1107,8 @@ package Bits
    -- Make_Word
    ----------------------------------------------------------------------------
    -- Assemble a 16/32/64-bit word using low-order halves.
+   -- L is always the LS byte, H is always the MS byte; M comes next to L,
+   -- then other letters represent increasing bytes.
    ----------------------------------------------------------------------------
 
    function Make_Word
