@@ -16,8 +16,8 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Storage_Elements;
-with System.Multiprocessors.Spin_Locks;
 with CPU.IO;
+with Mutex;
 
 package body PC
    is
@@ -31,11 +31,10 @@ package body PC
    --========================================================================--
 
    use System.Storage_Elements;
-   use System.Multiprocessors.Spin_Locks;
    use type CPU.Irq_Id_Type;
 
-   PIC_Lock : Spin_Lock;
-   PIT_Lock : Spin_Lock;
+   PIC_Lock : Mutex.Semaphore_Binary := Mutex.SEMAPHORE_UNLOCKED;
+   PIT_Lock : Mutex.Semaphore_Binary := Mutex.SEMAPHORE_UNLOCKED;
 
    --========================================================================--
    --                                                                        --
@@ -57,7 +56,7 @@ package body PC
        Vector_Offset_Slave  : in Unsigned_8)
       is
    begin
-      Lock (PIC_Lock);
+      Mutex.Acquire (PIC_Lock);
       -- PIC2 (slave)
       CPU.IO.PortOut (PIC2_ICW1, Unsigned_8'(16#11#));  -- edge triggered, cascade mode, ICW4 required
       CPU.IO.PortOut (PIC2_ICW2, Vector_Offset_Slave);  -- vector offset, for an x86 PC = 0x28 (40 .. 47)
@@ -73,7 +72,7 @@ package body PC
       CPU.IO.PortOut (PIC2_OCW1, Unsigned_8'(16#FF#));  -- PIC2: all masked
       CPU.IO.PortOut (PIC1_OCW1, Unsigned_8'(16#FB#));  -- PIC1: all masked except IR line 2
       --
-      Unlock (PIC_Lock);
+      Mutex.Release (PIC_Lock);
    end PIC_Init;
 
    ----------------------------------------------------------------------------
@@ -95,10 +94,10 @@ package body PC
          Irq_Line := Natural (Irq - PIC_Irq0);
          Port := PIC1_OCW1;
       end if;
-      Lock (PIC_Lock);
+      Mutex.Acquire (PIC_Lock);
       Data := CPU.IO.PortIn (Port);
       CPU.IO.PortOut (Port, Data and not Shift_Left (1, Irq_Line));
-      Unlock (PIC_Lock);
+      Mutex.Release (PIC_Lock);
    end PIC_Irq_Enable;
 
    ----------------------------------------------------------------------------
@@ -122,10 +121,10 @@ package body PC
             Irq_Line := Natural (Irq - PIC_Irq0);
             Port := PIC1_OCW1;
          end if;
-         Lock (PIC_Lock);
+         Mutex.Acquire (PIC_Lock);
          Data := CPU.IO.PortIn (Port);
          CPU.IO.PortOut (Port, Data or Shift_Left (1, Irq_Line));
-         Unlock (PIC_Lock);
+         Mutex.Release (PIC_Lock);
       end if;
    end PIC_Irq_Disable;
 
@@ -146,10 +145,10 @@ package body PC
    procedure PIC2_EOI
       is
    begin
-      Lock (PIC_Lock);
+      Mutex.Acquire (PIC_Lock);
       CPU.IO.PortOut (PIC1_OCW2, Unsigned_8'(16#20#));
       CPU.IO.PortOut (PIC2_OCW2, Unsigned_8'(16#20#));
-      Unlock (PIC_Lock);
+      Mutex.Release (PIC_Lock);
    end PIC2_EOI;
 
    ----------------------------------------------------------------------------
@@ -183,7 +182,7 @@ package body PC
       is
       US100_count : constant := ((((PIT_CLK * 100) + (1_000_000 / 2)) / 1_000_000) - 1);
    begin
-      Lock (PIT_Lock);
+      Mutex.Acquire (PIT_Lock);
       for Index in 1 .. Delay100us_Units loop
          -- MODE0: INTERRUPT ON TERMINAL COUNT, two bytes of counting,
          CPU.IO.PortOut (CONTROL_WORD, To_U8 (PIT_Control_Word_Type'(
@@ -206,7 +205,7 @@ package body PC
             exit when To_PIT_Status (Unsigned_8'(CPU.IO.PortIn (COUNTER1))).OUT_Pin;
          end loop;
       end loop;
-      Unlock (PIT_Lock);
+      Mutex.Release (PIT_Lock);
    end PIT_Counter1_Delay;
 
 pragma Warnings (Off, "types for unchecked conversion have different sizes");

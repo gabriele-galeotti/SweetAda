@@ -23,7 +23,6 @@ with Bits;
 with CPU;
 
 package PC
-   with Preelaborate => True
    is
 
    --========================================================================--
