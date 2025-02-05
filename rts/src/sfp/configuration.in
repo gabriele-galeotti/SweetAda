@@ -37,7 +37,7 @@ LIBGNAT_SRCS_COMMON += s-stalib.ads
 LIBGNAT_SRCS_COMMON += ../common/s-stoele.ads ../common/s-stoele.adb
 LIBGNAT_SRCS_COMMON += ../common/s-unstyp.ads
 
-LIBGNARL_SRCS_COMMON += s-musplo.ads s-musplo.adb
+LIBGNARL_SRCS_COMMON +=
 
 #
 # s-parame.ads default configuration.
