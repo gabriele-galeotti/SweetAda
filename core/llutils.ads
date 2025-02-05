@@ -126,7 +126,7 @@ package LLutils
       with Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Build an address from a base address plus on offset, scaled by a factor.
+   -- Build an address from a base address plus offset, scaled by a factor.
    ----------------------------------------------------------------------------
    function Build_Address
       (Base_Address  : System.Address;
@@ -147,7 +147,7 @@ package LLutils
       return Interfaces.Unsigned_8;
 
    ----------------------------------------------------------------------------
-   -- Transform an Unsigned_8 in BCD form.
+   -- Transform an Unsigned_8 to BCD form.
    ----------------------------------------------------------------------------
    function U8_To_BCD
       (V : Interfaces.Unsigned_8)
