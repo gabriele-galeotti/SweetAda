@@ -111,8 +111,8 @@ package Definitions
    CLK_16M      : constant :=  16_000_000; -- standard value
    CLK_UART18M  : constant :=  18_432_000; -- CLK_UART1M8 * 10
    CLK_20M      : constant :=  20_000_000; -- standard value
-   CLK_PAL28M   : constant :=  28_375_160; -- CLK_PAL * 64/10
    CLK_25M      : constant :=  25_000_000; -- MII PHY
+   CLK_PAL28M   : constant :=  28_375_160; -- CLK_PAL * 64/10
    CLK_33M      : constant :=  33_000_000; -- standard value
    CLK_33M33    : constant :=  33_330_000; -- PCI
    CLK_40M      : constant :=  40_000_000; -- standard value
