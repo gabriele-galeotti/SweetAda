@@ -36,6 +36,8 @@ package Sun4m
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    SCC_BASEADDRESS                           : constant := 16#7110_0000#;
    SLAVIO_TIMER_PROC_BASEADDRESS             : constant := 16#71D0_0000#;
    SLAVIO_TIMER_SYS_BASEADDRESS              : constant := 16#71D1_0000#;
@@ -325,5 +327,7 @@ pragma Warnings (On, "volatile actual passed by copy");
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
+pragma Style_Checks (On);
 
 end Sun4m;
