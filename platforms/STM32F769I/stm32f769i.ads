@@ -2563,6 +2563,505 @@ pragma Warnings (On);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- 8 Direct memory access controller (DMA)
+   ----------------------------------------------------------------------------
+
+   -- 8.5.1 DMA low interrupt status register (DMA_LISR)
+
+   type DMA_LISR_Type is record
+      FEIF0     : Boolean := False; -- stream 0 FIFO error interrupt flag
+      Reserved1 : Bits_1  := 0;
+      DMEIF0    : Boolean := False; -- stream 0 direct mode error interrupt flag
+      TEIF0     : Boolean := False; -- stream 0 transfer error interrupt flag
+      HTIF0     : Boolean := False; -- stream 0 half transfer interrupt flag
+      TCIF0     : Boolean := False; -- stream 0 transfer complete interrupt flag
+      FEIF1     : Boolean := False; -- stream 1 FIFO error interrupt flag
+      Reserved2 : Bits_1  := 0;
+      DMEIF1    : Boolean := False; -- stream 1 direct mode error interrupt flag
+      TEIF1     : Boolean := False; -- stream 1 transfer error interrupt flag
+      HTIF1     : Boolean := False; -- stream 1 half transfer interrupt flag
+      TCIF1     : Boolean := False; -- stream 1 transfer complete interrupt flag
+      Reserved3 : Bits_4  := 0;
+      FEIF2     : Boolean := False; -- stream 2 FIFO error interrupt flag
+      Reserved4 : Bits_1  := 0;
+      DMEIF2    : Boolean := False; -- stream 2 direct mode error interrupt flag
+      TEIF2     : Boolean := False; -- stream 2 transfer error interrupt flag
+      HTIF2     : Boolean := False; -- stream 2 half transfer interrupt flag
+      TCIF2     : Boolean := False; -- stream 2 transfer complete interrupt flag
+      FEIF3     : Boolean := False; -- stream 3 FIFO error interrupt flag
+      Reserved5 : Bits_1  := 0;
+      DMEIF3    : Boolean := False; -- stream 3 direct mode error interrupt flag
+      TEIF3     : Boolean := False; -- stream 3 transfer error interrupt flag
+      HTIF3     : Boolean := False; -- stream 3 half transfer interrupt flag
+      TCIF3     : Boolean := False; -- stream 3 transfer complete interrupt flag
+      Reserved6 : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_LISR_Type use record
+      FEIF0     at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  1;
+      DMEIF0    at 0 range  2 ..  2;
+      TEIF0     at 0 range  3 ..  3;
+      HTIF0     at 0 range  4 ..  4;
+      TCIF0     at 0 range  5 ..  5;
+      FEIF1     at 0 range  6 ..  6;
+      Reserved2 at 0 range  7 ..  7;
+      DMEIF1    at 0 range  8 ..  8;
+      TEIF1     at 0 range  9 ..  9;
+      HTIF1     at 0 range 10 .. 10;
+      TCIF1     at 0 range 11 .. 11;
+      Reserved3 at 0 range 12 .. 15;
+      FEIF2     at 0 range 16 .. 16;
+      Reserved4 at 0 range 17 .. 17;
+      DMEIF2    at 0 range 18 .. 18;
+      TEIF2     at 0 range 19 .. 19;
+      HTIF2     at 0 range 20 .. 20;
+      TCIF2     at 0 range 21 .. 21;
+      FEIF3     at 0 range 22 .. 22;
+      Reserved5 at 0 range 23 .. 23;
+      DMEIF3    at 0 range 24 .. 24;
+      TEIF3     at 0 range 25 .. 25;
+      HTIF3     at 0 range 26 .. 26;
+      TCIF3     at 0 range 27 .. 27;
+      Reserved6 at 0 range 28 .. 31;
+   end record;
+
+   -- 8.5.2 DMA high interrupt status register (DMA_HISR)
+
+   type DMA_HISR_Type is record
+      FEIF4     : Boolean := False; -- stream 4 FIFO error interrupt flag
+      Reserved1 : Bits_1  := 0;
+      DMEIF4    : Boolean := False; -- stream 4 direct mode error interrupt flag
+      TEIF4     : Boolean := False; -- stream 4 transfer error interrupt flag
+      HTIF4     : Boolean := False; -- stream 4 half transfer interrupt flag
+      TCIF4     : Boolean := False; -- stream 4 transfer complete interrupt flag
+      FEIF5     : Boolean := False; -- stream 5 FIFO error interrupt flag
+      Reserved2 : Bits_1  := 0;
+      DMEIF5    : Boolean := False; -- stream 5 direct mode error interrupt flag
+      TEIF5     : Boolean := False; -- stream 5 transfer error interrupt flag
+      HTIF5     : Boolean := False; -- stream 5 half transfer interrupt flag
+      TCIF5     : Boolean := False; -- stream 5 transfer complete interrupt flag
+      Reserved3 : Bits_4  := 0;
+      FEIF6     : Boolean := False; -- stream 6 FIFO error interrupt flag
+      Reserved4 : Bits_1  := 0;
+      DMEIF6    : Boolean := False; -- stream 6 direct mode error interrupt flag
+      TEIF6     : Boolean := False; -- stream 6 transfer error interrupt flag
+      HTIF6     : Boolean := False; -- stream 6 half transfer interrupt flag
+      TCIF6     : Boolean := False; -- stream 6 transfer complete interrupt flag
+      FEIF7     : Boolean := False; -- stream 7 FIFO error interrupt flag
+      Reserved5 : Bits_1  := 0;
+      DMEIF7    : Boolean := False; -- stream 7 direct mode error interrupt flag
+      TEIF7     : Boolean := False; -- stream 7 transfer error interrupt flag
+      HTIF7     : Boolean := False; -- stream 7 half transfer interrupt flag
+      TCIF7     : Boolean := False; -- stream 7 transfer complete interrupt flag
+      Reserved6 : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_HISR_Type use record
+      FEIF4     at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  1;
+      DMEIF4    at 0 range  2 ..  2;
+      TEIF4     at 0 range  3 ..  3;
+      HTIF4     at 0 range  4 ..  4;
+      TCIF4     at 0 range  5 ..  5;
+      FEIF5     at 0 range  6 ..  6;
+      Reserved2 at 0 range  7 ..  7;
+      DMEIF5    at 0 range  8 ..  8;
+      TEIF5     at 0 range  9 ..  9;
+      HTIF5     at 0 range 10 .. 10;
+      TCIF5     at 0 range 11 .. 11;
+      Reserved3 at 0 range 12 .. 15;
+      FEIF6     at 0 range 16 .. 16;
+      Reserved4 at 0 range 17 .. 17;
+      DMEIF6    at 0 range 18 .. 18;
+      TEIF6     at 0 range 19 .. 19;
+      HTIF6     at 0 range 20 .. 20;
+      TCIF6     at 0 range 21 .. 21;
+      FEIF7     at 0 range 22 .. 22;
+      Reserved5 at 0 range 23 .. 23;
+      DMEIF7    at 0 range 24 .. 24;
+      TEIF7     at 0 range 25 .. 25;
+      HTIF7     at 0 range 26 .. 26;
+      TCIF7     at 0 range 27 .. 27;
+      Reserved6 at 0 range 28 .. 31;
+   end record;
+
+   -- 8.5.3 DMA low interrupt flag clear register (DMA_LIFCR)
+
+   type DMA_LIFCR_Type is record
+      CFEIF0    : Boolean := False; -- stream 0 clear FIFO error interrupt flag
+      Reserved1 : Bits_1  := 0;
+      CDMEIF0   : Boolean := False; -- stream 0 clear direct mode error interrupt flag
+      CTEIF0    : Boolean := False; -- stream 0 clear transfer error interrupt flag
+      CHTIF0    : Boolean := False; -- stream 0 clear half transfer interrupt flag
+      CTCIF0    : Boolean := False; -- stream 0 clear transfer complete interrupt flag
+      CFEIF1    : Boolean := False; -- stream 1 clear FIFO error interrupt flag
+      Reserved2 : Bits_1  := 0;
+      CDMEIF1   : Boolean := False; -- stream 1 clear direct mode error interrupt flag
+      CTEIF1    : Boolean := False; -- stream 1 clear transfer error interrupt flag
+      CHTIF1    : Boolean := False; -- stream 1 clear half transfer interrupt flag
+      CTCIF1    : Boolean := False; -- stream 1 clear transfer complete interrupt flag
+      Reserved3 : Bits_4  := 0;
+      CFEIF2    : Boolean := False; -- stream 2 clear FIFO error interrupt flag
+      Reserved4 : Bits_1  := 0;
+      CDMEIF2   : Boolean := False; -- stream 2 clear direct mode error interrupt flag
+      CTEIF2    : Boolean := False; -- stream 2 clear transfer error interrupt flag
+      CHTIF2    : Boolean := False; -- stream 2 clear half transfer interrupt flag
+      CTCIF2    : Boolean := False; -- stream 2 clear transfer complete interrupt flag
+      CFEIF3    : Boolean := False; -- stream 3 clear FIFO error interrupt flag
+      Reserved5 : Bits_1  := 0;
+      CDMEIF3   : Boolean := False; -- stream 3 clear direct mode error interrupt flag
+      CTEIF3    : Boolean := False; -- stream 3 clear transfer error interrupt flag
+      CHTIF3    : Boolean := False; -- stream 3 clear half transfer interrupt flag
+      CTCIF3    : Boolean := False; -- stream 3 clear transfer complete interrupt flag
+      Reserved6 : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_LIFCR_Type use record
+      CFEIF0    at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  1;
+      CDMEIF0   at 0 range  2 ..  2;
+      CTEIF0    at 0 range  3 ..  3;
+      CHTIF0    at 0 range  4 ..  4;
+      CTCIF0    at 0 range  5 ..  5;
+      CFEIF1    at 0 range  6 ..  6;
+      Reserved2 at 0 range  7 ..  7;
+      CDMEIF1   at 0 range  8 ..  8;
+      CTEIF1    at 0 range  9 ..  9;
+      CHTIF1    at 0 range 10 .. 10;
+      CTCIF1    at 0 range 11 .. 11;
+      Reserved3 at 0 range 12 .. 15;
+      CFEIF2    at 0 range 16 .. 16;
+      Reserved4 at 0 range 17 .. 17;
+      CDMEIF2   at 0 range 18 .. 18;
+      CTEIF2    at 0 range 19 .. 19;
+      CHTIF2    at 0 range 20 .. 20;
+      CTCIF2    at 0 range 21 .. 21;
+      CFEIF3    at 0 range 22 .. 22;
+      Reserved5 at 0 range 23 .. 23;
+      CDMEIF3   at 0 range 24 .. 24;
+      CTEIF3    at 0 range 25 .. 25;
+      CHTIF3    at 0 range 26 .. 26;
+      CTCIF3    at 0 range 27 .. 27;
+      Reserved6 at 0 range 28 .. 31;
+   end record;
+
+   -- 8.5.4 DMA high interrupt flag clear register (DMA_HIFCR)
+
+   type DMA_HIFCR_Type is record
+      CFEIF4    : Boolean := False; -- stream 4 clear FIFO error interrupt flag
+      Reserved1 : Bits_1  := 0;
+      CDMEIF4   : Boolean := False; -- stream 4 clear direct mode error interrupt flag
+      CTEIF4    : Boolean := False; -- stream 4 clear transfer error interrupt flag
+      CHTIF4    : Boolean := False; -- stream 4 clear half transfer interrupt flag
+      CTCIF4    : Boolean := False; -- stream 4 clear transfer complete interrupt flag
+      CFEIF5    : Boolean := False; -- stream 5 clear FIFO error interrupt flag
+      Reserved2 : Bits_1  := 0;
+      CDMEIF5   : Boolean := False; -- stream 5 clear direct mode error interrupt flag
+      CTEIF5    : Boolean := False; -- stream 5 clear transfer error interrupt flag
+      CHTIF5    : Boolean := False; -- stream 5 clear half transfer interrupt flag
+      CTCIF5    : Boolean := False; -- stream 5 clear transfer complete interrupt flag
+      Reserved3 : Bits_4  := 0;
+      CFEIF6    : Boolean := False; -- stream 6 clear FIFO error interrupt flag
+      Reserved4 : Bits_1  := 0;
+      CDMEIF6   : Boolean := False; -- stream 6 clear direct mode error interrupt flag
+      CTEIF6    : Boolean := False; -- stream 6 clear transfer error interrupt flag
+      CHTIF6    : Boolean := False; -- stream 6 clear half transfer interrupt flag
+      CTCIF6    : Boolean := False; -- stream 6 clear transfer complete interrupt flag
+      CFEIF7    : Boolean := False; -- stream 7 clear FIFO error interrupt flag
+      Reserved5 : Bits_1  := 0;
+      CDMEIF7   : Boolean := False; -- stream 7 clear direct mode error interrupt flag
+      CTEIF7    : Boolean := False; -- stream 7 clear transfer error interrupt flag
+      CHTIF7    : Boolean := False; -- stream 7 clear half transfer interrupt flag
+      CTCIF7    : Boolean := False; -- stream 7 clear transfer complete interrupt flag
+      Reserved6 : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_HIFCR_Type use record
+      CFEIF4    at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  1;
+      CDMEIF4   at 0 range  2 ..  2;
+      CTEIF4    at 0 range  3 ..  3;
+      CHTIF4    at 0 range  4 ..  4;
+      CTCIF4    at 0 range  5 ..  5;
+      CFEIF5    at 0 range  6 ..  6;
+      Reserved2 at 0 range  7 ..  7;
+      CDMEIF5   at 0 range  8 ..  8;
+      CTEIF5    at 0 range  9 ..  9;
+      CHTIF5    at 0 range 10 .. 10;
+      CTCIF5    at 0 range 11 .. 11;
+      Reserved3 at 0 range 12 .. 15;
+      CFEIF6    at 0 range 16 .. 16;
+      Reserved4 at 0 range 17 .. 17;
+      CDMEIF6   at 0 range 18 .. 18;
+      CTEIF6    at 0 range 19 .. 19;
+      CHTIF6    at 0 range 20 .. 20;
+      CTCIF6    at 0 range 21 .. 21;
+      CFEIF7    at 0 range 22 .. 22;
+      Reserved5 at 0 range 23 .. 23;
+      CDMEIF7   at 0 range 24 .. 24;
+      CTEIF7    at 0 range 25 .. 25;
+      CHTIF7    at 0 range 26 .. 26;
+      CTCIF7    at 0 range 27 .. 27;
+      Reserved6 at 0 range 28 .. 31;
+   end record;
+
+   -- 8.5.5 DMA stream x configuration register (DMA_SxCR)
+
+   PFCTRL_DMA        : constant := 0; -- DMA is the flow controller
+   PFCTRL_PERIPHERAL : constant := 1; -- The peripheral is the flow controller
+
+   DIR_P2M  : constant := 2#00#; -- peripheral-to-memory
+   DIR_M2P  : constant := 2#01#; -- memory-to-peripheral
+   DIR_M2M  : constant := 2#10#; -- memory-to-memory
+   DIR_RSVD : constant := 2#11#; -- reserved
+
+   PINC_FIXED : constant := 0; -- peripheral address pointer is fixed
+   PINC_INCR  : constant := 1; -- peripheral address pointer is incremented after each data transfer (increment is done according to PSIZE)
+
+   MINC_FIXED : constant := 0; -- memory address pointer is fixed
+   MINC_INCR  : constant := 1; -- memory address pointer is incremented after each data transfer (increment is done according to MSIZE)
+
+   PSIZE_8    : constant := 2#00#; -- byte (8-bit)
+   PSIZE_16   : constant := 2#01#; -- half-word (16-bit)
+   PSIZE_32   : constant := 2#10#; -- word (32-bit)
+   PSIZE_RSVD : constant := 2#11#; -- reserved
+
+   MSIZE_8    : constant := 2#00#; -- byte (8-bit)
+   MSIZE_16   : constant := 2#01#; -- half-word (16-bit)
+   MSIZE_32   : constant := 2#10#; -- word (32-bit)
+   MSIZE_RSVD : constant := 2#11#; -- reserved
+
+   PINCOS_PSIZE : constant := 0; -- The offset size for the peripheral address calculation is linked to the PSIZE
+   PINCOS_4     : constant := 1; -- The offset size for the peripheral address calculation is fixed to 4 (32-bit alignment).
+
+   PL_LO  : constant := 2#00#; -- low
+   PL_MED : constant := 2#01#; -- medium
+   PL_HI  : constant := 2#10#; -- high
+   PL_VHI : constant := 2#11#; -- very high
+
+   DBM_NOBUFSWITCH : constant := 0; -- no buffer switching at the end of transfer
+   DBM_SWITCHONEND : constant := 1; -- memory target switched at the end of the DMA transfer
+
+   CT_Memory0 : constant := 0; -- current target memory is Memory 0 (addressed by the DMA_SxM0AR pointer)
+   CT_Memory1 : constant := 1; -- current target memory is Memory 1 (addressed by the DMA_SxM1AR pointer)
+
+   PBURST_SINGLE : constant := 2#00#; -- single transfer
+   PBURST_INCR4  : constant := 2#01#; -- INCR4 (incremental burst of 4 beats)
+   PBURST_INCR8  : constant := 2#10#; -- INCR8 (incremental burst of 8 beats)
+   PBURST_INCR16 : constant := 2#11#; -- INCR16 (incremental burst of 16 beats)
+
+   MBURST_SINGLE : constant := 2#00#; -- single transfer
+   MBURST_INCR4  : constant := 2#01#; -- INCR4 (incremental burst of 4 beats)
+   MBURST_INCR8  : constant := 2#10#; -- INCR8 (incremental burst of 8 beats)
+   MBURST_INCR16 : constant := 2#11#; -- INCR16 (incremental burst of 16 beats)
+
+   CHSEL_0  : constant := 2#0000#; -- channel 0 selected
+   CHSEL_1  : constant := 2#0001#; -- channel 1 selected
+   CHSEL_2  : constant := 2#0010#; -- channel 2 selected
+   CHSEL_3  : constant := 2#0011#; -- channel 3 selected
+   CHSEL_4  : constant := 2#0100#; -- channel 4 selected
+   CHSEL_5  : constant := 2#0101#; -- channel 5 selected
+   CHSEL_6  : constant := 2#0110#; -- channel 6 selected
+   CHSEL_7  : constant := 2#0111#; -- channel 7 selected
+   CHSEL_8  : constant := 2#1000#; -- channel 8 selected
+   CHSEL_9  : constant := 2#1001#; -- channel 9 selected
+   CHSEL_10 : constant := 2#1010#; -- channel 10 selected
+   CHSEL_11 : constant := 2#1011#; -- channel 11 selected
+   CHSEL_12 : constant := 2#1100#; -- channel 12 selected
+   CHSEL_13 : constant := 2#1101#; -- channel 13 selected
+   CHSEL_14 : constant := 2#1110#; -- channel 14 selected
+   CHSEL_15 : constant := 2#1111#; -- channel 15 selected
+
+   type DMA_SxCR_Type is record
+      EN        : Boolean := False;           -- stream enable / flag stream ready when read low
+      DMEIE     : Boolean := False;           -- direct mode error interrupt enable
+      TEIE      : Boolean := False;           -- transfer error interrupt enable
+      HTIE      : Boolean := False;           -- half transfer interrupt enable
+      TCIE      : Boolean := False;           -- transfer complete interrupt enable
+      PFCTRL    : Bits_1  := PFCTRL_DMA;      -- peripheral flow controller
+      DIR       : Bits_2  := DIR_P2M;         -- data transfer direction
+      CIRC      : Boolean := False;           -- circular mode
+      PINC      : Bits_1  := PINC_FIXED;      -- peripheral increment mode
+      MINC      : Bits_1  := MINC_FIXED;      -- memory increment mode
+      PSIZE     : Bits_2  := PSIZE_8;         -- peripheral data size
+      MSIZE     : Bits_2  := MSIZE_8;         -- memory data size
+      PINCOS    : Bits_1  := PINCOS_PSIZE;    -- peripheral increment offset size
+      PL        : Bits_2  := PL_LO;           -- priority level
+      DBM       : Bits_1  := DBM_NOBUFSWITCH; -- double-buffer mode
+      CT        : Bits_1  := CT_Memory0;      -- current target (only in double-buffer mode)
+      Reserved1 : Bits_1  := 0;
+      PBURST    : Bits_2  := PBURST_SINGLE;   -- peripheral burst transfer configuration
+      MBURST    : Bits_2  := MBURST_SINGLE;   -- memory burst transfer configuration
+      CHSEL     : Bits_4  := CHSEL_0;         -- channel selection
+      Reserved2 : Bits_3  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_SxCR_Type use record
+      EN        at 0 range  0 ..  0;
+      DMEIE     at 0 range  1 ..  1;
+      TEIE      at 0 range  2 ..  2;
+      HTIE      at 0 range  3 ..  3;
+      TCIE      at 0 range  4 ..  4;
+      PFCTRL    at 0 range  5 ..  5;
+      DIR       at 0 range  6 ..  7;
+      CIRC      at 0 range  8 ..  8;
+      PINC      at 0 range  9 ..  9;
+      MINC      at 0 range 10 .. 10;
+      PSIZE     at 0 range 11 .. 12;
+      MSIZE     at 0 range 13 .. 14;
+      PINCOS    at 0 range 15 .. 15;
+      PL        at 0 range 16 .. 17;
+      DBM       at 0 range 18 .. 18;
+      CT        at 0 range 19 .. 19;
+      Reserved1 at 0 range 20 .. 20;
+      PBURST    at 0 range 21 .. 22;
+      MBURST    at 0 range 23 .. 24;
+      CHSEL     at 0 range 25 .. 28;
+      Reserved2 at 0 range 29 .. 31;
+   end record;
+
+   -- 8.5.6 DMA stream x number of data register (DMA_SxNDTR)
+
+   type DMA_SxNDTR_Type is record
+      NDT      : Unsigned_16 := 0; -- number of data items to transfer (0 up to 65535)
+      Reserved : Bits_16     := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_SxNDTR_Type use record
+      NDT      at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   -- 8.5.7 DMA stream x peripheral address register (DMA_SxPAR)
+
+   type DMA_SxPAR_Type is record
+      PAR : Unsigned_32 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_SxPAR_Type use record
+      PAR at 0 range 0 .. 31;
+   end record;
+
+   -- 8.5.8 DMA stream x memory 0 address register (DMA_SxM0AR)
+
+   type DMA_SxM0AR_Type is record
+      M0A : Unsigned_32 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_SxM0AR_Type use record
+      M0A at 0 range 0 .. 31;
+   end record;
+
+   -- 8.5.9 DMA stream x memory 1 address register (DMA_SxM1AR)
+
+   type DMA_SxM1AR_Type is record
+      M1A : Unsigned_32 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_SxM1AR_Type use record
+      M1A at 0 range 0 .. 31;
+   end record;
+
+   -- 8.5.10 DMA stream x FIFO control register (DMA_SxFCR)
+
+   FTH_25PCT : constant := 2#00#; -- 1/4 full FIFO
+   FTH_50PCT : constant := 2#01#; -- 1/2 full FIFO
+   FTH_75PCT : constant := 2#10#; -- 3/4 full FIFO
+   FTH_FULL  : constant := 2#11#; -- full FIFO
+
+   FS_LT25PCT : constant := 2#000#; -- 0 < fifo_level < 1/4
+   FS_LT50PCT : constant := 2#001#; -- 1/4 ≤ fifo_level < 1/2
+   FS_LT75PCT : constant := 2#010#; -- 1/2 ≤ fifo_level < 3/4
+   FS_LTFULL  : constant := 2#011#; -- 3/4 ≤ fifo_level < full
+   FS_EMPTY   : constant := 2#100#; -- FIFO is empty
+   FS_FULL    : constant := 2#101#; -- FIFO is full
+
+   type DMA_SxFCR_Type is record
+      FTH       : Bits_2  := FTH_50PCT; -- FIFO threshold selection
+      DMDIS     : Boolean := False;     -- direct mode disable
+      FS        : Bits_3  := FS_EMPTY;  -- FIFO status
+      Reserved1 : Bits_1  := 0;
+      FEIE      : Boolean := False;     -- FIFO error interrupt enable
+      Reserved2 : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_SxFCR_Type use record
+      FTH       at 0 range 0 ..  1;
+      DMDIS     at 0 range 2 ..  2;
+      FS        at 0 range 3 ..  5;
+      Reserved1 at 0 range 6 ..  6;
+      FEIE      at 0 range 7 ..  7;
+      Reserved2 at 0 range 8 .. 31;
+   end record;
+
+   type DMA_Stream_Type is record
+      CR   : DMA_SxCR_Type   with Volatile_Full_Access => True;
+      NDTR : DMA_SxNDTR_Type with Volatile_Full_Access => True;
+      PAR  : DMA_SxPAR_Type  with Volatile_Full_Access => True;
+      M0AR : DMA_SxM0AR_Type with Volatile_Full_Access => True;
+      M1AR : DMA_SxM1AR_Type with Volatile_Full_Access => True;
+      FCR  : DMA_SxFCR_Type  with Volatile_Full_Access => True;
+   end record
+      with Size => 32 * 6;
+   for DMA_Stream_Type use record
+      CR   at 16#00# range 0 .. 31;
+      NDTR at 16#04# range 0 .. 31;
+      PAR  at 16#08# range 0 .. 31;
+      M0AR at 16#0C# range 0 .. 31;
+      M1AR at 16#10# range 0 .. 31;
+      FCR  at 16#14# range 0 .. 31;
+   end record;
+
+   type DMA_Stream_Array_Type is array (0 ..7) of DMA_Stream_Type
+      with Pack => True;
+
+   -- 8.5 DMA registers
+
+   type DMA_Type is record
+      LISR   : DMA_LISR_Type         with Volatile_Full_Access => True;
+      HISR   : DMA_HISR_Type         with Volatile_Full_Access => True;
+      LIFCR  : DMA_HIFCR_Type        with Volatile_Full_Access => True;
+      HIFCR  : DMA_HIFCR_Type        with Volatile_Full_Access => True;
+      STREAM : DMA_Stream_Array_Type with Volatile => True;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32 * 4 + 32 * 6 * 8;
+   for DMA_Type use record
+      LISR   at 16#00# range 0 .. 31;
+      HISR   at 16#04# range 0 .. 31;
+      LIFCR  at 16#08# range 0 .. 31;
+      HIFCR  at 16#0C# range 0 .. 31;
+      STREAM at 16#10# range 0 .. 32 * 6 * 8 - 1;
+   end record;
+
+   DMA1_BASEADDRESS : constant := 16#4002_6000#;
+
+   DMA1 : aliased DMA_Type
+      with Address    => System'To_Address (DMA1_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   DMA2_BASEADDRESS : constant := 16#4002_6400#;
+
+   DMA2 : aliased DMA_Type
+      with Address    => System'To_Address (DMA2_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ----------------------------------------------------------------------------
    -- 10 Nested vectored interrupt controller (NVIC)
    ----------------------------------------------------------------------------
 
