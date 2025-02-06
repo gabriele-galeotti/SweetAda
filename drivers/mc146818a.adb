@@ -101,9 +101,9 @@ package body MC146818A
    DIV_Any2 : constant := 2#111#; -- Time Base Frequency = Any, Operation Mode = No
 
    type RegisterA_Type is record
-      RS  : Bits_4;           -- rate selection
-      DIV : Bits_3;           -- divider chain
-      UIP : Boolean := False; -- update in progress
+      RS  : Bits_4  := RS_None; -- rate selection
+      DIV : Bits_3  := DIV_4M;  -- divider chain
+      UIP : Boolean := False;   -- update in progress
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -125,14 +125,14 @@ package body MC146818A
    DM_BINARY : constant := 1; -- binary data
 
    type RegisterB_Type is record
-      DSE    : Boolean; -- daylight savings enable
-      Hour24 : Bits_1;  -- format of the hours bytes
-      DM     : Bits_1;  -- data mode
-      SQWE   : Boolean; -- square-wave enable
-      UIE    : Boolean; -- update-ended interrupt enable)
-      AIE    : Boolean; -- alarm interrupt enable
-      PIE    : Boolean; -- periodic interrupt enable
-      SET    : Boolean; -- initialize the time and calendar bytes
+      DSE    : Boolean := False;     -- daylight savings enable
+      Hour24 : Bits_1  := Hour24_24; -- format of the hours bytes
+      DM     : Bits_1  := DM_BCD;    -- data mode
+      SQWE   : Boolean := False;     -- square-wave enable
+      UIE    : Boolean := False;     -- update-ended interrupt enable)
+      AIE    : Boolean := False;     -- alarm interrupt enable
+      PIE    : Boolean := False;     -- periodic interrupt enable
+      SET    : Boolean := False;     -- initialize the time and calendar bytes
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
