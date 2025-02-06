@@ -150,11 +150,11 @@ package body PCICAN
       is
    begin
       -- initialize PCI interface, setup BAR __FIX__ device number hardwired @ 4
-      PCI.Cfg_Write (Descriptor, PCI.BUS0, 4, 0, PCI.BAR0_Register_Offset, Unsigned_32'(16#D000#)); -- S5920
-      PCI.Cfg_Write (Descriptor, PCI.BUS0, 4, 0, PCI.BAR1_Register_Offset, Unsigned_32'(16#D100#)); -- SJA100
-      PCI.Cfg_Write (Descriptor, PCI.BUS0, 4, 0, PCI.BAR2_Register_Offset, Unsigned_32'(16#D200#)); -- Xilinx FPGA
+      PCI.Cfg_Write (Descriptor, PCI.BUS0, 4, 0, PCI.BAR0_Offset, Unsigned_32'(16#D000#)); -- S5920
+      PCI.Cfg_Write (Descriptor, PCI.BUS0, 4, 0, PCI.BAR1_Offset, Unsigned_32'(16#D100#)); -- SJA100
+      PCI.Cfg_Write (Descriptor, PCI.BUS0, 4, 0, PCI.BAR2_Offset, Unsigned_32'(16#D200#)); -- Xilinx FPGA
       -- enable IOEN
-      PCI.Cfg_Write (Descriptor, PCI.BUS0, 4, 0, PCI.CR_Register_Offset, Unsigned_8'(16#03#));
+      PCI.Cfg_Write (Descriptor, PCI.BUS0, 4, 0, PCI.Command_Offset, Unsigned_8'(16#03#));
    end Init;
 
    ----------------------------------------------------------------------------
