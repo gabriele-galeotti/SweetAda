@@ -999,11 +999,11 @@ pragma Warnings (Off, "types for unchecked conversion have different sizes");
       function To_U16 is new Ada.Unchecked_Conversion (Address, Unsigned_16);
    begin
       -- initialize PCI interface, setup BAR
-      PCI.Cfg_Write (PCI_Descriptor, PCI.BUS0, D.Device_Number, 0, PCI.BAR0_Register_Offset, To_U16 (D.Base_Address));
+      PCI.Cfg_Write (PCI_Descriptor, PCI.BUS0, D.Device_Number, 0, PCI.BAR0_Offset, To_U16 (D.Base_Address));
       -- enable MEMEN/IOEN
-      PCI.Cfg_Write (PCI_Descriptor, PCI.BUS0, D.Device_Number, 0, PCI.CR_Register_Offset, Unsigned_8'(16#03#));
+      PCI.Cfg_Write (PCI_Descriptor, PCI.BUS0, D.Device_Number, 0, PCI.Command_Offset, Unsigned_8'(16#03#));
       -- interrupt routing line
-      PCI.Cfg_Write (PCI_Descriptor, PCI.BUS0, D.Device_Number, 0, PCI.ILR_Register_Offset, D.PCI_Irq_Line);
+      PCI.Cfg_Write (PCI_Descriptor, PCI.BUS0, D.Device_Number, 0, PCI.ILR_Offset, D.PCI_Irq_Line);
       -- initialize NE2000
       D.NE2000PCI := True;
       D.BAR       := To_U16 (D.Base_Address) and 16#FFE0#;
