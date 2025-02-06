@@ -23,6 +23,7 @@ function Select_Address_Bits
     BE_Layout       : Boolean := False)
    return SSE.Integer_Address
    is
+   use type SSE.Integer_Address;
    Bit_Mask : SSE.Integer_Address;
    Result   : SSE.Integer_Address;
 begin

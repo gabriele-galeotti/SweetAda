@@ -20,6 +20,8 @@ function CString_Length
    (String_Address : System.Address)
    return Bits.C.size_t
    is
+   use type Bits.C.char;
+   use type Bits.C.size_t;
    nul        : constant Bits.C.char := Bits.C.char'First;
    Char_Array : Bits.C.char_array (Bits.C.size_t)
       with Address => String_Address;
