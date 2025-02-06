@@ -152,15 +152,31 @@ package PCI
    BUS0 : constant Bus_Number_Type := 0;
 
    -- standard register offsets of PCI Type 0 (non-bridge) configuration space header
-   CR_Register_Offset   : constant := 16#04#;
-   BAR0_Register_Offset : constant := 16#10#;
-   BAR1_Register_Offset : constant := 16#14#;
-   BAR2_Register_Offset : constant := 16#18#;
-   BAR3_Register_Offset : constant := 16#1C#;
-   BAR4_Register_Offset : constant := 16#20#;
-   BAR5_Register_Offset : constant := 16#24#;
-   ILR_Register_Offset  : constant := 16#3C#;
-   IPR_Register_Offset  : constant := 16#3D#;
+   VID_Offset                     : constant := 16#00#;
+   DID_Offset                     : constant := 16#02#;
+   Command_Offset                 : constant := 16#04#;
+   Status_Offset                  : constant := 16#06#;
+   RID_Offset                     : constant := 16#08#;
+   ClassCode_Offset               : constant := 16#09#;
+   CacheLineSize_Offset           : constant := 16#0C#;
+   LatencyTimer_Offset            : constant := 16#0D#;
+   HeaderType_Offset              : constant := 16#0E#;
+   BIST_Offset                    : constant := 16#0F#;
+   BAR0_Offset                    : constant := 16#10#;
+   BAR1_Offset                    : constant := 16#14#;
+   BAR2_Offset                    : constant := 16#18#;
+   BAR3_Offset                    : constant := 16#1C#;
+   BAR4_Offset                    : constant := 16#20#;
+   BAR5_Offset                    : constant := 16#24#;
+   CardBusCISPointer_Offset       : constant := 16#28#;
+   SubsystemVID_Offset            : constant := 16#2C#;
+   SubsystemID_Offset             : constant := 16#2E#;
+   ExpansionROMBaseAddress_Offset : constant := 16#30#;
+   CapPointer_Offset              : constant := 16#34#;
+   ILR_Offset                     : constant := 16#3C#;
+   IPR_Offset                     : constant := 16#3D#;
+   MinGNT_Offset                  : constant := 16#3E#;
+   MaxLat_Offset                  : constant := 16#3F#;
 
    ----------------------------------------------------------------------------
    -- Configuration space access types
