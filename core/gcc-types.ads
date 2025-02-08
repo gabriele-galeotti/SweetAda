@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ gcc_types.ads                                                                                             --
+-- __FLN__ gcc-types.ads                                                                                             --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -18,7 +18,7 @@
 with System;
 with Interfaces;
 
-package GCC_Types
+package GCC.Types
    with Pure       => True,
         SPARK_Mode => On
    is
@@ -93,4 +93,4 @@ package GCC_Types
       with Import     => True,
            Convention => Intrinsic;
 
-end GCC_Types;
+end GCC.Types;
