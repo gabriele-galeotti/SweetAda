@@ -42,7 +42,7 @@ all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 configure:
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 	@$(GCCDEFINES)                        \
-          GCC_Defines gcc_defines.ads         \
+          GCC.Defines gcc-defines.ads         \
           __VERSION__:VERSION:String:S        \
           __aarch64__:AARCH64:Boolean:H       \
           __arm__:ARM:Boolean:H               \
