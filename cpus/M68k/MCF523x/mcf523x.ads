@@ -440,6 +440,117 @@ pragma Style_Checks (Off);
            Convention => Ada;
 
    ----------------------------------------------------------------------------
+   -- Chapter 23 Programmable Interrupt Timer Modules (PIT0–PIT3)
+   ----------------------------------------------------------------------------
+
+   -- 23.2.1.1 PIT Control and Status Register (PCSRn)
+
+   PRE_DIV1   : constant := 2#0000#; -- div by 2^0
+   PRE_DIV2   : constant := 2#0001#; -- div by 2^1
+   PRE_DIV4   : constant := 2#0010#; -- div by 2^2
+   PRE_DIV8   : constant := 2#0011#; -- div by 2^3
+   PRE_DIV16  : constant := 2#0100#; -- div by 2^4
+   PRE_DIV32  : constant := 2#0101#; -- div by 2^5
+   PRE_DIV64  : constant := 2#0110#; -- div by 2^6
+   PRE_DIV128 : constant := 2#0111#; -- div by 2^7
+   PRE_DIV256 : constant := 2#1000#; -- div by 2^8
+   PRE_DIV512 : constant := 2#1001#; -- div by 2^9
+   PRE_DIV1k  : constant := 2#1010#; -- div by 2^10
+   PRE_DIV2k  : constant := 2#1011#; -- div by 2^11
+   PRE_DIV4k  : constant := 2#1100#; -- div by 2^12
+   PRE_DIV8k  : constant := 2#1101#; -- div by 2^13
+   PRE_DIV16k : constant := 2#1110#; -- div by 2^14
+   PRE_DIV32k : constant := 2#1111#; -- div by 2^15
+
+   type PCSR_Type is record
+      EN        : Boolean := False;    -- PIT enable bit.
+      RLD       : Boolean := False;    -- Reload bit.
+      PIF       : Boolean := False;    -- PIT interrupt flag.
+      PIE       : Boolean := False;    -- PIT interrupt enable.
+      OVW       : Boolean := False;    -- Overwrite.
+      DBG       : Boolean := False;    -- Debug mode bit.
+      DOZE      : Boolean := False;    -- Doze mode bit.
+      Reserved1 : Bits_1  := 0;
+      PRE       : Bits_4  := PRE_DIV1; -- Prescaler.
+      Reserved2 : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for PCSR_Type use record
+      EN        at 0 range  0 ..  0;
+      RLD       at 0 range  1 ..  1;
+      PIF       at 0 range  2 ..  2;
+      PIE       at 0 range  3 ..  3;
+      OVW       at 0 range  4 ..  4;
+      DBG       at 0 range  5 ..  5;
+      DOZE      at 0 range  6 ..  6;
+      Reserved1 at 0 range  7 ..  7;
+      PRE       at 0 range  8 .. 11;
+      Reserved2 at 0 range 12 .. 15;
+   end record;
+
+   -- 23.2.1.2 PIT Modulus Register (PMRn)
+
+   type PMR_Type is record
+      PM : Unsigned_16 := 16#FFFF#; -- timer modulus
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for PMR_Type use record
+      PM at 0 range 0 .. 15;
+   end record;
+
+   -- 23.2.1.3 PIT Count Register (PCNTRn)
+
+   type PCNTR_Type is record
+      PC : Unsigned_16; -- counter
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for PCNTR_Type use record
+      PC at 0 range 0 .. 15;
+   end record;
+
+   -- 23.2 Memory Map/Register Definition
+
+   type PIT_Type is record
+      PCSR  : PCSR_Type  with Volatile_Full_Access => True;
+      PMR   : PMR_Type   with Volatile_Full_Access => True;
+      PCNTR : PCNTR_Type with Volatile_Full_Access => True;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16 * 3;
+   for PIT_Type use record
+      PCSR  at 0 range 0 .. 15;
+      PMR   at 2 range 0 .. 15;
+      PCNTR at 4 range 0 .. 15;
+   end record;
+
+   PIT0 : aliased PIT_Type
+      with Address    => System'To_Address (IPSBAR_BASEADDRESS + 16#0015_0000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   PIT1 : aliased PIT_Type
+      with Address    => System'To_Address (IPSBAR_BASEADDRESS + 16#0016_0000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   PIT2 : aliased PIT_Type
+      with Address    => System'To_Address (IPSBAR_BASEADDRESS + 16#0017_0000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   PIT3 : aliased PIT_Type
+      with Address    => System'To_Address (IPSBAR_BASEADDRESS + 16#0018_0000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ----------------------------------------------------------------------------
    -- Chapter 26 UART Modules
    ----------------------------------------------------------------------------
 
