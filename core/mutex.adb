@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with GCC_Defines;
+with GCC.Defines;
 with CPU;
 
 package body Mutex
@@ -54,13 +54,13 @@ package body Mutex
          (Object_Address : in System.Address)
          is
       begin
-         while Atomic_Load (Object_Address, GCC_Defines.ATOMIC_SEQ_CST) /= 0 loop
+         while Atomic_Load (Object_Address, GCC.Defines.ATOMIC_SEQ_CST) /= 0 loop
             CPU.NOP;
          end loop;
       end Wait;
    begin
       loop
-         if not Atomic_Test_And_Set (S.Lock'Address, GCC_Defines.ATOMIC_SEQ_CST) then
+         if not Atomic_Test_And_Set (S.Lock'Address, GCC.Defines.ATOMIC_SEQ_CST) then
             return;
          end if;
          Wait (S.Lock'Address);
@@ -74,7 +74,7 @@ package body Mutex
       (S : in out Semaphore_Binary)
       is
    begin
-      Atomic_Clear (S.Lock'Address, GCC_Defines.ATOMIC_SEQ_CST);
+      Atomic_Clear (S.Lock'Address, GCC.Defines.ATOMIC_SEQ_CST);
    end Release;
 
 end Mutex;
