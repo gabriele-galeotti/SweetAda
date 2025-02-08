@@ -34,11 +34,10 @@ begin
    end if;
    for Index in reverse 1 .. MDigits loop
       Address_Digit := Interfaces.Unsigned_8 (IAddress mod 2**4);
-      LLutils.To_HexDigit (
+      Address_Literal (Index) := LLutils.To_HexDigit (
          Value => Address_Digit,
          MSD   => False,
-         LCase => False,
-         C     => Address_Literal (Index)
+         LCase => False
          );
       IAddress := @ / 2**4;
    end loop;
