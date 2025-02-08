@@ -168,6 +168,16 @@ package LLutils
       with Inline => True;
 
    ----------------------------------------------------------------------------
+   -- Take an 8-bit (2 hex digits) input value; if MSD, return the MS digit as
+   -- a character representing the hexadecimal digit, else the LS digit.
+   ----------------------------------------------------------------------------
+   function To_HexDigit
+      (Value : Interfaces.Unsigned_8;
+       MSD   : Boolean;
+       LCase : Boolean)
+      return Character;
+
+   ----------------------------------------------------------------------------
    -- Take an 8-bit (2 hex digits) input value; then, insert in MSD/LSD the
    -- hexadecimal representation of C (if it is a valid hexadecimal digit):
    -- Value = 0x33, C = 'A', MSD = True => Value = 0xA3
@@ -178,16 +188,6 @@ package LLutils
        MSD     : in     Boolean;
        Value   : in out Interfaces.Unsigned_8;
        Success :    out Boolean);
-
-   ----------------------------------------------------------------------------
-   -- Take an 8-bit (2 hex digits) input value; if MSD, return the MS digit as
-   -- a character representing the hexadecimal digit, else the LS digit.
-   ----------------------------------------------------------------------------
-   procedure To_HexDigit
-      (Value : in     Interfaces.Unsigned_8;
-       MSD   : in     Boolean;
-       LCase : in     Boolean;
-       C     :    out Character);
 
    ----------------------------------------------------------------------------
    -- Compute the length of a C string.

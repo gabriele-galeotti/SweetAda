@@ -198,6 +198,35 @@ package body LLutils
    end To_Ch;
 
    ----------------------------------------------------------------------------
+   -- To_HexDigit
+   ----------------------------------------------------------------------------
+   function To_HexDigit
+      (Value : Interfaces.Unsigned_8;
+       MSD   : Boolean;
+       LCase : Boolean)
+      return Character
+      is
+      Digit : Interfaces.Unsigned_8 := Value;
+      C     : Character;
+   begin
+      if MSD then
+         Digit := @ / 2**4;
+      end if;
+      Digit := @ and 16#0F#;
+      if Digit > 9 then
+         declare
+            A_Pos : Interfaces.Unsigned_8;
+         begin
+            A_Pos := (if LCase then Character'Pos ('a') else Character'Pos ('A'));
+            C := Character'Val (A_Pos + (Digit - 10));
+         end;
+      else
+         C := Character'Val (Character'Pos ('0') + Digit);
+      end if;
+      return C;
+   end To_HexDigit;
+
+   ----------------------------------------------------------------------------
    -- To_U8
    ----------------------------------------------------------------------------
    procedure To_U8
@@ -217,33 +246,6 @@ package body LLutils
       Value := (if MSD then (@ and 16#0F#) or (Digit * 2**4) else (@ and 16#F0#) or Digit);
       Success := True;
    end To_U8;
-
-   ----------------------------------------------------------------------------
-   -- To_HexDigit
-   ----------------------------------------------------------------------------
-   procedure To_HexDigit
-      (Value : in     Interfaces.Unsigned_8;
-       MSD   : in     Boolean;
-       LCase : in     Boolean;
-       C     :    out Character)
-      is
-      Digit : Interfaces.Unsigned_8 := Value;
-   begin
-      if MSD then
-         Digit := @ / 2**4;
-      end if;
-      Digit := @ and 16#0F#;
-      if Digit > 9 then
-         declare
-            A_Pos : Interfaces.Unsigned_8;
-         begin
-            A_Pos := (if LCase then Character'Pos ('a') else Character'Pos ('A'));
-            C := Character'Val (A_Pos + (Digit - 10));
-         end;
-      else
-         C := Character'Val (Character'Pos ('0') + Digit);
-      end if;
-   end To_HexDigit;
 
    ----------------------------------------------------------------------------
    -- CString_Length
