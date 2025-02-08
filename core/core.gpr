@@ -78,7 +78,7 @@ library project Core is
       );
 
    GCC_Defines_Files := (
-      "gcc_defines.ads"
+      "gcc-defines.ads"
       );
 
    Gnat_Exceptions_Files := (
