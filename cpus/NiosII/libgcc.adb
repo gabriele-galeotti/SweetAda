@@ -26,14 +26,14 @@ package body LibGCC
    --                                                                        --
    --========================================================================--
 
-   use type GCC_Types.SI_Type;
-   use type GCC_Types.USI_Type;
+   use type GCC.Types.SI_Type;
+   use type GCC.Types.USI_Type;
 
    function UDivModSI4
-      (N : GCC_Types.USI_Type;
-       D : GCC_Types.USI_Type;
+      (N : GCC.Types.USI_Type;
+       D : GCC.Types.USI_Type;
        M : Boolean)
-      return GCC_Types.USI_Type;
+      return GCC.Types.USI_Type;
 
    --========================================================================--
    --                                                                        --
@@ -47,10 +47,10 @@ package body LibGCC
    -- UDivModSI4
    ----------------------------------------------------------------------------
    function UDivModSI4
-      (N : GCC_Types.USI_Type;
-       D : GCC_Types.USI_Type;
+      (N : GCC.Types.USI_Type;
+       D : GCC.Types.USI_Type;
        M : Boolean)
-      return GCC_Types.USI_Type
+      return GCC.Types.USI_Type
       is
    separate;
 
@@ -58,9 +58,9 @@ package body LibGCC
    -- DivSI3
    ----------------------------------------------------------------------------
    function DivSI3
-      (N : GCC_Types.SI_Type;
-       D : GCC_Types.SI_Type)
-      return GCC_Types.SI_Type
+      (N : GCC.Types.SI_Type;
+       D : GCC.Types.SI_Type)
+      return GCC.Types.SI_Type
       is
    separate;
 
@@ -68,9 +68,9 @@ package body LibGCC
    -- ModSI3
    ----------------------------------------------------------------------------
    function ModSI3
-      (N : GCC_Types.SI_Type;
-       D : GCC_Types.SI_Type)
-      return GCC_Types.SI_Type
+      (N : GCC.Types.SI_Type;
+       D : GCC.Types.SI_Type)
+      return GCC.Types.SI_Type
       is
    separate;
 
@@ -78,9 +78,9 @@ package body LibGCC
    -- UDivSI3
    ----------------------------------------------------------------------------
    function UDivSI3
-      (N : GCC_Types.USI_Type;
-       D : GCC_Types.USI_Type)
-      return GCC_Types.USI_Type
+      (N : GCC.Types.USI_Type;
+       D : GCC.Types.USI_Type)
+      return GCC.Types.USI_Type
       is
    separate;
 
@@ -88,9 +88,9 @@ package body LibGCC
    -- UModSI3
    ----------------------------------------------------------------------------
    function UModSI3
-      (N : GCC_Types.USI_Type;
-       D : GCC_Types.USI_Type)
-      return GCC_Types.USI_Type
+      (N : GCC.Types.USI_Type;
+       D : GCC.Types.USI_Type)
+      return GCC.Types.USI_Type
       is
    separate;
 
