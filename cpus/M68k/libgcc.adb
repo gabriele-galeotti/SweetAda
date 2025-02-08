@@ -26,14 +26,14 @@ package body LibGCC
    --                                                                        --
    --========================================================================--
 
-   use type GCC_Types.DI_Type;
-   use type GCC_Types.UDI_Type;
+   use type GCC.Types.DI_Type;
+   use type GCC.Types.UDI_Type;
 
    function UDivModDI4
-      (N : in     GCC_Types.UDI_Type;
-       D : in     GCC_Types.UDI_Type;
-       R : in out GCC_Types.UDI_Type)
-      return GCC_Types.UDI_Type;
+      (N : in     GCC.Types.UDI_Type;
+       D : in     GCC.Types.UDI_Type;
+       R : in out GCC.Types.UDI_Type)
+      return GCC.Types.UDI_Type;
 
    --========================================================================--
    --                                                                        --
@@ -47,10 +47,10 @@ package body LibGCC
    -- UDivModDI4
    ----------------------------------------------------------------------------
    function UDivModDI4
-      (N : in     GCC_Types.UDI_Type;
-       D : in     GCC_Types.UDI_Type;
-       R : in out GCC_Types.UDI_Type)
-      return GCC_Types.UDI_Type
+      (N : in     GCC.Types.UDI_Type;
+       D : in     GCC.Types.UDI_Type;
+       R : in out GCC.Types.UDI_Type)
+      return GCC.Types.UDI_Type
       is
    separate;
 
@@ -58,9 +58,9 @@ package body LibGCC
    -- DivDI3
    ----------------------------------------------------------------------------
    function DivDI3
-      (N : GCC_Types.DI_Type;
-       D : GCC_Types.DI_Type)
-      return GCC_Types.DI_Type
+      (N : GCC.Types.DI_Type;
+       D : GCC.Types.DI_Type)
+      return GCC.Types.DI_Type
       is
    separate;
 
@@ -68,9 +68,9 @@ package body LibGCC
    -- ModDI3
    ----------------------------------------------------------------------------
    function ModDI3
-      (N : GCC_Types.DI_Type;
-       D : GCC_Types.DI_Type)
-      return GCC_Types.DI_Type
+      (N : GCC.Types.DI_Type;
+       D : GCC.Types.DI_Type)
+      return GCC.Types.DI_Type
       is
    separate;
 
@@ -78,9 +78,9 @@ package body LibGCC
    -- UDivDI3
    ----------------------------------------------------------------------------
    function UDivDI3
-      (N : GCC_Types.UDI_Type;
-       D : GCC_Types.UDI_Type)
-      return GCC_Types.UDI_Type
+      (N : GCC.Types.UDI_Type;
+       D : GCC.Types.UDI_Type)
+      return GCC.Types.UDI_Type
       is
    separate;
 
@@ -88,9 +88,9 @@ package body LibGCC
    -- UModDI3
    ----------------------------------------------------------------------------
    function UModDI3
-      (N : GCC_Types.UDI_Type;
-       D : GCC_Types.UDI_Type)
-      return GCC_Types.UDI_Type
+      (N : GCC.Types.UDI_Type;
+       D : GCC.Types.UDI_Type)
+      return GCC.Types.UDI_Type
       is
    separate;
 
