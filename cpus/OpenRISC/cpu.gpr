@@ -38,7 +38,7 @@ library project Cpu is
             "L__umodsi3.S",
             "L__divsi3.S",
             "L__modsi3.S",
-            "gcc_types.ads",
+            "gcc-types.ads",
             "libgcc.adb", "libgcc.ads",
             "libgcc-umul32x32.adb",
             "libgcc-umulsidi3.adb",
