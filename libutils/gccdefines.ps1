@@ -304,7 +304,7 @@ foreach ($i in $items)
 }
 
 $gcc_defines += $nl
-$gcc_defines += "end GCC_Defines;" + $nl
+$gcc_defines += "end $($package_name);" + $nl
 
 try
 {

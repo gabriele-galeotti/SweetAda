@@ -205,7 +205,7 @@ EOF
 done
 
 gccdefines=${gccdefines}${NL}
-gccdefines=${gccdefines}$(printf "%s\n" "end GCC_Defines;")${NL}
+gccdefines=${gccdefines}$(printf "%s\n" "end ${PACKAGE_NAME};")${NL}
 
 printf "%s" "${gccdefines}" > ${OUTPUT_FILENAME}
 
