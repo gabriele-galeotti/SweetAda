@@ -19,17 +19,17 @@ with Ada.Unchecked_Conversion;
 
 separate (LibGCC)
 function DivDI3
-   (N : GCC_Types.DI_Type;
-    D : GCC_Types.DI_Type)
-   return GCC_Types.DI_Type
+   (N : GCC.Types.DI_Type;
+    D : GCC.Types.DI_Type)
+   return GCC.Types.DI_Type
    is
-   function To_UDI is new Ada.Unchecked_Conversion (GCC_Types.DI_Type, GCC_Types.UDI_Type);
-   function To_DI is new Ada.Unchecked_Conversion (GCC_Types.UDI_Type, GCC_Types.DI_Type);
-   Num      : GCC_Types.DI_Type := N;
-   Den      : GCC_Types.DI_Type := D;
+   function To_UDI is new Ada.Unchecked_Conversion (GCC.Types.DI_Type, GCC.Types.UDI_Type);
+   function To_DI is new Ada.Unchecked_Conversion (GCC.Types.UDI_Type, GCC.Types.DI_Type);
+   Num      : GCC.Types.DI_Type := N;
+   Den      : GCC.Types.DI_Type := D;
    Negative : Boolean;
-   Q        : GCC_Types.DI_Type;
-   R        : GCC_Types.UDI_Type;
+   Q        : GCC.Types.DI_Type;
+   R        : GCC.Types.UDI_Type;
 begin
    Negative := False;
    if Num < 0 then

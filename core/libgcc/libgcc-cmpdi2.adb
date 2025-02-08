@@ -17,11 +17,11 @@
 
 separate (LibGCC)
 function CmpDI2
-   (A : GCC_Types.DI_Type;
-    B : GCC_Types.DI_Type)
-   return GCC_Types.SI_Type
+   (A : GCC.Types.DI_Type;
+    B : GCC.Types.DI_Type)
+   return GCC.Types.SI_Type
    is
-   R : GCC_Types.SI_Type;
+   R : GCC.Types.SI_Type;
 begin
    R := 1;
    if    A > B then

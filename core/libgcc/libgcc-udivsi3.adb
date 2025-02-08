@@ -17,9 +17,9 @@
 
 separate (LibGCC)
 function UDivSI3
-   (N : GCC_Types.USI_Type;
-    D : GCC_Types.USI_Type)
-   return GCC_Types.USI_Type
+   (N : GCC.Types.USI_Type;
+    D : GCC.Types.USI_Type)
+   return GCC.Types.USI_Type
    is
 begin
    return UDivModSI4 (N, D, False);

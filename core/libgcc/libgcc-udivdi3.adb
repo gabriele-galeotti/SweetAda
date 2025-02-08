@@ -17,11 +17,11 @@
 
 separate (LibGCC)
 function UDivDI3
-   (N : GCC_Types.UDI_Type;
-    D : GCC_Types.UDI_Type)
-   return GCC_Types.UDI_Type
+   (N : GCC.Types.UDI_Type;
+    D : GCC.Types.UDI_Type)
+   return GCC.Types.UDI_Type
    is
-   R : GCC_Types.UDI_Type;
+   R : GCC.Types.UDI_Type;
 begin
    R := 0;
    return UDivModDI4 (N, D, R);

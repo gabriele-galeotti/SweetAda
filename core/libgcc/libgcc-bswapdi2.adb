@@ -17,16 +17,16 @@
 
 separate (LibGCC)
 function BswapDI2
-   (V : GCC_Types.UDI_Type)
-   return GCC_Types.UDI_Type
+   (V : GCC.Types.UDI_Type)
+   return GCC.Types.UDI_Type
    is
 begin
-   return GCC_Types.Shift_Right (V and 16#FF00_0000_0000_0000#, 56) or
-          GCC_Types.Shift_Right (V and 16#00FF_0000_0000_0000#, 40) or
-          GCC_Types.Shift_Right (V and 16#0000_FF00_0000_0000#, 24) or
-          GCC_Types.Shift_Right (V and 16#0000_00FF_0000_0000#, 8) or
-          GCC_Types.Shift_Left (V and 16#0000_0000_FF00_0000#, 8) or
-          GCC_Types.Shift_Left (V and 16#0000_0000_00FF_0000#, 24) or
-          GCC_Types.Shift_Left (V and 16#0000_0000_0000_FF00#, 40) or
-          GCC_Types.Shift_Left (V and 16#0000_0000_0000_00FF#, 56);
+   return GCC.Types.Shift_Right (V and 16#FF00_0000_0000_0000#, 56) or
+          GCC.Types.Shift_Right (V and 16#00FF_0000_0000_0000#, 40) or
+          GCC.Types.Shift_Right (V and 16#0000_FF00_0000_0000#, 24) or
+          GCC.Types.Shift_Right (V and 16#0000_00FF_0000_0000#, 8) or
+          GCC.Types.Shift_Left (V and 16#0000_0000_FF00_0000#, 8) or
+          GCC.Types.Shift_Left (V and 16#0000_0000_00FF_0000#, 24) or
+          GCC.Types.Shift_Left (V and 16#0000_0000_0000_FF00#, 40) or
+          GCC.Types.Shift_Left (V and 16#0000_0000_0000_00FF#, 56);
 end BswapDI2;

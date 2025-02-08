@@ -17,11 +17,11 @@
 
 separate (LibGCC)
 function UCmpDI2
-   (A : GCC_Types.UDI_Type;
-    B : GCC_Types.UDI_Type)
-   return GCC_Types.SI_Type
+   (A : GCC.Types.UDI_Type;
+    B : GCC.Types.UDI_Type)
+   return GCC.Types.SI_Type
    is
-   R : GCC_Types.SI_Type;
+   R : GCC.Types.SI_Type;
 begin
    R := 1;
    if    A > B then

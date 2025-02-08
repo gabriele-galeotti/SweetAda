@@ -17,19 +17,19 @@
 
 separate (LibGCC)
 procedure UMul32x32
-   (M1 : in     GCC_Types.USI_Type;
-    M2 : in     GCC_Types.USI_Type;
-    RH :    out GCC_Types.USI_Type;
-    RL :    out GCC_Types.USI_Type)
+   (M1 : in     GCC.Types.USI_Type;
+    M2 : in     GCC.Types.USI_Type;
+    RH :    out GCC.Types.USI_Type;
+    RL :    out GCC.Types.USI_Type)
    is
-   M1_LOW  : constant GCC_Types.USI_Type := M1 mod 2**16;
-   M1_HIGH : constant GCC_Types.USI_Type := M1 / 2**16;
-   M2_LOW  : constant GCC_Types.USI_Type := M2 mod 2**16;
-   M2_HIGH : constant GCC_Types.USI_Type := M2 / 2**16;
-   I0      : GCC_Types.USI_Type;
-   I1      : GCC_Types.USI_Type;
-   I2      : GCC_Types.USI_Type;
-   I3      : GCC_Types.USI_Type;
+   M1_LOW  : constant GCC.Types.USI_Type := M1 mod 2**16;
+   M1_HIGH : constant GCC.Types.USI_Type := M1 / 2**16;
+   M2_LOW  : constant GCC.Types.USI_Type := M2 mod 2**16;
+   M2_HIGH : constant GCC.Types.USI_Type := M2 / 2**16;
+   I0      : GCC.Types.USI_Type;
+   I1      : GCC.Types.USI_Type;
+   I2      : GCC.Types.USI_Type;
+   I3      : GCC.Types.USI_Type;
 begin
    I0 := M2_LOW * M1_LOW;
    I1 := M2_LOW * M1_HIGH;

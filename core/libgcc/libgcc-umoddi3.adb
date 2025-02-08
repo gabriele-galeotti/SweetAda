@@ -17,12 +17,12 @@
 
 separate (LibGCC)
 function UModDI3
-   (N : GCC_Types.UDI_Type;
-    D : GCC_Types.UDI_Type)
-   return GCC_Types.UDI_Type
+   (N : GCC.Types.UDI_Type;
+    D : GCC.Types.UDI_Type)
+   return GCC.Types.UDI_Type
    is
-   Q : GCC_Types.UDI_Type with Unreferenced => True;
-   R : GCC_Types.UDI_Type;
+   Q : GCC.Types.UDI_Type with Unreferenced => True;
+   R : GCC.Types.UDI_Type;
 begin
    R := 1;
    Q := UDivModDI4 (N, D, R);

@@ -19,16 +19,16 @@ with Ada.Unchecked_Conversion;
 
 separate (LibGCC)
 function ModSI3
-   (N : GCC_Types.SI_Type;
-    D : GCC_Types.SI_Type)
-   return GCC_Types.SI_Type
+   (N : GCC.Types.SI_Type;
+    D : GCC.Types.SI_Type)
+   return GCC.Types.SI_Type
    is
-   function To_USI is new Ada.Unchecked_Conversion (GCC_Types.SI_Type, GCC_Types.USI_Type);
-   function To_SI is new Ada.Unchecked_Conversion (GCC_Types.USI_Type, GCC_Types.SI_Type);
-   Num      : GCC_Types.SI_Type := N;
-   Den      : GCC_Types.SI_Type := D;
+   function To_USI is new Ada.Unchecked_Conversion (GCC.Types.SI_Type, GCC.Types.USI_Type);
+   function To_SI is new Ada.Unchecked_Conversion (GCC.Types.USI_Type, GCC.Types.SI_Type);
+   Num      : GCC.Types.SI_Type := N;
+   Den      : GCC.Types.SI_Type := D;
    Negative : Boolean;
-   Result   : GCC_Types.SI_Type;
+   Result   : GCC.Types.SI_Type;
 begin
    Negative := False;
    if Num < 0 then
