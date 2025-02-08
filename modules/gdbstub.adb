@@ -112,8 +112,8 @@ package body Gdbstub
        Packet : in out Byte_Text_Type)
       is
    begin
-      To_HexDigit (Value => Value, MSD => True, LCase => True, C => Packet (1));
-      To_HexDigit (Value => Value, MSD => False, LCase => True, C => Packet (2));
+      Packet (1) := To_HexDigit (Value => Value, MSD => True, LCase => True);
+      Packet (2) := To_HexDigit (Value => Value, MSD => False, LCase => True);
    end Byte_Text;
 
    ----------------------------------------------------------------------------
