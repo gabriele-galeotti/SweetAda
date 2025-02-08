@@ -237,14 +237,16 @@ package body LLutils
       is
       Digit : Interfaces.Unsigned_8;
    begin
+      Success := True;
       case C is
          when '0' .. '9' => Digit := Character'Pos (C) - Character'Pos ('0');
          when 'A' .. 'F' => Digit := Character'Pos (C) - Character'Pos ('A') + 10;
          when 'a' .. 'f' => Digit := Character'Pos (C) - Character'Pos ('a') + 10;
-         when others     => Success := False; return;
+         when others     => Success := False;
       end case;
-      Value := (if MSD then (@ and 16#0F#) or (Digit * 2**4) else (@ and 16#F0#) or Digit);
-      Success := True;
+      if Success then
+         Value := (if MSD then (@ and 16#0F#) or (Digit * 2**4) else (@ and 16#F0#) or Digit);
+      end if;
    end To_U8;
 
    ----------------------------------------------------------------------------
