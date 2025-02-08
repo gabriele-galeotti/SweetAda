@@ -62,16 +62,18 @@ package body PCI.Utils
       is
       Data : Unsigned_32;
    begin
-      Data := Cfg_Read (Descriptor, Bus_Number, Device_Number, Function_Number, BAR0_Register_Offset);
+      Data := Cfg_Read (Descriptor, Bus_Number, Device_Number, Function_Number, BAR0_Offset);
       Console.Print (Prefix => "BAR0: ", Value => Data, NL => True);
-      Data := Cfg_Read (Descriptor, Bus_Number, Device_Number, Function_Number, BAR1_Register_Offset);
+      Data := Cfg_Read (Descriptor, Bus_Number, Device_Number, Function_Number, BAR1_Offset);
       Console.Print (Prefix => "BAR1: ", Value => Data, NL => True);
-      Data := Cfg_Read (Descriptor, Bus_Number, Device_Number, Function_Number, BAR2_Register_Offset);
+      Data := Cfg_Read (Descriptor, Bus_Number, Device_Number, Function_Number, BAR2_Offset);
       Console.Print (Prefix => "BAR2: ", Value => Data, NL => True);
-      Data := Cfg_Read (Descriptor, Bus_Number, Device_Number, Function_Number, BAR3_Register_Offset);
+      Data := Cfg_Read (Descriptor, Bus_Number, Device_Number, Function_Number, BAR3_Offset);
       Console.Print (Prefix => "BAR3: ", Value => Data, NL => True);
-      Data := Cfg_Read (Descriptor, Bus_Number, Device_Number, Function_Number, BAR4_Register_Offset);
+      Data := Cfg_Read (Descriptor, Bus_Number, Device_Number, Function_Number, BAR4_Offset);
       Console.Print (Prefix => "BAR4: ", Value => Data, NL => True);
+      Data := Cfg_Read (Descriptor, Bus_Number, Device_Number, Function_Number, BAR5_Offset);
+      Console.Print (Prefix => "BAR5: ", Value => Data, NL => True);
    end Cfg_BARs_Dump;
 
 end PCI.Utils;
