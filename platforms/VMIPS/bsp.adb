@@ -115,6 +115,7 @@ package body BSP
          S.IM7 := True; -- High-Resolution Clock
          R3000.CP0_SR_Write (S);
       end;
+      pragma Warnings (Off, "volatile actual passed by copy");
       declare
          DCT : VMIPS.Device_Control_Type;
       begin
@@ -130,6 +131,7 @@ package body BSP
             VMIPS.CLOCK.CONTROL_WORD := DCT;
          end if;
       end;
+      pragma Warnings (On, "volatile actual passed by copy");
       R3000.Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;
