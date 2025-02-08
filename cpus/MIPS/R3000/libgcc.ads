@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with GCC_Types;
+with GCC.Types;
 
 package LibGCC
    with Pure => True
@@ -30,47 +30,47 @@ package LibGCC
    --========================================================================--
 
    function BswapSI2
-      (V : GCC_Types.USI_Type)
-      return GCC_Types.USI_Type
+      (V : GCC.Types.USI_Type)
+      return GCC.Types.USI_Type
       with Export        => True,
            Convention    => C,
            External_Name => "__bswapsi2";
 
    function BswapDI2
-      (V : GCC_Types.UDI_Type)
-      return GCC_Types.UDI_Type
+      (V : GCC.Types.UDI_Type)
+      return GCC.Types.UDI_Type
       with Export        => True,
            Convention    => C,
            External_Name => "__bswapdi2";
 
    function DivDI3
-      (N : GCC_Types.DI_Type;
-       D : GCC_Types.DI_Type)
-      return GCC_Types.DI_Type
+      (N : GCC.Types.DI_Type;
+       D : GCC.Types.DI_Type)
+      return GCC.Types.DI_Type
       with Export        => True,
            Convention    => C,
            External_Name => "__divdi3";
 
    function ModDI3
-      (N : GCC_Types.DI_Type;
-       D : GCC_Types.DI_Type)
-      return GCC_Types.DI_Type
+      (N : GCC.Types.DI_Type;
+       D : GCC.Types.DI_Type)
+      return GCC.Types.DI_Type
       with Export        => True,
            Convention    => C,
            External_Name => "__moddi3";
 
    function UDivDI3
-      (N : GCC_Types.UDI_Type;
-       D : GCC_Types.UDI_Type)
-      return GCC_Types.UDI_Type
+      (N : GCC.Types.UDI_Type;
+       D : GCC.Types.UDI_Type)
+      return GCC.Types.UDI_Type
       with Export        => True,
            Convention    => C,
            External_Name => "__udivdi3";
 
    function UModDI3
-      (N : GCC_Types.UDI_Type;
-       D : GCC_Types.UDI_Type)
-      return GCC_Types.UDI_Type
+      (N : GCC.Types.UDI_Type;
+       D : GCC.Types.UDI_Type)
+      return GCC.Types.UDI_Type
       with Export        => True,
            Convention    => C,
            External_Name => "__umoddi3";

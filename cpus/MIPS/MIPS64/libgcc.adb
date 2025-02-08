@@ -26,8 +26,8 @@ package body LibGCC
    --                                                                        --
    --========================================================================--
 
-   use type GCC_Types.USI_Type;
-   use type GCC_Types.UDI_Type;
+   use type GCC.Types.USI_Type;
+   use type GCC.Types.UDI_Type;
 
    --========================================================================--
    --                                                                        --
@@ -41,8 +41,8 @@ package body LibGCC
    -- BswapSI2
    ----------------------------------------------------------------------------
    function BswapSI2
-      (V : GCC_Types.USI_Type)
-      return GCC_Types.USI_Type
+      (V : GCC.Types.USI_Type)
+      return GCC.Types.USI_Type
       is
    separate;
 
@@ -50,8 +50,8 @@ package body LibGCC
    -- BswapDI2
    ----------------------------------------------------------------------------
    function BswapDI2
-      (V : GCC_Types.UDI_Type)
-      return GCC_Types.UDI_Type
+      (V : GCC.Types.UDI_Type)
+      return GCC.Types.UDI_Type
       is
    separate;
 
