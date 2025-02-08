@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with GCC_Defines;
+with GCC.Defines;
 
 separate (MMIO)
 procedure WriteA_U16
@@ -30,5 +30,5 @@ procedure WriteA_U16
            Convention    => Intrinsic,
            External_Name => "__atomic_store_2";
 begin
-   Atomic_Store (Memory_Address, Value, GCC_Defines.ATOMIC_SEQ_CST);
+   Atomic_Store (Memory_Address, Value, GCC.Defines.ATOMIC_SEQ_CST);
 end WriteA_U16;
