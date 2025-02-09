@@ -1,5 +1,5 @@
 /* libgcc routines for 68000 w/o floating-point hardware.
-   Copyright (C) 1994-2022 Free Software Foundation, Inc.
+   Copyright (C) 1994-2024 Free Software Foundation, Inc.
 
 This file is part of GCC.
 
@@ -23,7 +23,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 <http://www.gnu.org/licenses/>.  */
 
 /* SweetAda version, reformatted and cleaned                 */
-/* __INF__ original: gcc-12.2.0/libgcc/config/m68k/lb1sf68.S */
+/* __INF__ original: gcc-14.2.0/libgcc/config/m68k/lb1sf68.S */
 
 /* Use this one for any 680x0; assumes no floating point hardware.
    The trailing " '" appearing on some lines is for ANSI preprocessors.  Yuk.
@@ -569,7 +569,7 @@ L1:             movel   sp@(8),d0                       /* d0 = dividend */
 
 L2:             movel   d1,sp@-
                 movel   d0,sp@-
-                PICCALL SYM (__udivsi3)                 /* divide abs(dividend) by abs(divisor) */
+                PICCALL SYM (__udivsi3_internal)        /* divide abs(dividend) by abs(divisor) */
                 addql   IMM (8),sp
 
                 tstb    d2
@@ -589,13 +589,13 @@ SYM (__umodsi3):
                 movel   sp@(4),d0                       /* d0 = dividend */
                 movel   d1,sp@-
                 movel   d0,sp@-
-                PICCALL SYM (__udivsi3)
+                PICCALL SYM (__udivsi3_internal)
                 addql   IMM (8),sp
                 movel   sp@(8),d1                       /* d1 = divisor */
 #if !defined(__mcoldfire__)
                 movel   d1,sp@-
                 movel   d0,sp@-
-                PICCALL SYM (__mulsi3)                  /* d0 = (a/b)*b */
+                PICCALL SYM (__mulsi3_internal)                  /* d0 = (a/b)*b */
                 addql   IMM (8),sp
 #else
                 mulsl   d1,d0
@@ -615,13 +615,13 @@ SYM (__modsi3):
                 movel   sp@(4),d0                       /* d0 = dividend */
                 movel   d1,sp@-
                 movel   d0,sp@-
-                PICCALL SYM (__divsi3)
+                PICCALL SYM (__divsi3_internal)
                 addql   IMM (8),sp
                 movel   sp@(8),d1                       /* d1 = divisor */
 #if !defined(__mcoldfire__)
                 movel   d1,sp@-
                 movel   d0,sp@-
-                PICCALL SYM (__mulsi3)                  /* d0 = (a/b)*b */
+                PICCALL SYM (__mulsi3_internal)                  /* d0 = (a/b)*b */
                 addql   IMM (8),sp
 #else
                 mulsl   d1,d0
@@ -775,7 +775,7 @@ SYM (__adddf3):
                 movel   a6@(16),d2                      | get second operand
                 movel   a6@(20),d3                      |
 
-                movel   d0,d7                           | get d0''s sign bit in d7
+                movel   d0,d7                           | get d0's sign bit in d7 '
                 addl    d1,d1                           | check and clear sign bit of a, and gain one
                 addxl   d0,d0                           | bit of extra precision
                 beq     Ladddf$b                        | if zero return second operand
@@ -785,12 +785,12 @@ SYM (__adddf3):
                 addxl   d2,d2                           | extra precision
                 beq     Ladddf$a                        | if zero return first operand
 
-                andl    IMM (0x80000000),d7             | isolate a''s sign bit
-                swap    d6                              | and also b''s sign bit
+                andl    IMM (0x80000000),d7             | isolate a's sign bit '
+                swap    d6                              | and also b's sign bit '
 #if !defined(__mcoldfire__)
                 andw    IMM (0x8000),d6                 |
-                orw     d6,d7                           | and combine them into d7, so that a''s sign
-                                                        | bit is in the high word and b''s is in the
+                orw     d6,d7                           | and combine them into d7, so that a's sign '
+                                                        | bit is in the high word and b's is in the '
                                                         | low word, so d6 is free to be used
 #else
                 andl    IMM (0x8000),d6
@@ -819,7 +819,7 @@ Ladddf$1:
 #else
                 lsrl    IMM (5),d4                      | in bit 0 and not bit 20
 #endif
-| Now we have a''s exponent in d4 and fraction in d0-d1
+| Now we have a's exponent in d4 and fraction in d0-d1 '
                 movel   d2,d5                           | save b to get exponent
                 andl    d6,d5                           | get exponent in d5
                 beq     Ladddf$b$den                    | branch if b is denormalized
@@ -836,7 +836,7 @@ Ladddf$2:
                 lsrl    IMM (5),d5                      | in bit 0 and not bit 20
 #endif
 
-| Now we have b''s exponent in d5 and fraction in d2-d3.
+| Now we have b's exponent in d5 and fraction in d2-d3. '
 
 | The situation now is as follows: the signs are combined in a0, the
 | numbers are in d0-d1 (a) and d2-d3 (b), and the exponents in d4 (a)
@@ -878,10 +878,10 @@ Ladddf$2:
                 movel   a4,a3
                 cmpl    d4,d5                           | compare the exponents
 #endif
-                beq     Ladddf$3                        | if equal don''t shift
+                beq     Ladddf$3                        | if equal don't shift '
                 bhi     9f                              | branch if second exponent is higher
 
-| Here we have a''s exponent larger than b''s, so we have to shift b. We do
+| Here we have a's exponent larger than b's, so we have to shift b. We do
 | this by using as counter d2:
 1:              movew   d4,d2                           | move largest exponent to d2
 #if !defined(__mcoldfire__)
@@ -897,7 +897,7 @@ Ladddf$2:
                 movel   a3,d5
                 movel   a4,a3
 #endif
-| if difference is too large we don''t shift (actually, we can just exit)
+| if difference is too large we don't shift (actually, we can just exit)
 #if !defined(__mcoldfire__)
                 cmpw    IMM (DBL_MANT_DIG+2),d2
 #else
@@ -996,7 +996,7 @@ Ladddf$2:
                 movel   a3,d5
                 movel   a4,a3
 #endif
-| if difference is too large we don''t shift (actually, we can just exit)
+| if difference is too large we don't shift (actually, we can just exit) '
 #if !defined(__mcoldfire__)
                 cmpw    IMM (DBL_MANT_DIG+2),d6
 #else
@@ -1104,9 +1104,9 @@ Ladddf$4:
                 movel   a4,a3
 #endif
                 movel   d7,d6                           |
-                movew   IMM (0),d7                      | get a''s sign in d7
+                movew   IMM (0),d7                      | get a's sign in d7 '
                 swap    d6                              |
-                movew   IMM (0),d6                      | and b''s sign in d6
+                movew   IMM (0),d6                      | and b's sign in d6 '
                 eorl    d7,d6                           | compare the signs
                 bmi     Lsubdf$0                        | if the signs are different we have
                                                         | to subtract
@@ -1291,7 +1291,7 @@ Lsubdf$0:
                 blt     Lround$to$zero
                 bra     Lround$to$plus
 Lsubdf$1:
-| Put back the exponent and sign (we don''t have overflow).
+| Put back the exponent and sign (we don't have overflow). '
                 bclr    IMM (DBL_MANT_DIG-1),d0
 #if !defined(__mcoldfire__)
                 lslw    IMM (4),d4                      | put exponent back into position
@@ -1308,7 +1308,7 @@ Lsubdf$1:
                 bra     Ladddf$ret
 
 | If one of the numbers was too small (difference of exponents >=
-| DBL_MANT_DIG+1) we return the other (and now we don''t have to
+| DBL_MANT_DIG+1) we return the other (and now we don't have to '
 | check for finiteness or zero).
 Ladddf$a$small:
 #if !defined(__mcoldfire__)
@@ -1384,8 +1384,10 @@ Ladddf$a:
                 bclr    IMM (31),d0                     |
                 cmpl    IMM (0x7ff00000),d0             |
                 bge     2f                              |
-                movel   d0,d0                           | check for zero, since we don''t
+                movel   d0,d0                           | check for zero, since we don't '
                 bne     Ladddf$ret                      | want to return -0 by mistake
+                movel   d1,d1                           |
+                bne     Ladddf$ret                      |
                 bclr    IMM (31),d7                     |
                 bra     Ladddf$ret                      |
 2:
@@ -1474,7 +1476,7 @@ Ladddf$nf:
                 cmpl    d3,d1                           | if d0 == d2 test d3 and d1
                 beq     Ld$inop                         | if equal return NaN
 1:
-                andl    IMM (0x80000000),d7             | get a''s sign bit
+                andl    IMM (0x80000000),d7             | get a's sign bit '
                 cmpl    d4,d0                           | test now for infinity
                 beq     Ld$infty                        | if a is INFINITY return with this sign
                 bchg    IMM (31),d7                     | else we know b is INFINITY and has
@@ -1505,12 +1507,12 @@ SYM (__muldf3):
                 movel   IMM (0x7ff00000),d7             | useful constant (+INFINITY)
                 movel   d7,d6                           | another (mask for fraction)
                 notl    d6                              |
-                bclr    IMM (31),d0                     | get rid of a''s sign bit
+                bclr    IMM (31),d0                     | get rid of a's sign bit '
                 movel   d0,d4                           |
                 orl     d1,d4                           |
                 beq     Lmuldf$a$0                      | branch if a is zero
                 movel   d0,d4                           |
-                bclr    IMM (31),d2                     | get rid of b''s sign bit
+                bclr    IMM (31),d2                     | get rid of b's sign bit '
                 movel   d2,d5                           |
                 orl     d3,d5                           |
                 beq     Lmuldf$b$0                      | branch if b is zero
@@ -1837,12 +1839,12 @@ SYM (__divdf3):
                 movel   IMM (0x7ff00000),d7             | useful constant (+INFINITY)
                 movel   d7,d6                           | another (mask for fraction)
                 notl    d6                              |
-                bclr    IMM (31),d0                     | get rid of a''s sign bit
+                bclr    IMM (31),d0                     | get rid of a's sign bit '
                 movel   d0,d4                           |
                 orl     d1,d4                           |
                 beq     Ldivdf$a$0                      | branch if a is zero
                 movel   d0,d4                           |
-                bclr    IMM (31),d2                     | get rid of b''s sign bit
+                bclr    IMM (31),d2                     | get rid of b's sign bit '
                 movel   d2,d5                           |
                 orl     d3,d5                           |
                 beq     Ldivdf$b$0                      | branch if b is zero
@@ -1971,7 +1973,7 @@ Ldivdf$2:                                               |
                 bhi     2b                              | if d1 > d2 go back
 4:
 | Here put the sticky bit in d2-d3 (in the position which actually corresponds
-| to it; if you don''t do this the algorithm loses in some cases).
+| to it; if you don't do this the algorithm loses in some cases). '
                 movel   IMM (0),d2
                 movel   d2,d3
 #if !defined(__mcoldfire__)
@@ -2070,7 +2072,7 @@ Ldivdf$b$0:
 | If we got here a is not zero. Check if a is NaN; in that case return NaN,
 | else return +/-INFINITY. Remember that a is in d0 with the sign bit
 | cleared already.
-                movel   a0,d7                           | put a''s sign bit back in d7
+                movel   a0,d7                           | put a's sign bit back in d7 '
                 cmpl    IMM (0x7ff00000),d0             | compare d0 with INFINITY
                 bhi     Ld$inop                         | if larger it is NaN
                 tstl    d1                              |
@@ -2092,8 +2094,7 @@ Ldivdf$a$nf:
 | If a is INFINITY we have to check b
                 cmpl    d7,d2                           | compare b with INFINITY
                 bge     Ld$inop                         | if b is NaN or INFINITY return NaN
-                tstl    d3                              |
-                bne     Ld$inop                         |
+                movl    a0,d7                           | restore sign bit to d7
                 bra     Ld$overflow                     | else return overflow
 
 | If a number is denormalized we put an exponent of 1 but do not put the
@@ -2188,8 +2189,8 @@ Lround$exit:
 #endif
                 beq     2f                              | if not loop back
                 bra     1b                              |
-                bra     Ld$underflow                    | safety check, shouldn''t execute
-2:              orl     d6,d2                           | this is a trick so we don''t lose
+                bra     Ld$underflow                    | safety check, shouldn't execute '
+2:              orl     d6,d2                           | this is a trick so we don't lose '
                 orl     d7,d3                           | the bits which were flushed right
                 movel   a0,d7                           | get back sign bit into d7
 | Now call the rounding routine (which takes care of denormalized numbers):
@@ -2212,7 +2213,7 @@ Lround$0:
 | Here we have a correctly rounded result (either normalized or denormalized).
 
 | Here we should have either a normalized number or a denormalized one, and
-| the exponent is necessarily larger or equal to 1 (so we don''t have to
+| the exponent is necessarily larger or equal to 1 (so we don't have to '
 | check again for underflow!). We have to check for overflow or for a
 | denormalized number (which also signals underflow).
 | Check for overflow (i.e., exponent >= 0x7ff).
@@ -2682,10 +2683,10 @@ SYM (__addsf3):
 #endif
                 movel   a6@(8),d0                       | get first operand
                 movel   a6@(12),d1                      | get second operand
-                movel   d0,a0                           | get d0''s sign bit
+                movel   d0,a0                           | get d0's sign bit '
                 addl    d0,d0                           | check and clear sign bit of a
                 beq     Laddsf$b                        | if zero return second operand
-                movel   d1,a1                           | save b''s sign bit
+                movel   d1,a1                           | save b's sign bit '
                 addl    d1,d1                           | get rid of sign bit
                 beq     Laddsf$a                        | if zero return first operand
 
@@ -2704,7 +2705,7 @@ SYM (__addsf3):
                 swap    d6                              | put exponent into first word
                 orl     d5,d0                           | and put hidden bit back
 Laddsf$1:
-| Now we have a''s exponent in d6 (second byte) and the mantissa in d0.
+| Now we have a's exponent in d6 (second byte) and the mantissa in d0. '
                 movel   d1,d7                           | get exponent in d7
                 andl    d4,d7                           |
                 beq     Laddsf$b$den                    | branch if b is denormalized
@@ -2715,7 +2716,7 @@ Laddsf$1:
                 andl    d4,d1                           | get fraction in d1
                 orl     d5,d1                           | and put hidden bit back
  Laddsf$2:
-| Now we have b''s exponent in d7 (second byte) and the mantissa in d1.
+| Now we have b's exponent in d7 (second byte) and the mantissa in d1. '
 
 | Note that the hidden bit corresponds to bit #FLT_MANT_DIG-1, and we
 | shifted right once, so bit #FLT_MANT_DIG is set (so we have one extra
@@ -2735,7 +2736,7 @@ Laddsf$1:
 #else
                 cmpl    d6,d7                           | compare exponents
 #endif
-                beq     Laddsf$3                        | if equal don''t shift
+                beq     Laddsf$3                        | if equal don't shift '
                 bhi     5f                              | branch if second exponent largest
 1:
                 subl    d6,d7                           | keep the largest exponent
@@ -2745,7 +2746,7 @@ Laddsf$1:
 #else
                 lsrl    IMM (8),d7                      | put difference in lower byte
 #endif
-| if difference is too large we don''t shift (actually, we can just exit)
+| if difference is too large we don't shift (actually, we can just exit) '
 #if !defined(__mcoldfire__)
                 cmpw    IMM (FLT_MANT_DIG+2),d7
 #else
@@ -2806,7 +2807,7 @@ Laddsf$1:
 #else
                 lsrl    IMM (8),d7                      | put difference in lower byte
 #endif
-| if difference is too large we don''t shift (and exit!)
+| if difference is too large we don't shift (and exit!) '
 #if !defined(__mcoldfire__)
                 cmpw    IMM (FLT_MANT_DIG+2),d7
 #else
@@ -2997,7 +2998,7 @@ Lsubsf$0:
                 blt     Lround$to$zero
                 bra     Lround$to$plus
 Lsubsf$1:
-| Put back the exponent (we can''t have overflow!).
+| Put back the exponent (we can't have overflow!). '
                 bclr    IMM (FLT_MANT_DIG-1),d0
 #if !defined(__mcoldfire__)
                 lslw    IMM (7),d2
@@ -3009,7 +3010,7 @@ Lsubsf$1:
                 bra     Laddsf$ret
 
 | If one of the numbers was too small (difference of exponents >=
-| FLT_MANT_DIG+2) we return the other (and now we don''t have to
+| FLT_MANT_DIG+2) we return the other (and now we don't have to '
 | check for finiteness or zero).
 Laddsf$a$small:
                 movel   a6@(12),d0
@@ -3076,7 +3077,7 @@ Laddsf$a:
                 bclr    IMM (31),d0                     | clear sign
                 cmpl    IMM (INFINITY),d0               | check for infty or NaN
                 bge     2f
-                movel   d0,d0                           | check for zero (we do this because we don''t
+                movel   d0,d0                           | check for zero (we do this because we don't '
                 bne     Laddsf$ret                      | want to return -0 by mistake
                 bclr    IMM (31),d7                     | if zero be sure to clear sign
                 bra     Laddsf$ret                      | if everything OK just return
@@ -3103,7 +3104,7 @@ Laddsf$ret:
                 rts
 
 Laddsf$ret$den:
-| Return a denormalized number (for addition we don''t signal underflow)
+| Return a denormalized number (for addition we don't signal underflow) '
                 lsrl    IMM (1),d0                      | remember to shift right back once
                 bra     Laddsf$ret                      | and return
 
@@ -3147,7 +3148,7 @@ Laddsf$nf:
                 cmpl    d1,d0                           | are both infinite?
                 beq     Lf$inop                         | if so return NaN
 
-                andl    IMM (0x80000000),d7             | get a''s sign bit
+                andl    IMM (0x80000000),d7             | get a's sign bit '
                 cmpl    d4,d0                           | test now for infinity
                 beq     Lf$infty                        | if a is INFINITY return with this sign
                 bchg    IMM (31),d7                     | else we know b is INFINITY and has
@@ -3176,10 +3177,10 @@ SYM (__mulsf3):
                 movel   d6,d5                           | another (mask for fraction)
                 notl    d5                              |
                 movel   IMM (0x00800000),d4             | this is to put hidden bit back
-                bclr    IMM (31),d0                     | get rid of a''s sign bit
+                bclr    IMM (31),d0                     | get rid of a's sign bit '
                 movel   d0,d2                           |
                 beq     Lmulsf$a$0                      | branch if a is zero
-                bclr    IMM (31),d1                     | get rid of b''s sign bit
+                bclr    IMM (31),d1                     | get rid of b's sign bit '
                 movel   d1,d3                           |
                 beq     Lmulsf$b$0                      | branch if b is zero
                 cmpl    d6,d0                           | is a big?
@@ -3391,10 +3392,10 @@ SYM (__divsf3):
                 movel   d6,d5                           | another (mask for fraction)
                 notl    d5                              |
                 movel   IMM (0x00800000),d4             | this is to put hidden bit back
-                bclr    IMM (31),d0                     | get rid of a''s sign bit
+                bclr    IMM (31),d0                     | get rid of a's sign bit '
                 movel   d0,d2                           |
                 beq     Ldivsf$a$0                      | branch if a is zero
-                bclr    IMM (31),d1                     | get rid of b''s sign bit
+                bclr    IMM (31),d1                     | get rid of b's sign bit '
                 movel   d1,d3                           |
                 beq     Ldivsf$b$0                      | branch if b is zero
                 cmpl    d6,d0                           | is a big?
@@ -3626,8 +3627,8 @@ Lround$exit:
 #endif
                 beq     2f                              | if not loop back
                 bra     1b                              |
-                bra     Lf$underflow                    | safety check, shouldn''t execute
-2:              orl     d6,d1                           | this is a trick so we don''t lose
+                bra     Lf$underflow                    | safety check, shouldn't execute '
+2:              orl     d6,d1                           | this is a trick so we don't lose '
                                                         | the extra bits which were flushed right
 | Now call the rounding routine (which takes care of denormalized numbers):
                 lea     pc@(Lround$0),a0                | to return from rounding routine
@@ -3649,7 +3650,7 @@ Lround$0:
 | Here we have a correctly rounded result (either normalized or denormalized).
 
 | Here we should have either a normalized number or a denormalized one, and
-| the exponent is necessarily larger or equal to 1 (so we don''t have to
+| the exponent is necessarily larger or equal to 1 (so we don't have to '
 | check again for underflow!). We have to check for overflow or for a
 | denormalized number (which also signals underflow).
 | Check for overflow (i.e., exponent >= 255).
@@ -3695,7 +3696,7 @@ Lround$0:
 |                             __negsf2
 |=============================================================================
 
-| This is trivial and could be shorter if we didn''t bother checking for NaN
+| This is trivial and could be shorter if we didn't bother checking for NaN '
 | and +/-INFINITY.
 
 | float __negsf2(float);
