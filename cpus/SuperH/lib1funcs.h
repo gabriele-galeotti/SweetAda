@@ -20,7 +20,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 <http://www.gnu.org/licenses/>.  */
 
 /* SweetAda version, reformatted and cleaned                 */
-/* __INF__ original: gcc-12.2.0/libgcc/config/sh/lib1funcs.h */
+/* __INF__ original: gcc-14.2.0/libgcc/config/sh/lib1funcs.h */
 
 #if defined(__ELF__)
 #define LOCAL(X)          .L_##X
