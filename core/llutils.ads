@@ -38,6 +38,10 @@ package LLutils
 
    package SSE renames System.Storage_Elements;
 
+   subtype Decimal_Digit_Type is Natural range 0 .. 9;
+
+   subtype Atomic_Type is Interfaces.Unsigned_8;
+
    ----------------------------------------------------------------------------
    -- Byte swapping
    ----------------------------------------------------------------------------
@@ -94,10 +98,6 @@ package LLutils
        Size           : in     Bits.Bitsize);
 
    ----------------------------------------------------------------------------
-   -- Address manipulation
-   ----------------------------------------------------------------------------
-
-   ----------------------------------------------------------------------------
    -- Extract a bit pattern from an address.
    -- Some CPUs are inherently big-endian machines (in the sense of how they
    -- store multi-byte objects), like PowerPC-class CPUs, but the bit layout
@@ -136,10 +136,6 @@ package LLutils
       with Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Unsigned_8 <=> BCD conversion
-   ----------------------------------------------------------------------------
-
-   ----------------------------------------------------------------------------
    -- Transform an Unsigned_8 from BCD form.
    ----------------------------------------------------------------------------
    function BCD_To_U8
@@ -152,12 +148,6 @@ package LLutils
    function U8_To_BCD
       (V : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8;
-
-   ----------------------------------------------------------------------------
-   -- Character-oriented utilities
-   ----------------------------------------------------------------------------
-
-   subtype Decimal_Digit_Type is Natural range 0 .. 9;
 
    ----------------------------------------------------------------------------
    -- Convert a digit to a character.
@@ -195,12 +185,6 @@ package LLutils
    function CString_Length
       (String_Address : System.Address)
       return Bits.C.size_t;
-
-   ----------------------------------------------------------------------------
-   -- Synchronization primitives
-   ----------------------------------------------------------------------------
-
-   subtype Atomic_Type is Interfaces.Unsigned_8;
 
    ----------------------------------------------------------------------------
    -- Atomic clear
