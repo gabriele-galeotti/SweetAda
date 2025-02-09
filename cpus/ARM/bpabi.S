@@ -1,6 +1,6 @@
 /* Miscellaneous BPABI functions.
 
-   Copyright (C) 2003-2022 Free Software Foundation, Inc.
+   Copyright (C) 2003-2024 Free Software Foundation, Inc.
    Contributed by CodeSourcery, LLC.
 
    This file is free software; you can redistribute it and/or modify it
@@ -23,7 +23,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 /* SweetAda version, reformatted and cleaned              */
-/* __INF__ original: gcc-12.2.0/libgcc/config/arm/bpabi.S */
+/* __INF__ original: gcc-14.2.0/libgcc/config/arm/bpabi.S */
 
                 .cfi_sections .debug_frame
 

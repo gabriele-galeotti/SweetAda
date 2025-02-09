@@ -1,6 +1,6 @@
 /* ieee754-sf.S single-precision floating point support for ARM
 
-   Copyright (C) 2003-2022 Free Software Foundation, Inc.
+   Copyright (C) 2003-2024 Free Software Foundation, Inc.
    Contributed by Nicolas Pitre (nico@fluxnic.net)
 
    This file is free software; you can redistribute it and/or modify it
@@ -23,7 +23,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 /* SweetAda version, reformatted and cleaned                   */
-/* __INF__ original: gcc-12.2.0/libgcc/config/arm/ieee754-sf.S */
+/* __INF__ original: gcc-14.2.0/libgcc/config/arm/ieee754-sf.S */
 
 /*
  * Notes:
@@ -809,8 +809,8 @@ ARM_FUNC_ALIAS eqsf2 cmpsf2
 
 1:              str     ip,[sp, #-4]!
                 .cfi_adjust_cfa_offset 4  @ CFA is now sp + previousOffset + 4.
-                @ We''re not adding CFI for ip as it''s pushed into the stack only because
-                @ it may be popped off later as a return value (i.e. we''re not preserving
+                @ We're not adding CFI for ip as it's pushed into the stack only because
+                @ it may be popped off later as a return value (i.e. we're not preserving
                 @ it anyways).
 
                 @ Trap any INF/NAN first.
@@ -822,9 +822,9 @@ ARM_FUNC_ALIAS eqsf2 cmpsf2
                 beq     3f
                 .cfi_remember_state
                 @ Save the current CFI state. This is done because the branch is conditional,
-                @ and if we don''t take it we''ll issue a .cfi_adjust_cfa_offset and return.
+                @ and if we don't take it we'll issue a .cfi_adjust_cfa_offset and return.
                 @ If we do take it, however, the .cfi_adjust_cfa_offset from the non-branch
-                @ code will affect the branch code as well. To avoid this we''ll restore
+                @ code will affect the branch code as well. To avoid this we'll restore
                 @ the current state before executing the branch code.
 
                 @ Compare values.

@@ -1,7 +1,7 @@
 @ libgcc routines for ARM cpu.
 @ Division routines, written by Richard Earnshaw, (rearnsha@armltd.co.uk)
 
-/* Copyright (C) 1995-2022 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2024 Free Software Foundation, Inc.
 
 This file is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -23,7 +23,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 <http://www.gnu.org/licenses/>.  */
 
 /* SweetAda version, reformatted and cleaned                  */
-/* __INF__ original: gcc-12.2.0/libgcc/config/arm/lib1funcs.S */
+/* __INF__ original: gcc-14.2.0/libgcc/config/arm/lib1funcs.S */
 
 /* Everything in this file should now use unified syntax.  */
 
@@ -1524,7 +1524,7 @@ LSYM(Lover12):
                 add     r7,r7,#2
 #endif
                 mov     r2,#0
-                swi     0
+                svc     0
                 do_pop  {r7}
                 RET
                 FUNC_END clear_cache
@@ -1639,7 +1639,7 @@ LSYM(Lover12):
                 asrs    ah,r2
                 subs    r2,#32
                 @ If r2 is negative at this point the following step would OR
-                @ the sign bit into all of AL.  That''s not what we want ...
+                @ the sign bit into all of AL.  That's not what we want ...
                 bmi     1f
                 mov     ip,r3
                 asrs    r3,r2
@@ -1959,7 +1959,7 @@ ARM_FUNC_START ctzsi2
    arguments are passed in registers.
 
    The second, _interwork_r7_call_via_rN(), instead stores the return
-   address at [r7, #-4].  It is the caller''s responsibility to ensure
+   address at [r7, #-4].  It is the caller's responsibility to ensure
    that this address is valid and contains no useful data.
 
    The third, _interwork_r11_call_via_rN(), works in the same way but
@@ -2147,6 +2147,78 @@ LSYM(Lchange_\register):
                 pop     {r0,r1}
                 bx      lr
                 SIZE (__gnu_thumb1_case_uhi)
+#endif
+
+#if defined(L_sync_none)
+                /* Null implementation of __sync_synchronize, for use when
+                   it is known that the system is single threaded.  */
+                .text
+                .align  0
+                FUNC_START sync_synchronize_none
+                bx      lr
+                FUNC_END sync_synchronize_none
+#endif
+
+#if defined(L_sync_dmb)
+                /* Full memory barrier using DMB.  Requires Armv7 (all profiles)
+                or armv6-m, or later.  */
+                .text
+                .align  0
+#if __ARM_ARCH_PROFILE == 'M'
+                .arch   armv6-m
+#else
+                .arch   armv7-a
+#endif
+                FUNC_START sync_synchronize_dmb
+                /* M-profile devices only support SY as the synchronization level,
+                   but that's probably what we want here anyway.  */
+                dmb
+                RET
+                FUNC_END sync_synchronize_dmb
+#endif
+
+#if defined(L_sync_cp15dmb)
+#if !defined(NOT_ISA_TARGET_32BIT)
+                /* Implementation of DMB using CP15 operations.  This was first
+                   defined in Armv6, but deprecated in Armv7 and can give
+                   sub-optimal performance.  */
+                .text
+                .align  0
+                ARM_FUNC_START sync_synchronize_cp15dmb
+                mcr     p15,0,r0,c7,c10,5
+                RET
+                FUNC_END sync_synchronize_cp15dmb
+#endif
+#endif
+
+#if defined(L_sync_synchronize)
+                /* Generic version of the synchronization primitive.  If we know
+                   that DMB exists, then use it.  Otherwise, arrange for a link
+                   time warning explaining how to pick a suitable alternative.
+                   We choose not to use CP15DMB because it is performance
+                   deprecated.  We only define this function if generating
+                   ELF binaries as otherwise we can't rely on the warning being
+                   generated.  */
+
+#if defined(__ELF__)
+                .text
+                .align  0
+                FUNC_START sync_synchronize
+#if __ARM_ARCH >= 7 || __ARM_ARCH_PROFILE == 'M'
+                dmb
+#endif
+                RET
+                FUNC_END sync_synchronize
+#if !(__ARM_ARCH >= 7 || __ARM_ARCH_PROFILE == 'M')
+                .sect   .gnu.warning.__sync_synchronize
+                .align  0
+                .ascii  "This implementation of __sync_synchronize is a stub with "
+                .ascii  "no effect.  Relink with\n"
+                .ascii  "  -specs=sync-{none,dmb,cp15dmb}.specs\n"
+                .ascii  "to specify exactly which barrier format to use and avoid "
+                .ascii  "this warning\0"
+#endif
+#endif
 #endif
 
 #if defined(L_thumb1_case_si)
