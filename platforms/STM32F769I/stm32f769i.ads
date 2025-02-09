@@ -3346,15 +3346,15 @@ pragma Warnings (On);
    -- 32.6.1 RTC time register (RTC_TR)
 
    type RTC_TR_Type is record
-      SU        : Bits_4;      -- Second units in BCD format
-      ST        : Bits_3;      -- Second tens in BCD format
+      SU        : Bits_4 := 0; -- Second units in BCD format
+      ST        : Bits_3 := 0; -- Second tens in BCD format
       Reserved1 : Bits_1 := 0;
-      MNU       : Bits_4;      -- Minute units in BCD format
-      MNT       : Bits_3;      -- Minute tens in BCD format
+      MNU       : Bits_4 := 0; -- Minute units in BCD format
+      MNT       : Bits_3 := 0; -- Minute tens in BCD format
       Reserved2 : Bits_1 := 0;
-      HU        : Bits_4;      -- Hour units in BCD format
-      HT        : Bits_2;      -- Hour tens in BCD format
-      PM        : Bits_1;      -- AM/PM notation
+      HU        : Bits_4 := 0; -- Hour units in BCD format
+      HT        : Bits_2 := 0; -- Hour tens in BCD format
+      PM        : Bits_1 := 0; -- AM/PM notation
       Reserved3 : Bits_9 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -3375,14 +3375,14 @@ pragma Warnings (On);
    -- 32.6.2 RTC date register (RTC_DR)
 
    type RTC_DR_Type is record
-      DU        : Bits_4;      -- Date units in BCD format
-      DT        : Bits_2;      -- Date tens in BCD format
+      DU        : Bits_4 := 2#0001#; -- Date units in BCD format
+      DT        : Bits_2 := 0;       -- Date tens in BCD format
       Reserved1 : Bits_2 := 0;
-      MU        : Bits_4;      -- Month units in BCD format
-      MT        : Bits_1;      -- Month tens in BCD format
-      WDU       : Bits_3;      -- Week day units
-      YU        : Bits_4;      -- Year units in BCD format
-      YT        : Bits_4;      -- Year tens in BCD format
+      MU        : Bits_4 := 2#0001#; -- Month units in BCD format
+      MT        : Bits_1 := 0;       -- Month tens in BCD format
+      WDU       : Bits_3 := 2#001#;  -- Week day units
+      YU        : Bits_4 := 0;       -- Year units in BCD format
+      YT        : Bits_4 := 0;       -- Year tens in BCD format
       Reserved2 : Bits_8 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -3426,28 +3426,28 @@ pragma Warnings (On);
    OSEL_WAKEUP  : constant := 2#11#; -- Wakeup output enabled
 
    type RTC_CR_Type is record
-      WUCKSEL   : Bits_3;       -- Wakeup clock selection
-      TSEDGE    : Bits_1;       -- Time-stamp event active edge
-      REFCKON   : Boolean;      -- RTC_REFIN reference clock detection enable (50 or 60 Hz)
-      BYPSHAD   : Boolean;      -- Bypass the shadow registers
-      FMT       : Bits_1;       -- Hour format
+      WUCKSEL   : Bits_3  := WUCKSEL_DIV16; -- Wakeup clock selection
+      TSEDGE    : Bits_1  := TSEDGE_RISING; -- Time-stamp event active edge
+      REFCKON   : Boolean := False;         -- RTC_REFIN reference clock detection enable (50 or 60 Hz)
+      BYPSHAD   : Boolean := False;         -- Bypass the shadow registers
+      FMT       : Bits_1  := FMT_24;        -- Hour format
       Reserved1 : Bits_1  := 0;
-      ALRAE     : Boolean;      -- Alarm A enable
-      ALRBE     : Boolean;      -- Alarm B enable
-      WUTE      : Boolean;      -- Wakeup timer enable
-      TSE       : Boolean;      -- timestamp enable
-      ALRAIE    : Boolean;      -- Alarm A interrupt enable
-      ALRBIE    : Boolean;      -- Alarm B interrupt enable
-      WUTIE     : Boolean;      -- Wakeup timer interrupt enable
-      TSIE      : Boolean;      -- Time-stamp interrupt enable
-      ADD1H     : Boolean;      -- Add 1 hour (summer time change)
-      SUB1H     : Boolean;      -- Subtract 1 hour (winter time change)
-      BKP       : Boolean;      -- Backup
-      COSEL     : Bits_1;       -- Calibration output selection
-      POL       : Bits_1;       -- Output polarity
-      OSEL      : Bits_2;       -- Output selection
-      COE       : Boolean;      -- Calibration output enable
-      ITSE      : Boolean;      -- timestamp on internal event enable
+      ALRAE     : Boolean := False;         -- Alarm A enable
+      ALRBE     : Boolean := False;         -- Alarm B enable
+      WUTE      : Boolean := False;         -- Wakeup timer enable
+      TSE       : Boolean := False;         -- timestamp enable
+      ALRAIE    : Boolean := False;         -- Alarm A interrupt enable
+      ALRBIE    : Boolean := False;         -- Alarm B interrupt enable
+      WUTIE     : Boolean := False;         -- Wakeup timer interrupt enable
+      TSIE      : Boolean := False;         -- Time-stamp interrupt enable
+      ADD1H     : Boolean := False;         -- Add 1 hour (summer time change)
+      SUB1H     : Boolean := False;         -- Subtract 1 hour (winter time change)
+      BKP       : Boolean := False;         -- Backup
+      COSEL     : Bits_1  := COSEL_512;     -- Calibration output selection
+      POL       : Bits_1  := POL_HI;        -- Output polarity
+      OSEL      : Bits_2  := OSEL_DISABLE;  -- Output selection
+      COE       : Boolean := False;         -- Calibration output enable
+      ITSE      : Boolean := False;         -- timestamp on internal event enable
       Reserved2 : Bits_7  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -3484,24 +3484,24 @@ pragma Warnings (On);
    INIT_INITMODE : constant := 1; -- Initialization mode used to program time and date register (RTC_TR and RTC_DR), and ...
 
    type RTC_ISR_Type is record
-      ALRAWF   : Boolean;      -- Alarm A write flag
-      ALRBWF   : Boolean;      -- Alarm B write flag
-      WUTWF    : Boolean;      -- Wakeup timer write flag
-      SHPF     : Boolean;      -- Shift operation pending
-      INITS    : Boolean;      -- Initialization status flag
-      RSF      : Boolean;      -- Registers synchronization flag
-      INITF    : Boolean;      -- Initialization flag
-      INIT     : Bits_1;       -- Initialization mode
-      ALRAF    : Boolean;      -- Alarm A flag
-      ALRBF    : Boolean;      -- Alarm B flag
-      WUTF     : Boolean;      -- Wakeup timer flag
-      TSF      : Boolean;      -- Time-stamp flag
-      TSOVF    : Boolean;      -- Time-stamp overflow flag
-      TAMP1F   : Boolean;      -- RTC_TAMP1 detection flag
-      TAMP2F   : Boolean;      -- RTC_TAMP2 detection flag
-      TAMP3F   : Boolean;      -- RTC_TAMP3 detection flag
-      RECALPF  : Boolean;      -- Recalibration pending Flag
-      ITSF     : Boolean;      -- Internal tTime-stamp flag
+      ALRAWF   : Boolean := True;         -- Alarm A write flag
+      ALRBWF   : Boolean := True;         -- Alarm B write flag
+      WUTWF    : Boolean := True;         -- Wakeup timer write flag
+      SHPF     : Boolean := False;        -- Shift operation pending
+      INITS    : Boolean := False;        -- Initialization status flag
+      RSF      : Boolean := False;        -- Registers synchronization flag
+      INITF    : Boolean := False;        -- Initialization flag
+      INIT     : Bits_1  := INIT_FREERUN; -- Initialization mode
+      ALRAF    : Boolean := False;        -- Alarm A flag
+      ALRBF    : Boolean := False;        -- Alarm B flag
+      WUTF     : Boolean := False;        -- Wakeup timer flag
+      TSF      : Boolean := False;        -- Time-stamp flag
+      TSOVF    : Boolean := False;        -- Time-stamp overflow flag
+      TAMP1F   : Boolean := False;        -- RTC_TAMP1 detection flag
+      TAMP2F   : Boolean := False;        -- RTC_TAMP2 detection flag
+      TAMP3F   : Boolean := False;        -- RTC_TAMP3 detection flag
+      RECALPF  : Boolean := False;        -- Recalibration pending Flag
+      ITSF     : Boolean := False;        -- Internal tTime-stamp flag
       Reserved : Bits_14 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -3531,9 +3531,9 @@ pragma Warnings (On);
    -- 32.6.5 RTC prescaler register (RTC_PRER)
 
    type RTC_PRER_Type is record
-      PREDIV_S  : Bits_15;      -- Synchronous prescaler factor
+      PREDIV_S  : Bits_15 := 16#FF#; -- Synchronous prescaler factor
       Reserved1 : Bits_1  := 0;
-      PREDIV_A  : Bits_7;       -- Asynchronous prescaler factor
+      PREDIV_A  : Bits_7  := 16#7F#; -- Asynchronous prescaler factor
       Reserved2 : Bits_9  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -3548,7 +3548,7 @@ pragma Warnings (On);
    -- 32.6.6 RTC wakeup timer register (RTC_WUTR)
 
    type RTC_WUTR_Type is record
-      WUT      : Bits_16;      -- Wakeup auto-reload value bits
+      WUT      : Bits_16 := 16#FFFF#; -- Wakeup auto-reload value bits
       Reserved : Bits_16 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -3562,20 +3562,20 @@ pragma Warnings (On);
    -- 32.6.8 RTC alarm B register (RTC_ALRMBR)
 
    type RTC_ALRMxR_Type is record
-      SU    : Bits_4; -- Second units in BCD format.
-      ST    : Bits_3; -- Second tens in BCD format.
-      MSK1  : Bits_1; -- Alarm x seconds mask
-      MNU   : Bits_4; -- Minute units in BCD format.
-      MNT   : Bits_3; -- Minute tens in BCD format.
-      MSK2  : Bits_1; -- Alarm x minutes mask
-      HU    : Bits_4; -- Hour units in BCD format.
-      HT    : Bits_2; -- Hour tens in BCD format.
-      PM    : Bits_1; -- AM/PM notation
-      MSK3  : Bits_1; -- Alarm x hours mask
-      DU    : Bits_4; -- Date units or day in BCD format.
-      DT    : Bits_2; -- Date tens in BCD format.
-      WDSEL : Bits_1; -- Week day selection
-      MSK4  : Bits_1; -- Alarm x date mask
+      SU    : Bits_4 := 0; -- Second units in BCD format.
+      ST    : Bits_3 := 0; -- Second tens in BCD format.
+      MSK1  : Bits_1 := 0; -- Alarm x seconds mask
+      MNU   : Bits_4 := 0; -- Minute units in BCD format.
+      MNT   : Bits_3 := 0; -- Minute tens in BCD format.
+      MSK2  : Bits_1 := 0; -- Alarm x minutes mask
+      HU    : Bits_4 := 0; -- Hour units in BCD format.
+      HT    : Bits_2 := 0; -- Hour tens in BCD format.
+      PM    : Bits_1 := 0; -- AM/PM notation
+      MSK3  : Bits_1 := 0; -- Alarm x hours mask
+      DU    : Bits_4 := 0; -- Date units or day in BCD format.
+      DT    : Bits_2 := 0; -- Date tens in BCD format.
+      WDSEL : Bits_1 := 0; -- Week day selection
+      MSK4  : Bits_1 := 0; -- Alarm x date mask
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -3628,9 +3628,9 @@ pragma Warnings (On);
    -- 32.6.11 RTC shift control register (RTC_SHIFTR)
 
    type RTC_SHIFTR_Type is record
-      SUBFS    : Bits_15; -- Subtract a fraction of a second
-      Reserved : Bits_16;
-      ADD1S    : Boolean; -- Add one second
+      SUBFS    : Bits_15 := 0;     -- Subtract a fraction of a second
+      Reserved : Bits_16 := 0;
+      ADD1S    : Boolean := False; -- Add one second
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -3672,15 +3672,15 @@ pragma Warnings (On);
    -- 32.6.13 RTC timestamp date register (RTC_TSDR)
 
    type RTC_TSDR_Type is record
-      DU        : Bits_4;      -- Date units in BCD format
-      DT        : Bits_2;      -- Date tens in BCD format
-      Reserved1 : Bits_2 := 0;
-      MU        : Bits_4;      -- Month units in BCD format
-      MT        : Bits_1;      -- Month tens in BCD format
-      WDU       : Bits_3;      -- Week day units
-      YU        : Bits_4;      -- Year units in BCD format
-      YT        : Bits_4;      -- Year tens in BCD format
-      Reserved2 : Bits_8 := 0;
+      DU        : Bits_4; -- Date units in BCD format
+      DT        : Bits_2; -- Date tens in BCD format
+      Reserved1 : Bits_2;
+      MU        : Bits_4; -- Month units in BCD format
+      MT        : Bits_1; -- Month tens in BCD format
+      WDU       : Bits_3; -- Week day units
+      YU        : Bits_4; -- Year units in BCD format
+      YT        : Bits_4; -- Year tens in BCD format
+      Reserved2 : Bits_8;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -3712,11 +3712,11 @@ pragma Warnings (On);
    -- 32.6.15 RTC calibration register (RTC_CALR)
 
    type RTC_CALR_Type is record
-      CALM      : Bits_9;       -- Calibration minus
+      CALM      : Bits_9  := 0;     -- Calibration minus
       Reserved1 : Bits_4  := 0;
-      CALW16    : Boolean;      -- Use a 16-second calibration cycle period
-      CALW8     : Boolean;      -- Use an 8-second calibration cycle period
-      CALP      : Boolean;      -- Increase frequency of RTC by 488.5 ppm
+      CALW16    : Boolean := False; -- Use a 16-second calibration cycle period
+      CALW8     : Boolean := False; -- Use an 8-second calibration cycle period
+      CALP      : Boolean := False; -- Increase frequency of RTC by 488.5 ppm
       Reserved2 : Bits_16 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -3732,10 +3732,10 @@ pragma Warnings (On);
 
    -- 32.6.16 RTC tamper configuration register (RTC_TAMPCR)
 
-   TAMPTRG_LO      : constant := 0; -- RTC_TAMPx input staying low triggers a tamper detection event.
-   TAMPTRG_HI      : constant := 1; -- RTC_TAMPx input staying high triggers a tamper detection event.
-   TAMPTRG_RISING  : constant := 0; -- RTC_TAMPx input rising edge triggers a tamper detection event.
-   TAMPTRG_FALLING : constant := 1; -- RTC_TAMPx input falling edge triggers a tamper detection event.
+   TAMPxTRG_LO      : constant := 0; -- RTC_TAMPx input staying low triggers a tamper detection event.
+   TAMPxTRG_HI      : constant := 1; -- RTC_TAMPx input staying high triggers a tamper detection event.
+   TAMPxTRG_RISING  : constant := 0; -- RTC_TAMPx input rising edge triggers a tamper detection event.
+   TAMPxTRG_FALLING : constant := 1; -- RTC_TAMPx input falling edge triggers a tamper detection event.
 
    TAMPFREQ_DIV32k : constant := 16#0#; -- RTCCLK / 32768 (1 Hz when RTCCLK = 32768 Hz)
    TAMPFREQ_DIV16k : constant := 16#1#; -- RTCCLK / 16384 (2 Hz when RTCCLK = 32768 Hz)
@@ -3757,27 +3757,27 @@ pragma Warnings (On);
    TAMPPRCH_CYC8 : constant := 16#3#; -- 8 RTCCLK cycles
 
    type RTC_TAMPCR_Type is record
-      TAMP1E       : Boolean;      -- RTC_TAMP1 input detection enable
-      TAMP1TRG     : Bits_1;       -- Active level for RTC_TAMP1 input
-      TAMPIE       : Boolean;      -- Tamper interrupt enable
-      TAMP2E       : Boolean;      -- RTC_TAMP2 input detection enable
-      TAMP2TRG     : Bits_1;       -- Active level for RTC_TAMP2 input
-      TAMP3E       : Boolean;      -- RTC_TAMP3 detection enable
-      TAMP3TRG     : Bits_1;       -- Active level for RTC_TAMP3 input
-      TAMPTS       : Boolean;      -- Activate timestamp on tamper detection event
-      TAMPFREQ     : Bits_3;       -- Tamper sampling frequency
-      TAMPFLT      : Bits_2;       -- RTC_TAMPx filter count
-      TAMPPRCH     : Bits_2;       -- RTC_TAMPx precharge duration
-      TAMPPUDIS    : Boolean;      -- RTC_TAMPx pull-up disable
-      TAMP1IE      : Boolean;      -- Tamper 1 interrupt enable
-      TAMP1NOERASE : Boolean;      -- Tamper 1 no erase
-      TAMP1MF      : Boolean;      -- Tamper 1 mask flag
-      TAMP2IE      : Boolean;      -- Tamper 2 interrupt enable
-      TAMP2NOERASE : Boolean;      -- Tamper 2 no erase
-      TAMP2MF      : Boolean;      -- Tamper 2 mask flag
-      TAMP3IE      : Boolean;      -- Tamper 3 interrupt enable
-      TAMP3NOERASE : Boolean;      -- Tamper 3 no erase
-      TAMP3MF      : Boolean;      -- Tamper 3 mask flag
+      TAMP1E       : Boolean := False;           -- RTC_TAMP1 input detection enable
+      TAMP1TRG     : Bits_1  := TAMPxTRG_LO;     -- Active level for RTC_TAMP1 input
+      TAMPIE       : Boolean := False;           -- Tamper interrupt enable
+      TAMP2E       : Boolean := False;           -- RTC_TAMP2 input detection enable
+      TAMP2TRG     : Bits_1  := TAMPxTRG_LO;     -- Active level for RTC_TAMP2 input
+      TAMP3E       : Boolean := False;           -- RTC_TAMP3 detection enable
+      TAMP3TRG     : Bits_1  := TAMPxTRG_LO;     -- Active level for RTC_TAMP3 input
+      TAMPTS       : Boolean := False;           -- Activate timestamp on tamper detection event
+      TAMPFREQ     : Bits_3  := TAMPFREQ_DIV32k; -- Tamper sampling frequency
+      TAMPFLT      : Bits_2  := TAMPFLT_EDGE;    -- RTC_TAMPx filter count
+      TAMPPRCH     : Bits_2  := TAMPPRCH_CYC1;   -- RTC_TAMPx precharge duration
+      TAMPPUDIS    : Boolean := False;           -- RTC_TAMPx pull-up disable
+      TAMP1IE      : Boolean := False;           -- Tamper 1 interrupt enable
+      TAMP1NOERASE : Boolean := False;           -- Tamper 1 no erase
+      TAMP1MF      : Boolean := False;           -- Tamper 1 mask flag
+      TAMP2IE      : Boolean := False;           -- Tamper 2 interrupt enable
+      TAMP2NOERASE : Boolean := False;           -- Tamper 2 no erase
+      TAMP2MF      : Boolean := False;           -- Tamper 2 mask flag
+      TAMP3IE      : Boolean := False;           -- Tamper 3 interrupt enable
+      TAMP3NOERASE : Boolean := False;           -- Tamper 3 no erase
+      TAMP3MF      : Boolean := False;           -- Tamper 3 mask flag
       Reserved     : Bits_7  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -3811,9 +3811,9 @@ pragma Warnings (On);
    -- 32.6.18 RTC alarm B sub second register (RTC_ALRMBSSR)
 
    type RTC_ALRMxSSR_Type is record
-      SS        : Bits_15;      -- Sub seconds value
+      SS        : Bits_15 := 0; -- Sub seconds value
       Reserved1 : Bits_9  := 0;
-      MASKSS    : Bits_4;       -- Mask the most-significant bits starting at this bit
+      MASKSS    : Bits_4  := 0; -- Mask the most-significant bits starting at this bit
       Reserved2 : Bits_4  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -3837,8 +3837,8 @@ pragma Warnings (On);
 
    type RTC_OR_Type is record
       Reserved1      : Bits_1  := 0;
-      TSINSEL        : Bits_2;       -- TIMESTAMP mapping
-      RTC_ALARM_TYPE : Bits_1;       -- RTC_ALARM on PC13 output type
+      TSINSEL        : Bits_2  := TSINSEL_PC13;      -- TIMESTAMP mapping
+      RTC_ALARM_TYPE : Bits_1  := RTC_ALARM_TYPE_OD; -- RTC_ALARM on PC13 output type
       Reserved2      : Bits_28 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -4402,7 +4402,7 @@ pragma Warnings (On);
 
    type USART_DR_Type is record
       DR       : Unsigned_8;
-      DR8      : Bits_1;
+      DR8      : Bits_1     := 0;
       Reserved : Bits_23    := 0;
    end record
       with Bit_Order => Low_Order_First,
