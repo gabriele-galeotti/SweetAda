@@ -142,6 +142,7 @@ LFPL_list()
 {
 _LFP_S_files=
 _LFP_C_files=
+_LFP_AD_files=
 _LFPL_list=""
 for f in "$@" ; do
   case ${f} in
@@ -155,6 +156,12 @@ for f in "$@" ; do
       if [ "x${_LFP_C_files}" != "xY" ] ; then
         _LFP_C_files=Y
         _LFPL_list="${_LFPL_list:+${_LFPL_list} }C"
+      fi
+      ;;
+    *.adb|*.ads)
+      if [ "x${_LFP_AD_files}" != "xY" ] ; then
+        _LFP_AD_files=Y
+        _LFPL_list="${_LFPL_list:+${_LFPL_list} }Ada"
       fi
       ;;
   esac

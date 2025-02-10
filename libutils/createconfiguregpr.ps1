@@ -195,10 +195,11 @@ function LFPL_list
   param([string]$list)
   $LFP_S_files = $false
   $LFP_C_files = $false
+  $LFP_AD_files = $false
   $LFPL = ""
   foreach ($f in $list.Split(" "))
   {
-     if ($f.Trim().EndsWith(".S") -and -not $LFP_S_files)
+     if     ($f.Trim().EndsWith(".S") -and -not $LFP_S_files)
      {
        $LFP_S_files = $true
        if ($LFPL.Length -gt 0)
@@ -215,6 +216,15 @@ function LFPL_list
          $LFPL = $LFPL + " "
        }
        $LFPL = $LFPL + "C"
+     }
+     elseif (($f.Trim().EndsWith(".adb") -or $f.Trim().EndsWith(".ads")) -and -not $LFP_AD_files)
+     {
+       $LFP_AD_files = $true
+       if ($LFPL.Length -gt 0)
+       {
+         $LFPL = $LFPL + " "
+       }
+       $LFPL = $LFPL + "Ada"
      }
   }
   return $LFPL
