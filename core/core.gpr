@@ -77,8 +77,11 @@ library project Core is
       "definitions.ads"
       );
 
-   GCC_Defines_Files := (
-      "gcc-defines.ads"
+   GCC_Files := (
+      "gcc.ads",
+      "gcc-defines.ads",
+      "gcc-source_info.ads",
+      "gcc-types.ads"
       );
 
    Gnat_Exceptions_Files := (
@@ -180,7 +183,9 @@ library project Core is
       );
 
    Mutex_Files := (
-      "mutex.adb", "mutex.ads"
+      "mutex.adb", "mutex.ads",
+      "mutex-acquire.adb",
+      "mutex-release.adb"
       );
 
    for Source_Files use
@@ -190,7 +195,7 @@ library project Core is
       Console_Files             &
       Core_Files                &
       Definitions_Files         &
-      GCC_Defines_Files         &
+      GCC_Files                 &
       Gnat_Exceptions_Files     &
       Integer_Math_Files        &
       Last_Chance_Handler_Files &

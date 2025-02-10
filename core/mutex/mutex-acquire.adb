@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ mutex.adb                                                                                                 --
+-- __FLN__ mutex-acquire.adb                                                                                         --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,31 +15,30 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package body Mutex
+with System;
+with GCC.Defines;
+with CPU;
+
+separate (Mutex)
+procedure Acquire
+   (S : in out Semaphore_Binary)
    is
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Package subprograms                          --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- Acquire
-   ----------------------------------------------------------------------------
-   procedure Acquire
-      (S : in out Semaphore_Binary)
+   use LLutils;
+   use type Atomic_Type'Base;
+   procedure Wait
+      (Object_Address : in System.Address)
+      with Inline => True;
+   procedure Wait
+      (Object_Address : in System.Address)
       is
-   separate;
-
-   ----------------------------------------------------------------------------
-   -- Release
-   ----------------------------------------------------------------------------
-   procedure Release
-      (S : in out Semaphore_Binary)
-      is
-   separate;
-
-end Mutex;
+   begin
+      while Atomic_Load (Object_Address, GCC.Defines.ATOMIC_SEQ_CST) /= 0 loop
+         CPU.NOP;
+      end loop;
+   end Wait;
+begin
+   loop
+      exit when not Atomic_Test_And_Set (S.Lock'Address, GCC.Defines.ATOMIC_SEQ_CST);
+      Wait (S.Lock'Address);
+   end loop;
+end Acquire;

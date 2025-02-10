@@ -18,7 +18,8 @@ INCLUDE_DIRECTORIES += $(CORE_DIRECTORY)                     \
                        $(CORE_DIRECTORY)/llutils             \
                        $(CORE_DIRECTORY)/malloc              \
                        $(CORE_DIRECTORY)/memory_functions    \
-                       $(CORE_DIRECTORY)/mmio
+                       $(CORE_DIRECTORY)/mmio                \
+                       $(CORE_DIRECTORY)/mutex
 
 #
 # Units not automatically inferred as dependencies by the build system.
