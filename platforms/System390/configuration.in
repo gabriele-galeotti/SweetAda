@@ -3,8 +3,10 @@
 # S/390 (Hercules emulator)
 #
 
+ifneq ($(filter configure,$(MAKECMDGOALS)),)
 ifneq ($(BUILD_MODE),GNATMAKE)
 $(warning *** Warning: this platform is supported only when BUILD_MODE = GNATMAKE.)
+endif
 endif
 
 ################################################################################
