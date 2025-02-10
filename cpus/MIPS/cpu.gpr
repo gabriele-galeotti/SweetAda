@@ -48,7 +48,7 @@ library project Cpu is
             when "R3000" | "MIPS32-24K" =>
                Ada := "Y";
                Ada_Files := Ada_Files & (
-                  "gcc-types.ads",
+                  "gcc.ads", "gcc-types.ads",
                   "libgcc.adb", "libgcc.ads",
                   "libgcc-bswapsi2.adb",
                   "libgcc-bswapdi2.adb",
@@ -61,7 +61,7 @@ library project Cpu is
             when "MIPS64-20K" =>
                Ada := "Y";
                Ada_Files := Ada_Files & (
-                  "gcc-types.ads",
+                  "gcc.ads", "gcc-types.ads",
                   "libgcc.adb", "libgcc.ads",
                   "libgcc-bswapsi2.adb",
                   "libgcc-bswapdi2.adb"
