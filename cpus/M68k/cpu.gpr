@@ -39,7 +39,7 @@ library project Cpu is
             "L_mulsi3.S",
             "L_udivsi3.S",
             "L_umodsi3.S",
-            "gcc-types.ads",
+            "gcc.ads", "gcc-types.ads",
             "libgcc.adb", "libgcc.ads",
             "libgcc-udivmoddi4.adb",
             "libgcc-divdi3.adb",
