@@ -48,6 +48,7 @@ configure:
           __arm__:ARM:Boolean:H               \
           __AVR__:AVR:Boolean:H               \
           __m68k__:M68k:Boolean:H             \
+          __mcoldfire__:MCOLDFIRE:Boolean:H   \
           __mips__:MIPS:Boolean:H             \
           __microblaze__:MICROBLAZE:Boolean:H \
           __nios2__:NIOS2:Boolean:H           \
