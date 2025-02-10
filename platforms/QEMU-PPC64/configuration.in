@@ -3,8 +3,10 @@
 # PowerPC POWER8 (QEMU emulator)
 #
 
+ifneq ($(filter configure,$(MAKECMDGOALS)),)
 ifneq ($(BUILD_MODE),GNATMAKE)
 $(warning *** Warning: this platform is supported only when BUILD_MODE = GNATMAKE.)
+endif
 endif
 
 ################################################################################
