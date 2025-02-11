@@ -1,6 +1,6 @@
 /* Integer division routines for RISC-V.
 
-   Copyright (C) 2016-2023 Free Software Foundation, Inc.
+   Copyright (C) 2016-2024 Free Software Foundation, Inc.
 
 This file is part of GCC.
 
@@ -24,7 +24,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 <http://www.gnu.org/licenses/>.  */
 
 /* SweetAda version, reformatted and cleaned              */
-/* __INF__ original: gcc-13.2.0/libgcc/config/riscv/div.S */
+/* __INF__ original: gcc-14.2.0/libgcc/config/riscv/div.S */
 
 #include "riscv-asm.h"
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2017-2023 Free Software Foundation, Inc.
+/* Copyright (C) 2017-2024 Free Software Foundation, Inc.
 
 This file is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -20,7 +20,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 <http://www.gnu.org/licenses/>.  */
 
 /* SweetAda version, reformatted and cleaned                    */
-/* __INF__ original: gcc-13.2.0/libgcc/config/riscv/riscv-asm.h */
+/* __INF__ original: gcc-14.2.0/libgcc/config/riscv/riscv-asm.h */
 
 #define FUNC_TYPE(X) .type   X,@function
 #define FUNC_SIZE(X) .size   X,.-X
