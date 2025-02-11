@@ -38,20 +38,25 @@ package ATmega128A
 pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
+   -- ATmega128A
+   -- Atmel-8151J-8-bit AVR Microcontroller_Datasheet_Complete-09/2015
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
    -- 11. AVR CPU Core
    ----------------------------------------------------------------------------
 
    -- 11.3.1. SREG – The AVR Status Register
 
    type SREG_Type is record
-      C : Boolean; -- Carry flag
-      Z : Boolean; -- Zero flag
-      N : Boolean; -- Negative flag
-      V : Boolean; -- Two's Complement Overflow flag
-      S : Boolean; -- Sign bit
-      H : Boolean; -- Half Carry flag
-      T : Boolean; -- Bit Copy Storage
-      I : Boolean; -- Global Interrupt Enable
+      C : Boolean := False; -- Carry flag
+      Z : Boolean := False; -- Zero flag
+      N : Boolean := False; -- Negative flag
+      V : Boolean := False; -- Two's Complement Overflow flag
+      S : Boolean := False; -- Sign bit
+      H : Boolean := False; -- Half Carry flag
+      T : Boolean := False; -- Bit Copy Storage
+      I : Boolean := False; -- Global Interrupt Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -81,8 +86,8 @@ pragma Style_Checks (Off);
    -- 13.10.1.XDIV – XTAL Divide Control Register
 
    type XDIV_Type is record
-      XDIV   : Bits_7;  -- XTAL Divide Select Bits [n = 6:0]
-      XDIVEN : Boolean; -- XTAL Divide Enable
+      XDIV   : Bits_7  := 0;     -- XTAL Divide Select Bits [n = 6:0]
+      XDIVEN : Boolean := False; -- XTAL Divide Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -117,8 +122,8 @@ pragma Style_Checks (Off);
    -- 16.2.1. MCUCR – MCU Control Register
 
    type MCUCR_Type is record
-      IVCE     : Boolean;      -- Interrupt Vector Change Enable
-      IVSEL    : Boolean;      -- Interrupt Vector Select
+      IVCE     : Boolean := False; -- Interrupt Vector Change Enable
+      IVSEL    : Boolean := False; -- Interrupt Vector Select
       Reserved : Bits_6  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -144,11 +149,11 @@ pragma Style_Checks (Off);
    -- 15.6.1. MCUCSR – MCU Control and Status Register
 
    type MCUCSR_Type is record
-      PORF     : Boolean;      -- Power-on Reset Flag
-      EXTRF    : Boolean;      -- External Reset Flag
-      BORF     : Boolean;      -- Brown-out Reset Flag
-      WDRF     : Boolean;      -- Watchdog Reset Flag
-      JTRF     : Boolean;      -- JTAG Reset Flag
+      PORF     : Boolean := True; -- Power-on Reset Flag
+      EXTRF    : Boolean := True; -- External Reset Flag
+      BORF     : Boolean := True; -- Brown-out Reset Flag
+      WDRF     : Boolean := True; -- Watchdog Reset Flag
+      JTRF     : Boolean := True; -- JTAG Reset Flag
       Reserved : Bits_3  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -184,9 +189,9 @@ pragma Style_Checks (Off);
    WDT_2048K : constant WDT_Prescaler_Type := 2#111#;
 
    type WDTCR_Type is record
-      WDP012   : Bits_3;       -- Watchdog Timer Prescaler bit 0 .. 2
-      WDE      : Boolean;      -- Watchdog Enable
-      WDCE     : Boolean;      -- Watchdog Change Enable
+      WDP012   : Bits_3  := WDT_16K; -- Watchdog Timer Prescaler bit 0 .. 2
+      WDE      : Boolean := False;   -- Watchdog Enable
+      WDCE     : Boolean := False;   -- Watchdog Change Enable
       Reserved : Bits_3  := 0;
    end record
       with Bit_Order => Low_Order_First,
