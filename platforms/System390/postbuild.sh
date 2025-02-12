@@ -8,7 +8,7 @@ case ${IPL_MODE} in
   "DASD")
     rm -f SYSRES.DSD
     "${PYTHON}" S360obj.py -a 0x10000 -p ${KERNEL_PARENT_PATH}/${KERNEL_ROMFILE} ${KERNEL_IPLFILE}
-    #$(TCLSH) S360obj.tcl -a 0x10000 -p ${KERNEL_PARENT_PATH}/${KERNEL_ROMFILE} ${KERNEL_IPLFILE}
+    #${TCLSH} S360obj.tcl -a 0x10000 -p ${KERNEL_PARENT_PATH}/${KERNEL_ROMFILE} ${KERNEL_IPLFILE}
     "${HERCULES_PREFIX}"/bin/dasdload -0 dasd_ctlfile.txt SYSRES.DSD 5
     ;;
 esac
