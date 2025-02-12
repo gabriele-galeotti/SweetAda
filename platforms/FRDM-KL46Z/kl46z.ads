@@ -2108,6 +2108,205 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- Chapter 27 Flash Memory Module (FTFA)
+   ----------------------------------------------------------------------------
+
+   -- 27.33.1 Flash Status Register (FTFA_FSTAT)
+
+   type FTFA_FSTAT_Type is record
+      MSGSTAT0 : Boolean := False; -- Memory Controller Command Completion Status Flag
+      Reserved : Bits_3  := 0;
+      FPVIOL   : Boolean := False; -- Flash Protection Violation Flag
+      ACCERR   : Boolean := False; -- Flash Access Error Flag
+      RDCOLERR : Boolean := False; -- Flash Read Collision Error Flag
+      CCIF     : Boolean := False; -- Command Complete Interrupt Flag
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for FTFA_FSTAT_Type use record
+      MSGSTAT0 at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 3;
+      FPVIOL   at 0 range 4 .. 4;
+      ACCERR   at 0 range 5 .. 5;
+      RDCOLERR at 0 range 6 .. 6;
+      CCIF     at 0 range 7 .. 7;
+   end record;
+
+   -- 27.33.2 Flash Configuration Register (FTFA_FCNFG)
+
+   type FTFA_FCNFG_Type is record
+      Reserved1 : Bits_1  := 0;
+      Reserved2 : Bits_1  := 0;
+      Reserved3 : Bits_1  := 0;
+      Reserved4 : Bits_1  := 0;
+      ERSSUSP   : Boolean := False; -- Erase Suspend
+      ERSAREQ   : Boolean := False; -- Erase All Request
+      RDCOLLIE  : Boolean := False; -- Read Collision Error Interrupt Enable
+      CCIE      : Boolean := False; -- Command Complete Interrupt Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for FTFA_FCNFG_Type use record
+      Reserved1 at 0 range 0 .. 0;
+      Reserved2 at 0 range 1 .. 1;
+      Reserved3 at 0 range 2 .. 2;
+      Reserved4 at 0 range 3 .. 3;
+      ERSSUSP   at 0 range 4 .. 4;
+      ERSAREQ   at 0 range 5 .. 5;
+      RDCOLLIE  at 0 range 6 .. 6;
+      CCIE      at 0 range 7 .. 7;
+   end record;
+
+   -- 27.33.3 Flash Security Register (FTFA_FSEC)
+
+   SEC_SECURE   : constant := 2#00#; -- MCU security status is secure
+   SEC_SECURE_2 : constant := 2#01#; -- MCU security status is secure
+   SEC_UNSECURE : constant := 2#10#; -- MCU security status is unsecure (The standard shipping condition of the flash memory module is unsecure.)
+   SEC_SECURE_3 : constant := 2#11#; -- MCU security status is secure
+
+   FSLACC_GRANTED   : constant := 2#00#; -- Freescale factory access granted
+   FSLACC_DENIED    : constant := 2#01#; -- Freescale factory access denied
+   FSLACC_DENIED_2  : constant := 2#10#; -- Freescale factory access denied
+   FSLACC_GRANTED_2 : constant := 2#11#; -- Freescale factory access granted
+
+   MEEN_ENABLED   : constant := 2#00#; -- Mass erase is enabled
+   MEEN_ENABLED_2 : constant := 2#01#; -- Mass erase is enabled
+   MEEN_DISABLED  : constant := 2#10#; -- Mass erase is disabled
+   MEEN_ENABLED_3 : constant := 2#11#; -- Mass erase is enabled
+
+   KEYEN_DISABLED_2 : constant := 2#00#; -- Backdoor key access disabled
+   KEYEN_DISABLED   : constant := 2#01#; -- Backdoor key access disabled (preferred KEYEN state to disable backdoor key access)
+   KEYEN_ENABLED    : constant := 2#10#; -- Backdoor key access enabled
+   KEYEN_DISABLED_3 : constant := 2#11#; -- Backdoor key access disabled
+
+   type FTFA_FSEC_Type is record
+      SEC    : Bits_2; -- Flash Security
+      FSLACC : Bits_2; -- Freescale Failure Analysis Access Code
+      MEEN   : Bits_2; -- Mass Erase Enable Bits
+      KEYEN  : Bits_2; -- Backdoor Key Security Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for FTFA_FSEC_Type use record
+      SEC    at 0 range 0 .. 1;
+      FSLACC at 0 range 2 .. 3;
+      MEEN   at 0 range 4 .. 5;
+      KEYEN  at 0 range 6 .. 7;
+   end record;
+
+   -- 27.33.4 Flash Option Register (FTFA_FOPT)
+
+   type FTFA_FOPT_Type is record
+      OPT : Bits_8; -- Nonvolatile Option
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for FTFA_FOPT_Type use record
+      OPT at 0 range 0 .. 7;
+   end record;
+
+   -- 27.33.5 Flash Common Command Object Registers (FTFA_FCCOBn)
+
+   type FTFA_FCCOBn_Type is record
+      CCOB : Bits_8; -- The FCCOB register provides a command code and relevant parameters to the memory controller.
+   end record
+      with Bit_Order            => Low_Order_First,
+           Size                 => 8,
+           Volatile_Full_Access => True;
+   for FTFA_FCCOBn_Type use record
+      CCOB at 0 range 0 .. 7;
+   end record;
+
+   type FTFA_FCCOBn_Array_Type is array (Natural range <>) of FTFA_FCCOBn_Type
+      with Pack => True;
+
+   -- 27.33.6 Program Flash Protection Registers (FTFA_FPROTn)
+
+   PROT_PROTECTED   : constant := 0; -- Program flash region is protected.
+   PROT_UNPROTECTED : constant := 1; -- Program flash region is not protected
+
+   type FTFA_FPROTn_Type is record
+      PROT : Bitmap_8; -- Program Flash Region Protect
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for FTFA_FPROTn_Type use record
+      PROT at 0 range 0 .. 7;
+   end record;
+
+   FTFA_FSTAT_ADDRESS : constant := 16#4002_0000#;
+
+   FTFA_FSTAT : aliased FTFA_FSTAT_Type
+      with Address              => System'To_Address (FTFA_FSTAT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FTFA_FCNFG_ADDRESS : constant := 16#4002_0001#;
+
+   FTFA_FCNFG : aliased FTFA_FCNFG_Type
+      with Address              => System'To_Address (FTFA_FCNFG_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FTFA_FSEC_ADDRESS : constant := 16#4002_0002#;
+
+   FTFA_FSEC : aliased FTFA_FSEC_Type
+      with Address              => System'To_Address (FTFA_FSEC_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FTFA_FOPT_ADDRESS : constant := 16#4002_0003#;
+
+   FTFA_FOPT : aliased FTFA_FOPT_Type
+      with Address              => System'To_Address (FTFA_FOPT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FTFA_FCCOB_ADDRESS : constant := 16#4002_0004#;
+
+   FTFA_FCCOB : aliased FTFA_FCCOBn_Array_Type (0 .. 11)
+      with Address    => System'To_Address (FTFA_FCCOB_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   FTFA_FPROT0_ADDRESS : constant := 16#4002_0010#;
+
+   FTFA_FPROT0 : aliased FTFA_FPROTn_Type
+      with Address              => System'To_Address (FTFA_FPROT0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FTFA_FPROT1_ADDRESS : constant := 16#4002_0011#;
+
+   FTFA_FPROT1 : aliased FTFA_FPROTn_Type
+      with Address              => System'To_Address (FTFA_FPROT1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FTFA_FPROT2_ADDRESS : constant := 16#4002_0012#;
+
+   FTFA_FPROT2 : aliased FTFA_FPROTn_Type
+      with Address              => System'To_Address (FTFA_FPROT2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FTFA_FPROT3_ADDRESS : constant := 16#4002_0013#;
+
+   FTFA_FPROT3 : aliased FTFA_FPROTn_Type
+      with Address              => System'To_Address (FTFA_FPROT3_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
    -- Chapter 32 Periodic Interrupt Timer (PIT)
    ----------------------------------------------------------------------------
 
