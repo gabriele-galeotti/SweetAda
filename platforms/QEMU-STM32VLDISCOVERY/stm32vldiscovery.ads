@@ -230,7 +230,7 @@ package STM32VLDISCOVERY
 
    type USART_DR_Type is record
       DR       : Unsigned_8;      -- Data value
-      DR8      : Bits_1;          -- 9th bit
+      DR8      : Bits_1     := 0; -- 9th bit
       Reserved : Bits_23    := 0;
    end record
       with Bit_Order => Low_Order_First,
