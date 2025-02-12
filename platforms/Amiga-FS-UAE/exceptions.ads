@@ -84,7 +84,7 @@ package Exceptions
    -- 022 is reserved
    -- 023 is reserved
    Spurious_Interrupt_Handler           : aliased Asm_Entry_Point -- 024
-      with Import => True, External_Name => "spurious_handler";
+      with Import => True, External_Name => "spuriousint_handler";
    Level_1_Interrupt_Autovector_Handler : aliased Asm_Entry_Point -- 025
       with Import => True, External_Name => "l1autovector_handler";
    Level_2_Interrupt_Autovector_Handler : aliased Asm_Entry_Point -- 026

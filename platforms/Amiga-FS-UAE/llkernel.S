@@ -147,8 +147,8 @@ uninitint_handler:
                 jmp     exception_entry
 
                 .align  4
-                .global spurious_handler
-spurious_handler:
+                .global spuriousint_handler
+spuriousint_handler:
                 pea     SPURIOUS_INTERRUPT
                 jmp     exception_entry
 

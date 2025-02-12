@@ -1,6 +1,6 @@
 
-                .global interrupt_vector_table
-interrupt_vector_table:
+                .global vectors_table
+vectors_table:
                                                 // #   offset
 
 initialsp:      .long   INITIALSP               // 000 0x0000 -
@@ -50,8 +50,8 @@ reserved7:      .long   0                       // 021 0x0054 -
 reserved8:      .long   0                       // 022 0x0058 -
 
 reserved9:      .long   0                       // 023 0x005C -
-                .extern spurious_handler
-spurious:       .long   spurious_handler        // 024 0x0060 -
+                .extern spuriousint_handler
+spuriousint:    .long   spuriousint_handler     // 024 0x0060 -
                 .extern l1autovector_handler
 l1autovector:   .long   l1autovector_handler    // 025 0x0064 -
                 .extern l2autovector_handler
