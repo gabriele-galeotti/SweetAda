@@ -43,15 +43,18 @@ package body Clocks
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
+   -- assume XTAL frequency = 50 MHz
+   -- target frequency = 150 MHz
+   ----------------------------------------------------------------------------
    procedure Init
       is
    begin
       -- MCG comes out of reset in FEI mode
       SIM_CLKDIV1 := (
-         OUTDIV4 => OUTDIVx_DIV4,
-         OUTDIV3 => OUTDIVx_DIV4,
-         OUTDIV2 => OUTDIVx_DIV2,
-         OUTDIV1 => OUTDIVx_DIV1,
+         OUTDIV4 => OUTDIVx_DIV6,  --  25 MHz Flash clock
+         OUTDIV3 => OUTDIVx_DIV15, --  10 MHz FlexBus
+         OUTDIV2 => OUTDIVx_DIV2,  --  75 MHz peripherals
+         OUTDIV1 => OUTDIVx_DIV1,  -- 150 MHz core/system
          others  => <>
          );
       MCG_C2 := (
@@ -85,6 +88,10 @@ package body Clocks
       MCG_C1.CLKS := CLKS_FLLPLLCS;
       MCG_C6.PLLS := PLLS_PLLCS;
       loop exit when MCG_S.CLKST = CLKST_PLL; end loop;
+      -- setup clock values
+      CLK_Core        := 150 * MHz1;
+      CLK_Peripherals := 75 * MHz1;
+      -- clock signal output
       if False then
          -- 5.7.3 Debug trace clock
          -- 12.2.3 System Options Register 2 (SIM_SOPT2)

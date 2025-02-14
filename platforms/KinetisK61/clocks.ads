@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Definitions;
+
 package Clocks
    is
 
@@ -25,6 +27,11 @@ package Clocks
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use Definitions;
+
+   CLK_Core        : Natural;
+   CLK_Peripherals : Natural;
 
    procedure Init;
 
