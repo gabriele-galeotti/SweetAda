@@ -125,19 +125,14 @@ package body Application
             loop
                Goldfish.Read_Clock (BSP.RTC_Descriptor, TM);
                Mutex.Acquire (M);
-               Console.Print (Time.Day_Of_Week (Time.NDay_Of_Week (TM.MDay, TM.Mon + 1, TM.Year + 1_900)));
-               Console.Print (" ");
-               Console.Print (Time.Month_Name (TM.Mon + 1));
-               Console.Print (" ");
-               Console.Print (TM.MDay);
-               Console.Print (" ");
-               Console.Print (TM.Year + 1_900);
-               Console.Print (" ");
-               Console.Print (TM.Hour);
-               Console.Print (":");
-               Console.Print (TM.Min);
-               Console.Print (":");
-               Console.Print (TM.Sec);
+               Console.Print (Prefix => "",  Value =>
+                  Time.Day_Of_Week (Time.NDay_Of_Week (TM.MDay, TM.Mon + 1, TM.Year + 1_900)));
+               Console.Print (Prefix => " ", Value => Time.Month_Name (TM.Mon + 1));
+               Console.Print (Prefix => " ", Value => TM.MDay);
+               Console.Print (Prefix => " ", Value => TM.Year + 1_900);
+               Console.Print (Prefix => " ", Value => TM.Hour);
+               Console.Print (Prefix => ":", Value => TM.Min);
+               Console.Print (Prefix => ":", Value => TM.Sec);
                Console.Print_NewLine;
                Mutex.Release (M);
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
