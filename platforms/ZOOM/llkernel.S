@@ -19,8 +19,8 @@
 // 14.3.1.3 Interrupt Vector Determination
 //
 
-                .global vector_table
-vector_table:
+                .global vectors_table
+vectors_table:
 
 reset_sp:       .long   0
                 .extern _start
