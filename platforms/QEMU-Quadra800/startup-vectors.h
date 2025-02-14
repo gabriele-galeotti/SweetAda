@@ -12,7 +12,7 @@
                 .extern cprotocolv_handler
                 .extern formaterr_handler
                 .extern uninitint_handler
-                .extern spurious_handler
+                .extern spuriousint_handler
                 .extern l1autovector_handler
                 .extern l2autovector_handler
                 .extern l3autovector_handler
@@ -37,8 +37,8 @@
                 .extern trap14_handler
                 .extern trap15_handler
 
-                .global interrupt_vector_table
-interrupt_vector_table:
+                .global vectors_table
+vectors_table:
 
 initialsp:      .long   INITIALSP               // 000 0x0000 -
 initialpc:      .long   INITIALPC               // 001 0x0004 -
@@ -64,7 +64,7 @@ reserved6:      .long   0                       // 020 0x0050 -
 reserved7:      .long   0                       // 021 0x0054 -
 reserved8:      .long   0                       // 022 0x0058 -
 reserved9:      .long   0                       // 023 0x005C -
-spurious:       .long   spurious_handler        // 024 0x0060 -
+spuriousint:    .long   spuriousint_handler     // 024 0x0060 -
 l1autovector:   .long   l1autovector_handler    // 025 0x0064 -
 l2autovector:   .long   l2autovector_handler    // 026 0x0068 -
 l3autovector:   .long   l3autovector_handler    // 027 0x006C -

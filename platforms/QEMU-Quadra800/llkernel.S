@@ -55,7 +55,7 @@ switch_context:
                 .global cprotocolv_handler
                 .global formaterr_handler
                 .global uninitint_handler
-                .global spurious_handler
+                .global spuriousint_handler
                 .global l1autovector_handler
                 .global l2autovector_handler
                 .global l3autovector_handler
@@ -136,7 +136,7 @@ uninitint_handler:
                 //pea
                 jmp     exception_entry
 
-spurious_handler:
+spuriousint_handler:
                 //pea
                 jmp     exception_entry
 
