@@ -57,7 +57,7 @@ package body BSP
    procedure SysTick_Init
       is
    begin
-      ARMv7M.SYST_RVR.RELOAD := Bits_24 (75 * MHz1 / Configure.TICK_FREQUENCY);
+      ARMv7M.SYST_RVR.RELOAD := Bits_24 (Clocks.CLK_Core / Configure.TICK_FREQUENCY);
       ARMv7M.SHPR3.PRI_15 := 16#FF#;
       ARMv7M.SYST_CVR.CURRENT := 0;
       ARMv7M.SYST_CSR := (
@@ -86,7 +86,9 @@ package body BSP
       (C : out Character)
       is
    begin
-      C := Character'Val (0);
+      -- wait for receiver available
+      loop exit when UART5.S1.RDRF; end loop;
+      C := To_Ch (UART5.D.RT);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
@@ -107,9 +109,10 @@ package body BSP
       PORTE_MUXCTRL.PCR (8).MUX := MUX_ALT3;
       PORTE_MUXCTRL.PCR (9).MUX := MUX_ALT3;
       UART5.C4 := (BRFA => 0, M10 => False, MAEN2 => False, MAEN1 => False);
-      UART5.BDL.SBR := Bits_8 ((75 * MHz1 / 16) / 115_200);
+      UART5.BDL.SBR := Bits_8 ((Clocks.CLK_Peripherals / 16) / 115_200);
       UART5.BDH.SBR := 0;
       UART5.C2.TE := True;
+      UART5.C2.RE := True;
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor := (
          Write => Console_Putchar'Access,
