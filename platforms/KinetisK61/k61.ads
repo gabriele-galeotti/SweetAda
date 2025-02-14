@@ -4319,36 +4319,99 @@ pragma Style_Checks (Off);
       TDMAS     at 0 range 7 .. 7;
    end record;
 
+   -- 56.3.13 UART Extended Data Register (UARTx_ED)
+
+   type UARTx_ED_Type is record
+      Reserved : Bits_6;
+      PARITYE  : Boolean; -- The current received dataword contained in D and C3[R8] was received with a parity error.
+      NOISY    : Boolean; -- The current received dataword contained in D and C3[R8] was received with noise.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_ED_Type use record
+      Reserved at 0 range 0 .. 5;
+      PARITYE  at 0 range 6 .. 6;
+      NOISY    at 0 range 7 .. 7;
+   end record;
+
+   -- 56.3.14 UART Modem Register (UARTx_MODEM)
+
+   TXRTSPOL_LO : constant := 0; -- Transmitter RTS is active low.
+   TXRTSPOL_HI : constant := 1; -- Transmitter RTS is active high.
+
+   type UARTx_MODEM_Type is record
+      TXCTSE   : Boolean := False;       -- Transmitter clear-to-send enable
+      TXRTSE   : Boolean := False;       -- Transmitter request-to-send enable
+      TXRTSPOL : Bits_1  := TXRTSPOL_LO; -- Transmitter request-to-send polarity
+      RXRTSE   : Boolean := False;       -- Receiver request-to-send enable
+      Reserved : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_MODEM_Type use record
+      TXCTSE   at 0 range 0 .. 0;
+      TXRTSE   at 0 range 1 .. 1;
+      TXRTSPOL at 0 range 2 .. 2;
+      RXRTSE   at 0 range 3 .. 3;
+      Reserved at 0 range 4 .. 7;
+   end record;
+
+   -- 56.3.15 UART Infrared Register (UARTx_IR)
+
+   TNP_3DIV16 : constant := 2#00#; -- 3/16.
+   TNP_1DIV16 : constant := 2#01#; -- 1/16.
+   TNP_1DIV32 : constant := 2#10#; -- 1/32.
+   TNP_1DIV4  : constant := 2#11#; -- 1/4.
+
+   type UARTx_IR_Type is record
+      TNP      : Bits_2  := TNP_3DIV16; -- Transmitter narrow pulse
+      IREN     : Boolean := False;      -- Infrared enable
+      Reserved : Bits_5  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_IR_Type use record
+      TNP      at 0 range 0 .. 1;
+      IREN     at 0 range 2 .. 2;
+      Reserved at 0 range 3 .. 7;
+   end record;
+
    -- 56.3 Memory map and registers
 
    type UART_Type is record
-      BDH : UARTx_BDH_Type with Volatile_Full_Access => True;
-      BDL : UARTx_BDL_Type with Volatile_Full_Access => True;
-      C1  : UARTx_C1_Type  with Volatile_Full_Access => True;
-      C2  : UARTx_C2_Type  with Volatile_Full_Access => True;
-      S1  : UARTx_S1_Type  with Volatile_Full_Access => True;
-      S2  : UARTx_S2_Type  with Volatile_Full_Access => True;
-      C3  : UARTx_C3_Type  with Volatile_Full_Access => True;
-      D   : UARTx_D_Type   with Volatile_Full_Access => True;
-      MA1 : UARTx_MA1_Type with Volatile_Full_Access => True;
-      MA2 : UARTx_MA2_Type with Volatile_Full_Access => True;
-      C4  : UARTx_C4_Type  with Volatile_Full_Access => True;
-      C5  : UARTx_C5_Type  with Volatile_Full_Access => True;
+      BDH   : UARTx_BDH_Type   with Volatile_Full_Access => True;
+      BDL   : UARTx_BDL_Type   with Volatile_Full_Access => True;
+      C1    : UARTx_C1_Type    with Volatile_Full_Access => True;
+      C2    : UARTx_C2_Type    with Volatile_Full_Access => True;
+      S1    : UARTx_S1_Type    with Volatile_Full_Access => True;
+      S2    : UARTx_S2_Type    with Volatile_Full_Access => True;
+      C3    : UARTx_C3_Type    with Volatile_Full_Access => True;
+      D     : UARTx_D_Type     with Volatile_Full_Access => True;
+      MA1   : UARTx_MA1_Type   with Volatile_Full_Access => True;
+      MA2   : UARTx_MA2_Type   with Volatile_Full_Access => True;
+      C4    : UARTx_C4_Type    with Volatile_Full_Access => True;
+      C5    : UARTx_C5_Type    with Volatile_Full_Access => True;
+      ED    : UARTx_ED_Type    with Volatile_Full_Access => True;
+      MODEM : UARTx_MODEM_Type with Volatile_Full_Access => True;
+      IR    : UARTx_IR_Type    with Volatile_Full_Access => True;
    end record
-      with Size => 16#C# * 8;
+      with Size => 16#0F# * 8;
    for UART_Type use record
-      BDH at 16#0# range 0 .. 7;
-      BDL at 16#1# range 0 .. 7;
-      C1  at 16#2# range 0 .. 7;
-      C2  at 16#3# range 0 .. 7;
-      S1  at 16#4# range 0 .. 7;
-      S2  at 16#5# range 0 .. 7;
-      C3  at 16#6# range 0 .. 7;
-      D   at 16#7# range 0 .. 7;
-      MA1 at 16#8# range 0 .. 7;
-      MA2 at 16#9# range 0 .. 7;
-      C4  at 16#A# range 0 .. 7;
-      C5  at 16#B# range 0 .. 7;
+      BDH   at 16#00# range 0 .. 7;
+      BDL   at 16#01# range 0 .. 7;
+      C1    at 16#02# range 0 .. 7;
+      C2    at 16#03# range 0 .. 7;
+      S1    at 16#04# range 0 .. 7;
+      S2    at 16#05# range 0 .. 7;
+      C3    at 16#06# range 0 .. 7;
+      D     at 16#07# range 0 .. 7;
+      MA1   at 16#08# range 0 .. 7;
+      MA2   at 16#09# range 0 .. 7;
+      C4    at 16#0A# range 0 .. 7;
+      C5    at 16#0B# range 0 .. 7;
+      ED    at 16#0C# range 0 .. 7;
+      MODEM at 16#0D# range 0 .. 7;
+      IR    at 16#0E# range 0 .. 7;
    end record;
 
    UART0 : aliased UART_Type
