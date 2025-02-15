@@ -60,7 +60,7 @@ return ${exit_status}
 #                                                                              #
 ################################################################################
 
-PACKAGE_NAME=gdb-15.2
+PACKAGE_NAME=gdb-16.2
 PACKAGE_NAME_SIMPLE=gdb
 PACKAGE_PARENT_PATH="/usr/local/src"
 PACKAGE_SOURCE_PATH=${PACKAGE_PARENT_PATH}/${PACKAGE_NAME}
