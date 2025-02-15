@@ -5,20 +5,12 @@ SweetAda GNU toolchain build scripts
 These are little shell scripts to build a GNAT toolchain from official FSF
 repositories in a Linux environment.
 
-Current versions of GNU packages are hardwired in the scripts. Download:
+Note that the scripts are Bash scripts which use array features, so they can't
+be run in a strict POSIX environment, which does not provide this facility.
 
-- https://ftp.gnu.org/pub/gnu/binutils/binutils-2.43.tar.[bz2|gz|lz|xz]
-- https://ftp.gnu.org/pub/gnu/gcc/gcc-14.2.0/gcc-14.2.0.tar.[gz|xz]
-- https://ftp.gnu.org/pub/gnu/gdb/gdb-15.2.tar.[gz|xz]
-
-and have them decompressed in the directory stated by the PACKAGE_PARENT_PATH
-variable, which is by default /usr/local/src.
-
-The scripts are Bash scripts which use array features, so they can't be run
-in a strict POSIX environment which does not provide this facility. Besides a
-working native GCC compiler, a series of mainstream tools are needed online,
-like Bison/readline/expat, so check your environment and install them to
-satisfy requirements. Toolchain builds are out-of-tree to keep source
+Besides a working host GCC compiler, a series of mainstream tools are needed
+online, like Bison/readline/expat, so check your environment and install them
+to satisfy requirements. Toolchain builds are out-of-tree to keep source
 directories clean.
 
 These scripts are rather generic, so they could be successfully run also in an
@@ -27,8 +19,18 @@ a toolchain in layered environments like MSYS2 or Cygwin. Although it may
 sounds strange, it is much better and faster to cross-compile the toolchain
 on, e.g., a Linux machine with a cross Linux-to-MinGW compiler, but it would
 require another set of scripts (apart the availability of that cross-compiler)
-to handle the so-named Canadian build process, which are definitely more
+to handle the so-named Canadian build process, which is definitively more
 complex and hard to make available for every possible user.
+
+Current versions of GNU packages are hardwired (but changeable) in the
+scripts. Download:
+
+- https://ftp.gnu.org/pub/gnu/binutils/binutils-2.44.tar.[bz2|gz|lz|xz]
+- https://ftp.gnu.org/pub/gnu/gcc/gcc-14.2.0/gcc-14.2.0.tar.[gz|xz]
+- https://ftp.gnu.org/pub/gnu/gdb/gdb-16.2.tar.[gz|xz]
+
+and have them uncompressed in the directory stated by the PACKAGE_PARENT_PATH
+variable, which defaults to /usr/local/src.
 
 The scripts generate a full log during configure and build phases. Albeit very
 difficult to read, normally it is anyway rather simple to detect gross errors
@@ -41,10 +43,10 @@ this variable could be changed to suit your environment. DESTDIR is only
 useful for package distribution/relocation and you have no need to specify it
 for a standard installation.
 
-Uncomment the toolchain name useful for your needs, and all the phase_* flags.
-They are kept separate so that it is not necessary to restart everything,
-should some problem arise during the build. In particular, the configure phase
-will wipe out the whole build directory.
+Uncomment the target toolchain name, and all the phase_* flags. They are kept
+separate so that it is not necessary to restart everything, should any
+problem arise during the build. In particular, the configure phase will wipe
+out the whole build directory.
 
 If you want optimized executables, add -O2 to the flags for the host compiler
 when configuring:
@@ -58,13 +60,60 @@ The scripts do not cover GPRbuild so far, because it is rather complex to
 provide a simple procedure to build it under all situations, please refer to
 official package providers.
 
-Binutils
+The GNATTOOLS script is for a special GNATMAKE installation, if you already
+have a 3rd-party toolchain that does not provide this executable then read the
+section below, else ignore it.
+
+Read the appropriate sections below and once you have setup everything, run
+the scripts in sequence:
+
+$ ./Binutils.sh
+$ ./GCC.sh
+$ ./GDB.sh
+
+You can check if toolchain executables run fine (/opt/toolchains is the prefix
+and arm-eabi is the toolchain name of this example installation):
+
+$ /opt/toolchains/bin/arm-eabi-as --version
+GNU assembler (SweetAda GNU toolchain 1.0) 2.44
+Copyright (C) 2025 Free Software Foundation, Inc.
+...
+$ /opt/toolchains/bin/arm-eabi-gcc --version
+arm-eabi-gcc (SweetAda GNU toolchain 1.0) 14.2.0
+Copyright (C) 2024 Free Software Foundation, Inc.
+...
+$ /opt/toolchains/bin/arm-eabi-gdb --version
+GNU gdb (SweetAda GNU toolchain 1.0) 16.2
+Copyright (C) 2025 Free Software Foundation, Inc.
+...
+
+The final step is to configure the master configuration.in file in the
+SweetAda filesystem:
+
+else ifeq ($(OSTYPE),linux)
+  #
+  # Linux and other compliant environments
+  #
+  TOOLCHAIN_PREFIX := /opt/toolchains <--- prefix
+  GPRBUILD_PREFIX  := /usr
+...
+# standard toolchain names
+# toolchains have names like "arm-eabi", "riscv32-elf", "x86_64-pc-linux-gnu",
+# etc
+...
+TOOLCHAIN_NAME_ARM        := arm-eabi <--- toolchain name
+
+Note that the master configuration.in has already default names for a standard
+use, in that case adjust only your toolchain prefix if differs from the
+supplied one.
+
+Binutils build
 --------------------------------------------------------------------------------
 
-Binutils is rather simple to build and does not require external support nor
+Binutils is rather simple to build and does not require external support, nor
 particular handlings.
 
-GCC
+GCC build
 --------------------------------------------------------------------------------
 
 With this script, only one loop of GCC will be built. That means no libada,
@@ -72,10 +121,10 @@ libc or libm libraries, just the compiler and LibGCC. This suffices for a
 normal use of SweetAda in practically all situations. Further development
 will cover in the future also the libm build.
 
-In order to successfully build GCC, the GMP, MPC and MPFR libraries are
-needed, so download the appropriate package from your preferred package
-provider. Of course you do not need the development packages but only the
-(shared) libraries, plus headers.
+In order to successfully build GCC the GMP, MPC and MPFR libraries are needed,
+so download the appropriate package from your preferred package provider. Of
+course you do not need the development packages but only the (shared)
+libraries, plus headers.
 
 It is highly advised to integrate ISL and libiconv source libraries into the
 source tree of GCC. Download:
@@ -83,7 +132,7 @@ source tree of GCC. Download:
 - https://libisl.sourceforge.io/isl-0.27.tar.[bz2|gz|xz]
 - https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.17.tar.gz
 
-and have them decompressed so that the following layout exists:
+and have them uncompressed so that the following layout exists:
 
 /usr/local/src
   |
@@ -92,23 +141,23 @@ and have them decompressed so that the following layout exists:
   |   +-- INSTALL
   |   +-- c++tools
   |   ...
-  |   +-- isl      (-> symlink to ISL source directory)
-  |   +-- libiconv (-> symlink to libiconv source directory)
+  |   +-- isl      (also a symlink to ISL source directory)
+  |   +-- libiconv (also a symlink to libiconv source directory)
   |   ...
   ...
 
 Note that the added directories should have no version suffix, so remove the
 version suffix or create a symlink to the physical source directory.
 
-GDB
+GDB build
 --------------------------------------------------------------------------------
 
-Like GCC, it is highly advised to integrate the ISL and libiconv libraries
-into the source tree of GDB as well.
+Like the GCC case, it is highly advised to integrate the ISL and libiconv
+libraries into the source tree of GDB as well.
 
 Due to not-perfect integration with all possible OS distribution layouts, a
-little helper script exists in order to detect Python 3 libraries. The option
-is specified in the configure list, but it is commented out because maybe your
+little helper script exists in order to detect Python3 libraries. The option
+is specified in the configure list, but is commented out because maybe your
 system has a 1-1 match with the GDB's configure idea about which (if exists)
 Python is actually installed in the system.
 
@@ -117,8 +166,10 @@ persists, try to discover potential issues by checking if python-config
 (usually located in /usr/bin) provides correct responses and change parameters
 thereof.
 
-GNATTOOLS
+GNATTOOLS build
 --------------------------------------------------------------------------------
+
+NOTE: the following is only for 3rd-party toolchains that lack GNATMAKE
 
 If you are building a GNAT toolchain, the provided GCC.sh script builds also
 the GNAT tools as integral components of the toolchain, i.e., the various
@@ -126,21 +177,24 @@ GNATMAKE, GNATPREP, etc.
 
 If, instead, you are using a ready-to-use toolchain from your preferred
 provider, those tools unfortunately could not be present, because the provider
-implicitly states that you should use other tools in order to manage your
+implicitly assumes that you should use other tools in order to manage your
 projects (e.g., GPRbuild).
 
-SweetAda does use these tools, because GNATMAKE is the original native tool
+SweetAda could use these tools, because GNATMAKE is the original native tool
 used to handle the various phases of compilation, so this kind of toolchains
-prevent the use of the GNATMAKE build mode. Because of this, SweetAda has an
-alternate mode which lets you use GPRbuild (and which is the default since its
-use is more or less mainstream).
+prevent the use of the GNATMAKE build mode.
 
-GNATMAKE build mode anyway is an optimal choice, because it offers a more
-low-level view of the build process, besides being fast. But using a random
-GNATMAKE coupled with an external toolchain could not work straight 100% of
-the times, since most likely there will be a discrepancy in ALI library
-versioning. This leads to not-perfect resolution of dependencies and forces a
-rebuild from scratch of the project even if you change only one source file.
+Because of this, SweetAda has an alternate mode which lets you use GPRbuild
+(and which is the default since its use is more or less a mainstream).
+
+Anyway, GNATMAKE build mode is an optimal choice, because it offers a more
+low-level view of the build process, besides being fast.
+
+But using a random GNATMAKE coupled with an external toolchain could not work
+straight 100% of the times, since most likely there will be a discrepancy in
+ALI library versioning. This leads to not-perfect resolution of dependencies
+and forces a rebuild from scratch of the project even if you change only one
+source file.
 
 So, if you want to use the toolchain from your provider, and, at the same
 time, want to use the GNATMAKE build mode, then this script allows you to
@@ -166,6 +220,13 @@ Then, you should know the ALI version emitted by the compiler toolchain used,
 and you have to specify the ALI string in the script, where some examples are
 outlined. The best method is to compile something and inspect the .ali file
 generated (the "V" line which comes first).
+
+V "GNAT Lib v???" <--- e.g. "GNAT Lib v2021"
+A -nostdinc
+A -O2
+A -Wextra
+A -Wall
+...
 
 Finally, choose your target (of course the toolchain names have to match
 exactly), uncomment all the various phases, and run the script. If everything
