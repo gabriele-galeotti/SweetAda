@@ -4376,42 +4376,177 @@ pragma Style_Checks (Off);
       Reserved at 0 range 3 .. 7;
    end record;
 
+   -- 56.3.16 UART FIFO Parameters (UARTx_PFIFO)
+
+   RXFIFOSIZE_1    : constant := 2#000#; -- Receive FIFO/Buffer depth = 1 dataword.
+   RXFIFOSIZE_4    : constant := 2#001#; -- Receive FIFO/Buffer depth = 4 datawords.
+   RXFIFOSIZE_8    : constant := 2#010#; -- Receive FIFO/Buffer depth = 8 datawords.
+   RXFIFOSIZE_16   : constant := 2#011#; -- Receive FIFO/Buffer depth = 16 datawords.
+   RXFIFOSIZE_32   : constant := 2#100#; -- Receive FIFO/Buffer depth = 32 datawords.
+   RXFIFOSIZE_64   : constant := 2#101#; -- Receive FIFO/Buffer depth = 64 datawords.
+   RXFIFOSIZE_128  : constant := 2#110#; -- Receive FIFO/Buffer depth = 128 datawords.
+   RXFIFOSIZE_RSVD : constant := 2#111#; -- Reserved.
+
+   TXFIFOSIZE_1    : constant := 2#000#; -- Transmit FIFO/Buffer depth = 1 dataword.
+   TXFIFOSIZE_4    : constant := 2#001#; -- Transmit FIFO/Buffer depth = 4 datawords.
+   TXFIFOSIZE_8    : constant := 2#010#; -- Transmit FIFO/Buffer depth = 8 datawords.
+   TXFIFOSIZE_16   : constant := 2#011#; -- Transmit FIFO/Buffer depth = 16 datawords.
+   TXFIFOSIZE_32   : constant := 2#100#; -- Transmit FIFO/Buffer depth = 32 datawords.
+   TXFIFOSIZE_64   : constant := 2#101#; -- Transmit FIFO/Buffer depth = 64 datawords.
+   TXFIFOSIZE_128  : constant := 2#110#; -- Transmit FIFO/Buffer depth = 128 datawords.
+   TXFIFOSIZE_RSVD : constant := 2#111#; -- Reserved.
+
+   type UARTx_PFIFO_Type is record
+      RXFIFOSIZE : Bits_3  := RXFIFOSIZE_1; -- Receive FIFO. Buffer Depth
+      RXFE       : Boolean := False;        -- Receive FIFO Enable
+      TXFIFOSIZE : Bits_3  := TXFIFOSIZE_1; -- Transmit FIFO. Buffer Depth
+      TXFE       : Boolean := False;        -- Transmit FIFO Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_PFIFO_Type use record
+      RXFIFOSIZE at 0 range 0 .. 2;
+      RXFE       at 0 range 3 .. 3;
+      TXFIFOSIZE at 0 range 4 .. 6;
+      TXFE       at 0 range 7 .. 7;
+   end record;
+
+   -- 56.3.17 UART FIFO Control Register (UARTx_CFIFO)
+
+   type UARTx_CFIFO_Type is record
+      RXUFE    : Boolean := False; -- Receive FIFO Underflow Interrupt Enable
+      TXOFE    : Boolean := False; -- Transmit FIFO Overflow Interrupt Enable
+      RXOFE    : Boolean := False; -- Receive FIFO Overflow Interrupt Enable
+      Reserved : Bits_3  := 0;
+      RXFLUSH  : Boolean := False; -- Receive FIFO/Buffer Flush
+      TXFLUSH  : Boolean := False; -- Transmit FIFO/Buffer Flush
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_CFIFO_Type use record
+      RXUFE    at 0 range 0 .. 0;
+      TXOFE    at 0 range 1 .. 1;
+      RXOFE    at 0 range 2 .. 2;
+      Reserved at 0 range 3 .. 5;
+      RXFLUSH  at 0 range 6 .. 6;
+      TXFLUSH  at 0 range 7 .. 7;
+   end record;
+
+   -- 56.3.18 UART FIFO Status Register (UARTx_SFIFO)
+
+   type UARTx_SFIFO_Type is record
+      RXUF     : Boolean := False; -- Receiver Buffer Underflow Flag
+      TXOF     : Boolean := False; -- Transmitter Buffer Overflow Flag
+      RXOF     : Boolean := False; -- Receiver Buffer Overflow Flag
+      Reserved : Bits_3  := 0;
+      RXEMPT   : Boolean := True;  -- Receive Buffer/FIFO Empty
+      TXEMPT   : Boolean := True;  -- Transmit Buffer/FIFO Empty
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_SFIFO_Type use record
+      RXUF     at 0 range 0 .. 0;
+      TXOF     at 0 range 1 .. 1;
+      RXOF     at 0 range 2 .. 2;
+      Reserved at 0 range 3 .. 5;
+      RXEMPT   at 0 range 6 .. 6;
+      TXEMPT   at 0 range 7 .. 7;
+   end record;
+
+   -- 56.3.19 UART FIFO Transmit Watermark (UARTx_TWFIFO)
+
+   type UARTx_TWFIFO_Type is record
+      TXWATER : Unsigned_8 := 0; -- Transmit Watermark
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_TWFIFO_Type use record
+      TXWATER at 0 range 0 .. 7;
+   end record;
+
+   -- 56.3.20 UART FIFO Transmit Count (UARTx_TCFIFO)
+
+   type UARTx_TCFIFO_Type is record
+      TXCOUNT : Unsigned_8; -- Transmit Counter
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_TCFIFO_Type use record
+      TXCOUNT at 0 range 0 .. 7;
+   end record;
+
+   -- 56.3.21 UART FIFO Receive Watermark (UARTx_RWFIFO)
+
+   type UARTx_RWFIFO_Type is record
+      RXWATER : Unsigned_8 := 1; -- Receive Watermark
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_RWFIFO_Type use record
+      RXWATER at 0 range 0 .. 7;
+   end record;
+
+   -- 56.3.22 UART FIFO Receive Count (UARTx_RCFIFO)
+
+   type UARTx_RCFIFO_Type is record
+      RXCOUNT : Unsigned_8; -- Receive Counter
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UARTx_RCFIFO_Type use record
+      RXCOUNT at 0 range 0 .. 7;
+   end record;
+
    -- 56.3 Memory map and registers
 
    type UART_Type is record
-      BDH   : UARTx_BDH_Type   with Volatile_Full_Access => True;
-      BDL   : UARTx_BDL_Type   with Volatile_Full_Access => True;
-      C1    : UARTx_C1_Type    with Volatile_Full_Access => True;
-      C2    : UARTx_C2_Type    with Volatile_Full_Access => True;
-      S1    : UARTx_S1_Type    with Volatile_Full_Access => True;
-      S2    : UARTx_S2_Type    with Volatile_Full_Access => True;
-      C3    : UARTx_C3_Type    with Volatile_Full_Access => True;
-      D     : UARTx_D_Type     with Volatile_Full_Access => True;
-      MA1   : UARTx_MA1_Type   with Volatile_Full_Access => True;
-      MA2   : UARTx_MA2_Type   with Volatile_Full_Access => True;
-      C4    : UARTx_C4_Type    with Volatile_Full_Access => True;
-      C5    : UARTx_C5_Type    with Volatile_Full_Access => True;
-      ED    : UARTx_ED_Type    with Volatile_Full_Access => True;
-      MODEM : UARTx_MODEM_Type with Volatile_Full_Access => True;
-      IR    : UARTx_IR_Type    with Volatile_Full_Access => True;
+      BDH    : UARTx_BDH_Type    with Volatile_Full_Access => True;
+      BDL    : UARTx_BDL_Type    with Volatile_Full_Access => True;
+      C1     : UARTx_C1_Type     with Volatile_Full_Access => True;
+      C2     : UARTx_C2_Type     with Volatile_Full_Access => True;
+      S1     : UARTx_S1_Type     with Volatile_Full_Access => True;
+      S2     : UARTx_S2_Type     with Volatile_Full_Access => True;
+      C3     : UARTx_C3_Type     with Volatile_Full_Access => True;
+      D      : UARTx_D_Type      with Volatile_Full_Access => True;
+      MA1    : UARTx_MA1_Type    with Volatile_Full_Access => True;
+      MA2    : UARTx_MA2_Type    with Volatile_Full_Access => True;
+      C4     : UARTx_C4_Type     with Volatile_Full_Access => True;
+      C5     : UARTx_C5_Type     with Volatile_Full_Access => True;
+      ED     : UARTx_ED_Type     with Volatile_Full_Access => True;
+      MODEM  : UARTx_MODEM_Type  with Volatile_Full_Access => True;
+      IR     : UARTx_IR_Type     with Volatile_Full_Access => True;
+      PFIFO  : UARTx_PFIFO_Type  with Volatile_Full_Access => True;
+      CFIFO  : UARTx_CFIFO_Type  with Volatile_Full_Access => True;
+      SFIFO  : UARTx_SFIFO_Type  with Volatile_Full_Access => True;
+      TWFIFO : UARTx_TWFIFO_Type with Volatile_Full_Access => True;
+      TCFIFO : UARTx_TCFIFO_Type with Volatile_Full_Access => True;
+      RWFIFO : UARTx_RWFIFO_Type with Volatile_Full_Access => True;
+      RCFIFO : UARTx_RCFIFO_Type with Volatile_Full_Access => True;
    end record
-      with Size => 16#0F# * 8;
+      with Size => 16#17# * 8;
    for UART_Type use record
-      BDH   at 16#00# range 0 .. 7;
-      BDL   at 16#01# range 0 .. 7;
-      C1    at 16#02# range 0 .. 7;
-      C2    at 16#03# range 0 .. 7;
-      S1    at 16#04# range 0 .. 7;
-      S2    at 16#05# range 0 .. 7;
-      C3    at 16#06# range 0 .. 7;
-      D     at 16#07# range 0 .. 7;
-      MA1   at 16#08# range 0 .. 7;
-      MA2   at 16#09# range 0 .. 7;
-      C4    at 16#0A# range 0 .. 7;
-      C5    at 16#0B# range 0 .. 7;
-      ED    at 16#0C# range 0 .. 7;
-      MODEM at 16#0D# range 0 .. 7;
-      IR    at 16#0E# range 0 .. 7;
+      BDH    at 16#00# range 0 .. 7;
+      BDL    at 16#01# range 0 .. 7;
+      C1     at 16#02# range 0 .. 7;
+      C2     at 16#03# range 0 .. 7;
+      S1     at 16#04# range 0 .. 7;
+      S2     at 16#05# range 0 .. 7;
+      C3     at 16#06# range 0 .. 7;
+      D      at 16#07# range 0 .. 7;
+      MA1    at 16#08# range 0 .. 7;
+      MA2    at 16#09# range 0 .. 7;
+      C4     at 16#0A# range 0 .. 7;
+      C5     at 16#0B# range 0 .. 7;
+      ED     at 16#0C# range 0 .. 7;
+      MODEM  at 16#0D# range 0 .. 7;
+      IR     at 16#0E# range 0 .. 7;
+      PFIFO  at 16#10# range 0 .. 7;
+      CFIFO  at 16#11# range 0 .. 7;
+      SFIFO  at 16#12# range 0 .. 7;
+      TWFIFO at 16#13# range 0 .. 7;
+      TCFIFO at 16#14# range 0 .. 7;
+      RWFIFO at 16#15# range 0 .. 7;
+      RCFIFO at 16#16# range 0 .. 7;
    end record;
 
    UART0 : aliased UART_Type
