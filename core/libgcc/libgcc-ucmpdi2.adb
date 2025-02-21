@@ -15,19 +15,34 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Ada.Unchecked_Conversion;
+
 separate (LibGCC)
 function UCmpDI2
    (A : GCC.Types.UDI_Type;
     B : GCC.Types.UDI_Type)
    return GCC.Types.SI_Type
    is
-   R : GCC.Types.SI_Type;
+   function To_USI_2 is new Ada.Unchecked_Conversion (GCC.Types.UDI_Type, USI_2);
+   T_A    : constant USI_2 := To_USI_2 (A);
+   T_B    : constant USI_2 := To_USI_2 (B);
+   A_HIGH : GCC.Types.USI_Type renames T_A (HI64);
+   A_LOW  : GCC.Types.USI_Type renames T_A (LO64);
+   B_HIGH : GCC.Types.USI_Type renames T_B (HI64);
+   B_LOW  : GCC.Types.USI_Type renames T_B (LO64);
+   R      : GCC.Types.SI_Type;
 begin
    R := 1;
-   if    A > B then
-      R := @ + 1;
-   elsif A < B then
+   if    A_HIGH < B_HIGH then
       R := @ - 1;
+   elsif A_HIGH > B_HIGH then
+      R := @ + 1;
+   else
+      if    A_LOW < B_LOW then
+         R := @ - 1;
+      elsif A_LOW > B_LOW then
+         R := @ + 1;
+      end if;
    end if;
    return R;
 end UCmpDI2;
