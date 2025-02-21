@@ -15,14 +15,21 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Ada.Unchecked_Conversion;
+
 separate (LibGCC)
 function BswapSI2
-   (V : GCC.Types.USI_Type)
-   return GCC.Types.USI_Type
+   (V : GCC.Types.SI_Type)
+   return GCC.Types.SI_Type
    is
+   function To_USI is new Ada.Unchecked_Conversion (GCC.Types.SI_Type, GCC.Types.USI_Type);
+   function To_SI is new Ada.Unchecked_Conversion (GCC.Types.USI_Type, GCC.Types.SI_Type);
+   UV : constant GCC.Types.USI_Type := To_USI (V);
 begin
-   return GCC.Types.Shift_Right (V and 16#FF00_0000#, 24) or
-          GCC.Types.Shift_Right (V and 16#00FF_0000#, 8) or
-          GCC.Types.Shift_Left (V and 16#0000_FF00#, 8) or
-          GCC.Types.Shift_Left (V and 16#0000_00FF#, 24);
+   return To_SI (
+             GCC.Types.Shift_Right (UV and 16#FF00_0000#, 24) or
+             GCC.Types.Shift_Right (UV and 16#00FF_0000#, 8) or
+             GCC.Types.Shift_Left (UV and 16#0000_FF00#, 8) or
+             GCC.Types.Shift_Left (UV and 16#0000_00FF#, 24)
+             );
 end BswapSI2;
