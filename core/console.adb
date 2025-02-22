@@ -32,6 +32,10 @@ package body Console
    use type SSE.Storage_Offset;
    use type SSE.Integer_Address;
    use type Interfaces.Unsigned_8;
+   use type Interfaces.Integer_8;
+   use type Interfaces.Integer_16;
+   use type Interfaces.Integer_32;
+   use type Interfaces.Integer_64;
    use type Bits.Bits_1;
    use type Bits.C.char;
    use type Bits.C.size_t;
@@ -205,6 +209,50 @@ package body Console
    ----------------------------------------------------------------------------
    procedure Print_Address
       (Value  : in System.Address;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      is
+   separate;
+
+   ----------------------------------------------------------------------------
+   -- Print_Integer8
+   ----------------------------------------------------------------------------
+   procedure Print_Integer8
+      (Value  : in Interfaces.Integer_8;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      is
+   separate;
+
+   ----------------------------------------------------------------------------
+   -- Print_Integer16
+   ----------------------------------------------------------------------------
+   procedure Print_Integer16
+      (Value  : in Interfaces.Integer_16;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      is
+   separate;
+
+   ----------------------------------------------------------------------------
+   -- Print_Integer32
+   ----------------------------------------------------------------------------
+   procedure Print_Integer32
+      (Value  : in Interfaces.Integer_32;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      is
+   separate;
+
+   ----------------------------------------------------------------------------
+   -- Print_Integer64
+   ----------------------------------------------------------------------------
+   procedure Print_Integer64
+      (Value  : in Interfaces.Integer_64;
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")

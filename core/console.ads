@@ -223,6 +223,66 @@ package Console
       renames Print_Address;
 
    ----------------------------------------------------------------------------
+   -- Print[_Integer8]
+   ----------------------------------------------------------------------------
+   procedure Print_Integer8
+      (Value  : in Interfaces.Integer_8;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "");
+   procedure Print
+      (Value  : in Interfaces.Integer_8;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      renames Print_Integer8;
+
+   ----------------------------------------------------------------------------
+   -- Print[_Integer16]
+   ----------------------------------------------------------------------------
+   procedure Print_Integer16
+      (Value  : in Interfaces.Integer_16;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "");
+   procedure Print
+      (Value  : in Interfaces.Integer_16;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      renames Print_Integer16;
+
+   ----------------------------------------------------------------------------
+   -- Print[_Integer32]
+   ----------------------------------------------------------------------------
+   procedure Print_Integer32
+      (Value  : in Interfaces.Integer_32;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "");
+   procedure Print
+      (Value  : in Interfaces.Integer_32;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      renames Print_Integer32;
+
+   ----------------------------------------------------------------------------
+   -- Print[_Integer64]
+   ----------------------------------------------------------------------------
+   procedure Print_Integer64
+      (Value  : in Interfaces.Integer_64;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "");
+   procedure Print
+      (Value  : in Interfaces.Integer_64;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      renames Print_Integer64;
+
+   ----------------------------------------------------------------------------
    -- Print[_Integer]
    ----------------------------------------------------------------------------
    procedure Print_Integer
