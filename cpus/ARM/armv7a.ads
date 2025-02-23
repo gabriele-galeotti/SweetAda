@@ -32,6 +32,14 @@ package ARMv7A
    --                                                                        --
    --========================================================================--
 
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
+   -- ARM® Architecture Reference Manual
+   -- ARMv7-A and ARMv7-R edition
+   -- ARM DDI 0406C.d (ID040418)
+   ----------------------------------------------------------------------------
+
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
@@ -53,5 +61,7 @@ package ARMv7A
       with Inline => True;
    procedure Fault_Irq_Disable
       with Inline => True;
+
+pragma Style_Checks (On);
 
 end ARMv7A;

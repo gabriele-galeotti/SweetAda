@@ -33,6 +33,13 @@ package ARMv4
    use System;
    use Bits;
 
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
+   -- ARM Architecture Reference Manual
+   -- ARM DDI 0100I
+   ----------------------------------------------------------------------------
+
    ----------------------------------------------------------------------------
    -- ARM registers
    ----------------------------------------------------------------------------
@@ -192,5 +199,7 @@ package ARMv4
       with Inline => True;
    procedure Fiq_Disable
       with Inline => True;
+
+pragma Style_Checks (On);
 
 end ARMv4;
