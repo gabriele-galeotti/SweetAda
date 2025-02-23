@@ -40,6 +40,11 @@ package ARMv7M
 pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
+   -- Arm®v7-M Architecture Reference Manual
+   -- ARM DDI 0403E.e (ID021621)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
    -- B1.4 Registers
    ----------------------------------------------------------------------------
 
@@ -792,6 +797,38 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
+
+   String_Reset        renames ARMv6M.String_Reset;
+   String_NMI          renames ARMv6M.String_NMI;
+   String_HardFault    renames ARMv6M.String_HardFault;
+   String_MemManage    : aliased constant String := "MemManage";
+   String_BusFault     : aliased constant String := "BusFault";
+   String_UsageFault   : aliased constant String := "UsageFault";
+   String_Reserved     renames ARMv6M.String_Reserved;
+   -- Reserved
+   -- Reserved
+   -- Reserved
+   String_SVCall       renames ARMv6M.String_SVCall;
+   String_DebugMonitor : aliased constant String := "DebugMonitor";
+   -- Reserved
+   String_PendSV       renames ARMv6M.String_PendSV;
+   String_SysTick      renames ARMv6M.String_SysTick;
+
+   MsgPtr_Reset        renames ARMv6M.MsgPtr_Reset;                                     -- 1
+   MsgPtr_NMI          renames ARMv6M.MsgPtr_NMI;                                       -- 2
+   MsgPtr_HardFault    renames ARMv6M.MsgPtr_HardFault;                                 -- 3
+   MsgPtr_MemManage    : constant access constant String := String_MemManage'Access;    -- 4
+   MsgPtr_BusFault     : constant access constant String := String_BusFault'Access;     -- 5
+   MsgPtr_UsageFault   : constant access constant String := String_UsageFault'Access;   -- 6
+   MsgPtr_Reserved     renames ARMv6M.MsgPtr_Reserved;                                  -- 7
+   -- Reserved                                                                             8
+   -- Reserved                                                                             9
+   -- Reserved                                                                             10
+   MsgPtr_SVCall       renames ARMv6M.MsgPtr_SVCall;                                    -- 11
+   MsgPtr_DebugMonitor : constant access constant String := String_DebugMonitor'Access; -- 12
+   -- Reserved                                                                          -- 13
+   MsgPtr_PendSV       renames ARMv6M.MsgPtr_PendSV;                                    -- 14
+   MsgPtr_SysTick      renames ARMv6M.MsgPtr_SysTick;                                   -- 15
 
    procedure Irq_Enable
       renames ARMv6M.Irq_Enable;

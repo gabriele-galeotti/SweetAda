@@ -36,6 +36,13 @@ package ARMv6M
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
+   -- ARMv6-M Architecture Reference Manual
+   -- ARM DDI 0419C (ID092410)
+   ----------------------------------------------------------------------------
+
    ----------------------------------------------------------------------------
    -- B1.4 Registers
    ----------------------------------------------------------------------------
@@ -660,6 +667,38 @@ package ARMv6M
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
+   String_Reset     : aliased constant String := "Reset";
+   String_NMI       : aliased constant String := "NMI";
+   String_HardFault : aliased constant String := "HardFault";
+   String_Reserved  : aliased constant String := "Reserved";
+   -- Reserved
+   -- Reserved
+   -- Reserved
+   -- Reserved
+   -- Reserved
+   -- Reserved
+   String_SVCall    : aliased constant String := "SVCall";
+   -- Reserved
+   -- Reserved
+   String_PendSV    : aliased constant String := "PendSV";
+   String_SysTick   : aliased constant String := "SysTick";
+
+   MsgPtr_Reset     : constant access constant String := String_Reset'Access;     -- 1
+   MsgPtr_NMI       : constant access constant String := String_NMI'Access;       -- 2
+   MsgPtr_HardFault : constant access constant String := String_HardFault'Access; -- 3
+   MsgPtr_Reserved  : constant access constant String := String_Reserved'Access;  -- 4
+   -- Reserved                                                                       5
+   -- Reserved                                                                       6
+   -- Reserved                                                                       7
+   -- Reserved                                                                       8
+   -- Reserved                                                                       9
+   -- Reserved                                                                       10
+   MsgPtr_SVCall    : constant access constant String := String_SVCall'Access;    -- 11
+   -- Reserved                                                                    -- 12
+   -- Reserved                                                                    -- 13
+   MsgPtr_PendSV    : constant access constant String := String_PendSV'Access;    -- 14
+   MsgPtr_SysTick   : constant access constant String := String_SysTick'Access;   -- 15
+
    procedure Irq_Enable
       with Inline => True;
    procedure Irq_Disable
@@ -668,5 +707,7 @@ package ARMv6M
       with Inline => True;
    procedure Fault_Irq_Disable
       with Inline => True;
+
+pragma Style_Checks (On);
 
 end ARMv6M;
