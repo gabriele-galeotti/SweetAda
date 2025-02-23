@@ -14,6 +14,20 @@
 
                 .syntax unified
 
+                .macro EXCEPTION handler,number
+                .thumb_func
+                .type   \handler,%function
+                .global \handler
+\handler:
+                push    {lr}
+                movs    r0,#\number
+                mov     r1,lr
+                bl      exception_process
+                pop     {pc}
+                .endm
+
+////////////////////////////////////////////////////////////////////////////////
+
                 .sect   .vectors,"ax"
 
                 .p2align 8
@@ -24,20 +38,20 @@ vectors:
 SP_Main:        .long   0
                 .extern _start
 Reset:          .long   _start                  //  1
-NMI:            .long   0                       //  2
-HardFault:      .long   0                       //  3
-ReservedExc4:   .long   0                       //  4
-ReservedExc5:   .long   0                       //  5
-ReservedExc6:   .long   0                       //  6
-ReservedExc7:   .long   0                       //  7
-ReservedExc8:   .long   0                       //  8
-ReservedExc9:   .long   0                       //  9
-ReservedExcA:   .long   0                       // 10
-SVCall:         .long   0                       // 11
-ReservedExcC:   .long   0                       // 12
-ReservedExcD:   .long   0                       // 13
-PendSV:         .long   0                       // 14
-SysTick:        .long   systick_handler         // 15
+NMI:            .long   NMI_handler             //  2
+HardFault:      .long   HardFault_handler       //  3
+ReservedExc4:   .long   ReservedExc4_handler    //  4
+ReservedExc5:   .long   ReservedExc5_handler    //  5
+ReservedExc6:   .long   ReservedExc6_handler    //  6
+ReservedExc7:   .long   ReservedExc7_handler    //  7
+ReservedExc8:   .long   ReservedExc8_handler    //  8
+ReservedExc9:   .long   ReservedExc9_handler    //  9
+ReservedExcA:   .long   ReservedExcA_handler    // 10
+SVCall:         .long   SVCall_handler          // 11
+ReservedExcC:   .long   ReservedExcC_handler    // 12
+ReservedExcD:   .long   ReservedExcD_handler    // 13
+PendSV:         .long   PendSV_handler          // 14
+SysTick:        .long   SysTick_handler         // 15
 
 // Non-Core vectors
 
@@ -76,12 +90,29 @@ Interrupt31:    .long   0                       // 47 Port control module Pin de
 
                 .sect   .text,"ax"
 
-                .thumb_func
-                .type   systick_handler,%function
-                .global systick_handler
-systick_handler:
-                push    {lr}
+                .extern exception_process
+                .extern systick_process
                 .extern irq_process
-                bl      irq_process
+
+                EXCEPTION NMI_handler,2
+                EXCEPTION HardFault_handler,3
+                EXCEPTION ReservedExc4_handler,4
+                EXCEPTION ReservedExc5_handler,5
+                EXCEPTION ReservedExc6_handler,6
+                EXCEPTION ReservedExc7_handler,7
+                EXCEPTION ReservedExc8_handler,8
+                EXCEPTION ReservedExc9_handler,9
+                EXCEPTION ReservedExcA_handler,10
+                EXCEPTION SVCall_handler,11
+                EXCEPTION ReservedExcC_handler,12
+                EXCEPTION ReservedExcD_handler,13
+                EXCEPTION PendSV_handler,14
+
+                .thumb_func
+                .type   SysTick_handler,%function
+                .global SysTick_handler
+SysTick_handler:
+                push    {lr}
+                bl      systick_process
                 pop     {pc}
 

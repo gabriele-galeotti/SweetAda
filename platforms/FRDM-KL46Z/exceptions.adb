@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
 with LLutils;
 with Abort_Library;
 with ARMv6M;
@@ -34,7 +33,6 @@ package body Exceptions
    --                                                                        --
    --========================================================================--
 
-   use Interfaces;
    use KL46Z;
 
    --========================================================================--
@@ -49,16 +47,31 @@ package body Exceptions
    -- Exception_Process
    ----------------------------------------------------------------------------
    procedure Exception_Process
+      (VectorN : in Unsigned_32;
+       LR      : in Unsigned_32)
       is
    begin
       Console.Print ("*** EXCEPTION", NL => True);
+      case VectorN is
+         when 1  => Console.Print (ARMv6M.MsgPtr_Reset.all, NL => True);
+         when 2  => Console.Print (ARMv6M.MsgPtr_NMI.all, NL => True);
+         when 3  => Console.Print (ARMv6M.MsgPtr_HardFault.all, NL => True);
+         when 11 => Console.Print (ARMv6M.MsgPtr_SVCall.all, NL => True);
+         when 14 => Console.Print (ARMv6M.MsgPtr_PendSV.all, NL => True);
+         when 15 => Console.Print (ARMv6M.MsgPtr_SysTick.all, NL => True);
+         when 4 | 5 .. 10 | 12 .. 13 =>
+            Console.Print (ARMv6M.MsgPtr_Reserved.all, NL => True);
+         when others                 =>
+            Console.Print ("UNKNOWN", NL => True);
+      end case;
+      Console.Print (LR, NL => True);
       Abort_Library.System_Abort;
    end Exception_Process;
 
    ----------------------------------------------------------------------------
-   -- Irq_Process
+   -- SysTick_Process
    ----------------------------------------------------------------------------
-   procedure Irq_Process
+   procedure SysTick_Process
       is
    begin
       BSP.Tick_Count := @ + 1;
@@ -66,6 +79,15 @@ package body Exceptions
       if (BSP.Tick_Count mod 1_000) = 0 then
          GPIOE.PTOR (29) := True;
       end if;
+   end SysTick_Process;
+
+   ----------------------------------------------------------------------------
+   -- Irq_Process
+   ----------------------------------------------------------------------------
+   procedure Irq_Process
+      is
+   begin
+      null;
    end Irq_Process;
 
    ----------------------------------------------------------------------------
@@ -79,7 +101,7 @@ package body Exceptions
    begin
       ARMv6M.NVIC_ICER := [others => True];
       ARMv6M.VTOR.TBLOFF := Bits_25 (LLutils.Select_Address_Bits (Vector_Table'Address, 7, 31));
-      -- LED2 (RED)
+      -- LED2 (RED) for SysTick_Process
       SIM_SCGC5.PORTE := True;
       PORTE_MUXCTRL.PCR (29).MUX := MUX_GPIO;
       GPIOE.PDDR (29) := True;
