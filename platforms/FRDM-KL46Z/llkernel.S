@@ -18,8 +18,7 @@
                 .thumb_func
                 .type   \handler,%function
                 .global \handler
-\handler:
-                push    {lr}
+\handler:       push    {lr}
                 movs    r0,#\number
                 mov     r1,lr
                 bl      exception_process
@@ -53,7 +52,7 @@ ReservedExcD:   .long   ReservedExcD_handler    // 13
 PendSV:         .long   PendSV_handler          // 14
 SysTick:        .long   SysTick_handler         // 15
 
-// Non-Core vectors
+// non-core vectors
 
 Interrupt0:     .long   0                       // 16 DMA DMA channel 0 transfer complete and error
 Interrupt1:     .long   0                       // 17 DMA DMA channel 1 transfer complete and error
@@ -87,6 +86,8 @@ Interrupt28:    .long   0                       // 44 LPTMR0
 Interrupt29:    .long   0                       // 45 SLCD
 Interrupt30:    .long   0                       // 46 Port control module Pin detect (Port A)
 Interrupt31:    .long   0                       // 47 Port control module Pin detect (Single interrupt vector for Port C and Port D)
+
+////////////////////////////////////////////////////////////////////////////////
 
                 .sect   .text,"ax"
 

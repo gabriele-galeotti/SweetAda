@@ -126,10 +126,10 @@ package body BSP
       PORTA_MUXCTRL.PCR (1).MUX := MUX_ALT2;
       PORTA_MUXCTRL.PCR (2).MUX := MUX_ALT2;
       UART0.C4 := (
-         OSR    => OSR_16x,
-         M10    => False,
-         MAEN2  => False,
-         MAEN1  => False
+         OSR   => OSR_16x,
+         M10   => False,
+         MAEN2 => False,
+         MAEN1 => False
          );
       UART0.BDL.SBR := Bits_8 ((UART_Clock / 16) / 9_600);
       UART0.BDH.SBR := 0;

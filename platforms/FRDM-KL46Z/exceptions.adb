@@ -59,9 +59,9 @@ package body Exceptions
          when 11 => Console.Print (ARMv6M.MsgPtr_SVCall.all, NL => True);
          when 14 => Console.Print (ARMv6M.MsgPtr_PendSV.all, NL => True);
          when 15 => Console.Print (ARMv6M.MsgPtr_SysTick.all, NL => True);
-         when 4 | 5 .. 10 | 12 .. 13 =>
+         when 4 .. 10 | 12 .. 13 =>
             Console.Print (ARMv6M.MsgPtr_Reserved.all, NL => True);
-         when others                 =>
+         when others             =>
             Console.Print ("UNKNOWN", NL => True);
       end case;
       Console.Print (LR, NL => True);
@@ -100,7 +100,8 @@ package body Exceptions
               External_Name => "vectors";
    begin
       ARMv6M.NVIC_ICER := [others => True];
-      ARMv6M.VTOR.TBLOFF := Bits_25 (LLutils.Select_Address_Bits (Vector_Table'Address, 7, 31));
+      ARMv6M.VTOR.TBLOFF :=
+         Bits_25 (LLutils.Select_Address_Bits (Vector_Table'Address, 7, 31));
       -- LED2 (RED) for SysTick_Process
       SIM_SCGC5.PORTE := True;
       PORTE_MUXCTRL.PCR (29).MUX := MUX_GPIO;
