@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
 with Bits;
 
 package Exceptions
@@ -28,6 +29,7 @@ package Exceptions
    --                                                                        --
    --========================================================================--
 
+   use Interfaces;
    use Bits;
 
    SP_Main      : aliased Asm_Entry_Point with Import => True, External_Name => "SP_Main";
@@ -48,9 +50,16 @@ package Exceptions
    SysTick      : aliased Asm_Entry_Point with Import => True, External_Name => "SysTick";
 
    procedure Exception_Process
+      (VectorN : in Unsigned_32;
+       LR      : in Unsigned_32)
       with Export        => True,
            Convention    => Asm,
            External_Name => "exception_process";
+
+   procedure SysTick_Process
+      with Export        => True,
+           Convention    => Asm,
+           External_Name => "systick_process";
 
    procedure Irq_Process
       with Export        => True,
