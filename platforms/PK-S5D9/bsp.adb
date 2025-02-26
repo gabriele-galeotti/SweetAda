@@ -18,13 +18,13 @@
 with Definitions;
 with Bits;
 with ARMv7M;
-with ARMv7M.FPU;
 with CortexM4;
 with S5D9;
 with Exceptions;
 with Console;
 with Clocks;
 with W25Q64FV;
+with MII;
 with LCD;
 
 package body BSP
@@ -206,11 +206,12 @@ package body BSP
       -- MCU clock: 120 MHz ---------------------------------------------------
       Clocks.Init;
       -- power-on peripherals -------------------------------------------------
-      -- MSTPCRB.MSTPB31 := False; -- SCI0 on
+      MSTPCRB.MSTPB6  := False; -- QSPI on
+      MSTPCRB.MSTPB15 := False; -- ETHERC0 on
       MSTPCRB.MSTPB19 := False; -- SPI0 on
       MSTPCRB.MSTPB28 := False; -- SCI3 on
+      -- MSTPCRB.MSTPB31 := False; -- SCI0 on
       MSTPCRD.MSTPD3  := False; -- AGT0 on
-      MSTPCRB.MSTPB6  := False; -- QSPI on
       -- enable writing to the PmnPFS register --------------------------------
       PWPR.B0WI  := False;
       PWPR.PFSWE := True;
@@ -239,7 +240,8 @@ package body BSP
       LED_Init;
       W25Q64FV.Init;
       W25Q64FV.Device_Detect;
-      LCD.Init;
+      MII.Init;
+      -- LCD.Init;
       -------------------------------------------------------------------------
       ARMv7M.Irq_Enable;
       ARMv7M.Fault_Irq_Enable;

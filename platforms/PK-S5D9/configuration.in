@@ -11,11 +11,9 @@
 ################################################################################
 
 # force ZFP
-#RTS        := zfp
-#PROFILE    := zfp
-#USE_LIBADA := N
-USE_LIBGCC := Y
-#USE_LIBM   := Y
+RTS        := zfp
+PROFILE    := zfp
+USE_LIBADA := N
 
 USE_APPLICATION := test-pk-s5d9
 
@@ -27,9 +25,7 @@ USE_APPLICATION := test-pk-s5d9
 CPU       := ARM
 CPU_MODEL := CORTEXM4
 
-#GCC_SWITCHES_PLATFORM     := -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
-GCC_SWITCHES_PLATFORM     := -mcpu=cortex-m4 -mthumb -mfloat-abi=softfp -mfpu=fpv4-sp-d16
-#GCC_SWITCHES_PLATFORM     := -mcpu=cortex-m4 -mthumb
+GCC_SWITCHES_PLATFORM     := -mcpu=cortex-m4 -mthumb
 LD_SWITCHES_PLATFORM      := --undefined=vectors --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         := Y
