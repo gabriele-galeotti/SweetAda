@@ -14,6 +14,19 @@
 
                 .syntax unified
 
+                .macro EXCEPTION handler,number
+                .thumb_func
+                .type   \handler,%function
+                .global \handler
+\handler:       push    {lr}
+                movs    r0,#\number
+                mov     r1,lr
+                bl      exception_process
+                pop     {pc}
+                .endm
+
+////////////////////////////////////////////////////////////////////////////////
+
                 .sect   .vectors,"ax"
 
                 .align  7
@@ -24,20 +37,22 @@ vectors:
 SP_Main:        .long   0
                 .extern _start
 Reset:          .long   _start                  //   1
-NMI:            .long   0                       //   2
-HardFault:      .long   0                       //   3
-MemManage:      .long   0                       //   4
-BusFault:       .long   0                       //   5
-UsageFault:     .long   0                       //   6
-ReservedExc7:   .long   0                       //   7
-ReservedExc8:   .long   0                       //   8
-ReservedExc9:   .long   0                       //   9
-ReservedExcA:   .long   0                       //  10
-SVCall:         .long   0                       //  11
-DebugMonitor:   .long   0                       //  12
-ReservedExcD:   .long   0                       //  13
-PendSV:         .long   0                       //  14
-SysTick:        .long   systick_handler         //  15
+NMI:            .long   NMI_handler             //   2
+HardFault:      .long   HardFault_handler       //   3
+MemManage:      .long   MemManage_handler       //   4
+BusFault:       .long   BusFault_handler        //   5
+UsageFault:     .long   UsageFault_handler      //   6
+ReservedExc7:   .long   ReservedExc7_handler    //   7
+ReservedExc8:   .long   ReservedExc8_handler    //   8
+ReservedExc9:   .long   ReservedExc9_handler    //   9
+ReservedExcA:   .long   ReservedExcA_handler    //  10
+SVCall:         .long   SVCall_handler          //  11
+DebugMonitor:   .long   DebugMonitor_handler    //  12
+ReservedExcD:   .long   ReservedExcD_handler    //  13
+PendSV:         .long   PendSV_handler          //  14
+SysTick:        .long   SysTick_handler         //  15
+
+// non-core vectors
 
 Interrupt0:     .long   0                       //  16 Event selected in the ICU.IELSR0 register
 Interrupt1:     .long   0                       //  17 Event selected in the ICU.IELSR1 register
@@ -283,15 +298,35 @@ Interrupt237:   .long   0
 Interrupt238:   .long   0
 Interrupt239:   .long   0
 
+////////////////////////////////////////////////////////////////////////////////
+
                 .sect   .text,"ax"
 
-                .thumb_func
-                .type   systick_handler,%function
-                .global systick_handler
-systick_handler:
-                push    {lr}
+                .extern exception_process
+                .extern systick_process
                 .extern irq_process
-                bl      irq_process
+
+                EXCEPTION NMI_handler,2
+                EXCEPTION HardFault_handler,3
+                EXCEPTION MemManage_handler,4
+                EXCEPTION BusFault_handler,5
+                EXCEPTION UsageFault_handler,6
+                EXCEPTION ReservedExc7_handler,7
+                EXCEPTION ReservedExc8_handler,8
+                EXCEPTION ReservedExc9_handler,9
+                EXCEPTION ReservedExcA_handler,10
+                EXCEPTION SVCall_handler,11
+                EXCEPTION DebugMonitor_handler,12
+                EXCEPTION ReservedExcD_handler,13
+                EXCEPTION PendSV_handler,14
+
+                .thumb_func
+                .type   SysTick_handler,%function
+                .global SysTick_handler
+SysTick_handler:
+                push    {lr}
+                .extern systick_process
+                bl      systick_process
                 pop     {lr}
                 bx      lr
 

@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
 with LLutils;
 with Abort_Library;
 with ARMv7M;
@@ -35,7 +34,6 @@ package body Exceptions
    --                                                                        --
    --========================================================================--
 
-   use Interfaces;
    use S5D9;
 
    --========================================================================--
@@ -50,16 +48,34 @@ package body Exceptions
    -- Exception_Process
    ----------------------------------------------------------------------------
    procedure Exception_Process
+      (VectorN : in Unsigned_32;
+       LR      : in Unsigned_32)
       is
    begin
       Console.Print ("*** EXCEPTION", NL => True);
+      case VectorN is
+         when 1  => Console.Print (ARMv7M.MsgPtr_Reset.all, NL => True);
+         when 2  => Console.Print (ARMv7M.MsgPtr_NMI.all, NL => True);
+         when 3  => Console.Print (ARMv7M.MsgPtr_HardFault.all, NL => True);
+         when 4  => Console.Print (ARMv7M.MsgPtr_MemManage.all, NL => True);
+         when 5  => Console.Print (ARMv7M.MsgPtr_BusFault.all, NL => True);
+         when 6  => Console.Print (ARMv7M.MsgPtr_UsageFault.all, NL => True);
+         when 11 => Console.Print (ARMv7M.MsgPtr_SVCall.all, NL => True);
+         when 14 => Console.Print (ARMv7M.MsgPtr_PendSV.all, NL => True);
+         when 15 => Console.Print (ARMv7M.MsgPtr_SysTick.all, NL => True);
+         when 7 .. 10 | 12 .. 13 =>
+            Console.Print (ARMv7M.MsgPtr_Reserved.all, NL => True);
+         when others             =>
+            Console.Print ("UNKNOWN", NL => True);
+      end case;
+      Console.Print (LR, NL => True);
       Abort_Library.System_Abort;
    end Exception_Process;
 
    ----------------------------------------------------------------------------
-   -- Irq_Process
+   -- SysTick_Process
    ----------------------------------------------------------------------------
-   procedure Irq_Process
+   procedure SysTick_Process
       is
    begin
       BSP.Tick_Count := @ + 1;
@@ -67,6 +83,15 @@ package body Exceptions
          -- LED1 green
          PORT (6).PODR (0) := not @;
       end if;
+   end SysTick_Process;
+
+   ----------------------------------------------------------------------------
+   -- Irq_Process
+   ----------------------------------------------------------------------------
+   procedure Irq_Process
+      is
+   begin
+      null;
    end Irq_Process;
 
    ----------------------------------------------------------------------------
