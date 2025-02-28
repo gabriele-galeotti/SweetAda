@@ -53,13 +53,43 @@ pragma Style_Checks (Off);
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
+   -- these definitions are both codes for exception and vector offsets
+   Reset                 : constant := 16#00#;
+   Undefined_Instruction : constant := 16#04#;
+   Supervisor_Call       : constant := 16#08#;
+   Prefetch_Abort        : constant := 16#0C#;
+   Data_Abort            : constant := 16#10#;
+   Notused               : constant := 16#14#;
+   IRQ                   : constant := 16#18#;
+   FIQ                   : constant := 16#1C#;
+
+   String_Reset                 : aliased constant String := "Reset";
+   String_Undefined_Instruction : aliased constant String := "Undefined Instruction";
+   String_Supervisor_Call       : aliased constant String := "Supervisor Call";
+   String_Prefetch_Abort        : aliased constant String := "Prefetch Abort";
+   String_Data_Abort            : aliased constant String := "Data Abort";
+   String_Notused               : aliased constant String := "Not used";
+   String_IRQ                   : aliased constant String := "IRQ";
+   String_FIQ                   : aliased constant String := "FIQ";
+   String_UNKNOWN               : aliased constant String := "UNKNOWN";
+
+   MsgPtr_Reset                 : constant access constant String := String_Reset'Access;
+   MsgPtr_Undefined_Instruction : constant access constant String := String_Undefined_Instruction'Access;
+   MsgPtr_Supervisor_Call       : constant access constant String := String_Supervisor_Call'Access;
+   MsgPtr_Prefetch_Abort        : constant access constant String := String_Prefetch_Abort'Access;
+   MsgPtr_Data_Abort            : constant access constant String := String_Data_Abort'Access;
+   MsgPtr_Notused               : constant access constant String := String_Notused'Access;
+   MsgPtr_IRQ                   : constant access constant String := String_IRQ'Access;
+   MsgPtr_FIQ                   : constant access constant String := String_FIQ'Access;
+   MsgPtr_UNKNOWN               : constant access constant String := String_UNKNOWN'Access;
+
    procedure Irq_Enable
       with Inline => True;
    procedure Irq_Disable
       with Inline => True;
-   procedure Fault_Irq_Enable
+   procedure Fiq_Enable
       with Inline => True;
-   procedure Fault_Irq_Disable
+   procedure Fiq_Disable
       with Inline => True;
 
 pragma Style_Checks (On);

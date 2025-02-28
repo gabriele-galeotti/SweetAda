@@ -110,9 +110,9 @@ package body ARMv7A
    end Irq_Disable;
 
    ----------------------------------------------------------------------------
-   -- Fault_Irq_Enable
+   -- Fiq_Enable
    ----------------------------------------------------------------------------
-   procedure Fault_Irq_Enable
+   procedure Fiq_Enable
       is
    begin
       Asm (
@@ -124,12 +124,12 @@ package body ARMv7A
            Clobber  => "memory",
            Volatile => True
           );
-   end Fault_Irq_Enable;
+   end Fiq_Enable;
 
    ----------------------------------------------------------------------------
-   -- Fault_Irq_Disable
+   -- Fiq_Disable
    ----------------------------------------------------------------------------
-   procedure Fault_Irq_Disable
+   procedure Fiq_Disable
       is
    begin
       Asm (
@@ -141,6 +141,6 @@ package body ARMv7A
            Clobber  => "memory",
            Volatile => True
           );
-   end Fault_Irq_Disable;
+   end Fiq_Disable;
 
 end ARMv7A;
