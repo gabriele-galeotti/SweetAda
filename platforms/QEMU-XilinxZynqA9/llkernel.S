@@ -14,6 +14,16 @@
 
                 .syntax unified
 
+                .macro EXCEPTION handler,number
+                .type   \handler,%function
+                .global \handler
+\handler:       mov     r0,#\number
+                mov     r1,lr
+                bl      exception_process
+                .endm
+
+////////////////////////////////////////////////////////////////////////////////
+
                 .sect   .vectors,"ax"
 
                 .global vectors
@@ -30,26 +40,36 @@ vectors:
 
                 .extern _start
 V_Reset:        .long   _start
-V_UndInstr:     .long   _start
-V_SVC:          .long   _start
-V_PAbort:       .long   _start
-V_DAbort:       .long   _start
-V_Notused:      .long   _start
-V_IRQ:          .long   irq_handler
-V_FIQ:          .long   fiq_handler
+V_UndInstr:     .long   UndInstr_handler
+V_SVC:          .long   SVC_handler
+V_PAbort:       .long   PAbort_handler
+V_DAbort:       .long   DAbort_handler
+V_Notused:      .long   Notused_handler
+V_IRQ:          .long   IRQ_handler
+V_FIQ:          .long   FIQ_handler
 
 ////////////////////////////////////////////////////////////////////////////////
 
                 .sect   .text,"ax"
 
-                .type   fiq_handler,%function
-                .global fiq_handler
-fiq_handler:
+                .extern exception_process
+                .extern irq_process
+
+                EXCEPTION UndInstr_handler,0x04
+                EXCEPTION SVC_handler,0x08
+                EXCEPTION PAbort_handler,0x0C
+                EXCEPTION DAbort_handler,0x10
+                EXCEPTION Notused_handler,0x14
+
+                .type   FIQ_handler,%function
+                .global FIQ_handler
+FIQ_handler:
+                // not supported
                 subs    pc,lr,#4
 
-                .type   irq_handler,%function
-                .global irq_handler
-irq_handler:
+                .type   IRQ_handler,%function
+                .global IRQ_handler
+IRQ_handler:
                 stmfd   sp!,{r0-r3,r9,r12,lr}
                 .extern irq_process
                 bl      irq_process

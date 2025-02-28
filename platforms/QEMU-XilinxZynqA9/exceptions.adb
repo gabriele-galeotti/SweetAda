@@ -15,9 +15,11 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
+with Abort_Library;
+with ARMv7A;
 with ZynqA9;
 with BSP;
+with Console;
 
 package body Exceptions
    is
@@ -30,8 +32,6 @@ package body Exceptions
    --                                                                        --
    --========================================================================--
 
-   use Interfaces;
-
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -39,6 +39,35 @@ package body Exceptions
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- Exception_Process
+   ----------------------------------------------------------------------------
+   procedure Exception_Process
+      (VectorN : in Unsigned_32;
+       LR      : in Unsigned_32)
+      is
+   begin
+      Console.Print ("*** EXCEPTION", NL => True);
+      case VectorN is
+         when ARMv7A.Reset                 =>
+            Console.Print (ARMv7A.MsgPtr_Reset.all, NL => True);
+         when ARMv7A.Undefined_Instruction =>
+            Console.Print (ARMv7A.MsgPtr_Undefined_Instruction.all, NL => True);
+         when ARMv7A.Supervisor_Call       =>
+            Console.Print (ARMv7A.MsgPtr_Supervisor_Call.all, NL => True);
+         when ARMv7A.Prefetch_Abort        =>
+            Console.Print (ARMv7A.MsgPtr_Prefetch_Abort.all, NL => True);
+         when ARMv7A.Data_Abort            =>
+            Console.Print (ARMv7A.MsgPtr_Data_Abort.all, NL => True);
+         when ARMv7A.Notused               =>
+            Console.Print (ARMv7A.MsgPtr_Notused.all, NL => True);
+         when others                       =>
+            Console.Print (ARMv7A.MsgPtr_UNKNOWN.all, NL => True);
+      end case;
+      Console.Print (LR, NL => True);
+      Abort_Library.System_Abort;
+   end Exception_Process;
 
    ----------------------------------------------------------------------------
    -- Irq_Process

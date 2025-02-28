@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
+
 package Exceptions
    is
 
@@ -25,6 +27,15 @@ package Exceptions
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use Interfaces;
+
+   procedure Exception_Process
+      (VectorN : in Unsigned_32;
+       LR      : in Unsigned_32)
+      with Export        => True,
+           Convention    => Asm,
+           External_Name => "exception_process";
 
    procedure Irq_Process
       with Export        => True,
