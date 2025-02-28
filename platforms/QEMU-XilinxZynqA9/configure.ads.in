@@ -13,7 +13,7 @@ package Configure
    CPU_MODEL : constant String := "@CPU_MODEL@";
 
    -- basic configuration parameters
-   CLK_FREQUENCY  : constant := 33333333; -- 33.333333 MHz
+   CLK_FREQUENCY  : constant := 33_333_333; -- 33.333333 MHz
    TICK_FREQUENCY : constant := 1 * kHz1;
 
 end Configure;
