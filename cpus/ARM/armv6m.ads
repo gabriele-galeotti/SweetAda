@@ -682,6 +682,7 @@ pragma Style_Checks (Off);
    -- Reserved
    String_PendSV    : aliased constant String := "PendSV";
    String_SysTick   : aliased constant String := "SysTick";
+   String_UNKNOWN   : aliased constant String := "UNKNOWN";
 
    MsgPtr_Reset     : constant access constant String := String_Reset'Access;     -- 1
    MsgPtr_NMI       : constant access constant String := String_NMI'Access;       -- 2
@@ -698,6 +699,7 @@ pragma Style_Checks (Off);
    -- Reserved                                                                    -- 13
    MsgPtr_PendSV    : constant access constant String := String_PendSV'Access;    -- 14
    MsgPtr_SysTick   : constant access constant String := String_SysTick'Access;   -- 15
+   MsgPtr_UNKNOWN   : constant access constant String := String_UNKNOWN'Access;
 
    procedure Irq_Enable
       with Inline => True;

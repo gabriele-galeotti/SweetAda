@@ -813,6 +813,7 @@ pragma Style_Checks (Off);
    -- Reserved
    String_PendSV       renames ARMv6M.String_PendSV;
    String_SysTick      renames ARMv6M.String_SysTick;
+   String_UNKNOWN      renames ARMv6M.String_UNKNOWN;
 
    MsgPtr_Reset        renames ARMv6M.MsgPtr_Reset;                                     -- 1
    MsgPtr_NMI          renames ARMv6M.MsgPtr_NMI;                                       -- 2
@@ -829,6 +830,7 @@ pragma Style_Checks (Off);
    -- Reserved                                                                          -- 13
    MsgPtr_PendSV       renames ARMv6M.MsgPtr_PendSV;                                    -- 14
    MsgPtr_SysTick      renames ARMv6M.MsgPtr_SysTick;                                   -- 15
+   MsgPtr_UNKNOWN      renames ARMv6M.MsgPtr_UNKNOWN;
 
    procedure Irq_Enable
       renames ARMv6M.Irq_Enable;
