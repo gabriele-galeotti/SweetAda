@@ -460,6 +460,7 @@ DISTCLEAN_OBJECTS_COMMON := $(GNATADC_FILENAME)      \
 # configuration switches.
 # PLATFORM_DIRECTORY: directory of the configured platform
 # CPU_DIRECTORY: directory of the configured CPU
+# CPU_MODEL_DIRECTORY: additional directory of the configured CPU
 #
 TOOLCHAIN_NAME           :=
 TOOLCHAIN_PROGRAM_PREFIX :=
@@ -529,6 +530,12 @@ INCLUDE_DIRECTORIES     :=
 CPU_INCLUDE_DIRECTORIES :=
 IMPLICIT_CORE_UNITS     :=
 IMPLICIT_CLIBRARY_UNITS :=
+
+#
+# Initialize other support variables.
+#
+GPR_CORE_CPU   :=
+GCCDEFINES_CPU :=
 
 #
 # Various features.
@@ -802,6 +809,8 @@ export                                \
        CPU                            \
        CPU_MODEL                      \
        FPU_MODEL                      \
+       GPR_CORE_CPU                   \
+       GCCDEFINES_CPU                 \
        BUILD_MODE                     \
        OPTIMIZATION_LEVEL             \
        RTS                            \
