@@ -34,17 +34,17 @@ endif
 
 GPR_CORE_CPU += cpu.ads
 
-GCCDEFINES_CPU += __mc68000__:MC68000:Boolean:H
-GCCDEFINES_CPU += __mc68010__:MC68010:Boolean:H
-GCCDEFINES_CPU += __mc68020__:MC68020:Boolean:H
-GCCDEFINES_CPU += __mc68030__:MC68030:Boolean:H
-GCCDEFINES_CPU += __mc68040__:MC68040:Boolean:H
-GCCDEFINES_CPU += __mcf5200__:MCF5200:Boolean:H
-GCCDEFINES_CPU += __mcf528x__:MCF528x:Boolean:H
-GCCDEFINES_CPU += __mcf_cpu_5235:MCF_CPU_5235:Boolean:H
-GCCDEFINES_CPU += __mcf_family_5235:MCF_FAMILY_5235:Boolean:H
-GCCDEFINES_CPU += __mcfhwdiv__:MCFHWDIV:Boolean:H
-GCCDEFINES_CPU += __mcfisaaplus__:MCFISAAPLUS:Boolean:H
-GCCDEFINES_CPU += __mcfv2__:MCFV2:Boolean:H
-GCCDEFINES_CPU += __mcoldfire__:MCOLDFIRE:Boolean:H
+GCCDEFINES_CPU += __mc68000__:MC68000:Boolean:H               \
+                  __mc68010__:MC68010:Boolean:H               \
+                  __mc68020__:MC68020:Boolean:H               \
+                  __mc68030__:MC68030:Boolean:H               \
+                  __mc68040__:MC68040:Boolean:H               \
+                  __mcf5200__:MCF5200:Boolean:H               \
+                  __mcf528x__:MCF528x:Boolean:H               \
+                  __mcf_cpu_5235:MCF_CPU_5235:Boolean:H       \
+                  __mcf_family_5235:MCF_FAMILY_5235:Boolean:H \
+                  __mcfhwdiv__:MCFHWDIV:Boolean:H             \
+                  __mcfisaaplus__:MCFISAAPLUS:Boolean:H       \
+                  __mcfv2__:MCFV2:Boolean:H                   \
+                  __mcoldfire__:MCOLDFIRE:Boolean:H
 
