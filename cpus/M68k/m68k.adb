@@ -17,6 +17,7 @@
 
 with System.Machine_Code;
 with Definitions;
+with GCC.Defines;
 
 package body M68k
    is
@@ -105,16 +106,20 @@ package body M68k
       is
       B : Unsigned_8;
    begin
-      Asm (
-           Template => ""                       & CRLF &
-                       "        moves.b %1@,%0" & CRLF &
-                       "",
-           Outputs  => Unsigned_8'Asm_Output ("=d", B),
-           Inputs   => Address'Asm_Input ("a", A),
-           Clobber  => "",
-           Volatile => True
-          );
-      return B;
+      if GCC.Defines.MCOLDFIRE then
+         raise Program_Error;
+      else
+         Asm (
+              Template => ""                       & CRLF &
+                          "        moves.b %1@,%0" & CRLF &
+                          "",
+              Outputs  => Unsigned_8'Asm_Output ("=d", B),
+              Inputs   => Address'Asm_Input ("a", A),
+              Clobber  => "",
+              Volatile => True
+             );
+         return B;
+      end if;
    end MoveSByte;
 
    procedure MoveSByte
@@ -122,18 +127,22 @@ package body M68k
        B : in Unsigned_8)
       is
    begin
-      Asm (
-           Template => ""                       & CRLF &
-                       "        moves.b %0,%1@" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => [
-                        Unsigned_8'Asm_Input ("d", B),
-                        Address'Asm_Input ("a", A)
-                       ],
-           Clobber  => "",
-           Volatile => True
-          );
+      if GCC.Defines.MCOLDFIRE then
+         raise Program_Error;
+      else
+         Asm (
+              Template => ""                       & CRLF &
+                          "        moves.b %0,%1@" & CRLF &
+                          "",
+              Outputs  => No_Output_Operands,
+              Inputs   => [
+                           Unsigned_8'Asm_Input ("d", B),
+                           Address'Asm_Input ("a", A)
+                          ],
+              Clobber  => "",
+              Volatile => True
+             );
+      end if;
    end MoveSByte;
 
    ----------------------------------------------------------------------------
@@ -146,16 +155,20 @@ package body M68k
       is
       W : Unsigned_16;
    begin
-      Asm (
-           Template => ""                       & CRLF &
-                       "        moves.w %1@,%0" & CRLF &
-                       "",
-           Outputs  => Unsigned_16'Asm_Output ("=d", W),
-           Inputs   => Address'Asm_Input ("a", A),
-           Clobber  => "",
-           Volatile => True
-          );
-      return W;
+      if GCC.Defines.MCOLDFIRE then
+         raise Program_Error;
+      else
+         Asm (
+              Template => ""                       & CRLF &
+                          "        moves.w %1@,%0" & CRLF &
+                          "",
+              Outputs  => Unsigned_16'Asm_Output ("=d", W),
+              Inputs   => Address'Asm_Input ("a", A),
+              Clobber  => "",
+              Volatile => True
+             );
+         return W;
+      end if;
    end MoveSWord;
 
    procedure MoveSWord
@@ -163,18 +176,22 @@ package body M68k
        W : in Unsigned_16)
       is
    begin
-      Asm (
-           Template => ""                       & CRLF &
-                       "        moves.w %0,%1@" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => [
-                        Unsigned_16'Asm_Input ("d", W),
-                        Address'Asm_Input ("a", A)
-                       ],
-           Clobber  => "",
-           Volatile => True
-          );
+      if GCC.Defines.MCOLDFIRE then
+         raise Program_Error;
+      else
+         Asm (
+              Template => ""                       & CRLF &
+                          "        moves.w %0,%1@" & CRLF &
+                          "",
+              Outputs  => No_Output_Operands,
+              Inputs   => [
+                           Unsigned_16'Asm_Input ("d", W),
+                           Address'Asm_Input ("a", A)
+                          ],
+              Clobber  => "",
+              Volatile => True
+             );
+      end if;
    end MoveSWord;
 
    ----------------------------------------------------------------------------
@@ -187,16 +204,20 @@ package body M68k
       is
       L : Unsigned_32;
    begin
-      Asm (
-           Template => ""                       & CRLF &
-                       "        moves.l %1@,%0" & CRLF &
-                       "",
-           Outputs  => Unsigned_32'Asm_Output ("=d", L),
-           Inputs   => Address'Asm_Input ("a", A),
-           Clobber  => "",
-           Volatile => True
-          );
-      return L;
+      if GCC.Defines.MCOLDFIRE then
+         raise Program_Error;
+      else
+         Asm (
+              Template => ""                       & CRLF &
+                          "        moves.l %1@,%0" & CRLF &
+                          "",
+              Outputs  => Unsigned_32'Asm_Output ("=d", L),
+              Inputs   => Address'Asm_Input ("a", A),
+              Clobber  => "",
+              Volatile => True
+             );
+         return L;
+      end if;
    end MoveSLong;
 
    procedure MoveSLong
@@ -204,18 +225,22 @@ package body M68k
        L : in Unsigned_32)
       is
    begin
-      Asm (
-           Template => ""                       & CRLF &
-                       "        moves.l %0,%1@" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => [
-                        Unsigned_32'Asm_Input ("d", L),
-                        Address'Asm_Input ("a", A)
-                       ],
-           Clobber  => "",
-           Volatile => True
-          );
+      if GCC.Defines.MCOLDFIRE then
+         raise Program_Error;
+      else
+         Asm (
+              Template => ""                       & CRLF &
+                          "        moves.l %0,%1@" & CRLF &
+                          "",
+              Outputs  => No_Output_Operands,
+              Inputs   => [
+                           Unsigned_32'Asm_Input ("d", L),
+                           Address'Asm_Input ("a", A)
+                          ],
+              Clobber  => "",
+              Volatile => True
+             );
+      end if;
    end MoveSLong;
 
    ----------------------------------------------------------------------------
@@ -241,15 +266,19 @@ package body M68k
    procedure RESET
       is
    begin
-      Asm (
-           Template => ""              & CRLF &
-                       "        reset" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "memory",
-           Volatile => True
-          );
+      if GCC.Defines.MCOLDFIRE then
+         raise Program_Error;
+      else
+         Asm (
+              Template => ""              & CRLF &
+                          "        reset" & CRLF &
+                          "",
+              Outputs  => No_Output_Operands,
+              Inputs   => No_Input_Operands,
+              Clobber  => "memory",
+              Volatile => True
+             );
+      end if;
    end RESET;
 
    ----------------------------------------------------------------------------
@@ -330,15 +359,17 @@ package body M68k
    procedure Irq_Enable
       is
    begin
-      Asm (
-           Template => ""                        & CRLF &
-                       "        andi.w  %0,%%sr" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => Integer'Asm_Input ("i", 16#F8FF#),
-           Clobber  => "memory",
-           Volatile => True
-          );
+      if not GCC.Defines.MCOLDFIRE then
+         Asm (
+              Template => ""                        & CRLF &
+                          "        andi.w  %0,%%sr" & CRLF &
+                          "",
+              Outputs  => No_Output_Operands,
+              Inputs   => Integer'Asm_Input ("i", 16#F8FF#),
+              Clobber  => "memory",
+              Volatile => True
+             );
+      end if;
    end Irq_Enable;
 
    ----------------------------------------------------------------------------
@@ -347,15 +378,17 @@ package body M68k
    procedure Irq_Disable
       is
    begin
-      Asm (
-           Template => ""                        & CRLF &
-                       "        ori.w   %0,%%sr" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => Integer'Asm_Input ("i", 16#0700#),
-           Clobber  => "memory",
-           Volatile => True
-          );
+      if not GCC.Defines.MCOLDFIRE then
+         Asm (
+              Template => ""                        & CRLF &
+                          "        ori.w   %0,%%sr" & CRLF &
+                          "",
+              Outputs  => No_Output_Operands,
+              Inputs   => Integer'Asm_Input ("i", 16#0700#),
+              Clobber  => "memory",
+              Volatile => True
+             );
+      end if;
    end Irq_Disable;
 
 end M68k;
