@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
 with CFv2;
 
 package CPU
@@ -29,11 +30,34 @@ package CPU
    --                                                                        --
    --========================================================================--
 
+   use System;
+
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
    procedure NOP
       renames CFv2.NOP;
+   procedure PAUSE
+      renames CFv2.PAUSE;
+   procedure BREAKPOINT
+      renames CFv2.BREAKPOINT;
+
+   ----------------------------------------------------------------------------
+   -- Specific definitions
+   ----------------------------------------------------------------------------
+
+   procedure VBR_Set
+      (VBR_Address : in Address)
+      renames CFv2.VBR_Set;
+
+   ----------------------------------------------------------------------------
+   -- Exceptions and interrupts
+   ----------------------------------------------------------------------------
+
+   procedure Irq_Enable
+      renames CFv2.Irq_Enable;
+   procedure Irq_Disable
+      renames CFv2.Irq_Disable;
 
 end CPU;
