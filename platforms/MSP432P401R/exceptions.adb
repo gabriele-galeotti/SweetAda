@@ -63,7 +63,7 @@ package body Exceptions
          when 15 => Console.Print (ARMv7M.MsgPtr_SysTick.all, NL => True);
          when 7 .. 10 | 12 .. 13 =>
             Console.Print (ARMv7M.MsgPtr_Reserved.all, NL => True);
-         when others                 =>
+         when others             =>
             Console.Print ("UNKNOWN", NL => True);
       end case;
       Console.Print (LR, NL => True);
