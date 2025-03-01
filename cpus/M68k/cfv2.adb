@@ -110,4 +110,42 @@ package body CFv2
           );
    end VBR_Set;
 
+   ----------------------------------------------------------------------------
+   -- Irq_Enable
+   ----------------------------------------------------------------------------
+   procedure Irq_Enable
+      is
+   begin
+      Asm (
+           Template => ""                          & CRLF &
+                       "        move    %%sr,%%d0" & CRLF &
+                       "        andi.l  %0,%%d0  " & CRLF &
+                       "        move    %%d0,%%sr" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Integer'Asm_Input ("i", 16#F8FF#),
+           Clobber  => "cc,d0,memory",
+           Volatile => True
+          );
+   end Irq_Enable;
+
+   ----------------------------------------------------------------------------
+   -- Irq_Disable
+   ----------------------------------------------------------------------------
+   procedure Irq_Disable
+      is
+   begin
+      Asm (
+           Template => ""                          & CRLF &
+                       "        move    %%sr,%%d0" & CRLF &
+                       "        ori.l   %0,%%d0  " & CRLF &
+                       "        move    %%d0,%%sr" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Integer'Asm_Input ("i", 16#0700#),
+           Clobber  => "cc,d0,memory",
+           Volatile => True
+          );
+   end Irq_Disable;
+
 end CFv2;

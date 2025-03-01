@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with M68k;
 
 package CFv2
    with Preelaborate => True
@@ -31,15 +32,31 @@ package CFv2
 
    use System;
 
+   subtype SR_Type is M68k.SR_Type;
+
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
+   function SR_Read
+      return SR_Type
+      renames M68k.SR_Read;
+
+   procedure SR_Write
+      (Value : in SR_Type)
+      renames M68k.SR_Write;
+
    procedure NOP
       with Inline => True;
+
    procedure PAUSE
       with Inline => True;
+
    procedure BREAKPOINT
+      with Inline => True;
+
+   procedure VBR_Set
+      (VBR_Address : in Address)
       with Inline => True;
 
    ----------------------------------------------------------------------------
@@ -54,8 +71,9 @@ package CFv2
       with Import     => True,
            Convention => Ada;
 
-   procedure VBR_Set
-      (VBR_Address : in Address)
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
       with Inline => True;
 
 end CFv2;
