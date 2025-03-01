@@ -3,28 +3,28 @@ TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_M68k)
 
 ifeq      ($(CPU_MODEL),M68010)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/M68010
-  GPR_CORE_CPU := m68k.adb m68k.ads
+  GPR_CORE_CPU += m68k.adb m68k.ads
 else ifeq ($(CPU_MODEL),M68020)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/M68020
-  GPR_CORE_CPU := m68k.adb m68k.ads
+  GPR_CORE_CPU += m68k.adb m68k.ads
 else ifeq ($(CPU_MODEL),M68030)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/M68030
-  GPR_CORE_CPU := m68k.adb m68k.ads
+  GPR_CORE_CPU += m68k.adb m68k.ads
 else ifeq ($(CPU_MODEL),M68040)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/M68040
-  GPR_CORE_CPU := m68k.adb m68k.ads
+  GPR_CORE_CPU += m68k.adb m68k.ads
 else ifeq ($(CPU_MODEL),MCF5206)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/MCF5206
-  GPR_CORE_CPU := cfv2.adb cfv2.ads
+  GPR_CORE_CPU += m68k.adb m68k.ads cfv2.adb cfv2.ads
 else ifeq ($(CPU_MODEL),MCF5235)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/MCF523x
-  GPR_CORE_CPU := cfv2.adb cfv2.ads
+  GPR_CORE_CPU += m68k.adb m68k.ads cfv2.adb cfv2.ads
 else ifeq ($(CPU_MODEL),MCF5373)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/MCF5373
-  GPR_CORE_CPU := cfv2.adb cfv2.ads
+  GPR_CORE_CPU += m68k.adb m68k.ads cfv2.adb cfv2.ads
 else ifeq ($(CPU_MODEL),CFv2)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CFv2
-  GPR_CORE_CPU := cfv2.adb cfv2.ads
+  GPR_CORE_CPU += m68k.adb m68k.ads cfv2.adb cfv2.ads
 else
   ifneq ($(filter rts,$(MAKECMDGOALS)),rts)
     $(warning *** Warning: "$(CPU_MODEL)": no CPU model supported.\
@@ -33,5 +33,18 @@ else
 endif
 
 GPR_CORE_CPU += cpu.ads
-export GPR_CORE_CPU
+
+GCCDEFINES_CPU += __mc68000__:MC68000:Boolean:H
+GCCDEFINES_CPU += __mc68010__:MC68010:Boolean:H
+GCCDEFINES_CPU += __mc68020__:MC68020:Boolean:H
+GCCDEFINES_CPU += __mc68030__:MC68030:Boolean:H
+GCCDEFINES_CPU += __mc68040__:MC68040:Boolean:H
+GCCDEFINES_CPU += __mcf5200__:MCF5200:Boolean:H
+GCCDEFINES_CPU += __mcf528x__:MCF528x:Boolean:H
+GCCDEFINES_CPU += __mcf_cpu_5235:MCF_CPU_5235:Boolean:H
+GCCDEFINES_CPU += __mcf_family_5235:MCF_FAMILY_5235:Boolean:H
+GCCDEFINES_CPU += __mcfhwdiv__:MCFHWDIV:Boolean:H
+GCCDEFINES_CPU += __mcfisaaplus__:MCFISAAPLUS:Boolean:H
+GCCDEFINES_CPU += __mcfv2__:MCFV2:Boolean:H
+GCCDEFINES_CPU += __mcoldfire__:MCOLDFIRE:Boolean:H
 
