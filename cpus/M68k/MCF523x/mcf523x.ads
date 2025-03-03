@@ -294,6 +294,260 @@ pragma Style_Checks (Off);
    -- 12.3.1.5.6 FEC/I2C Pin Assignment Register (PAR_FECI2C)
 
    ----------------------------------------------------------------------------
+   -- Chapter 13 Interrupt Controller Modules
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- NOTE: the line order of interrupts sources is inverted (w.r.t. the
+   -- manual) to allow indexing inside a big-endian bitmap by means of an
+   -- enumerate subscript
+   ----------------------------------------------------------------------------
+
+   -- INTC0
+
+   -- interrupt source number = 64 + SOURCE
+   type INTC0_Source_Type is (
+                                -- SOURCE/MODULE/SOURCE DESCRIPTION
+      NOTUSED4,                 -- 63
+      NOTUSED3,                 -- 62
+      NOTUSED2,                 -- 61
+      FLEXCAN1_BOFF_INT,        -- 60 FLEXCAN1 Bus-Off Interrupt
+      FLEXCAN1_ERR_INT,         -- 59 FLEXCAN1 Error Interrupt
+      FLEXCAN1_BUF15I,          -- 58 FLEXCAN1 Message Buffer 15 Interrupt
+      FLEXCAN1_BUF14I,          -- 57 FLEXCAN1 Message Buffer 14 Interrupt
+      FLEXCAN1_BUF13I,          -- 56 FLEXCAN1 Message Buffer 13 Interrupt
+      FLEXCAN1_BUF12I,          -- 55 FLEXCAN1 Message Buffer 12 Interrupt
+      FLEXCAN1_BUF11I,          -- 54 FLEXCAN1 Message Buffer 11 Interrupt
+      FLEXCAN1_BUF10I,          -- 53 FLEXCAN1 Message Buffer 10 Interrupt
+      FLEXCAN1_BUF9I,           -- 52 FLEXCAN1 Message Buffer 9 Interrupt
+      FLEXCAN1_BUF8I,           -- 51 FLEXCAN1 Message Buffer 8 Interrupt
+      FLEXCAN1_BUF7I,           -- 50 FLEXCAN1 Message Buffer 7 Interrupt
+      FLEXCAN1_BUF6I,           -- 49 FLEXCAN1 Message Buffer 6 Interrupt
+      FLEXCAN1_BUF5I,           -- 48 FLEXCAN1 Message Buffer 5 Interrupt
+      FLEXCAN1_BUF4I,           -- 47 FLEXCAN1 Message Buffer 4 Interrupt
+      FLEXCAN1_BUF3I,           -- 46 FLEXCAN1 Message Buffer 3 Interrupt
+      FLEXCAN1_BUF2I,           -- 45 FLEXCAN1 Message Buffer 2 Interrupt
+      FLEXCAN1_BUF1I,           -- 44 FLEXCAN1 Message Buffer 1 Interrupt
+      FLEXCAN1_BUF0I,           -- 43 FLEXCAN1 Message Buffer 0 Interrupt
+      MDHA_MI,                  -- 42 MDHA     MDHA interrupt flag
+      SKHA_INT,                 -- 41 SKHA     SKHA interrupt flag
+      RNG_EI,                   -- 40 RNG      RNG interrupt flag
+      PIT3_PIF,                 -- 39 PIT3     PIT interrupt flag
+      PIT2_PIF,                 -- 38 PIT2     PIT interrupt flag
+      PIT1_PIF,                 -- 37 PIT1     PIT interrupt flag
+      PIT0_PIF,                 -- 36 PIT0     PIT interrupt flag
+      FEC_BABR,                 -- 35 FEC      Babbling receive error
+      FEC_BABT,                 -- 34 FEC      Babbling transmit error
+      FEC_EBERR,                -- 33 FEC      Ethernet bus error
+      FEC_GRA,                  -- 32 FEC      Graceful stop complete
+      FEC_HBERR,                -- 31 FEC      Heartbeat error
+      FEC_LC,                   -- 30 FEC      Late collision
+      FEC_MII,                  -- 29 FEC      MII interrupt
+      FEC_R_INTB,               -- 28 FEC      Receive buffer interrupt
+      FEC_R_INTF,               -- 27 FEC      Receive frame interrupt
+      FEC_RL,                   -- 26 FEC      Collision retry limit
+      FEC_UN,                   -- 25 FEC      Transmit FIFO underrun
+      FEC_X_INTB,               -- 24 FEC      Transmit buffer interrupt
+      FEC_X_INTF,               -- 23 FEC      Transmit frame interrupt
+      TMR3_INT,                 -- 22 TMR3     TMR3 interrupt
+      TMR2_INT,                 -- 21 TMR2     TMR2 interrupt
+      TMR1_INT,                 -- 20 TMR1     TMR1 interrupt
+      TMR0_INT,                 -- 19 TMR0     TMR0 interrupt
+      QSPI_INT,                 -- 18 QSPI     QSPI interrupt
+      I2C_IIF,                  -- 17 I2C      I2C interrupt
+      NOTUSED1,                 -- 16
+      UART2_INT,                -- 15 UART2    UART2 interrupt
+      UART1_INT,                -- 14 UART1    UART1 interrupt
+      UART0_INT,                -- 13 UART0    UART0 interrupt
+      DMA3_DONE,                -- 12 DMA      DMA Channel 3 transfer complete
+      DMA2_DONE,                -- 11 DMA      DMA Channel 2 transfer complete
+      DMA1_DONE,                -- 10 DMA      DMA Channel 1 transfer complete
+      DMA0_DONE,                -- 9  DMA      DMA Channel 0 transfer complete
+      SCM_SWTI,                 -- 8  SCM      Software watchdog timeout
+      EPORT_EPF7,               -- 7  EPORT    Edge port flag 7
+      EPORT_EPF6,               -- 6  EPORT    Edge port flag 6
+      EPORT_EPF5,               -- 5  EPORT    Edge port flag 5
+      EPORT_EPF4,               -- 4  EPORT    Edge port flag 4
+      EPORT_EPF3,               -- 3  EPORT    Edge port flag 3
+      EPORT_EPF2,               -- 2  EPORT    Edge port flag 2
+      EPORT_EPF1,               -- 1  EPORT    Edge port flag 1
+      NOTIMPLEMENTED            -- 0
+      );
+
+   type IPR0_Type is array (INTC0_Source_Type range <>) of Boolean
+      with Pack => True;
+
+   IPRH0 : aliased IPR0_Type (INTC0_Source_Type range NOTUSED4 .. FEC_GRA)
+      with Address              => System'To_Address (IPSBAR_BASEADDRESS + 16#0000_0C00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   IPRL0 : aliased IPR0_Type (INTC0_Source_Type range FEC_HBERR .. NOTIMPLEMENTED)
+      with Address              => System'To_Address (IPSBAR_BASEADDRESS + 16#0000_0C04#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   MASKALL0 : constant INTC0_Source_Type := NOTIMPLEMENTED;
+
+   type IMR0_Type is array (INTC0_Source_Type range <>) of Boolean
+      with Pack => True;
+
+   IMRH0 : aliased IMR0_Type (INTC0_Source_Type range NOTUSED4 .. FEC_GRA)
+      with Address              => System'To_Address (IPSBAR_BASEADDRESS + 16#0000_0C08#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   IMRL0 : aliased IMR0_Type (INTC0_Source_Type range FEC_HBERR .. MASKALL0)
+      with Address              => System'To_Address (IPSBAR_BASEADDRESS + 16#0000_0C0C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- INTC1
+
+   -- interrupt source number = 128 + SOURCE
+   type INTC1_Source_Type is (
+                                -- SOURCE/MODULE/SOURCE DESCRIPTION
+      NOTUSED12,                -- 63
+      NOTUSED11,                -- 62
+      NOTUSED10,                -- 61
+      NOTUSED9,                 -- 60
+      ETPU_TGIF,                -- 59 ETPU ETPU global interrupt flag
+      ETPU_TC31F,               -- 58 ETPU ETPU channel interrupt flag
+      ETPU_TC30F,               -- 57 ETPU ETPU channel interrupt flag
+      ETPU_TC29F,               -- 56 ETPU ETPU channel interrupt flag
+      ETPU_TC28F,               -- 55 ETPU ETPU channel interrupt flag
+      ETPU_TC27F,               -- 54 ETPU ETPU channel interrupt flag
+      ETPU_TC26F,               -- 53 ETPU ETPU channel interrupt flag
+      ETPU_TC25F,               -- 52 ETPU ETPU channel interrupt flag
+      ETPU_TC24F,               -- 51 ETPU ETPU channel interrupt flag
+      ETPU_TC23F,               -- 50 ETPU ETPU channel interrupt flag
+      ETPU_TC22F,               -- 49 ETPU ETPU channel interrupt flag
+      ETPU_TC21F,               -- 48 ETPU ETPU channel interrupt flag
+      ETPU_TC20F,               -- 47 ETPU ETPU channel interrupt flag
+      ETPU_TC19F,               -- 46 ETPU ETPU channel interrupt flag
+      ETPU_TC18F,               -- 45 ETPU ETPU channel interrupt flag
+      ETPU_TC17F,               -- 44 ETPU ETPU channel interrupt flag
+      ETPU_TC16F,               -- 43 ETPU ETPU channel interrupt flag
+      ETPU_TC15F,               -- 42 ETPU ETPU channel interrupt flag
+      ETPU_TC14F,               -- 41 ETPU ETPU channel interrupt flag
+      ETPU_TC13F,               -- 40 ETPU ETPU channel interrupt flag
+      ETPU_TC12F,               -- 39 ETPU ETPU channel interrupt flag
+      ETPU_TC11F,               -- 38 ETPU ETPU channel interrupt flag
+      ETPU_TC10F,               -- 37 ETPU ETPU channel interrupt flag
+      ETPU_TC9F,                -- 36 ETPU ETPU channel interrupt flag
+      ETPU_TC8F,                -- 35 ETPU ETPU channel interrupt flag
+      ETPU_TC7F,                -- 34 ETPU ETPU channel interrupt flag
+      ETPU_TC6F,                -- 33 ETPU ETPU channel interrupt flag
+      ETPU_TC5F,                -- 32 ETPU ETPU channel interrupt flag
+      ETPU_TC4F,                -- 31 ETPU ETPU channel interrupt flag
+      ETPU_TC3F,                -- 30 ETPU ETPU channel interrupt flag
+      ETPU_TC2F,                -- 29 ETPU ETPU channel interrupt flag
+      ETPU_TC1F,                -- 28 ETPU ETPU channel interrupt flag
+      ETPU_TC0F,                -- 27 ETPU ETPU channel interrupt flag
+      NOTUSED8,                 -- 26
+      FLEXCAN0_BOFF_INT,        -- 25 FLEXCAN0 Bus-Off Interrupt
+      FLEXCAN0_ERR_INT,         -- 24 FLEXCAN0 Error Interrupt
+      FLEXCAN0_BUF15I,          -- 23 FLEXCAN0 Message Buffer 15 Interrupt
+      FLEXCAN0_BUF14I,          -- 22 FLEXCAN0 Message Buffer 14 Interrupt
+      FLEXCAN0_BUF13I,          -- 21 FLEXCAN0 Message Buffer 13 Interrupt
+      FLEXCAN0_BUF12I,          -- 20 FLEXCAN0 Message Buffer 12 Interrupt
+      FLEXCAN0_BUF11I,          -- 19 FLEXCAN0 Message Buffer 11 Interrupt
+      FLEXCAN0_BUF10I,          -- 18 FLEXCAN0 Message Buffer 10 Interrupt
+      FLEXCAN0_BUF9I,           -- 17 FLEXCAN0 Message Buffer 9 Interrupt
+      FLEXCAN0_BUF8I,           -- 16 FLEXCAN0 Message Buffer 8 Interrupt
+      FLEXCAN0_BUF7I,           -- 15 FLEXCAN0 Message Buffer 7 Interrupt
+      FLEXCAN0_BUF6I,           -- 14 FLEXCAN0 Message Buffer 6 Interrupt
+      FLEXCAN0_BUF5I,           -- 13 FLEXCAN0 Message Buffer 5 Interrupt
+      FLEXCAN0_BUF4I,           -- 12 FLEXCAN0 Message Buffer 4 Interrupt
+      FLEXCAN0_BUF3I,           -- 11 FLEXCAN0 Message Buffer 3 Interrupt
+      FLEXCAN0_BUF2I,           -- 10 FLEXCAN0 Message Buffer 2 Interrupt
+      FLEXCAN0_BUF1I,           -- 9  FLEXCAN0 Message Buffer 1 Interrupt
+      FLEXCAN0_BUF0I,           -- 8  FLEXCAN0 Message Buffer 0 Interrupt
+      NOTUSED7,                 -- 7
+      NOTUSED6,                 -- 6
+      NOTUSED5,                 -- 5
+      NOTUSED4,                 -- 4
+      NOTUSED3,                 -- 3
+      NOTUSED2,                 -- 2
+      NOTUSED1,                 -- 1
+      NOTIMPLEMENTED            -- 0
+      );
+
+   type IPR1_Type is array (INTC1_Source_Type range <>) of Boolean
+      with Pack => True;
+
+   IPRH1 : aliased IPR1_Type (INTC1_Source_Type range NOTUSED12 .. ETPU_TC5F)
+      with Address              => System'To_Address (IPSBAR_BASEADDRESS + 16#0000_0D00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   IPRL1 : aliased IPR1_Type (INTC1_Source_Type range ETPU_TC4F .. NOTIMPLEMENTED)
+      with Address              => System'To_Address (IPSBAR_BASEADDRESS + 16#0000_0D04#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   MASKALL1 : constant INTC1_Source_Type := NOTIMPLEMENTED;
+
+   type IMR1_Type is array (INTC1_Source_Type range <>) of Boolean
+      with Pack => True;
+
+   IMRH1 : aliased IMR1_Type (INTC1_Source_Type range NOTUSED12 .. ETPU_TC5F)
+      with Address              => System'To_Address (IPSBAR_BASEADDRESS + 16#0000_0D08#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   IMRL1 : aliased IMR1_Type (INTC1_Source_Type range ETPU_TC4F .. MASKALL1)
+      with Address              => System'To_Address (IPSBAR_BASEADDRESS + 16#0000_0D0C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   type ICR_Type is record
+      IP       : Bits_3 := 0; -- Interrupt priority.
+      IL       : Bits_3 := 0; -- Interrupt level.
+      Reserved : Bits_2 := 0;
+   end record
+      with Bit_Order            => Low_Order_First,
+           Size                 => 8,
+           Volatile_Full_Access => True;
+   for ICR_Type use record
+      IP       at 0 range 0 .. 2;
+      IL       at 0 range 3 .. 5;
+      Reserved at 0 range 6 .. 7;
+   end record;
+
+   -- ICR0/1
+
+   ICR0 : aliased array (0 .. 63) of ICR_Type
+      with Address    => System'To_Address (IPSBAR_BASEADDRESS + 16#0000_0C40#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ICR1 : aliased array (0 .. 63) of ICR_Type
+      with Address    => System'To_Address (IPSBAR_BASEADDRESS + 16#0000_0D40#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   function IRQ_Index
+      (IRQ : INTC0_Source_Type)
+      return Natural
+         with Inline => True;
+
+   function IRQ_Index
+      (IRQ : INTC1_Source_Type)
+      return Natural
+         with Inline => True;
+
+   ----------------------------------------------------------------------------
    -- Chapter 19 Fast Ethernet Controller (FEC)
    ----------------------------------------------------------------------------
 

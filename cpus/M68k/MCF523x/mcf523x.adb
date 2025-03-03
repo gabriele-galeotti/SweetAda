@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ cpu.ads                                                                                                   --
+-- __FLN__ mcf523x.adb                                                                                               --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,49 +15,32 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with CFv2;
-
-package CPU
+package body MCF523x
    with Preelaborate => True
    is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                               Public part                              --
+   --                           Package subprograms                          --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   use System;
+   function IRQ_Index
+      (IRQ : INTC0_Source_Type)
+      return Natural
+      is
+   begin
+      return 63 - IRQ'Enum_Rep;
+   end IRQ_Index;
 
-   ----------------------------------------------------------------------------
-   -- CPU helper subprograms
-   ----------------------------------------------------------------------------
+   function IRQ_Index
+      (IRQ : INTC1_Source_Type)
+      return Natural
+      is
+   begin
+      return 63 - IRQ'Enum_Rep;
+   end IRQ_Index;
 
-   procedure NOP
-      renames CFv2.NOP;
-   procedure STOP
-      renames CFv2.STOP;
-   procedure BREAKPOINT
-      renames CFv2.BREAKPOINT;
-
-   ----------------------------------------------------------------------------
-   -- Specific definitions
-   ----------------------------------------------------------------------------
-
-   procedure VBR_Set
-      (VBR_Address : in Address)
-      renames CFv2.VBR_Set;
-
-   ----------------------------------------------------------------------------
-   -- Exceptions and interrupts
-   ----------------------------------------------------------------------------
-
-   procedure Irq_Enable
-      renames CFv2.Irq_Enable;
-   procedure Irq_Disable
-      renames CFv2.Irq_Disable;
-
-end CPU;
+end MCF523x;
