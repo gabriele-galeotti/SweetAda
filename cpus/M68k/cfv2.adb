@@ -59,9 +59,9 @@ package body CFv2
    end NOP;
 
    ----------------------------------------------------------------------------
-   -- PAUSE
+   -- STOP
    ----------------------------------------------------------------------------
-   procedure PAUSE
+   procedure STOP
       is
    begin
       Asm (
@@ -73,7 +73,7 @@ package body CFv2
            Clobber  => "",
            Volatile => True
           );
-   end PAUSE;
+   end STOP;
 
    ----------------------------------------------------------------------------
    -- BREAKPOINT

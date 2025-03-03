@@ -49,7 +49,7 @@ package CFv2
    procedure NOP
       with Inline => True;
 
-   procedure PAUSE
+   procedure STOP
       with Inline => True;
 
    procedure BREAKPOINT
