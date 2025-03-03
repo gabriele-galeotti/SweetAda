@@ -374,6 +374,8 @@ pragma Style_Checks (Off);
       NOTIMPLEMENTED            -- 0
       );
 
+   MASKALL0 : constant INTC0_Source_Type := NOTIMPLEMENTED;
+
    type IPR0_Type is array (INTC0_Source_Type range <>) of Boolean
       with Pack => True;
 
@@ -389,7 +391,6 @@ pragma Style_Checks (Off);
            Import               => True,
            Convention           => Ada;
 
-   MASKALL0 : constant INTC0_Source_Type := NOTIMPLEMENTED;
 
    type IMR0_Type is array (INTC0_Source_Type range <>) of Boolean
       with Pack => True;
@@ -477,6 +478,8 @@ pragma Style_Checks (Off);
       NOTIMPLEMENTED            -- 0
       );
 
+   MASKALL1 : constant INTC1_Source_Type := NOTIMPLEMENTED;
+
    type IPR1_Type is array (INTC1_Source_Type range <>) of Boolean
       with Pack => True;
 
@@ -491,8 +494,6 @@ pragma Style_Checks (Off);
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
-
-   MASKALL1 : constant INTC1_Source_Type := NOTIMPLEMENTED;
 
    type IMR1_Type is array (INTC1_Source_Type range <>) of Boolean
       with Pack => True;
@@ -540,12 +541,12 @@ pragma Style_Checks (Off);
    function IRQ_Index
       (IRQ : INTC0_Source_Type)
       return Natural
-         with Inline => True;
+      with Inline => True;
 
    function IRQ_Index
       (IRQ : INTC1_Source_Type)
       return Natural
-         with Inline => True;
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Chapter 19 Fast Ethernet Controller (FEC)
