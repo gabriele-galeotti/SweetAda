@@ -8,8 +8,7 @@ CONFIGURE_DEPS += $(CPU_DIRECTORY)/$(CPU_DEF)  \
                   $(CPU_DIRECTORY)/armv8a.adbp \
                   $(CPU_DIRECTORY)/armv8a.adsp
 
-GPR_CORE_CPU := cpu.ads    \
+GPR_CORE_CPU += cpu.ads    \
                 armv8a.adb \
                 armv8a.ads
-export GPR_CORE_CPU
 
