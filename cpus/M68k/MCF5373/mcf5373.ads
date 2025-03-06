@@ -60,20 +60,20 @@ pragma Style_Checks (Off);
    HLCK_HALF   : constant := 1; -- Half cache operation.
 
    type CACR_Type is record
-      Reserved1 : Bits_4;
-      EUSP      : Boolean; -- Enable user stack pointer.
-      DW        : Boolean; -- Default write protect.
-      Reserved2 : Bits_2;
-      DCM       : Bits_2;  -- Default cache mode.
-      DNFB      : Bits_1;  -- Default noncacheable fill buffer
-      Reserved3 : Bits_13;
-      CINVA     : Boolean; -- Cache invalidate all.
-      Reserved4 : Bits_2;
-      HLCK      : Bits_1;  -- Half cache lock mode
-      DPI       : Boolean; -- Disable CPUSHL invalidation.
-      ESB       : Boolean; -- Enable store buffer.
-      Reserved5 : Bits_1;
-      EC        : Boolean; -- Enable cache.
+      Reserved1 : Bits_4  := 0;
+      EUSP      : Boolean := False;       -- Enable user stack pointer.
+      DW        : Boolean := False;       -- Default write protect.
+      Reserved2 : Bits_2  := 0;
+      DCM       : Bits_2  := DCM_WT;      -- Default cache mode.
+      DNFB      : Bits_1  := DNFB_N;      -- Default noncacheable fill buffer
+      Reserved3 : Bits_13 := 0;
+      CINVA     : Boolean := False;       -- Cache invalidate all.
+      Reserved4 : Bits_2  := 0;
+      HLCK      : Bits_1  := HLCK_NORMAL; -- Half cache lock mode
+      DPI       : Boolean := False;       -- Disable CPUSHL invalidation.
+      ESB       : Boolean := False;       -- Enable store buffer.
+      Reserved5 : Bits_1  := 0;
+      EC        : Boolean := False;       -- Enable cache.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -106,15 +106,15 @@ pragma Style_Checks (Off);
    S_ALL  : constant := 2#10#; -- Execute cache matching on all accesses
 
    type ACR_Type is record
-      Reserved1    : Bits_2;
-      W            : Boolean; -- Write protect.
-      Reserved2    : Bits_2;
-      CM           : Bits_2;  -- Cache mode.
-      Reserved3    : Bits_6;
-      S            : Bits_2;  -- Supervisor mode.
-      E            : Boolean; -- Enable.
-      Address_Mask : Bits_8;  -- Address mask.
-      Address_Base : Bits_8;  -- Address base.
+      Reserved1    : Bits_2  := 0;
+      W            : Boolean := False;  -- Write protect.
+      Reserved2    : Bits_2  := 0;
+      CM           : Bits_2  := CM_WT;  -- Cache mode.
+      Reserved3    : Bits_6  := 0;
+      S            : Bits_2  := S_USER; -- Supervisor mode.
+      E            : Boolean := False;  -- Enable.
+      Address_Mask : Bits_8  := 0;      -- Address mask.
+      Address_Base : Bits_8  := 0;      -- Address base.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -282,11 +282,11 @@ pragma Style_Checks (Off);
    -- 26.2.1 Watchdog Control Register (WCR)
 
    type WCR_Type is record
-      EN       : Boolean; -- Watchdog enable bit.
-      HALTED   : Boolean; -- Halted mode bit.
-      DOZE     : Boolean; -- Doze mode bit.
-      WAIT     : Boolean; -- Wait mode bit.
-      Reserved : Bits_12;
+      EN       : Boolean := True; -- Watchdog enable bit.
+      HALTED   : Boolean := True; -- Halted mode bit.
+      DOZE     : Boolean := True; -- Doze mode bit.
+      WAIT     : Boolean := True; -- Wait mode bit.
+      Reserved : Bits_12 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
