@@ -41,8 +41,8 @@ _start:
                 // VBR setting -- see MCF5200 PRM Section 5,
                 // "Supervisor (privileged) instructions"
                 //
-                .extern vector_table
-                move.l  #vector_table,%d0
+                .extern vectors_table
+                move.l  #vectors_table,%d0
                 movec.l %d0,%vbr
 
                 //

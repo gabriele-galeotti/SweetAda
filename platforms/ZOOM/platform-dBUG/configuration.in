@@ -28,7 +28,7 @@ CPU_MODEL := MCF5373
 ################################################################################
 
 GCC_SWITCHES_PLATFORM     := -mcpu=5373
-LD_SWITCHES_PLATFORM      := --no-warn-rwx-segments
+LD_SWITCHES_PLATFORM      := --undefined=vectors_table --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
 POSTBUILD_ROMFILE         := Y

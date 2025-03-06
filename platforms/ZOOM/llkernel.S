@@ -22,9 +22,9 @@
                 .global vectors_table
 vectors_table:
 
-reset_sp:       .long   0
+initialsp:      .long   0
                 .extern _start
-reset_pc:       .long   _start
+initialpc:      .long   _start
                 .space  (64-2)*4
                 // Table 14-15. Interrupt Source Assignment For INTC0
                 .space  (64)*4                          // INTC0 vectors 0..63 (+64)
@@ -42,9 +42,7 @@ reset_pc:       .long   _start
 pit0_handler:
                 //pea     PIT0_IRQID
                 jmp     irq_entry
-                // __FIX__ original instructions
-                // movem.l %d0-%d1/%a0-%a1,%sp@-
-                // movem.l %sp@+,%d0-%d1/%a0-%a1
+
 irq_entry:
                 // stack frame handling - init
                 lea     -16(%sp),%sp                    // 4 regs x 4 bytes/reg = 16 bytes
