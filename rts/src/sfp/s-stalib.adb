@@ -1,12 +1,12 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                         GNAT RUN-TIME COMPONENTS                         --
+--                         GNAT COMPILER COMPONENTS                         --
 --                                                                          --
---                                 G N A T                                  --
+--              S Y S T E M . S T A N D A R D _ L I B R A R Y               --
 --                                                                          --
---                                 S p e c                                  --
+--                                 B o d y                                  --
 --                                                                          --
---                     Copyright (C) 1992-2022, AdaCore                     --
+--          Copyright (C) 1995-2024, Free Software Foundation, Inc.         --
 --                                                                          --
 -- GNAT is free software;  you can  redistribute it  and/or modify it under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -28,33 +28,49 @@
 -- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
 ------------------------------------------------------------------------------
+-- SweetAda SFP cutted-down version                                         --
+------------------------------------------------------------------------------
 
---  This is the parent package for a library of useful units provided with GNAT
+package body System.Standard_Library is
 
---  Note: this unit is used during bootstrap, see ADA_GENERATED_FILES in
---  gcc-interface/Make-lang.in for details on the constraints.
+   Runtime_Finalized : Boolean := False;
+   --  Set to True when adafinal is called. Used to ensure that subsequent
+   --  calls to adafinal after the first have no effect.
 
-package GNAT is
-   pragma Pure;
+   --------------------------
+   -- Abort_Undefer_Direct --
+   --------------------------
 
-   --  The following type denotes the range of buckets for various hashed
-   --  data structures in the GNAT unit hierarchy.
+   procedure Abort_Undefer_Direct is
+   begin
+      null;
+   end Abort_Undefer_Direct;
 
-   type Bucket_Range_Type is mod 2 ** 32;
+   --------------
+   -- Adafinal --
+   --------------
 
-   --  The following exception is raised whenever an attempt is made to mutate
-   --  the state of a data structure that is being iterated on.
+   procedure Adafinal is
+   begin
+      if not Runtime_Finalized then
+         Runtime_Finalized := True;
+      end if;
+   end Adafinal;
 
-   Iterated : exception;
+   -----------------
+   -- Break_Start --
+   -----------------
 
-   --  The following exception is raised when an iterator is exhausted and
-   --  further attempts are made to advance it.
+   procedure Break_Start;
+   pragma Export (C, Break_Start, "__gnat_break_start");
+   --  This is a dummy procedure that is called at the start of execution.
+   --  Its sole purpose is to provide a well defined point for the placement
+   --  of a main program breakpoint. This is not used anymore but kept for
+   --  bootstrapping issues (still referenced by old gnatbind generated files).
 
-   Iterator_Exhausted : exception;
+   procedure Break_Start is
+   begin
+      null;
+   end Break_Start;
 
-   --  The following exception is raised whenever an attempt is made to mutate
-   --  the state of a data structure that has not been created yet.
-
-   Not_Created : exception;
-
-end GNAT;
+end System.Standard_Library;

@@ -192,4 +192,54 @@ package System.Standard_Library is
    pragma Export (C, Tasking_Error_Def,    "tasking_error");
    pragma Export (C, Abort_Signal_Def,     "_abort_signal");
 
+   Local_Partition_ID : Natural := 0;
+   --  This variable contains the local Partition_ID that will be used when
+   --  building exception occurrences. In distributed mode, it will be
+   --  set by each partition to the correct value during the elaboration.
+
+   type Exception_Trace_Kind is
+     (RM_Convention,
+      --  No particular trace is requested, only unhandled exceptions
+      --  in the environment task (following the RM) will be printed.
+      --  This is the default behavior.
+
+      Every_Raise,
+      --  Denotes the initial raise event for any exception occurrence, either
+      --  explicit or due to a specific language rule, within the context of a
+      --  task or not.
+
+      Unhandled_Raise,
+      --  Denotes the raise events corresponding to exceptions for which there
+      --  is no user defined handler. This includes unhandled exceptions in
+      --  task bodies.
+
+      Unhandled_Raise_In_Main
+      --  Same as Unhandled_Raise, except exceptions in task bodies are not
+      --  included. Same as RM_Convention, except (1) the message is printed as
+      --  soon as the environment task completes due to an unhandled exception
+      --  (before awaiting the termination of dependent tasks, and before
+      --  library-level finalization), and (2) a symbolic traceback is given
+      --  if possible. This is the default behavior if the binder switch -E is
+      --  used.
+     );
+   --  Provide a way to denote different kinds of automatic traces related
+   --  to exceptions that can be requested.
+
+   Exception_Trace : Exception_Trace_Kind := RM_Convention;
+   pragma Atomic (Exception_Trace);
+   --  By default, follow the RM convention
+
+   -----------------
+   -- Subprograms --
+   -----------------
+
+   procedure Abort_Undefer_Direct;
+   pragma Inline (Abort_Undefer_Direct);
+   --  A little procedure that just calls Abort_Undefer.all, for use in
+   --  clean up procedures, which only permit a simple subprogram name.
+
+   procedure Adafinal;
+   --  Performs the Ada Runtime finalization the first time it is invoked.
+   --  All subsequent calls are ignored.
+
 end System.Standard_Library;
