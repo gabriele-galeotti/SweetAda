@@ -4,7 +4,6 @@ TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_AVR)
 # override core MMIO
 CPU_INCLUDE_DIRECTORIES := $(CPU_DIRECTORY)/mmio
 
-GPR_CORE_CPU := cpu.ads         \
+GPR_CORE_CPU += cpu.ads         \
                 avr.adb avr.ads
-export GPR_CORE_CPU
 
