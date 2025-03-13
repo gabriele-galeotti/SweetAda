@@ -8,6 +8,8 @@
 // Please consult the LICENSE.txt file located in the top-level directory.
 //
 
+#define __ASSEMBLER__ 1
+
 //
 // Environment variables:
 // LOADADDRESS is the starting address of the binary executable
