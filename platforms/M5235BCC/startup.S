@@ -52,12 +52,6 @@ _start:
                 clr.l   CCM_TEST
 
                 //
-                // Setup VBR.
-                //
-                //move.l  #vector_table,%d0                       // MCF5200 PRM Section 5, "Supervisor (privileged) instructions"
-                //movec.l %d0,%vbr
-
-                //
                 // Setup stack pointer.
                 //
                 lea.l   kernel_stack,%sp
@@ -84,10 +78,6 @@ _start:
 dead:           jmp     .
 
                 .size   _start,.-_start
-
-////////////////////////////////////////////////////////////////////////////////
-
-                .sect   .data
 
 ////////////////////////////////////////////////////////////////////////////////
 
