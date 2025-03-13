@@ -308,6 +308,103 @@ pragma Style_Checks (Off);
    -- Chapter 30 UART Modules
    ----------------------------------------------------------------------------
 
+   -- 30.3.1 UART Mode Registers 1 (UMR1n)
+
+   B_C_5 : constant := 2#00#; -- 5 bits
+   B_C_6 : constant := 2#01#; -- 6 bits
+   B_C_7 : constant := 2#10#; -- 7 bits
+   B_C_8 : constant := 2#11#; -- 8 bits
+
+   -- With parity
+   PT_EVEN    : constant := 0; -- Even parity
+   PT_ODD     : constant := 1; -- Odd parity
+   -- Force parity
+   PT_LOW     : constant := 0; -- Low parity
+   PT_HIGH    : constant := 1; -- High parity
+   -- Multidrop mode
+   PT_DATA    : constant := 0; -- Low parity
+   PT_ADDRESS : constant := 1; -- High parity
+
+   PM_WITHPARITY    : constant := 2#00#; -- With parity
+   PM_FORCEPARITY   : constant := 2#01#; -- Force parity
+   PM_NOPARITY      : constant := 2#10#;
+   PM_MULTIDROPMODE : constant := 2#11#; -- Multidrop mode
+
+   ERR_CHARACTER : constant := 0; -- Character mode.
+   ERR_BLOCK     : constant := 1; -- Block mode.
+
+   RXIRQ_FFULL_RXRDY : constant := 0; -- RXRDY is the source generating interrupt or DMA requests.
+   RXIRQ_FFULL_FFULL : constant := 1; -- FFULL is the source generating interrupt or DMA requests.
+
+   type UMR1_Type is record
+      B_C         : Bits_2  := B_C_5;             -- Bits per character.
+      PT          : Bits_1  := PT_EVEN;           -- Parity type.
+      PM          : Bits_2  := PM_WITHPARITY;     -- Parity mode.
+      ERR         : Bits_1  := ERR_CHARACTER;     -- Error mode.
+      RXIRQ_FFULL : Bits_1  := RXIRQ_FFULL_RXRDY; -- Receiver interrupt select.
+      RXRTS       : Boolean := False;             -- Receiver request-to-send.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UMR1_Type use record
+      B_C         at 0 range 0 .. 1;
+      PT          at 0 range 2 .. 2;
+      PM          at 0 range 3 .. 4;
+      ERR         at 0 range 5 .. 5;
+      RXIRQ_FFULL at 0 range 6 .. 6;
+      RXRTS       at 0 range 7 .. 7;
+   end record;
+
+   -- 30.3.2 UART Mode Register 2 (UMR2n)
+
+   -- Stop-bit length control (5 bits)
+   SB_5_17DIV16 : constant := 2#0000#; -- 1.063
+   SB_5_18DIV16 : constant := 2#0001#; -- 1.125
+   SB_5_19DIV16 : constant := 2#0010#; -- 1.188
+   SB_5_20DIV16 : constant := 2#0011#; -- 1.250
+   SB_5_21DIV16 : constant := 2#0100#; -- 1.313
+   SB_5_22DIV16 : constant := 2#0101#; -- 1.375
+   SB_5_23DIV16 : constant := 2#0110#; -- 1.438
+   SB_5_1DOT5   : constant := 2#0111#; -- 1.500
+   -- Stop-bit length control (6-8 bits)
+   SB_9DIV16    : constant := 2#0000#; -- 0.563
+   SB_10DIV16   : constant := 2#0001#; -- 0.625
+   SB_11DIV16   : constant := 2#0010#; -- 0.688
+   SB_12DIV16   : constant := 2#0011#; -- 0.750
+   SB_13DIV16   : constant := 2#0100#; -- 0.813
+   SB_14DIV16   : constant := 2#0101#; -- 0.875
+   SB_15DIV16   : constant := 2#0110#; -- 0.938
+   SB_1         : constant := 2#0111#; -- 1.000
+   -- Stop-bit length control
+   SB_25DIV16   : constant := 2#1000#; -- 1.563
+   SB_26DIV16   : constant := 2#1001#; -- 1.625
+   SB_27DIV16   : constant := 2#1010#; -- 1.688
+   SB_28DIV16   : constant := 2#1011#; -- 1.750
+   SB_29DIV16   : constant := 2#1100#; -- 1.813
+   SB_30DIV16   : constant := 2#1101#; -- 1.875
+   SB_31DIV16   : constant := 2#1110#; -- 1.938
+   SB_2         : constant := 2#1111#; -- 2.000
+
+   CM_NORMAL   : constant := 2#00#; -- Normal
+   CM_AUTECHO  : constant := 2#01#; -- Automatic echo
+   CM_LOCALLB  : constant := 2#10#; -- Local loopback
+   CM_REMOTELB : constant := 2#11#; -- Remote loopback
+
+   type UMR2_Type is record
+      SB    : Bits_4  := SB_9DIV16; -- Stop-bit length control.
+      TXCTS : Boolean := False;     -- Transmitter clear-to-send.
+      TXRTS : Boolean := False;     -- Transmitter ready-to-send.
+      CM    : Bits_2  := CM_NORMAL; -- Channel mode.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for UMR2_Type use record
+      SB    at 0 range 0 .. 3;
+      TXCTS at 0 range 4 .. 4;
+      TXRTS at 0 range 5 .. 5;
+      CM    at 0 range 6 .. 7;
+   end record;
+
    -- 30.3.3 UART Status Registers (USRn)
 
    type USR_Type is record
