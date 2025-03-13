@@ -21,8 +21,8 @@
                 .extern _start
 #define INITIALPC _start
 
-                .global vectors
-vectors:
+                .global vectors_table
+vectors_table:
 
 initialsp:      .long   INITIALSP               // 000 0x0000 -
 initialpc:      .long   INITIALPC               // 001 0x0004 -
