@@ -169,14 +169,17 @@ endif
 # variable list handling
 #
 # Usage:
+# $(call list-create,<variable_name>,item)
 # $(call list-insert,<variable_name>,item)
 # $(call list-append,<variable_name>,item)
 # $(call list-delete,<variable_name>,item)
 #
+# list-create: create a list (with initialization items).
 # list-insert: head-insert an item to a list.
 # list-append: tail-append an item to a list.
 # list-delete: delete an item from a list.
 #
+list-create = $(eval $$1 := $$2)
 list-insert = $(eval $$1 := $$2 $$($$1))
 list-append = $(eval $$1 := $$($$1) $$2)
 list-delete = $(eval $$1 := $$(filter-out $$2,$$($$1)))
