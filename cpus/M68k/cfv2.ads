@@ -32,6 +32,11 @@ package CFv2
 
    use System;
 
+   -- MOVEC register codes
+   VBR    : constant := 16#0801#;
+   RAMBAR : constant := 16#0C05#;
+   MBAR   : constant := 16#0C0F#;
+
    subtype SR_Type is M68k.SR_Type;
 
    ----------------------------------------------------------------------------
