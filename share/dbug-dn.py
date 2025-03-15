@@ -11,7 +11,7 @@
 
 #
 # Arguments:
-# -p <serialport_device> serialport device
+# -d <serialport_device> serialport device
 # -b <baud_rate>         serialport device baud rate
 # -e <elftool>           ELFtool executable
 # -f <kernel_filename>   ELF executable filename
@@ -92,15 +92,15 @@ while argv_idx < argc:
     if   sys.argv[argv_idx] == '-b':
         argv_idx += 1
         BAUD_RATE = sys.argv[argv_idx]
+    elif sys.argv[argv_idx] == '-d':
+        argv_idx += 1
+        SERIALPORT_DEVICE = sys.argv[argv_idx]
     elif sys.argv[argv_idx] == '-e':
         argv_idx += 1
         ELFTOOL = sys.argv[argv_idx]
     elif sys.argv[argv_idx] == '-f':
         argv_idx += 1
         SWEETADA_ELF = sys.argv[argv_idx]
-    elif sys.argv[argv_idx] == '-p':
-        argv_idx += 1
-        SERIALPORT_DEVICE = sys.argv[argv_idx]
     elif sys.argv[argv_idx] == '-s':
         argv_idx += 1
         START_SYMBOL = sys.argv[argv_idx]
