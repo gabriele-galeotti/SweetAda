@@ -14,8 +14,10 @@ package Configure
    CPU_MODEL   : constant String := "@CPU_MODEL@";
 
    -- basic configuration parameters
-   FREF_FREQUENCY : constant := 25 * MHz1;
-   FSYS_FREQUENCY : constant := 150 * MHz1;
+   FREF_FREQUENCY  : constant := 25 * MHz1;
+   FSYS_FREQUENCY  : constant := 150 * MHz1;
+   FSYS2_FREQUENCY : constant := FSYS_FREQUENCY / 2;
+   TICK_FREQUENCY  : constant := 1 * kHz1;
 
    -- MII
    MII_ADDRESS : constant := 1;

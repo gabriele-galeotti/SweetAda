@@ -15,6 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
+with Bits;
+
 package Exceptions
    is
 
@@ -25,6 +28,18 @@ package Exceptions
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use Interfaces;
+   use Bits;
+
+   type Vectors_Table_Type is array (Natural range <>) of Unsigned_32
+      with Pack => True;
+
+   Vectors_Table : aliased Vectors_Table_Type (0 .. 191)
+      with Size          => 192 * Unsigned_32'Object_Size,
+           Volatile      => True,
+           Import        => True,
+           External_Name => "vectors_table";
 
    procedure Exception_Process
       with Export        => True,

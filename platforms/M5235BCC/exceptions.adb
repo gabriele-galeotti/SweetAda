@@ -15,9 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
 with Abort_Library;
-with Bits;
 with CPU;
 with MCF523x;
 with BSP;
@@ -34,8 +32,6 @@ package body Exceptions
    --                                                                        --
    --========================================================================--
 
-   use Interfaces;
-   use Bits;
    use MCF523x;
 
    --========================================================================--
@@ -74,11 +70,12 @@ package body Exceptions
    ----------------------------------------------------------------------------
    procedure Init
       is
-      Vectors_Table : aliased Asm_Entry_Point
-         with Import        => True,
-              External_Name => "vectors_table";
    begin
       CPU.VBR_Set (Vectors_Table'Address);
+      IMRL0 (MASKALL0) := True;
+      IMRL0 (MASKALL0) := False;
+      IMRL1 (MASKALL1) := True;
+      IMRL1 (MASKALL1) := False;
    end Init;
 
 end Exceptions;

@@ -17,6 +17,7 @@
 
 with System;
 with System.Storage_Elements;
+with Ada.Unchecked_Conversion;
 with Definitions;
 with Configure;
 with Bits;
@@ -25,6 +26,8 @@ with Secondary_Stack;
 with CPU;
 with MCF523x;
 with M5235BCC;
+with Devicedata;
+with Exceptions;
 with Console;
 
 package body BSP
@@ -46,6 +49,7 @@ package body BSP
    use MCF523x;
    use M5235BCC;
 
+   procedure Timer_Init;
    procedure FlashROM_Detect;
    procedure MII_Detect;
 
@@ -56,6 +60,25 @@ package body BSP
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- Timer_Init
+   ----------------------------------------------------------------------------
+   procedure Timer_Init
+      is
+   begin
+      PIT0.PCSR := (
+         EN     => True,
+         RLD    => True,
+         PIE    => True,
+         OVW    => True,
+         PRE    => PRE_DIV8k,
+         others => <>
+         );
+      PIT0.PMR.PM := Unsigned_16 (
+         Configure.FSYS2_FREQUENCY / (8_192 * Configure.TICK_FREQUENCY)
+         );
+   end Timer_Init;
 
    ----------------------------------------------------------------------------
    -- FlashROM_Detect
@@ -79,7 +102,9 @@ package body BSP
       DeviceCode   := MMIO.Read_U16 (FlashROM_Address + 16#01# * Address_Scale);
       Console.Print (Prefix => "Manufacturer: ", Value => Manufacturer, NL => True);
       Console.Print (Prefix => "Device Code:  ", Value => DeviceCode, NL => True);
-      if Manufacturer = 16#0020# and then DeviceCode = 16#2249# then
+      if Manufacturer = Devicedata.STM29W160EB_Manufacturer and then
+         DeviceCode   = Devicedata.STM29W160EB_DeviceCode
+      then
          Console.Print ("STM29W160EB Flash ROM", NL => True);
       end if;
       -- Read/Reset
@@ -91,14 +116,13 @@ package body BSP
    ----------------------------------------------------------------------------
    procedure MII_Detect
       is
-      MII_FREQUENCY : constant := 2_500 * kHz1; -- MII speed must be 2.5 MHz
-      KS8721BLSL_ID : constant := 16#0022_1619#; -- Micrel KS8721BL/SL
+      MII_FREQUENCY : constant := CLK_2M5; -- MII speed must be 2.5 MHz
       MII_PHYID1    : constant := 2;
       MII_PHYID2    : constant := 3;
       DATA          : Unsigned_16;
       MII_ID        : Unsigned_32;
    begin
-      MSCR := (MII_SPEED => Bits_6 (Configure.FSYS_FREQUENCY / (2 * MII_FREQUENCY)), others => <>);
+      MSCR := (MII_SPEED => Bits_6 (Configure.FSYS2_FREQUENCY / MII_FREQUENCY), others => <>);
       EIMR.MII := False;
       MMFR := (RA => MII_PHYID1, PA => Configure.MII_ADDRESS, OP => OP_READ, others => <>);
       loop exit when EIR.MII; end loop;
@@ -109,7 +133,7 @@ package body BSP
       EIR.MII := True;
       MII_ID := Make_Word (DATA, Unsigned_16 (MMFR.DATA));
       Console.Print (Prefix => "MII id: ", Value => MII_ID, NL => True);
-      if MII_ID = KS8721BLSL_ID then
+      if MII_ID = Devicedata.KS8721BLSL_ID then
          Console.Print ("Micrel KS8721BL/SL", NL => True);
       end if;
    end MII_Detect;
@@ -154,9 +178,9 @@ package body BSP
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("M5235BCC", NL => True);
+      pragma Warnings (Off, "volatile actual passed by copy");
       Console.Print (Prefix => "PIN:    ", Value => Unsigned_32 (CIR.PIN), NL => True);
       Console.Print (Prefix => "PRN:    ", Value => Unsigned_32 (CIR.PRN), NL => True);
-      pragma Warnings (Off, "volatile actual passed by copy");
       Console.Print (Prefix => "IPSBAR: ", Value => To_U32 (IPSBAR) and 16#FFFF_FFFE#, NL => True);
       Console.Print (Prefix => "SYNCR:  ", Value => To_U32 (SYNCR), NL => True);
       Console.Print (Prefix => "SYNSR:  ", Value => To_U32 (SYNSR), NL => True);
@@ -164,6 +188,21 @@ package body BSP
       -------------------------------------------------------------------------
       FlashROM_Detect;
       MII_Detect;
+      -------------------------------------------------------------------------
+      Exceptions.Init;
+      -- PIT INTC0 36 ---------------------------------------------------------
+      declare
+         VH_PIT0 : aliased Asm_Entry_Point
+            with Import        => True,
+                 External_Name => "VH_PIT0";
+         function To_U32 is new Ada.Unchecked_Conversion (Address, Unsigned_32);
+      begin
+         IMRH0 (PIT0_PIF) := False;
+         ICR0 (IRQ_Index (PIT0_PIF, False)) := (IP => 7, IL => 6, others => <>);
+         Exceptions.Vectors_Table (IRQ_Index (PIT0_PIF, True)) := To_U32 (VH_PIT0'Address);
+         Timer_Init;
+      end;
+      CPU.Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;
 
