@@ -57,6 +57,21 @@ _start:
                 lea.l   kernel_stack,%sp
 
                 //
+                // Static data relocation.
+                //
+                .extern _etext
+                .extern _sdata
+                .extern _edata
+                move.l  #_etext,%a0
+                move.l  #_sdata,%a1
+                move.l  #_edata,%a2
+1:              cmp.l   %a1,%a2
+                beq.s   2f
+                move.b  %a0@+,%a1@+
+                bra.s   1b
+2:
+
+                //
                 // Initialize .bss section.
                 //
                 .extern _sbss
