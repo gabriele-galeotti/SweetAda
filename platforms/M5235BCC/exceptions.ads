@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
-with Bits;
 
 package Exceptions
    is
@@ -30,7 +29,6 @@ package Exceptions
    --========================================================================--
 
    use Interfaces;
-   use Bits;
 
    type Vectors_Table_Type is array (Natural range <>) of Unsigned_32
       with Pack => True;
