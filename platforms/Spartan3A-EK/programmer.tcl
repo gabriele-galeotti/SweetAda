@@ -181,8 +181,8 @@ if {$PSOC_COMMDEVICE eq ""} {
 # 3.1 Configure FPGA over Slave Serial
 #
 set fd [open $PSOC_COMMDEVICE "r+"]
-fconfigure $fd \
-    -blocking 0 \
+chan configure $fd \
+    -blocking false \
     -buffering none \
     -eofchar {} \
     -mode 230400,n,8,1 \

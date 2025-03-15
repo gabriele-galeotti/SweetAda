@@ -44,8 +44,8 @@ set serialport_device [lindex $argv 1]
 set baud_rate [lindex $argv 2]
 
 set serialport_fd [open $serialport_device "r+"]
-fconfigure $serialport_fd \
-    -blocking 0 \
+chan configure $serialport_fd \
+    -blocking false \
     -buffering none \
     -eofchar {} \
     -mode $baud_rate,n,8,1 \
@@ -63,7 +63,7 @@ switch $baud_rate {
 # read kernel file and write to the serial port
 set kernel_fd [open $kernel_srecfile r]
 fconfigure $kernel_fd -buffering line
-fconfigure stdout -buffering none
+chan configure stdout -buffering none
 puts -nonewline stdout "sending "
 while {[gets $kernel_fd data] >= 0} {
     puts -nonewline $serialport_fd "$data\x0D\x0A"
@@ -80,7 +80,7 @@ while {[gets $kernel_fd data] >= 0} {
 }
 puts -nonewline $serialport_fd "\x0D\x0A"
 puts stdout ""
-fconfigure stdout -buffering line
+chan configure stdout -buffering line
 close $kernel_fd
 
 close $serialport_fd

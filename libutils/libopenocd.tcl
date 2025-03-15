@@ -93,12 +93,12 @@ proc openocd_rpc_tx {command} {
 proc openocd_rpc_init {{server 127.0.0.1} {port 6666}} {
     set s [socket $server $port]
     openocd_rpc_set_socket $s
-    fconfigure $s \
+    chan configure $s \
         -blocking false \
         -buffering none \
         -encoding binary \
         -eofchar {}
-    fconfigure stdout \
+    chan configure stdout \
         -buffering none
 }
 

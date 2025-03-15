@@ -109,8 +109,8 @@ if {[catch {exec >@stdout 2>@stderr arp -s $DREAMCAST_IP_ADDRESS $BBA_MAC_ADDRES
 
 # create UDP socket
 set s [udp_open]
-fconfigure $s -remote [list $DREAMCAST_IP_ADDRESS $DREAMCAST_UDP_PORT]
-fconfigure $s -buffering none -encoding binary -eofchar {}
+chan configure $s -remote [list $DREAMCAST_IP_ADDRESS $DREAMCAST_UDP_PORT]
+chan configure $s -buffering none -encoding binary -eofchar {}
 
 # open the binary file
 set fd_input [open $KERNEL_ROMFILE r]
@@ -133,7 +133,7 @@ if {[string compare -length 4 $recv_data $CMD_LOADBIN]} {
 }
 
 # send the binary file in chunks with size 1kB
-fconfigure stdout -buffering none
+chan configure stdout -buffering none
 set chunk_length 1024
 set sequence 1
 puts -nonewline "sending "
@@ -153,7 +153,7 @@ while {true} {
     msleep 30
 }
 puts ""
-fconfigure stdout -buffering line
+chan configure stdout -buffering line
 
 # close the binary file
 close $fd_input

@@ -71,7 +71,7 @@ proc NetServerAccept {s address port} {
     puts "Accept $s from $address port $port."
     set NetServerRecord(address,$s) [list $address $port]
     # ensure that each "puts" by the server results in a network transmission
-    fconfigure $s -buffering line
+    chan configure $s -buffering line
     # set up a callback for when the client sends data
     fileevent $s readable [list NetServerExec $s]
 }
