@@ -31,9 +31,6 @@ package SBC5206
 
    use Interfaces;
 
-   VBR  : constant := 16#0801#;
-   MBAR : constant := 16#0C0F#;
-
    procedure TX
       (Data : in Unsigned_8);
    procedure RX
