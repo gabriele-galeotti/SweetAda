@@ -28,19 +28,31 @@ package body MCF523x
    --========================================================================--
 
    function IRQ_Index
-      (IRQ : INTC0_Source_Type)
+      (IRQ       : INTC0_Source_Type;
+       VTHandler : Boolean)
       return Natural
       is
+      Index : Natural;
    begin
-      return 63 - IRQ'Enum_Rep;
+      Index := 63 - IRQ'Enum_Rep;
+      if VTHandler then
+         Index := @ + 64;
+      end if;
+      return Index;
    end IRQ_Index;
 
    function IRQ_Index
-      (IRQ : INTC1_Source_Type)
+      (IRQ       : INTC1_Source_Type;
+       VTHandler : Boolean)
       return Natural
       is
+      Index : Natural;
    begin
-      return 63 - IRQ'Enum_Rep;
+      Index := 63 - IRQ'Enum_Rep;
+      if VTHandler then
+         Index := @ + 64;
+      end if;
+      return Index;
    end IRQ_Index;
 
 end MCF523x;

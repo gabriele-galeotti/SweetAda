@@ -539,12 +539,14 @@ pragma Style_Checks (Off);
            Convention => Ada;
 
    function IRQ_Index
-      (IRQ : INTC0_Source_Type)
+      (IRQ       : INTC0_Source_Type;
+       VTHandler : Boolean)
       return Natural
       with Inline => True;
 
    function IRQ_Index
-      (IRQ : INTC1_Source_Type)
+      (IRQ       : INTC1_Source_Type;
+       VTHandler : Boolean)
       return Natural
       with Inline => True;
 
