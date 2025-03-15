@@ -45,6 +45,7 @@ proc read_response {fd} {
             foreach c [split $input ""] {
                 switch $c {
                     "\b" {
+                        # spinning indicator
                         set c [string range $data_buffer end-1 0]
                         set data_buffer [string range $data_buffer 0 end-1]
                         puts -nonewline $c
@@ -127,7 +128,7 @@ if {$ELFTOOL ne ""} {
 set serialport_fd [open $SERIALPORT_DEVICE "r+"]
 # 8N1
 chan configure $serialport_fd \
-    -blocking 0 \
+    -blocking false \
     -buffering none \
     -eofchar {} \
     -handshake xonxoff \
