@@ -22,10 +22,6 @@
 _start:
 
                 move.w  #0x2700,%sr                     // supervisor mode, disable interrupts
-                // VBR & MBAR programming
-                // ColdFire Family PRM, 8-13, "MOVEC"
-                move.l  #0,%d0                          // VBR programming
-                movec.l %d0,#VBR                        // CFPRM 1.5.3
 
                 // QEMU cannot handle $C0F operations (MCF5206 MBAR)
 #if 0
