@@ -50,7 +50,7 @@ package body MCF523x
    begin
       Index := 63 - IRQ'Enum_Rep;
       if VTHandler then
-         Index := @ + 64;
+         Index := @ + 128;
       end if;
       return Index;
    end IRQ_Index;

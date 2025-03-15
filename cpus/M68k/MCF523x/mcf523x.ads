@@ -391,7 +391,6 @@ pragma Style_Checks (Off);
            Import               => True,
            Convention           => Ada;
 
-
    type IMR0_Type is array (INTC0_Source_Type range <>) of Boolean
       with Pack => True;
 
