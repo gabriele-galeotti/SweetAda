@@ -1,7 +1,6 @@
 
 TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_OpenRISC)
 
-GPR_CORE_CPU := cpu.ads                   \
+GPR_CORE_CPU += cpu.ads                   \
                 openrisc.adb openrisc.ads
-export GPR_CORE_CPU
 
