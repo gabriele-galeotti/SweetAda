@@ -92,23 +92,30 @@ $gev_buffer = [System.Text.StringBuilder]::new($gev_buffer_size)
 function GetEnvVar
 {
   param([string]$varname)
-  if (-not (Test-Path env:$varname))
+  if (-not (Test-Path Env:$varname))
   {
     return [string]::Empty
   }
   else
   {
-    $nchars = [Win32.Win32GetEnvironmentVariable]::GetEnvironmentVariable(
-                $varname,
-                $gev_buffer,
-                [uint32]$gev_buffer_size
-                )
-    if ($nchars -gt $gev_buffer_size)
+    if ([System.Environment]::OSVersion.Platform -eq "Win32NT")
     {
-      Write-Stderr "$($scriptname): *** Error: GetEnvVar: buffer size < $($nchars)."
-      ExitWithCode 1
+      $nchars = [Win32.Win32GetEnvironmentVariable]::GetEnvironmentVariable(
+                  $varname,
+                  $gev_buffer,
+                  [uint32]$gev_buffer_size
+                  )
+      if ($nchars -gt $gev_buffer_size)
+      {
+        Write-Stderr "$($scriptname): *** Error: GetEnvVar: buffer size < $($nchars)."
+        ExitWithCode 1
+      }
+      return [string]$gev_buffer
     }
-    return [string]$gev_buffer
+    else
+    {
+      return [string][Environment]::GetEnvironmentVariable(${varname})
+    }
   }
 }
 

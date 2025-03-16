@@ -32,6 +32,7 @@
 #  N - constant/Integer: value, else -1
 #  P - constant/Integer: value if > 0, else -1
 #  S - String: value, else ""
+#  U - String (unquoted): quoted value, else ""
 #
 
 ################################################################################
@@ -105,24 +106,49 @@ $gev_buffer = [System.Text.StringBuilder]::new($gev_buffer_size)
 function GetEnvVar
 {
   param([string]$varname)
-  if (-not (Test-Path env:$varname))
+  if (-not (Test-Path Env:$varname))
   {
     return [string]::Empty
   }
   else
   {
-    $nchars = [Win32.Win32GetEnvironmentVariable]::GetEnvironmentVariable(
-                $varname,
-                $gev_buffer,
-                [uint32]$gev_buffer_size
-                )
-    if ($nchars -gt $gev_buffer_size)
+    if ([System.Environment]::OSVersion.Platform -eq "Win32NT")
     {
-      Write-Stderr "$($scriptname): *** Error: GetEnvVar: buffer size < $($nchars)."
-      ExitWithCode 1
+      $nchars = [Win32.Win32GetEnvironmentVariable]::GetEnvironmentVariable(
+                  $varname,
+                  $gev_buffer,
+                  [uint32]$gev_buffer_size
+                  )
+      if ($nchars -gt $gev_buffer_size)
+      {
+        Write-Stderr "$($scriptname): *** Error: GetEnvVar: buffer size < $($nchars)."
+        ExitWithCode 1
+      }
+      return [string]$gev_buffer
     }
-    return [string]$gev_buffer
+    else
+    {
+      return [string][Environment]::GetEnvironmentVariable(${varname})
+    }
   }
+}
+
+################################################################################
+# ConvertHex()                                                                 #
+#                                                                              #
+################################################################################
+function ConvertHex
+{
+  param($inputvalue)
+  if ($inputvalue.StartsWith("0X") -or $inputvalue.StartsWith("0x"))
+  {
+    $outputvalue = "16#" + ($inputvalue -Replace "0X" -Replace "0x") + "#"
+  }
+  else
+  {
+    $outputvalue = $inputvalue
+  }
+  return $outputvalue
 }
 
 ################################################################################
@@ -166,7 +192,7 @@ foreach ($i in $items)
   }
   switch ($spec)
   {
-    { ($_ -eq "B") -or ($_ -eq "H") -or ($_ -eq "N") -or ($_ -eq "P") -or ($_ -eq "S") }
+    { ($_ -eq "B") -or ($_ -eq "H") -or ($_ -eq "N") -or ($_ -eq "P") -or ($_ -eq "S") -or ($_ -eq "U") }
       { }
     default
       {
@@ -267,11 +293,13 @@ foreach ($i in $items)
         { $_ -eq "HBoolean" }
           { if ($value -ne 0) { $value = "True" } else { $value = "False" } }
         { ($_ -eq "N") -or ($_ -eq "NInteger") }
-          { if ([string]::IsNullOrEmpty($value)) { $value = "-1" } }
+          { if ([string]::IsNullOrEmpty($value)) { $value = "-1" } else { $value = $(ConvertHex $value) } }
         { ($_ -eq "P") -or ($_ -eq "PInteger") }
-          { if ([int]$value -lt 1) { $value = "-1" } }
+          { if ([int]$value -lt 1) { $value = "-1" } else { $value = $(ConvertHex $value) } }
         { $_ -eq "SString" }
           { if ([string]::IsNullOrEmpty($value)) { $value = "`"`"" } }
+        { $_ -eq "UString" }
+          { if ([string]::IsNullOrEmpty($value)) { $value = "`"`"" } else { $value = "`"$value`"" } }
         default
           {
             Write-Stderr "$($scriptname): *** Error: inconsistent item specification."
@@ -289,7 +317,7 @@ foreach ($i in $items)
         { $value = "False" }
       { ($_ -eq "N") -or ($_ -eq "NInteger") -or ($_ -eq "P") -or ($_ -eq "PInteger") }
         { $value = "-1" }
-      { $_ -eq "SString" }
+      { ($_ -eq "SString") -or ($_ -eq "UString") }
         { $value = "`"`"" }
       default
       {

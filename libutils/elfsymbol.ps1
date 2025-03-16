@@ -89,7 +89,7 @@ $gev_buffer = [System.Text.StringBuilder]::new($gev_buffer_size)
 function GetEnvVar
 {
   param([string]$varname)
-  if (-not (Test-Path env:$varname))
+  if (-not (Test-Path Env:$varname))
   {
     return [string]::Empty
   }
