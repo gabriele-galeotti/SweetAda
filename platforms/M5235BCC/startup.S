@@ -56,6 +56,7 @@ _start:
                 //
                 lea.l   kernel_stack,%sp
 
+#if defined(DATA_RELOC)
                 //
                 // Static data relocation.
                 //
@@ -65,11 +66,11 @@ _start:
                 move.l  #_etext,%a0
                 move.l  #_sdata,%a1
                 move.l  #_edata,%a2
-1:              cmp.l   %a1,%a2
-                beq.s   2f
-                move.b  %a0@+,%a1@+
-                bra.s   1b
-2:
+                bra.s   2f
+1:              move.b  %a0@+,%a1@+
+2:              cmp.l   %a1,%a2
+                bne.s   1b
+#endif
 
                 //
                 // Initialize .bss section.
@@ -80,7 +81,7 @@ _start:
                 move.l  #_ebss,%a1
 1:              cmp.l   %a0,%a1
                 beq.s   2f
-                clr.b   (%a0)+
+                clr.b   %a0@+
                 bra.s   1b
 2:
 

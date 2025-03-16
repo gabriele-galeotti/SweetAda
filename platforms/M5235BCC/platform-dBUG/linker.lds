@@ -8,7 +8,7 @@ MEMORY
          * "User code may start at address 0x00020000"
          * We start at 1st MiB boundary due to vector table and VBR issues.
          * dBUG command sequence:
-         * dBUG> dl 100000
+         * dBUG> dn kernel.o
          * dBUG> go <entry_point>
          */
         SDRAM  : ORIGIN = 0x00100000, LENGTH = (16M - 1M)
@@ -21,13 +21,10 @@ SECTIONS
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
-        .vectors :
-        {
-                KEEP(*(.vectors))
-        } > SDRAM
         .text :
         {
                 _stext = .;
+                KEEP(*(.vectors))
                 *(.text)
                 *(.text.*)
                 *(.rodata)
