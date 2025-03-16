@@ -177,16 +177,14 @@ pragma Style_Checks (Off);
 
    -- 15.6.2. WDTCR – Watchdog Timer Control Register
 
-   type WDT_Prescaler_Type is new Bits_3;
-
-   WDT_16K   : constant WDT_Prescaler_Type := 2#000#;
-   WDT_32K   : constant WDT_Prescaler_Type := 2#001#;
-   WDT_64K   : constant WDT_Prescaler_Type := 2#010#;
-   WDT_128K  : constant WDT_Prescaler_Type := 2#011#;
-   WDT_256K  : constant WDT_Prescaler_Type := 2#100#;
-   WDT_512K  : constant WDT_Prescaler_Type := 2#101#;
-   WDT_1024K : constant WDT_Prescaler_Type := 2#110#;
-   WDT_2048K : constant WDT_Prescaler_Type := 2#111#;
+   WDT_16K   : constant := 2#000#;
+   WDT_32K   : constant := 2#001#;
+   WDT_64K   : constant := 2#010#;
+   WDT_128K  : constant := 2#011#;
+   WDT_256K  : constant := 2#100#;
+   WDT_512K  : constant := 2#101#;
+   WDT_1024K : constant := 2#110#;
+   WDT_2048K : constant := 2#111#;
 
    type WDTCR_Type is record
       WDP012   : Bits_3  := WDT_16K; -- Watchdog Timer Prescaler bit 0 .. 2
