@@ -33,6 +33,7 @@
 #  N - constant/Integer: value, else -1
 #  P - constant/Integer: value if > 0, else -1
 #  S - String: value, else ""
+#  U - String (unquoted): quoted value, else ""
 #
 
 # shellcheck disable=SC2086,SC2181,SC2268
@@ -78,6 +79,19 @@ return 0
 }
 
 ################################################################################
+# convert_hex()                                                                #
+#                                                                              #
+################################################################################
+convert_hex()
+{
+case $1 in
+  0X*|0x*) printf "16#%X#\n" "$1" ;;
+  *)       printf "%s\n" "$1" ;;
+esac
+return 0
+}
+
+################################################################################
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
@@ -113,7 +127,7 @@ EOF
     exit 1
   fi
   case ${i_spec} in
-    B|H|N|P|S)
+    B|H|N|P|S|U)
       ;;
     *)
       log_print_error "${SCRIPT_FILENAME}: *** Error: no item specifier."
@@ -181,27 +195,27 @@ EOF
     case ${i_spec}${i_type} in
       BBoolean)   value="True" ;;
       HBoolean)   if [ $((value)) -ne 0 ] ; then value="True" ; else value="False" ; fi ;;
-      N|NInteger) if [ "x${value}" = "x" ] ; then value="-1" ; fi ;;
-      P|PInteger) if [ $((value)) -lt 1 ] ; then value="-1" ; fi ;;
+      N|NInteger) if [ "x${value}" = "x" ] ; then value="-1" ; else value=$(convert_hex ${value}) ; fi ;;
+      P|PInteger) if [ $((value)) -lt 1 ] ; then value="-1" ; else value=$(convert_hex ${value}) ; fi ;;
       SString)    if [ "x${value}" = "x" ] ; then value="\"\"" ; fi ;;
+      UString)    if [ "x${value}" = "x" ] ; then value="\"\"" ; else value="\"${value}\"" ; fi ;;
       *)
         log_print_error "${SCRIPT_FILENAME}: *** Error: inconsistent item specification."
         exit 1
         ;;
     esac
-    gccdefines=${gccdefines}$(printf "%s${format_string}\n" "$indent" "${i_tmacro}" "${i_type}" "${value}")${NL}
   else
     case ${i_spec}${i_type} in
       BBoolean|HBoolean)     value="False" ;;
       N|NInteger|P|PInteger) value="-1" ;;
-      SString)               value="\"\"" ;;
+      SString|UString)       value="\"\"" ;;
       *)
         log_print_error "${SCRIPT_FILENAME}: *** Error: inconsistent item specification."
         exit 1
         ;;
     esac
-    gccdefines=${gccdefines}$(printf "%s${format_string}\n" "$indent" "${i_tmacro}" "${i_type}" "${value}")${NL}
   fi
+  gccdefines=${gccdefines}$(printf "%s${format_string}\n" "$indent" "${i_tmacro}" "${i_type}" "${value}")${NL}
 done
 
 gccdefines=${gccdefines}${NL}
