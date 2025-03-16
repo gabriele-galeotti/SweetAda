@@ -7,3 +7,24 @@ CPU_INCLUDE_DIRECTORIES := $(CPU_DIRECTORY)/mmio
 GPR_CORE_CPU += cpu.ads         \
                 avr.adb avr.ads
 
+GCCDEFINES_CPU += __AVR_2_BYTE_PC__:AVR_2_BYTE_PC:Boolean:H         \
+                  __AVR_ARCH__:AVR_ARCH::N                          \
+                  __AVR_ATmega128A__:AVR_ATmega128A:Boolean:H       \
+                  __AVR_ATmega328P__:AVR_ATmega328P:Boolean:H       \
+                  __AVR_DEVICE_NAME__:AVR_DEVICE_NAME:String:U      \
+                  __AVR_ENHANCED__:AVR_ENHANCED:Boolean:H           \
+                  __AVR_ERRATA_SKIP__:AVR_ERRATA_SKIP:Boolean:H     \
+                  __AVR_HAVE_16BIT_SP__:AVR_HAVE_16BIT_SP:Boolean:H \
+                  __AVR_HAVE_ADIW__:AVR_HAVE_ADIW:Boolean:H         \
+                  __AVR_HAVE_ELPMX__:AVR_HAVE_ELPMX:Boolean:H       \
+                  __AVR_HAVE_ELPM__:AVR_HAVE_ELPM:Boolean:H         \
+                  __AVR_HAVE_JMP_CALL__:AVR_HAVE_JMP_CALL:Boolean:H \
+                  __AVR_HAVE_LPMX__:AVR_HAVE_LPMX:Boolean:H         \
+                  __AVR_HAVE_MOVW__:AVR_HAVE_MOVW:Boolean:H         \
+                  __AVR_HAVE_MUL__:AVR_HAVE_MUL:Boolean:H           \
+                  __AVR_HAVE_RAMPZ__:AVR_HAVE_RAMPZ:Boolean:H       \
+                  __AVR_HAVE_SPH__:AVR_HAVE_SPH:Boolean:H           \
+                  __AVR_MEGA__:AVR_MEGA:Boolean:H                   \
+                  __AVR_RODATA_IN_RAM__:AVR_RODATA_IN_RAM:Boolean:H \
+                  __AVR_SFR_OFFSET__:AVR_SFR_OFFSET::N
+
