@@ -43,7 +43,7 @@ set kernel_srecfile [lindex $argv 0]
 set serialport_device [lindex $argv 1]
 set baud_rate [lindex $argv 2]
 
-set serialport_fd [open $serialport_device "r+"]
+set serialport_fd [open $serialport_device {RDWR NONBLOCK}]
 chan configure $serialport_fd \
     -blocking false \
     -buffering none \

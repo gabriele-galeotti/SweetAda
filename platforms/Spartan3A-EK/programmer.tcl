@@ -180,7 +180,7 @@ if {$PSOC_COMMDEVICE eq ""} {
 #
 # 3.1 Configure FPGA over Slave Serial
 #
-set fd [open $PSOC_COMMDEVICE "r+"]
+set fd [open $PSOC_COMMDEVICE {RDWR NONBLOCK}]
 chan configure $fd \
     -blocking false \
     -buffering none \

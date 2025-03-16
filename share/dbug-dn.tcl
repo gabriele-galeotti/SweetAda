@@ -125,8 +125,7 @@ if {$ELFTOOL ne ""} {
     set START_ADDRESS $START_SYMBOL
 }
 
-set serialport_fd [open $SERIALPORT_DEVICE "r+"]
-# 8N1
+set serialport_fd [open $SERIALPORT_DEVICE {RDWR NONBLOCK}]
 chan configure $serialport_fd \
     -blocking false \
     -buffering none \
