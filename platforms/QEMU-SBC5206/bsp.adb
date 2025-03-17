@@ -15,11 +15,12 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Parameters;
-with System.Secondary_Stack;
 with Definitions;
 with Bits;
 with Exceptions;
+with Secondary_Stack;
+with CPU;
+with MCF5206;
 with SBC5206;
 with Console;
 
@@ -38,14 +39,6 @@ package body BSP
    use Definitions;
    use Bits;
 
-   BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
-
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      with Export        => True,
-           Convention    => C,
-           External_Name => "__gnat_get_secondary_stack";
-
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -53,16 +46,6 @@ package body BSP
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- Get_Sec_Stack
-   ----------------------------------------------------------------------------
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      is
-   begin
-      return BSP_SS_Stack;
-   end Get_Sec_Stack;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -91,7 +74,7 @@ package body BSP
       is
    begin
       -------------------------------------------------------------------------
-      System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
+      Secondary_Stack.Init;
       -------------------------------------------------------------------------
       Exceptions.Init;
       SBC5206.Init;
@@ -103,6 +86,30 @@ package body BSP
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("Arnewsh SBC5206 (QEMU emulator)", NL => True);
+      -------------------------------------------------------------------------
+      MCF5206.TIMER1.TRR := 16#1000#;
+      MCF5206.TIMER1.TMR := (
+         RST => True,
+         CLK => MCF5206.CLK_MSTCLK,
+         FRR => MCF5206.FRR_RESTART,
+         ORI => True,
+         OM  => MCF5206.OM_TOGGLE,
+         CE  => MCF5206.CE_ANYEDGE,
+         PS  => 16
+         );
+      MCF5206.TIMER1.TER := (
+         CAP    => False,
+         REF    => True,
+         others => <>
+         );
+      MCF5206.IMR.TIMER1 := False;
+      MCF5206.ICR9 := (
+         IP     => 2,
+         IL     => 2,
+         AVEC   => True,
+         others => <>
+         );
+      CPU.Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;
 

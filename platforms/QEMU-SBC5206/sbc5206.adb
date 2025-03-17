@@ -19,7 +19,7 @@ with System;
 with Configure;
 with LLutils;
 with MMIO;
-with CFPeripherals;
+with MCF5206;
 
 package body SBC5206
    is
@@ -33,7 +33,7 @@ package body SBC5206
    --========================================================================--
 
    use System;
-   use CFPeripherals;
+   use MCF5206;
 
    -- Local subprograms
 

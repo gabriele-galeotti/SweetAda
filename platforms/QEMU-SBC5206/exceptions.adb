@@ -15,6 +15,12 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Abort_Library;
+with CPU;
+with MCF5206;
+with BSP;
+with Console;
+
 package body Exceptions
    is
 
@@ -27,8 +33,40 @@ package body Exceptions
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- Exception_Process
+   ----------------------------------------------------------------------------
+   procedure Exception_Process
+      is
+   begin
+      Console.Print ("*** EXCEPTION", NL => True);
+      Abort_Library.System_Abort;
+   end Exception_Process;
+
+   ----------------------------------------------------------------------------
+   -- Irq_Process
+   ----------------------------------------------------------------------------
+   procedure Irq_Process
+      is
+   begin
+      BSP.Tick_Count := @ + 1;
+      MCF5206.TIMER1.TER := (
+         CAP    => True,
+         REF    => True,
+         others => <>
+         );
+      MCF5206.IPR.TIMER1 := True;
+      if BSP.Tick_Count mod 1_000 = 0 then
+         Console.Print ("OK", NL => True);
+      end if;
+   end Irq_Process;
+
+   ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
-   procedure Init is null;
+   procedure Init
+      is
+   begin
+      CPU.VBR_Set (Vectors_Table'Address);
+   end Init;
 
 end Exceptions;
