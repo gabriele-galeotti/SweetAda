@@ -116,16 +116,16 @@ package body BSP
       SCI (3).SPMR := (
          SSE    => False,
          CTSE   => False,
-         MSS    => SPMR_MSS_Master,
+         MSS    => MSS_Master,
          MFF    => False,
-         CKPOL  => SPMR_CKPOL_NORMAL,
-         CKPH   => SPMR_CKPH_NORMAL,
+         CKPOL  => CKPOL_NORMAL,
+         CKPH   => CKPH_NORMAL,
          others => <>
          );
       SCI (3).SCMR := (
          SMIF   => False,
-         SINV   => SCMR_SINV_NO,
-         SDIR   => SCMR_SDIR_LSB,
+         SINV   => SINV_NO,
+         SDIR   => SDIR_LSB,
          CHR1   => CHR_8.CHR1,
          others => <>
          );
@@ -139,13 +139,13 @@ package body BSP
          others  => <>
          );
       SCI (3).SMR.NORMAL := (
-         CKS  => SMR_CKS_PCLKA,
+         CKS  => CKS_PCLKA,
          MP   => False,
-         STOP => SMR_STOP_1,
-         PM   => SMR_PM_EVEN,
+         STOP => STOP_1,
+         PM   => PM_EVEN,
          PE   => False,
          CHR  => CHR_8.CHR,
-         CM   => SMR_CM_ASYNC
+         CM   => CM_ASYNC
          );
       -- Table 34.10 Examples of BRR settings for different bit rates in asynchronous mode (2)
       SCI (3).BRR := 97; -- 9600 bps @ 30 MHz (n = 0)
