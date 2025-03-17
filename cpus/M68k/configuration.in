@@ -41,10 +41,16 @@ GCCDEFINES_CPU += __mc68000__:MC68000:Boolean:H               \
                   __mc68040__:MC68040:Boolean:H               \
                   __mcf5200__:MCF5200:Boolean:H               \
                   __mcf528x__:MCF528x:Boolean:H               \
+                  __mcf_cpu_5206:MCF_CPU_5206:Boolean:H       \
                   __mcf_cpu_5235:MCF_CPU_5235:Boolean:H       \
+                  __mcf_cpu_5373:MCF_CPU_5373:Boolean:H       \
+                  __mcf_family_5206:MCF_FAMILY_5206:Boolean:H \
                   __mcf_family_5235:MCF_FAMILY_5235:Boolean:H \
+                  __mcf_family_5373:MCF_FAMILY_5373:Boolean:H \
                   __mcfhwdiv__:MCFHWDIV:Boolean:H             \
+                  __mcfisaa__:MCFISAA:Boolean:H               \
                   __mcfisaaplus__:MCFISAAPLUS:Boolean:H       \
                   __mcfv2__:MCFV2:Boolean:H                   \
+                  __mcfv3__:MCFV3:Boolean:H                   \
                   __mcoldfire__:MCOLDFIRE:Boolean:H
 
