@@ -41,31 +41,32 @@ all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 .PHONY: configure
 configure:
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
-	@$(GCCDEFINES)                        \
-          GCC.Defines gcc-defines.ads         \
-          __VERSION__:VERSION:String:S        \
-          __ELF__:ELF:Boolean:H               \
-          __ATOMIC_RELAXED:ATOMIC_RELAXED::N  \
-          __ATOMIC_CONSUME:ATOMIC_CONSUME::N  \
-          __ATOMIC_ACQUIRE:ATOMIC_ACQUIRE::N  \
-          __ATOMIC_RELEASE:ATOMIC_RELEASE::N  \
-          __ATOMIC_ACQ_REL:ATOMIC_ACQ_REL::N  \
-          __ATOMIC_SEQ_CST:ATOMIC_SEQ_CST::N  \
-          __aarch64__:AARCH64:Boolean:H       \
-          __arm__:ARM:Boolean:H               \
-          __AVR__:AVR:Boolean:H               \
-          __m68k__:M68k:Boolean:H             \
-          __mips__:MIPS:Boolean:H             \
-          __microblaze__:MICROBLAZE:Boolean:H \
-          __nios2__:NIOS2:Boolean:H           \
-          __or1k__:OR1k:Boolean:H             \
-          __PPC__:PPC:Boolean:H               \
-          __riscv:RISCV:Boolean:H             \
-          __s390__:S390:Boolean:H             \
-          __sh__:SH:Boolean:H                 \
-          __sparc__:SPARC:Boolean:H           \
-          __i386__:x86:Boolean:H              \
-          __x86_64__:x86_64:Boolean:H         \
+	@$(GCCDEFINES)                                 \
+          GCC.Defines gcc-defines.ads                  \
+          __VERSION__:VERSION:String:S                 \
+          __ELF__:ELF:Boolean:H                        \
+          __ATOMIC_RELAXED:ATOMIC_RELAXED::N           \
+          __ATOMIC_CONSUME:ATOMIC_CONSUME::N           \
+          __ATOMIC_ACQUIRE:ATOMIC_ACQUIRE::N           \
+          __ATOMIC_RELEASE:ATOMIC_RELEASE::N           \
+          __ATOMIC_ACQ_REL:ATOMIC_ACQ_REL::N           \
+          __ATOMIC_SEQ_CST:ATOMIC_SEQ_CST::N           \
+          __REGISTER_PREFIX__:REGISTER_PREFIX:String:U \
+          __aarch64__:AARCH64:Boolean:H                \
+          __arm__:ARM:Boolean:H                        \
+          __AVR__:AVR:Boolean:H                        \
+          __m68k__:M68k:Boolean:H                      \
+          __mips__:MIPS:Boolean:H                      \
+          __microblaze__:MICROBLAZE:Boolean:H          \
+          __nios2__:NIOS2:Boolean:H                    \
+          __or1k__:OR1k:Boolean:H                      \
+          __PPC__:PPC:Boolean:H                        \
+          __riscv:RISCV:Boolean:H                      \
+          __s390__:S390:Boolean:H                      \
+          __sh__:SH:Boolean:H                          \
+          __sparc__:SPARC:Boolean:H                    \
+          __i386__:x86:Boolean:H                       \
+          __x86_64__:x86_64:Boolean:H                  \
           $(GCCDEFINES_CPU)
 
 .PHONY: clean
