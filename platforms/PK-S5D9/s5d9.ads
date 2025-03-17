@@ -1839,24 +1839,24 @@ pragma Warnings (On);
 
    -- 25.2.4 AGT Control Register (AGTCR)
 
-   AGTCR_TSTART_STOP  : constant := 0;
-   AGTCR_TSTART_START : constant := 1;
+   TSTART_STOP  : constant := 0;
+   TSTART_START : constant := 1;
 
-   AGTCR_TCSTF_STOPPED  : constant := 0;
-   AGTCR_TCSTF_PROGRESS : constant := 1;
+   TCSTF_STOPPED  : constant := 0;
+   TCSTF_PROGRESS : constant := 1;
 
-   AGTCR_TSTOP_WINV : constant := 0;
-   AGTCR_TSTOP_STOP : constant := 1;
+   TSTOP_WINV : constant := 0;
+   TSTOP_STOP : constant := 1;
 
    type AGTCR_Type is record
-      TSTART   : Bits_1;       -- AGT Count Start
-      TCSTF    : Bits_1;       -- AGT Count Status Flag
-      TSTOP    : Bits_1;       -- AGT Count Forced Stop
+      TSTART   : Bits_1  := TSTART_STOP;   -- AGT Count Start
+      TCSTF    : Bits_1  := TCSTF_STOPPED; -- AGT Count Status Flag
+      TSTOP    : Bits_1  := TSTOP_WINV;    -- AGT Count Forced Stop
       Reserved : Bits_1  := 0;
-      TEDGF    : Boolean;      -- Active Edge Judgment Flag
-      TUNDF    : Boolean;      -- Underflow Flag
-      TCMAF    : Boolean;      -- Compare Match A Flag
-      TCMBF    : Boolean;      -- Compare Match B Flag
+      TEDGF    : Boolean := False;         -- Active Edge Judgment Flag
+      TUNDF    : Boolean := False;         -- Underflow Flag
+      TCMAF    : Boolean := False;         -- Compare Match A Flag
+      TCMBF    : Boolean := False;         -- Compare Match B Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1873,26 +1873,26 @@ pragma Warnings (On);
 
    -- 25.2.5 AGT Mode Register 1 (AGTMR1)
 
-   AGTMR1_TMOD_TIMER  : constant := 2#000#;
-   AGTMR1_TMOD_PULSE  : constant := 2#001#;
-   AGTMR1_TMOD_EVENT  : constant := 2#010#;
-   AGTMR1_TMOD_PWMEAS : constant := 2#011#;
-   AGTMR1_TMOD_PPMEAS : constant := 2#100#;
+   TMOD_TIMER  : constant := 2#000#;
+   TMOD_PULSE  : constant := 2#001#;
+   TMOD_EVENT  : constant := 2#010#;
+   TMOD_PWMEAS : constant := 2#011#;
+   TMOD_PPMEAS : constant := 2#100#;
 
-   AGTMR1_TEDGPL_SINGLE : constant := 0;
-   AGTMR1_TEDGPL_BOTH   : constant := 1;
+   TEDGPL_SINGLE : constant := 0;
+   TEDGPL_BOTH   : constant := 1;
 
-   AGTMR1_TCK_PCLKB   : constant := 2#000#;
-   AGTMR1_TCK_PCLKB8  : constant := 2#001#;
-   AGTMR1_TCK_PCLKB2  : constant := 2#011#;
-   AGTMR1_TCK_AGTLCLK : constant := 2#100#;
-   AGTMR1_TCK_AGT0    : constant := 2#101#;
-   AGTMR1_TCK_AGTSCLK : constant := 2#110#;
+   TCK_PCLKB   : constant := 2#000#;
+   TCK_PCLKB8  : constant := 2#001#;
+   TCK_PCLKB2  : constant := 2#011#;
+   TCK_AGTLCLK : constant := 2#100#;
+   TCK_AGT0    : constant := 2#101#;
+   TCK_AGTSCLK : constant := 2#110#;
 
    type AGTMR1_Type is record
-      TMOD     : Bits_3;      -- Operating Mode
-      TEDGPL   : Bits_1;      -- Edge Polarity
-      TCK      : Bits_3;      -- Count Source
+      TMOD     : Bits_3 := TMOD_TIMER;    -- Operating Mode
+      TEDGPL   : Bits_1 := TEDGPL_SINGLE; -- Edge Polarity
+      TCK      : Bits_3 := TCK_PCLKB;     -- Count Source
       Reserved : Bits_1 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1906,19 +1906,19 @@ pragma Warnings (On);
 
    -- 25.2.6 AGT Mode Register 2 (AGTMR2)
 
-   AGTMR2_FDIV1   : constant := 2#000#;
-   AGTMR2_FDIV2   : constant := 2#001#;
-   AGTMR2_FDIV4   : constant := 2#010#;
-   AGTMR2_FDIV8   : constant := 2#011#;
-   AGTMR2_FDIV16  : constant := 2#100#;
-   AGTMR2_FDIV32  : constant := 2#101#;
-   AGTMR2_FDIV64  : constant := 2#110#;
-   AGTMR2_FDIV128 : constant := 2#111#;
+   CKS_DIV1   : constant := 2#000#;
+   CKS_DIV2   : constant := 2#001#;
+   CKS_DIV4   : constant := 2#010#;
+   CKS_DIV8   : constant := 2#011#;
+   CKS_DIV16  : constant := 2#100#;
+   CKS_DIV32  : constant := 2#101#;
+   CKS_DIV64  : constant := 2#110#;
+   CKS_DIV128 : constant := 2#111#;
 
    type AGTMR2_Type is record
-      CKS      : Bits_3;       -- AGTSCLK/AGTLCLK Count Source Clock Frequency Division Ratio
+      CKS      : Bits_3  := CKS_DIV1; -- AGTSCLK/AGTLCLK Count Source Clock Frequency Division Ratio
       Reserved : Bits_4  := 0;
-      LPM      : Boolean;      -- Low Power Mode
+      LPM      : Boolean := False;    -- Low Power Mode
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1928,16 +1928,76 @@ pragma Warnings (On);
       LPM      at 0 range 7 .. 7;
    end record;
 
+   -- 25.2.7 AGT I/O Control Register (AGTIOC)
+
+   -- Pulse output mode
+   TEDGSEL_PULSE_HIGH : constant := 0; -- Output is started at high (initialization level: high)
+   TEDGSEL_PULSE_LOW  : constant := 1; -- Output is started at low (initialization level: low).
+   -- Event counter mode
+   TEDGSEL_ECNT_RISING  : constant := 0; -- Count on rising edge
+   TEDGSEL_ECNT_FALLING : constant := 1; -- Count on falling edge.
+   -- Pulse width measurement mode
+   TEDGSEL_PWMEAS_LOW  : constant := 0; -- Low-level width is measured
+   TEDGSEL_PWMEAS_HIGH : constant := 1; -- High-level width is measured.
+   -- Pulse period measurement mode
+   TEDGSEL_PPMEAS_RISING  : constant := 0; -- Measure from one rising edge to the next rising edge
+   TEDGSEL_PPMEAS_FALLING : constant := 1; -- Measure from one falling edge to the next falling edge.
+
+   TIPF_NOFILTER   : constant := 2#00#; -- No filter
+   TIPF_PCLKB      : constant := 2#01#; -- Filter sampled at PCLKB
+   TIPF_PCLKBDIV8  : constant := 2#10#; -- Filter sampled at PCLKB/8
+   TIPF_PCLKBDIV32 : constant := 2#11#; -- Filter sampled at PCLKB/32.
+
+   TIOGT_ALWAYS : constant := 2#00#; -- Event is always counted
+   TIOGT_AGTEEn : constant := 2#01#; -- Event is counted during polarity period specified for AGTEEn.
+
+   type AGTIOC_Type is record
+      TEDGSEL   : Bits_1  := TEDGSEL_PULSE_HIGH; -- I/O Polarity Switch
+      Reserved1 : Bits_1  := 0;
+      TOE       : Boolean := False;              -- AGTOn Output Enable
+      Reserved2 : Bits_1  := 0;
+      TIPF      : Bits_2  := TIPF_NOFILTER;      -- Input Filter
+      TIOGT     : Bits_2  := TIOGT_ALWAYS;       -- Count Control
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for AGTIOC_Type use record
+      TEDGSEL   at 0 range 0 .. 0;
+      Reserved1 at 0 range 1 .. 1;
+      TOE       at 0 range 2 .. 2;
+      Reserved2 at 0 range 3 .. 3;
+      TIPF      at 0 range 4 .. 5;
+      TIOGT     at 0 range 6 .. 7;
+   end record;
+
+   -- 25.2.8 AGT Event Pin Select Register (AGTISR)
+
+   EEPS_LOW  : constant := 0; -- An event is counted during the low-level period
+   EEPS_HIGH : constant := 1; -- An event is counted during the high-level period.
+
+   type AGTISR_Type is record
+      Reserved1 : Bits_2  := 0;
+      EEPS      : Boolean := False; -- AGTEEn Polarity Selection
+      Reserved2 : Bits_5  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for AGTISR_Type use record
+      Reserved1 at 0 range 0 .. 1;
+      EEPS      at 0 range 2 .. 2;
+      Reserved2 at 0 range 3 .. 7;
+   end record;
+
    -- 25.2.9 AGT Compare Match Function Select Register (AGTCMSR)
 
    type AGTCMSR_Type is record
-      TCMEA     : Boolean;      -- Compare Match A Register Enable
-      TOEA      : Boolean;      -- AGTOAn Output Enable
-      TOPOLA    : Boolean;      -- AGTOAn Polarity Select
+      TCMEA     : Boolean := False; -- Compare Match A Register Enable
+      TOEA      : Boolean := False; -- AGTOAn Output Enable
+      TOPOLA    : Boolean := False; -- AGTOAn Polarity Select
       Reserved1 : Bits_1  := 0;
-      TCMEB     : Boolean;      -- Compare Match B Register Enable
-      TOEB      : Boolean;      -- AGTOBn Output Enable
-      TOPOLB    : Boolean;      -- AGTOBn Polarity Select
+      TCMEB     : Boolean := False; -- Compare Match B Register Enable
+      TOEB      : Boolean := False; -- AGTOBn Output Enable
+      TOPOLB    : Boolean := False; -- AGTOBn Polarity Select
       Reserved2 : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -1953,25 +2013,47 @@ pragma Warnings (On);
       Reserved2 at 0 range 7 .. 7;
    end record;
 
+   -- 25.2.10 AGT Pin Select Register (AGTIOSEL)
+
+   SEL_Pm         : constant := 2#00#; -- Select Pm*2/AGTIO as AGTIO
+   SEL_prohibited : constant := 2#01#; -- Setting prohibited
+   SEL_P402       : constant := 2#10#; -- Select P402/AGTIO as AGTIO
+   SEL_P403       : constant := 2#11#; -- Select P403/AGTIO as AGTIO.
+
+   type AGTIOSEL_Type is record
+      SEL       : Bits_2  := SEL_Pm; -- AGTIO Pin Select
+      Reserved1 : Bits_2  := 0;
+      TIES      : Boolean := False;  -- AGTIO Input Enable
+      Reserved2 : Bits_3  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for AGTIOSEL_Type use record
+      SEL       at 0 range 0 .. 1;
+      Reserved1 at 0 range 2 .. 3;
+      TIES      at 0 range 4 .. 4;
+      Reserved2 at 0 range 5 .. 7;
+   end record;
+
    -- AGT0 .. 1
 
    type AGT_Type is record
-      AGTC     : Unsigned_16;
-      AGTCMA   : Unsigned_16;
-      AGTCMB   : Unsigned_16;
-      Pad1     : Unsigned_16;
-      AGTCR    : AGTCR_Type;
-      AGTMR1   : AGTMR1_Type;
-      AGTMR2   : AGTMR2_Type;
-      Pad2     : Unsigned_8;
-      AGTIOC   : Unsigned_8;
-      AGTISR   : Unsigned_8;
-      AGTCMSR  : AGTCMSR_Type;
-      AGTIOSEL : Unsigned_8;
+      AGT      : Unsigned_16   with Volatile_Full_Access => True;
+      AGTCMA   : Unsigned_16   with Volatile_Full_Access => True;
+      AGTCMB   : Unsigned_16   with Volatile_Full_Access => True;
+      Pad1     : Unsigned_16   with Volatile_Full_Access => True;
+      AGTCR    : AGTCR_Type    with Volatile_Full_Access => True;
+      AGTMR1   : AGTMR1_Type   with Volatile_Full_Access => True;
+      AGTMR2   : AGTMR2_Type   with Volatile_Full_Access => True;
+      Pad2     : Unsigned_8    with Volatile_Full_Access => True;
+      AGTIOC   : AGTIOC_Type   with Volatile_Full_Access => True;
+      AGTISR   : AGTISR_Type   with Volatile_Full_Access => True;
+      AGTCMSR  : AGTCMSR_Type  with Volatile_Full_Access => True;
+      AGTIOSEL : AGTIOSEL_Type with Volatile_Full_Access => True;
    end record
       with Size => 16 * 8;
    for AGT_Type use record
-      AGTC     at 16#00# range 0 .. 15;
+      AGT      at 16#00# range 0 .. 15;
       AGTCMA   at 16#02# range 0 .. 15;
       AGTCMB   at 16#04# range 0 .. 15;
       Pad1     at 16#06# range 0 .. 15;
@@ -2081,19 +2163,19 @@ pragma Warnings (On);
    -- 34.2.9 Serial Mode Register (SMR) for Non-Smart Card Interface Mode (SCMR.SMIF = 0)
    -- 34.2.10 Serial Mode Register for Smart Card Interface Mode (SMR_SMCI) (SCMR.SMIF = 1)
 
-   SMR_CKS_PCLKA   : constant := 2#00#; -- PCLKA clock (n = 0)
-   SMR_CKS_PCLKA4  : constant := 2#01#; -- PCLKA/4 clock (n = 1)
-   SMR_CKS_PCLKA16 : constant := 2#10#; -- PCLKA/16 clock (n = 2)
-   SMR_CKS_PCLKA64 : constant := 2#11#; -- PCLKA/64 clock (n = 3)
+   CKS_PCLKA   : constant := 2#00#; -- PCLKA clock (n = 0)
+   CKS_PCLKA4  : constant := 2#01#; -- PCLKA/4 clock (n = 1)
+   CKS_PCLKA16 : constant := 2#10#; -- PCLKA/16 clock (n = 2)
+   CKS_PCLKA64 : constant := 2#11#; -- PCLKA/64 clock (n = 3)
 
-   SMR_STOP_1 : constant := 0; -- 1 stop bit
-   SMR_STOP_2 : constant := 1; -- 2 stop bit
+   STOP_1 : constant := 0; -- 1 stop bit
+   STOP_2 : constant := 1; -- 2 stop bit
 
-   SMR_PM_EVEN : constant := 0; -- even parity
-   SMR_PM_ODD  : constant := 1; -- odd parity
+   PM_EVEN : constant := 0; -- even parity
+   PM_ODD  : constant := 1; -- odd parity
 
-   SMR_CM_ASYNC : constant := 0; -- Asynchronous mode or simple IIC mode
-   SMR_CM_SYNC  : constant := 1; -- Clock synchronous mode or simple SPI mode
+   CM_ASYNC : constant := 0; -- Asynchronous mode or simple IIC mode
+   CM_SYNC  : constant := 1; -- Clock synchronous mode or simple SPI mode
 
    type SMR_NORMAL_Type is record
       CKS  : Bits_2;  -- Clock Select
@@ -2176,11 +2258,11 @@ pragma Warnings (On);
 
    -- 34.2.13 Serial Status Register (SSR) for Non-Smart Card Interface and Non-FIFO Mode (SCMR.SMIF = 0 and FCR.FM = 0)
 
-   SSR_MPBT_DATA : constant := 0;
-   SSR_MPBT_ID   : constant := 1;
+   MPBT_DATA : constant := 0;
+   MPBT_ID   : constant := 1;
 
-   SSR_MPB_DATA : constant := 0;
-   SSR_MPB_ID   : constant := 1;
+   MPB_DATA : constant := 0;
+   MPB_ID   : constant := 1;
 
    type SSR_NORMAL_Type is
    record
@@ -2269,11 +2351,11 @@ pragma Warnings (On);
 
    -- 34.2.16 Smart Card Mode Register (SCMR)
 
-   SCMR_SINV_NO  : constant := 0;
-   SCMR_SINV_YES : constant := 1;
+   SINV_NO  : constant := 0;
+   SINV_YES : constant := 1;
 
-   SCMR_SDIR_LSB : constant := 0;
-   SCMR_SDIR_MSB : constant := 1;
+   SDIR_LSB : constant := 0;
+   SDIR_MSB : constant := 1;
 
    type SCMR_Type is record
       SMIF      : Boolean;                -- Smart Card Interface Mode Select
@@ -2321,11 +2403,11 @@ pragma Warnings (On);
 
    -- 34.2.20 Noise Filter Setting Register (SNFR)
 
-   SNFR_NFCS_ASYNC_1 : constant := 2#000#; -- Use clock signal divided by 1 with noise filter
-   SNFR_NFCS_IIC_1   : constant := 2#001#; -- Use clock signal divided by 1 with noise filter
-   SNFR_NFCS_IIC_2   : constant := 2#010#; -- Use clock signal divided by 2 with noise filter
-   SNFR_NFCS_IIC_4   : constant := 2#011#; -- Use clock signal divided by 4 with noise filter
-   SNFR_NFCS_IIC_8   : constant := 2#100#; -- Use clock signal divided by 8 with noise filter.
+   NFCS_ASYNC_1 : constant := 2#000#; -- Use clock signal divided by 1 with noise filter
+   NFCS_IIC_1   : constant := 2#001#; -- Use clock signal divided by 1 with noise filter
+   NFCS_IIC_2   : constant := 2#010#; -- Use clock signal divided by 2 with noise filter
+   NFCS_IIC_4   : constant := 2#011#; -- Use clock signal divided by 4 with noise filter
+   NFCS_IIC_8   : constant := 2#100#; -- Use clock signal divided by 8 with noise filter.
 
    type SNFR_Type is record
       NFCS     : Bits_3;      -- Noise Filter Clock Select
@@ -2355,11 +2437,11 @@ pragma Warnings (On);
 
    -- 34.2.22 IIC Mode Register 2 (SIMR2)
 
-   SIMR2_IICINTM_ACKNACK : constant := 0;
-   SIMR2_IICINTM_RXTX    : constant := 1;
+   IICINTM_ACKNACK : constant := 0;
+   IICINTM_RXTX    : constant := 1;
 
-   SIMR2_IICACKT_ACK  : constant := 0;
-   SIMR2_IICACKT_NACK : constant := 1;
+   IICACKT_ACK  : constant := 0;
+   IICACKT_NACK : constant := 1;
 
    type SIMR2_Type is record
       IICINTM   : Bits_1;       -- IIC Interrupt Mode Select
@@ -2380,15 +2462,15 @@ pragma Warnings (On);
 
    -- 34.2.23 IIC Mode Register 3 (SIMR3)
 
-   SIMR3_IICSDAS_OUTSER : constant := 2#00#;
-   SIMR3_IICSDAS_GEN    : constant := 2#01#;
-   SIMR3_IICSDAS_SDALOW : constant := 2#10#;
-   SIMR3_IICSDAS_SDAHIZ : constant := 2#11#;
+   IICSDAS_OUTSER : constant := 2#00#;
+   IICSDAS_GEN    : constant := 2#01#;
+   IICSDAS_SDALOW : constant := 2#10#;
+   IICSDAS_SDAHIZ : constant := 2#11#;
 
-   SIMR3_IICSCLS_OUTSER : constant := 2#00#;
-   SIMR3_IICSCLS_GEN    : constant := 2#01#;
-   SIMR3_IICSCLS_SDALOW : constant := 2#10#;
-   SIMR3_IICSCLS_SDAHIZ : constant := 2#11#;
+   IICSCLS_OUTSER : constant := 2#00#;
+   IICSCLS_GEN    : constant := 2#01#;
+   IICSCLS_SDALOW : constant := 2#10#;
+   IICSCLS_SDAHIZ : constant := 2#11#;
 
    type SIMR3_Type is record
       IICSTAREQ  : Boolean; -- Start Condition Generation
@@ -2424,14 +2506,14 @@ pragma Warnings (On);
 
    -- 34.2.25 SPI Mode Register (SPMR)
 
-   SPMR_MSS_Master : constant := 0;
-   SPMR_MSS_Slave  : constant := 1;
+   MSS_Master : constant := 0;
+   MSS_Slave  : constant := 1;
 
-   SPMR_CKPOL_NORMAL : constant := 0;
-   SPMR_CKPOL_INVERT : constant := 1;
+   CKPOL_NORMAL : constant := 0;
+   CKPOL_INVERT : constant := 1;
 
-   SPMR_CKPH_NORMAL : constant := 0;
-   SPMR_CKPH_DELAY  : constant := 1;
+   CKPH_NORMAL : constant := 0;
+   CKPH_DELAY  : constant := 1;
 
    type SPMR_Type is record
       SSE       : Boolean;      -- SSn Pin Function Enable
@@ -2532,8 +2614,8 @@ pragma Warnings (On);
 
    -- 34.2.30 Data Compare Match Control Register (DCCR)
 
-   DCCR_IDSEL_Always  : constant := 0;
-   DCCR_IDSEL_IDFrame : constant := 1;
+   IDSEL_Always  : constant := 0;
+   IDSEL_IDFrame : constant := 1;
 
    type DCCR_Type is record
       DCMF      : Boolean;      -- Data Compare Match Flag
