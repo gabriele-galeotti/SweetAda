@@ -12,6 +12,18 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+                .macro SAVE_REGISTERS
+                lea     %sp@(-16),%sp           // space for 4 registers
+                movem.l %d0-%d1/%a0-%a1,%sp@
+                .endm
+
+                .macro RESTORE_REGISTERS
+                movem.l %sp@,%d0-%d1/%a0-%a1
+                lea     %sp@(16),%sp            // space for 4 registers
+                .endm
+
+////////////////////////////////////////////////////////////////////////////////
+
                 .sect   .vectors,"ax"
 
 //

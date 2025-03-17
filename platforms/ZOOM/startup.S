@@ -37,18 +37,25 @@ _start:
                 movec.l %d0,%cacr
 
                 //
-                // Setup VBR.
-                // VBR setting -- see MCF5200 PRM Section 5,
-                // "Supervisor (privileged) instructions"
-                //
-                .extern vectors_table
-                move.l  #vectors_table,%d0
-                movec.l %d0,%vbr
-
-                //
                 // Setup stack pointer.
                 //
                 lea.l   kernel_stack,%sp
+
+#if defined(DATA_RELOC)
+                //
+                // Static data relocation.
+                //
+                .extern _etext
+                .extern _sdata
+                .extern _edata
+                move.l  #_etext,%a0
+                move.l  #_sdata,%a1
+                move.l  #_edata,%a2
+                bra.s   2f
+1:              move.b  %a0@+,%a1@+
+2:              cmp.l   %a1,%a2
+                bne.s   1b
+#endif
 
                 //
                 // Initialize .bss section.

@@ -3,13 +3,11 @@ ENTRY(_start)
 
 MEMORY
 {
-/*
- * With dBUG, user code may start at 0x40020000 (as dBUG "help" command
- * output says), but we start at 0x40100000 (MiB-boundary for VBR alignment
- * reasons).
- */
-        /* vectorarea (RWX) : ORIGIN = 0x40100000, LENGTH = 0x00000400 */
-        /* code       (RWX) : ORIGIN = 0x40100400, LENGTH = 0x00003C00 */
+        /*
+         * With dBUG, user code may start at 0x40020000 (as dBUG "help" command
+         * output says), but we start at 0x40100000 (MiB-boundary for VBR alignment
+         * reasons).
+         */
         SDRAM  (RWX) : ORIGIN = 0x40100000, LENGTH = 0x00100000 /* 32M - 0x100000 */
         RAMBAR (RWX) : ORIGIN = 0x80000000, LENGTH = 32k
 }
@@ -19,38 +17,23 @@ SECTIONS
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
-        /* dummy initializations
-        .vectorarea: { } > vectorarea
-        .code:       { } > code
-        .sdram:      { } > SDRAM
-        */
-        /**********************************************************************
-         *                                                                    *
-         **********************************************************************/
-        /*
-        .vectors :
-        {
-                *(.vectors)
-                . = ALIGN(0x10);
-        } > SDRAM
-        */
-        /**********************************************************************
-         *                                                                    *
-         **********************************************************************/
         .text :
         {
-                *(.vectors)
+                _stext = .;
+                KEEP(*(.vectors))
                 *(.text)
                 *(.text.*)
                 *(.rodata)
                 *(.rodata.*)
                 . = ALIGN(0x10);
+                _etext = .;
         } > SDRAM
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
         .data :
         {
+                _sdata = .;
                 *(.data)
                 *(.data.*)
                 . = ALIGN(0x10);
@@ -58,6 +41,7 @@ SECTIONS
                 . = ALIGN(0x10);
                 __SDA_BASE = .;
                 . = ALIGN(0x10);
+                _edata = .;
         } > SDRAM
         /**********************************************************************
          *                                                                    *

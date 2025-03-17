@@ -1,7 +1,11 @@
 
+with Definitions;
+
 package Configure
    with Pure => True
    is
+
+   use Definitions;
 
    -- PLATFORM and CPU definitions
    PLATFORM    : constant String := "ZOOM";
@@ -10,13 +14,12 @@ package Configure
    CPU_MODEL   : constant String := "@CPU_MODEL@";
 
    -- basic configuration parameters
+   -- master clock = 240 MHz
    -- CLOCK_MULTIPLIER = 0x5A = 90 --> fsys = 16*(90/8) = 180 MHz, fsys/3 = 60 MHz
    -- CLOCK_MULTIPLIER = 0x78 = 120 --> fsys = 16*(120/8) = 240 MHz, fsys/3 = 80 MHz
-   PLATFORM_DBUG    : Integer := 1;
-   -- master clock = 240 MHz
-   CLOCK_MULTIPLIER : Integer := 16#78#;
-   SYSTEM_CLOCK     : Integer := 80;
-   FSYS3            : Integer := 80_000_000;
-   PHY_ADDRESS      : Integer := 2;
+   CLOCK_MULTIPLIER : constant := 16#78#;
+   FSYS_FREQUENCY   : constant := 240 * MHz1;
+   FSYS3_FREQUENCY  : constant := FSYS_FREQUENCY / 3;
+   PHY_ADDRESS      : constant := 2;
 
 end Configure;

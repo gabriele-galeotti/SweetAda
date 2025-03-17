@@ -1,12 +1,13 @@
 #!/usr/bin/env sh
 
-# create an S-record kernel file for dBUG download
+TFTP_DIRECTORY=/home/tftp
 
-${OBJCOPY}                                 \
-  -O srec                                  \
-  ${SWEETADA_PATH}/${KERNEL_OUTFILE}       \
-  ${SWEETADA_PATH}/${KERNEL_BASENAME}.srec
-chmod a-x ${SWEETADA_PATH}/${KERNEL_BASENAME}.srec
+${OBJCOPY}                           \
+  --strip-all                        \
+  -j .vectors -j .text -j .data      \
+  -O elf32-m68k                      \
+  ${SWEETADA_PATH}/${KERNEL_OUTFILE} \
+  ${TFTP_DIRECTORY}/kernel.o
 
 exit $?
 

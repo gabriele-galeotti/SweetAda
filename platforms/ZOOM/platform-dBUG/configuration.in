@@ -52,11 +52,13 @@ SESSION_END_COMMAND   :=
 
 # Tcl:
 # $(TCLSH) instead of $(PYTHON)
-# srecord-dbug.tcl instead of srecord-dbug.py
+# dbug-dn.tcl instead of dbug-dn.py
 
-RUN_COMMAND   := "$(PYTHON)"                                             \
-                   "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/srecord-dbug.py \
-                   "$(SWEETADA_PATH)"/$(KERNEL_BASENAME).srec            \
-                   /dev/ttyUSB0 19200
+RUN_COMMAND   := "$(PYTHON)"                               \
+                   $(SHARE_DIRECTORY)/dbug-dn.py           \
+                   -d /dev/ttyUSB0 -b 19200                \
+                   -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE) \
+                   -e $(ELFTOOL)                           \
+                   -s _start
 DEBUG_COMMAND := $(RUN_COMMAND)
 
