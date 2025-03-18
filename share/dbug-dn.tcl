@@ -118,7 +118,6 @@ if {$ELFTOOL ne ""} {
         set START_ADDRESS [format "0x%X" [expr $result]]
     } else {
         puts stderr "$SCRIPT_FILENAME: *** Error: system failure or ELFTOOL executable not found."
-        openocd_rpc_disconnect
         exit 1
     }
 } else {
