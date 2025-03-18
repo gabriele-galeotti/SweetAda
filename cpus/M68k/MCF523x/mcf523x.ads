@@ -308,9 +308,9 @@ pragma Style_Checks (Off);
    -- interrupt source number = 64 + SOURCE
    type INTC0_Source_Type is (
                                 -- SOURCE/MODULE/SOURCE DESCRIPTION
-      NOTUSED4,                 -- 63
-      NOTUSED3,                 -- 62
-      NOTUSED2,                 -- 61
+      NOTUSED4,                 -- 63 Not used
+      NOTUSED3,                 -- 62 Not used
+      NOTUSED2,                 -- 61 Not used
       FLEXCAN1_BOFF_INT,        -- 60 FLEXCAN1 Bus-Off Interrupt
       FLEXCAN1_ERR_INT,         -- 59 FLEXCAN1 Error Interrupt
       FLEXCAN1_BUF15I,          -- 58 FLEXCAN1 Message Buffer 15 Interrupt
@@ -355,7 +355,7 @@ pragma Style_Checks (Off);
       TMR0_INT,                 -- 19 TMR0     TMR0 interrupt
       QSPI_INT,                 -- 18 QSPI     QSPI interrupt
       I2C_IIF,                  -- 17 I2C      I2C interrupt
-      NOTUSED1,                 -- 16
+      NOTUSED1,                 -- 16 Not used
       UART2_INT,                -- 15 UART2    UART2 interrupt
       UART1_INT,                -- 14 UART1    UART1 interrupt
       UART0_INT,                -- 13 UART0    UART0 interrupt
@@ -371,7 +371,7 @@ pragma Style_Checks (Off);
       EPORT_EPF3,               -- 3  EPORT    Edge port flag 3
       EPORT_EPF2,               -- 2  EPORT    Edge port flag 2
       EPORT_EPF1,               -- 1  EPORT    Edge port flag 1
-      NOTIMPLEMENTED            -- 0
+      NOTIMPLEMENTED            -- 0  Not implemented
       );
 
    MASKALL0 : constant INTC0_Source_Type := NOTIMPLEMENTED;
@@ -411,10 +411,10 @@ pragma Style_Checks (Off);
    -- interrupt source number = 128 + SOURCE
    type INTC1_Source_Type is (
                                 -- SOURCE/MODULE/SOURCE DESCRIPTION
-      NOTUSED12,                -- 63
-      NOTUSED11,                -- 62
-      NOTUSED10,                -- 61
-      NOTUSED9,                 -- 60
+      NOTUSED12,                -- 63 Not used
+      NOTUSED11,                -- 62 Not used
+      NOTUSED10,                -- 61 Not used
+      NOTUSED9,                 -- 60 Not used
       ETPU_TGIF,                -- 59 ETPU ETPU global interrupt flag
       ETPU_TC31F,               -- 58 ETPU ETPU channel interrupt flag
       ETPU_TC30F,               -- 57 ETPU ETPU channel interrupt flag
@@ -448,7 +448,7 @@ pragma Style_Checks (Off);
       ETPU_TC2F,                -- 29 ETPU ETPU channel interrupt flag
       ETPU_TC1F,                -- 28 ETPU ETPU channel interrupt flag
       ETPU_TC0F,                -- 27 ETPU ETPU channel interrupt flag
-      NOTUSED8,                 -- 26
+      NOTUSED8,                 -- 26 Not used
       FLEXCAN0_BOFF_INT,        -- 25 FLEXCAN0 Bus-Off Interrupt
       FLEXCAN0_ERR_INT,         -- 24 FLEXCAN0 Error Interrupt
       FLEXCAN0_BUF15I,          -- 23 FLEXCAN0 Message Buffer 15 Interrupt
@@ -467,14 +467,14 @@ pragma Style_Checks (Off);
       FLEXCAN0_BUF2I,           -- 10 FLEXCAN0 Message Buffer 2 Interrupt
       FLEXCAN0_BUF1I,           -- 9  FLEXCAN0 Message Buffer 1 Interrupt
       FLEXCAN0_BUF0I,           -- 8  FLEXCAN0 Message Buffer 0 Interrupt
-      NOTUSED7,                 -- 7
-      NOTUSED6,                 -- 6
-      NOTUSED5,                 -- 5
-      NOTUSED4,                 -- 4
-      NOTUSED3,                 -- 3
-      NOTUSED2,                 -- 2
-      NOTUSED1,                 -- 1
-      NOTIMPLEMENTED            -- 0
+      NOTUSED7,                 -- 7  Not used
+      NOTUSED6,                 -- 6  Not used
+      NOTUSED5,                 -- 5  Not used
+      NOTUSED4,                 -- 4  Not used
+      NOTUSED3,                 -- 3  Not used
+      NOTUSED2,                 -- 2  Not used
+      NOTUSED1,                 -- 1  Not used
+      NOTIMPLEMENTED            -- 0  Not implemented
       );
 
    MASKALL1 : constant INTC1_Source_Type := NOTIMPLEMENTED;
