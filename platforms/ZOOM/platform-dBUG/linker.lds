@@ -5,8 +5,8 @@ MEMORY
 {
         /*
          * With dBUG, user code may start at 0x40020000 (as dBUG "help" command
-         * output says), but we start at 0x40100000 (MiB-boundary for VBR alignment
-         * reasons).
+         * output says), but we start at 0x40100000 (MiB-boundary for VBR
+         * alignment reasons).
          */
         SDRAM  (RWX) : ORIGIN = 0x40100000, LENGTH = 0x00100000 /* 32M - 0x100000 */
         RAMBAR (RWX) : ORIGIN = 0x80000000, LENGTH = 32k
