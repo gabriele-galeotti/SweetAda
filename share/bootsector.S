@@ -8,6 +8,8 @@
 // Please consult the LICENSE.txt file located in the top-level directory.
 //
 
+#define __ASSEMBLER__ 1
+
 //
 // bootsector CHS mapping = 1,0,1
 // bootsector loaded @ 0000:7C00
