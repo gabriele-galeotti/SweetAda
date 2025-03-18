@@ -932,7 +932,7 @@ pragma Style_Checks (Off);
 
    -- 13.2.1 Protect Register (PRCR)
 
-   PRCR_KEY_CODE : constant := 16#A5#;
+   PRKEY_PRCKEYCODE : constant := 16#A5#;
 
    type PRCR_Type is record
       PRC0      : Boolean    := False; -- Protect Bit 0

@@ -197,10 +197,10 @@ package body BSP
    begin
       -- unlock registers -----------------------------------------------------
       PRCR := (
-         PRC0   => True,          -- Protect Bit 0
-         PRC1   => True,          -- Protect Bit 1
-         PRC3   => True,          -- Protect Bit 3
-         PRKEY  => PRCR_KEY_CODE, -- PRC Key Code
+         PRC0   => True,             -- Protect Bit 0
+         PRC1   => True,             -- Protect Bit 1
+         PRC3   => True,             -- Protect Bit 3
+         PRKEY  => PRKEY_PRCKEYCODE, -- PRC Key Code
          others => <>
          );
       -- MCU clock: 120 MHz ---------------------------------------------------
