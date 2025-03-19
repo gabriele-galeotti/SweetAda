@@ -415,39 +415,39 @@ pragma Style_Checks (Off);
       NOTUSED11,                -- 62 Not used
       NOTUSED10,                -- 61 Not used
       NOTUSED9,                 -- 60 Not used
-      ETPU_TGIF,                -- 59 ETPU ETPU global interrupt flag
-      ETPU_TC31F,               -- 58 ETPU ETPU channel interrupt flag
-      ETPU_TC30F,               -- 57 ETPU ETPU channel interrupt flag
-      ETPU_TC29F,               -- 56 ETPU ETPU channel interrupt flag
-      ETPU_TC28F,               -- 55 ETPU ETPU channel interrupt flag
-      ETPU_TC27F,               -- 54 ETPU ETPU channel interrupt flag
-      ETPU_TC26F,               -- 53 ETPU ETPU channel interrupt flag
-      ETPU_TC25F,               -- 52 ETPU ETPU channel interrupt flag
-      ETPU_TC24F,               -- 51 ETPU ETPU channel interrupt flag
-      ETPU_TC23F,               -- 50 ETPU ETPU channel interrupt flag
-      ETPU_TC22F,               -- 49 ETPU ETPU channel interrupt flag
-      ETPU_TC21F,               -- 48 ETPU ETPU channel interrupt flag
-      ETPU_TC20F,               -- 47 ETPU ETPU channel interrupt flag
-      ETPU_TC19F,               -- 46 ETPU ETPU channel interrupt flag
-      ETPU_TC18F,               -- 45 ETPU ETPU channel interrupt flag
-      ETPU_TC17F,               -- 44 ETPU ETPU channel interrupt flag
-      ETPU_TC16F,               -- 43 ETPU ETPU channel interrupt flag
-      ETPU_TC15F,               -- 42 ETPU ETPU channel interrupt flag
-      ETPU_TC14F,               -- 41 ETPU ETPU channel interrupt flag
-      ETPU_TC13F,               -- 40 ETPU ETPU channel interrupt flag
-      ETPU_TC12F,               -- 39 ETPU ETPU channel interrupt flag
-      ETPU_TC11F,               -- 38 ETPU ETPU channel interrupt flag
-      ETPU_TC10F,               -- 37 ETPU ETPU channel interrupt flag
-      ETPU_TC9F,                -- 36 ETPU ETPU channel interrupt flag
-      ETPU_TC8F,                -- 35 ETPU ETPU channel interrupt flag
-      ETPU_TC7F,                -- 34 ETPU ETPU channel interrupt flag
-      ETPU_TC6F,                -- 33 ETPU ETPU channel interrupt flag
-      ETPU_TC5F,                -- 32 ETPU ETPU channel interrupt flag
-      ETPU_TC4F,                -- 31 ETPU ETPU channel interrupt flag
-      ETPU_TC3F,                -- 30 ETPU ETPU channel interrupt flag
-      ETPU_TC2F,                -- 29 ETPU ETPU channel interrupt flag
-      ETPU_TC1F,                -- 28 ETPU ETPU channel interrupt flag
-      ETPU_TC0F,                -- 27 ETPU ETPU channel interrupt flag
+      ETPU_TGIF,                -- 59 ETPU     ETPU global interrupt flag
+      ETPU_TC31F,               -- 58 ETPU     ETPU channel interrupt flag
+      ETPU_TC30F,               -- 57 ETPU     ETPU channel interrupt flag
+      ETPU_TC29F,               -- 56 ETPU     ETPU channel interrupt flag
+      ETPU_TC28F,               -- 55 ETPU     ETPU channel interrupt flag
+      ETPU_TC27F,               -- 54 ETPU     ETPU channel interrupt flag
+      ETPU_TC26F,               -- 53 ETPU     ETPU channel interrupt flag
+      ETPU_TC25F,               -- 52 ETPU     ETPU channel interrupt flag
+      ETPU_TC24F,               -- 51 ETPU     ETPU channel interrupt flag
+      ETPU_TC23F,               -- 50 ETPU     ETPU channel interrupt flag
+      ETPU_TC22F,               -- 49 ETPU     ETPU channel interrupt flag
+      ETPU_TC21F,               -- 48 ETPU     ETPU channel interrupt flag
+      ETPU_TC20F,               -- 47 ETPU     ETPU channel interrupt flag
+      ETPU_TC19F,               -- 46 ETPU     ETPU channel interrupt flag
+      ETPU_TC18F,               -- 45 ETPU     ETPU channel interrupt flag
+      ETPU_TC17F,               -- 44 ETPU     ETPU channel interrupt flag
+      ETPU_TC16F,               -- 43 ETPU     ETPU channel interrupt flag
+      ETPU_TC15F,               -- 42 ETPU     ETPU channel interrupt flag
+      ETPU_TC14F,               -- 41 ETPU     ETPU channel interrupt flag
+      ETPU_TC13F,               -- 40 ETPU     ETPU channel interrupt flag
+      ETPU_TC12F,               -- 39 ETPU     ETPU channel interrupt flag
+      ETPU_TC11F,               -- 38 ETPU     ETPU channel interrupt flag
+      ETPU_TC10F,               -- 37 ETPU     ETPU channel interrupt flag
+      ETPU_TC9F,                -- 36 ETPU     ETPU channel interrupt flag
+      ETPU_TC8F,                -- 35 ETPU     ETPU channel interrupt flag
+      ETPU_TC7F,                -- 34 ETPU     ETPU channel interrupt flag
+      ETPU_TC6F,                -- 33 ETPU     ETPU channel interrupt flag
+      ETPU_TC5F,                -- 32 ETPU     ETPU channel interrupt flag
+      ETPU_TC4F,                -- 31 ETPU     ETPU channel interrupt flag
+      ETPU_TC3F,                -- 30 ETPU     ETPU channel interrupt flag
+      ETPU_TC2F,                -- 29 ETPU     ETPU channel interrupt flag
+      ETPU_TC1F,                -- 28 ETPU     ETPU channel interrupt flag
+      ETPU_TC0F,                -- 27 ETPU     ETPU channel interrupt flag
       NOTUSED8,                 -- 26 Not used
       FLEXCAN0_BOFF_INT,        -- 25 FLEXCAN0 Bus-Off Interrupt
       FLEXCAN0_ERR_INT,         -- 24 FLEXCAN0 Error Interrupt
