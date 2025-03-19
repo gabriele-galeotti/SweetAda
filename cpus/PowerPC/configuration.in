@@ -2,18 +2,16 @@
 ifeq ($(CPU_MODEL),POWERPC64)
   TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_PowerPC64)
   CPU_INCLUDE_DIRECTORIES := $(CPU_DIRECTORY)/64
-  GPR_CORE_CPU :=
 else
   TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_PowerPC)
   CPU_INCLUDE_DIRECTORIES := $(CPU_DIRECTORY)/32
   ifeq ($(CPU_MODEL),PPC405)
     CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/PPC405
-    GPR_CORE_CPU := ppc405.adb ppc405.ads
+    GPR_CORE_CPU += ppc405.adb ppc405.ads
   endif
 endif
 
 GPR_CORE_CPU += cpu.ads                 \
                 powerpc.adb powerpc.ads \
                 powerpc_definitions.ads
-export GPR_CORE_CPU
 
