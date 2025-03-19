@@ -81,10 +81,10 @@ def read_response(fd, response):
 ################################################################################
 
 SERIALPORT_DEVICE = None
-BAUD_RATE         = None
+BAUD_RATE         = '19200'
 SWEETADA_ELF      = None
 ELFTOOL           = None
-START_SYMBOL      = None
+START_SYMBOL      = '_start'
 
 argc = len(sys.argv)
 argv_idx = 1
