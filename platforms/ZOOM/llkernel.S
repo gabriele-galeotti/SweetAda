@@ -99,54 +99,54 @@ reserved35:     .long   VH_default              // 063 0x00FC -
 // User Defined Vectors
 
                 .long   VH_default              // 064 INTC0 0  Not Used
-                .long   VH_default              // 065 INTC0 1  EPORT
-                .long   VH_default              // 066 INTC0 2  EPORT
-                .long   VH_default              // 067 INTC0 3  EPORT
-                .long   VH_default              // 068 INTC0 4  EPORT
-                .long   VH_default              // 069 INTC0 5  EPORT
-                .long   VH_default              // 070 INTC0 6  EPORT
-                .long   VH_default              // 071 INTC0 7  EPORT
-                .long   VH_default              // 072 INTC0 8  DMA
-                .long   VH_default              // 073 INTC0 9  DMA
-                .long   VH_default              // 074 INTC0 10 DMA
-                .long   VH_default              // 075 INTC0 11 DMA
-                .long   VH_default              // 076 INTC0 12 DMA
-                .long   VH_default              // 077 INTC0 13 DMA
-                .long   VH_default              // 078 INTC0 14 DMA
-                .long   VH_default              // 079 INTC0 15 DMA
-                .long   VH_default              // 080 INTC0 16 DMA
-                .long   VH_default              // 081 INTC0 17 DMA
-                .long   VH_default              // 082 INTC0 18 DMA
-                .long   VH_default              // 083 INTC0 19 DMA
-                .long   VH_default              // 084 INTC0 20 DMA
-                .long   VH_default              // 085 INTC0 21 DMA
-                .long   VH_default              // 086 INTC0 22 DMA
-                .long   VH_default              // 087 INTC0 23 DMA
-                .long   VH_default              // 088 INTC0 24 DMA
-                .long   VH_default              // 089 INTC0 25 SCM
-                .long   VH_default              // 090 INTC0 26 UART0
-                .long   VH_default              // 091 INTC0 27 UART1
-                .long   VH_default              // 092 INTC0 28 UART2
+                .long   VH_default              // 065 INTC0 1  EPORT Edge port flag 1
+                .long   VH_default              // 066 INTC0 2  EPORT Edge port flag 2
+                .long   VH_default              // 067 INTC0 3  EPORT Edge port flag 3
+                .long   VH_default              // 068 INTC0 4  EPORT Edge port flag 4
+                .long   VH_default              // 069 INTC0 5  EPORT Edge port flag 5
+                .long   VH_default              // 070 INTC0 6  EPORT Edge port flag 6
+                .long   VH_default              // 071 INTC0 7  EPORT Edge port flag 7
+                .long   VH_default              // 072 INTC0 8  DMA   DMA Channel 0 transfer complete
+                .long   VH_default              // 073 INTC0 9  DMA   DMA Channel 1 transfer complete
+                .long   VH_default              // 074 INTC0 10 DMA   DMA Channel 2 transfer complete
+                .long   VH_default              // 075 INTC0 11 DMA   DMA Channel 3 transfer complete
+                .long   VH_default              // 076 INTC0 12 DMA   DMA Channel 4 transfer complete
+                .long   VH_default              // 077 INTC0 13 DMA   DMA Channel 5 transfer complete
+                .long   VH_default              // 078 INTC0 14 DMA   DMA Channel 6 transfer complete
+                .long   VH_default              // 079 INTC0 15 DMA   DMA Channel 7 transfer complete
+                .long   VH_default              // 080 INTC0 16 DMA   DMA Channel 8 transfer complete
+                .long   VH_default              // 081 INTC0 17 DMA   DMA Channel 9 transfer complete
+                .long   VH_default              // 082 INTC0 18 DMA   DMA Channel 10 transfer complete
+                .long   VH_default              // 083 INTC0 19 DMA   DMA Channel 11 transfer complete
+                .long   VH_default              // 084 INTC0 20 DMA   DMA Channel 12 transfer complete
+                .long   VH_default              // 085 INTC0 21 DMA   DMA Channel 13 transfer complete
+                .long   VH_default              // 086 INTC0 22 DMA   DMA Channel 14 transfer complete
+                .long   VH_default              // 087 INTC0 23 DMA   DMA Channel 15 transfer complete
+                .long   VH_default              // 088 INTC0 24 DMA   DMA Error Interrupt
+                .long   VH_default              // 089 INTC0 25 SCM   Core Watchdog Timeout
+                .long   VH_default              // 090 INTC0 26 UART0 UART0 Interrupt Request
+                .long   VH_default              // 091 INTC0 27 UART1 UART1 Interrupt Request
+                .long   VH_default              // 092 INTC0 28 UART2 UART2 Interrupt Request
                 .long   VH_default              // 093 INTC0 29 Not Used
-                .long   VH_default              // 094 INTC0 30 I2C
-                .long   VH_default              // 095 INTC0 31 QSPI
-                .long   VH_default              // 096 INTC0 32 DTIM0
-                .long   VH_default              // 097 INTC0 33 DTIM1
-                .long   VH_default              // 098 INTC0 34 DTIM2
-                .long   VH_default              // 099 INTC0 35 DTIM3
-                .long   VH_default              // 100 INTC0 36 FEC
-                .long   VH_default              // 101 INTC0 37 FEC
-                .long   VH_default              // 102 INTC0 38 FEC
-                .long   VH_default              // 103 INTC0 39 FEC
-                .long   VH_default              // 104 INTC0 40 FEC
-                .long   VH_default              // 105 INTC0 41 FEC
-                .long   VH_default              // 106 INTC0 42 FEC
-                .long   VH_default              // 107 INTC0 43 FEC
-                .long   VH_default              // 108 INTC0 44 FEC
-                .long   VH_default              // 109 INTC0 45 FEC
-                .long   VH_default              // 110 INTC0 46 FEC
-                .long   VH_default              // 111 INTC0 47 FEC
-                .long   VH_default              // 112 INTC0 48 FEC
+                .long   VH_default              // 094 INTC0 30 I2C   I2C Interrupt
+                .long   VH_default              // 095 INTC0 31 QSPI  QSPI interrupt
+                .long   VH_default              // 096 INTC0 32 DTIM0 Timer 0 interrupt
+                .long   VH_default              // 097 INTC0 33 DTIM1 Timer 1 interrupt
+                .long   VH_default              // 098 INTC0 34 DTIM2 Timer 2 interrupt
+                .long   VH_default              // 099 INTC0 35 DTIM3 Timer 3 interrupt
+                .long   VH_default              // 100 INTC0 36 FEC   Transmit frame interrupt
+                .long   VH_default              // 101 INTC0 37 FEC   Transmit buffer interrupt
+                .long   VH_default              // 102 INTC0 38 FEC   Transmit FIFO underrun
+                .long   VH_default              // 103 INTC0 39 FEC   Collision retry limit
+                .long   VH_default              // 104 INTC0 40 FEC   Receive frame interrupt
+                .long   VH_default              // 105 INTC0 41 FEC   Receive buffer interrupt
+                .long   VH_default              // 106 INTC0 42 FEC   MII interrupt
+                .long   VH_default              // 107 INTC0 43 FEC   Late collision
+                .long   VH_default              // 108 INTC0 44 FEC   Heartbeat error
+                .long   VH_default              // 109 INTC0 45 FEC   Graceful stop complete
+                .long   VH_default              // 110 INTC0 46 FEC   Ethernet bus error
+                .long   VH_default              // 111 INTC0 47 FEC   Babbling transmit error
+                .long   VH_default              // 112 INTC0 48 FEC   Babbling receive error
                 .long   VH_default              // 113 INTC0 49 Not Used
                 .long   VH_default              // 114 INTC0 50 Not Used
                 .long   VH_default              // 115 INTC0 51 Not Used
@@ -160,7 +160,7 @@ reserved35:     .long   VH_default              // 063 0x00FC -
                 .long   VH_default              // 123 INTC0 59 Not Used
                 .long   VH_default              // 124 INTC0 60 Not Used
                 .long   VH_default              // 125 INTC0 61 Not Used
-                .long   VH_default              // 126 INTC0 62 SCM
+                .long   VH_default              // 126 INTC0 62 SCM   Core bus error interrupt
                 .long   VH_default              // 127 INTC0 63 Not Used
                 .long   VH_default              // 128 INTC1 0  Not Used
                 .long   VH_default              // 129 INTC1 1  Not Used
@@ -202,20 +202,20 @@ reserved35:     .long   VH_default              // 063 0x00FC -
                 .long   VH_default              // 165 INTC1 37 Not Used
                 .long   VH_default              // 166 INTC1 38 Not Used
                 .long   VH_default              // 167 INTC1 39 Not Used
-                .long   VH_default              // 168 INTC1 40 RNG
-                .long   VH_default              // 169 INTC1 41 SKHA
-                .long   VH_default              // 170 INTC1 42 MDHA
-                .long   VH_default              // 171 INTC1 43 PIT0
-                .long   VH_default              // 172 INTC1 44 PIT1
-                .long   VH_default              // 173 INTC1 45 PIT2
-                .long   VH_default              // 174 INTC1 46 PIT3
-                .long   VH_default              // 175 INTC1 47 USB OTG
-                .long   VH_default              // 176 INTC1 48 USB Host
-                .long   VH_default              // 177 INTC1 49 SSI
-                .long   VH_default              // 178 INTC1 50 PWM
+                .long   VH_default              // 168 INTC1 40 RNG      RNG interrupt flag
+                .long   VH_default              // 169 INTC1 41 SKHA     SKHA interrupt flag
+                .long   VH_default              // 170 INTC1 42 MDHA     MDHA interrupt flag
+                .long   VH_default              // 171 INTC1 43 PIT0     PIT interrupt flag
+                .long   VH_default              // 172 INTC1 44 PIT1     PIT interrupt flag
+                .long   VH_default              // 173 INTC1 45 PIT2     PIT interrupt flag
+                .long   VH_default              // 174 INTC1 46 PIT3     PIT interrupt flag
+                .long   VH_default              // 175 INTC1 47 USB OTG  USB OTG interrupt
+                .long   VH_default              // 176 INTC1 48 USB Host USB host interrupt
+                .long   VH_default              // 177 INTC1 49 SSI      SSI interrupt
+                .long   VH_default              // 178 INTC1 50 PWM      PWM interrupt
                 .long   VH_default              // 179 INTC1 51 Not Used
-                .long   VH_default              // 180 INTC1 52 RTC
-                .long   VH_default              // 181 INTC1 53 CCM
+                .long   VH_default              // 180 INTC1 52 RTC      Real time clock interrupt
+                .long   VH_default              // 181 INTC1 53 CCM      USB status Interrupt
                 .long   VH_default              // 182 INTC1 54 Not Used
                 .long   VH_default              // 183 INTC1 55 Not Used
                 .long   VH_default              // 184 INTC1 56 Not Used
