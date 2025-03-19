@@ -279,9 +279,9 @@ pragma Style_Checks (Off);
    -- Chapter 14 Interrupt Controller Modules
    ----------------------------------------------------------------------------
 
-   -- NOTE: the line order of interrupts sources is inverted (w.r.t. the
-   -- manual) to allow indexing inside a big-endian bitmap by means of an
-   -- enumerate subscript
+   -- NOTE: the line order of interrupt sources is inverted (w.r.t. the manual)
+   -- to allow indexing inside a big-endian bitmap by means of an enumerate
+   -- subscript
 
    -- INTC0
 
