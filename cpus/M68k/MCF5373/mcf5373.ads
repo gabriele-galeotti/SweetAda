@@ -276,6 +276,156 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- Chapter 14 Interrupt Controller Modules
+   ----------------------------------------------------------------------------
+
+   -- NOTE: the line order of interrupts sources is inverted (w.r.t. the
+   -- manual) to allow indexing inside a big-endian bitmap by means of an
+   -- enumerate subscript
+
+   -- INTC0
+
+   -- interrupt source number = 64 + SOURCE
+   type INTC0_Source_Type is (
+                                -- SOURCE/MODULE/SOURCE DESCRIPTION
+      NOTUSED1,                 -- 63 Not Used
+      SCM_SCMIR_CFEI,           -- 62 SCM   Core bus error interrupt
+      NOTUSED2,                 -- 61 Not Used
+      NOTUSED3,                 -- 60 Not Used
+      NOTUSED4,                 -- 59 Not Used
+      NOTUSED5,                 -- 58 Not Used
+      NOTUSED6,                 -- 57 Not Used
+      NOTUSED7,                 -- 56 Not Used
+      NOTUSED8,                 -- 55 Not Used
+      NOTUSED9,                 -- 54 Not Used
+      NOTUSED10,                -- 53 Not Used
+      NOTUSED11,                -- 52 Not Used
+      NOTUSED12,                -- 51 Not Used
+      NOTUSED13,                -- 50 Not Used
+      NOTUSED14,                -- 49 Not Used
+      FEC_EIR_BABR,             -- 48 FEC   Babbling receive error
+      FEC_EIR_BABT,             -- 47 FEC   Babbling transmit error
+      FEC_EIR_EBERR,            -- 46 FEC   Ethernet bus error
+      FEC_EIR_GRA,              -- 45 FEC   Graceful stop complete
+      FEC_EIR_HBERR,            -- 44 FEC   Heartbeat error
+      FEC_EIR_LC,               -- 43 FEC   Late collision
+      FEC_EIR_MII,              -- 42 FEC   MII interrupt
+      FEC_EIR_RXB,              -- 41 FEC   Receive buffer interrupt
+      FEC_EIR_RXF,              -- 40 FEC   Receive frame interrupt
+      FEC_EIR_RL,               -- 39 FEC   Collision retry limit
+      FEC_EIR_UN,               -- 38 FEC   Transmit FIFO underrun
+      FEC_EIR_TXB,              -- 37 FEC   Transmit buffer interrupt
+      FEC_EIR_TXF,              -- 36 FEC   Transmit frame interrupt
+      DTIM3_DTER3,              -- 35 DTIM3 Timer 3 interrupt
+      DTIM2_DTER2,              -- 34 DTIM2 Timer 2 interrupt
+      DTIM1_DTER1,              -- 33 DTIM1 Timer 1 interrupt
+      DTIM0_DTER0,              -- 32 DTIM0 Timer 0 interrupt
+      QSPI_QIR,                 -- 31 QSPI  QSPI interrupt
+      I2C_I2SR_IIF,             -- 30 I2C   I2C Interrupt
+      NOTUSED15,                -- 29 Not Used
+      UART2_UISR2,              -- 28 UART2 UART2 Interrupt Request
+      UART1_UISR1,              -- 27 UART1 UART1 Interrupt Request
+      UART0_UISR0,              -- 26 UART0 UART0 Interrupt Request
+      SCM_SCMIR_CWIC,           -- 25 SCM   Core Watchdog Timeout
+      DMA_EDMA_ERR_ERRn,        -- 24 DMA   DMA Error Interrupt
+      DMA_EDMA_INTR_INT15,      -- 23 DMA   DMA Channel 15 transfer complete
+      DMA_EDMA_INTR_INT14,      -- 22 DMA   DMA Channel 14 transfer complete
+      DMA_EDMA_INTR_INT13,      -- 21 DMA   DMA Channel 13 transfer complete
+      DMA_EDMA_INTR_INT12,      -- 20 DMA   DMA Channel 12 transfer complete
+      DMA_EDMA_INTR_INT11,      -- 19 DMA   DMA Channel 11 transfer complete
+      DMA_EDMA_INTR_INT10,      -- 18 DMA   DMA Channel 10 transfer complete
+      DMA_EDMA_INTR_INT09,      -- 17 DMA   DMA Channel 9 transfer complete
+      DMA_EDMA_INTR_INT08,      -- 16 DMA   DMA Channel 8 transfer complete
+      DMA_EDMA_INTR_INT07,      -- 15 DMA   DMA Channel 7 transfer complete
+      DMA_EDMA_INTR_INT06,      -- 14 DMA   DMA Channel 6 transfer complete
+      DMA_EDMA_INTR_INT05,      -- 13 DMA   DMA Channel 5 transfer complete
+      DMA_EDMA_INTR_INT04,      -- 12 DMA   DMA Channel 4 transfer complete
+      DMA_EDMA_INTR_INT03,      -- 11 DMA   DMA Channel 3 transfer complete
+      DMA_EDMA_INTR_INT02,      -- 10 DMA   DMA Channel 2 transfer complete
+      DMA_EDMA_INTR_INT01,      -- 9  DMA   DMA Channel 1 transfer complete
+      DMA_EDMA_INTR_INT00,      -- 8  DMA   DMA Channel 0 transfer complete
+      EPORT_EPFR_EPF7,          -- 7  EPORT Edge port flag 7
+      EPORT_EPFR_EPF6,          -- 6  EPORT Edge port flag 6
+      EPORT_EPFR_EPF5,          -- 5  EPORT Edge port flag 5
+      EPORT_EPFR_EPF4,          -- 4  EPORT Edge port flag 4
+      EPORT_EPFR_EPF3,          -- 3  EPORT Edge port flag 3
+      EPORT_EPFR_EPF2,          -- 2  EPORT Edge port flag 2
+      EPORT_EPFR_EPF1,          -- 1  EPORT Edge port flag 1
+      NOTUSED16                 -- 0  Not Used
+      );
+
+   -- INTC1
+
+   -- interrupt source number = 128 + SOURCE
+   type INTC1_Source_Type is (
+                                -- SOURCE/MODULE/SOURCE DESCRIPTION
+      NOTUSED1,                 -- 63  Not Used
+      NOTUSED2,                 -- 62  Not Used
+      NOTUSED3,                 -- 61  Not Used
+      NOTUSED4,                 -- 60  Not Used
+      NOTUSED5,                 -- 59  Not Used
+      NOTUSED6,                 -- 58  Not Used
+      NOTUSED7,                 -- 57  Not Used
+      NOTUSED8,                 -- 56  Not Used
+      NOTUSED9,                 -- 55  Not Used
+      NOTUSED10,                -- 54  Not Used
+      CCM_UHCSR_UOCSR,          -- 53  CCM      USB status Interrupt
+      RTC_RTC_ISR,              -- 52  RTC      Real time clock interrupt
+      NOTUSED11,                -- 51  Not Used
+      PWM_PWMSDN_IF,            -- 50  PWM      PWM interrupt
+      SSI_SSI_ISR,              -- 49  SSI      SSI interrupt
+      USB_Host_USB_STS,         -- 48  USB Host USB host interrupt
+      USB_OTG_USB_STS,          -- 47  USB OTG  USB OTG interrupt
+      PIT3_PCSR3_PIF,           -- 46  PIT3     PIT interrupt flag
+      PIT2_PCSR2_PIF,           -- 45  PIT2     PIT interrupt flag
+      PIT1_PCSR1_PIF,           -- 44  PIT1     PIT interrupt flag
+      PIT0_PCSR0_PIF,           -- 43  PIT0     PIT interrupt flag
+      MDHA_MI,                  -- 42  MDHA     MDHA interrupt flag
+      SKHA_INT,                 -- 41  SKHA     SKHA interrupt flag
+      RNG_EI,                   -- 40  RNG      RNG interrupt flag
+      NOTUSED12,                -- 39  Not Used
+      NOTUSED13,                -- 38  Not Used
+      NOTUSED14,                -- 37  Not Used
+      NOTUSED15,                -- 36  Not Used
+      NOTUSED16,                -- 35  Not Used
+      NOTUSED17,                -- 34  Not Used
+      NOTUSED18,                -- 33  Not Used
+      NOTUSED19,                -- 32  Not Used
+      NOTUSED20,                -- 31  Not Used
+      NOTUSED21,                -- 30  Not Used
+      NOTUSED22,                -- 29  Not Used
+      NOTUSED23,                -- 28  Not Used
+      NOTUSED24,                -- 27  Not Used
+      NOTUSED25,                -- 26  Not Used
+      NOTUSED26,                -- 25  Not Used
+      NOTUSED27,                -- 24  Not Used
+      NOTUSED28,                -- 23  Not Used
+      NOTUSED29,                -- 22  Not Used
+      NOTUSED30,                -- 21  Not Used
+      NOTUSED31,                -- 20  Not Used
+      NOTUSED32,                -- 19  Not Used
+      NOTUSED33,                -- 18  Not Used
+      NOTUSED34,                -- 17  Not Used
+      NOTUSED35,                -- 16  Not Used
+      NOTUSED36,                -- 15  Not Used
+      NOTUSED37,                -- 14  Not Used
+      NOTUSED38,                -- 13  Not Used
+      NOTUSED39,                -- 12  Not Used
+      NOTUSED40,                -- 11  Not Used
+      NOTUSED41,                -- 10  Not Used
+      NOTUSED42,                -- 9   Not Used
+      NOTUSED43,                -- 8   Not Used
+      NOTUSED44,                -- 7   Not Used
+      NOTUSED45,                -- 6   Not Used
+      NOTUSED46,                -- 5   Not Used
+      NOTUSED47,                -- 4   Not Used
+      NOTUSED48,                -- 3   Not Used
+      NOTUSED49,                -- 2   Not Used
+      NOTUSED50,                -- 1   Not Used
+      NOTUSED51                 -- 0   Not Used
+      );
+
+   ----------------------------------------------------------------------------
    -- Chapter 26 Watchdog Timer Module
    ----------------------------------------------------------------------------
 

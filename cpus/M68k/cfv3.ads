@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ cpu.ads                                                                                                   --
+-- __FLN__ cfv3.ads                                                                                                  --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -16,9 +16,9 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with CFv3;
+with CFv2;
 
-package CPU
+package CFv3
    with Preelaborate => True
    is
 
@@ -32,19 +32,53 @@ package CPU
 
    use System;
 
+   -- MOVEC register codes
+   VBR    renames CFv2.VBR;
+   RAMBAR renames CFv2.RAMBAR;
+   MBAR   renames CFv2.MBAR;
+
+   subtype SR_Type is CFv2.SR_Type;
+
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
 
-   procedure NOP
-      renames CFv3.NOP;
+   function SR_Read
+      return SR_Type
+      renames CFv2.SR_Read;
 
-   ----------------------------------------------------------------------------
-   -- Specific definitions
-   ----------------------------------------------------------------------------
+   procedure SR_Write
+      (Value : in SR_Type)
+      renames CFv2.SR_Write;
+
+   procedure NOP
+      renames CFv2.NOP;
+
+   procedure STOP
+      renames CFv2.STOP;
+
+   procedure BREAKPOINT
+      renames CFv2.BREAKPOINT;
 
    procedure VBR_Set
       (VBR_Address : in Address)
-      renames CFv3.VBR_Set;
+      renames CFv2.VBR_Set;
 
-end CPU;
+   ----------------------------------------------------------------------------
+   -- Exceptions and interrupts
+   ----------------------------------------------------------------------------
+
+   subtype Vector_Type is CFv2.Vector_Type;
+
+   subtype Vector_Number_Type is CFv2.Vector_Number_Type;
+
+   IVT : aliased array (Vector_Number_Type) of Vector_Type
+      with Import     => True,
+           Convention => Ada;
+
+   procedure Irq_Enable
+      renames CFv2.Irq_Enable;
+   procedure Irq_Disable
+      renames CFv2.Irq_Disable;
+
+end CFv3;
