@@ -45,11 +45,10 @@ _start:
                 move.l  #_etext,%a0
                 move.l  #_sdata,%a1
                 move.l  #_edata,%a2
-1:              cmp.l   %a1,%a2
-                beq.s   2f
-                move.b  %a0@+,%a1@+
-                bra.s   1b
-2:
+                bra.s   2f
+1:              move.b  %a0@+,%a1@+
+2:              cmp.l   %a1,%a2
+                bne.s   1b
 
                 //
                 // Initialize .bss section.
