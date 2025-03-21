@@ -98,6 +98,7 @@ set kernel_start_sector 2
 exec {*}$::env(TOOLCHAIN_CC)    \
     -o "$asmboot_filename.o"    \
     -c                          \
+    -I.                         \
     -DLOADADDRESS=$load_address \
     -DNSECTORS=$kernel_sectors  \
     -DENTRYPOINT=$entry_point   \

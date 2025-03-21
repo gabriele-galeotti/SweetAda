@@ -104,6 +104,7 @@ os.system(
     os.getenv('TOOLCHAIN_CC')            + ' ' +
     '-o ' + asmboot_filename + '.o'      + ' ' +
     '-c'                                 + ' ' +
+    '-I.'                                + ' ' +
     '-DLOADADDRESS=' + str(load_address) + ' ' +
     '-DNSECTORS=' + str(kernel_sectors)  + ' ' +
     '-DENTRYPOINT=' + str(entry_point)   + ' ' +
