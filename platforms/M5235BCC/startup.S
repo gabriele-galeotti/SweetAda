@@ -79,11 +79,10 @@ _start:
                 .extern _ebss
                 move.l  #_sbss,%a0
                 move.l  #_ebss,%a1
-1:              cmp.l   %a0,%a1
-                beq.s   2f
-                clr.b   %a0@+
-                bra.s   1b
-2:
+                bra.s   2f
+1:              clr.b   %a0@+
+2:              cmp.l   %a0,%a1
+                bne.s   1b
 
                 //
                 // Jump to high-level code.
