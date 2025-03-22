@@ -12,7 +12,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define SAVE_REGS                        \
+#define SAVE_REGISTERS                   \
                 swi     r3, r1, 0       ;\
                 swi     r4, r1, 4       ;\
                 swi     r5, r1, 8       ;\
@@ -25,7 +25,7 @@
                 swi     r12,r1,36       ;\
                 swi     r15,r1,40
 
-#define RESTORE_REGS                     \
+#define RESTORE_REGISTERS                \
                 lwi     r3, r1, 0       ;\
                 lwi     r4, r1, 4       ;\
                 lwi     r5, r1, 8       ;\
@@ -77,11 +77,11 @@ vectors:
                 .global timerirq
 timerirq:
                 addi    r1,r1,-11*4
-                SAVE_REGS
+                SAVE_REGISTERS
                 .extern exception_process
                 bralid  r15,exception_process
                 nop
-                RESTORE_REGS
+                RESTORE_REGISTERS
                 addi    r1,r1,11*4
                 rtid    r14,0
                 nop
