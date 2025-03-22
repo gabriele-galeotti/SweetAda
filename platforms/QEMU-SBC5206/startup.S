@@ -21,7 +21,10 @@
                 .global _start
 _start:
 
-                move.w  #0x2700,%sr                     // supervisor mode, disable interrupts
+                //
+                // Supervisor mode, disable interrupts.
+                //
+                move.w  #0x2700,%sr
 
                 // QEMU cannot handle $C0F operations (MCF5206 MBAR)
 #if 0
