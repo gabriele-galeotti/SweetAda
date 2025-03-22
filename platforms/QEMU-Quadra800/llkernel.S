@@ -14,33 +14,14 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define SAVE_REGS    movem.l %d0-%d1/%a0-%a1,%sp@-
-#define RESTORE_REGS movem.l %sp@+,%d0-%d1/%a0-%a1
+#define SAVE_REGISTERS    movem.l %d0-%d1/%a0-%a1,%sp@-
+#define RESTORE_REGISTERS movem.l %sp@+,%d0-%d1/%a0-%a1
 
 ////////////////////////////////////////////////////////////////////////////////
 
                 .sect   .text."ax"
 
                 .align  4
-
-//
-// Context switching routine.
-//
-// Arguments of this routine are two pointers:
-// - a current context saving area
-// - a next context saving area
-//
-// sp+0 return address
-// sp+4 parm1 (old execution context)
-// sp+8 parm2 (new execution context)
-//
-
-                .global switch_context
-switch_context:
-
-//
-// Exception handlers.
-//
 
                 .global accfault_handler
                 .global addrerr_handler
