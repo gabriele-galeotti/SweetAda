@@ -30,15 +30,15 @@ package LibGCC
    --========================================================================--
 
    function BswapSI2
-      (V : GCC.Types.USI_Type)
-      return GCC.Types.USI_Type
+      (V : GCC.Types.SI_Type)
+      return GCC.Types.SI_Type
       with Export        => True,
            Convention    => C,
            External_Name => "__bswapsi2";
 
    function BswapDI2
-      (V : GCC.Types.UDI_Type)
-      return GCC.Types.UDI_Type
+      (V : GCC.Types.DI_Type)
+      return GCC.Types.DI_Type
       with Export        => True,
            Convention    => C,
            External_Name => "__bswapdi2";

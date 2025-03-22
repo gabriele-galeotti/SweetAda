@@ -48,8 +48,8 @@ package body LibGCC
    -- BswapSI2
    ----------------------------------------------------------------------------
    function BswapSI2
-      (V : GCC.Types.USI_Type)
-      return GCC.Types.USI_Type
+      (V : GCC.Types.SI_Type)
+      return GCC.Types.SI_Type
       is
    separate;
 
@@ -57,8 +57,8 @@ package body LibGCC
    -- BswapDI2
    ----------------------------------------------------------------------------
    function BswapDI2
-      (V : GCC.Types.UDI_Type)
-      return GCC.Types.UDI_Type
+      (V : GCC.Types.DI_Type)
+      return GCC.Types.DI_Type
       is
    separate;
 
