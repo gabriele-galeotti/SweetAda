@@ -17,7 +17,7 @@
 #define SAVEREG sw
 #define LOADREG lw
 
-#define SAVE_REGS                        \
+#define SAVE_REGISTERS                   \
                 SAVEREG $at, 0($k1)     ;\
                 SAVEREG $v0, 4($k1)     ;\
                 SAVEREG $v1, 8($k1)     ;\
@@ -39,7 +39,7 @@
                 SAVEREG $sp,72($k1)     ;\
                 SAVEREG $ra,76($k1)
 
-#define RESTORE_REGS                     \
+#define RESTORE_REGISTERS                \
                 LOADREG $at, 0($k1)     ;\
                 LOADREG $v0, 4($k1)     ;\
                 LOADREG $v1, 8($k1)     ;\
@@ -112,12 +112,12 @@ tlbmiss:
 
 irqhandle:
                 la      $k1,savearea
-                SAVE_REGS
+                SAVE_REGISTERS
                 .extern exception_process
                 la      $t0,exception_process
                 jalr    $t0
                 nop
-                RESTORE_REGS
+                RESTORE_REGISTERS
                 mtc0    $0,CP0_CAUSE
                 eret
 
