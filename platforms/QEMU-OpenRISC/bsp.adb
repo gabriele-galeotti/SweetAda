@@ -57,7 +57,7 @@ package body BSP
       is
    begin
       OpenRISC.TTMR_Write ((
-         TP => 16#0008_0000#,
+         TP => Configure.CLOCK_FREQUENCY / Configure.TICK_FREQUENCY,
          IP => False,
          IE => True,
          M  => OpenRISC.M_STOP

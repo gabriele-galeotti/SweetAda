@@ -17,6 +17,7 @@
 
 with Interfaces;
 with OpenRISC;
+with Configure;
 with BSP;
 with Console;
 
@@ -42,6 +43,11 @@ package body Exceptions
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- Exception_Process
+   ----------------------------------------------------------------------------
+   procedure Exception_Process is null;
+
+   ----------------------------------------------------------------------------
    -- Irq_Process
    ----------------------------------------------------------------------------
    procedure Irq_Process
@@ -55,7 +61,7 @@ package body Exceptions
          M  => OpenRISC.M_DISABLED
          ));
       BSP.Tick_Count := @ + 1;
-      if BSP.Tick_Count mod 1_000 = 0 then
+      if BSP.Tick_Count mod Configure.TICK_FREQUENCY = 0 then
          Console.Print ("*** T ***", NL => True);
       end if;
       BSP.Tick_Timer_Init;
