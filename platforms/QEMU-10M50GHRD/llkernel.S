@@ -12,7 +12,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define SAVE_REGS                        \
+#define SAVE_REGISTERS                   \
                 stw     r1,  0(sp)      ;\
                 stw     r2,  4(sp)      ;\
                 stw     r3,  8(sp)      ;\
@@ -32,7 +32,7 @@
                 stw     r28,64(sp)      ;\
                 stw     r31,68(sp)
 
-#define RESTORE_REGS                     \
+#define RESTORE_REGISTERS                \
                 ldw     r1,  0(sp)      ;\
                 ldw     r2,  4(sp)      ;\
                 ldw     r3,  8(sp)      ;\
@@ -73,10 +73,10 @@
                 .global irq_entry
 irq_entry:
                 addi    sp,sp,-72
-                SAVE_REGS
+                SAVE_REGISTERS
                 .extern irq_process
                 call    irq_process
-                RESTORE_REGS
+                RESTORE_REGISTERS
                 addi    sp,sp,72
                 subi    ea,ea,4
                 eret
