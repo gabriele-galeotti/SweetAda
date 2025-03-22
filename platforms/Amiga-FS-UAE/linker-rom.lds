@@ -19,9 +19,7 @@ SECTIONS
         .romstartup :
         {
                 _sromstartup = .;
-                _svectors = .;
                 KEEP(*(.vectors))
-                _evectors = .;
                 *(.startup)
                 . = ALIGN(0x10);
                 _eromstartup = .;
@@ -44,7 +42,7 @@ SECTIONS
          *                                                                    *
          **********************************************************************/
         _text_start = _eromstartup;
-        .text : AT(_text_start)
+        .text : AT(_eromstartup)
         {
                 _stext = .;
                 *(.text)
@@ -60,7 +58,7 @@ SECTIONS
         /**********************************************************************
          *                                                                    *
          **********************************************************************/
-        _data_start = _eromstartup + SIZEOF(.text);
+        _data_start = _text_start + SIZEOF(.text);
         .data : AT(_data_start)
         {
                 _sdata = .;
