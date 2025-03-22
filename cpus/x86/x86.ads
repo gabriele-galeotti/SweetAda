@@ -537,8 +537,8 @@ package x86
    -- 386s and 486 have only 4-KiB page size.
    ----------------------------------------------------------------------------
 
-   PAGESIZE4k : constant := Definitions.kB4;
-   PAGESIZE4M : constant := Definitions.MB4;
+   PAGESIZE4k : constant := Definitions.KiB4;
+   PAGESIZE4M : constant := Definitions.MiB4;
 
    type Page_Select_Type is new Bits_1;
 
