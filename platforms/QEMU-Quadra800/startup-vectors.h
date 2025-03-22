@@ -40,7 +40,7 @@
                 .global vectors_table
 vectors_table:
 
-initialsp:      .long   INITIALSP               // 000 0x0000 -
+initialsp:      .long   0                       // 000 0x0000 -
 initialpc:      .long   INITIALPC               // 001 0x0004 -
 accfault:       .long   accfault_handler        // 002 0x0008 -
 addrerr:        .long   addrerr_handler         // 003 0x000C -

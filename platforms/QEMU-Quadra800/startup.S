@@ -14,7 +14,6 @@
 
                 .sect   .vectors,"ax"
 
-#define INITIALSP 0
 #define INITIALPC (_start-0x40800000)
 #include "startup-vectors.h"
 
