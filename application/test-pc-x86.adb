@@ -51,7 +51,7 @@ package body Application
    use PIIX;
 
    -- Malloc memory area
-   Heap : aliased Storage_Array (0 .. Definitions.kB64 - 1)
+   Heap : aliased Storage_Array (0 .. Definitions.KiB64 - 1)
        with Alignment               => 16#1000#,
             Suppress_Initialization => True; -- pragma Initialize_Scalars
 
