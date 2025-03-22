@@ -45,12 +45,12 @@ package body Application
       with Export        => True,
            External_Name => "ap_pc";
 
-   -- AP hart stack size = 4 kB
-   SP1 : aliased array (0 .. kB4 - 1) of Unsigned_8
+   -- AP hart stack size = 4 KiB
+   SP1 : aliased array (0 .. KiB4 - 1) of Unsigned_8
       with Alignment => 8;
-   SP2 : aliased array (0 .. kB4 - 1) of Unsigned_8
+   SP2 : aliased array (0 .. KiB4 - 1) of Unsigned_8
       with Alignment => 8;
-   SP3 : aliased array (0 .. kB4 - 1) of Unsigned_8
+   SP3 : aliased array (0 .. KiB4 - 1) of Unsigned_8
       with Alignment => 8;
 
    -- Console mutex
