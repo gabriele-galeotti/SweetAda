@@ -10,21 +10,14 @@
 
 #define __ASSEMBLER__ 1
 
+#include <amiga.h>
+
 //
 // Environment variables:
 // LOADADDRESS is the starting address of the binary executable
 // NSECTORS is the number of sectors to load
 // ENTRYPOINT is the the target address of the binary executable
 //
-
-#define EXECBASE   4
-#define SUPERSTATE -150 // 0xFFFFFF6A
-#define LVODoIO    -456 // 0xFFFFFE38
-#define CMD_READ   2
-#define IO_COMMAND 28
-#define IO_LENGTH  36
-#define IO_DATA    40
-#define IO_OFFSET  44
 
 ////////////////////////////////////////////////////////////////////////////////
 

@@ -12,9 +12,7 @@
 
 #include <configure.h>
 #include <m68k.h>
-
-#define CIAA_PRA  0x00BFE001 // Port A
-#define CIAA_DDRA 0x00BFE201 // Data Direction Port A
+#include <amiga.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -33,34 +31,20 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-                .sect   .vectors,"ax"
-
-#define INITIALSP 0x11114EF9                            // 1111 = 256k ROM, 4EF9 = jmp
-#define INITIALPC _start
-#include "startup-vectors.h"
-
-////////////////////////////////////////////////////////////////////////////////
-
                 .sect   .startup,"ax"
-
-                //
-                // Kickstart header @ 0x00FC0000.
-                //
-                // The execution thread is now in ROM space because the reset
-                // vector specified @ 0x4 (aliased) contains an high-address
-                // program counter.
-                //
 
                 .type   _start,@function
                 .global _start
 _start:
 
                 //
-                // M68040 USER''S MANUAL
-                // 3.1.3 Transparent Translation Registers
-                // __REF__ acroread /a "page=54" "M68040UM.pdf"
+                // Supervisor mode, disable interrupts.
                 //
-                move.w  #0x2700,%sr                     // supervisor mode, disable interrupts
+                move.w  #0x2700,%sr
+
+                //
+                // Setup control registers.
+                //
                 clr.l   %d0
 #if defined(__mc68020__) || defined(__mc68030__) || defined(__mc68040__)
                 movec   %d0,%sfc
