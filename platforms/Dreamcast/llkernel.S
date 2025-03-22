@@ -18,8 +18,8 @@
                 //.sect   .text,"ax"
 
                 .align  16
-                .global vector_table
-vector_table:
+                .global vectors_table
+vectors_table:
 
                 // TRAPA
                 . = 0x0100

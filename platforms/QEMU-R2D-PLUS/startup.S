@@ -23,7 +23,7 @@ _start:
                 //
                 // Set VBR.
                 //
-                mov.l   REF(vector_table),r0
+                mov.l   REF(vectors_table),r0
                 ldc     r0,vbr
 
                 //
@@ -61,7 +61,7 @@ dead:           bra     .
 
                 .align  4
 DEF_LREFL(kernel_stack)
-DEF_EREFL(vector_table)
+DEF_EREFL(vectors_table)
 DEF_EREFL(_sbss)
 DEF_EREFL(_ebss)
 DEF_EREFL(_ada_main)
