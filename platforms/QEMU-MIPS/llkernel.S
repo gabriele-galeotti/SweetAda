@@ -24,9 +24,9 @@
 # define X2 1
 #endif
 
-#define REGSAREA_SIZE 76*X2
+#define REGISTER_AREA_SIZE 76*X2
 
-#define SAVE_REGS                                \
+#define SAVE_REGISTERS                           \
                 SAVEREG $at,( 0*X2)($sp)        ;\
                 SAVEREG $v0,( 4*X2)($sp)        ;\
                 SAVEREG $v1,( 8*X2)($sp)        ;\
@@ -47,7 +47,7 @@
                 SAVEREG $gp,(68*X2)($sp)        ;\
                 SAVEREG $ra,(72*X2)($sp)
 
-#define RESTORE_REGS                             \
+#define RESTORE_REGISTERS                        \
                 LOADREG $at,( 0*X2)($sp)        ;\
                 LOADREG $v0,( 4*X2)($sp)        ;\
                 LOADREG $v1,( 8*X2)($sp)        ;\
@@ -133,14 +133,14 @@ handle_exc:
                 nop
 
 irq_handler:
-                subu    $sp,$sp,REGSAREA_SIZE
-                SAVE_REGS
+                subu    $sp,$sp,REGISTER_AREA_SIZE
+                SAVE_REGISTERS
                 .extern exception_process
                 la      $t0,exception_process
                 jalr    $t0
                 nop
-                RESTORE_REGS
-                addu    $sp,$sp,REGSAREA_SIZE
+                RESTORE_REGISTERS
+                addu    $sp,$sp,REGISTER_AREA_SIZE
                 mtc0    $0,CP0_CAUSE
                 eret
 
