@@ -78,7 +78,7 @@ package NE2000
       );
 
    RAM_Address : constant := 16#4000#;
-   RAM_Size    : constant := Definitions.kB16;
+   RAM_Size    : constant := Definitions.KiB16;
 
    procedure Probe
       (PCI_Descriptor : in     PCI.Descriptor_Type;
