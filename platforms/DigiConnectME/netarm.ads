@@ -72,7 +72,7 @@ pragma Style_Checks (Off);
 
    NETA_MAX_REVISIONS : constant := 3;
 
-   CACHE_SIZE : constant := kB8; -- size of cache in bytes
+   CACHE_SIZE : constant := KiB8; -- size of cache in bytes
 
    -- the following masks should be applied to (dma_sr_t *)->bitsi.isrc
    NCIP_MASK : constant := 8;
