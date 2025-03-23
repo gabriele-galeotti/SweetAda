@@ -8,3 +8,6 @@ GPR_CORE_CPU += cpu.ads                   \
                 sparc.adb sparc.ads       \
                 cpu-mmio.adb cpu-mmio.ads
 
+GCCDEFINES_CPU += __leon__:LEON:Boolean:H         \
+                  __sparc_v8__:SPARC_V8:Boolean:H
+
