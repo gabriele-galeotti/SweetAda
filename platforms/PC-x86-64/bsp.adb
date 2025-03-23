@@ -150,16 +150,19 @@ package body BSP
       end if;
       -------------------------------------------------------------------------
       Console.Print (
-         To_IA32_EFER (RDMSR (IA32_EFER)).LMA,
-         Prefix => "64-bit mode:        ", NL => True
+         Prefix => "64-bit mode:        ",
+         Value  => To_IA32_EFER (RDMSR (IA32_EFER)).LMA,
+         NL     => True
          );
       Console.Print (
-         To_IA32_APIC_BASE (RDMSR (IA32_APIC_BASE)).APIC_Global_Enable,
-         Prefix => "APIC_Global_Enable: ", NL => True
+         Prefix => "APIC_Global_Enable: ",
+         Value  => To_IA32_APIC_BASE (RDMSR (IA32_APIC_BASE)).APIC_Global_Enable,
+         NL     => True
          );
       Console.Print (
-         Shift_Left (Unsigned_32 (To_IA32_APIC_BASE (RDMSR (IA32_APIC_BASE)).APIC_Base), 12),
-         Prefix => "APIC_Base:          ", NL => True
+         Prefix => "APIC_Base:          ",
+         Value  => Shift_Left (Unsigned_32 (To_IA32_APIC_BASE (RDMSR (IA32_APIC_BASE)).APIC_Base), 12),
+         NL     => True
          );
       -- PCI ------------------------------------------------------------------
       PCI_Descriptor := (
@@ -175,7 +178,7 @@ package body BSP
             for Index in PCI.Device_Number_Type'Range loop
                PCI.Cfg_Detect_Device (PCI_Descriptor, 0, Index, Vendor_Id, Device_Id, Success);
                if Success then
-                  Console.Print (Unsigned_16 (Index), Prefix => "PCI Device #");
+                  Console.Print (Prefix => "PCI Device #", Value => Unsigned_16 (Index));
                   Console.Print (Character'(' '));
                   Console.Print (Unsigned_16 (Vendor_Id));
                   Console.Print (Character'(':'));
