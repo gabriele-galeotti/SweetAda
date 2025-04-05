@@ -30,7 +30,6 @@ package body P8
    --========================================================================--
 
    use System.Machine_Code;
-   use Interfaces;
 
    CRLF : String renames Definitions.CRLF;
 
