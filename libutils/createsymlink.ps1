@@ -238,7 +238,8 @@ while ($fileindex -lt $args.length)
     $optionchar = $args[$fileindex].Substring(1)
     if ($optionchar -eq "c")
     {
-      if ($IsWindows)
+      $wine = $(GetEnvVar WINEPREFIX)
+      if ($IsWindows -or ![string]::IsNullOrEmpty($wine))
       {
         $symlinkcopy = "Y"
       }
