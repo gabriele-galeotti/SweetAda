@@ -4,12 +4,15 @@ REM
 REM Start GNAT Studio.
 REM
 
+REM force OSTYPE
+SET OSTYPE=cmd
+
 REM be sure to have a Make available online
 SET MAKE=make.exe
 REM SET MAKE=mingw32-make.exe
 
 REM GNAT Studio executable
-SET GNATSTUDIO="C:\Program Files"\GNATSTUDIO\bin\gnatstudio.exe
+SET GNATSTUDIO="%ProgramFiles%"\GNATSTUDIO\bin\gnatstudio.exe
 
 REM detect toolchain from configuration.in
 FOR /F "delims=" %%T IN ('%MAKE% PROBEVARIABLE^=TOOLCHAIN_PREFIX probevariable') DO (

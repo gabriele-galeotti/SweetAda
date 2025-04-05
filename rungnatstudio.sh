@@ -4,11 +4,25 @@
 # Start GNAT Studio.
 #
 
+# detect OSTYPE
+TOOLCHAIN_PREFIX=$(make PROBEVARIABLE=OSTYPE probevariable)
+if [ "x${OSTYPE}" = "x" ] ; then
+  printf "%s\n" "*** Warning: no OSTYPE detected." 1>&2
+else
+  export OSTYPE
+fi
+
 # GNAT Studio prefix and executable
-GNATSTUDIO_PREFIX=/opt/GNAT/2021
-GNATSTUDIO_FILENAME=gnatstudio
-#GNATSTUDIO_PREFIX="C:/Program Files/GNATSTUDIO"
-#GNATSTUDIO_FILENAME=gnatstudio.exe
+case ${OSTYPE} in
+  msys)
+    GNATSTUDIO_PREFIX="C:/Program Files"/GNATSTUDIO
+    GNATSTUDIO_FILENAME=gnatstudio.exe
+    ;;
+  *)
+    GNATSTUDIO_PREFIX=/opt/GNAT/2021
+    GNATSTUDIO_FILENAME=gnatstudio
+    ;;
+esac
 export GNATSTUDIO_PREFIX
 GNATSTUDIO="${GNATSTUDIO_PREFIX}"/bin/${GNATSTUDIO_FILENAME}
 
