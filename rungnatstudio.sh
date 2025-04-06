@@ -5,7 +5,7 @@
 #
 
 # detect OSTYPE
-TOOLCHAIN_PREFIX=$(make PROBEVARIABLE=OSTYPE probevariable)
+OSTYPE=$(make PROBEVARIABLE=OSTYPE probevariable)
 if [ "x${OSTYPE}" = "x" ] ; then
   printf "%s\n" "*** Warning: no OSTYPE detected." 1>&2
 else
