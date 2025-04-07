@@ -1641,6 +1641,545 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- 11 DMA
+   ----------------------------------------------------------------------------
+
+   -- 11.3.1 DMA_DEVICE_CFG Register
+
+   type DMA_DEVICE_CFG_Type is record
+      NUM_DMA_CHANNELS    : Unsigned_8; -- Reflects the number of DMA channels available on the device
+      NUM_SRC_PER_CHANNEL : Unsigned_8; -- Reflects the number of DMA sources per channel
+      Reserved            : Bits_16;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_DEVICE_CFG_Type use record
+      NUM_DMA_CHANNELS    at 0 range  0 ..  7;
+      NUM_SRC_PER_CHANNEL at 0 range  8 .. 15;
+      Reserved            at 0 range 16 .. 31;
+   end record;
+
+   -- 11.3.2 DMA_SW_CHTRIG Register
+
+   type DMA_SW_CHTRIG_Type is record
+      CH : Bitmap_32 := [others => False]; -- Write 1 triggers DMA_CHANNEL??. Bit is auto-cleared when channel goes active.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_SW_CHTRIG_Type use record
+      CH at 0 range 0 .. 31;
+   end record;
+
+   -- 11.3.3 DMA_CHn_SRCCFG Register
+
+   type DMA_CHn_SRCCFG_Type is record
+      DMA_SRC  : Unsigned_8 := 0; -- Controls which device level DMA source is mapped to the channel input
+      Reserved : Bits_24    := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_CHn_SRCCFG_Type use record
+      DMA_SRC  at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   -- 11.3.4 DMA_INT1_SRCCFG Register
+
+   type DMA_INT1_SRCCFG_Type is record
+      INT_SRC  : Bits_5  := 0;     -- Controls which channel's completion event is mapped as a source of this Interrupt
+      EN       : Boolean := False; -- When 1, enables the DMA_INT1 mapping.
+      Reserved : Bits_26 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_INT1_SRCCFG_Type use record
+      INT_SRC  at 0 range 0 ..  4;
+      EN       at 0 range 5 ..  5;
+      Reserved at 0 range 6 .. 31;
+   end record;
+
+   -- 11.3.5 DMA_INT2_SRCCFG Register
+
+   type DMA_INT2_SRCCFG_Type is record
+      INT_SRC  : Bits_5  := 0;     -- Controls which channel's completion event is mapped as a source of this Interrupt
+      EN       : Boolean := False; -- When 1, enables the DMA_INT2 mapping.
+      Reserved : Bits_26 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_INT2_SRCCFG_Type use record
+      INT_SRC  at 0 range 0 ..  4;
+      EN       at 0 range 5 ..  5;
+      Reserved at 0 range 6 .. 31;
+   end record;
+
+   -- 11.3.6 DMA_INT3_SRCCFG Register
+
+   type DMA_INT3_SRCCFG_Type is record
+      INT_SRC  : Bits_5  := 0;     -- Controls which channel's completion event is mapped as a source of this Interrupt
+      EN       : Boolean := False; -- When 1, enables the DMA_INT3 mapping.
+      Reserved : Bits_26 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_INT3_SRCCFG_Type use record
+      INT_SRC  at 0 range 0 ..  4;
+      EN       at 0 range 5 ..  5;
+      Reserved at 0 range 6 .. 31;
+   end record;
+
+   -- 11.3.7 DMA_INT0_SRCFLG Register
+
+   type DMA_INT0_SRCFLG_Type is record
+      CH : Bitmap_32; -- If 1, indicates that Channel ?? was the source of DMA_INT0
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_INT0_SRCFLG_Type use record
+      CH at 0 range 0 .. 31;
+   end record;
+
+   -- 11.3.8 DMA_INT0_CLRFLG Register
+
+   type DMA_INT0_CLRFLG_Type is record
+      CH : Bitmap_32 := [others => False]; -- Write 1 clears the corresponding flag bit in the DMA_INT0_SRCFLG register. Write 0 has no effect
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_INT0_CLRFLG_Type use record
+      CH at 0 range 0 .. 31;
+   end record;
+
+   -- 11.3.9 DMA_STAT Register
+
+   STATE_IDLE    : constant := 2#0000#; -- idle
+   STATE_RCHCD   : constant := 2#0001#; -- reading channel controller data
+   STATE_RSRCDEP : constant := 2#0010#; -- reading source data end pointer
+   STATE_RDSTDEP : constant := 2#0011#; -- reading destination data end pointer
+   STATE_RSRCD   : constant := 2#0100#; -- reading source data
+   STATE_WDSTD   : constant := 2#0101#; -- writing destination data
+   STATE_WRQCLR  : constant := 2#0110#; -- waiting for DMA request to clear
+   STATE_WCHCD   : constant := 2#0111#; -- writing channel controller data
+   STATE_STALLED : constant := 2#1000#; -- stalled
+   STATE_DONE    : constant := 2#1001#; -- done
+   STATE_SCAGAT  : constant := 2#1010#; -- peripheral scatter-gather transition
+   STATE_RSVD1   : constant := 2#1011#; -- Reserved
+   STATE_RSVD2   : constant := 2#1100#; -- Reserved
+   STATE_RSVD3   : constant := 2#1101#; -- Reserved
+   STATE_RSVD4   : constant := 2#1110#; -- Reserved
+   STATE_RSVD5   : constant := 2#1111#; -- Reserved
+
+   TESTSTAT_NONE : constant := 0; -- Controller does not include the integration test logic
+   TESTSTAT_TEST : constant := 1; -- Controller includes the integration test logic
+
+   type DMA_STAT_Type is record
+      MASTEN    : Boolean; -- Enable status of the controller
+      Reserved1 : Bits_3;
+      STATE     : Bits_4;  -- Current state of the control state machine.
+      Reserved2 : Bits_8;
+      DMACHANS  : Bits_5;  -- Number of available DMA channels minus one.
+      Reserved3 : Bits_7;
+      TESTSTAT  : Bits_4;  -- To reduce the gate count you can configure the controller to exclude the integration test logic.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_STAT_Type use record
+      MASTEN    at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  3;
+      STATE     at 0 range  4 ..  7;
+      Reserved2 at 0 range  8 .. 15;
+      DMACHANS  at 0 range 16 .. 20;
+      Reserved3 at 0 range 21 .. 27;
+      TESTSTAT  at 0 range 28 .. 31;
+   end record;
+
+   -- 11.3.10 DMA_CFG Register
+
+   type DMA_CFG_Type is record
+      MASTEN            : Boolean := False; -- Enable status of the controller
+      Reserved1         : Bits_4  := 0;
+      CHPROTCTRL_HPROT1 : Boolean := False; -- Controls HPROT[1] to indicate if a privileged access is occurring.
+      CHPROTCTRL_HPROT2 : Boolean := False; -- Controls HPROT[2] to indicate if a bufferable access is occurring.
+      CHPROTCTRL_HPROT3 : Boolean := False; -- Controls HPROT[3] to indicate if a cacheable access is occurring.
+      Reserved2         : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_CFG_Type use record
+      MASTEN            at 0 range 0 ..  0;
+      Reserved1         at 0 range 1 ..  4;
+      CHPROTCTRL_HPROT1 at 0 range 5 ..  5;
+      CHPROTCTRL_HPROT2 at 0 range 6 ..  6;
+      CHPROTCTRL_HPROT3 at 0 range 7 ..  7;
+      Reserved2         at 0 range 8 .. 31;
+   end record;
+
+   -- 11.3.11 DMA_CTLBASE Register
+
+   type DMA_CTLBASE_Type is record
+      Reserved : Bits_5  := 0;
+      ADDR     : Bits_27 := 0; -- Pointer to the base address of the primary data structure.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_CTLBASE_Type use record
+      Reserved at 0 range 0 ..  4;
+      ADDR     at 0 range 5 .. 31;
+   end record;
+
+   -- 11.3.12 DMA_ALTBASE Register
+
+   type DMA_ALTBASE_Type is record
+      ADDR : Unsigned_32; -- Base address of the alternate data structure
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_ALTBASE_Type use record
+      ADDR at 0 range 0 .. 31;
+   end record;
+
+   -- 11.3.13 DMA_WAITSTAT Register
+
+   type DMA_WAITSTAT_Type is record
+      WAITREQ : Bitmap_32; -- Channel wait on request status.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_WAITSTAT_Type use record
+      WAITREQ at 0 range 0 .. 31;
+   end record;
+
+   -- 11.3.14 DMA_SWREQ Register
+
+   type DMA_SWREQ_Type is record
+      SWREQ : Bitmap_32 := [others => False]; -- Set the appropriate bit to generate a software DMA request on the corresponding DMA channel.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_SWREQ_Type use record
+      SWREQ at 0 range 0 .. 31;
+   end record;
+
+   -- 11.3.15 DMA_USEBURSTSET Register
+
+   type DMA_USEBURSTSET_Type is record
+      SET : Bitmap_32 := [others => False]; -- Returns the useburst status, or disables dma_sreq[C] from generating DMA requests.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_USEBURSTSET_Type use record
+      SET at 0 range 0 .. 31;
+   end record;
+
+   -- 11.3.16 DMA_USEBURSTCLR Register
+
+   type DMA_USEBURSTCLR_Type is record
+      CLR : Bitmap_32 := [others => False]; -- Set the appropriate bit to enable dma_sreq[] to generate requests.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_USEBURSTCLR_Type use record
+      CLR at 0 range 0 .. 31;
+   end record;
+
+   -- 11.3.17 DMA_REQMASKSET Register
+
+   type DMA_REQMASKSET_Type is record
+      SET : Bitmap_32 := [others => False]; -- Returns the request mask status of dma_req[] and dma_sreq[], or disables the corresponding channel from generating DMA requests.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_REQMASKSET_Type use record
+      SET at 0 range 0 .. 31;
+   end record;
+
+   -- 11.3.18 DMA_REQMASKCLR Register
+
+   type DMA_REQMASKCLR_Type is record
+      CLR : Bitmap_32 := [others => False]; -- Set the appropriate bit to enable DMA requests for the channel corresponding to dma_req[] and dma_sreq[].
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_REQMASKCLR_Type use record
+      CLR at 0 range 0 .. 31;
+   end record;
+
+   -- 11.3.19 DMA_ENASET Register
+
+   type DMA_ENASET_Type is record
+      SET : Bitmap_32 := [others => False]; -- Returns the enable status of the channels, or enables the corresponding channels.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_ENASET_Type use record
+      SET at 0 range 0 .. 31;
+   end record;
+
+   -- 11.3.20 DMA_ENACLR Register
+
+   type DMA_ENACLR_Type is record
+      CLR : Bitmap_32 := [others => False]; -- Set the appropriate bit to disable the corresponding DMA channel.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_ENACLR_Type use record
+      CLR at 0 range 0 .. 31;
+   end record;
+
+   -- 11.3.21 DMA_ALTSET Register
+
+   type DMA_ALTSET_Type is record
+      SET : Bitmap_32 := [others => False]; -- Returns the channel control data structure status, or selects the alternate data structure for the corresponding DMA channel.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_ALTSET_Type use record
+      SET at 0 range 0 .. 31;
+   end record;
+
+   -- 11.3.22 DMA_ALTCLR Register
+
+   type DMA_ALTCLR_Type is record
+      CLR : Bitmap_32 := [others => False]; -- Set the appropriate bit to select the primary data structure for the corresponding DMA channel.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_ALTCLR_Type use record
+      CLR at 0 range 0 .. 31;
+   end record;
+
+   -- 11.3.23 DMA_PRIOSET Register
+
+   type DMA_PRIOSET_Type is record
+      SET : Bitmap_32 := [others => False]; -- Returns the channel priority mask status, or sets the channel priority to high.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_PRIOSET_Type use record
+      SET at 0 range 0 .. 31;
+   end record;
+
+   -- 11.3.24 DMA_PRIOCLR Register
+
+   type DMA_PRIOCLR_Type is record
+      CLR : Bitmap_32 := [others => False]; -- Set the appropriate bit to select the default priority level for the specified DMA channel.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_PRIOCLR_Type use record
+      CLR at 0 range 0 .. 31;
+   end record;
+
+   -- 11.3.25 DMA_ERRCLR Register
+
+   type DMA_ERRCLR_Type is record
+      ERRCLR   : Boolean := False; -- Returns the status of dma_err, or sets the signal LOW.
+      Reserved : Bits_31 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_ERRCLR_Type use record
+      ERRCLR   at 0 range 0 ..  0;
+      Reserved at 0 range 1 .. 31;
+   end record;
+
+   -- Table 6-26. DMA Registers
+
+   DMA_BASEADDRESS : constant := 16#400E_0000#;
+
+   DMA_DEVICE_CFG : aliased DMA_DEVICE_CFG_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#0000#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_SW_CHTRIG : aliased DMA_SW_CHTRIG_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#0004#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_CH0_SRCCFG : aliased DMA_CHn_SRCCFG_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#0010#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_CH1_SRCCFG : aliased DMA_CHn_SRCCFG_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#0014#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_CH2_SRCCFG : aliased DMA_CHn_SRCCFG_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#0018#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_CH3_SRCCFG : aliased DMA_CHn_SRCCFG_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#001C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_CH4_SRCCFG : aliased DMA_CHn_SRCCFG_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#0020#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_CH5_SRCCFG : aliased DMA_CHn_SRCCFG_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#0024#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_CH6_SRCCFG : aliased DMA_CHn_SRCCFG_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#0028#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_CH7_SRCCFG : aliased DMA_CHn_SRCCFG_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#002C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_INT1_SRCCFG : aliased DMA_INT1_SRCCFG_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#0100#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_INT2_SRCCFG : aliased DMA_INT2_SRCCFG_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#0104#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_INT3_SRCCFG : aliased DMA_INT3_SRCCFG_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#0108#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_INT0_SRCFLG : aliased DMA_INT0_SRCFLG_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#0110#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_INT0_CLRFLG : aliased DMA_INT0_CLRFLG_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#0114#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_STAT : aliased DMA_STAT_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#1000#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_CFG : aliased DMA_CFG_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#1004#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_CTLBASE : aliased DMA_CTLBASE_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#1008#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_ALTBASE : aliased DMA_ALTBASE_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#100C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_WAITSTAT : aliased DMA_WAITSTAT_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#1010#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_SWREQ : aliased DMA_SWREQ_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#1014#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_USEBURSTSET : aliased DMA_USEBURSTSET_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#1018#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_USEBURSTCLR : aliased DMA_USEBURSTCLR_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#101C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_REQMASKSET : aliased DMA_REQMASKSET_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#1020#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_REQMASKCLR : aliased DMA_REQMASKCLR_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#1024#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_ENASET : aliased DMA_ENASET_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#1028#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_ENACLR : aliased DMA_ENACLR_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#102C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_ALTSET : aliased DMA_ALTSET_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#1030#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_ALTCLR : aliased DMA_ALTCLR_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#1034#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_PRIOSET : aliased DMA_PRIOSET_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#1038#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_PRIOCLR : aliased DMA_PRIOCLR_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#103C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DMA_ERRCLR : aliased DMA_ERRCLR_Type
+      with Address              => System'To_Address (DMA_BASEADDRESS + 16#104C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
    -- 12 Digital I/O
    ----------------------------------------------------------------------------
 
