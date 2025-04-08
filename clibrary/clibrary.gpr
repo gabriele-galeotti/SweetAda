@@ -41,8 +41,8 @@ library project CLibrary is
       );
    C_Files := (
       "assert.c",
-      "ctype.c",
-      "errno.c",
+      -- "ctype.c",
+      -- "errno.c",
       "stdio.c",
       "stdlib.c",
       "string.c",
