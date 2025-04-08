@@ -110,18 +110,19 @@ while ($ntarget -gt 0)
     $target_mtime = (Get-Item $target).LastWriteTime
     if ($destination_mtime -gt $target_mtime)
     {
-      Write-Host "file [installed/symlinked] `"$($destination)`"" `
-                 "has timestamp more recent than"                 `
-                 "file [origin] `"$($target)`""
+      Write-Host "file [installed/symlinked]: `"$($destination)`"" `
+                 "will be deleted, but timestamp is more recent than" `
+                 "file [origin]:              `"$($target)`"" `
+                 "Changes to this file could be lost."
       while ($true)
       {
-        $answer = (Read-Host "[U]pdate or [R]emove: ").ToUpper()
+        $answer = (Read-Host "[U]pdate origin or [I]gnore changes").ToUpper()
         if ($answer -eq "U")
         {
           Move-Item -Path $destination -Destination $target -Force
           break
         }
-        elseif ($answer -eq "R")
+        elseif ($answer -eq "I")
         {
           $remove = $true
           break
