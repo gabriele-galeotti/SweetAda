@@ -146,7 +146,6 @@ export TMPDIR
 # clean                 C               NP
 # distclean             C               NP
 # createkernelcfg               S       NP
-# freeze                        S       NP
 # help                          S       NP
 # rts                   R               NP
 # configure                             P
@@ -176,7 +175,6 @@ CLEANING_GOALS := clean     \
 
 # general service goals
 SERVICE_GOALS := createkernelcfg   \
-                 freeze            \
                  help              \
                  $(LIBUTILS_GOALS)
 
@@ -1608,22 +1606,6 @@ libutils-gnat-wrapper:
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GNAT-wrapper clean
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GNAT-wrapper all
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GNAT-wrapper install
-
-#
-# Kernel "freezing".
-#
-FREEZE_DIRECTORY    := freeze
-FILES_TO_BE_FREEZED :=
--include $(FREEZE_DIRECTORY)/Makefile.fz.in
-.PHONY: freeze
-freeze:
-ifneq ($(FILES_TO_BE_FREEZED),)
-ifeq ($(OSTYPE),cmd)
-	-$(CP) $(FILES_TO_BE_FREEZED) $(FREEZE_DIRECTORY)\ $(NULL)
-else
-	-$(CP) $(FILES_TO_BE_FREEZED) $(FREEZE_DIRECTORY)/
-endif
-endif
 
 #
 # Probe a variable value.
