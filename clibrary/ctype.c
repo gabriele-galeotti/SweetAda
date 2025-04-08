@@ -16,11 +16,11 @@
  * _CTYPE_U 0x01 UPPERCASE SYMBOL
  * _CTYPE_L 0x02 LOWERCASE SYMBOL
  * _CTYPE_D 0x04 NUMERIC DIGIT
- * _CTYPE_C 0x08 CONTROL CHARACTER
+ * _CTYPE_S 0x08 "HARD" SPACE (0x20)
  * _CTYPE_P 0x10 PUNCTUATION CHARACTER
- * _CTYPE_W 0x20 "C" LOCALE WHITE SPACE CHARACTER (HT/LF/VT/FF/CR/SP)
+ * _CTYPE_C 0x20 CONTROL CHARACTER
+ * _CTYPE_B 0x40 "C" LOCALE WHITE SPACE CHARACTER (HT/LF/VT/FF/CR/SP)
  * _CTYPE_X 0x40 HEXADECIMAL DIGIT
- * _CTYPE_S 0x80 "HARD" SPACE (0x20)
  */
 
 const unsigned char _CTYPE_character_table[] = {
@@ -35,11 +35,11 @@ const unsigned char _CTYPE_character_table[] = {
         _CTYPE_C,               /*   6 0x06 |  ^F| ACK */
         _CTYPE_C,               /*   7 0x07 |  ^G| BEL */
         _CTYPE_C,               /*   8 0x08 |  ^H| BS */
-        _CTYPE_C | _CTYPE_W,    /*   9 0x09 |  ^I| HT */
-        _CTYPE_C | _CTYPE_W,    /*  10 0x0A |  ^J| LF */
-        _CTYPE_C | _CTYPE_W,    /*  11 0x0B |  ^K| VT */
-        _CTYPE_C | _CTYPE_W,    /*  12 0x0C |  ^L| FF */
-        _CTYPE_C | _CTYPE_W,    /*  13 0x0D |  ^M| CR */
+        _CTYPE_C | _CTYPE_B,    /*   9 0x09 |  ^I| HT */
+        _CTYPE_C | _CTYPE_B,    /*  10 0x0A |  ^J| LF */
+        _CTYPE_C | _CTYPE_B,    /*  11 0x0B |  ^K| VT */
+        _CTYPE_C | _CTYPE_B,    /*  12 0x0C |  ^L| FF */
+        _CTYPE_C | _CTYPE_B,    /*  13 0x0D |  ^M| CR */
         _CTYPE_C,               /*  14 0x0E |  ^N| SO */
         _CTYPE_C,               /*  15 0x0F |  ^O| SI */
         _CTYPE_C,               /*  16 0x10 |  ^P| DLE */
@@ -58,7 +58,7 @@ const unsigned char _CTYPE_character_table[] = {
         _CTYPE_C,               /*  29 0x1D |  ^]| GS */
         _CTYPE_C,               /*  30 0x1E |  ^^| RS */
         _CTYPE_C,               /*  31 0x1F |  ^_| US */
-        _CTYPE_W | _CTYPE_S,    /*  32 0x20 |    | SP */
+        _CTYPE_B | _CTYPE_S,    /*  32 0x20 |    | SP */
         _CTYPE_P,               /*  33 0x21 |   !| */
         _CTYPE_P,               /*  34 0x22 |   "| */
         _CTYPE_P,               /*  35 0x23 |   #| */
@@ -186,7 +186,7 @@ const unsigned char _CTYPE_character_table[] = {
         0,                      /* 157 0x9D |^M-]| */
         0,                      /* 158 0x9E |^M-^| */
         0,                      /* 159 0x9F |^M-_| */
-        _CTYPE_W | _CTYPE_S,    /* 160 0xA0 | M- | NON-BREAKING SPACE */
+        _CTYPE_B | _CTYPE_S,    /* 160 0xA0 | M- | NON-BREAKING SPACE */
         _CTYPE_P,               /* 161 0xA1 | M-!| ¡ */
         _CTYPE_P,               /* 162 0xA2 | M-"| ¢ */
         _CTYPE_P,               /* 163 0xA3 | M-#| £ */
@@ -339,7 +339,7 @@ int
 int
 (isspace)(int c)
 {
-        return ((_CTYPE_character_table + 1)[(int)(unsigned char)c] & _CTYPE_W) != 0;
+        return ((_CTYPE_character_table + 1)[(int)(unsigned char)c] & _CTYPE_B) != 0;
 }
 
 int

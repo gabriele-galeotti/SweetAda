@@ -23,11 +23,11 @@ extern "C" {
 #define _CTYPE_U 0x01 /* UPPERCASE SYMBOL                                     */
 #define _CTYPE_L 0x02 /* LOWERCASE SYMBOL                                     */
 #define _CTYPE_D 0x04 /* NUMERIC DIGIT                                        */
-#define _CTYPE_C 0x08 /* CONTROL CHARACTER                                    */
+#define _CTYPE_S 0x08 /* "HARD" SPACE (0x20)                                  */
 #define _CTYPE_P 0x10 /* PUNCTUATION CHARACTER                                */
-#define _CTYPE_W 0x20 /* "C" LOCALE WHITE SPACE CHARACTER (HT/LF/VT/FF/CR/SP) */
-#define _CTYPE_X 0x40 /* HEXADECIMAL DIGIT                                    */
-#define _CTYPE_S 0x80 /* "HARD" SPACE (0x20)                                  */
+#define _CTYPE_C 0x20 /* CONTROL CHARACTER                                    */
+#define _CTYPE_B 0x40 /* "C" LOCALE WHITE SPACE CHARACTER (HT/LF/VT/FF/CR/SP) */
+#define _CTYPE_X 0x80 /* HEXADECIMAL DIGIT                                    */
 
 extern const unsigned char _CTYPE_character_table[];
 
@@ -55,7 +55,7 @@ extern int toupper(int);
 #define islower(c)  ((_CTYPE_character_table + 1)[(int)(unsigned char)(c)] & _CTYPE_L)
 #define isprint(c)  ((_CTYPE_character_table + 1)[(int)(unsigned char)(c)] & (_CTYPE_P | _CTYPE_U | _CTYPE_L | _CTYPE_D | _CTYPE_S))
 #define ispunct(c)  ((_CTYPE_character_table + 1)[(int)(unsigned char)(c)] & _CTYPE_P)
-#define isspace(c)  ((_CTYPE_character_table + 1)[(int)(unsigned char)(c)] & _CTYPE_W)
+#define isspace(c)  ((_CTYPE_character_table + 1)[(int)(unsigned char)(c)] & _CTYPE_B)
 #define isupper(c)  ((_CTYPE_character_table + 1)[(int)(unsigned char)(c)] & _CTYPE_U)
 #define isxdigit(c) ((_CTYPE_character_table + 1)[(int)(unsigned char)(c)] & (_CTYPE_D | _CTYPE_X))
 #define isascii(c)  ((int)((unsigned char)(c) <= _CTYPE_ASCII_MASK))
