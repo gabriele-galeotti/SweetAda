@@ -36,8 +36,8 @@ LIBRARY_NAME := clibrary
 OBJECTS :=
 
 OBJECTS += $(OBJ_DIRECTORY)/assert.o
-OBJECTS += $(OBJ_DIRECTORY)/ctype.o
-OBJECTS += $(OBJ_DIRECTORY)/errno.o
+#OBJECTS += $(OBJ_DIRECTORY)/ctype.o
+#OBJECTS += $(OBJ_DIRECTORY)/errno.o
 OBJECTS += $(OBJ_DIRECTORY)/stdio.o
 OBJECTS += $(OBJ_DIRECTORY)/stdlib.o
 OBJECTS += $(OBJ_DIRECTORY)/string.o
