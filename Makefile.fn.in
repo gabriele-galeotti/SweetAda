@@ -160,7 +160,7 @@ endif
 # Create an empty file.
 #
 ifeq ($(OSTYPE),cmd)
-create-emptyfile = TYPE nul > $1
+create-emptyfile = TYPE nul>$1
 else
 create-emptyfile = touch $1
 endif
