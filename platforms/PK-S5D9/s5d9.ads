@@ -3175,13 +3175,29 @@ pragma Warnings (On);
 
    -- 38.2.5 SPI Data Register (SPDR/SPDR_HA)
 
-   type SPDR_Type is record
-      SPDR : Unsigned_32; -- SPDR/SPDR_HA is the interface with the buffers that hold data for transmission and reception by the SPI.
+   type SPDR_Width is (Bit8, Bit16, Bit32);
+
+   type SPDR_Type (W : SPDR_Width := Bit8) is record
+      case W is
+         when Bit8  =>
+            Unused1 : Bits_24    := 0;
+            SPDR8   : Unsigned_8;       -- SPDR/SPDR_HA is the interface with the buffers that hold data for transmission and reception by the SPI.
+         when Bit16 =>
+            Unused2 : Bits_16     := 0;
+            SPDR16  : Unsigned_16;      -- SPDR/SPDR_HA is the interface with the buffers that hold data for transmission and reception by the SPI.
+         when Bit32 =>
+            SPDR32  : Unsigned_32;
+      end case;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order       => Low_Order_First,
+           Size            => 32,
+           Unchecked_Union => True;
    for SPDR_Type use record
-      SPDR at 0 range 0 .. 31;
+      Unused1 at 0 range  0 .. 23;
+      SPDR8   at 0 range 24 .. 31;
+      Unused2 at 0 range  0 .. 15;
+      SPDR16  at 0 range 16 .. 31;
+      SPDR32  at 0 range  0 .. 31;
    end record;
 
    -- 38.2.6 SPI Sequence Control Register (SPSCR)
