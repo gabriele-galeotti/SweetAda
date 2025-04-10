@@ -17,7 +17,6 @@
 
 with CPU;
 with S5D9;
-with BSP;
 
 package body LCD
    is
@@ -31,6 +30,16 @@ package body LCD
    --========================================================================--
 
    use S5D9;
+
+   procedure Init_SPI;
+   procedure CS_Assert
+      with Inline => True;
+   procedure CS_Deassert
+      with Inline => True;
+   procedure Command_Assert
+      with Inline => True;
+   procedure Data_Assert
+      with Inline => True;
 
    --========================================================================--
    --                                                                        --
@@ -56,81 +65,12 @@ package body LCD
    ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
-   -- Init
+   -- Init_SPI
    ----------------------------------------------------------------------------
-   procedure Init
+   procedure Init_SPI
       is
-      Delay_Count : constant := 10_000_000;
    begin
-      SPI (0).SPSR.MODF := False;
-      SPI (0).SPCR.SPE := True;
-      SPI (0).SPPCR := (others => <>);
-      SPI (0).SPBR.SPBR := 16#E0#;
-      SPI (0).SPCR := (
-         SPMS   => SPMS_SPI4,
-         TXMD   => TXMD_FD,
-         MSTR   => MSTR_MASTER,
-         SPE    => True,
-         others => <>
-         );
-      loop exit when not SPI (0).SPSR.IDLNF; end loop;
-      SPI (0).SPSCR.SPSLN := SPSLN0;
-      SPI (0).SPDCR := (
-         SPFC   => SPFC_1,     -- Number of Frames Specification
-         SPRDTD => SPRDTD_RB,  -- SPI Receive/Transmit Data Select
-         -- SPRDTD => SPRDTD_TB,  -- SPI Receive/Transmit Data Select
-         -- SPLW   => SPLW_HALFW, -- SPI Word Access/Halfword Access Specification
-         -- SPBYT  => SPBYT_BYTE, -- SPI Byte Access Specification
-         SPLW   => SPLW_FULLW, -- SPI Word Access/Halfword Access Specification
-         SPBYT  => SPBYT_WORD, -- SPI Byte Access Specification
-         others => <>
-         );
-      -- SPI (0).SPCR.SPE := True;
-
-      -- MISOA_A
---      PFSR (P100).PMR  := True;
---      PFSR (P100).PSEL := PSEL_SPI;
-      PFSR (P100).PMR  := False;
-      PORT (1).PDR (0) := False;
-      -- MOSIA_A
---      PFSR (P101).PMR  := True;
---      PFSR (P101).PSEL := PSEL_SPI;
-      PFSR (P101).PMR  := False;
-      PORT (1).PDR (1) := False;
-      -- RSPCKA_A LCD SCK
---      PFSR (P102).PMR  := True;
---      PFSR (P102).PSEL := PSEL_SPI;
-      PFSR (P102).PMR  := False;
-      PORT (1).PDR (2) := False;
-      -- RESX LCD /RESET active low
-      PFSR (P610).PMR := False;
-      PORT (6).PDR (10) := True;
-      -- CSX LCD /CS active low
-      PFSR (P611).PMR := False;
-      PORT (6).PDR (11) := True;
-      -- D/CX LCD command/data
-      PFSR (P115).PMR := False;
-      PORT (1).PDR (15) := False; -- float
-      -- low on D/CX = command
-      -- PORT (1).PODR (15) := False;
-      -- pulse /RESET, then deassert
-      PORT (6).PODR (10) := False;
-      for Delay_Loop_Count in 1 .. 1_000 loop CPU.NOP; end loop;
-      PORT (6).PODR (10) := True;
-      for Delay_Loop_Count in 1 .. 1_000 loop CPU.NOP; end loop;
-      --
-      return;
-      -- /CS active
-      PORT (6).PODR (11) := False;
-      -- SPI programming
-      SPI (0).SPCMD (0) := (
-         CPHA   => CPHA_TRAIL, -- RSPCK Phase Setting
-         CPOL   => CPOL_HIGH,  -- RSPCK Polarity Setting
-         BRDV   => BRDV_DIV8,  -- Bit Rate Division Setting
-         SPB    => SPB_8,      -- SPI Data Length Setting
-         LSBF   => LSBF_MSB,   -- SPI LSB First
-         others => <>
-         );
+      SPI (0).SPCR.SPE := False;
       SPI (0).SPSR := (
          OVRF   => False,
          MODF   => False,
@@ -139,13 +79,94 @@ package body LCD
          SPTEF  => True,
          others => <>
          );
-      loop
-         BSP.Console_Putchar ('X');
-         loop exit when SPI (0).SPSR.SPTEF; end loop;
-         SPI (0).SPDR.SPDR := 16#AA#;
-         for Delay_Loop_Count in 1 .. 100_000 loop CPU.NOP; end loop;
-      end loop;
+      SPI (0).SPCR := (
+         SPMS   => SPMS_SPI4,
+         TXMD   => TXMD_FD,
+         MSTR   => MSTR_MASTER,
+         SPE    => True,
+         others => <>
+         );
+      SPI (0).SPPCR := (others => <>);
+      SPI (0).SPBR.SPBR := 16#E0#;
+      SPI (0).SPSCR.SPSLN := SPSLN0;
+      loop exit when not SPI (0).SPSR.IDLNF; end loop;
+      SPI (0).SPDCR := (
+         SPFC   => SPFC_1,     -- Number of Frames Specification
+         SPRDTD => SPRDTD_RB,  -- SPI Receive/Transmit Data Select
+         SPLW   => SPLW_FULLW, -- SPI Word Access/Halfword Access Specification
+         SPBYT  => SPBYT_BYTE, -- SPI Byte Access Specification
+         others => <>
+         );
+      SPI (0).SPCMD (0) := (
+         CPHA   => CPHA_LEAD, -- RSPCK Phase Setting
+         CPOL   => CPOL_LOW,  -- RSPCK Polarity Setting
+         BRDV   => BRDV_DIV8, -- Bit Rate Division Setting
+         SPB    => SPB_8,     -- SPI Data Length Setting
+         LSBF   => LSBF_MSB,  -- SPI MSB First
+         others => <>
+         );
+      -- MISOA_A
+      PFSR (P100).PMR  := True;
+      PFSR (P100).PSEL := PSEL_SPI;
+      -- MOSIA_A
+      PFSR (P101).PMR  := True;
+      PFSR (P101).PSEL := PSEL_SPI;
+      -- RSPCKA_A LCD SCK
+      PFSR (P102).PMR  := True;
+      PFSR (P102).PSEL := PSEL_SPI;
+      -- RESX LCD /RESET active low
+      PFSR (P610).PMR := False;
+      PORT (6).PDR (10) := True;
+      -- CSX LCD /CS active low
+      PFSR (P611).PMR := False;
+      PORT (6).PDR (11) := True;
+      -- D/CX LCD command/data
+      PFSR (P115).PMR := False;
+      PORT (1).PDR (15) := True;
+      -- pulse /RESET
+      PORT (6).PODR (10) := False;
+      for Delay_Loop_Count in 1 .. 1_000_000 loop CPU.NOP; end loop;
+      PORT (6).PODR (10) := True;
+      for Delay_Loop_Count in 1 .. 10_000_000 loop CPU.NOP; end loop;
+   end Init_SPI;
 
+   ----------------------------------------------------------------------------
+   -- helpers
+   ----------------------------------------------------------------------------
+   procedure CS_Assert is begin PORT (6).PODR (11) := False; end CS_Assert;
+   procedure CS_Deassert is begin PORT (6).PODR (11) := True; end CS_Deassert;
+   procedure Command_Assert is begin PORT (1).PODR (15) := False; end Command_Assert;
+   procedure Data_Assert is begin PORT (1).PODR (15) := True; end Data_Assert;
+
+   ----------------------------------------------------------------------------
+   -- Init
+   ----------------------------------------------------------------------------
+   procedure Init
+      is
+   begin
+      Init_SPI;
+      CS_Assert;
+      Command_Assert;
+      -- Software Reset
+      loop exit when SPI (0).SPSR.SPTEF; end loop;
+      SPI (0).SPDR.SPDR8 := 16#01#;
+      for Delay_Loop_Count in 1 .. 10_000_000 loop CPU.NOP; end loop;
+      loop exit when SPI (0).SPSR.SPRF; end loop;
+      -- Sleep Out
+      loop exit when SPI (0).SPSR.SPTEF; end loop;
+      SPI (0).SPDR.SPDR8 := 16#11#;
+      for Delay_Loop_Count in 1 .. 10_000_000 loop CPU.NOP; end loop;
+      loop exit when SPI (0).SPSR.SPRF; end loop;
+      -- Display OFF
+      loop exit when SPI (0).SPSR.SPTEF; end loop;
+      SPI (0).SPDR.SPDR8 := 16#28#;
+      for Delay_Loop_Count in 1 .. 10_000_000 loop CPU.NOP; end loop;
+      loop exit when SPI (0).SPSR.SPRF; end loop;
+      -- Display ON
+      loop exit when SPI (0).SPSR.SPTEF; end loop;
+      SPI (0).SPDR.SPDR8 := 16#29#;
+      for Delay_Loop_Count in 1 .. 10_000_000 loop CPU.NOP; end loop;
+      loop exit when SPI (0).SPSR.SPRF; end loop;
    end Init;
 
 end LCD;

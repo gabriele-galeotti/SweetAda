@@ -241,7 +241,7 @@ package body BSP
       W25Q64FV.Init;
       W25Q64FV.Device_Detect;
       MII.Init;
-      -- LCD.Init;
+      LCD.Init;
       -------------------------------------------------------------------------
       ARMv7M.Irq_Enable;
       ARMv7M.Fault_Irq_Enable;
