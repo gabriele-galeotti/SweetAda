@@ -36,6 +36,19 @@ package body MII
    use Bits;
    use S5D9;
 
+   MII_Delay : constant := 10_000;
+
+   function Bit_Read
+      return Bits_1
+      with Inline => True;
+
+   procedure Bit_Send
+      (Bit : in Bits_1)
+      with Inline => True;
+
+   procedure Bus_Release
+      with Inline => True;
+
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -43,17 +56,6 @@ package body MII
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   function Bit_Read
-      return Bits_1
-      with Inline => True;
-   procedure Bit_Send
-      (Bit : in Bits_1)
-      with Inline => True;
-   procedure Bus_Release
-      with Inline => True;
-
-   MII_Delay : constant := 10_000;
 
    function Bit_Read
       return Bits_1
