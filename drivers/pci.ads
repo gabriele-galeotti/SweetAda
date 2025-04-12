@@ -178,6 +178,38 @@ package PCI
    MinGNT_Offset                  : constant := 16#3E#;
    MaxLat_Offset                  : constant := 16#3F#;
 
+   -- Command register
+   type Command_Type is record
+      IOEN     : Boolean := False; -- I/O space enable
+      MEMEN    : Boolean := False; -- memory space enable
+      BMEN     : Boolean := False; -- bus master enable
+      SCYCEN   : Boolean := False; -- special cycle enable
+      MWIEN    : Boolean := False; -- memory write invalidate
+      VGASNOOP : Boolean := False; -- VGA snoop enable
+      PERREN   : Boolean := False; -- parity error enable
+      ADSTEP   : Boolean := False; -- address/data stepping enable
+      SERREN   : Boolean := False; -- /SERR enable
+      FBTBEN   : Boolean := False; -- fast back-to-back enable
+      IRQEN    : Boolean := False; -- interrupt enable
+      Reserved : Bits_5  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for Command_Type use record
+      IOEN     at 0 range  0 ..  0;
+      MEMEN    at 0 range  1 ..  1;
+      BMEN     at 0 range  2 ..  2;
+      SCYCEN   at 0 range  3 ..  3;
+      MWIEN    at 0 range  4 ..  4;
+      VGASNOOP at 0 range  5 ..  5;
+      PERREN   at 0 range  6 ..  6;
+      ADSTEP   at 0 range  7 ..  7;
+      SERREN   at 0 range  8 ..  8;
+      FBTBEN   at 0 range  9 ..  9;
+      IRQEN    at 0 range 10 .. 10;
+      Reserved at 0 range 11 .. 15;
+   end record;
+
    ----------------------------------------------------------------------------
    -- Configuration space access types
    ----------------------------------------------------------------------------
