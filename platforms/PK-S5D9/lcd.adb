@@ -93,7 +93,9 @@ package body LCD
       SPI (0).SPDCR := (
          SPFC   => SPFC_1,     -- Number of Frames Specification
          SPRDTD => SPRDTD_RB,  -- SPI Receive/Transmit Data Select
-         SPLW   => SPLW_FULLW, -- SPI Word Access/Halfword Access Specification
+         -- SPLW   => SPLW_FULLW, -- SPI Word Access/Halfword Access Specification
+         -- SPBYT  => SPBYT_WORD, -- SPI Byte Access Specification
+         SPLW   => SPLW_HALFW, -- SPI Word Access/Halfword Access Specification
          SPBYT  => SPBYT_BYTE, -- SPI Byte Access Specification
          others => <>
          );
