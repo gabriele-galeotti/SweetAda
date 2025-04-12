@@ -3180,24 +3180,24 @@ pragma Warnings (On);
    type SPDR_Type (W : SPDR_Width := Bit8) is record
       case W is
          when Bit8  =>
-            Unused1 : Bits_24    := 0;
-            SPDR8   : Unsigned_8;       -- SPDR/SPDR_HA is the interface with the buffers that hold data for transmission and reception by the SPI.
+            SPDR8   : Unsigned_8  with Volatile_Full_Access => True; -- SPDR/SPDR_HA is the interface with the buffers that hold data for transmission and reception by the SPI.
+            Unused1 : Bits_24;
          when Bit16 =>
-            Unused2 : Bits_16     := 0;
-            SPDR16  : Unsigned_16;      -- SPDR/SPDR_HA is the interface with the buffers that hold data for transmission and reception by the SPI.
+            SPDR16  : Unsigned_16 with Volatile_Full_Access => True; -- SPDR/SPDR_HA is the interface with the buffers that hold data for transmission and reception by the SPI.
+            Unused2 : Bits_16;
          when Bit32 =>
-            SPDR32  : Unsigned_32;
+            SPDR32  : Unsigned_32 with Volatile_Full_Access => True; -- SPDR/SPDR_HA is the interface with the buffers that hold data for transmission and reception by the SPI.
       end case;
    end record
       with Bit_Order       => Low_Order_First,
            Size            => 32,
            Unchecked_Union => True;
    for SPDR_Type use record
-      Unused1 at 0 range  0 .. 23;
-      SPDR8   at 0 range 24 .. 31;
-      Unused2 at 0 range  0 .. 15;
-      SPDR16  at 0 range 16 .. 31;
-      SPDR32  at 0 range  0 .. 31;
+      SPDR8   at 0 range 0 ..  7;
+      Unused1 at 1 range 0 .. 23;
+      SPDR16  at 0 range 0 .. 15;
+      Unused2 at 2 range 0 .. 15;
+      SPDR32  at 0 range 0 .. 31;
    end record;
 
    -- 38.2.6 SPI Sequence Control Register (SPSCR)
@@ -3477,7 +3477,7 @@ pragma Warnings (Off);
       SSLP   : SSLP_Type        with Volatile_Full_Access => True;
       SPPCR  : SPPCR_Type       with Volatile_Full_Access => True;
       SPSR   : SPSR_Type        with Volatile_Full_Access => True;
-      SPDR   : SPDR_Type        with Volatile_Full_Access => True;
+      SPDR   : SPDR_Type        with Volatile => True;
       SPSCR  : SPSCR_Type       with Volatile_Full_Access => True;
       SPSSR  : SPSSR_Type       with Volatile_Full_Access => True;
       SPBR   : SPBR_Type        with Volatile_Full_Access => True;
