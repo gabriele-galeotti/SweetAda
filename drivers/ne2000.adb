@@ -131,28 +131,25 @@ package body NE2000
    -- CR: Command Register (00H; Type=R/W)
    ----------------------------------------------------------------------------
 
-   subtype RD_Type is Bits_3;
-   subtype PS_Type is Bits_2;
-
    -- RD field encoding
-   RD_INVALID   : constant := 2#000#; -- Not allowed
-   REMOTE_READ  : constant := 2#001#; -- Remote Read
-   REMOTE_WRITE : constant := 2#010#; -- Remote Write
-   SEND_PACKET  : constant := 2#011#; -- Send Packet
-   ABRT_CMPLT   : constant := 2#100#; -- Abort/Complete remote DMA
+   RD_INVALID      : constant := 2#000#; -- Not allowed
+   RD_REMOTE_READ  : constant := 2#001#; -- Remote Read
+   RD_REMOTE_WRITE : constant := 2#010#; -- Remote Write
+   RD_SEND_PACKET  : constant := 2#011#; -- Send Packet
+   RD_ABRT_CMPLT   : constant := 2#100#; -- Abort/Complete remote DMA
 
    -- PS field encoding
-   PAGE0 : constant := 2#00#;
-   PAGE1 : constant := 2#01#;
-   PAGE2 : constant := 2#10#;
-   PAGE3 : constant := 2#11#;
+   PS_PAGE0 : constant := 2#00#; -- Register Page 0
+   PS_PAGE1 : constant := 2#01#; -- Register Page 1
+   PS_PAGE2 : constant := 2#10#; -- Register Page 2
+   PS_PAGE3 : constant := 2#11#; -- Register Page 3
 
    type CR_Type is record
-      STP : Boolean; -- STOP
-      STA : Boolean; -- START
-      TXP : Boolean; -- TRANSMIT PACKET
-      RD  : Bits_3;  -- REMOTE DMA COMMAND
-      PS  : PS_Type; -- PAGE SELECT
+      STP : Boolean := True;          -- STOP
+      STA : Boolean := False;         -- START
+      TXP : Boolean := False;         -- TRANSMIT PACKET
+      RD  : Bits_3  := RD_ABRT_CMPLT; -- REMOTE DMA COMMAND
+      PS  : Bits_2  := PS_PAGE0;      -- PAGE SELECT
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -167,16 +164,21 @@ package body NE2000
    function To_U8 is new Ada.Unchecked_Conversion (CR_Type, Unsigned_8);
    function To_CR is new Ada.Unchecked_Conversion (Unsigned_8, CR_Type);
 
-   -- useful record aggregates for setting CR, (valid only for START = True)
-   CR_NODMA : constant CR_Type := (STP => False, STA => True, TXP => False, RD => ABRT_CMPLT, PS => PAGE0);
-   CR_RD    : constant CR_Type := (STP => False, STA => True, TXP => False, RD => REMOTE_READ, PS => PAGE0);
-   CR_WR    : constant CR_Type := (STP => False, STA => True, TXP => False, RD => REMOTE_WRITE, PS => PAGE0);
-   CR_TX    : constant CR_Type := (STP => False, STA => True, TXP => True, RD => ABRT_CMPLT, PS => PAGE0);
-
-   -- Page select
-   CR_PAGE0 : CR_Type renames CR_NODMA;
-   CR_PAGE1 : constant CR_Type := (STP => False, STA => True, TXP => False, RD => ABRT_CMPLT, PS => PAGE1);
-   CR_PAGE2 : constant CR_Type := (STP => False, STA => True, TXP => False, RD => ABRT_CMPLT, PS => PAGE2);
+   -- useful record aggregates (STP = False, STA = True)
+   CR_NODMA : constant CR_Type :=
+      (STP => False, STA => True, TXP => False, RD  => RD_ABRT_CMPLT,   PS  => PS_PAGE0);
+   CR_RD    : constant CR_Type :=
+      (STP => False, STA => True, TXP => False, RD  => RD_REMOTE_READ,  PS  => PS_PAGE0);
+   CR_WR    : constant CR_Type :=
+      (STP => False, STA => True, TXP => False, RD  => RD_REMOTE_WRITE, PS  => PS_PAGE0);
+   CR_TX    : constant CR_Type :=
+      (STP => False, STA => True, TXP => True,  RD  => RD_ABRT_CMPLT,   PS  => PS_PAGE0);
+   CR_PAGE0 : constant CR_Type :=
+      (STP => False, STA => True, TXP => False, RD  => RD_ABRT_CMPLT,   PS  => PS_PAGE0);
+   CR_PAGE1 : constant CR_Type :=
+      (STP => False, STA => True, TXP => False, RD  => RD_ABRT_CMPLT,   PS  => PS_PAGE1);
+   CR_PAGE2 : constant CR_Type :=
+      (STP => False, STA => True, TXP => False, RD  => RD_ABRT_CMPLT,   PS  => PS_PAGE2);
 
    ----------------------------------------------------------------------------
    -- TSR: Transmit Status Register (04H; Type=R in Page0)
@@ -205,19 +207,22 @@ package body NE2000
      OWC    at 0 range 7 .. 7;
    end record;
 
+   function To_U8 is new Ada.Unchecked_Conversion (TSR_Type, Unsigned_8);
+   function To_CR is new Ada.Unchecked_Conversion (Unsigned_8, TSR_Type);
+
    ----------------------------------------------------------------------------
    -- ISR: Interrupt Status Register (07H; Type=R/W in Page0)
    ----------------------------------------------------------------------------
 
    type ISR_Type is record
-      PRX : Boolean;
-      PTX : Boolean;
-      RXE : Boolean;
-      TXE : Boolean;
-      OVW : Boolean;
-      CNT : Boolean;
-      RDC : Boolean;
-      RST : Boolean;
+      PRX : Boolean := False; -- PACKET RECEIVED
+      PTX : Boolean := False; -- PACKET TRANSMITTED
+      RXE : Boolean := False; -- RECEIVE ERROR
+      TXE : Boolean := False; -- TRANSMIT ERROR
+      OVW : Boolean := False; -- OVERWRITE WARNING
+      CNT : Boolean := False; -- COUNTER OVERFLOW
+      RDC : Boolean := False; -- REMOTE DMA COMPLETE
+      RST : Boolean := False; -- RESET STATUS
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -235,35 +240,38 @@ package body NE2000
    function To_U8 is new Ada.Unchecked_Conversion (ISR_Type, Unsigned_8);
    function To_ISR is new Ada.Unchecked_Conversion (Unsigned_8, ISR_Type);
 
-   ISR_PRX : constant ISR_Type := (PRX => True, others => False);
-   ISR_PTX : constant ISR_Type := (PTX => True, others => False);
-   ISR_RDC : constant ISR_Type := (RDC => True, others => False);
-   ISR_RST : constant ISR_Type := (RST => True, others => False);
-   ISR_ALL : constant ISR_Type := (others => True);
+   -- useful record aggregates
+   ISR_CLRPRX : constant ISR_Type := (PRX => True, others => False);
+   ISR_CLRPTX : constant ISR_Type := (PTX => True, others => False);
+   ISR_CLRRDC : constant ISR_Type := (RDC => True, others => False);
+   ISR_CLRRST : constant ISR_Type := (RST => True, others => False);
+   ISR_CLRALL : constant ISR_Type := (others => True);
 
    ----------------------------------------------------------------------------
    -- RCR: Receive Configuration Register (0CH; Type=W in Page0, Type=R in Page2)
    ----------------------------------------------------------------------------
 
    type RCR_Type is record
-      SEP    : Boolean; -- SAVE ERRORED PACKETS
-      AR     : Boolean; -- ACCEPT RUNT PACKETS
-      AB     : Boolean; -- ACCEPT BROADCAST
-      AM     : Boolean; -- ACCEPT MULTICAST
-      PRO    : Boolean; -- PROMISCUOUS PHYSICAL
-      MON    : Boolean; -- MONITOR MODE
-      Unused : Bits_2;
+      SEP       : Boolean := False; -- SAVE ERRORED PACKETS
+      AR        : Boolean := False; -- ACCEPT RUNT PACKETS
+      AB        : Boolean := False; -- ACCEPT BROADCAST
+      AM        : Boolean := False; -- ACCEPT MULTICAST
+      PRO       : Boolean := False; -- PROMISCUOUS PHYSICAL
+      MON       : Boolean := False; -- MONITOR MODE
+      Reserved1 : Bits_1  := 0;
+      Reserved2 : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
    for RCR_Type use record
-      SEP    at 0 range 0 .. 0;
-      AR     at 0 range 1 .. 1;
-      AB     at 0 range 2 .. 2;
-      AM     at 0 range 3 .. 3;
-      PRO    at 0 range 4 .. 4;
-      MON    at 0 range 5 .. 5;
-      Unused at 0 range 6 .. 7;
+      SEP       at 0 range 0 .. 0;
+      AR        at 0 range 1 .. 1;
+      AB        at 0 range 2 .. 2;
+      AM        at 0 range 3 .. 3;
+      PRO       at 0 range 4 .. 4;
+      MON       at 0 range 5 .. 5;
+      Reserved1 at 0 range 6 .. 6;
+      Reserved2 at 0 range 7 .. 7;
    end record;
 
    function To_U8 is new Ada.Unchecked_Conversion (RCR_Type, Unsigned_8);
@@ -309,11 +317,11 @@ package body NE2000
    LB_External3 : constant := 2#11#; -- LOOPBACK MODE 3
 
    type TCR_Type is record
-      CRC    : Boolean; -- INHIBIT CRC
-      LB     : Bits_2;  -- ENCODED LOOPBACK CONTROL
-      ATD    : Boolean; -- AUTO TRANSMIT DISABLE
-      OFST   : Boolean; -- COLLISION OFFSET ENABLE
-      Unused : Bits_3;
+      CRC    : Boolean := False;     -- INHIBIT CRC
+      LB     : Bits_2  := LB_Normal; -- ENCODED LOOPBACK CONTROL
+      ATD    : Boolean := False;     -- AUTO TRANSMIT DISABLE
+      OFST   : Boolean := False;     -- COLLISION OFFSET ENABLE
+      Unused : Bits_3  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -332,19 +340,31 @@ package body NE2000
    -- DCR: Data Configuration Register (0EH; Type=W in Page0, Type=R in Page2)
    ----------------------------------------------------------------------------
 
-   FT1 : constant := 2#00#; -- 1 word, 2 bytes
-   FT2 : constant := 2#01#; -- 2 word, 4 bytes
-   FT4 : constant := 2#10#; -- 4 word, 8 bytes
-   FT6 : constant := 2#11#; -- 6 word, 12 bytes
+   WTS_BYTE : constant := 0; -- Selects byte-wide DMA transfers
+   WTS_WORD : constant := 1; -- Selects word-wide DMA transfers
+
+   BOS_x86  : constant := 0; -- MS byte placed on AD15–AD8 and LS byte on AD7 – AD0 (32000 8086)
+   BOS_M68k : constant := 1; -- MS byte placed on AD7–AD0 and LS byte on AD15 – AD8 (68000)
+
+   LAS_16 : constant := 0; -- Dual 16-bit DMA mode
+   LAS_32 : constant := 1; -- Single 32-bit DMA mode
+
+   LS_Loopback : constant := 0; -- Loopback mode selected Bits D1 D2 of the TCR must also be programmed for Loopback operation
+   LS_Normal   : constant := 1; -- Normal Operation
+
+   FT_1 : constant := 2#00#; -- 1 word, 2 bytes
+   FT_2 : constant := 2#01#; -- 2 word, 4 bytes
+   FT_4 : constant := 2#10#; -- 4 word, 8 bytes
+   FT_6 : constant := 2#11#; -- 6 word, 12 bytes
 
    type DCR_Type is record
-      WTS    : Boolean; -- WORD TRANSFER SELECT False => byte-wide, True => word-wide (16-bit)
-      BOS    : Boolean; -- BYTE ORDER SELECT
-      LAS    : Boolean; -- LONG ADDRESS SELECT
-      LS     : Boolean; -- LOOPBACK SELECT
-      AR     : Boolean; -- AUTO-INITIALIZE REMOTE
-      FT     : Bits_2;  -- FIFO THRESHOLD SELECT
-      Unused : Bits_1;
+      WTS    : Bits_1  := WTS_BYTE;  -- WORD TRANSFER SELECT False => byte-wide, True => word-wide (16-bit)
+      BOS    : Bits_1  := BOS_x86;   -- BYTE ORDER SELECT
+      LAS    : Bits_1  := LAS_16;    -- LONG ADDRESS SELECT
+      LS     : Bits_1  := LS_Normal; -- LOOPBACK SELECT
+      AR     : Boolean := False;     -- AUTO-INITIALIZE REMOTE
+      FT     : Bits_2  := FT_1;      -- FIFO THRESHOLD SELECT
+      Unused : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -359,20 +379,21 @@ package body NE2000
    end record;
 
    function To_U8 is new Ada.Unchecked_Conversion (DCR_Type, Unsigned_8);
+   function To_DCR is new Ada.Unchecked_Conversion (Unsigned_8, DCR_Type);
 
    ----------------------------------------------------------------------------
    -- IMR: Interrupt Mask Register (0FH; Type=W in Page0, Type=R in Page2)
    ----------------------------------------------------------------------------
 
    type IMR_Type is record
-      PRXE : Boolean;
-      PTXE : Boolean;
-      RXEE : Boolean;
-      TXEE : Boolean;
-      OVWE : Boolean;
-      CNTE : Boolean;
-      RDCE : Boolean; -- enable remote DMA complete
-      RSTE : Boolean; -- not present in original 8390
+      PRXE : Boolean := False; -- PACKET RECEIVED INTERRUPT ENABLE
+      PTXE : Boolean := False; -- PACKET TRANSMITTED INTERRUPT ENABLE
+      RXEE : Boolean := False; -- RECEIVE ERROR INTERRUPT ENABLE
+      TXEE : Boolean := False; -- TRANSMIT ERROR INTERRUPT ENABLE
+      OVWE : Boolean := False; -- OVERWRITE WARNING INTERRUPT ENABLE
+      CNTE : Boolean := False; -- COUNTER OVERFLOW INTERRUPT ENABLE
+      RDCE : Boolean := False; -- DMA COMPLETE INTERRUPT ENABLE
+      RSTE : Boolean := False; -- not present in original 8390
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -400,12 +421,12 @@ package body NE2000
    EEM_CfgWE    : constant := 2#11#; -- Config register write enable
 
    type CR9346_Type is record
-      EEDO   : Bits_1 := 0; -- state of EEDO pin in auto-load or 9346 programming mode.
-      EEDI   : Bits_1 := 0; -- state of EEDI pin in auto-load or 9346 programming mode.
-      EESK   : Bits_1 := 0; -- state of EESK pin in auto-load or 9346 programming mode.
-      EECS   : Bits_1 := 0; -- state of EECS pin in auto-load or 9346 programming mode.
+      EEDO   : Bits_1 := 0;          -- state of EEDO pin in auto-load or 9346 programming mode.
+      EEDI   : Bits_1 := 0;          -- state of EEDI pin in auto-load or 9346 programming mode.
+      EESK   : Bits_1 := 0;          -- state of EESK pin in auto-load or 9346 programming mode.
+      EECS   : Bits_1 := 0;          -- state of EECS pin in auto-load or 9346 programming mode.
       Unused : Bits_2 := 0;
-      EEM    : Bits_2;      -- These 2 bits select the RTL8029AS operating mode.
+      EEM    : Bits_2 := EEM_Normal; -- These 2 bits select the RTL8029AS operating mode.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -419,15 +440,16 @@ package body NE2000
    end record;
 
    function To_U8 is new Ada.Unchecked_Conversion (CR9346_Type, Unsigned_8);
+   function To_CR9346 is new Ada.Unchecked_Conversion (Unsigned_8, CR9346_Type);
 
    ----------------------------------------------------------------------------
    -- CONFIG0: RTL8029AS Configuration Register 0 (03H; Type=R)
    ----------------------------------------------------------------------------
 
    type CONFIG0_Type is record
-      Unused1 : Bits_2 := 0;
-      BNC     : Boolean;     -- RTL8029AS is using the 10Base2 thin cable as its networking medium.
-      Unused2 : Bits_5 := 0;
+      Unused1 : Bits_2  := 0;
+      BNC     : Boolean := False; -- RTL8029AS is using the 10Base2 thin cable as its networking medium.
+      Unused2 : Bits_5  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -438,6 +460,7 @@ package body NE2000
    end record;
 
    function To_U8 is new Ada.Unchecked_Conversion (CONFIG0_Type, Unsigned_8);
+   function To_CONFIG0 is new Ada.Unchecked_Conversion (Unsigned_8, CONFIG0_Type);
 
    ----------------------------------------------------------------------------
    -- CONFIG2: RTL8029AS Configuration Register 2 (05H; Type=R except Bit[7:5]=R/W)
@@ -454,11 +477,11 @@ package body NE2000
    PL_10Base2 : constant := 2#11#; -- 10Base2
 
    type CONFIG2_Type is record
-      BS     : Bits_2;      -- Select Boot ROM size
-      Unused : Bits_2 := 0;
-      PF     : Boolean;     -- Pause Flag
-      FCE    : Boolean;     -- Flow Control Enable
-      PL     : Bits_2;      -- Select network medium types.
+      BS     : Bits_2  := BS_NoROM; -- Select Boot ROM size
+      Unused : Bits_2  := 0;
+      PF     : Boolean := False;    -- Pause Flag
+      FCE    : Boolean := False;    -- Flow Control Enable
+      PL     : Bits_2  := PL_TPCX;  -- Select network medium types.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -471,6 +494,7 @@ package body NE2000
    end record;
 
    function To_U8 is new Ada.Unchecked_Conversion (CONFIG2_Type, Unsigned_8);
+   function To_CONFIG2 is new Ada.Unchecked_Conversion (Unsigned_8, CONFIG2_Type);
 
    ----------------------------------------------------------------------------
    -- CONFIG3: RTL8029AS Configuration Register 3 (06H; Type=R except Bit[6,2:1]=R/W)
@@ -483,14 +507,14 @@ package body NE2000
    LEDS1_L1CRSL2MCSB : constant := 1;
 
    type CONFIG3_Type is record
-      Unused1  : Bits_1 := 0;
-      PWRDN    : Boolean;     -- This bit, when set, puts RTL8029AS into power down mode.
-      SLEEP    : Boolean;     -- This bit, when set, puts RTL8029AS into sleep mode.
-      Reserved : Bits_1 := 0;
-      LEDS0    : Bits_1;      -- These two bits select the outputs to LED2-0 pins.
-      LEDS1    : Bits_1;      -- These two bits select the outputs to LED2-0 pins.
-      FUDUP    : Boolean;     -- When this bit is set, RTL8029AS is set to the full-duplex mode
-      Unused2  : Bits_1 := 0;
+      Unused1  : Bits_1  := 0;
+      PWRDN    : Boolean := False;          -- This bit, when set, puts RTL8029AS into power down mode.
+      SLEEP    : Boolean := False;          -- This bit, when set, puts RTL8029AS into sleep mode.
+      Reserved : Bits_1  := 0;
+      LEDS0    : Bits_1  := LEDS0_L0LINK;   -- These two bits select the outputs to LED2-0 pins.
+      LEDS1    : Bits_1  := LEDS1_L1RXL2TX; -- ''
+      FUDUP    : Boolean := False;          -- When this bit is set, RTL8029AS is set to the full-duplex mode
+      Unused2  : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -506,6 +530,7 @@ package body NE2000
    end record;
 
    function To_U8 is new Ada.Unchecked_Conversion (CONFIG3_Type, Unsigned_8);
+   function To_CONFIG3 is new Ada.Unchecked_Conversion (Unsigned_8, CONFIG3_Type);
 
    ----------------------------------------------------------------------------
    -- Ring descriptor
@@ -537,6 +562,12 @@ package body NE2000
        R            : in Register_Type)
       return Unsigned_16
       with Inline => True;
+   -- shorthand
+   function PA
+      (Base_Address : in Unsigned_16;
+       R            : in Register_Type)
+      return Unsigned_16
+      renames Port_Address;
    procedure Reset
       (D : in Descriptor_Type);
    procedure Setup
@@ -563,11 +594,6 @@ package body NE2000
    begin
       return Base_Address + (Register_Type'Enum_Rep (R) and 16#FF#);
    end Port_Address;
-   -- shorthand
-   function PA
-      (Base_Address : in Unsigned_16;
-       R            : in Register_Type)
-      return Unsigned_16 renames Port_Address;
 
    ----------------------------------------------------------------------------
    -- Reset
@@ -576,21 +602,13 @@ package body NE2000
       (D : in Descriptor_Type)
       is
       BAR : Unsigned_16;
-      function In8
-         (Port : in Unsigned_16)
-         return Unsigned_8
-         renames D.Read_8.all;
-      procedure Out8
-         (Port  : in Unsigned_16;
-          Value : in Unsigned_8)
-         renames D.Write_8.all;
+      function In8 (Port : in Unsigned_16) return Unsigned_8 renames D.Read_8.all;
+      procedure Out8 (Port : in Unsigned_16; Value : in Unsigned_8) renames D.Write_8.all;
    begin
       BAR := D.BAR;
       Out8 (PA (BAR, RST), In8 (PA (BAR, RST))); -- read = enable RESET, then write = disable RESET
-      loop
-         exit when To_ISR (In8 (PA (BAR, ISRR))).RST;
-      end loop;
-      Out8 (PA (BAR, ISRW), To_U8 (ISR_RST)); -- clear interrupt
+      loop exit when To_ISR (In8 (PA (BAR, ISRR))).RST; end loop;
+      Out8 (PA (BAR, ISRW), To_U8 (ISR_CLRRST)); -- clear interrupt
    end Reset;
 
    ----------------------------------------------------------------------------
@@ -602,9 +620,16 @@ package body NE2000
        Success        :    out Boolean)
       is
    begin
-      PCI.Cfg_Find_Device_By_Id (PCI_Descriptor, PCI.BUS0, PCI.VENDOR_ID_REALTEK, PCI.DEVICE_ID_RTL8029, Device_Number, Success);
+      PCI.Cfg_Find_Device_By_Id (
+         PCI_Descriptor,
+         PCI.BUS0,
+         PCI.VENDOR_ID_REALTEK,
+         PCI.DEVICE_ID_RTL8029,
+         Device_Number,
+         Success
+         );
       if Success then
-         Console.Print (Unsigned_8 (Device_Number), Prefix => "RTL8029 @ PCI DevNum ", NL => True);
+         Console.Print (Prefix => "RTL8029 @ PCI DevNum ", Value => Unsigned_8 (Device_Number), NL => True);
       end if;
    end Probe;
 
@@ -621,9 +646,15 @@ package body NE2000
    begin
       Reset (D);
       BAR := D.BAR;
-      -- Page 3 (NE2000 PCI only)
+      -- Page 3 registers setup (NE2000 PCI only) -----------------------------
       if D.NE2000PCI then
-         Out8 (PA (BAR, CR), To_U8 (CR_Type'(STP => True, STA => False, TXP => False, RD => ABRT_CMPLT, PS => PAGE3)));
+         Out8 (PA (BAR, CR), To_U8 (CR_Type'(
+            STP => True,
+            STA => False,
+            TXP => False,
+            RD  => RD_ABRT_CMPLT,
+            PS  => PS_PAGE3
+            )));
          Out8 (PA (BAR, CR9346), To_U8 (CR9346_Type'(
             EEM    => EEM_CfgWE, -- Config register write enable
             others => <>
@@ -651,24 +682,50 @@ package body NE2000
             others => <>
             )));
       end if;
-      -- Page 0
-      Out8 (PA (BAR, CR), To_U8 (CR_Type'(STP => True, STA => False, TXP => False, RD => ABRT_CMPLT, PS => PAGE0)));
-      Out8 (
-            -- DCR: FIFO threshold = 8, no auto-init remote DMA, BOS = 80x86, word-wide DMA transfers
-            PA (BAR, DCRW),
-            To_U8 (DCR_Type'(WTS => True, BOS => False, LAS => False, LS => True, AR => False, FT => FT4, Unused => 0))
-           );
-      Out8 (PA (BAR, RBCR0), 16#00#);   -- RBCR0: clear remote byte count LO
-      Out8 (PA (BAR, RBCR1), 16#00#);   -- RBCR1: clear remote byte count HI
-      Out8 (PA (BAR, RCRW), 16#14#);    -- RCR: accept broadcast packets __FIX__ perché anche PRO?
-      Out8 (PA (BAR, TCRW), To_U8 (TCR_Type'(CRC => False, LB => LB_Internal, ATD => False, OFST => False, Unused => 0)));
-      Out8 (PA (BAR, BNRY), 16#40#);    -- BNRY: set boundary
-      Out8 (PA (BAR, PSTARTW), 16#40#); -- PSTART: set page start
-      Out8 (PA (BAR, PSTOPW), 16#7F#);  -- PSTOP: set page stop
-      Out8 (PA (BAR, ISRW), To_U8 (ISR_ALL));
-      Out8 (PA (BAR, IMRW), To_U8 (IMR_Type'(PRXE => True, PTXE => True, others => False)));
-      -- Page 1
-      Out8 (PA (BAR, CR), To_U8 (CR_Type'(STP => True, STA => False, TXP => False, RD => ABRT_CMPLT, PS => PAGE1)));
+      -- Page 0 registers setup -----------------------------------------------
+      Out8 (PA (BAR, CR), To_U8 (CR_Type'(
+         STP => True,
+         STA => False,
+         TXP => False,
+         RD  => RD_ABRT_CMPLT,
+         PS  => PS_PAGE0
+         )));
+      Out8 (PA (BAR, DCRW), To_U8 (DCR_Type'(
+         WTS    => WTS_WORD,
+         BOS    => BOS_x86,
+         LAS    => LAS_16,
+         LS     => LS_Normal,
+         AR     => False,
+         FT     => FT_4,
+         others => <>
+         )));
+      Out8 (PA (BAR, RBCR0), 16#00#); -- RBCR0: clear remote byte count LO
+      Out8 (PA (BAR, RBCR1), 16#00#); -- RBCR1: clear remote byte count HI
+      Out8 (PA (BAR, RCRW), 16#14#);  -- RCR: accept broadcast packets __FIX__ perché anche PRO?
+      Out8 (PA (BAR, TCRW), To_U8 (TCR_Type'(
+         CRC    => False,
+         LB     => LB_Internal,
+         ATD    => False,
+         OFST   => False,
+         Unused => 0
+         )));
+      Out8 (PA (BAR, BNRY), 16#40#);             -- BNRY: set boundary
+      Out8 (PA (BAR, PSTARTW), 16#40#);          -- PSTART: set page start
+      Out8 (PA (BAR, PSTOPW), 16#7F#);           -- PSTOP: set page stop
+      Out8 (PA (BAR, ISRW), To_U8 (ISR_CLRALL)); -- clear all interrupt flags
+      Out8 (PA (BAR, IMRW), To_U8 (IMR_Type'(
+         PRXE => True,
+         PTXE => True,
+         others => False
+         )));
+      -- Page 1 registers setup -----------------------------------------------
+      Out8 (PA (BAR, CR), To_U8 (CR_Type'(
+         STP => True,
+         STA => False,
+         TXP => False,
+         RD  => RD_ABRT_CMPLT,
+         PS  => PS_PAGE1
+         )));
       declare
          PAR : Register_Type := PAR0;
       begin
@@ -682,14 +739,30 @@ package body NE2000
       end loop;
       Out8 (PA (BAR, CURR), 16#40#); -- CURR: set current page
       D.Next_Ptr := 16#40#;
-      -- Page 0: START and disable loopback
-      Out8 (PA (BAR, CR), To_U8 (CR_Type'(STP => False, STA => True, TXP => False, RD => ABRT_CMPLT, PS => PAGE0)));
-      Out8 (
-            -- DCR: FIFO threshold = 8, no auto-init remote DMA, BOS = 80x86, word-wide DMA transfers
-            PA (BAR, DCRW),
-            To_U8 (DCR_Type'(WTS => True, BOS => False, LAS => False, LS => False, AR => False, FT => FT4, Unused => 0))
-           );
-      Out8 (PA (BAR, TCRW), To_U8 (TCR_Type'(CRC => False, LB => LB_Normal, ATD => False, OFST => False, Unused => 0)));
+      -- Page 0 registers setup: START and disable loopback
+      Out8 (PA (BAR, CR), To_U8 (CR_Type'(
+         STP => False,
+         STA => True,
+         TXP => False,
+         RD  => RD_ABRT_CMPLT,
+         PS  => PS_PAGE0
+         )));
+      Out8 (PA (BAR, DCRW), To_U8 (DCR_Type'(
+         WTS    => WTS_WORD,
+         BOS    => BOS_x86,
+         LAS    => LAS_16,
+         LS     => LS_Loopback,
+         AR     => False,
+         FT     => FT_4,
+         others => <>
+         )));
+      Out8 (PA (BAR, TCRW), To_U8 (TCR_Type'(
+         CRC    => False,
+         LB     => LB_Normal,
+         ATD    => False,
+         OFST   => False,
+         others => <>
+         )));
    end Setup;
 
    ----------------------------------------------------------------------------
@@ -704,28 +777,22 @@ package body NE2000
               Convention => Ada;
       BAR    : Unsigned_16;
       Status : ISR_Type;
-      function In8
-         (Port : Unsigned_16)
-         return Unsigned_8
-         renames D.Read_8.all;
-      procedure Out8
-         (Port  : in Unsigned_16;
-          Value : in Unsigned_8)
-         renames D.Write_8.all;
+      function In8 (Port : Unsigned_16) return Unsigned_8 renames D.Read_8.all;
+      procedure Out8 (Port : in Unsigned_16; Value : in Unsigned_8) renames D.Write_8.all;
    begin
       BAR := D.BAR;
       -- Page 0 NODMA
       Out8 (PA (BAR, CR), To_U8 (CR_PAGE0));
       Status := To_ISR (In8 (PA (BAR, ISRR)));
       if Status.PRX then
-         -- Out8 (PA (BAR, ISRW), To_U8 (ISR_PRX));
+         -- Out8 (PA (BAR, ISRW), To_U8 (ISR_CLRPRX));
          Receive (D);
          -- Console.Print ("RX", NL => True);
          Out8 (PA (BAR, CR), To_U8 (CR_PAGE0));
-         -- Out8 (PA (BAR, ISRW), To_U8 (ISR_PRX));
+         -- Out8 (PA (BAR, ISRW), To_U8 (ISR_CLRPRX));
       end if;
       if Status.PTX then
-         Out8 (PA (BAR, ISRW), To_U8 (ISR_PTX));
+         Out8 (PA (BAR, ISRW), To_U8 (ISR_CLRPTX));
       end if;
    end Interrupt_Handler;
 
@@ -736,10 +803,7 @@ package body NE2000
       (D : in out Descriptor_Type)
       is
       BAR : Unsigned_16;
-      procedure Out8
-         (Port  : in Unsigned_16;
-          Value : in Unsigned_8)
-         renames D.Write_8.all;
+      procedure Out8 (Port : in Unsigned_16; Value : in Unsigned_8) renames D.Write_8.all;
    begin
       BAR := D.BAR;
       -- Page 1 NODMA
@@ -764,25 +828,14 @@ package body NE2000
       NIC_Packet_Header : Ring_Descriptor_Type;
       P                 : Pbuf_Ptr;
       Index             : Storage_Offset;
-      function In8
-         (Port : Unsigned_16)
-         return Unsigned_8
-         renames D.Read_8.all;
-      function In16
-         (Port : Unsigned_16)
-         return Unsigned_16
-         renames D.Read_16.all;
-      function In32
-         (Port : Unsigned_16)
-         return Unsigned_32
-         renames D.Read_32.all;
-      procedure Out8
-         (Port  : in Unsigned_16;
-          Value : in Unsigned_8)
-         renames D.Write_8.all;
+      function In8 (Port : Unsigned_16) return Unsigned_8 renames D.Read_8.all;
+      function In16 (Port : Unsigned_16) return Unsigned_16 renames D.Read_16.all;
+      function In32 (Port : Unsigned_16) return Unsigned_32 renames D.Read_32.all;
+      procedure Out8 (Port : in Unsigned_16; Value : in Unsigned_8) renames D.Write_8.all;
       procedure Setup_DMA_Port
          (Memory_Address : in Unsigned_16;
-          Byte_Count     : in Unsigned_16);
+          Byte_Count     : in Unsigned_16)
+         with Inline => True;
       procedure Setup_DMA_Port
          (Memory_Address : in Unsigned_16;
           Byte_Count     : in Unsigned_16)
@@ -795,13 +848,6 @@ package body NE2000
          Out8 (PA (BAR, RBCR0), LByte (Byte_Count));     -- RBCR0: set remote byte count LO
          Out8 (PA (BAR, RBCR1), HByte (Byte_Count));     -- RBCR1: set remote byte count HI
       end Setup_DMA_Port;
-      procedure Packet_Dump_Length;
-      procedure Packet_Dump_Length
-         is
-      begin
-         Console.Print (NIC_Packet_Header.Receive_Status,               Prefix => "RSR:           ", NL => True);
-         Console.Print (Integer (NIC_Packet_Header.Receive_Byte_Count), Prefix => "packet length: ", NL => True);
-      end Packet_Dump_Length;
    begin
       BAR := D.BAR;
       loop
@@ -818,7 +864,8 @@ package body NE2000
             NIC_Packet_Header := To_RDT (In32 (PA (BAR, RDMA)));
          else
             declare
-               type U16_2 is new Bits.U16_Array (0 .. 1) with Alignment => Unsigned_32'Alignment;
+               type U16_2 is new Bits.U16_Array (0 .. 1)
+                  with Alignment => Unsigned_32'Alignment;
                PH : U16_2;
                function To_U32 is new Ada.Unchecked_Conversion (U16_2, Unsigned_32);
             begin
@@ -835,24 +882,26 @@ package body NE2000
             Update (D);
             return;
          end if;
-         NIC_Packet_Header.Receive_Byte_Count := NIC_Packet_Header.Receive_Byte_Count - RING_DESCRIPTOR_SIZE;
+         NIC_Packet_Header.Receive_Byte_Count :=
+            NIC_Packet_Header.Receive_Byte_Count - RING_DESCRIPTOR_SIZE;
          -- set read packet
          Setup_DMA_Port (
-                         Unsigned_16 (D.Next_Ptr) * 2**8 + RING_DESCRIPTOR_SIZE,
-                         NIC_Packet_Header.Receive_Byte_Count
-                        );
+            Unsigned_16 (D.Next_Ptr) * 2**8 + RING_DESCRIPTOR_SIZE,
+            NIC_Packet_Header.Receive_Byte_Count
+            );
          -- Page 0 RD
          Out8 (PA (BAR, CR), To_U8 (CR_RD));
-         -- Out8 (PA (BAR, ISRW), To_U8 (ISR_PRX));
-         -- Out8 (PA (BAR, ISRW), To_U8 (ISR_RDC));
+         -- Out8 (PA (BAR, ISRW), To_U8 (ISR_CLRPRX));
+         -- Out8 (PA (BAR, ISRW), To_U8 (ISR_CLRRDC));
          -- allocate a Pbuf
          P := Allocate (Natural (NIC_Packet_Header.Receive_Byte_Count));
-         Out8 (PA (BAR, ISRW), To_U8 (ISR_PRX));
+         Out8 (PA (BAR, ISRW), To_U8 (ISR_CLRPRX));
          if P = null then
             -- __FIX__ --------------------------------------------------
             -- dump packet information
-            Packet_Dump_Length;
             Console.Print ("*** Error: no pbufs available", NL => True);
+            Console.Print (Prefix => "RSR:           ", Value => NIC_Packet_Header.Receive_Status, NL => True);
+            Console.Print (Prefix => "packet length: ", Value => Integer (NIC_Packet_Header.Receive_Byte_Count), NL => True);
             loop null; end loop;
             -- update packet pointer according to NIC-created packet header informations
             -- Descriptor.Next_Ptr := NIC_Packet_Header.Next_Packet_Pointer;
@@ -911,23 +960,14 @@ package body NE2000
       Byte_Idx   : Integer;
       Data       : Unsigned_32;
       Intcontext : CPU.Intcontext_Type;
-      function In8
-         (Port : Unsigned_16)
-         return Unsigned_8
-         renames D.Read_8.all;
-      procedure Out8
-         (Port  : in Unsigned_16;
-          Value : in Unsigned_8)
-         renames D.Write_8.all;
-      procedure Out32
-         (Port  : in Unsigned_16;
-          Value : in Unsigned_32)
-         renames D.Write_32.all;
+      function In8 (Port : Unsigned_16) return Unsigned_8 renames D.Read_8.all;
+      procedure Out8 (Port : in Unsigned_16; Value : in Unsigned_8) renames D.Write_8.all;
+      procedure Out32 (Port : in Unsigned_16; Value : in Unsigned_32) renames D.Write_32.all;
       procedure Packet_Dump;
       procedure Packet_Dump
          is
       begin
-         Console.Print (P.all.Size, Prefix => "Packet tx is: ", NL => True);
+         Console.Print (Prefix => "Packet tx is: ", Value => P.all.Size, NL => True);
          Console.Print_Memory (Payload_Address (P), Bits.Bytesize (P.all.Size));
       end Packet_Dump;
    begin
@@ -974,18 +1014,15 @@ package body NE2000
       CPU.Intcontext_Set (Intcontext);
    end Transmit;
 
-pragma Warnings (Off, "types for unchecked conversion have different sizes");
-
    ----------------------------------------------------------------------------
    -- Init (ISA)
    ----------------------------------------------------------------------------
    procedure Init
       (D : in out Descriptor_Type)
       is
-      function To_U16 is new Ada.Unchecked_Conversion (Address, Unsigned_16);
    begin
       D.NE2000PCI := False;
-      D.BAR       := To_U16 (D.Base_Address);
+      D.BAR       := Unsigned_16 (To_Integer (D.Base_Address) and 16#FFFF#);
       Setup (D);
    end Init;
 
@@ -996,20 +1033,43 @@ pragma Warnings (Off, "types for unchecked conversion have different sizes");
       (PCI_Descriptor : in     PCI.Descriptor_Type;
        D              : in out Descriptor_Type)
       is
-      function To_U16 is new Ada.Unchecked_Conversion (Address, Unsigned_16);
+      function To_U16 is new Ada.Unchecked_Conversion (PCI.Command_Type, Unsigned_16);
    begin
       -- initialize PCI interface, setup BAR
-      PCI.Cfg_Write (PCI_Descriptor, PCI.BUS0, D.Device_Number, 0, PCI.BAR0_Offset, To_U16 (D.Base_Address));
+      PCI.Cfg_Write (
+         PCI_Descriptor,
+         PCI.BUS0,
+         D.Device_Number,
+         0,
+         PCI.BAR0_Offset,
+         Unsigned_16 (To_Integer (D.Base_Address) and 16#FFFF#)
+         );
       -- enable MEMEN/IOEN
-      PCI.Cfg_Write (PCI_Descriptor, PCI.BUS0, D.Device_Number, 0, PCI.Command_Offset, Unsigned_8'(16#03#));
+      PCI.Cfg_Write (
+         PCI_Descriptor,
+         PCI.BUS0,
+         D.Device_Number,
+         0,
+         PCI.Command_Offset,
+         To_U16 (PCI.Command_Type'(
+            IOEN  => True,
+            MEMEN => True,
+            others => <>
+            ))
+         );
       -- interrupt routing line
-      PCI.Cfg_Write (PCI_Descriptor, PCI.BUS0, D.Device_Number, 0, PCI.ILR_Offset, D.PCI_Irq_Line);
+      PCI.Cfg_Write (
+         PCI_Descriptor,
+         PCI.BUS0,
+         D.Device_Number,
+         0,
+         PCI.ILR_Offset,
+         D.PCI_Irq_Line
+         );
       -- initialize NE2000
       D.NE2000PCI := True;
-      D.BAR       := To_U16 (D.Base_Address) and 16#FFE0#;
+      D.BAR       := Unsigned_16 (To_Integer (D.Base_Address) and 16#FFE0#);
       Setup (D);
    end Init_PCI;
-
-pragma Warnings (On, "types for unchecked conversion have different sizes");
 
 end NE2000;
