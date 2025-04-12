@@ -80,7 +80,7 @@ package body Exceptions
       is
    begin
       BSP.Tick_Count := @ + 1;
-      -- blink on-board LED2
+      -- blink on-board LED2 YELLOW
       if (BSP.Tick_Count mod Configure.TICK_FREQUENCY) = 0 then
          GPIOF.PTOR (11) := True;
       end if;
@@ -105,7 +105,7 @@ package body Exceptions
               External_Name => "vectors";
    begin
       ARMv7M.VTOR.TBLOFF := Bits_25 (LLutils.Select_Address_Bits (Vector_Table'Address, 7, 31));
-      -- LED2 (YELLOW)
+      -- LED2 YELLOW
       PORTF_MUXCTRL.PCR (11).MUX := MUX_GPIO;
       GPIOF.PDDR (11) := True;
    end Init;
