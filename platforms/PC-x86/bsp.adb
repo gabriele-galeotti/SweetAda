@@ -231,7 +231,7 @@ package body BSP
             for Index in PCI.Device_Number_Type'Range loop
                PCI.Cfg_Detect_Device (PCI_Descriptor, 0, Index, Vendor_Id, Device_Id, Success);
                if Success then
-                  Console.Print (Unsigned_16 (Index), Prefix => "PCI Device #");
+                  Console.Print (Prefix => "PCI Device #", Value => Unsigned_16 (Index));
                   Console.Print (Character'(' '));
                   Console.Print (Unsigned_16 (Vendor_Id));
                   Console.Print (Character'(':'));
