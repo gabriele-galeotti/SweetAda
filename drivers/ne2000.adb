@@ -701,7 +701,7 @@ package body NE2000
          )));
       Out8 (PA (BAR, RBCR0), 16#00#); -- RBCR0: clear remote byte count LO
       Out8 (PA (BAR, RBCR1), 16#00#); -- RBCR1: clear remote byte count HI
-      Out8 (PA (BAR, RCRW), 16#14#);  -- RCR: accept broadcast packets __FIX__ perché anche PRO?
+      Out8 (PA (BAR, RCRW), 16#14#);  -- RCR: accept broadcast packets __FIX__ why also PRO?
       Out8 (PA (BAR, TCRW), To_U8 (TCR_Type'(
          CRC    => False,
          LB     => LB_Internal,
@@ -714,8 +714,8 @@ package body NE2000
       Out8 (PA (BAR, PSTOPW), 16#7F#);           -- PSTOP: set page stop
       Out8 (PA (BAR, ISRW), To_U8 (ISR_CLRALL)); -- clear all interrupt flags
       Out8 (PA (BAR, IMRW), To_U8 (IMR_Type'(
-         PRXE => True,
-         PTXE => True,
+         PRXE   => True,
+         PTXE   => True,
          others => False
          )));
       -- Page 1 registers setup -----------------------------------------------
@@ -963,7 +963,8 @@ package body NE2000
       function In8 (Port : Unsigned_16) return Unsigned_8 renames D.Read_8.all;
       procedure Out8 (Port : in Unsigned_16; Value : in Unsigned_8) renames D.Write_8.all;
       procedure Out32 (Port : in Unsigned_16; Value : in Unsigned_32) renames D.Write_32.all;
-      procedure Packet_Dump;
+      procedure Packet_Dump
+         with Inline => True;
       procedure Packet_Dump
          is
       begin
@@ -1052,8 +1053,8 @@ package body NE2000
          0,
          PCI.Command_Offset,
          To_U16 (PCI.Command_Type'(
-            IOEN  => True,
-            MEMEN => True,
+            IOEN   => True,
+            MEMEN  => True,
             others => <>
             ))
          );
