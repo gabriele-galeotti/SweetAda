@@ -47,7 +47,7 @@ kernel.*
 *.out
 *.srec
 *.tmp
-core/gcc_defines.ads
+core/gcc-defines.ads
 lib/
 obj/
 
