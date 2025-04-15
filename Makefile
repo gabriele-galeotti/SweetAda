@@ -283,6 +283,14 @@ endif
 
 export CHDIR CP LS MKDIR MV RM RMDIR
 
+# make this useful variables available from now on
+ifeq ($(OSTYPE),cmd)
+PROGRAM_FILES := $(shell ECHO %ProgramFiles%)
+export PROGRAM_FILES
+PROGRAM_FILES_x86 := $(shell ECHO %ProgramFiles(x86)%)
+export PROGRAM_FILES_x86
+endif
+
 # include build system utilities
 include Makefile.ut.in
 
