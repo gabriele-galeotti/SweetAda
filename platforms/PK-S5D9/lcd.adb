@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
 with CPU;
 with S5D9;
 
@@ -29,9 +30,21 @@ package body LCD
    --                                                                        --
    --========================================================================--
 
+   use Interfaces;
    use S5D9;
 
+   -- Level 1 Command
+   Software_Reset        : constant := 16#01#;
+   Sleep_Out             : constant := 16#11#;
+   Display_OFF           : constant := 16#28#;
+   Display_ON            : constant := 16#29#;
+   Color_Set             : constant := 16#2D#;
+   Write_Memory_Continue : constant := 16#3C#;
+   Write_CTRL_Display    : constant := 16#53#;
+
    procedure Init_SPI;
+   procedure LCD_Delay
+      (Count : in Integer);
    procedure CS_Assert
       with Inline => True;
    procedure CS_Deassert
@@ -49,9 +62,8 @@ package body LCD
    --                                                                        --
    --========================================================================--
 
-   ----------------------------------------------------------------------------
+   --
    -- ILI9341V
-   ----------------------------------------------------------------------------
    -- SPI0 on PORT1
    -- IM[3:0] = 1110, 4-wire 8-bit data serial interface II, SDI: In SDO: Out
    -- LCD name     schematic    PMODA   SPI
@@ -62,7 +74,7 @@ package body LCD
    -- SDO          SDO          3       MISOA    LCD_MISO  --> pin 132 P1_0
    -- RDX          /RD          -       -        LCD_RD    --> pin 95  P1_14
    -- WRX (D/CX)   /WR          -       -        LCD_WR    --> pin 96  P1_15 (selector command/parameter)
-   ----------------------------------------------------------------------------
+   --
 
    ----------------------------------------------------------------------------
    -- Init_SPI
@@ -87,7 +99,7 @@ package body LCD
          others => <>
          );
       SPI (0).SPPCR := (others => <>);
-      SPI (0).SPBR.SPBR := 16#E0#;
+      SPI (0).SPBR.SPBR := 16;
       SPI (0).SPSCR.SPSLN := SPSLN0;
       loop exit when not SPI (0).SPSR.IDLNF; end loop;
       SPI (0).SPDCR := (
@@ -102,7 +114,7 @@ package body LCD
       SPI (0).SPCMD (0) := (
          CPHA   => CPHA_LEAD, -- RSPCK Phase Setting
          CPOL   => CPOL_LOW,  -- RSPCK Polarity Setting
-         BRDV   => BRDV_DIV8, -- Bit Rate Division Setting
+         BRDV   => BRDV_DIV2, -- Bit Rate Division Setting
          SPB    => SPB_8,     -- SPI Data Length Setting
          LSBF   => LSBF_MSB,  -- SPI MSB First
          others => <>
@@ -127,10 +139,20 @@ package body LCD
       PORT (1).PDR (15) := True;
       -- pulse /RESET
       PORT (6).PODR (10) := False;
-      for Delay_Loop_Count in 1 .. 1_000_000 loop CPU.NOP; end loop;
+      LCD_Delay (1_000);
       PORT (6).PODR (10) := True;
-      for Delay_Loop_Count in 1 .. 10_000_000 loop CPU.NOP; end loop;
+      LCD_Delay (1_000_000);
    end Init_SPI;
+
+   ----------------------------------------------------------------------------
+   -- LCD_Delay
+   ----------------------------------------------------------------------------
+   procedure LCD_Delay
+      (Count : in Integer)
+      is
+   begin
+      for Delay_Loop_Count in 1 .. Count loop CPU.NOP; end loop;
+   end LCD_Delay;
 
    ----------------------------------------------------------------------------
    -- helpers
@@ -147,28 +169,80 @@ package body LCD
       is
    begin
       Init_SPI;
+      -- LCD startup
       CS_Assert;
       Command_Assert;
       -- Software Reset
       loop exit when SPI (0).SPSR.SPTEF; end loop;
-      SPI (0).SPDR.SPDR8 := 16#01#;
-      for Delay_Loop_Count in 1 .. 10_000_000 loop CPU.NOP; end loop;
-      loop exit when SPI (0).SPSR.SPRF; end loop;
+      SPI (0).SPDR.SPDR8 := Software_Reset;
+      LCD_Delay (1_000_000);
       -- Sleep Out
       loop exit when SPI (0).SPSR.SPTEF; end loop;
-      SPI (0).SPDR.SPDR8 := 16#11#;
-      for Delay_Loop_Count in 1 .. 10_000_000 loop CPU.NOP; end loop;
-      loop exit when SPI (0).SPSR.SPRF; end loop;
+      SPI (0).SPDR.SPDR8 := Sleep_Out;
+      LCD_Delay (1_000_000);
       -- Display OFF
       loop exit when SPI (0).SPSR.SPTEF; end loop;
-      SPI (0).SPDR.SPDR8 := 16#28#;
-      for Delay_Loop_Count in 1 .. 10_000_000 loop CPU.NOP; end loop;
-      loop exit when SPI (0).SPSR.SPRF; end loop;
+      SPI (0).SPDR.SPDR8 := Display_OFF;
+      LCD_Delay (1_000_000);
       -- Display ON
       loop exit when SPI (0).SPSR.SPTEF; end loop;
-      SPI (0).SPDR.SPDR8 := 16#29#;
-      for Delay_Loop_Count in 1 .. 10_000_000 loop CPU.NOP; end loop;
-      loop exit when SPI (0).SPSR.SPRF; end loop;
+      SPI (0).SPDR.SPDR8 := Display_ON;
+      LCD_Delay (1_000_000);
+      CS_Deassert;
+      -- Write CTRL Display
+      CS_Assert;
+      Command_Assert;
+      loop exit when SPI (0).SPSR.SPTEF; end loop;
+      SPI (0).SPDR.SPDR8 := Write_CTRL_Display;
+      Data_Assert;
+      loop exit when SPI (0).SPSR.SPTEF; end loop;
+      SPI (0).SPDR.SPDR8 := 16#04#;
+      CS_Deassert;
+      -- Color Set
+      CS_Assert;
+      Command_Assert;
+      loop exit when SPI (0).SPSR.SPTEF; end loop;
+      SPI (0).SPDR.SPDR8 := Color_Set;
+      Data_Assert;
+      -- R 5-bit
+      for Idx in 0 .. 31 loop
+         loop exit when SPI (0).SPSR.SPTEF; end loop;
+         SPI (0).SPDR.SPDR8 := Unsigned_8 (Idx);
+      end loop;
+      -- G 6-bit
+      for Idx in 0 .. 63 loop
+         loop exit when SPI (0).SPSR.SPTEF; end loop;
+         SPI (0).SPDR.SPDR8 := Unsigned_8 (Idx);
+      end loop;
+      -- B 5-bit
+      for Idx in 0 .. 31 loop
+         loop exit when SPI (0).SPSR.SPTEF; end loop;
+         SPI (0).SPDR.SPDR8 := Unsigned_8 (Idx);
+      end loop;
+      CS_Deassert;
+      -- draw a frame
+      CS_Assert;
+      Command_Assert;
+      loop exit when SPI (0).SPSR.SPTEF; end loop;
+      SPI (0).SPDR.SPDR8 := Write_Memory_Continue;
+      LCD_Delay (20_000);
+      Data_Assert;
+      declare
+         Color : Unsigned_8;
+      begin
+         for Y in 0 .. 319 loop
+            Color := 0;
+            for X in 0 .. 239 loop
+               loop exit when SPI (0).SPSR.SPTEF; end loop;
+               SPI (0).SPDR.SPDR8 := Shift_Left (Color, 2);
+               loop exit when SPI (0).SPSR.SPTEF; end loop;
+               SPI (0).SPDR.SPDR8 := Shift_Left (Color, 4);
+               loop exit when SPI (0).SPSR.SPTEF; end loop;
+               SPI (0).SPDR.SPDR8 := Shift_Left (Color, 6);
+               Color := @ + 1;
+            end loop;
+         end loop;
+      end;
    end Init;
 
 end LCD;
