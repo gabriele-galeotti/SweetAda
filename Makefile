@@ -283,7 +283,7 @@ endif
 
 export CHDIR CP LS MKDIR MV RM RMDIR
 
-# make this useful variables available from now on
+# make these useful variables available from now on
 ifeq ($(OSTYPE),cmd)
 PROGRAM_FILES := $(shell ECHO %ProgramFiles%)
 export PROGRAM_FILES
