@@ -274,7 +274,7 @@ package body Console
    -- Print_sizet
    ----------------------------------------------------------------------------
    procedure Print_sizet
-      (s      : in Bits.C.size_t;
+      (Value  : in Bits.C.size_t;
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
