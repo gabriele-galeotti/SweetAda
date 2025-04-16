@@ -76,6 +76,10 @@ begin
       Heap_Descriptor.Next_Ptr := Memory_Block'Unchecked_Access;
    end if;
    if Debug then
-      Console.Print (Memory_Block'Address, Prefix => "Free block: ", NL => True);
+      Console.Print (
+         Prefix => "Free block: ",
+         Value  => Memory_Block'Address,
+         NL     => True
+         );
    end if;
 end Free;

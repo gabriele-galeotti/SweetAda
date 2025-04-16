@@ -103,8 +103,16 @@ package body Malloc
       Heap_Block.Size     := Size;
       Heap_Block.Next_Ptr := null;
       if Debug then
-         Console.Print (Heap_Block.Size, Prefix => "Initializing: ", NL => True);
-         Console.Print (Integer'(MEMORYBLOCKTYPE_SIZE), Prefix => "MEMORYBLOCKTYPE_SIZE: ", NL => True);
+         Console.Print (
+            Prefix => "Initializing:         ",
+            Value  => Heap_Block.Size,
+            NL     => True
+            );
+         Console.Print (
+            Prefix => "MEMORYBLOCKTYPE_SIZE: ",
+            Value  => Integer'(MEMORYBLOCKTYPE_SIZE),
+            NL     => True
+            );
       end if;
       Free (Heap_Block'Address + MEMORYBLOCKTYPE_SIZE);
    end Init;

@@ -25,14 +25,14 @@ function Malloc
    Q     : Memory_Block_Ptr;
 begin
    if Debug then
-      Console.Print (Size, Prefix => "Requesting: ", NL => True);
+      Console.Print (Prefix => "Requesting: ", Value => Size, NL => True);
    end if;
    if Size = 0 then
       return Null_Address;
    end if;
    RSize := Round_Size (MEMORYBLOCKTYPE_SIZE + Size, DEFAULT_ALIGNMENT);
    if Debug then
-      Console.Print (RSize, Prefix => "Rounded size: ", NL => True);
+      Console.Print (Prefix => "Rounded size: ", Value => RSize, NL => True);
    end if;
    -- traverse the list of free block
    P := Heap_Descriptor'Access;
@@ -46,7 +46,11 @@ begin
       raise Storage_Error;
    end if;
    if Debug then
-      Console.Print (Q.all'Address, Prefix => "Found block @ ", NL => True);
+      Console.Print (
+         Prefix => "Found block @ ",
+         Value  => Q.all'Address,
+         NL     => True
+         );
    end if;
    -- the memory block could be too big to be provided as a whole; if
    -- possible, split it in two sub-blocks, one for the user and the other
@@ -59,7 +63,11 @@ begin
                  Convention => Ada;
       begin
          if Debug then
-            Console.Print (Half_Block'Address, Prefix => "Creating free block @ ", NL => True);
+            Console.Print (
+               Prefix => "Creating free block @ ",
+               Value  => Half_Block'Address,
+               NL     => True
+               );
          end if;
          P.all.Next_Ptr := Half_Block'Unchecked_Access;
          P.all.Next_Ptr.all.Size := Q.all.Size - RSize;
