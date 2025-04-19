@@ -36,4 +36,8 @@ package Devicedata
    -- Micrel KS8721BL/SL MII PLT
    KS8721BLSL_ID : constant := 16#0022_1619#;
 
+   -- Micrel KSZ8081RNA/RND
+   KS8081RNAD_ID_REVA2 : constant := 16#0022_1560#;
+   KS8081RNAD_ID_REVA3 : constant := 16#0022_1561#;
+
 end Devicedata;
