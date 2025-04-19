@@ -15,7 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
+with Ada.Unchecked_Conversion;
 with Interfaces;
+with Bits;
 with CPU;
 with S5D9;
 
@@ -30,21 +33,101 @@ package body LCD
    --                                                                        --
    --========================================================================--
 
+   use System;
    use Interfaces;
+   use Bits;
    use S5D9;
 
-   -- Level 1 Command
-   Software_Reset        : constant := 16#01#;
-   Sleep_Out             : constant := 16#11#;
-   Display_OFF           : constant := 16#28#;
-   Display_ON            : constant := 16#29#;
-   Color_Set             : constant := 16#2D#;
-   Write_Memory_Continue : constant := 16#3C#;
-   Write_CTRL_Display    : constant := 16#53#;
+   -- 8.1. Command List (Regulative Command Set)
 
-   procedure Init_SPI;
+   No_Operation                     : constant := 16#00#;
+   Software_Reset                   : constant := 16#01#;
+   Sleep_Out                        : constant := 16#11#;
+   Normal_Display_Mode_ON           : constant := 16#13#;
+   Display_OFF                      : constant := 16#28#;
+   Display_ON                       : constant := 16#29#;
+   Column_Address_Set               : constant := 16#2A#;
+   Page_Address_Set                 : constant := 16#2B#;
+   Memory_Write                     : constant := 16#2C#;
+   Color_Set                        : constant := 16#2D#;
+   Partial_Area                     : constant := 16#30#;
+   Memory_Access_Control            : constant := 16#36#;
+   Vertical_Scrolling_Start_Address : constant := 16#37#;
+   Pixel_Format_Set                 : constant := 16#3A#;
+   Write_Memory_Continue            : constant := 16#3C#;
+   Write_CTRL_Display               : constant := 16#53#;
+
+   -- 8.2.29. Memory Access Control (36h)
+
+   MH_L2R : constant := 0; -- Refresh X1 -> X240
+   MH_R2L : constant := 1; -- Refresh X240 -> X1
+
+   BGR_RGB : constant := 0; -- R-G-B
+   BGR_BGR : constant := 1; -- B-G-R
+
+   ML_T2B : constant := 0; -- Refresh Y1 -> Y320
+   ML_B2T : constant := 1; -- Refresh Y320 -> Y1
+
+   MV_NORMAL  : constant := 0; -- Normal mode
+   MV_REVERSE : constant := 1; -- Reverse mode
+
+   MX_L2R : constant := 0; -- X1 -> X240
+   MX_R2L : constant := 1; -- X240 -> X1
+
+   MY_T2B : constant := 0; -- Y1 -> Y320
+   MY_B2T : constant := 1; -- Y320 -> Y1
+
+   type MADCTL_Type is record
+      Unused : Bits_2 := 0;
+      MH     : Bits_1 := MH_L2R;    -- Horizontal Refresh ORDER
+      BGR    : Bits_1 := BGR_RGB;   -- RGB-BGR Order
+      ML     : Bits_1 := ML_T2B;    -- Vertical Refresh Order
+      MV     : Bits_1 := MV_NORMAL; -- Row / Column Exchange
+      MX     : Bits_1 := MX_L2R;    -- Column Address Order
+      MY     : Bits_1 := MY_T2B;    -- Row Address Order
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MADCTL_Type use record
+      Unused at 0 range 0 .. 1;
+      MH     at 0 range 2 .. 2;
+      BGR    at 0 range 3 .. 3;
+      ML     at 0 range 4 .. 4;
+      MV     at 0 range 5 .. 5;
+      MX     at 0 range 6 .. 6;
+      MY     at 0 range 7 .. 7;
+   end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (MADCTL_Type, Unsigned_8);
+
+   -- 8.2.40. Write CTRL Display (53h)
+
+   type CTRL_Type is record
+      Unused1 : Bits_2  := 0;
+      BL      : Boolean := False; -- Backlight Control On/Off
+      DD      : Boolean := False; -- Display Dimming, only for manual brightness setting
+      Unused2 : Bits_1  := 0;
+      BCTRL   : Boolean := False; -- Brightness Control Block On/Off, This bit is always used to switch brightness for display.
+      Unused3 : Bits_2  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CTRL_Type use record
+      Unused1 at 0 range 0 .. 1;
+      BL      at 0 range 2 .. 2;
+      DD      at 0 range 3 .. 3;
+      Unused2 at 0 range 4 .. 4;
+      BCTRL   at 0 range 5 .. 5;
+      Unused3 at 0 range 6 .. 7;
+   end record;
+
+   function To_U8 is new Ada.Unchecked_Conversion (CTRL_Type, Unsigned_8);
+
+   -- Subprograms
+
    procedure LCD_Delay
       (Count : in Integer);
+   procedure Init_SPI;
    procedure CS_Assert
       with Inline => True;
    procedure CS_Deassert
@@ -52,6 +135,12 @@ package body LCD
    procedure Command_Assert
       with Inline => True;
    procedure Data_Assert
+      with Inline => True;
+   procedure Data_Send
+      (Data : in Unsigned_8)
+      with Inline => True;
+   procedure DataArray_Send
+      (Data : in Byte_Array)
       with Inline => True;
 
    --========================================================================--
@@ -62,7 +151,19 @@ package body LCD
    --                                                                        --
    --========================================================================--
 
-   --
+   ----------------------------------------------------------------------------
+   -- LCD_Delay
+   ----------------------------------------------------------------------------
+   procedure LCD_Delay
+      (Count : in Integer)
+      is
+   begin
+      for Delay_Loop_Count in 1 .. Count loop CPU.NOP; end loop;
+   end LCD_Delay;
+
+   ----------------------------------------------------------------------------
+   -- Init_SPI
+   ----------------------------------------------------------------------------
    -- ILI9341V
    -- SPI0 on PORT1
    -- IM[3:0] = 1110, 4-wire 8-bit data serial interface II, SDI: In SDO: Out
@@ -74,10 +175,6 @@ package body LCD
    -- SDO          SDO          3       MISOA    LCD_MISO  --> pin 132 P1_0
    -- RDX          /RD          -       -        LCD_RD    --> pin 95  P1_14
    -- WRX (D/CX)   /WR          -       -        LCD_WR    --> pin 96  P1_15 (selector command/parameter)
-   --
-
-   ----------------------------------------------------------------------------
-   -- Init_SPI
    ----------------------------------------------------------------------------
    procedure Init_SPI
       is
@@ -100,8 +197,7 @@ package body LCD
          );
       SPI (0).SPPCR := (others => <>);
       SPI (0).SPBR.SPBR := 16;
-      SPI (0).SPSCR.SPSLN := SPSLN0;
-      loop exit when not SPI (0).SPSR.IDLNF; end loop;
+      SPI (0).SPSCR.SPSLN := SPSLN_1;
       SPI (0).SPDCR := (
          SPFC   => SPFC_1,     -- Number of Frames Specification
          SPRDTD => SPRDTD_RB,  -- SPI Receive/Transmit Data Select
@@ -139,23 +235,13 @@ package body LCD
       PORT (1).PDR (15) := True;
       -- pulse /RESET
       PORT (6).PODR (10) := False;
-      LCD_Delay (1_000);
+      LCD_Delay (1_000_000);
       PORT (6).PODR (10) := True;
       LCD_Delay (1_000_000);
    end Init_SPI;
 
    ----------------------------------------------------------------------------
-   -- LCD_Delay
-   ----------------------------------------------------------------------------
-   procedure LCD_Delay
-      (Count : in Integer)
-      is
-   begin
-      for Delay_Loop_Count in 1 .. Count loop CPU.NOP; end loop;
-   end LCD_Delay;
-
-   ----------------------------------------------------------------------------
-   -- helpers
+   -- /CS and D/C line helpers
    ----------------------------------------------------------------------------
    procedure CS_Assert is begin PORT (6).PODR (11) := False; end CS_Assert;
    procedure CS_Deassert is begin PORT (6).PODR (11) := True; end CS_Deassert;
@@ -163,86 +249,161 @@ package body LCD
    procedure Data_Assert is begin PORT (1).PODR (15) := True; end Data_Assert;
 
    ----------------------------------------------------------------------------
+   -- Data_Send
+   ----------------------------------------------------------------------------
+   procedure Data_Send
+      (Data : in Unsigned_8)
+      is
+      RX_Data : Unsigned_8 with Unreferenced => True;
+   begin
+      loop exit when SPI (0).SPSR.SPTEF; end loop;
+      SPI (0).SPDR.SPDR8 := Data;
+      loop exit when SPI (0).SPSR.SPRF; end loop;
+      RX_Data := SPI (0).SPDR.SPDR8;
+   end Data_Send;
+
+   ----------------------------------------------------------------------------
+   -- Command_Send
+   ----------------------------------------------------------------------------
+   procedure Command_Send
+      (Command : in Unsigned_8)
+      renames Data_Send;
+
+   ----------------------------------------------------------------------------
+   -- DataArray_Send
+   ----------------------------------------------------------------------------
+   procedure DataArray_Send
+      (Data : in Byte_Array)
+      is
+   begin
+      for Index in Data'First .. Data'Last loop
+         Data_Send (Data (Index));
+      end loop;
+   end DataArray_Send;
+
+   ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
       is
+      Data : Unsigned_8 with Unreferenced => True;
    begin
       Init_SPI;
-      -- LCD startup
+      -- Software Reset
       CS_Assert;
       Command_Assert;
-      -- Software Reset
-      loop exit when SPI (0).SPSR.SPTEF; end loop;
-      SPI (0).SPDR.SPDR8 := Software_Reset;
-      LCD_Delay (1_000_000);
+      Command_Send (Software_Reset);
+      CS_Deassert;
       -- Sleep Out
-      loop exit when SPI (0).SPSR.SPTEF; end loop;
-      SPI (0).SPDR.SPDR8 := Sleep_Out;
-      LCD_Delay (1_000_000);
-      -- Display OFF
-      loop exit when SPI (0).SPSR.SPTEF; end loop;
-      SPI (0).SPDR.SPDR8 := Display_OFF;
-      LCD_Delay (1_000_000);
+      CS_Assert;
+      Command_Assert;
+      Command_Send (Sleep_Out);
+      CS_Deassert;
       -- Display ON
-      loop exit when SPI (0).SPSR.SPTEF; end loop;
-      SPI (0).SPDR.SPDR8 := Display_ON;
-      LCD_Delay (1_000_000);
+      CS_Assert;
+      Command_Assert;
+      Command_Send (Display_ON);
       CS_Deassert;
       -- Write CTRL Display
       CS_Assert;
       Command_Assert;
-      loop exit when SPI (0).SPSR.SPTEF; end loop;
-      SPI (0).SPDR.SPDR8 := Write_CTRL_Display;
+      Command_Send (Write_CTRL_Display);
       Data_Assert;
-      loop exit when SPI (0).SPSR.SPTEF; end loop;
-      SPI (0).SPDR.SPDR8 := 16#04#;
+      DataArray_Send (Byte_Array'([
+         To_U8 (CTRL_Type'(BL => True, others => <>))
+         ]));
       CS_Deassert;
-      -- Color Set
+      -- Memory Access Control
       CS_Assert;
       Command_Assert;
-      loop exit when SPI (0).SPSR.SPTEF; end loop;
-      SPI (0).SPDR.SPDR8 := Color_Set;
+      Command_Send (Memory_Access_Control);
       Data_Assert;
-      -- R 5-bit
-      for Idx in 0 .. 31 loop
-         loop exit when SPI (0).SPSR.SPTEF; end loop;
-         SPI (0).SPDR.SPDR8 := Unsigned_8 (Idx);
-      end loop;
-      -- G 6-bit
-      for Idx in 0 .. 63 loop
-         loop exit when SPI (0).SPSR.SPTEF; end loop;
-         SPI (0).SPDR.SPDR8 := Unsigned_8 (Idx);
-      end loop;
-      -- B 5-bit
-      for Idx in 0 .. 31 loop
-         loop exit when SPI (0).SPSR.SPTEF; end loop;
-         SPI (0).SPDR.SPDR8 := Unsigned_8 (Idx);
-      end loop;
+      DataArray_Send (Byte_Array'([
+         To_U8 (MADCTL_Type'(
+            MH     => MH_L2R,
+            BGR    => BGR_RGB,
+            ML     => ML_T2B,
+            MV     => MV_NORMAL,
+            MX     => MX_L2R,
+            MY     => MY_T2B,
+            others => <>
+            ))
+         ]));
       CS_Deassert;
-      -- draw a frame
+      -- Normal Display Mode ON
       CS_Assert;
       Command_Assert;
-      loop exit when SPI (0).SPSR.SPTEF; end loop;
-      SPI (0).SPDR.SPDR8 := Write_Memory_Continue;
-      LCD_Delay (20_000);
+      Command_Send (Normal_Display_Mode_ON);
+      CS_Deassert;
+      -- Pixel Format Set
+      CS_Assert;
+      Command_Assert;
+      Command_Send (Pixel_Format_Set);
+      Data_Assert;
+      DataArray_Send (Byte_Array'([16#66#]));
+      CS_Deassert;
+      -- Color Set RGB565
+      CS_Assert;
+      Command_Assert;
+      Command_Send (Color_Set);
+      Data_Assert;
+      for Idx in 0 .. 31 loop Data_Send (Unsigned_8 (Idx)); end loop;
+      for Idx in 0 .. 63 loop Data_Send (Unsigned_8 (Idx)); end loop;
+      for Idx in 0 .. 31 loop Data_Send (Unsigned_8 (Idx)); end loop;
+      CS_Deassert;
+      -- Column Address Set
+      CS_Assert;
+      Command_Assert;
+      Command_Send (Column_Address_Set);
+      Data_Assert;
+      DataArray_Send (Byte_Array'([0, 0, 0, 16#EF#]));
+      CS_Deassert;
+      -- Page Address Set
+      CS_Assert;
+      Command_Assert;
+      Command_Send (Page_Address_Set);
+      Data_Assert;
+      DataArray_Send (Byte_Array'([0, 0, 1, 16#3F#]));
+      CS_Deassert;
+      -- Vertical Scrolling Start Address
+      CS_Assert;
+      Command_Assert;
+      Command_Send (Vertical_Scrolling_Start_Address);
+      Data_Assert;
+      DataArray_Send (Byte_Array'([0, 0]));
+      CS_Deassert;
+      -- draw a frame with switching colors
+      CS_Assert;
+      Command_Assert;
+      Command_Send (Memory_Write);
       Data_Assert;
       declare
-         Color : Unsigned_8;
+         Color_R  : Unsigned_8 := 0;
+         Color_G  : Unsigned_8 := 0;
+         Color_B  : Unsigned_8 := 0;
+         Switch_R : Unsigned_8 := 0;
+         Switch_G : Unsigned_8 := 0;
+         Switch_B : Unsigned_8 := 0;
       begin
          for Y in 0 .. 319 loop
-            Color := 0;
+            if    Y < (320 / 3) then
+               Switch_R := 16#FF#; Switch_G := 0; Switch_B := 0;
+            elsif Y >= (320 / 3) and then Y < (320 * 2 / 3) then
+               Switch_R := 0; Switch_G := 16#FF#; Switch_B := 0;
+            elsif Y > (320 * 2 / 3) then
+               Switch_R := 0; Switch_G := 0; Switch_B := 16#FF#;
+            end if;
             for X in 0 .. 239 loop
-               loop exit when SPI (0).SPSR.SPTEF; end loop;
-               SPI (0).SPDR.SPDR8 := Shift_Left (Color, 2);
-               loop exit when SPI (0).SPSR.SPTEF; end loop;
-               SPI (0).SPDR.SPDR8 := Shift_Left (Color, 4);
-               loop exit when SPI (0).SPSR.SPTEF; end loop;
-               SPI (0).SPDR.SPDR8 := Shift_Left (Color, 6);
-               Color := @ + 1;
+               Data_Send (Shift_Left (Color_R, 2) and Switch_R);
+               Data_Send (Shift_Left (Color_G, 2) and Switch_G);
+               Data_Send (Shift_Left (Color_B, 2) and Switch_B);
             end loop;
+            Color_R := @ + 1;
+            Color_G := @ + 1;
+            Color_B := @ + 1;
          end loop;
       end;
+      CS_Deassert;
    end Init;
 
 end LCD;
