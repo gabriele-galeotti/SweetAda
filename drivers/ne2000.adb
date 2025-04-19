@@ -915,14 +915,14 @@ package body NE2000
                loop
                   -- exit when To_ISR (In8 (BAR + 16#07#)).RDC;
                   MMIO.Write (Payload_Address (P) + Index, In32 (PA (BAR, RDMA)));
-                  Index := Index + 4;
+                  Index := @ + 4;
                   exit when Index >= Storage_Offset (NIC_Packet_Header.Receive_Byte_Count);
                end loop;
             else
                loop
                   -- exit when To_ISR (In8 (BAR + 16#07#)).RDC;
                   MMIO.Write (Payload_Address (P) + Index, In16 (PA (BAR, RDMA)));
-                  Index := Index + 2;
+                  Index := @ + 2;
                   exit when Index >= Storage_Offset (NIC_Packet_Header.Receive_Byte_Count);
                end loop;
             end if;
@@ -989,7 +989,7 @@ package body NE2000
       Data := 0;
       for Index in 0 .. P.all.Size - 1 loop
          Data := Shift_Left (Data, 8) or Unsigned_32 (P.all.Payload (Index));
-         Byte_Idx := Byte_Idx + 1;
+         Byte_Idx := @ + 1;
          if Index = P.all.Size - 1 then
             case Byte_Idx is
                when 3      => Data := Shift_Left (Data, 8);
