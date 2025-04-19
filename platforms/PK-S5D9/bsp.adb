@@ -148,7 +148,8 @@ package body BSP
          CM   => CM_ASYNC
          );
       -- Table 34.10 Examples of BRR settings for different bit rates in asynchronous mode (2)
-      SCI (3).BRR := 97; -- 9600 bps @ 30 MHz (n = 0)
+      -- 9600 bps @ 30 MHz (n = 0)
+      SCI (3).BRR := Unsigned_8 (Clocks.CLK_PCKA / (64 / 2 * 9_600) - 1);
       -- pin 706 function = SCI2, RxD
       PFSR (P706) := (PMR => True, PSEL => PSEL_SCI2, others => <>);
       -- pin 707 function = SCI2, TxD
