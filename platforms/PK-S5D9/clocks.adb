@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Definitions;
 with S5D9;
 
 package body Clocks
@@ -28,6 +29,7 @@ package body Clocks
    --                                                                        --
    --========================================================================--
 
+   use Definitions;
    use S5D9;
 
    --========================================================================--
@@ -93,6 +95,9 @@ package body Clocks
          PCKD   => SCKDIVCR_DIV4,  -- Peripheral Module Clock D ->  30     MHz
          others => <>
          );
+      -- setup clock values
+      CLK_Core := 120 * MHz1;
+      CLK_PCKA := 30 * MHz1;
    end Init;
 
 end Clocks;
