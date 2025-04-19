@@ -3120,8 +3120,8 @@ pragma Warnings (On);
    SPLP_NORMAL   : constant := 0; -- Normal mode
    SPLP_LOOPBACK : constant := 1; -- Loopback mode
 
-   SPLP2_NORMAL   : constant := 0; -- Normal mode
-   SPLP2_LOOPBACK : constant := 1; -- Loopback mode
+   SPLP2_NORMAL   renames SPLP_NORMAL;
+   SPLP2_LOOPBACK renames SPLP_LOOPBACK;
 
    MOIFV_LOW  : constant := 0; -- Set level output on MOSIn pin during MOSI idling to correspond to low
    MOIFV_HIGH : constant := 1; -- Set level output on MOSIn pin during MOSI idling to correspond to high.
@@ -3202,17 +3202,17 @@ pragma Warnings (On);
 
    -- 38.2.6 SPI Sequence Control Register (SPSCR)
 
-   SPSLN0 : constant := 2#000#; -- 0-->0
-   SPSLN1 : constant := 2#001#; -- 0-->1-->0
-   SPSLN2 : constant := 2#010#; -- 0-->1-->2-->0
-   SPSLN3 : constant := 2#011#; -- 0-->...>3-->0
-   SPSLN4 : constant := 2#100#; -- 0-->...>4-->0
-   SPSLN5 : constant := 2#101#; -- 0-->...>5-->0
-   SPSLN6 : constant := 2#110#; -- 0-->...>6-->0
-   SPSLN7 : constant := 2#111#; -- 0-->...>7-->0
+   SPSLN_1 : constant := 2#000#; -- 0-->0
+   SPSLN_2 : constant := 2#001#; -- 0-->1-->0
+   SPSLN_3 : constant := 2#010#; -- 0-->1-->2-->0
+   SPSLN_4 : constant := 2#011#; -- 0-->...>3-->0
+   SPSLN_5 : constant := 2#100#; -- 0-->...>4-->0
+   SPSLN_6 : constant := 2#101#; -- 0-->...>5-->0
+   SPSLN_7 : constant := 2#110#; -- 0-->...>6-->0
+   SPSLN_8 : constant := 2#111#; -- 0-->...>7-->0
 
    type SPSCR_Type is record
-      SPSLN    : Bits_3 := SPSLN0; -- SPI Sequence Length Specification
+      SPSLN    : Bits_3 := SPSLN_1; -- SPI Sequence Length Specification
       Reserved : Bits_5 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -3224,19 +3224,28 @@ pragma Warnings (On);
 
    -- 38.2.7 SPI Sequence Status Register (SPSSR)
 
-   SPCMD0 : constant := 2#000#;
-   SPCMD1 : constant := 2#001#;
-   SPCMD2 : constant := 2#010#;
-   SPCMD3 : constant := 2#011#;
-   SPCMD4 : constant := 2#100#;
-   SPCMD5 : constant := 2#101#;
-   SPCMD6 : constant := 2#110#;
-   SPCMD7 : constant := 2#111#;
+   SPCP_SPCMD0 : constant := 2#000#;
+   SPCP_SPCMD1 : constant := 2#001#;
+   SPCP_SPCMD2 : constant := 2#010#;
+   SPCP_SPCMD3 : constant := 2#011#;
+   SPCP_SPCMD4 : constant := 2#100#;
+   SPCP_SPCMD5 : constant := 2#101#;
+   SPCP_SPCMD6 : constant := 2#110#;
+   SPCP_SPCMD7 : constant := 2#111#;
+
+   SPECM_SPCMD0 renames SPCP_SPCMD0;
+   SPECM_SPCMD1 renames SPCP_SPCMD1;
+   SPECM_SPCMD2 renames SPCP_SPCMD2;
+   SPECM_SPCMD3 renames SPCP_SPCMD3;
+   SPECM_SPCMD4 renames SPCP_SPCMD4;
+   SPECM_SPCMD5 renames SPCP_SPCMD5;
+   SPECM_SPCMD6 renames SPCP_SPCMD6;
+   SPECM_SPCMD7 renames SPCP_SPCMD7;
 
    type SPSSR_Type is record
-      SPCP      : Bits_3 := SPCMD0; -- SPI Command Pointer
+      SPCP      : Bits_3 := SPCP_SPCMD0;  -- SPI Command Pointer
       Reserved1 : Bits_1 := 0;
-      SPECM     : Bits_3 := SPCMD0; -- SPI Error Command
+      SPECM     : Bits_3 := SPECM_SPCMD0; -- SPI Error Command
       Reserved2 : Bits_1 := 0;
    end record
       with Bit_Order => Low_Order_First,
