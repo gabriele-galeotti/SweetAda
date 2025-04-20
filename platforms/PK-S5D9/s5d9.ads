@@ -1605,6 +1605,335 @@ pragma Warnings (On);
            Convention => Ada;
 
    ----------------------------------------------------------------------------
+   -- 17. DMA Controller (DMAC)
+   ----------------------------------------------------------------------------
+
+   -- 17.2.1 DMA Source Address Register (DMSAR)
+
+   type DMSAR_Type is record
+      DMSA : Unsigned_32 := 0; -- Specifies the transfer source start address
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMSAR_Type use record
+      DMSA at 0 range 0 .. 31;
+   end record;
+
+   -- 17.2.2 DMA Destination Address Register (DMDAR)
+
+   type DMDAR_Type is record
+      DMDA : Unsigned_32 := 0; -- Specifies the transfer destination start address
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMDAR_Type use record
+      DMDA at 0 range 0 .. 31;
+   end record;
+
+   -- 17.2.3 DMA Transfer Count Register (DMCRA)
+
+   type DMCRA_Type is record
+      DMCRAL : Unsigned_16 := 0; -- Lower bits of transfer count
+      DMCRAH : Unsigned_16 := 0; -- Upper bits of transfer count
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMCRA_Type use record
+      DMCRAL at 0 range  0 .. 15;
+      DMCRAH at 0 range 16 .. 31;
+   end record;
+
+  -- 17.2.4 DMA Block Transfer Count Register (DMCRB)
+
+   type DMCRB_Type is record
+      DMCRB : Unsigned_16 := 0; -- Specifies the number of block or repeat transfer operations
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for DMCRB_Type use record
+      DMCRB at 0 range 0 .. 15;
+   end record;
+
+   -- 17.2.5 DMA Transfer Mode Register (DMTMD)
+
+   DCTG_SOFT  : constant := 2#00#; -- Software
+   DCTG_INT   : constant := 2#01#; -- Interrupts from peripheral modules or external interrupt input pins
+   DCTG_RSVD1 : constant := 2#10#; -- Setting prohibited
+   DCTG_RSVD2 : constant := 2#11#; -- Setting prohibited.
+
+   SZ_8    : constant := 2#00#; -- 8 bits
+   SZ_16   : constant := 2#01#; -- 16 bits
+   SZ_32   : constant := 2#10#; -- 32 bits
+   SZ_RSVD : constant := 2#11#; -- Setting prohibited.
+
+   DTS_DST  : constant := 2#00#; -- Specify destination as the repeat area or block area
+   DTS_SRC  : constant := 2#01#; -- Specify source as the repeat area or block area
+   DTS_NONE : constant := 2#10#; -- Do not specify repeat area or block area
+   DTS_RSVD : constant := 2#11#; -- Setting prohibited.
+
+   MD_NORMAL : constant := 2#00#; -- Normal transfer
+   MD_REPEAT : constant := 2#01#; -- Repeat transfer
+   MD_BLOCK  : constant := 2#10#; -- Block transfer
+   MD_RSVD   : constant := 2#11#; -- Setting prohibited.
+
+   type DMTMD_Type is record
+      DCTG      : Bits_2 := DCTG_SOFT; -- Transfer Request Source Select
+      Reserved1 : Bits_6 := 0;
+      SZ        : Bits_2 := SZ_8;      -- Transfer Data Size Select
+      Reserved2 : Bits_2 := 0;
+      DTS       : Bits_2 := DTS_DST;   -- Repeat Area Select
+      MD        : Bits_2 := MD_NORMAL; -- Transfer Mode Select
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for DMTMD_Type use record
+      DCTG      at 0 range  0 ..  1;
+      Reserved1 at 0 range  2 ..  7;
+      SZ        at 0 range  8 ..  9;
+      Reserved2 at 0 range 10 .. 11;
+      DTS       at 0 range 12 .. 13;
+      MD        at 0 range 14 .. 15;
+   end record;
+
+   -- 17.2.6 DMA Interrupt Setting Register (DMINT)
+
+   type DMINT_Type is record
+      DARIE    : Boolean := False; -- Destination Address Extended Repeat Area Overflow Interrupt Enable
+      SARIE    : Boolean := False; -- Source Address Extended Repeat Area Overflow Interrupt Enable
+      RPTIE    : Boolean := False; -- Repeat Size End Interrupt Enable
+      ESIE     : Boolean := False; -- Transfer Escape End Interrupt Enable
+      DTIE     : Boolean := False; -- Transfer End Interrupt Enable
+      Reserved : Bits_3 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for DMINT_Type use record
+      DARIE    at 0 range 0 .. 0;
+      SARIE    at 0 range 1 .. 1;
+      RPTIE    at 0 range 2 .. 2;
+      ESIE     at 0 range 3 .. 3;
+      DTIE     at 0 range 4 .. 4;
+      Reserved at 0 range 5 .. 7;
+   end record;
+
+   -- 17.2.7 DMA Address Mode Register (DMAMD)
+
+   DARA_NONE  : constant := 2#00000#; -- Not specified
+   DARA_2     : constant := 2#00001#; -- 2 bytes specified as extended repeat area by the lower 1 bit of the address
+   DARA_4     : constant := 2#00010#; -- 4 bytes specified as extended repeat area by the lower 2 bits of the address
+   DARA_8     : constant := 2#00011#; -- 8 bytes specified as extended repeat area by the lower 3 bits of the address
+   DARA_16    : constant := 2#00100#; -- 16 bytes specified as extended repeat area by the lower 4 bits of the address
+   DARA_32    : constant := 2#00101#; -- 32 bytes specified as extended repeat area by the lower 5 bits of the address
+   DARA_64    : constant := 2#00110#; -- 64 bytes specified as extended repeat area by the lower 6 bits of the address
+   DARA_128   : constant := 2#00111#; -- 128 bytes specified as extended repeat area by the lower 7 bits of the address
+   DARA_256   : constant := 2#01000#; -- 256 bytes specified as extended repeat area by the lower 8 bits of the address
+   DARA_512   : constant := 2#01001#; -- 512 bytes specified as extended repeat area by the lower 9 bits of the address
+   DARA_1KB   : constant := 2#01010#; -- 1 KB specified as extended repeat area by the lower 10 bits of the address
+   DARA_2KB   : constant := 2#01011#; -- 2 KB specified as extended repeat area by the lower 11 bits of the address
+   DARA_4KB   : constant := 2#01100#; -- 4 KB specified as extended repeat area by the lower 12 bits of the address
+   DARA_8KB   : constant := 2#01101#; -- 8 KB specified as extended repeat area by the lower 13 bits of the address
+   DARA_16K   : constant := 2#01110#; -- 16 KB specified as extended repeat area by the lower 14 bits of the address
+   DARA_32KB  : constant := 2#01111#; -- 32 KB specified as extended repeat area by the lower 15 bits of the address
+   DARA_64KB  : constant := 2#10000#; -- 64 KB specified as extended repeat area by the lower 16 bits of the address
+   DARA_128KB : constant := 2#10001#; -- 128 KB specified as extended repeat area by the lower 17 bits of the address
+   DARA_256KB : constant := 2#10010#; -- 256 KB specified as extended repeat area by the lower 18 bits of the address
+   DARA_512KB : constant := 2#10011#; -- 512 KB specified as extended repeat area by the lower 19 bits of the address
+   DARA_1MB   : constant := 2#10100#; -- 1 MB specified as extended repeat area by the lower 20 bits of the address
+   DARA_2MB   : constant := 2#10101#; -- 2 MB specified as extended repeat area by the lower 21 bits of the address
+   DARA_4MB   : constant := 2#10110#; -- 4 MB specified as extended repeat area by the lower 22 bits of the address
+   DARA_8MB   : constant := 2#10111#; -- 8 MB specified as extended repeat area by the lower 23 bits of the address
+   DARA_16MB  : constant := 2#11000#; -- 16 MB specified as extended repeat area by the lower 24 bits of the address
+   DARA_32MB  : constant := 2#11001#; -- 32 MB specified as extended repeat area by the lower 25 bits of the address
+   DARA_64MB  : constant := 2#11010#; -- 64 MB specified as extended repeat area by the lower 26 bits of the address
+   DARA_128MB : constant := 2#11011#; -- 128 MB specified as extended repeat area by the lower 27 bits of the address
+   DARA_RSVD1 : constant := 2#11100#; -- Setting prohibited
+   DARA_RSVD2 : constant := 2#11101#; -- Setting prohibited
+   DARA_RSVD3 : constant := 2#11110#; -- Setting prohibited
+   DARA_RSVD4 : constant := 2#11111#; -- Setting prohibited
+
+   DM_FIXED  : constant := 2#00#; -- Fixed address
+   DM_OFFSET : constant := 2#01#; -- Offset addition
+   DM_INCR   : constant := 2#10#; -- Incremented address
+   DM_DECR   : constant := 2#11#; -- Decremented address.
+
+   SARA_NONE  renames DARA_NONE;
+   SARA_2     renames DARA_2;
+   SARA_4     renames DARA_4;
+   SARA_8     renames DARA_8;
+   SARA_16    renames DARA_16;
+   SARA_32    renames DARA_32;
+   SARA_64    renames DARA_64;
+   SARA_128   renames DARA_128;
+   SARA_256   renames DARA_256;
+   SARA_512   renames DARA_512;
+   SARA_1KB   renames DARA_1KB;
+   SARA_2KB   renames DARA_2KB;
+   SARA_4KB   renames DARA_4KB;
+   SARA_8KB   renames DARA_8KB;
+   SARA_16K   renames DARA_16K;
+   SARA_32KB  renames DARA_32KB;
+   SARA_64KB  renames DARA_64KB;
+   SARA_128KB renames DARA_128KB;
+   SARA_256KB renames DARA_256KB;
+   SARA_512KB renames DARA_512KB;
+   SARA_1MB   renames DARA_1MB;
+   SARA_2MB   renames DARA_2MB;
+   SARA_4MB   renames DARA_4MB;
+   SARA_8MB   renames DARA_8MB;
+   SARA_16MB  renames DARA_16MB;
+   SARA_32MB  renames DARA_32MB;
+   SARA_64MB  renames DARA_64MB;
+   SARA_128MB renames DARA_128MB;
+   SARA_RSVD1 renames DARA_RSVD1;
+   SARA_RSVD2 renames DARA_RSVD2;
+   SARA_RSVD3 renames DARA_RSVD3;
+   SARA_RSVD4 renames DARA_RSVD4;
+
+   SM_FIXED  renames DM_FIXED;
+   SM_OFFSET renames DM_OFFSET;
+   SM_INCR   renames DM_INCR;
+   SM_DECR   renames DM_DECR;
+
+   type DMAMD_Type is record
+      DARA      : Bits_5 := DARA_NONE; -- Destination Address Extended Repeat Area
+      Reserved1 : Bits_1 := 0;
+      DM        : Bits_2 := DM_FIXED;  -- Destination Address Update Mode
+      SARA      : Bits_5 := SARA_NONE; -- Source Address Extended Repeat Area
+      Reserved2 : Bits_1 := 0;
+      SM        : Bits_2 := SM_FIXED;  -- Source Address Update Mode
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for DMAMD_Type use record
+      DARA      at 0 range  0 ..  4;
+      Reserved1 at 0 range  5 ..  5;
+      DM        at 0 range  6 ..  7;
+      SARA      at 0 range  8 .. 12;
+      Reserved2 at 0 range 13 .. 13;
+      SM        at 0 range 14 .. 15;
+   end record;
+
+   -- 17.2.8 DMA Offset Register (DMOFR)
+
+   type DMOFR_Type is record
+      DMOF : Unsigned_32 := 0; -- Specifies the offset when offset addition is selected as the address update mode for transfer source or destination
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMOFR_Type use record
+      DMOF at 0 range 0 .. 31;
+   end record;
+
+   -- 17.2.9 DMA Transfer Enable Register (DMCNT)
+
+   type DMCNT_Type is record
+      DTE      : Boolean := False; -- DMA Transfer Enable
+      Reserved : Bits_7  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for DMCNT_Type use record
+      DTE      at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 7;
+   end record;
+
+   -- 17.2.10 DMA Software Start Register (DMREQ)
+
+   type DMREQ_Type is record
+      SWREQ     : Boolean := False; -- DMA Software Start
+      Reserved1 : Bits_3  := 0;
+      CLRS      : Boolean := False; -- DMA Software Start Bit Auto Clear Select
+      Reserved2 : Bits_3  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for DMREQ_Type use record
+      SWREQ     at 0 range 0 .. 0;
+      Reserved1 at 0 range 1 .. 3;
+      CLRS      at 0 range 4 .. 4;
+      Reserved2 at 0 range 5 .. 7;
+   end record;
+
+   -- 17.2.11 DMA Status Register (DMSTS)
+
+   type DMSTS_Type is record
+      ESIF      : Boolean := False; -- Transfer Escape End Interrupt Flag
+      Reserved1 : Bits_3  := 0;
+      DTIF      : Boolean := False; -- Transfer End Interrupt Flag
+      Reserved2 : Bits_2  := 0;
+      ACT       : Boolean := False; -- DMA Active Flag
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for DMSTS_Type use record
+      ESIF      at 0 range 0 .. 0;
+      Reserved1 at 0 range 1 .. 3;
+      DTIF      at 0 range 4 .. 4;
+      Reserved2 at 0 range 5 .. 6;
+      ACT       at 0 range 7 .. 7;
+   end record;
+
+   -- 17.2.12 DMAC Module Activation Register (DMAST)
+
+   type DMAST_Type is record
+      DMST     : Boolean := False; -- DMAC Operation Enable
+      Reserved : Bits_7  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for DMAST_Type use record
+      DMST     at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 7;
+   end record;
+
+   -- DMAC0 .. DMAC7 memory-mapped array
+
+pragma Warnings (Off);
+   type DMAC_Type is record
+      DMSAR : DMSAR_Type with Volatile_Full_Access => True;
+      DMDAR : DMDAR_Type with Volatile_Full_Access => True;
+      DMCRA : DMCRA_Type with Volatile_Full_Access => True;
+      DMCRB : DMCRB_Type with Volatile_Full_Access => True;
+      DMTMD : DMTMD_Type with Volatile_Full_Access => True;
+      DMINT : DMINT_Type with Volatile_Full_Access => True;
+      DMAMD : DMAMD_Type with Volatile_Full_Access => True;
+      DMOFR : DMOFR_Type with Volatile_Full_Access => True;
+      DMCNT : DMCNT_Type with Volatile_Full_Access => True;
+      DMREQ : DMREQ_Type with Volatile_Full_Access => True;
+      DMSTS : DMSTS_Type with Volatile_Full_Access => True;
+   end record
+      with Size                    => 16#40# * 8,
+           Suppress_Initialization => True;
+   for DMAC_Type use record
+      DMSAR at 16#00# range 0 .. 31;
+      DMDAR at 16#04# range 0 .. 31;
+      DMCRA at 16#08# range 0 .. 31;
+      DMCRB at 16#0C# range 0 .. 15;
+      DMTMD at 16#10# range 0 .. 15;
+      DMINT at 16#13# range 0 ..  7;
+      DMAMD at 16#14# range 0 .. 15;
+      DMOFR at 16#18# range 0 .. 31;
+      DMCNT at 16#1C# range 0 ..  7;
+      DMREQ at 16#1D# range 0 ..  7;
+      DMSTS at 16#1E# range 0 ..  7;
+   end record;
+pragma Warnings (On);
+
+   DMAC_BASEADDRESS : constant := 16#4000_5000#;
+
+   DMAC : aliased array (0 .. 7) of DMAC_Type
+      with Address    => System'To_Address (DMAC_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   DMAST : aliased DMAST_Type
+      with Address    => System'To_Address (DMAC_BASEADDRESS + 16#200#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ----------------------------------------------------------------------------
    -- 20. I/O Ports
    ----------------------------------------------------------------------------
 
