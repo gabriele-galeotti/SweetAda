@@ -61,7 +61,7 @@ package body BSP
    procedure SysTick_Init
       is
    begin
-      ARMv7M.SYST_RVR.RELOAD := Bits_24 (120 * MHz1 / 2_000);
+      ARMv7M.SYST_RVR.RELOAD := Bits_24 (Clocks.CLK_Core / 2_000);
       ARMv7M.SHPR3.PRI_15 := 16#FF#;
       ARMv7M.SYST_CVR.CURRENT := 0;
       ARMv7M.SYST_CSR := (
@@ -139,7 +139,7 @@ package body BSP
          others  => <>
          );
       SCI (3).SMR.NORMAL := (
-         CKS  => CKS_PCLKA,
+         CKS  => CKS_PCLKA, -- n = 0
          MP   => False,
          STOP => STOP_1,
          PM   => PM_EVEN,
@@ -210,8 +210,8 @@ package body BSP
       MSTPCRB.MSTPB6  := False; -- QSPI on
       MSTPCRB.MSTPB15 := False; -- ETHERC0 on
       MSTPCRB.MSTPB19 := False; -- SPI0 on
+      -- MSTPCRB.MSTPB25 := False; -- SCI6 on
       MSTPCRB.MSTPB28 := False; -- SCI3 on
-      -- MSTPCRB.MSTPB31 := False; -- SCI0 on
       MSTPCRD.MSTPD3  := False; -- AGT0 on
       -- enable writing to the PmnPFS register --------------------------------
       PWPR.B0WI  := False;
