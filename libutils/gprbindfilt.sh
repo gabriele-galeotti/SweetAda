@@ -154,7 +154,7 @@ while IFS= read -r textline ; do
       printf "%s\n" "${textline}"
       ;;
     FILE)
-      gnatbindelab=${gnatbindelab}$(printf "%s\n" "${textline}")${NL}
+      gnatbindelab=${gnatbindelab}$(printf "%s" "${textline}")${NL}
       ;;
     *)
       ;;
