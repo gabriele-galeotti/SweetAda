@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Definitions;
 with Bits;
 with K61;
 
@@ -29,6 +30,7 @@ package body Clocks
    --                                                                        --
    --========================================================================--
 
+   use Definitions;
    use Bits;
    use K61;
 
