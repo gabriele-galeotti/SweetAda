@@ -120,47 +120,51 @@ package Definitions
    GHz1 : constant := 1_000 * MHz1;
 
    -- common known clock rates in Hz
+   -- MHz-fractional rates are written in full form
    CLK_RTC32k   : constant :=      32_768; -- 2**15
-   CLK_1M       : constant :=   1_000_000; -- standard value
+   CLK_1M       : constant :=    1 * MHz1; -- standard value
    CLK_RTC1M    : constant :=   1_048_576; -- 2**20
    CLK_UART1M8  : constant :=   1_843_200; -- 115_200 * 16
-   CLK_2M       : constant :=   2_000_000; -- standard value
+   CLK_2M       : constant :=    2 * MHz1; -- standard value
    CLK_RTC2M    : constant :=   2_097_152; -- 2**21
    CLK_UART2M4  : constant :=   2_457_600; -- 9_600 * 16**2 = CLK_UART1M8 * 4/3
    CLK_2M5      : constant :=   2_500_000; -- MIIM
    CLK_NTSC     : constant :=   3_579_545; -- 315_000_000 / 88
    CLK_UART3M6  : constant :=   3_686_400; -- CLK_UART1M8 * 2
-   CLK_4M       : constant :=   4_000_000; -- standard value
+   CLK_4M       : constant :=    4 * MHz1; -- standard value
    CLK_RTC4M    : constant :=   4_194_304; -- 2**22
    CLK_PAL      : constant :=   4_433_619; -- 283.75 * 15625 + 25
    CLK_PC5150   : constant :=   4_772_727; -- CLK_NTSC * 4/3
    CLK_UART4M9  : constant :=   4_915_200; -- CLK_UART1M8 * 8/3
-   CLK_6M       : constant :=   6_000_000; -- standard value
+   CLK_6M       : constant :=    6 * MHz1; -- standard value
    CLK_PALAmiga : constant :=   7_093_790; -- CLK_PAL * 8/5 = CLK_PAL28M / 4
    CLK_NTSCx2   : constant :=   7_159_090; -- CLK_NTSC * 2
    CLK_UART7M3  : constant :=   7_372_800; -- CLK_UART1M8 * 4
-   CLK_8M       : constant :=   8_000_000; -- standard value
-   CLK_10M      : constant :=  10_000_000; -- standard value
-   CLK_12M      : constant :=  12_000_000; -- USB
+   CLK_8M       : constant :=    8 * MHz1; -- standard value
+   CLK_10M      : constant :=   10 * MHz1; -- standard value
+   CLK_12M      : constant :=   12 * MHz1; -- USB
    CLK_NTSCx4   : constant :=  14_318_182; -- CLK_NTSC * 4
    CLK_UART14M  : constant :=  14_745_600; -- CLK_UART1M8 * 8
-   CLK_16M      : constant :=  16_000_000; -- standard value
+   CLK_16M      : constant :=   16 * MHz1; -- standard value
    CLK_UART18M  : constant :=  18_432_000; -- CLK_UART1M8 * 10
-   CLK_20M      : constant :=  20_000_000; -- standard value
-   CLK_25M      : constant :=  25_000_000; -- MII PHY
+   CLK_20M      : constant :=   20 * MHz1; -- standard value
+   CLK_25M      : constant :=   25 * MHz1; -- MII PHY
    CLK_PAL28M   : constant :=  28_375_160; -- CLK_PAL * 64/10
-   CLK_33M      : constant :=  33_000_000; -- standard value
+   CLK_33M      : constant :=   33 * MHz1; -- standard value
    CLK_33M33    : constant :=  33_330_000; -- PCI
-   CLK_40M      : constant :=  40_000_000; -- standard value
-   CLK_50M      : constant :=  50_000_000; -- RMII PHY
-   CLK_66M      : constant :=  66_000_000; -- standard value
+   CLK_40M      : constant :=   40 * MHz1; -- standard value
+   CLK_50M      : constant :=   50 * MHz1; -- RMII PHY
+   CLK_66M      : constant :=   66 * MHz1; -- standard value
    CLK_66M66    : constant :=  66_667_000; -- PCI
-   CLK_75M      : constant :=  75_000_000; -- standard value
-   CLK_80M      : constant :=  80_000_000; -- standard value
-   CLK_100M     : constant := 100_000_000; -- standard value
-   CLK_120M     : constant := 120_000_000; -- standard value
-   CLK_133M     : constant := 133_000_000; -- standard value
-   CLK_150M     : constant := 150_000_000; -- standard value
+   CLK_75M      : constant :=   75 * MHz1; -- standard value
+   CLK_80M      : constant :=   80 * MHz1; -- standard value
+   CLK_90M      : constant :=   90 * MHz1; -- standard value
+   CLK_100M     : constant :=  100 * MHz1; -- standard value
+   CLK_120M     : constant :=  120 * MHz1; -- standard value
+   CLK_133M     : constant :=  133 * MHz1; -- standard value
+   CLK_150M     : constant :=  150 * MHz1; -- standard value
+   CLK_180M     : constant :=  180 * MHz1; -- standard value
+   CLK_200M     : constant :=  200 * MHz1; -- standard value
 
    -- serial port baud rates
    type Baud_Rate_Type is
