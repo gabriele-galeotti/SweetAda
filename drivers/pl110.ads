@@ -166,7 +166,7 @@ pragma Style_Checks (Off);
    end record;
 
    ----------------------------------------------------------------------------
-   -- Framebuffer & video parameters
+   -- Framebuffer and video parameters
    ----------------------------------------------------------------------------
 
    VIDEO_WIDTH  : constant := 640;

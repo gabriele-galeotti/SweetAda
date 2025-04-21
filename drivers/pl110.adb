@@ -34,7 +34,11 @@ package body PL110
    subtype G_Type is Natural range 0 .. 2**6 - 1;
    subtype B_Type is Natural range 0 .. 2**5 - 1;
 
-   function RGB565 (R : R_Type; G : G_Type; B : B_Type) return Unsigned_16;
+   function RGB565
+      (R : R_Type;
+       G : G_Type;
+       B : B_Type)
+      return Unsigned_16;
 
    --========================================================================--
    --                                                                        --
