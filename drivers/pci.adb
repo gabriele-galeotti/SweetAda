@@ -81,10 +81,10 @@ package body PCI
       Offset := Unsigned_8 (Register_Number and 16#03#);
       Data := Cfg_Read (Descriptor, Bus_Number, Device_Number, Function_Number, Register_Number);
       case Offset is
-         when 0 => Data := (Data and 16#FFFF_FF00#) or             Unsigned_32 (Value);
-         when 1 => Data := (Data and 16#FFFF_00FF#) or Shift_Left (Unsigned_32 (Value), 8);
-         when 2 => Data := (Data and 16#FF00_FFFF#) or Shift_Left (Unsigned_32 (Value), 16);
-         when 3 => Data := (Data and 16#00FF_FFFF#) or Shift_Left (Unsigned_32 (Value), 24);
+         when 0 => Data := (@ and 16#FFFF_FF00#) or             Unsigned_32 (Value);
+         when 1 => Data := (@ and 16#FFFF_00FF#) or Shift_Left (Unsigned_32 (Value), 8);
+         when 2 => Data := (@ and 16#FF00_FFFF#) or Shift_Left (Unsigned_32 (Value), 16);
+         when 3 => Data := (@ and 16#00FF_FFFF#) or Shift_Left (Unsigned_32 (Value), 24);
       end case;
       Cfg_Write (Descriptor, Bus_Number, Device_Number, Function_Number, Register_Number, Data);
    end Cfg_Write;
@@ -129,9 +129,9 @@ package body PCI
       -- pragma Assert (Offset /= 1)
       Data := Cfg_Read (Descriptor, Bus_Number, Device_Number, Function_Number, Register_Number);
       case Offset is
-         when 0 => Data := (Data and 16#FFFF_0000#) or Unsigned_32 (Value);
+         when 0 => Data := (@ and 16#FFFF_0000#) or Unsigned_32 (Value);
          when 1 => null; -- __DNO__
-         when 2 => Data := (Data and 16#0000_FFFF#) or Shift_Left (Unsigned_32 (Value), 16);
+         when 2 => Data := (@ and 16#0000_FFFF#) or Shift_Left (Unsigned_32 (Value), 16);
       end case;
       Cfg_Write (Descriptor, Bus_Number, Device_Number, Function_Number, Register_Number, Data);
    end Cfg_Write;
