@@ -276,7 +276,7 @@ package body LCD
       (Data : in Byte_Array)
       is
    begin
-      for Index in Data'First .. Data'Last loop
+      for Index in Data'Range loop
          Data_Send (Data (Index));
       end loop;
    end DataArray_Send;
@@ -286,7 +286,6 @@ package body LCD
    ----------------------------------------------------------------------------
    procedure Init
       is
-      Data : Unsigned_8 with Unreferenced => True;
    begin
       Init_SPI;
       -- Software Reset
