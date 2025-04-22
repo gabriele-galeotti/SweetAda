@@ -71,12 +71,12 @@ function Write-Stderr
 #
 # Basic input parameters check.
 #
-$profile = $args[0]
-if ([string]::IsNullOrEmpty($profile))
+if ($args[0] -eq $null)
 {
   Write-Stderr "$($scriptname): *** Error: no PROFILE specified."
   ExitWithCode 1
 }
+$profile = $args[0]
 $gnatadc_filename = $args[1]
 if ([string]::IsNullOrEmpty($gnatadc_filename))
 {
@@ -97,15 +97,11 @@ foreach ($textline in Get-Content "$($gnatadc_filename).in")
   $textlinearray = $textline -Split "--"
   $pragma = $textlinearray[0].Trim(" ")
   $profiles = $textlinearray[1]
-  if ($pragma -eq "")
+  if (($pragma -eq "") -or ($profiles -eq ""))
   {
     continue
   }
-  if ($profiles -eq "")
-  {
-    continue
-  }
-  $profilesarray = $profiles.Split(" ").Trim(" ")
+  $profilesarray = ($profiles.Trim(" ") -Replace "\s+"," ").Split(" ")
   foreach ($p in $profilesarray)
   {
     if ($p -eq $profile)

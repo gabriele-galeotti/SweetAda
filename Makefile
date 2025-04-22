@@ -453,7 +453,7 @@ DISTCLEAN_OBJECTS_COMMON := $(GNATADC_FILENAME)      \
 ################################################################################
 
 #
-# TOOLCHAIN_NAME: initialized by configuration.
+# TOOLCHAIN_NAME: initialized from configuration.
 # TOOLCHAIN_PROGRAM_PREFIX: synthesized from TOOLCHAIN_NAME.
 # GCC_VERSION: is the GCC version string; if empty, the toolchain is believed
 # to be non-existent.
@@ -1335,7 +1335,7 @@ $(GNATADC_FILENAME): $(CONFIGURE_DEPS) $(GNATADC_FILENAME).in
 ifneq ($(RTS_INSTALLED),Y)
 	$(error Error: no RTS available)
 endif
-	$(CREATEGNATADC) $(PROFILE) $(GNATADC_FILENAME)
+	$(CREATEGNATADC) "$(PROFILE)" $(GNATADC_FILENAME)
 
 .PHONY: configure-gpr
 configure-gpr: $(CONFIGUREGPR_FILENAME)

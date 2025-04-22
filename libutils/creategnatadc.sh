@@ -68,11 +68,11 @@ return 0
 #
 # Basic input parameters check.
 #
-PROFILE="$1"
-if [ "x${PROFILE}" = "x" ] ; then
+if [ $# -lt 1 ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: no PROFILE specified."
   exit 1
 fi
+PROFILE="$1"
 GNATADC_FILENAME="$2"
 if [ "x${GNATADC_FILENAME}" = "x" ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: no GNATADC_FILENAME specified."
@@ -94,9 +94,11 @@ while IFS= read -r textline ; do
   if [ "x${textline_woc}" != "x" ] ; then
     pragma=$(printf "%s" "${textline_woc}" | sed -e "s|^\(pragma.*;\)\(.*\)|\1|")
     profiles=$(printf "%s" "${textline_woc}" | sed -e "s|^\(pragma.*--\)\(.*\)|\2|")
-    profile_check=$(printf "%s" "${profiles}" | grep -c -w -e "${PROFILE}" 2> /dev/null)
-    if [ "x${profile_check}" != "x0" ] ; then
-      gnatadc=${gnatadc}$(printf "%s" "${pragma}")${NL}
+    if [ "x${PROFILE}" != "x" ] ; then
+      profile_check=$(printf "%s" "${profiles}" | grep -c -w -e "${PROFILE}" 2> /dev/null)
+      if [ "x${profile_check}" != "x0" ] ; then
+        gnatadc=${gnatadc}$(printf "%s" "${pragma}")${NL}
+      fi
     fi
   fi
 done < "${GNATADC_FILENAME}.in"
