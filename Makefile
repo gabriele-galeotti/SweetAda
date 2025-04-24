@@ -32,94 +32,21 @@
 
 .POSIX:
 
+MAKEFILE_MASTER_INCLUDED := Y
+
 .NOTPARALLEL:
 
 .DEFAULT_GOAL := help
-
-MAKEFILE_MASTER_INCLUDED := Y
-
-NULL  :=
-SPACE := $(NULL) $(NULL)
-TAB   := $(NULL)	$(NULL)
-export NULL SPACE TAB
-
-KERNEL_BASENAME := kernel
 
 # verbose output, "Y/y/1" = enabled
 VERBOSE ?=
 override VERBOSE := $(subst y,Y,$(subst 1,y,$(VERBOSE)))
 export VERBOSE
 
-################################################################################
-#                                                                              #
-# Main setup.                                                                  #
-#                                                                              #
-################################################################################
+KERNEL_BASENAME := kernel
 
-# detect OS type
-# detected OS names: "cmd"/"msys"/"darwin"/"linux"
-ifeq ($(OS),Windows_NT)
-ifneq ($(MSYSTEM),)
-OSTYPE := msys
-else
-OSTYPE := cmd
-endif
-else
-OSTYPE_UNAME := $(shell uname -s 2> /dev/null)
-ifeq      ($(OSTYPE_UNAME),Darwin)
-OSTYPE := darwin
-else ifeq ($(OSTYPE_UNAME),Linux)
-OSTYPE := linux
-else
-$(error Error: no valid OSTYPE)
-endif
-endif
-export OSTYPE
-
-# workarounds for some environments
-ifeq ($(OSTYPE),cmd)
-SHELL := cmd.exe
-endif
-
-# executable and script extensions
-SCREXT_cmd := .bat
-SCREXT_unx := .sh
-ifeq ($(OSTYPE),cmd)
-EXEEXT     := .exe
-SCREXT     := $(SCREXT_cmd)
-SHELL_EXEC := $(SHELL) /C
-else
-ifeq ($(OSTYPE),msys)
-EXEEXT     := .exe
-else
-EXEEXT     :=
-endif
-SCREXT     := $(SCREXT_unx)
-SHELL_EXEC := $(SHELL)
-endif
-export EXEEXT SCREXT_cmd SCREXT_unx SCREXT SHELL_EXEC
-
-# define a minimum set of variables that are required for functions and
-# various utilities
-ifeq ($(OSTYPE),cmd)
-ECHO := ECHO
-REM  := REM
-else
-ECHO := printf "%s\n"
-REM  := \#
-endif
-SED  := sed$(EXEEXT)
-export ECHO REM SED
-
-# TMPDIR handling
-ifeq      ($(OSTYPE),cmd)
-TMPDIR := $(TEMP)
-else ifeq ($(OSTYPE),msys)
-TMPDIR := $(TEMP)
-else
-TMPDIR ?= /tmp
-endif
-export TMPDIR
+# include operating system setup
+include Makefile.os.in
 
 ################################################################################
 #                                                                              #
@@ -221,7 +148,8 @@ MAKEFILEDIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 SWEETADA_PATH ?= $(MAKEFILEDIR)
 export SWEETADA_PATH
 
-# include the utilities
+# LIBUTILS_DIRECTORY is special because it is an integral part of the build
+# system and it needs to be treated separately
 LIBUTILS_DIRECTORY := libutils
 export LIBUTILS_DIRECTORY
 # add LIBUTILS_DIRECTORY to PATH
@@ -233,55 +161,6 @@ else
 PATH := $(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY):$(PATH)
 endif
 export PATH
-
-# detect Make version
-ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
-ifeq ($(OSTYPE),cmd)
-MAKE_VERSION := $(shell SET "PATH=$(PATH)" && "$(MAKE)" --version 2>nul| $(SED) -e "2,$$d")
-else
-MAKE_VERSION := $(shell PATH="$(PATH)" "$(MAKE)" --version 2> /dev/null | $(SED) -e "2,\$$d")
-endif
-endif
-
-# define every other OS command
-ifeq ($(OSTYPE),cmd)
-CHDIR := CD
-CP    := COPY /B /Y 1>nul
-LS    := DIR /B
-MKDIR := MKDIR
-MV    := MOVE /Y 1>nul
-RM    := DEL /F /Q 2>nul
-RMDIR := RMDIR /Q /S 2>nul
-else
-# POSIX
-CHDIR := cd
-CP    := cp -f
-LS    := ls -A
-MKDIR := mkdir -p
-MV    := mv -f
-RM    := rm -f
-RMDIR := $(RM) -r
-endif
-ifeq ($(OSTYPE),msys)
-CP += --preserve=all
-endif
-
-ifeq ($(VERBOSE),Y)
-ifeq ($(OSTYPE),cmd)
-# no verbosity
-else
-CP += -v
-MV += -v
-RM += -v
-endif
-else
-ifeq ($(filter $(MAKECMDGOALS),$(LIBUTILS_GOALS)),)
-MAKEFLAGS += s
-endif
-GNUMAKEFLAGS += --no-print-directory
-endif
-
-export CHDIR CP LS MKDIR MV RM RMDIR
 
 # make these useful variables available from now on
 ifeq ($(OSTYPE),cmd)
@@ -296,6 +175,11 @@ include Makefile.ut.in
 
 # load complex functions
 include Makefile.fn.in
+
+# check basic utilities
+ifeq ($(TOOLS_CHECK),Y)
+-include Makefile.ck.in
+endif
 
 ################################################################################
 #                                                                              #
@@ -332,7 +216,8 @@ IMPLICIT_ALI_UNITS :=
 EXTERNAL_OBJECTS   :=
 
 # initialize configuration dependencies
-CONFIGURE_DEPS           := Makefile.fn.in Makefile.lb.in Makefile.tc.in Makefile.ut.in
+CONFIGURE_DEPS           := Makefile.os.in Makefile.ut.in Makefile.fn.in \
+                            Makefile.lb.in Makefile.tc.in
 GPRBUILD_DEPS            :=
 CONFIGURE_FILES_PLATFORM :=
 
@@ -375,9 +260,12 @@ endif
 # export PATH so that we can use everything
 export PATH
 
-# check basic utilities
-ifeq ($(TOOLS_CHECK),Y)
--include Makefile.ck.in
+# add silent operation in non-verbose mode, except when building utilities
+ifneq ($(VERBOSE),Y)
+GNUMAKEFLAGS += --no-print-directory
+ifeq ($(filter $(MAKECMDGOALS),$(LIBUTILS_GOALS)),)
+MAKEFLAGS += s
+endif
 endif
 
 ################################################################################
@@ -834,8 +722,9 @@ export                                \
        EXTERNAL_OBJECTS               \
        STACK_LIMIT                    \
        GNATBIND_SECSTACK              \
-       POSTBUILD_COMMAND              \
-       KERNEL_ENTRY_POINT
+       KERNEL_ENTRY_POINT             \
+       LD_SCRIPT                      \
+       POSTBUILD_COMMAND
 
 export USE_ELFTOOL
 ifeq ($(USE_ELFTOOL),Y)

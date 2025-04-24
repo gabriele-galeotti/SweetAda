@@ -17,6 +17,9 @@
 # UPDATETM
 #
 
+ifneq ($(MAKEFILE_FN_IN_INCLUDED),Y)
+MAKEFILE_FN_IN_INCLUDED := Y
+
 __CHARACTERS__ :=
 __CHARACTERS__ +=    !  "  \# $$ %  &  '  (  )  *  +  ,  -  .  /
 __CHARACTERS__ += 0  1  2  3  4  5  6  7  8  9  :  ;  <  =  >  ?
@@ -71,9 +74,11 @@ else
 echo-print = printf "%s\n" "$(call unquote,$1)"
 endif
 
+# max. width = 24
 BRIEFTEXT_WIDTH := 12
-#                          123456789012
-BRIEFTEXT_SPACES := $(NULL)            $(NULL)
+BRIEFTEXT_SPACES := $(call substring,$(NULL)                        $(NULL),1,$(BRIEFTEXT_WIDTH))
+#                                           123456789012345678901234
+export BRIEFTEXT_WIDTH
 
 #
 # brief-text
@@ -121,6 +126,15 @@ ls-dirs = DIR /A:D /B *
 else
 __ls-dirs-ts__ = ls -A -d */
 ls-dirs = $(foreach d,$(call __ls-dirs-ts__),$(patsubst %/,%,$(d)))
+endif
+
+# UPDATETM (in cmd context) is the only non-native OS utility that should be
+# defined (usually via Makefile.ut.in) at the time of the inclusion; in order
+# to silence this warning, either define it properly or set UPDATETM := $(REM)
+ifeq ($(OSTYPE),cmd)
+ifeq ($(UPDATETM),)
+$(warning *** Warning: UPDATETM not defined.)
+endif
 endif
 
 #
@@ -183,4 +197,6 @@ list-create = $(eval $$1 := $$2)
 list-insert = $(eval $$1 := $$2 $$($$1))
 list-append = $(eval $$1 := $$($$1) $$2)
 list-delete = $(eval $$1 := $$(filter-out $$2,$$($$1)))
+
+endif
 

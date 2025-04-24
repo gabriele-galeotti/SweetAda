@@ -1,0 +1,130 @@
+
+#
+# OS sub-Makefile
+#
+# Copyright (C) 2020-2025 Gabriele Galeotti
+#
+# This work is licensed under the terms of the MIT License.
+# Please consult the LICENSE.txt file located in the top-level directory.
+#
+
+#
+# Arguments:
+# none
+#
+# Environment variables:
+# OS
+# MSYSTEM
+# TEMP
+# VERBOSE
+#
+
+ifneq ($(MAKEFILE_OS_IN_INCLUDED),Y)
+MAKEFILE_OS_IN_INCLUDED := Y
+
+NULL  :=
+SPACE := $(NULL) $(NULL)
+TAB   := $(NULL)	$(NULL)
+export NULL SPACE TAB
+
+# detect OS type
+# detected OS names: "cmd"/"msys"/"darwin"/"linux"
+ifeq ($(OS),Windows_NT)
+ifneq ($(MSYSTEM),)
+OSTYPE := msys
+else
+OSTYPE := cmd
+endif
+else
+OSTYPE_UNAME := $(shell uname -s 2> /dev/null)
+ifeq      ($(OSTYPE_UNAME),Darwin)
+OSTYPE := darwin
+else ifeq ($(OSTYPE_UNAME),Linux)
+OSTYPE := linux
+else
+$(error Error: no valid OSTYPE)
+endif
+endif
+export OSTYPE
+
+# workarounds for some environments
+ifeq ($(OSTYPE),cmd)
+SHELL := cmd.exe
+endif
+
+# executable and script extensions
+SCREXT_cmd := .bat
+SCREXT_unx := .sh
+ifeq ($(OSTYPE),cmd)
+EXEEXT     := .exe
+SCREXT     := $(SCREXT_cmd)
+SHELL_EXEC := $(SHELL) /C
+else
+ifeq ($(OSTYPE),msys)
+EXEEXT     := .exe
+else
+EXEEXT     :=
+endif
+SCREXT     := $(SCREXT_unx)
+SHELL_EXEC := $(SHELL)
+endif
+export EXEEXT SCREXT_cmd SCREXT_unx SCREXT SHELL_EXEC
+
+# define a minimum set of variables that are required for functions and
+# various utilities
+ifeq ($(OSTYPE),cmd)
+ECHO := ECHO
+REM  := REM
+else
+ECHO := printf "%s\n"
+REM  := \#
+endif
+export ECHO REM
+
+# TMPDIR handling
+ifeq      ($(OSTYPE),cmd)
+TMPDIR := $(TEMP)
+else ifeq ($(OSTYPE),msys)
+TMPDIR := $(TEMP)
+else
+TMPDIR ?= /tmp
+endif
+export TMPDIR
+
+# define basic OS commands
+ifeq ($(OSTYPE),cmd)
+CHDIR := CD
+CP    := COPY /B /Y 1>nul
+LS    := DIR /B
+MKDIR := MKDIR
+MV    := MOVE /Y 1>nul
+RM    := DEL /F /Q 2>nul
+RMDIR := RMDIR /Q /S 2>nul
+else
+# POSIX
+CHDIR := cd
+CP    := cp -f
+LS    := ls -A
+MKDIR := mkdir -p
+MV    := mv -f
+RM    := rm -f
+RMDIR := rm -f -r
+endif
+ifeq ($(OSTYPE),msys)
+CP += --preserve=all
+endif
+
+ifeq ($(VERBOSE),Y)
+ifeq ($(OSTYPE),cmd)
+# no verbosity flag
+else
+CP += -v
+MV += -v
+RM += -v
+endif
+endif
+
+export CHDIR CP LS MKDIR MV RM RMDIR
+
+endif
+
