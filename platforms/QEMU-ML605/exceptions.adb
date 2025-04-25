@@ -64,8 +64,8 @@ package body Exceptions
       is
    begin
       Memory_Functions.Cpymem (
-         Linker.EText'Address, -- .vectors section
-         SSE.To_Address (0),   -- LMB RAM @ 0
+         SSE.To_Address (Linker.EText), -- .vectors section
+         SSE.To_Address (0),            -- LMB RAM @ 0
          256
          );
    end Init;
