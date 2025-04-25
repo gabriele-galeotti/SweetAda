@@ -216,7 +216,6 @@ try
   Remove-Item -Path $OUTPUT_FILENAME_ADS -Force -ErrorAction Ignore
   New-Item -Name $OUTPUT_FILENAME_ADS -ItemType File | Out-Null
   Add-Content -Path $OUTPUT_FILENAME_ADS -Value $linkerads -NoNewLine
-
 }
 catch
 {
@@ -231,7 +230,6 @@ try
   Remove-Item -Path $OUTPUT_FILENAME_ADB -Force -ErrorAction Ignore
   New-Item -Name $OUTPUT_FILENAME_ADB -ItemType File | Out-Null
   Add-Content -Path $OUTPUT_FILENAME_ADB -Value $linkeradb -NoNewLine
-
 }
 catch
 {

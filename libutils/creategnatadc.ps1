@@ -117,7 +117,6 @@ try
   Remove-Item -Path $gnatadc_filename -Force -ErrorAction Ignore
   New-Item -Name $gnatadc_filename -ItemType File | Out-Null
   Add-Content -Path $gnatadc_filename -Value $gnatadc -NoNewLine
-
 }
 catch
 {
