@@ -42,12 +42,20 @@ OBJECTS := $(foreach f,$(OBJECTS_XFORM_3),$(OBJ_DIRECTORY)/$(f))
 all: $(CONFIGURE_FILES_PLATFORM) $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: configure
-configure: clean-configure-files $(CONFIGURE_FILES_PLATFORM)
+configure: clean-configure-files $(CONFIGURE_FILES_PLATFORM) $(LD_SCRIPT)
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
+	@$(CREATELINKERADSB) $(LD_SCRIPT)
 
 ifneq ($(CONFIGURE_FILES_PLATFORM),)
 $(CONFIGURE_FILES_PLATFORM): % : %.in
 	$(PROCESSCFG) $< $@
+endif
+
+ifneq ($(wildcard $(LD_SCRIPT).S),)
+$(LD_SCRIPT): $(LD_SCRIPT).S
+	$(CPP) -o $@ -C -E -P $<
+else
+$(LD_SCRIPT):
 endif
 
 .PHONY: postbuild
@@ -60,6 +68,14 @@ endif
 clean-configure-files:
 ifneq ($(CONFIGURE_FILES_PLATFORM),)
 	$(RM) $(CONFIGURE_FILES_PLATFORM)
+endif
+ifneq ($(wildcard $(LD_SCRIPT).S),)
+	$(RM) $(LD_SCRIPT)
+endif
+ifeq ($(OSTYPE),cmd)
+	-$(RM) $(KERNEL_PARENT_PATH)\$(CORE_DIRECTORY)\linker.ad*
+else
+	-$(RM) $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/linker.ad*
 endif
 
 .PHONY: clean

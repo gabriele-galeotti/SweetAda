@@ -48,6 +48,7 @@ kernel.*
 *.srec
 *.tmp
 core/gcc-defines.ads
+core/linker.ad*
 lib/
 obj/
 
