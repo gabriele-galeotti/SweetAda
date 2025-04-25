@@ -83,7 +83,7 @@ fi
 
 textlines=$(                                             \
             grep -e "LINKERADSB:" ${LD_SCRIPT}         | \
-            sed -e "s|.*LINKERADSB:\(.*:[^ ]*\).*|\1|"   \
+            sed -e "s|.*\(LINKERADSB:.*:[^ ]*\).*|\1|"   \
            )
 if [ "x${textlines}" = "x" ] ; then
   exit 0
@@ -117,7 +117,7 @@ linkeradb=${linkeradb}"${indent}type Symbol_Type is new Bits.Null_Object"${NL}
 linkeradb=${linkeradb}"${indent}   with Convention => Asm;"${NL}
 linkeradb=${linkeradb}${NL}
 for t in ${textlines} ; do
-  IFS=':' read -r symbol_name Ada_identifier << EOF
+  IFS=':' read -r tag symbol_name Ada_identifier << EOF
 ${t}
 EOF
 linkerads=${linkerads}"${indent}function ${Ada_identifier}"${NL}
@@ -139,10 +139,10 @@ linkerads=${linkerads}$(printf "%s\n" "end ${PACKAGE};")${NL}
 linkeradb=${linkeradb}$(printf "%s\n" "end ${PACKAGE};")${NL}
 
 printf "%s" "${linkerads}" > ${OUTPUT_FILENAME_ADS}
-log_print "${SCRIPT_FILENAME}: $(basename ${OUTPUT_FILENAME_ADS}): done."
+log_print "${SCRIPT_FILENAME}: linker.ads: done."
 
 printf "%s" "${linkeradb}" > ${OUTPUT_FILENAME_ADB}
-log_print "${SCRIPT_FILENAME}: $(basename ${OUTPUT_FILENAME_ADB}): done."
+log_print "${SCRIPT_FILENAME}: linker.adb: done."
 
 exit 0
 
