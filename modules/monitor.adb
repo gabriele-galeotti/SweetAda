@@ -108,9 +108,9 @@ package body Monitor
       Console.Print_NewLine;
       Console.Print (Prefix => "Standard'Word_Size:    ", Value => Integer'(Standard'Word_Size), NL => True);
       Console.Print (Prefix => "Standard'Address_Size: ", Value => Integer'(Standard'Address_Size), NL => True);
-      Console.Print (Prefix => "SText:                 ", Value => Linker.SText'Address, NL => True);
-      Console.Print (Prefix => "SData:                 ", Value => Linker.SData'Address, NL => True);
-      Console.Print (Prefix => "SBss:                  ", Value => Linker.SBss'Address, NL => True);
+      Console.Print (Prefix => "SText:                 ", Value => Linker.SText, NL => True);
+      Console.Print (Prefix => "SData:                 ", Value => Linker.SData, NL => True);
+      Console.Print (Prefix => "SBss:                  ", Value => Linker.SBss, NL => True);
    end Parameters_Dump;
 
    ----------------------------------------------------------------------------
