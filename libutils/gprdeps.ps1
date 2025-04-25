@@ -75,6 +75,11 @@ function ParseGpr
   {
     return $units
   }
+  $filepath = $(Split-Path -Path $filename -Parent)
+  if ([string]::IsNullOrEmpty($filepath))
+  {
+    $filepath = "./"
+  }
   foreach ($textline in Get-Content "$filename")
   {
     $textline = $textline.Trim()
@@ -87,10 +92,12 @@ function ParseGpr
       $unit = $textline                `
                 -Replace "`t"," "      `
                 -Replace "with *`"","" `
+                -Replace ".gpr",""     `
                 -Replace "`" *;.*",""
       if ($unit.Length -gt 0)
       {
-        $units = "$units $($unit).gpr"
+        $unit += ".gpr"
+        $units = "$units $(Join-Path -Path $filepath -ChildPath $unit)"
       }
     }
     else

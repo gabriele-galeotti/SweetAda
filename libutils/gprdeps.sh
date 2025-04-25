@@ -69,6 +69,7 @@ parse_gpr()
 if [ ! -e $1 ] ; then
   return 0
 fi
+filepath=$(dirname $1)
 while IFS= read -r textline ; do
   textline=$(                                              \
              printf "%s" "${textline}"                   | \
@@ -82,10 +83,12 @@ while IFS= read -r textline ; do
       ;;
     with*)
       unit=$(
-             printf "%s" "${textline}"                                   | \
-             sed -e "s|^with[[:blank:]]*\"\(.*\)\"[[:blank:]]*;.*\$|\1|"   \
+             printf "%s" "${textline}"                                 | \
+             sed                                                         \
+               -e "s|^with[[:blank:]]*\"\(.*\)\"[[:blank:]]*;.*\$|\1|"   \
+               -e "s|.gpr||"                                             \
             )
-      printf " %s.gpr" "${unit}"
+      printf " ${filepath}/%s.gpr" "${unit}"
       ;;
     *)
       break
