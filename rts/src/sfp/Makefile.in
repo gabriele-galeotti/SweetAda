@@ -13,5 +13,10 @@
 # use -O1 otherwise gdb isn't able to get a full backtrace on mips targets.
 #
 $(ADALIB_PATH)/a-except.o: $(ADAINCLUDE_PATH)/a-except.adb
-	$(ADAC) -o $@ -c -g -O1 -fno-inline -fno-toplevel-reorder $(ADAC_SWITCHES) $<
+	$(ADAC) -o $@ -c                    \
+          -g -O1                            \
+          -fno-inline -fno-toplevel-reorder \
+          -I$(ADAINCLUDE_PATH)              \
+          $(ADAC_SWITCHES)                  \
+          $<
 

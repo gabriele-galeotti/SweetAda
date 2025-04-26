@@ -13,26 +13,42 @@
 # make arguments
 #
 # Environment variables:
-# NULL
-# OSTYPE
-# CP
-# ECHO
-# MKDIR
-# RM
-# RMDIR
-# SED
-# CPU
-# CPUS
+# KERNEL_PARENT_PATH
 # TOOLCHAIN_NAME
 # TOOLCHAIN_ADAC
 # TOOLCHAIN_CC
 # TOOLCHAIN_AR
 # TOOLCHAIN_RANLIB
+# CPU
+# CPUS
 # RTS
-# RTSES
-# RTS_PATH
 # MULTILIB
 #
+
+################################################################################
+#                                                                              #
+# Initialization.                                                              #
+#                                                                              #
+################################################################################
+
+.POSIX:
+
+MAKEFILE_RTS_INCLUDED := Y
+
+.NOTPARALLEL:
+
+include $(KERNEL_PARENT_PATH)/Makefile.os.in
+include $(KERNEL_PARENT_PATH)/Makefile.ut.in
+include $(KERNEL_PARENT_PATH)/Makefile.fn.in
+
+RTS_SRC_NO_DIRS  := common targets
+
+ifeq ($(OSTYPE),cmd)
+RTS_SRC_ALL_DIRS := $(shell $(CHDIR) src && $(call ls-dirs) 2>nul)
+else
+RTS_SRC_ALL_DIRS := $(shell ($(CHDIR) src && $(call ls-dirs)) 2> /dev/null)
+endif
+RTSES            := $(filter-out $(RTS_SRC_NO_DIRS),$(RTS_SRC_ALL_DIRS))
 
 ################################################################################
 #                                                                              #
@@ -40,6 +56,7 @@
 #                                                                              #
 ################################################################################
 
+ifeq ($(filter probevariable,$(MAKECMDGOALS)),)
 ifeq ($(findstring $(RTS),$(RTSES)),)
 $(error Error: no valid RTS)
 endif
@@ -51,6 +68,7 @@ $(error Error: no valid TOOLCHAIN_NAME)
 endif
 ifeq ($(MULTILIB),)
 $(error Error: no valid MULTILIB)
+endif
 endif
 
 ################################################################################
@@ -87,12 +105,10 @@ AR     := $(TOOLCHAIN_AR)
 RANLIB := $(TOOLCHAIN_RANLIB)
 
 ADAC_SWITCHES :=
-ADAC_SWITCHES += --RTS="$(SWEETADA_PATH)"/rts/$(RTS)/$(TOOLCHAIN_NAME)/$(MULTILIB_DIRECTORY)
 ADAC_SWITCHES += $(MULTILIB_SWITCHES)
 # we are building a static library, so no PIC
 #ADAC_SWITCHES += -fPIC
 ADAC_SWITCHES += -nostdinc -nostdlib
-ADAC_SWITCHES += -gnatwa
 #ADAC_SWITCHES += -gnata    # Assertions enabled.
 # -gnatg implies -gnatwae and -gnatyg
 ADAC_SWITCHES += -gnatg    # Internal GNAT implementation mode.
@@ -262,11 +278,33 @@ endif
 
 # Ada sources generic rules
 $(ADALIB_PATH)/%.o: $(ADAINCLUDE_PATH)/%.adb
-	$(ADAC) -o $@ -c -g -O2 $(ADAC_SWITCHES) $<
+	$(ADAC) -o $@ -c       \
+          -g -O2               \
+          -I$(ADAINCLUDE_PATH) \
+          $(ADAC_SWITCHES)     \
+          $<
 $(ADALIB_PATH)/%.o: $(ADAINCLUDE_PATH)/%.ads
-	$(ADAC) -o $@ -c -g -O2 $(ADAC_SWITCHES) $<
+	$(ADAC) -o $@ -c       \
+          -g -O2               \
+          -I$(ADAINCLUDE_PATH) \
+          $(ADAC_SWITCHES)     \
+          $<
 
 # C sources generic rules
 $(ADALIB_PATH)/%.o: $(ADAINCLUDE_PATH)/%.c
-	$(CC) -o $@ -c -g -O2 $(CC_SWITCHES) $<
+	$(CC) -o $@ -c         \
+          -g -O2               \
+          -I$(ADAINCLUDE_PATH) \
+          $(CC_SWITCHES)       \
+          $<
+
+#
+# Probe a variable value.
+#
+# Example:
+# $ VERBOSE= PROBEVARIABLE="MULTILIB_SWITCHES" make probevariable 2> /dev/null
+#
+.PHONY: probevariable
+probevariable:
+	@$(call echo-print,"$($(PROBEVARIABLE))")
 
