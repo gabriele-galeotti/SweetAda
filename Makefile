@@ -299,14 +299,24 @@ endif
 # RTS_BASE_PATH: where all RTSes live
 RTS_BASE_PATH := $(SWEETADA_PATH)/$(RTS_DIRECTORY)
 
-# RTSes
-RTS_SRC_NO_DIRS  := common targets
+# probe available RTSes
 ifeq ($(OSTYPE),cmd)
-RTS_SRC_ALL_DIRS := $(shell $(CHDIR) $(RTS_DIRECTORY)\src && $(call ls-dirs) 2>nul)
+RTSES := $(shell                                 \
+           SET "GNUMAKEFLAGS=$(GNUMAKEFLAGS)" && \
+           SET "PATH=$(PATH)"                 && \
+           SET "KERNEL_PARENT_PATH=.."        && \
+           "$(MAKE)" -C $(RTS_DIRECTORY)         \
+             PROBEVARIABLE=RTSES probevariable   \
+           2>nul)
 else
-RTS_SRC_ALL_DIRS := $(shell ($(CHDIR) $(RTS_DIRECTORY)/src && $(call ls-dirs)) 2> /dev/null)
+RTSES := $(shell                               \
+           GNUMAKEFLAGS="$(GNUMAKEFLAGS)"      \
+           PATH="$(PATH)"                      \
+           KERNEL_PARENT_PATH=..               \
+           "$(MAKE)" -C $(RTS_DIRECTORY)       \
+             PROBEVARIABLE=RTSES probevariable \
+           2> /dev/null)
 endif
-RTSES            := $(filter-out $(RTS_SRC_NO_DIRS),$(RTS_SRC_ALL_DIRS))
 
 # build flag and version control
 DOTSWEETADA := .sweetada
