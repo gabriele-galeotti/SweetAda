@@ -19,7 +19,6 @@ with Definitions;
 with Bits;
 with CPU;
 with KL46Z;
-with BSP;
 
 package body Clocks
    is
@@ -100,8 +99,17 @@ package body Clocks
          UART0SRC     => UART0SRC_MCGxLLCLK,
          others       => <>
          );
-      BSP.CORE_Clock := 48 * MHz1;
-      BSP.UART_Clock := 24 * MHz1;
+      -- select ERCLK32K source
+      SIM_SOPT1 := (
+         OSC32KSEL => OSC32KSEL_SYS,
+         others    => <>
+         );
+      -- MCGIRCLK = 32.678 kHz
+      MCG_C2.IRCS    := IRCS_SLOW;
+      MCG_C1.IRCLKEN := True;
+      -- setup values
+      CLK_Core := 48 * MHz1;
+      CLK_UART := 24 * MHz1;
    end Init;
 
 end Clocks;
