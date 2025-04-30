@@ -21,6 +21,7 @@ with CPU;
 with ARMv6M;
 with KL46Z;
 with Clocks;
+with LCD;
 with Exceptions;
 with Console;
 
@@ -142,6 +143,8 @@ package body BSP
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("FRDM-KL46Z", NL => True);
+      -------------------------------------------------------------------------
+      LCD.Init;
       -------------------------------------------------------------------------
       ARMv6M.Irq_Enable;
       ARMv6M.Fault_Irq_Enable;
