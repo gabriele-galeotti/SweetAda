@@ -55,7 +55,7 @@ pragma Style_Checks (Off);
    PS_PULLDOWN : constant := 0; -- Internal pulldown resistor is enabled on the corresponding pin, if the corresponding Port Pull Enable field is set.
    PS_PULLUP   : constant := 1; -- Internal pullup resistor is enabled on the corresponding pin, if the corresponding Port Pull Enable field is set.
 
-   MUX_DISABLED : constant := 2#000#; -- Pin disabled (analog).
+   MUX_ALT0     : constant := 2#001#; -- Pin disabled (analog).
    MUX_ALT1     : constant := 2#001#; -- Alternative 1 (GPIO).
    MUX_ALT2     : constant := 2#010#; -- Alternative 2 (chip-specific).
    MUX_ALT3     : constant := 2#011#; -- Alternative 3 (chip-specific).
@@ -63,6 +63,7 @@ pragma Style_Checks (Off);
    MUX_ALT5     : constant := 2#101#; -- Alternative 5 (chip-specific).
    MUX_ALT6     : constant := 2#110#; -- Alternative 6 (chip-specific).
    MUX_ALT7     : constant := 2#111#; -- Alternative 7 (chip-specific).
+   MUX_DISABLED renames MUX_ALT0;
    MUX_GPIO renames MUX_ALT1;
 
    IRQC_DISABLED   : constant := 2#0000#; -- Interrupt/DMA request disabled.
@@ -3071,6 +3072,380 @@ pragma Style_Checks (Off);
            Convention => Ada;
    GPIOE : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIO_BASEADDRESS + 16#100#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- Chapter 44 LCD Controller (SLCD)
+   ----------------------------------------------------------------------------
+
+   -- 44.3.1 LCD General Control Register (LCD_GCR)
+
+   DUTY_1BP : constant := 2#000#; -- Use 1 BP (1/1 duty cycle).
+   DUTY_2BP : constant := 2#001#; -- Use 2 BP (1/2 duty cycle).
+   DUTY_3BP : constant := 2#010#; -- Use 3 BP (1/3 duty cycle).
+   DUTY_4BP : constant := 2#011#; -- Use 4 BP (1/4 duty cycle). (Default)
+   DUTY_8BP : constant := 2#111#; -- Use 8 BP (1/8 duty cycle).
+
+   LCLK_PS1 : constant := 2#000#; -- 44.4.1.3 SLCD base clock and frame frequency
+   LCLK_PS2 : constant := 2#001#; -- ''
+   LCLK_PS3 : constant := 2#010#; -- ''
+   LCLK_PS4 : constant := 2#011#; -- ''
+   LCLK_PS5 : constant := 2#100#; -- ''
+   LCLK_PS6 : constant := 2#101#; -- ''
+   LCLK_PS7 : constant := 2#110#; -- ''
+   LCLK_PS8 : constant := 2#111#; -- ''
+
+   SOURCE_DEFAULT   : constant := 0; -- Selects the default clock as the LCD clock source.
+   SOURCE_ALTSOURCE : constant := 1; -- Selects output of the alternate clock source selection (see ALTSOURCE) as the LCD clock source.
+
+   ALTSOURCE_CLKSRC1 : constant := 0; -- Select Alternate Clock Source 1 (default)
+   ALTSOURCE_CLKSRC2 : constant := 1; -- Select Alternate Clock Source 2
+
+   ALTDIV_DIV1   : constant := 2#00#; -- Divide factor = 1 (No divide)
+   ALTDIV_DIV8   : constant := 2#01#; -- Divide factor = 8
+   ALTDIV_DIV64  : constant := 2#10#; -- Divide factor = 64
+   ALTDIV_DIV512 : constant := 2#11#; -- Divide factor = 512
+
+   VSUPPLY_INT : constant := 0; -- Drive VLL3 internally from VDD
+   VSUPPLY_EXT : constant := 1; -- Drive VLL3 externally from VDD or drive VLL internally from vIREG
+
+   -- For CPSEL = 0
+   LADJ_LOWLOAD1  : constant := 2#00#; -- Low Load (LCD glass capacitance 2000 pF or lower). LCD or GPIO functions can be used on V LL1 , V LL2 , V CAP1 and V CAP2 pins.
+   LADJ_LOWLOAD2  : constant := 2#01#; -- Low Load (LCD glass capacitance 2000 pF or lower). LCD or GPIO functions can be used on V LL1 , V LL2 , V CAP1 and V CAP2 pins.
+   LADJ_HIGHLOAD1 : constant := 2#10#; -- High Load (LCD glass capacitance 8000 pF or lower) LCD or GPIO functions can be used on V CAP1 and V CAP2 pins. .
+   LADJ_HIGHLOAD2 : constant := 2#11#; -- High Load (LCD glass capacitance 8000 pF or lower). LCD or GPIO functions can be used on V CAP1 and V CAP2 pins.
+   -- For CPSEL = 1
+   LADJ_FASTCLK   : constant := 2#00#; -- Fastest clock source for charge pump (LCD glass capacitance 8000 pF or 4000pF or lower if FFR is set ).
+   LADJ_INTCLK1   : constant := 2#01#; -- Intermediate clock source for charge pump (LCD glass capacitance 4000 pF or 2000pF or lower if FFR is set ).
+   LADJ_INTCLK2   : constant := 2#10#; -- Intermediate clock source for charge pump (LCD glass capacitance 2000 pF or 1000pF or lower if FFR is set ).
+   LADJ_SLOWCLK   : constant := 2#11#; -- Slowest clock source for charge pump (LCD glass capacitance 1000 pF or 500pF or lower if FFR is set ).
+
+   CPSEL_DISABLE : constant := 0; -- LCD charge pump is disabled. Resistor network selected. (The internal 1/3-bias is forced.)
+   CPSEL_ENABLE  : constant := 1; -- LCD charge pump is selected. Resistor network disabled. (The internal 1/3-bias is forced.)
+
+   type LCD_GCR_Type is record
+      DUTY      : Bits_3  := DUTY_4BP;          -- LCD duty select
+      LCLK      : Bits_3  := LCLK_PS1;          -- LCD Clock Prescaler
+      SOURCE    : Bits_1  := SOURCE_DEFAULT;    -- LCD Clock Source Select
+      LCDEN     : Boolean := False;             -- LCD Driver Enable
+      LCDSTP    : Boolean := False;             -- LCD Stop
+      LCDDOZE   : Boolean := False;             -- LCD Doze enable
+      FFR       : Boolean := False;             -- Fast Frame Rate Select
+      ALTSOURCE : Bits_1  := ALTSOURCE_CLKSRC1; -- Selects the alternate clock source
+      ALTDIV    : Bits_2  := ALTDIV_DIV1;       -- LCD AlternateClock Divider
+      FDCIEN    : Boolean := False;             -- LCD Fault Detection Complete Interrupt Enable
+      PADSAFE   : Boolean := False;             -- Pad Safe State Enable
+      Reserved1 : Bits_1  := 0;
+      VSUPPLY   : Bits_1  := VSUPPLY_INT;       -- Voltage Supply Control
+      Reserved2 : Bits_1  := 0;
+      Reserved3 : Bits_1  := 0;
+      LADJ      : Bits_2  := LADJ_HIGHLOAD2;    -- Load Adjust
+      Reserved4 : Bits_1  := 0;
+      CPSEL     : Bits_1  := CPSEL_DISABLE;     -- Charge Pump or Resistor Bias Select
+      RVTRIM    : Bits_4  := 8;                 -- Regulated Voltage Trim
+      Reserved5 : Bits_3  := 0;
+      RVEN      : Boolean := False;             -- Regulated Voltage Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LCD_GCR_Type use record
+      DUTY      at 0 range  0 ..  2;
+      LCLK      at 0 range  3 ..  5;
+      SOURCE    at 0 range  6 ..  6;
+      LCDEN     at 0 range  7 ..  7;
+      LCDSTP    at 0 range  8 ..  8;
+      LCDDOZE   at 0 range  9 ..  9;
+      FFR       at 0 range 10 .. 10;
+      ALTSOURCE at 0 range 11 .. 11;
+      ALTDIV    at 0 range 12 .. 13;
+      FDCIEN    at 0 range 14 .. 14;
+      PADSAFE   at 0 range 15 .. 15;
+      Reserved1 at 0 range 16 .. 16;
+      VSUPPLY   at 0 range 17 .. 17;
+      Reserved2 at 0 range 18 .. 18;
+      Reserved3 at 0 range 19 .. 19;
+      LADJ      at 0 range 20 .. 21;
+      Reserved4 at 0 range 22 .. 22;
+      CPSEL     at 0 range 23 .. 23;
+      RVTRIM    at 0 range 24 .. 27;
+      Reserved5 at 0 range 28 .. 30;
+      RVEN      at 0 range 31 .. 31;
+   end record;
+
+   LCD_GCR_ADDRESS : constant := 16#4005_3000#;
+
+   LCD_GCR : aliased LCD_GCR_Type
+      with Address              => System'To_Address (LCD_GCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 44.3.2 LCD Auxiliary Register (LCD_AR)
+
+   BRATE_1 : constant := 2#000#; -- LCD controller blink rate = LCD clock /2**(12 + 0)
+   BRATE_2 : constant := 2#001#; -- LCD controller blink rate = LCD clock /2**(12 + 1)
+   BRATE_3 : constant := 2#010#; -- LCD controller blink rate = LCD clock /2**(12 + 2)
+   BRATE_4 : constant := 2#011#; -- LCD controller blink rate = LCD clock /2**(12 + 3)
+   BRATE_5 : constant := 2#100#; -- LCD controller blink rate = LCD clock /2**(12 + 4)
+   BRATE_6 : constant := 2#101#; -- LCD controller blink rate = LCD clock /2**(12 + 5)
+   BRATE_7 : constant := 2#110#; -- LCD controller blink rate = LCD clock /2**(12 + 6)
+   BRATE_8 : constant := 2#111#; -- LCD controller blink rate = LCD clock /2**(12 + 7)
+
+   BMODE_BLANK   : constant := 0; -- Display blank during the blink period.
+   BMODE_ALTDISP : constant := 1; -- Display alternate display during blink period (Ignored if duty is 5 or greater).
+
+   type LCD_AR_Type is record
+      BRATE     : Bits_3  := BRATE_1;     -- Blink-rate configuration
+      BMODE     : Bits_1  := BMODE_BLANK; -- Blink mode
+      Reserved1 : Bits_1  := 0;
+      BLANK     : Boolean := False;       -- Blank display mode
+      ALT       : Boolean := False;       -- Alternate display mode
+      BLINK     : Boolean := False;       -- Blink command
+      Reserved2 : Bits_7  := 0;
+      Reserved3 : Bits_1  := 0;
+      Reserved4 : Bits_16 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LCD_AR_Type use record
+      BRATE     at 0 range  0 ..  2;
+      BMODE     at 0 range  3 ..  3;
+      Reserved1 at 0 range  4 ..  4;
+      BLANK     at 0 range  5 ..  5;
+      ALT       at 0 range  6 ..  6;
+      BLINK     at 0 range  7 ..  7;
+      Reserved2 at 0 range  8 .. 14;
+      Reserved3 at 0 range 15 .. 15;
+      Reserved4 at 0 range 16 .. 31;
+   end record;
+
+   LCD_AR_ADDRESS : constant := 16#4005_3004#;
+
+   LCD_AR : aliased LCD_AR_Type
+      with Address              => System'To_Address (LCD_AR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 44.3.3 LCD Fault Detect Control Register (LCD_FDCR)
+
+   FDSWW_4   : constant := 2#000#; -- Sample window width is 4 sample clock cycles.
+   FDSWW_8   : constant := 2#001#; -- Sample window width is 8 sample clock cycles.
+   FDSWW_16  : constant := 2#010#; -- Sample window width is 16 sample clock cycles.
+   FDSWW_32  : constant := 2#011#; -- Sample window width is 32 sample clock cycles.
+   FDSWW_64  : constant := 2#100#; -- Sample window width is 64 sample clock cycles.
+   FDSWW_128 : constant := 2#101#; -- Sample window width is 128 sample clock cycles.
+   FDSWW_256 : constant := 2#110#; -- Sample window width is 256 sample clock cycles.
+   FDSWW_512 : constant := 2#111#; -- Sample window width is 512 sample clock cycles.
+
+   FDPRS_DIV1   : constant := 2#000#; -- 1/1 bus clock.
+   FDPRS_DIV2   : constant := 2#001#; -- 1/2 bus clock.
+   FDPRS_DIV4   : constant := 2#010#; -- 1/4 bus clock.
+   FDPRS_DIV8   : constant := 2#011#; -- 1/8 bus clock.
+   FDPRS_DIV16  : constant := 2#100#; -- 1/16 bus clock.
+   FDPRS_DIV32  : constant := 2#101#; -- 1/32 bus clock.
+   FDPRS_DIV64  : constant := 2#110#; -- 1/64 bus clock.
+   FDPRS_DIV128 : constant := 2#111#; -- 1/128 bus clock.
+
+   type LCD_FDCR_Type is record
+      FDPINID   : Bits_6 := 0;           -- Fault Detect Pin ID
+      FDBPEN    : Boolean := False;      -- Fault Detect Back Plane Enable
+      FDEN      : Boolean := False;      -- Fault Detect Enable
+      Reserved1 : Bits_1  := 0;
+      FDSWW     : Bits_3  := FDSWW_4;    -- Fault Detect Sample Window Width
+      FDPRS     : Bits_3  := FDPRS_DIV1; -- Fault Detect Clock Prescaler
+      Reserved2 : Bits_1  := 0;
+      Reserved3 : Bits_16 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LCD_FDCR_Type use record
+      FDPINID   at 0 range  0 ..  5;
+      FDBPEN    at 0 range  6 ..  6;
+      FDEN      at 0 range  7 ..  7;
+      Reserved1 at 0 range  8 ..  8;
+      FDSWW     at 0 range  9 .. 11;
+      FDPRS     at 0 range 12 .. 14;
+      Reserved2 at 0 range 15 .. 15;
+      Reserved3 at 0 range 16 .. 31;
+   end record;
+
+   LCD_FDCR_ADDRESS : constant := 16#4005_3008#;
+
+   LCD_FDCR : aliased LCD_FDCR_Type
+      with Address              => System'To_Address (LCD_FDCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 44.3.4 LCD Fault Detect Status Register (LCD_FDSR)
+
+   type LCD_FDSR_Type is record
+      FDCNT     : Unsigned_8 := 0;     -- Fault Detect Counter
+      Reserved1 : Bits_7     := 0;
+      FDCF      : Boolean    := False; -- Fault Detection Complete Flag
+      Reserved2 : Bits_16    := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LCD_FDSR_Type use record
+      FDCNT     at 0 range  0 ..  7;
+      Reserved1 at 0 range  8 .. 14;
+      FDCF      at 0 range 15 .. 15;
+      Reserved2 at 0 range 16 .. 31;
+   end record;
+
+   LCD_FDSR_ADDRESS : constant := 16#4005_300C#;
+
+   LCD_FDSR : aliased LCD_FDSR_Type
+      with Address              => System'To_Address (LCD_FDSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- types for LCD_PENn/LCD_BPENn
+
+   type Bitmap_32L is array (0 .. 31) of Boolean
+      with Component_Size => 1,
+           Size           => 32;
+
+   type Bitmap_32H is array (32 .. 63) of Boolean
+      with Component_Size => 1,
+           Size           => 32;
+
+   -- 44.3.5 LCD Pin Enable register (LCD_PENn)
+
+   type LCD_PENL_Type is record
+      PEN : Bitmap_32L := [others => False]; -- LCD Pin Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LCD_PENL_Type use record
+      PEN at 0 range 0 .. 31;
+   end record;
+
+   LCD_PENL_ADDRESS : constant := 16#4005_3010#;
+
+   LCD_PENL : aliased LCD_PENL_Type
+      with Address              => System'To_Address (LCD_PENL_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   type LCD_PENH_Type is record
+      PEN : Bitmap_32H := [others => False]; -- LCD Pin Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LCD_PENH_Type use record
+      PEN at 0 range 0 .. 31;
+   end record;
+
+   LCD_PENH_ADDRESS : constant := 16#4005_3014#;
+
+   LCD_PENH : aliased LCD_PENH_Type
+      with Address              => System'To_Address (LCD_PENH_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 44.3.6 LCD Back Plane Enable register (LCD_BPENn)
+
+   type LCD_BPENL_Type is record
+      BPEN : Bitmap_32L := [others => False]; -- Back Plane Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LCD_BPENL_Type use record
+      BPEN at 0 range 0 .. 31;
+   end record;
+
+   LCD_BPENL_ADDRESS : constant := 16#4005_3018#;
+
+   LCD_BPENL : aliased LCD_BPENL_Type
+      with Address              => System'To_Address (LCD_BPENL_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   type LCD_BPENH_Type is record
+      BPEN : Bitmap_32H := [others => False]; -- Back Plane Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LCD_BPENH_Type use record
+      BPEN at 0 range 0 .. 31;
+   end record;
+
+   LCD_BPENH_ADDRESS : constant := 16#4005_301C#;
+
+   LCD_BPENH : aliased LCD_BPENH_Type
+      with Address              => System'To_Address (LCD_BPENH_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 44.3.7 LCD Waveform register (LCD_WF3TO0)
+   -- 44.3.8 LCD Waveform register (LCD_WF7TO4)
+   -- 44.3.9 LCD Waveform register (LCD_WF11TO8)
+   -- 44.3.10 LCD Waveform register (LCD_WF15TO12)
+   -- 44.3.11 LCD Waveform register (LCD_WF19TO16)
+   -- 44.3.12 LCD Waveform register (LCD_WF23TO20)
+   -- 44.3.13 LCD Waveform register (LCD_WF27TO24)
+   -- 44.3.14 LCD Waveform register (LCD_WF31TO28)
+   -- 44.3.15 LCD Waveform register (LCD_WF35TO32)
+   -- 44.3.16 LCD Waveform register (LCD_WF39TO36)
+   -- 44.3.17 LCD Waveform register (LCD_WF43TO40)
+   -- 44.3.18 LCD Waveform register (LCD_WF47TO44)
+   -- 44.3.19 LCD Waveform register (LCD_WF51TO48)
+   -- 44.3.20 LCD Waveform register (LCD_WF55TO52)
+   -- 44.3.21 LCD Waveform register (LCD_WF59TO56)
+   -- 44.3.22 LCD Waveform register (LCD_WF63TO60)
+
+   type LCD_Waveform_Type is record
+      A : Boolean := False;
+      B : Boolean := False;
+      C : Boolean := False;
+      D : Boolean := False;
+      E : Boolean := False;
+      F : Boolean := False;
+      G : Boolean := False;
+      H : Boolean := False;
+   end record
+      with Pack => True,
+           Size => 8;
+
+   type LCD_Waveform_Array_Type is array (0 .. 3) of LCD_Waveform_Type;
+   type LCD_Waveform_Register_Type is record
+      WF : LCD_Waveform_Array_Type;
+   end record
+      with Size                 => 32,
+           Volatile_Full_Access => True;
+
+   -- LCD_WF3TO0   : aliased LCD_Waveform_Array_Type with Address => System'To_Address (16#4005_3020#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   -- LCD_WF7TO4   : aliased LCD_Waveform_Array_Type with Address => System'To_Address (16#4005_3024#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   -- LCD_WF11TO8  : aliased LCD_Waveform_Array_Type with Address => System'To_Address (16#4005_3028#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   -- LCD_WF15TO12 : aliased LCD_Waveform_Array_Type with Address => System'To_Address (16#4005_302C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   -- LCD_WF19TO16 : aliased LCD_Waveform_Array_Type with Address => System'To_Address (16#4005_3030#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   -- LCD_WF23TO20 : aliased LCD_Waveform_Array_Type with Address => System'To_Address (16#4005_3034#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   -- LCD_WF27TO24 : aliased LCD_Waveform_Array_Type with Address => System'To_Address (16#4005_3038#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   -- LCD_WF31TO28 : aliased LCD_Waveform_Array_Type with Address => System'To_Address (16#4005_303C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   -- LCD_WF35TO32 : aliased LCD_Waveform_Array_Type with Address => System'To_Address (16#4005_3040#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   -- LCD_WF39TO36 : aliased LCD_Waveform_Array_Type with Address => System'To_Address (16#4005_3044#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   -- LCD_WF43TO40 : aliased LCD_Waveform_Array_Type with Address => System'To_Address (16#4005_3048#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   -- LCD_WF47TO44 : aliased LCD_Waveform_Array_Type with Address => System'To_Address (16#4005_304C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   -- LCD_WF51TO48 : aliased LCD_Waveform_Array_Type with Address => System'To_Address (16#4005_3050#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   -- LCD_WF55TO52 : aliased LCD_Waveform_Array_Type with Address => System'To_Address (16#4005_3054#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   -- LCD_WF59TO56 : aliased LCD_Waveform_Array_Type with Address => System'To_Address (16#4005_3058#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+   -- LCD_WF63TO60 : aliased LCD_Waveform_Array_Type with Address => System'To_Address (16#4005_305C#), Volatile_Full_Access => True, Import => True, Convention => Ada;
+
+   type LCD_Waveform_Register_Array_Type is array (0 .. 15) of LCD_Waveform_Register_Type
+      with Pack => True;
+
+   LCD_WF : aliased LCD_Waveform_Register_Array_Type
+      with Address    => System'To_Address (16#4005_3020#),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
