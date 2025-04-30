@@ -3419,10 +3419,9 @@ pragma Style_Checks (Off);
 
    type LCD_Waveform_Array_Type is array (0 .. 3) of LCD_Waveform_Type;
    type LCD_Waveform_Register_Type is record
-      WF : LCD_Waveform_Array_Type;
+      WF : LCD_Waveform_Array_Type with Volatile_Full_Access => True;
    end record
-      with Size                 => 32,
-           Volatile_Full_Access => True;
+      with Size => 32;
 
    -- LCD_WF3TO0   : aliased LCD_Waveform_Array_Type with Address => System'To_Address (16#4005_3020#), Volatile_Full_Access => True, Import => True, Convention => Ada;
    -- LCD_WF7TO4   : aliased LCD_Waveform_Array_Type with Address => System'To_Address (16#4005_3024#), Volatile_Full_Access => True, Import => True, Convention => Ada;
