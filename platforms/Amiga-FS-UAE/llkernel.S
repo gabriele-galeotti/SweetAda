@@ -21,8 +21,8 @@
 
                 .sect   .vectors,"ax"
 
-                .extern _start
 #define INITIALSP 0x11114EF9 // 1111 = 256k ROM, 4EF9 = jmp
+                .extern _start
 
                 .global vectors_table
 vectors_table:
