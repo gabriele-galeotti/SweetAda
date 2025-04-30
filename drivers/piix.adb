@@ -60,22 +60,34 @@ package body PIIX
          );
    begin
       PCI.Cfg_Write (
-         Descriptor => D, Bus_Number => PCI.BUS0, Device_Number => 1, Function_Number => 0,
+         Descriptor      => D,
+         Bus_Number      => PCI.BUS0,
+         Device_Number   => 1,
+         Function_Number => 0,
          Register_Number => PIRQRCA,
          Value           => To_U8 (PIRQC)
          );
       PCI.Cfg_Write (
-         Descriptor => D, Bus_Number => PCI.BUS0, Device_Number => 1, Function_Number => 0,
+         Descriptor      => D,
+         Bus_Number      => PCI.BUS0,
+         Device_Number   => 1,
+         Function_Number => 0,
          Register_Number => PIRQRCB,
          Value           => To_U8 (PIRQC)
          );
       PCI.Cfg_Write (
-         Descriptor => D, Bus_Number => PCI.BUS0, Device_Number => 1, Function_Number => 0,
+         Descriptor      => D,
+         Bus_Number      => PCI.BUS0,
+         Device_Number   => 1,
+         Function_Number => 0,
          Register_Number => PIRQRCC,
          Value           => To_U8 (PIRQC)
          );
       PCI.Cfg_Write (
-         Descriptor => D, Bus_Number => PCI.BUS0, Device_Number => 1, Function_Number => 0,
+         Descriptor      => D,
+         Bus_Number      => PCI.BUS0,
+         Device_Number   => 1,
+         Function_Number => 0,
          Register_Number => PIRQRCD,
          Value           => To_U8 (PIRQC)
          );
