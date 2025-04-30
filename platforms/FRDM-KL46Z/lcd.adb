@@ -84,7 +84,7 @@ package body LCD
          CPSEL     => CPSEL_ENABLE,      -- use capacitor charge pump
          RVTRIM    => 0,
          RVEN      => False,             -- disable voltage regulator
-         others => <>
+         others    => <>
          );
       -- setup display modes
       LCD_AR := (
