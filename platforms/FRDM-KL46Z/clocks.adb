@@ -104,7 +104,7 @@ package body Clocks
          OSC32KSEL => OSC32KSEL_SYS,
          others    => <>
          );
-      -- MCGIRCLK = 32.678 kHz
+      -- MCGIRCLK = 32.768 kHz
       MCG_C2.IRCS    := IRCS_SLOW;
       MCG_C1.IRCLKEN := True;
       -- setup values
