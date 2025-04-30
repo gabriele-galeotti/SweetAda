@@ -10,6 +10,9 @@
 #                                                                              #
 ################################################################################
 
+RTS     := sfp
+PROFILE := sfp
+
 USE_APPLICATION := test-decstation5000.133
 
 export NETWORK_BOOT := N

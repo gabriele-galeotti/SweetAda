@@ -10,9 +10,8 @@
 #                                                                              #
 ################################################################################
 
-RTS        := sfp
-PROFILE    := sfp
-USE_LIBADA := Y
+RTS     := sfp
+PROFILE := sfp
 
 USE_APPLICATION := test-neorv32
 

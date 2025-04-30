@@ -8,9 +8,8 @@
 #                                                                              #
 ################################################################################
 
-RTS        := zfp
-PROFILE    := zfp
-USE_LIBADA := N
+RTS     := zfp
+PROFILE := zfp
 
 USE_APPLICATION := test-mpc8306-switch
 

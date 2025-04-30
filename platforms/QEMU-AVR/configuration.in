@@ -10,9 +10,8 @@
 #                                                                              #
 ################################################################################
 
-#RTS        := zfp
-#PROFILE    := zfp
-#USE_LIBADA := N
+RTS     := sfp
+PROFILE := sfp
 
 USE_APPLICATION := test-qemu-avr
 

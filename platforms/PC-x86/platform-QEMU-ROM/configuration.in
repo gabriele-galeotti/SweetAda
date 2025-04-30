@@ -13,6 +13,9 @@
 #                                                                              #
 ################################################################################
 
+RTS     := sfp
+PROFILE := sfp
+
 USE_CLIBRARY := Y
 
 USE_APPLICATION := test-pc-x86

@@ -14,9 +14,8 @@ endif
 #                                                                              #
 ################################################################################
 
-RTS        := zfp
-PROFILE    := zfp
-USE_LIBADA := N
+RTS     := zfp
+PROFILE := zfp
 
 USE_APPLICATION := test-qemu-ppc64
 
