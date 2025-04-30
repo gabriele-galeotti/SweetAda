@@ -56,7 +56,7 @@ package body BSP
    procedure SysTick_Init
       is
    begin
-      ARMv6M.SYST_RVR.RELOAD := Bits_24 (CORE_Clock / 1_000);
+      ARMv6M.SYST_RVR.RELOAD := Bits_24 (Clocks.CLK_Core / 1_000);
       ARMv6M.SHPR3.PRI_15 := 16#1#;
       ARMv6M.SYST_CVR.CURRENT := 0;
       ARMv6M.SYST_CSR := (
@@ -116,10 +116,10 @@ package body BSP
          TSI    => True,
          PORTA  => True,
          PORTB  => True,
-         PORTC  => False,
+         PORTC  => True,
          PORTD  => True,
          PORTE  => True,
-         SLCD   => False,
+         SLCD   => True,
          others => <>
          );
       -- UART0 ----------------------------------------------------------------
@@ -131,7 +131,7 @@ package body BSP
          MAEN2 => False,
          MAEN1 => False
          );
-      UART0.BDL.SBR := Bits_8 ((UART_Clock / 16) / 9_600);
+      UART0.BDL.SBR := Bits_8 ((Clocks.CLK_UART / 16) / 9_600);
       UART0.BDH.SBR := 0;
       UART0.C2.TE := True;
       -- Console --------------------------------------------------------------

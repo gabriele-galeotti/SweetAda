@@ -34,9 +34,6 @@ package BSP
            Convention    => Asm,
            External_Name => "tick_count";
 
-   CORE_Clock : Natural;
-   UART_Clock : Natural;
-
    procedure Console_Putchar
       (C : in Character);
    procedure Console_Getchar
