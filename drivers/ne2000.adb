@@ -988,19 +988,19 @@ package body NE2000
       Byte_Idx := 0;
       Data := 0;
       for Index in 0 .. P.all.Size - 1 loop
-         Data := Shift_Left (Data, 8) or Unsigned_32 (P.all.Payload (Index));
+         Data := Shift_Left (@, 8) or Unsigned_32 (P.all.Payload (Index));
          Byte_Idx := @ + 1;
          if Index = P.all.Size - 1 then
             case Byte_Idx is
-               when 3      => Data := Shift_Left (Data, 8);
-               when 2      => Data := Shift_Left (Data, 16);
-               when 1      => Data := Shift_Left (Data, 24);
+               when 3      => Data := Shift_Left (@, 8);
+               when 2      => Data := Shift_Left (@, 16);
+               when 1      => Data := Shift_Left (@, 24);
                when others => null;
             end case;
             Byte_Idx := 4;
          end if;
          if Byte_Idx = 4 then
-            Data := Byte_Swap (Data);
+            Data := Byte_Swap (@);
             Out32 (BAR + 16#10#, Data);
             Byte_Idx := 0;
             Data := 0;
