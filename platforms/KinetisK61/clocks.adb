@@ -90,9 +90,6 @@ package body Clocks
       MCG_C1.CLKS := CLKS_FLLPLLCS;
       MCG_C6.PLLS := PLLS_PLLCS;
       loop exit when MCG_S.CLKST = CLKST_PLL; end loop;
-      -- setup clock values
-      CLK_Core        := 150 * MHz1;
-      CLK_Peripherals := 75 * MHz1;
       -- clock signal output
       if False then
          -- 5.7.3 Debug trace clock
@@ -105,6 +102,9 @@ package body Clocks
          SIM_SCGC5.PORTA := True;               -- PORTA clock gate control
          PORTA_MUXCTRL.PCR (6).MUX := MUX_ALT7; -- PTA6 = ALT7 = TRACE_CLKOUT
       end if;
+      -- setup clock values
+      CLK_Core        := 150 * MHz1;
+      CLK_Peripherals := 75 * MHz1;
    end Init;
 
 end Clocks;
