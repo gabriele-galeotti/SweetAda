@@ -18,6 +18,7 @@ ifeq ($(OBJECT_DIRECTORY),)
 $(error Error: invalid OBJECT_DIRECTORY)
 endif
 
+include $(KERNEL_PARENT_PATH)/Makefile.os.in
 include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 
