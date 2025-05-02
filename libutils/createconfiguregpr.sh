@@ -35,7 +35,6 @@
 # GNATBIND_SECSTACK
 # USE_LIBGCC
 # USE_LIBM
-# USE_LIBADA
 # USE_CLIBRARY
 # ADAC_SWITCHES_RTS
 # CC_SWITCHES_RTS
@@ -212,28 +211,26 @@ INDENTATION_LEVEL=$((INDENTATION_LEVEL+1))
 #
 # Configuration declarations.
 #
+configuregpr=${configuregpr}$(print_I "Platform                          := \"${PLATFORM}\";")${NL}
+configuregpr=${configuregpr}$(print_I "Cpu                               := \"${CPU}\";")${NL}
+configuregpr=${configuregpr}$(print_I "Cpu_Model                         := \"${CPU_MODEL}\";")${NL}
 configuregpr=${configuregpr}$(print_I "SweetAda_Path                     := \"${SWEETADA_PATH}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Toolchain_Prefix                  := \"${TOOLCHAIN_PREFIX}\";")${NL}
-configuregpr=${configuregpr}$(print_I "Gprbuild_Prefix                   := \"${GPRBUILD_PREFIX}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Toolchain_Name                    := \"${TOOLCHAIN_NAME}\";")${NL}
+configuregpr=${configuregpr}$(print_I "Gprbuild_Prefix                   := \"${GPRBUILD_PREFIX}\";")${NL}
 configuregpr=${configuregpr}$(print_I "GCC_Wrapper                       := \"${GCC_WRAPPER}\";")${NL}
 configuregpr=${configuregpr}$(print_I "GnatAdc_Filename                  := \"${GNATADC_FILENAME}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Library_Directory                 := \"${LIBRARY_DIRECTORY}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Object_Directory                  := \"${OBJECT_DIRECTORY}\";")${NL}
-configuregpr=${configuregpr}$(print_I "Platform                          := \"${PLATFORM}\";")${NL}
-configuregpr=${configuregpr}$(print_I "Cpu                               := \"${CPU}\";")${NL}
-configuregpr=${configuregpr}$(print_I "Cpu_Model                         := \"${CPU_MODEL}\";")${NL}
-configuregpr=${configuregpr}$(print_I "RTS_Path                          := \"${RTS_PATH}\";")${NL}
 configuregpr=${configuregpr}$(print_I "RTS                               := \"${RTS}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Profile                           := \"${PROFILE}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Ada_Mode                          := \"${ADA_MODE}\";")${NL}
-configuregpr=${configuregpr}$(print_I "Optimization_Level                := \"${OPTIMIZATION_LEVEL}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Stack_Limit                       := \"${STACK_LIMIT}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Gnatbind_SecStack                 := \"${GNATBIND_SECSTACK}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Use_LibGCC                        := \"${USE_LIBGCC}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Use_Libm                          := \"${USE_LIBM}\";")${NL}
-configuregpr=${configuregpr}$(print_I "Use_LibAda                        := \"${USE_LIBADA}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Use_CLibrary                      := \"${USE_CLIBRARY}\";")${NL}
+configuregpr=${configuregpr}$(print_I "Optimization_Level                := \"${OPTIMIZATION_LEVEL}\";")${NL}
 INDENTL="                                      "
 configuregpr=${configuregpr}$(print_I "ADAC_Switches_RTS                 := (")${NL}
 string=$(print_list "${ADAC_SWITCHES_RTS}" "${INDENTATION_LEVEL}" "${INDENTL}")
@@ -247,6 +244,7 @@ configuregpr=${configuregpr}$(print_I "GCC_Switches_Platform             := (")$
 string=$(print_list "${GCC_SWITCHES_PLATFORM}" "${INDENTATION_LEVEL}" "${INDENTL}")
 if [ "x${string}" != "x" ] ; then configuregpr=${configuregpr}${string}${NL} ; fi
 configuregpr=${configuregpr}$(print_I "                                     );")${NL}
+configuregpr=${configuregpr}$(print_I "RTS_Path                          := \"${RTS_PATH}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Lowlevel_Files_Platform           := (")${NL}
 string=$(print_list "${LOWLEVEL_FILES_PLATFORM}" "${INDENTATION_LEVEL}" "${INDENTL}")
 if [ "x${string}" != "x" ] ; then configuregpr=${configuregpr}${string}${NL} ; fi

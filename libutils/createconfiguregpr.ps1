@@ -34,7 +34,6 @@
 # GNATBIND_SECSTACK
 # USE_LIBGCC
 # USE_LIBM
-# USE_LIBADA
 # USE_CLIBRARY
 # ADAC_SWITCHES_RTS
 # CC_SWITCHES_RTS
@@ -283,28 +282,26 @@ $configuregpr += $(print_V $configure_filename) + $nl
 #
 # Configuration declarations.
 #
+$configuregpr += $(print_I "Platform                          := `"$(GetEnvVar PLATFORM)`";") + $nl
+$configuregpr += $(print_I "Cpu                               := `"$(GetEnvVar CPU)`";") + $nl
+$configuregpr += $(print_I "Cpu_Model                         := `"$(GetEnvVar CPU_MODEL)`";") + $nl
 $configuregpr += $(print_I "SweetAda_Path                     := `"$(GetEnvVar SWEETADA_PATH)`";") + $nl
 $configuregpr += $(print_I "Toolchain_Prefix                  := `"$(GetEnvVar TOOLCHAIN_PREFIX)`";") + $nl
-$configuregpr += $(print_I "Gprbuild_Prefix                   := `"$(GetEnvVar GPRBUILD_PREFIX)`";") + $nl
 $configuregpr += $(print_I "Toolchain_Name                    := `"$(GetEnvVar TOOLCHAIN_NAME)`";") + $nl
+$configuregpr += $(print_I "Gprbuild_Prefix                   := `"$(GetEnvVar GPRBUILD_PREFIX)`";") + $nl
 $configuregpr += $(print_I "GCC_Wrapper                       := `"$(GetEnvVar GCC_WRAPPER)`";") + $nl
 $configuregpr += $(print_I "GnatAdc_Filename                  := `"$(GetEnvVar GNATADC_FILENAME)`";") + $nl
 $configuregpr += $(print_I "Library_Directory                 := `"$(GetEnvVar LIBRARY_DIRECTORY)`";") + $nl
 $configuregpr += $(print_I "Object_Directory                  := `"$(GetEnvVar OBJECT_DIRECTORY)`";") + $nl
-$configuregpr += $(print_I "Platform                          := `"$(GetEnvVar PLATFORM)`";") + $nl
-$configuregpr += $(print_I "Cpu                               := `"$(GetEnvVar CPU)`";") + $nl
-$configuregpr += $(print_I "Cpu_Model                         := `"$(GetEnvVar CPU_MODEL)`";") + $nl
-$configuregpr += $(print_I "RTS_Path                          := `"$(GetEnvVar RTS_PATH)`";") + $nl
 $configuregpr += $(print_I "RTS                               := `"$(GetEnvVar RTS)`";") + $nl
 $configuregpr += $(print_I "Profile                           := `"$(GetEnvVar PROFILE)`";") + $nl
 $configuregpr += $(print_I "Ada_Mode                          := `"$(GetEnvVar ADA_MODE)`";") + $nl
-$configuregpr += $(print_I "Optimization_Level                := `"$(GetEnvVar OPTIMIZATION_LEVEL)`";") + $nl
 $configuregpr += $(print_I "Stack_Limit                       := `"$(GetEnvVar STACK_LIMIT)`";") + $nl
 $configuregpr += $(print_I "Gnatbind_SecStack                 := `"$(GetEnvVar GNATBIND_SECSTACK)`";") + $nl
 $configuregpr += $(print_I "Use_LibGCC                        := `"$(GetEnvVar USE_LIBGCC)`";") + $nl
 $configuregpr += $(print_I "Use_Libm                          := `"$(GetEnvVar USE_LIBM)`";") + $nl
-$configuregpr += $(print_I "Use_LibAda                        := `"$(GetEnvVar USE_LIBADA)`";") + $nl
 $configuregpr += $(print_I "Use_CLibrary                      := `"$(GetEnvVar USE_CLIBRARY)`";") + $nl
+$configuregpr += $(print_I "Optimization_Level                := `"$(GetEnvVar OPTIMIZATION_LEVEL)`";") + $nl
 $indentl =                  "                                      "
 $configuregpr += $(print_I "ADAC_Switches_RTS                 := (") + $nl
 $configuregpr += $(print_list $(GetEnvVar ADAC_SWITCHES_RTS).Trim(" ") $indentation_level $indentl)
@@ -315,6 +312,7 @@ $configuregpr += $(print_I "                                     );") + $nl
 $configuregpr += $(print_I "GCC_Switches_Platform             := (") + $nl
 $configuregpr += $(print_list $(GetEnvVar GCC_SWITCHES_PLATFORM).Trim(" ") $indentation_level $indentl)
 $configuregpr += $(print_I "                                     );") + $nl
+$configuregpr += $(print_I "RTS_Path                          := `"$(GetEnvVar RTS_PATH)`";") + $nl
 $configuregpr += $(print_I "Lowlevel_Files_Platform           := (") + $nl
 $configuregpr += $(print_list $(GetEnvVar LOWLEVEL_FILES_PLATFORM).Trim(" ") $indentation_level $indentl)
 $configuregpr += $(print_I "                                     );") + $nl
