@@ -2663,6 +2663,285 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- Chapter 37 Serial Peripheral Interface (SPI)
+   ----------------------------------------------------------------------------
+
+   -- 37.3.1 SPI Status Register (SPIx_S)
+
+   type SPIx_S_Type is record
+      RFIFOEF : Boolean; -- SPI read FIFO empty flag
+      TXFULLF : Boolean; -- Transmit FIFO full flag
+      TNEAREF : Boolean; -- Transmit FIFO nearly empty flag
+      RNFULLF : Boolean; -- Receive FIFO nearly full flag
+      MODF    : Boolean; -- Master Mode Fault Flag
+      SPTEF   : Boolean; -- SPI Transmit Buffer Empty Flag (when FIFO is not supported or not enabled) or SPI transmit FIFO empty flag (when FIFO is supported and enabled)
+      SPMF    : Boolean; -- SPI Match Flag
+      SPRF    : Boolean; -- SPI Read Buffer Full Flag (when FIFO is not supported or not enabled) or SPI read FIFO FULL flag (when FIFO is supported and enabled)
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPIx_S_Type use record
+      RFIFOEF at 0 range 0 .. 0;
+      TXFULLF at 0 range 1 .. 1;
+      TNEAREF at 0 range 2 .. 2;
+      RNFULLF at 0 range 3 .. 3;
+      MODF    at 0 range 4 .. 4;
+      SPTEF   at 0 range 5 .. 5;
+      SPMF    at 0 range 6 .. 6;
+      SPRF    at 0 range 7 .. 7;
+   end record;
+
+   -- 37.3.2 SPI Baud Rate Register (SPIx_BR)
+
+   SPR_DIV2   : constant := 2#0000#; -- Baud rate divisor is 2.
+   SPR_DIV4   : constant := 2#0001#; -- Baud rate divisor is 4.
+   SPR_DIV8   : constant := 2#0010#; -- Baud rate divisor is 8.
+   SPR_DIV16  : constant := 2#0011#; -- Baud rate divisor is 16.
+   SPR_DIV32  : constant := 2#0100#; -- Baud rate divisor is 32.
+   SPR_DIV64  : constant := 2#0101#; -- Baud rate divisor is 64.
+   SPR_DIV128 : constant := 2#0110#; -- Baud rate divisor is 128.
+   SPR_DIV256 : constant := 2#0111#; -- Baud rate divisor is 256.
+   SPR_DIV512 : constant := 2#1000#; -- Baud rate divisor is 512.
+
+   SPPR_DIV1 : constant := 2#000#; -- Baud rate prescaler divisor is 1.
+   SPPR_DIV2 : constant := 2#001#; -- Baud rate prescaler divisor is 2.
+   SPPR_DIV3 : constant := 2#010#; -- Baud rate prescaler divisor is 3.
+   SPPR_DIV4 : constant := 2#011#; -- Baud rate prescaler divisor is 4.
+   SPPR_DIV5 : constant := 2#100#; -- Baud rate prescaler divisor is 5.
+   SPPR_DIV6 : constant := 2#101#; -- Baud rate prescaler divisor is 6.
+   SPPR_DIV7 : constant := 2#110#; -- Baud rate prescaler divisor is 7.
+   SPPR_DIV8 : constant := 2#111#; -- Baud rate prescaler divisor is 8.
+
+   type SPIx_BR_Type is record
+      SPR      : Bits_4 := SPR_DIV2;  -- SPI Baud Rate Divisor
+      SPPR     : Bits_3 := SPPR_DIV1; -- SPI Baud Rate Prescale Divisor
+      Reserved : Bits_1 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPIx_BR_Type use record
+      SPR      at 0 range 0 .. 3;
+      SPPR     at 0 range 4 .. 6;
+      Reserved at 0 range 7 .. 7;
+   end record;
+
+   -- 37.3.3 SPI Control Register 2 (SPIx_C2)
+
+   SPC0_NORMAL : constant := 0; -- SPI uses separate pins for data input and data output (pin mode is normal).
+   SPC0_BIDIR  : constant := 1; -- SPI configured for single-wire bidirectional operation (pin mode is bidirectional).
+
+   SPIMODE_8  : constant := 0; -- 8-bit SPI shift register, match register, and buffers
+   SPIMODE_16 : constant := 1; -- 16-bit SPI shift register, match register, and buffers
+
+   type SPIx_C2_Type is record
+      SPC0    : Bits_1  := SPC0_NORMAL; -- SPI Pin Control 0
+      SPISWAI : Boolean := False;       -- SPI Stop in Wait Mode
+      RXDMAE  : Boolean := False;       -- Receive DMA enable
+      BIDIROE : Boolean := False;       -- Bidirectional Mode Output Enable
+      MODFEN  : Boolean := False;       -- Master Mode-Fault Function Enable
+      TXDMAE  : Boolean := False;       -- Transmit DMA enable
+      SPIMODE : Bits_1  := SPIMODE_8;   -- SPI 8-bit or 16-bit mode
+      SPMIE   : Boolean := False;       -- SPI Match Interrupt Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPIx_C2_Type use record
+      SPC0    at 0 range 0 .. 0;
+      SPISWAI at 0 range 1 .. 1;
+      RXDMAE  at 0 range 2 .. 2;
+      BIDIROE at 0 range 3 .. 3;
+      MODFEN  at 0 range 4 .. 4;
+      TXDMAE  at 0 range 5 .. 5;
+      SPIMODE at 0 range 6 .. 6;
+      SPMIE   at 0 range 7 .. 7;
+   end record;
+
+   -- 37.3.4 SPI Control Register 1 (SPIx_C1)
+
+   LSBFE_MSB : constant := 0; -- SPI serial data transfers start with the most significant bit.
+   LSBFE_LSB : constant := 1; -- SPI serial data transfers start with the least significant bit.
+
+   -- MODFEN=0
+   SSOE_MSTGPIOSLSELIN   : constant := 0; -- When C2[MODFEN] is 0: In master mode, SS pin function is general-purpose I/O (not SPI). In slave mode, SS pin function is slave select input.
+   SSOE_MSTGPIOSLSELIN_2 : constant := 1; -- When C2[MODFEN] is 0: In master mode, SS pin function is general-purpose I/O (not SPI). In slave mode, SS pin function is slave select input.
+   -- MODFEN=1
+   SSOE_MSTFAULTSLSELIN  : constant := 0; -- When C2[MODFEN] is 1: In master mode, SS pin function is SS input for mode fault. In slave mode, SS pin function is slave select input.
+   SSOE_MSTSSOUTSLSELIN  : constant := 1; -- When C2[MODFEN] is 1: In master mode, SS pin function is automatic SS output. In slave mode: SS pin function is slave select input.
+
+   CPHA_MIDDLE : constant := 0; -- First edge on SPSCK occurs at the middle of the first cycle of a data transfer.
+   CPHA_START  : constant := 1; -- First edge on SPSCK occurs at the start of the first cycle of a data transfer.
+
+   CPOL_HIGH : constant := 0; -- Active-high SPI clock (idles low)
+   CPOL_LOW  : constant := 1; -- Active-low SPI clock (idles high)
+
+   MSTR_SLAVE  : constant := 0; -- SPI module configured as a slave SPI device
+   MSTR_MASTER : constant := 1; -- SPI module configured as a master SPI device
+
+   type SPIx_C1_Type is record
+      LSBFE : Bits_1  := LSBFE_MSB;           -- LSB First (shifter direction)
+      SSOE  : Bits_1  := SSOE_MSTGPIOSLSELIN; -- Slave Select Output Enable
+      CPHA  : Bits_1  := CPHA_START;          -- Clock Phase
+      CPOL  : Bits_1  := CPOL_HIGH;           -- Clock Polarity
+      MSTR  : Bits_1  := MSTR_SLAVE;          -- Master/Slave Mode Select
+      SPTIE : Boolean := False;               -- SPI Transmit Interrupt Enable
+      SPE   : Boolean := False;               -- SPI System Enable
+      SPIE  : Boolean := False;               -- SPI Interrupt Enable: for SPRF and MODF (when FIFO is not supported or not enabled) or for read FIFO (when FIFO is supported and enabled)
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPIx_C1_Type use record
+      LSBFE at 0 range 0 .. 0;
+      SSOE  at 0 range 1 .. 1;
+      CPHA  at 0 range 2 .. 2;
+      CPOL  at 0 range 3 .. 3;
+      MSTR  at 0 range 4 .. 4;
+      SPTIE at 0 range 5 .. 5;
+      SPE   at 0 range 6 .. 6;
+      SPIE  at 0 range 7 .. 7;
+   end record;
+
+   -- 37.3.5 SPI Match Register low (SPIx_ML)
+
+   type SPIx_ML_Type is record
+      ML : Unsigned_8; -- Hardware compare value (low byte)
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPIx_ML_Type use record
+      ML at 0 range 0 .. 7;
+   end record;
+
+   -- 37.3.6 SPI match register high (SPIx_MH)
+
+   type SPIx_MH_Type is record
+      MH : Unsigned_8; -- Hardware compare value (high byte)
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPIx_MH_Type use record
+      MH at 0 range 0 .. 7;
+   end record;
+
+   -- 37.3.7 SPI Data Register low (SPIx_DL)
+
+   type SPIx_DL_Type is record
+      DL : Unsigned_8; -- Data (low byte)
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPIx_DL_Type use record
+      DL at 0 range 0 .. 7;
+   end record;
+
+   -- 37.3.8 SPI data register high (SPIx_DH)
+
+   type SPIx_DH_Type is record
+      DH : Unsigned_8; -- Data (high byte)
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPIx_DH_Type use record
+      DH at 0 range 0 .. 7;
+   end record;
+
+   -- 37.3.9 SPI clear interrupt register (SPIx_CI)
+
+   type SPIx_CI_Type is record
+      SPRFCI    : Boolean := False; -- Receive FIFO full flag clear interrupt
+      SPTEFCI   : Boolean := False; -- Transmit FIFO empty flag clear interrupt
+      RNFULLFCI : Boolean := False; -- Receive FIFO nearly full flag clear interrupt
+      TNEAREFCI : Boolean := False; -- Transmit FIFO nearly empty flag clear interrupt
+      RXFOF     : Boolean := False; -- Receive FIFO overflow flag
+      TXFOF     : Boolean := False; -- Transmit FIFO overflow flag
+      RXFERR    : Boolean := False; -- Receive FIFO error flag
+      TXFERR    : Boolean := False; -- Transmit FIFO error flag
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPIx_CI_Type use record
+      SPRFCI    at 0 range 0 .. 0;
+      SPTEFCI   at 0 range 1 .. 1;
+      RNFULLFCI at 0 range 2 .. 2;
+      TNEAREFCI at 0 range 3 .. 3;
+      RXFOF     at 0 range 4 .. 4;
+      TXFOF     at 0 range 5 .. 5;
+      RXFERR    at 0 range 6 .. 6;
+      TXFERR    at 0 range 7 .. 7;
+   end record;
+
+   -- 37.3.10 SPI control register 3 (SPIx_C3)
+
+   INTCLR_FIFO : constant := 0; -- These interrupts are cleared when the corresponding flags are cleared depending on the state of the FIFOs
+   INTCLR_CI   : constant := 1; -- These interrupts are cleared by writing the corresponding bits in the CI register
+
+   RNFULLF_MARK_48 : constant := 0; -- RNFULLF is set when the receive FIFO has 48 bits or more
+   RNFULLF_MARK_32 : constant := 1; -- RNFULLF is set when the receive FIFO has 32 bits or more
+
+   TNEAREF_MARK_16 : constant := 0; -- TNEAREF is set when the transmit FIFO has 16 bits or less
+   TNEAREF_MARK_32 : constant := 1; -- TNEAREF is set when the transmit FIFO has 32 bits or less
+
+   type SPIx_C3_Type is record
+      FIFOMODE     : Boolean := False;           -- FIFO mode enable
+      RNFULLIEN    : Boolean := False;           -- Receive FIFO nearly full interrupt enable
+      TNEARIEN     : Boolean := False;           -- Transmit FIFO nearly empty interrupt enable
+      INTCLR       : Bits_1  := INTCLR_FIFO;     -- Interrupt clearing mechanism select
+      RNFULLF_MARK : Bits_1  := RNFULLF_MARK_48; -- Receive FIFO nearly full watermark
+      TNEAREF_MARK : Bits_1  := TNEAREF_MARK_16; -- Transmit FIFO nearly empty watermark
+      Reserved     : Bits_2  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SPIx_C3_Type use record
+      FIFOMODE     at 0 range 0 .. 0;
+      RNFULLIEN    at 0 range 1 .. 1;
+      TNEARIEN     at 0 range 2 .. 2;
+      INTCLR       at 0 range 3 .. 3;
+      RNFULLF_MARK at 0 range 4 .. 4;
+      TNEAREF_MARK at 0 range 5 .. 5;
+      Reserved     at 0 range 6 .. 7;
+   end record;
+
+   -- 37.3 Memory map/register definition
+
+   type SPI_Type is record
+      S  : SPIx_S_Type  with Volatile_Full_Access => True;
+      BR : SPIx_BR_Type with Volatile_Full_Access => True;
+      C2 : SPIx_C2_Type with Volatile_Full_Access => True;
+      C1 : SPIx_C1_Type with Volatile_Full_Access => True;
+      ML : SPIx_ML_Type with Volatile_Full_Access => True;
+      MH : SPIx_MH_Type with Volatile_Full_Access => True;
+      DL : SPIx_DL_Type with Volatile_Full_Access => True;
+      DH : SPIx_DH_Type with Volatile_Full_Access => True;
+      CI : SPIx_CI_Type with Volatile_Full_Access => True;
+      C3 : SPIx_C3_Type with Volatile_Full_Access => True;
+   end record
+      with Size => 16#C# * 8;
+   for SPI_Type use record
+      S  at 16#0# range 0 .. 7;
+      BR at 16#1# range 0 .. 7;
+      C2 at 16#2# range 0 .. 7;
+      C1 at 16#3# range 0 .. 7;
+      ML at 16#4# range 0 .. 7;
+      MH at 16#5# range 0 .. 7;
+      DL at 16#6# range 0 .. 7;
+      DH at 16#7# range 0 .. 7;
+      CI at 16#A# range 0 .. 7;
+      C3 at 16#B# range 0 .. 7;
+   end record;
+
+   SPI0 : aliased SPI_Type
+      with Address    => System'To_Address (16#4007_6000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   SPI1 : aliased SPI_Type
+      with Address    => System'To_Address (16#4007_7000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ----------------------------------------------------------------------------
    -- Chapter 39 Universal Asynchronous Receiver/Transmitter (UART0)
    ----------------------------------------------------------------------------
 
@@ -3250,7 +3529,7 @@ pragma Style_Checks (Off);
    FDPRS_DIV128 : constant := 2#111#; -- 1/128 bus clock.
 
    type LCD_FDCR_Type is record
-      FDPINID   : Bits_6 := 0;           -- Fault Detect Pin ID
+      FDPINID   : Bits_6  := 0;          -- Fault Detect Pin ID
       FDBPEN    : Boolean := False;      -- Fault Detect Back Plane Enable
       FDEN      : Boolean := False;      -- Fault Detect Enable
       Reserved1 : Bits_1  := 0;
