@@ -23,6 +23,8 @@
 # CPUS
 # RTS
 # MULTILIB
+# PROBEVARIABLE
+# PROBEVARIABLES
 #
 
 ################################################################################
@@ -56,7 +58,7 @@ RTSES            := $(filter-out $(RTS_SRC_NO_DIRS),$(RTS_SRC_ALL_DIRS))
 #                                                                              #
 ################################################################################
 
-ifeq ($(filter probevariable,$(MAKECMDGOALS)),)
+ifeq ($(filter probevariable probevariables,$(MAKECMDGOALS)),)
 ifeq ($(findstring $(RTS),$(RTSES)),)
 $(error Error: no valid RTS)
 endif
@@ -298,13 +300,15 @@ $(ADALIB_PATH)/%.o: $(ADAINCLUDE_PATH)/%.c
           $(CC_SWITCHES)       \
           $<
 
-#
-# Probe a variable value.
-#
-# Example:
-# $ VERBOSE= PROBEVARIABLE="MULTILIB_SWITCHES" make probevariable 2> /dev/null
-#
 .PHONY: probevariable
 probevariable:
 	@$(call echo-print,"$($(PROBEVARIABLE))")
+
+.PHONY: probevariables
+probevariables:
+ifeq ($(OSTYPE),cmd)
+	@$(foreach v,$(PROBEVARIABLES),$(call echo-print,"$(v):=$($(v))|")&)
+else
+	@$(foreach v,$(PROBEVARIABLES),$(call echo-print,"$(v):=$($(v))|");)
+endif
 

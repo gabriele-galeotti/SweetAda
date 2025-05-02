@@ -23,7 +23,6 @@
 # TOOLCHAIN_PREFIX
 # TOOLCHAIN_NAME
 # RTS_DIRECTORY
-# RTS_BASE_PATH
 # RTS
 # ADA_MODE
 # STACK_LIMIT
@@ -85,8 +84,7 @@ endif
 LIBM_FILENAME := $(TOOLCHAIN_PREFIX)/$(TOOLCHAIN_NAME)/lib/$(GCC_MULTIDIR)/libm.a
 
 # RTS
-RTS_ROOT_PATH := $(RTS_BASE_PATH)/$(RTS)/$(TOOLCHAIN_NAME)
-RTS_PATH      := $(RTS_ROOT_PATH)/$(GCC_MULTIDIR)
+RTS_PATH      := $(SWEETADA_PATH)/$(RTS_DIRECTORY)/$(RTS)/$(TOOLCHAIN_NAME)/$(GCC_MULTIDIR)
 ifeq ($(OSTYPE),cmd)
 RTS_INSTALLED := $(shell                                              \
                    SETLOCAL ENABLEDELAYEDEXPANSION                 && \
@@ -293,6 +291,7 @@ else
 GPRBUILD_VERSION := $(shell PATH="$(PATH)" $(GPRBUILD) --version 2> /dev/null | $(SED) -e "2,\$$d")
 endif
 endif
+GPRCLEAN := gprclean$(EXEEXT)
 endif
 
 ################################################################################

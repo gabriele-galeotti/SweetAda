@@ -22,6 +22,7 @@
 # RTS
 # NOBUILD
 # PROBEVARIABLE
+# PROBEVARIABLES
 #
 
 ################################################################################
@@ -70,6 +71,7 @@ include Makefile.os.in
 # libutils-gnat-wrapper L       S       NP
 # infodump              I               NP
 # probevariable         I               NP
+# probevariables        I               NP
 # clean                 C               NP
 # distclean             C               NP
 # createkernelcfg               S       NP
@@ -93,8 +95,9 @@ LIBUTILS_GOALS := libutils-elftool      \
                   libutils-gnat-wrapper
 
 # info goals
-INFO_GOALS := infodump      \
-              probevariable
+INFO_GOALS := infodump       \
+              probevariable  \
+              probevariables
 
 # clean/distclean goals
 CLEANING_GOALS := clean     \
@@ -204,7 +207,6 @@ PROFILE            :=
 ADA_MODE           := ADA22
 USE_LIBGCC         :=
 USE_LIBM           :=
-USE_LIBADA         :=
 USE_CLIBRARY       :=
 USE_APPLICATION    := dummy
 OPTIMIZATION_LEVEL :=
@@ -214,6 +216,7 @@ KERNEL_ENTRY_POINT := _start
 
 IMPLICIT_ALI_UNITS :=
 EXTERNAL_OBJECTS   :=
+EXTERNAL_ALIS      :=
 
 # initialize configuration dependencies
 CONFIGURE_DEPS           := Makefile.os.in Makefile.ut.in Makefile.fn.in \
@@ -296,10 +299,7 @@ PLATFORMS := $(shell ($(CHDIR) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs)) 2>
 CPUS      := $(shell ($(CHDIR) $(CPU_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
 endif
 
-# RTS_BASE_PATH: where all RTSes live
-RTS_BASE_PATH := $(SWEETADA_PATH)/$(RTS_DIRECTORY)
-
-# probe available RTSes
+# RTSes
 ifeq ($(OSTYPE),cmd)
 RTSES := $(shell                                 \
            SET "GNUMAKEFLAGS=$(GNUMAKEFLAGS)" && \
@@ -357,8 +357,6 @@ DISTCLEAN_OBJECTS_COMMON := $(GNATADC_FILENAME)      \
 # to be non-existent.
 # LIBGCC_FILENAME: is the filename of the "multilib" LibGCC determined by
 # compiler configuration switches.
-# RTS_ROOT_PATH: RTS path of a specific toolchain, which contains all its
-# various "multilib" RTSes, arranged in a classic LibGCC-hierarchy fashion.
 # RTS_PATH: is the specific path of a well-defined "multilib" RTS (e.g., the
 # multilib subdirectory used by the build system), determined by compiler
 # configuration switches.
@@ -370,7 +368,6 @@ TOOLCHAIN_NAME           :=
 TOOLCHAIN_PROGRAM_PREFIX :=
 GCC_VERSION              :=
 LIBGCC_FILENAME          :=
-RTS_ROOT_PATH            :=
 RTS_PATH                 :=
 PLATFORM_DIRECTORY       :=
 CPU_DIRECTORY            :=
@@ -632,7 +629,6 @@ export                           \
        OBJECT_DIRECTORY          \
        RTSES                     \
        RTS_DIRECTORY             \
-       RTS_BASE_PATH             \
        SHARE_DIRECTORY           \
        GNATADC_FILENAME          \
        INCLUDE_DIRECTORIES       \
@@ -678,7 +674,6 @@ export                           \
        TOOLCHAIN_OBJDUMP         \
        TOOLCHAIN_RANLIB          \
        GCC_VERSION               \
-       RTS_ROOT_PATH             \
        RTS_PATH                  \
        ADAC                      \
        ADAC_SWITCHES_WARNING     \
@@ -697,6 +692,7 @@ export                           \
        GNATPREP                  \
        GNATXREF                  \
        GPRBUILD                  \
+       GPRCLEAN                  \
        LD                        \
        NM                        \
        OBJCOPY                   \
@@ -722,7 +718,6 @@ export                                \
        ADA_MODE                       \
        USE_LIBGCC                     \
        USE_LIBM                       \
-       USE_LIBADA                     \
        USE_CLIBRARY                   \
        USE_APPLICATION                \
        CONFIGURE_FILES_PLATFORM       \
@@ -730,6 +725,7 @@ export                                \
        LOWLEVEL_FILES_PLATFORM        \
        GCC_SWITCHES_LOWLEVEL_PLATFORM \
        EXTERNAL_OBJECTS               \
+       EXTERNAL_ALIS                  \
        STACK_LIMIT                    \
        GNATBIND_SECSTACK              \
        KERNEL_ENTRY_POINT             \
@@ -794,22 +790,35 @@ else
 LIBM_OBJECT :=
 endif
 
-ifneq ($(RTS),zfp)
-USE_LIBADA := Y
-endif
-
-ifeq ($(USE_LIBADA),Y)
-ifeq ($(OSTYPE),msys)
-LIBGNAT_OBJECT  := "$(shell cygpath.exe -m "$(RTS_PATH)")"/adalib/libgnat.a
-LIBGNARL_OBJECT := "$(shell cygpath.exe -m "$(RTS_PATH)")"/adalib/libgnarl.a
+ifeq ($(OSTYPE),cmd)
+$(foreach s,                                              \
+  $(subst |,$(SPACE),$(subst $(SPACE),,$(shell          \
+    SET "GNUMAKEFLAGS=$(GNUMAKEFLAGS)"                 && \
+    SET "VERBOSE="                                     && \
+    SET "PATH=$(PATH)"                                 && \
+    SET "KERNEL_PARENT_PATH=.."                        && \
+    SET "RTS=$(RTS)"                                   && \
+    SET "TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)"             && \
+    SET "MULTILIB=$(GCC_MULTIDIR)"                     && \
+    "$(MAKE)" -C $(RTS_DIRECTORY)                         \
+      PROBEVARIABLES="LIBGNAT LIBGNARL" probevariables    \
+    2>nul))),$(eval $(subst ,$(SPACE),$(s))))
 else
-LIBGNAT_OBJECT  := "$(RTS_PATH)"/adalib/libgnat.a
-LIBGNARL_OBJECT := "$(RTS_PATH)"/adalib/libgnarl.a
+$(foreach s,                                           \
+  $(subst |,$(SPACE),$(subst $(SPACE),,$(shell       \
+    GNUMAKEFLAGS="$(GNUMAKEFLAGS)"                     \
+    VERBOSE=                                           \
+    PATH="$(PATH)"                                     \
+    KERNEL_PARENT_PATH=..                              \
+    RTS=$(RTS)                                         \
+    TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)                   \
+    MULTILIB=$(GCC_MULTIDIR)                           \
+    "$(MAKE)" -C $(RTS_DIRECTORY)                      \
+      PROBEVARIABLES="LIBGNAT LIBGNARL" probevariables \
+    2> /dev/null))),$(eval $(subst ,$(SPACE),$(s))))
 endif
-LIBADA_OBJECTS  := $(LIBGNAT_OBJECT) $(LIBGNARL_OBJECT)
-else
-LIBADA_OBJECTS  :=
-endif
+LIBGNAT_OBJECT  := $(RTS_DIRECTORY)/$(LIBGNAT)
+LIBGNARL_OBJECT := $(RTS_DIRECTORY)/$(LIBGNARL)
 
 ifeq ($(USE_CLIBRARY),Y)
 CLIBRARY_OBJECT := $(OBJECT_DIRECTORY)/libclibrary.a
@@ -959,6 +968,7 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
                       %,$(OBJECT_DIRECTORY)/%.ali, \
                       main $(IMPLICIT_ALI_UNITS)   \
                       )                            \
+                    $(EXTERNAL_ALIS)               \
                     > gnatbind_elab.lst            \
         ,[GNATBIND],b__main.adb)
 ifeq ($(OSTYPE),cmd)
@@ -1072,7 +1082,7 @@ endif
               $(LIBM_OBJECT)                        \
               $(CLIBRARY_OBJECT)                    \
               $(OBJECT_DIRECTORY)/libcore.a         \
-              $(LIBADA_OBJECTS)                     \
+              $(LIBGNARL_OBJECT) $(LIBGNAT_OBJECT)  \
               $(OBJECT_DIRECTORY)/libcpu.a          \
               $(OBJECT_DIRECTORY)/libplatform.a     \
               $(LIBGCC_OBJECT)                      \
@@ -1156,12 +1166,10 @@ libgcc.elf.lst: $(KERNEL_OUTFILE)
 
 .PHONY: kernel_libinfo
 kernel_libinfo:
-ifeq ($(USE_LIBADA),Y)
-kernel_libinfo: libgnat.lst libgnat.elf.lst libgnarl.lst libgnarl.elf.lst
-endif
 ifeq ($(USE_LIBGCC),Y)
 kernel_libinfo: libgcc.lst libgcc.elf.lst
 endif
+kernel_libinfo: libgnat.lst libgnat.elf.lst libgnarl.lst libgnarl.elf.lst
 
 .PHONY: kernel_info
 kernel_info: kernel_libinfo             \
@@ -1309,28 +1317,26 @@ ifneq ($(TOOLCHAIN_NAME),)
 	@$(call echo-print,"GCC VERSION:             $(GCC_VERSION)")
 	@$(call echo-print,"AS VERSION:              $(AS_VERSION)")
 	@$(call echo-print,"LD VERSION:              $(LD_VERSION)")
-	@$(call echo-print,"GCC MULTIDIR:            $(GCC_MULTIDIR)")
 endif
 	@$(call echo-print,"RTS:                     $(RTS)")
 	@$(call echo-print,"GNAT.ADC PROFILE:        $(PROFILE)")
 	@$(call echo-print,"ADA MODE:                $(ADA_MODE)")
-ifneq ($(RTS),)
-	@$(call echo-print,"RTS ROOT PATH:           $(RTS_ROOT_PATH)")
-	@$(call echo-print,"RTS PATH:                $(RTS_PATH)")
-endif
 ifeq ($(USE_LIBGCC),Y)
 	@$(call echo-print,"LIBGCC FILENAME:         $(LIBGCC_FILENAME)")
 endif
 ifeq ($(USE_LIBM),Y)
 	@$(call echo-print,"LIBM FILENAME:           $(LIBM_FILENAME)")
 endif
-	@$(call echo-print,"USE LIBADA:              $(USE_LIBADA)")
 	@$(call echo-print,"USE CLIBRARY:            $(USE_CLIBRARY)")
 	@$(call echo-print,"OPTIMIZATION LEVEL:      $(OPTIMIZATION_LEVEL)")
 ifneq ($(TOOLCHAIN_NAME),)
 	@$(call echo-print,"ADA GCC SWITCHES (RTS):  $(strip $(ADAC_SWITCHES_RTS))")
 	@$(call echo-print,"C GCC SWITCHES (RTS):    $(strip $(CC_SWITCHES_RTS))")
 	@$(call echo-print,"GCC SWITCHES (PLATFORM): $(strip $(GCC_SWITCHES_PLATFORM))")
+	@$(call echo-print,"GCC MULTIDIR:            $(GCC_MULTIDIR)")
+ifneq ($(RTS),)
+	@$(call echo-print,"RTS PATH:                $(RTS_PATH)")
+endif
 	@$(call echo-print,"LOWLEVEL FILES:          $(strip $(LOWLEVEL_FILES_PLATFORM))")
 	@$(call echo-print,"GCC SWITCHES (LOWLEVEL): $(strip $(GCC_SWITCHES_LOWLEVEL_PLATFORM))")
 	@$(call echo-print,"LD SCRIPT:               $(LD_SCRIPT)")
@@ -1446,18 +1452,6 @@ endif
 
 .PHONY: clean
 clean:
-ifeq ($(OSTYPE),cmd)
-	-IF EXIST $(LIBRARY_DIRECTORY)\    \
-          $(CHDIR) $(LIBRARY_DIRECTORY) && \
-          $(RM) *.*
-	-IF EXIST $(OBJECT_DIRECTORY)\                \
-          $(CHDIR) $(OBJECT_DIRECTORY)             && \
-          $(RM) *.*                                && \
-          $(RMDIR) ..\$(OBJECT_DIRECTORY)\ $(NULL)
-else
-	-$(RM) $(LIBRARY_DIRECTORY)/*
-	-$(RMDIR) $(OBJECT_DIRECTORY)/*
-endif
 	$(MAKE) $(MAKE_APPLICATION) clean
 	$(MAKE) $(MAKE_CLIBRARY) clean
 	$(MAKE) $(MAKE_CORE) clean
@@ -1472,6 +1466,25 @@ ifneq ($(PLATFORM),)
 ifeq ($(filter $(PLATFORM),$(PLATFORMS)),$(PLATFORM))
 	$(MAKE) $(MAKE_PLATFORM) clean
 endif
+endif
+ifeq ($(OSTYPE),cmd)
+	-IF EXIST $(LIBRARY_DIRECTORY)\    \
+          $(CHDIR) $(LIBRARY_DIRECTORY) && \
+          $(RM) *.*
+	-IF EXIST $(OBJECT_DIRECTORY)\                \
+          $(CHDIR) $(OBJECT_DIRECTORY)             && \
+          $(RM) *.*                                && \
+          $(RMDIR) ..\$(OBJECT_DIRECTORY)\ $(NULL)
+else
+	-$(RM) $(LIBRARY_DIRECTORY)/*
+	-$(RMDIR) $(OBJECT_DIRECTORY)/*
+endif
+ifeq ($(BUILD_MODE),GPRbuild)
+	$(call brief-command, \
+        $(GPRCLEAN)                      \
+                    -r                   \
+                    -P $(KERNEL_GPRFILE) \
+        ,[GPRCLEAN],$(KERNEL_GPRFILE))
 endif
 	-$(RM) $(CLEAN_OBJECTS)
 
@@ -1519,12 +1532,22 @@ libutils-gnat-wrapper:
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GNAT-wrapper install
 
 #
-# Probe a variable value.
+# Probe variable values.
 #
 # Example:
 # $ VERBOSE= PROBEVARIABLE="PLATFORMS" make probevariable 2> /dev/null
+# $ VERBOSE= PROBEVARIABLES="OSTYPE PLATFORMS" make probevariables 2> /dev/null
 #
+
 .PHONY: probevariable
 probevariable:
 	@$(call echo-print,"$($(PROBEVARIABLE))")
+
+.PHONY: probevariables
+probevariables:
+ifeq ($(OSTYPE),cmd)
+	@$(foreach v,$(PROBEVARIABLES),$(call echo-print,"$(v):=$($(v))|")&)
+else
+	@$(foreach v,$(PROBEVARIABLES),$(call echo-print,"$(v):=$($(v))|");)
+endif
 
