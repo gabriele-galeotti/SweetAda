@@ -182,8 +182,15 @@ package body LLutils
       (V : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8
       is
+      L : Interfaces.Unsigned_8;
+      H : Interfaces.Unsigned_8;
    begin
-      return Bits.ShL (V / 10, 4) + V mod 10;
+      L := V mod 10;
+      H := V / 10;
+      if L > 9 or else H > 9 then
+         raise Constraint_Error;
+      end if;
+      return Bits.ShL (H, 4) or L;
    end U8_To_BCD;
 
    ----------------------------------------------------------------------------
