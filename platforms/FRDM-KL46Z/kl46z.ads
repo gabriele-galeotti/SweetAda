@@ -55,14 +55,14 @@ pragma Style_Checks (Off);
    PS_PULLDOWN : constant := 0; -- Internal pulldown resistor is enabled on the corresponding pin, if the corresponding Port Pull Enable field is set.
    PS_PULLUP   : constant := 1; -- Internal pullup resistor is enabled on the corresponding pin, if the corresponding Port Pull Enable field is set.
 
-   MUX_ALT0     : constant := 2#001#; -- Pin disabled (analog).
-   MUX_ALT1     : constant := 2#001#; -- Alternative 1 (GPIO).
-   MUX_ALT2     : constant := 2#010#; -- Alternative 2 (chip-specific).
-   MUX_ALT3     : constant := 2#011#; -- Alternative 3 (chip-specific).
-   MUX_ALT4     : constant := 2#100#; -- Alternative 4 (chip-specific).
-   MUX_ALT5     : constant := 2#101#; -- Alternative 5 (chip-specific).
-   MUX_ALT6     : constant := 2#110#; -- Alternative 6 (chip-specific).
-   MUX_ALT7     : constant := 2#111#; -- Alternative 7 (chip-specific).
+   MUX_ALT0 : constant := 2#000#; -- Pin disabled (analog).
+   MUX_ALT1 : constant := 2#001#; -- Alternative 1 (GPIO).
+   MUX_ALT2 : constant := 2#010#; -- Alternative 2 (chip-specific).
+   MUX_ALT3 : constant := 2#011#; -- Alternative 3 (chip-specific).
+   MUX_ALT4 : constant := 2#100#; -- Alternative 4 (chip-specific).
+   MUX_ALT5 : constant := 2#101#; -- Alternative 5 (chip-specific).
+   MUX_ALT6 : constant := 2#110#; -- Alternative 6 (chip-specific).
+   MUX_ALT7 : constant := 2#111#; -- Alternative 7 (chip-specific).
    MUX_DISABLED renames MUX_ALT0;
    MUX_GPIO renames MUX_ALT1;
 
