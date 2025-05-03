@@ -246,7 +246,6 @@ EXTERNAL_ALIS      :=
 # initialize configuration dependencies
 CONFIGURE_DEPS           := Makefile.os.in Makefile.ut.in Makefile.fn.in \
                             Makefile.lb.in Makefile.tc.in
-GPRBUILD_DEPS            := ./$(KERNEL_GPRFILE)
 GPRBUILD_DEPS            :=
 CONFIGURE_FILES_PLATFORM :=
 
