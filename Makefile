@@ -198,6 +198,31 @@ ifeq ($(MAKECMDGOALS),rts)
 RTS_BUILD := $(RTS)
 endif
 
+# build flag and version control
+DOTSWEETADA := .sweetada
+
+# default kernel filenames
+KERNEL_CFGFILE := $(KERNEL_BASENAME).cfg
+KERNEL_DEPFILE := $(KERNEL_BASENAME).d
+KERNEL_OBJFILE := $(KERNEL_BASENAME).obj
+KERNEL_OUTFILE := $(KERNEL_BASENAME).o
+KERNEL_ROMFILE := $(KERNEL_BASENAME).rom
+
+# GNAT .adc filename
+GNATADC_FILENAME := gnat.adc
+
+# GPRbuild project
+KERNEL_GPRFILE := ./sweetada.gpr
+
+# GPRbuild configuration
+CONFIGUREGPR_FILENAME := configure.gpr
+
+# cleaning
+CLEAN_OBJECTS_COMMON     := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst \
+                            *.map *.o *.out* *.srec *.td *.tmp
+DISTCLEAN_OBJECTS_COMMON := $(GNATADC_FILENAME)      \
+                            $(CONFIGUREGPR_FILENAME)
+
 # default system parameters
 TOOLCHAIN_PREFIX   :=
 GPRBUILD_PREFIX    :=
@@ -212,8 +237,8 @@ USE_APPLICATION    := dummy
 OPTIMIZATION_LEVEL :=
 STACK_LIMIT        := 4096
 POSTBUILD_ROMFILE  :=
+LD_SCRIPT          := linker.lds
 KERNEL_ENTRY_POINT := _start
-
 IMPLICIT_ALI_UNITS :=
 EXTERNAL_OBJECTS   :=
 EXTERNAL_ALIS      :=
@@ -221,7 +246,7 @@ EXTERNAL_ALIS      :=
 # initialize configuration dependencies
 CONFIGURE_DEPS           := Makefile.os.in Makefile.ut.in Makefile.fn.in \
                             Makefile.lb.in Makefile.tc.in
-GPRBUILD_DEPS            :=
+GPRBUILD_DEPS            := $(KERNEL_GPRFILE)
 CONFIGURE_FILES_PLATFORM :=
 
 # read the master configuration file
@@ -317,32 +342,6 @@ RTSES := $(shell                               \
              PROBEVARIABLE=RTSES probevariable \
            2> /dev/null)
 endif
-
-# build flag and version control
-DOTSWEETADA := .sweetada
-
-# default kernel filenames
-KERNEL_CFGFILE := $(KERNEL_BASENAME).cfg
-KERNEL_DEPFILE := $(KERNEL_BASENAME).d
-KERNEL_OBJFILE := $(KERNEL_BASENAME).obj
-KERNEL_OUTFILE := $(KERNEL_BASENAME).o
-KERNEL_ROMFILE := $(KERNEL_BASENAME).rom
-
-# GNAT .adc filename
-GNATADC_FILENAME := gnat.adc
-
-# GPRbuild filenames
-KERNEL_GPRFILE        := sweetada.gpr
-CONFIGUREGPR_FILENAME := configure.gpr
-
-# default linker script name
-LD_SCRIPT := linker.lds
-
-# cleaning
-CLEAN_OBJECTS_COMMON     := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst \
-                            *.map *.o *.out* *.srec *.td *.tmp
-DISTCLEAN_OBJECTS_COMMON := $(GNATADC_FILENAME)      \
-                            $(CONFIGUREGPR_FILENAME)
 
 ################################################################################
 #                                                                              #
