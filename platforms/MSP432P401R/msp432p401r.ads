@@ -3235,12 +3235,15 @@ pragma Style_Checks (Off);
    -- 24 Enhanced Universal Serial Communication Interface (eUSCI) – UART Mode
    ----------------------------------------------------------------------------
 
-   -- 24.4.1 UCAxCTLW0 Register Control Word Register 0
+   -- 24.4.1 UCAxCTLW0 Register eUSCI_Ax Control Word Register 0
 
    UCSSELx_UCLK    : constant := 2#00#; -- UCLK
    UCSSELx_ACLK    : constant := 2#01#; -- ACLK
    UCSSELx_SMCLK   : constant := 2#10#; -- SMCLK
    UCSSELx_SMCLK_2 : constant := 2#11#; -- SMCLK
+
+   UCSYNC_ASYNC : constant := 0; -- Asynchronous mode
+   UCSYNC_SYNC  : constant := 1; -- Synchronous mode
 
    UCMODEx_UART         : constant := 2#00#; -- UART mode
    UCMODEx_IDLEMP       : constant := 2#01#; -- Idle-line multiprocessor mode
@@ -3259,7 +3262,7 @@ pragma Style_Checks (Off);
    UCPAR_ODD  : constant := 0; -- Odd parity
    UCPAR_EVEN : constant := 1; -- Even parity
 
-   type UCAxCTLW0_Type is record
+   type UCAxCTLW0_UART_Type is record
       UCSWRST  : Boolean := False;        -- Software reset enable
       UCTXBRK  : Boolean := False;        -- Transmit break.
       UCTXADDR : Boolean := False;        -- Transmit address.
@@ -3267,7 +3270,7 @@ pragma Style_Checks (Off);
       UCBRKIE  : Boolean := False;        -- Receive break character interrupt enable
       UCRXEIE  : Boolean := False;        -- Receive erroneous-character interrupt enable
       UCSSELx  : Bits_2  := 0;            -- eUSCI_A clock source select.
-      UCSYNC   : Boolean := False;        -- Synchronous mode enable
+      UCSYNC   : Bits_1  := UCSYNC_ASYNC; -- Synchronous mode enable
       UCMODEx  : Bits_2  := UCMODEx_UART; -- eUSCI_A mode.
       UCSPB    : Bits_1  := UCSPB_1;      -- Stop bit select.
       UC7BIT   : Bits_1  := UC7BIT_8;     -- Character length.
@@ -3277,7 +3280,7 @@ pragma Style_Checks (Off);
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
-   for UCAxCTLW0_Type use record
+   for UCAxCTLW0_UART_Type use record
       UCSWRST  at 0 range  0 ..  0;
       UCTXBRK  at 0 range  1 ..  1;
       UCTXADDR at 0 range  2 ..  2;
@@ -3294,27 +3297,38 @@ pragma Style_Checks (Off);
       UCPEN    at 0 range 15 .. 15;
    end record;
 
-   -- 24.4.2 UCAxCTLW1 Register Control Word Register 1
+   -- 24.4.2 UCAxCTLW1 Register eUSCI_Ax Control Word Register 1
 
    UCGLITx_5ns  : constant := 2#00#; -- Approximately 5 ns
    UCGLITx_20ns : constant := 2#01#; -- Approximately 20 ns
    UCGLITx_30ns : constant := 2#10#; -- Approximately 30 ns
    UCGLITx_50ns : constant := 2#11#; -- Approximately 50 ns
 
-   type UCAxCTLW1_Type is record
+   type UCAxCTLW1_UART_Type is record
       UCGLITx  : Bits_2  := UCGLITx_50ns; -- Deglitch time
       Reserved : Bits_14 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
-   for UCAxCTLW1_Type use record
+   for UCAxCTLW1_UART_Type use record
       UCGLITx  at 0 range 0 ..  1;
       Reserved at 0 range 2 .. 15;
    end record;
 
-   -- 24.4.4 UCAxMCTLW Register Modulation Control Word Register
+   -- 24.4.3 UCAxBRW Register eUSCI_Ax Baud Rate Control Word Register
 
-   type UCAxMCTLW_Type is record
+   type UCAxBRW_UART_Type is record
+      UCBRx : Unsigned_16 := 0; -- Clock prescaler setting of the baud-rate generator
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for UCAxBRW_UART_Type use record
+      UCBRx at 0 range 0 .. 15;
+   end record;
+
+   -- 24.4.4 UCAxMCTLW Register eUSCI_Ax Modulation Control Word Register
+
+   type UCAxMCTLW_UART_Type is record
       UCOS16   : Boolean := False; -- Oversampling mode enabled
       Reserved : Bits_3  := 0;
       UCBRFx   : Bits_4  := 0;     -- First modulation stage select.
@@ -3322,16 +3336,16 @@ pragma Style_Checks (Off);
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
-   for UCAxMCTLW_Type use record
+   for UCAxMCTLW_UART_Type use record
       UCOS16   at 0 range 0 ..  0;
       Reserved at 0 range 1 ..  3;
       UCBRFx   at 0 range 4 ..  7;
       UCBRSx   at 0 range 8 .. 15;
    end record;
 
-   -- 24.4.5 UCAxSTATW Register Status Register
+   -- 24.4.5 UCAxSTATW Register eUSCI_Ax Status Register
 
-   type UCAxSTATW_Type is record
+   type UCAxSTATW_UART_Type is record
       UCBUSY        : Boolean := False; -- eUSCI_A busy.
       UCADDR_UCIDLE : Boolean := False; -- UCADDR: Address received in address-bit multiprocessor mode. UCADDR is cleared when UCAxRXBUF is read. UCIDLE: Idle line detected in idle-line multiprocessor mode. UCIDLE is cleared when UCAxRXBUF is read.
       UCRXERR       : Boolean := False; -- Receive error flag.
@@ -3344,7 +3358,7 @@ pragma Style_Checks (Off);
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
-   for UCAxSTATW_Type use record
+   for UCAxSTATW_UART_Type use record
       UCBUSY        at 0 range 0 ..  0;
       UCADDR_UCIDLE at 0 range 1 ..  1;
       UCRXERR       at 0 range 2 ..  2;
@@ -3356,40 +3370,40 @@ pragma Style_Checks (Off);
       Reserved      at 0 range 8 .. 15;
    end record;
 
-   -- 24.4.6 UCAxRXBUF Register
+   -- 24.4.6 UCAxRXBUF Register eUSCI_Ax Receive Buffer Register
 
-   type UCAxRXBUF_Type is record
+   type UCAxRXBUF_UART_Type is record
       UCRXBUFx : Unsigned_8;      -- The receive-data buffer is user accessible and contains the last received character from the receive shift register.
       Reserved : Bits_8     := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
-   for UCAxRXBUF_Type use record
+   for UCAxRXBUF_UART_Type use record
       UCRXBUFx at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 15;
    end record;
 
-   -- 24.4.7 UCAxTXBUF Register Transmit Buffer Register
+   -- 24.4.7 UCAxTXBUF Register eUSCI_Ax Transmit Buffer Register
 
-   type UCAxTXBUF_Type is record
+   type UCAxTXBUF_UART_Type is record
       UCTXBUFx : Unsigned_8;      -- The transmit data buffer is user accessible and holds the data waiting to be moved into the transmit shift register and transmitted on UCAxTXD.
       Reserved : Bits_8     := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
-   for UCAxTXBUF_Type use record
+   for UCAxTXBUF_UART_Type use record
       UCTXBUFx at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 15;
    end record;
 
-   -- 24.4.8 UCAxABCTL Register Auto Baud Rate Control Register
+   -- 24.4.8 UCAxABCTL Register eUSCI_Ax Auto Baud Rate Control Register
 
    UCDELIMx_1 : constant := 2#00#; -- 1 bit time
    UCDELIMx_2 : constant := 2#01#; -- 2 bit times
    UCDELIMx_3 : constant := 2#10#; -- 3 bit times
    UCDELIMx_4 : constant := 2#11#; -- 4 bit times
 
-   type UCAxABCTL_Type is record
+   type UCAxABCTL_UART_Type is record
       UCABDEN   : Boolean := False;      -- Automatic baud-rate detect enable
       Reserved1 : Bits_1  := 0;
       UCBTOE    : Boolean := False;      -- Break time out error
@@ -3399,7 +3413,7 @@ pragma Style_Checks (Off);
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
-   for UCAxABCTL_Type use record
+   for UCAxABCTL_UART_Type use record
       UCABDEN   at 0 range 0 ..  0;
       Reserved1 at 0 range 1 ..  1;
       UCBTOE    at 0 range 2 ..  2;
@@ -3408,7 +3422,7 @@ pragma Style_Checks (Off);
       Reserved2 at 0 range 6 .. 15;
    end record;
 
-   -- 24.4.9 UCAxIRCTL Register IrDA Control Word Register
+   -- 24.4.9 UCAxIRCTL Register eUSCI_Ax IrDA Control Word Register
 
    UCIRTXCLK_BRCLK          : constant := 0; -- BRCLK
    UCIRTXCLK_UCOS16BITCLK16 : constant := 1; -- BITCLK16 when UCOS16 = 1. Otherwise, BRCLK.
@@ -3416,7 +3430,7 @@ pragma Style_Checks (Off);
    UCIRRXPL_HI : constant := 0; -- IrDA transceiver delivers a high pulse when a light pulse is seen.
    UCIRRXPL_LO : constant := 1; -- IrDA transceiver delivers a low pulse when a light pulse is seen.
 
-   type UCAxIRCTL_Type is record
+   type UCAxIRCTL_UART_Type is record
       UCIREN    : Boolean := False;           -- IrDA encoder and decoder enable
       UCIRTXCLK : Bits_1  := UCIRTXCLK_BRCLK; -- IrDA transmit pulse clock select
       UCIRTXPLx : Bits_6  := 0;               -- Transmit pulse length.
@@ -3426,7 +3440,7 @@ pragma Style_Checks (Off);
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
-   for UCAxIRCTL_Type use record
+   for UCAxIRCTL_UART_Type use record
       UCIREN    at 0 range  0 ..  0;
       UCIRTXCLK at 0 range  1 ..  1;
       UCIRTXPLx at 0 range  2 ..  7;
@@ -3435,9 +3449,9 @@ pragma Style_Checks (Off);
       UCIRRXFLx at 0 range 10 .. 15;
    end record;
 
-   -- 24.4.10 UCAxIE Register Interrupt Enable Register
+   -- 24.4.10 UCAxIE Register eUSCI_Ax Interrupt Enable Register
 
-   type UCAxIE_Type is record
+   type UCAxIE_UART_Type is record
       UCRXIE    : Boolean := False; -- Receive interrupt enable
       UCTXIE    : Boolean := False; -- Transmit interrupt enable
       UCSTTIE   : Boolean := False; -- Start bit interrupt enable
@@ -3446,7 +3460,7 @@ pragma Style_Checks (Off);
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
-   for UCAxIE_Type use record
+   for UCAxIE_UART_Type use record
       UCRXIE    at 0 range 0 ..  0;
       UCTXIE    at 0 range 1 ..  1;
       UCSTTIE   at 0 range 2 ..  2;
@@ -3454,9 +3468,9 @@ pragma Style_Checks (Off);
       Reserved  at 0 range 4 .. 15;
    end record;
 
-   -- 24.4.11 UCAxIFG Register Interrupt Flag Register
+   -- 24.4.11 UCAxIFG Register eUSCI_Ax Interrupt Flag Register
 
-   type UCAxIFG_Type is record
+   type UCAxIFG_UART_Type is record
       UCRXIFG    : Boolean := False; -- Receive interrupt flag.
       UCTXIFG    : Boolean := False; -- Transmit interrupt flag.
       UCSTTIFG   : Boolean := False; -- Start bit interrupt flag.
@@ -3465,7 +3479,7 @@ pragma Style_Checks (Off);
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
-   for UCAxIFG_Type use record
+   for UCAxIFG_UART_Type use record
       UCRXIFG    at 0 range 0 ..  0;
       UCTXIFG    at 0 range 1 ..  1;
       UCSTTIFG   at 0 range 2 ..  2;
@@ -3473,32 +3487,41 @@ pragma Style_Checks (Off);
       Reserved   at 0 range 4 .. 15;
    end record;
 
-   -- 24.4.12 UCAxIV Register Interrupt Vector Register
+   -- 24.4.12 UCAxIV Register eUSCI_Ax Interrupt Vector Register
 
-   UCAxIV_NONE    : constant := 16#00#; -- No interrupt pending
-   UCAxIV_RXFULL  : constant := 16#02#; -- Interrupt Source: Receive buffer full; Interrupt Flag: UCRXIFG; Interrupt Priority: Highest
-   UCAxIV_TXEMPTY : constant := 16#04#; -- Interrupt Source: Transmit buffer empty; Interrupt Flag: UCTXIFG
-   UCAxIV_START   : constant := 16#06#; -- Interrupt Source: Start bit received; Interrupt Flag: UCSTTIFG
-   UCAxIV_TXDONE  : constant := 16#08#; -- Interrupt Source: Transmit complete; Interrupt Flag: UCTXCPTIFG; Interrupt Priority: Lowest
+   UCAxIV_NONE    : constant := 16#0#; -- No interrupt pending
+   UCAxIV_RXFULL  : constant := 16#2#; -- Interrupt Source: Receive buffer full; Interrupt Flag: UCRXIFG; Interrupt Priority: Highest
+   UCAxIV_TXEMPTY : constant := 16#4#; -- Interrupt Source: Transmit buffer empty; Interrupt Flag: UCTXIFG
+   UCAxIV_START   : constant := 16#6#; -- Interrupt Source: Start bit received; Interrupt Flag: UCSTTIFG
+   UCAxIV_TXDONE  : constant := 16#8#; -- Interrupt Source: Transmit complete; Interrupt Flag: UCTXCPTIFG; Interrupt Priority: Lowest
+
+   type UCAxIV_UART_Type is record
+      UCIVx : Unsigned_16; -- eUSCI_A interrupt vector value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for UCAxIV_UART_Type use record
+      UCIVx at 0 range 0 .. 15;
+   end record;
 
    -- 24.4 eUSCI_A UART Registers
 
-   type eUSCI_Ax_Type is record
-      UCAxCTLW0 : UCAxCTLW0_Type with Volatile_Full_Access => True;
-      UCAxCTLW1 : UCAxCTLW1_Type with Volatile_Full_Access => True;
-      UCAxBRW   : Unsigned_16    with Volatile_Full_Access => True;
-      UCAxMCTLW : UCAxMCTLW_Type with Volatile_Full_Access => True;
-      UCAxSTATW : UCAxSTATW_Type with Volatile_Full_Access => True;
-      UCAxRXBUF : UCAxRXBUF_Type with Volatile_Full_Access => True;
-      UCAxTXBUF : UCAxTXBUF_Type with Volatile_Full_Access => True;
-      UCAxABCTL : UCAxABCTL_Type with Volatile_Full_Access => True;
-      UCAxIRCTL : UCAxIRCTL_Type with Volatile_Full_Access => True;
-      UCAxIE    : UCAxIE_Type    with Volatile_Full_Access => True;
-      UCAxIFG   : UCAxIFG_Type   with Volatile_Full_Access => True;
-      UCAxIV    : Unsigned_16    with Volatile_Full_Access => True;
+   type eUSCI_Ax_UART_Type is record
+      UCAxCTLW0 : UCAxCTLW0_UART_Type with Volatile_Full_Access => True;
+      UCAxCTLW1 : UCAxCTLW1_UART_Type with Volatile_Full_Access => True;
+      UCAxBRW   : UCAxBRW_UART_Type   with Volatile_Full_Access => True;
+      UCAxMCTLW : UCAxMCTLW_UART_Type with Volatile_Full_Access => True;
+      UCAxSTATW : UCAxSTATW_UART_Type with Volatile_Full_Access => True;
+      UCAxRXBUF : UCAxRXBUF_UART_Type with Volatile_Full_Access => True;
+      UCAxTXBUF : UCAxTXBUF_UART_Type with Volatile_Full_Access => True;
+      UCAxABCTL : UCAxABCTL_UART_Type with Volatile_Full_Access => True;
+      UCAxIRCTL : UCAxIRCTL_UART_Type with Volatile_Full_Access => True;
+      UCAxIE    : UCAxIE_UART_Type    with Volatile_Full_Access => True;
+      UCAxIFG   : UCAxIFG_UART_Type   with Volatile_Full_Access => True;
+      UCAxIV    : UCAxIV_UART_Type    with Volatile_Full_Access => True;
    end record
       with Size => 16#20# * 8;
-   for eUSCI_Ax_Type use record
+   for eUSCI_Ax_UART_Type use record
       UCAxCTLW0 at 16#00# range 0 .. 15;
       UCAxCTLW1 at 16#02# range 0 .. 15;
       UCAxBRW   at 16#06# range 0 .. 15;
@@ -3513,12 +3536,219 @@ pragma Style_Checks (Off);
       UCAxIV    at 16#1E# range 0 .. 15;
    end record;
 
-   -- Table 6-6. eUSCI_A0 Registers
+   -- Table 6-6. eUSCI_A0 UART Registers
 
-   eUSCI_A0_ADDRESS : constant := 16#4000_1000#;
+   eUSCI_A0_UART_ADDRESS : constant := 16#4000_1000#;
 
-   eUSCI_A0 : aliased eUSCI_Ax_Type
-      with Address    => System'To_Address (eUSCI_A0_ADDRESS),
+   eUSCI_A0_UART : aliased eUSCI_Ax_UART_Type
+      with Address    => System'To_Address (eUSCI_A0_UART_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 25 Enhanced Universal Serial Communication Interface (eUSCI) – SPI Mode
+   ----------------------------------------------------------------------------
+
+   -- 25.4.1 UCAxCTLW0 Register eUSCI_Ax Control Register 0
+
+   UCSTEM_NONE   : constant := 0; -- STE pin is used to prevent conflicts with other masters
+   UCSTEM_ENABLE : constant := 1; -- STE pin is used to generate the enable signal for a 4-wire slave
+
+   UCSSELx_RSVD    : constant := 2#00#; -- Reserved
+   -- already defined at 24.4.1
+   -- UCSSELx_ACLK    : constant := 2#01#; -- ACLK
+   -- UCSSELx_SMCLK   : constant := 2#10#; -- SMCLK
+   -- UCSSELx_SMCLK_2 : constant := 2#11#; -- SMCLK
+
+   -- already defined at 24.4.1
+   -- UCSYNC_ASYNC : constant := 0; -- Asynchronous mode
+   -- UCSYNC_SYNC  : constant := 1; -- Synchronous mode
+
+   UCMODEx_SPI3  : constant := 2#00#; -- 3-pin SPI
+   UCMODEx_SPI4H : constant := 2#01#; -- 4-pin SPI with UCxSTE active high: Slave enabled when UCxSTE = 1
+   UCMODEx_SPI4L : constant := 2#10#; -- 4-pin SPI with UCxSTE active low: Slave enabled when UCxSTE = 0
+   UCMODEx_I2C   : constant := 2#11#; -- I2C mode
+
+   UCMST_SLAVE  : constant := 0; -- Slave mode
+   UCMST_MASTER : constant := 1; -- Master mode
+
+   -- already defined at 24.4.1
+   -- UC7BIT_8 : constant := 0; -- 8-bit data
+   -- UC7BIT_7 : constant := 1; -- 7-bit data
+
+   -- already defined at 24.4.1
+   -- UCMSB_LSB : constant := 0; -- LSB first
+   -- UCMSB_MSB : constant := 1; -- MSB first
+
+   UCCKPL_INACTIVEL : constant := 0; -- The inactive state is low.
+   UCCKPL_INACTIVEH : constant := 1; -- The inactive state is high.
+
+   UCCKPH_CHGCAP : constant := 0; -- Data is changed on the first UCLK edge and captured on the following edge.
+   UCCKPH_CAPCHG : constant := 1; -- Data is captured on the first UCLK edge and changed on the following edge.
+
+   type UCAxCTLW0_SPI_Type is record
+      UCSWRST  : Boolean := True;             -- Software reset enable
+      UCSTEM   : Bits_1  := UCSTEM_NONE;      -- STE mode select in master mode.
+      Reserved : Bits_4  := 0;
+      UCSSELx  : Bits_2  := UCSSELx_RSVD;     -- eUSCI clock source select.
+      UCSYNC   : Bits_1  := UCSYNC_ASYNC;     -- Synchronous mode enable
+      UCMODEx  : Bits_2  := UCMODEx_SPI3;     -- eUSCI mode.
+      UCMST    : Bits_1  := UCMST_SLAVE;      -- Master mode select
+      UC7BIT   : Bits_1  := UC7BIT_8;         -- Character length.
+      UCMSB    : Bits_1  := UCMSB_LSB;        -- MSB first select.
+      UCCKPL   : Bits_1  := UCCKPL_INACTIVEL; -- Clock polarity select
+      UCCKPH   : Bits_1  := UCCKPH_CHGCAP;    -- Clock phase select
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for UCAxCTLW0_SPI_Type use record
+      UCSWRST  at 0 range  0 ..  0;
+      UCSTEM   at 0 range  1 ..  1;
+      Reserved at 0 range  2 ..  5;
+      UCSSELx  at 0 range  6 ..  7;
+      UCSYNC   at 0 range  8 ..  8;
+      UCMODEx  at 0 range  9 .. 10;
+      UCMST    at 0 range 11 .. 11;
+      UC7BIT   at 0 range 12 .. 12;
+      UCMSB    at 0 range 13 .. 13;
+      UCCKPL   at 0 range 14 .. 14;
+      UCCKPH   at 0 range 15 .. 15;
+   end record;
+
+   -- 25.4.2 UCAxBRW Register eUSCI_Ax Bit Rate Control Register 1
+
+   type UCAxBRW_SPI_Type is record
+      UCBRx : Unsigned_16; -- Bit clock prescaler setting
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for UCAxBRW_SPI_Type use record
+      UCBRx at 0 range 0 .. 15;
+   end record;
+
+   -- 25.4.3 UCAxSTATW Register eUSCI_Ax Status Register
+
+   type UCAxSTATW_SPI_Type is record
+      UCBUSY    : Boolean := False; -- eUSCI busy.
+      Reserved1 : Bits_4  := 0;
+      UCOE      : Boolean := False; -- Overrun error flag.
+      UCFE      : Boolean := False; -- Framing error flag.
+      UCLISTEN  : Boolean := False; -- Listen enable.
+      Reserved2 : Bits_8  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for UCAxSTATW_SPI_Type use record
+      UCBUSY    at 0 range 0 ..  0;
+      Reserved1 at 0 range 1 ..  4;
+      UCOE      at 0 range 5 ..  5;
+      UCFE      at 0 range 6 ..  6;
+      UCLISTEN  at 0 range 7 ..  7;
+      Reserved2 at 0 range 8 .. 15;
+   end record;
+
+   -- 25.4.4 UCAxRXBUF Register eUSCI_Ax Receive Buffer Register
+
+   type UCAxRXBUF_SPI_Type is record
+      UCRXBUFx : Bits_8 := 0; -- The receive-data buffer is user accessible and contains the last received character from the receive shift register.
+      Reserved : Bits_8 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for UCAxRXBUF_SPI_Type use record
+      UCRXBUFx at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 15;
+   end record;
+
+   -- 25.4.5 UCAxTXBUF Register eUSCI_Ax Transmit Buffer Register
+
+   type UCAxTXBUF_SPI_Type is record
+      UCTXBUFx : Bits_8 := 0; -- The transmit data buffer is user accessible and holds the data waiting to be moved into the transmit shift register and transmitted.
+      Reserved : Bits_8 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for UCAxTXBUF_SPI_Type use record
+      UCTXBUFx at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 15;
+   end record;
+
+   -- 25.4.6 UCAxIE Register eUSCI_Ax Interrupt Enable Register
+
+   type UCAxIE_SPI_Type is record
+      UCRXIE   : Boolean := False; -- Receive interrupt enable
+      UCTXIE   : Boolean := False; -- Transmit interrupt enable
+      Reserved : Bits_14 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for UCAxIE_SPI_Type use record
+      UCRXIE   at 0 range 0 ..  0;
+      UCTXIE   at 0 range 1 ..  1;
+      Reserved at 0 range 2 .. 15;
+   end record;
+
+   -- 25.4.7 UCAxIFG Register eUSCI_Ax Interrupt Flag Register
+
+   type UCAxIFG_SPI_Type is record
+      UCRXIFG  : Boolean := False; -- Receive interrupt flag.
+      UCTXIFG  : Boolean := False; -- Transmit interrupt flag.
+      Reserved : Bits_14 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for UCAxIFG_SPI_Type use record
+      UCRXIFG  at 0 range 0 ..  0;
+      UCTXIFG  at 0 range 1 ..  1;
+      Reserved at 0 range 2 .. 15;
+   end record;
+
+   -- 25.4.8 UCAxIV Register eUSCI_Ax Interrupt Vector Register
+
+   UCIVx_NONE : constant := 16#0#; -- No interrupt pending
+   UCIVx_RX   : constant := 16#2#; -- Interrupt Source: Data received; Interrupt Flag: UCRXIFG; Interrupt Priority: Highest
+   UCIVx_TBE  : constant := 16#4#; -- Interrupt Source: Transmit buffer empty; Interrupt Flag: UCTXIFG; Interrupt Priority: Lowest
+
+   type UCAxIV_SPI_Type is record
+      UCIVx : Unsigned_16; -- eUSCI interrupt vector value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for UCAxIV_SPI_Type use record
+      UCIVx at 0 range 0 .. 15;
+   end record;
+
+   -- 25.4 eUSCI_A SPI Registers
+
+   type eUSCI_Ax_SPI_Type is record
+      UCAxCTLW0 : UCAxCTLW0_SPI_Type with Volatile_Full_Access => True;
+      UCAxBRW   : UCAxBRW_SPI_Type   with Volatile_Full_Access => True;
+      UCAxSTATW : UCAxSTATW_SPI_Type with Volatile_Full_Access => True;
+      UCAxRXBUF : UCAxRXBUF_SPI_Type with Volatile_Full_Access => True;
+      UCAxTXBUF : UCAxTXBUF_SPI_Type with Volatile_Full_Access => True;
+      UCAxIE    : UCAxIE_SPI_Type    with Volatile_Full_Access => True;
+      UCAxIFG   : UCAxIFG_SPI_Type   with Volatile_Full_Access => True;
+      UCAxIV    : UCAxIV_SPI_Type    with Volatile_Full_Access => True;
+   end record
+      with Size => 16#20# * 8;
+   for eUSCI_Ax_SPI_Type use record
+      UCAxCTLW0 at 16#00# range 0 .. 15;
+      UCAxBRW   at 16#06# range 0 .. 15;
+      UCAxSTATW at 16#0A# range 0 .. 15;
+      UCAxRXBUF at 16#0C# range 0 .. 15;
+      UCAxTXBUF at 16#0E# range 0 .. 15;
+      UCAxIE    at 16#1A# range 0 .. 15;
+      UCAxIFG   at 16#1C# range 0 .. 15;
+      UCAxIV    at 16#1E# range 0 .. 15;
+   end record;
+
+   -- Table 6-6. eUSCI_A0 UART Registers
+
+   eUSCI_A0_SPI_ADDRESS : constant := 16#4000_1000#;
+
+   eUSCI_A0_SPI : aliased eUSCI_Ax_SPI_Type
+      with Address    => System'To_Address (eUSCI_A0_SPI_ADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
