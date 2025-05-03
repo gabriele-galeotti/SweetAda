@@ -78,8 +78,8 @@ package body BSP
       is
    begin
       -- wait for transmitter available
-      loop exit when not eUSCI_A0.UCAxSTATW.UCBUSY; end loop;
-      eUSCI_A0.UCAxTXBUF.UCTXBUFx := To_U8 (C);
+      loop exit when not eUSCI_A0_UART.UCAxSTATW.UCBUSY; end loop;
+      eUSCI_A0_UART.UCAxTXBUF.UCTXBUFx := To_U8 (C);
    end Console_Putchar;
 
    procedure Console_Getchar
@@ -113,19 +113,19 @@ package body BSP
       -- clock setup ----------------------------------------------------------
       Clocks.Init;
       -- USCI_A0 --------------------------------------------------------------
-      eUSCI_A0.UCAxCTLW0.UCSWRST := True;
-      eUSCI_A0.UCAxIRCTL.UCIREN := False;
-      eUSCI_A0.UCAxBRW := 78; -- 9600 bps @ SMCLK = 12 MHz
-      eUSCI_A0.UCAxMCTLW := (
+      eUSCI_A0_UART.UCAxCTLW0.UCSWRST := True;
+      eUSCI_A0_UART.UCAxIRCTL.UCIREN := False;
+      eUSCI_A0_UART.UCAxBRW.UCBRx := 78; -- 9600 bps @ SMCLK = 12 MHz
+      eUSCI_A0_UART.UCAxMCTLW := (
          UCOS16 => True,
          UCBRFx => 2,
          UCBRSx => 0,
          others => <>
          );
-      eUSCI_A0.UCAxCTLW0 := (
+      eUSCI_A0_UART.UCAxCTLW0 := (
          UCSWRST => True,
          UCSSELx => UCSSELx_SMCLK,
-         UCSYNC  => False,
+         UCSYNC  => UCSYNC_ASYNC,
          UCMODEx => UCMODEx_UART,
          UCSPB   => UCSPB_1,
          UC7BIT  => UC7BIT_8,
@@ -142,7 +142,7 @@ package body BSP
       P1.PxSEL0 (3) := True;
       P1.PxSEL1 (3) := False;
       P1.PxREN  (3) := False;
-      eUSCI_A0.UCAxCTLW0.UCSWRST := False;
+      eUSCI_A0_UART.UCAxCTLW0.UCSWRST := False;
       -------------------------------------------------------------------------
       Exceptions.Init;
       -- Console --------------------------------------------------------------
