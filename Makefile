@@ -212,7 +212,7 @@ KERNEL_ROMFILE := $(KERNEL_BASENAME).rom
 GNATADC_FILENAME := gnat.adc
 
 # GPRbuild project
-KERNEL_GPRFILE := ./sweetada.gpr
+KERNEL_GPRFILE := sweetada.gpr
 
 # GPRbuild configuration
 CONFIGUREGPR_FILENAME := configure.gpr
@@ -246,7 +246,7 @@ EXTERNAL_ALIS      :=
 # initialize configuration dependencies
 CONFIGURE_DEPS           := Makefile.os.in Makefile.ut.in Makefile.fn.in \
                             Makefile.lb.in Makefile.tc.in
-GPRBUILD_DEPS            := $(KERNEL_GPRFILE)
+GPRBUILD_DEPS            := ./$(KERNEL_GPRFILE)
 CONFIGURE_FILES_PLATFORM :=
 
 # read the master configuration file
