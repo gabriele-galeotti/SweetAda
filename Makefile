@@ -247,6 +247,7 @@ EXTERNAL_ALIS      :=
 CONFIGURE_DEPS           := Makefile.os.in Makefile.ut.in Makefile.fn.in \
                             Makefile.lb.in Makefile.tc.in
 GPRBUILD_DEPS            := ./$(KERNEL_GPRFILE)
+GPRBUILD_DEPS            :=
 CONFIGURE_FILES_PLATFORM :=
 
 # read the master configuration file
@@ -326,12 +327,12 @@ endif
 
 # RTSes
 ifeq ($(OSTYPE),cmd)
-RTSES := $(shell                                 \
-           SET "GNUMAKEFLAGS=$(GNUMAKEFLAGS)" && \
-           SET "PATH=$(PATH)"                 && \
-           SET "KERNEL_PARENT_PATH=.."        && \
-           "$(MAKE)" -C $(RTS_DIRECTORY)         \
-             PROBEVARIABLE=RTSES probevariable   \
+RTSES := $(shell                                  \
+           SET "GNUMAKEFLAGS=$(GNUMAKEFLAGS)"  && \
+           SET "PATH=$(PATH)"                  && \
+           SET "KERNEL_PARENT_PATH=.."         && \
+           "$(MAKE)" -C $(RTS_DIRECTORY)          \
+             PROBEVARIABLE=RTSES probevariable    \
            2>nul)
 else
 RTSES := $(shell                               \
@@ -1477,13 +1478,6 @@ ifeq ($(OSTYPE),cmd)
 else
 	-$(RM) $(LIBRARY_DIRECTORY)/*
 	-$(RMDIR) $(OBJECT_DIRECTORY)/*
-endif
-ifeq ($(BUILD_MODE),GPRbuild)
-	$(call brief-command, \
-        $(GPRCLEAN)                      \
-                    -r                   \
-                    -P $(KERNEL_GPRFILE) \
-        ,[GPRCLEAN],$(KERNEL_GPRFILE))
 endif
 	-$(RM) $(CLEAN_OBJECTS)
 
