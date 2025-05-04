@@ -134,11 +134,5 @@ USE_ELFTOOL := Y
 
 ADA_MODE := ADA22
 
-#RTS := zfp
-RTS := sfp
-
-#PROFILE := zfp
-PROFILE := sfp
-
 OPTIMIZATION_LEVEL := 1
 
