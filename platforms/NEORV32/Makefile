@@ -19,8 +19,8 @@ $(error Error: invalid OBJECT_DIRECTORY)
 endif
 
 include $(KERNEL_PARENT_PATH)/Makefile.os.in
-include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
+include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 
 # shorthands
 LIB_DIRECTORY     := $(KERNEL_PARENT_PATH)/$(LIBRARY_DIRECTORY)

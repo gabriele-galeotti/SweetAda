@@ -12,8 +12,9 @@ ifeq ($(KERNEL_PARENT_PATH),)
 $(error Error: invalid KERNEL_PARENT_PATH)
 endif
 
-include $(KERNEL_PARENT_PATH)/Makefile.fn.in
+include $(KERNEL_PARENT_PATH)/Makefile.os.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
+include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 
 -include Makefile.if.in
 
