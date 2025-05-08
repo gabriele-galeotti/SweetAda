@@ -103,7 +103,7 @@ package body BSP
    begin
       -- 34.3.7 SCI Initialization in Asynchronous Mode
       SCI (3).SCR := (
-         CKE    => CKE_Async_On_Chip_BRG_SCK_IO,
+         CKE    => CKE_ASYNC_ONCHIP_SCK_IO,
          TEIE   => False,
          RE     => False,
          TE     => False,
@@ -116,7 +116,7 @@ package body BSP
       SCI (3).SPMR := (
          SSE    => False,
          CTSE   => False,
-         MSS    => MSS_Master,
+         MSS    => MSS_MASTER,
          MFF    => False,
          CKPOL  => CKPOL_NORMAL,
          CKPH   => CKPH_NORMAL,
@@ -139,7 +139,7 @@ package body BSP
          others  => <>
          );
       SCI (3).SMR.NORMAL := (
-         CKS  => CKS_PCLKA, -- n = 0
+         CKS  => CKS_PCLKA_DIV1, -- n = 0
          MP   => False,
          STOP => STOP_1,
          PM   => PM_EVEN,
@@ -149,14 +149,14 @@ package body BSP
          );
       -- Table 34.10 Examples of BRR settings for different bit rates in asynchronous mode (2)
       -- 9600 bps @ 30 MHz (n = 0)
-      SCI (3).BRR := Unsigned_8 (Clocks.CLK_PCKA / (64 / 2 * 9_600) - 1);
+      SCI (3).BRR.BITRATE := Unsigned_8 (Clocks.CLK_PCKA / (64 / 2 * 9_600) - 1);
       -- pin 706 function = SCI2, RxD
       PFSR (P706) := (PMR => True, PSEL => PSEL_SCI2, others => <>);
       -- pin 707 function = SCI2, TxD
       PFSR (P707) := (PMR => True, PSEL => PSEL_SCI2, others => <>);
       -- enable TE/RE
       SCI (3).SCR := (
-         CKE    => CKE_Async_On_Chip_BRG_SCK_IO,
+         CKE    => CKE_ASYNC_ONCHIP_SCK_IO,
          RE     => True,
          TE     => True,
          others => False
@@ -176,7 +176,7 @@ package body BSP
    begin
       -- wait for transmitter available
       loop exit when SCI (3).SSR.NORMAL.TDRE; end loop;
-      SCI (3).TDR := To_U8 (C);
+      SCI (3).TDR.DATA := To_U8 (C);
    end Console_Putchar;
 
    procedure Console_Getchar
@@ -186,7 +186,7 @@ package body BSP
    begin
       -- wait for receiver available
       loop exit when SCI (3).SSR.NORMAL.RDRF; end loop;
-      Data := SCI (3).RDR;
+      Data := SCI (3).RDR.DATA;
       C := To_Ch (Data);
    end Console_Getchar;
 
