@@ -2235,19 +2235,19 @@ pragma Warnings (On);
 
    -- 25.2.6 AGT Mode Register 2 (AGTMR2)
 
-   CKS_DIV1   : constant := 2#000#;
-   CKS_DIV2   : constant := 2#001#;
-   CKS_DIV4   : constant := 2#010#;
-   CKS_DIV8   : constant := 2#011#;
-   CKS_DIV16  : constant := 2#100#;
-   CKS_DIV32  : constant := 2#101#;
-   CKS_DIV64  : constant := 2#110#;
-   CKS_DIV128 : constant := 2#111#;
+   CKS_PCLKB_DIV1   : constant := 2#000#;
+   CKS_PCLKB_DIV2   : constant := 2#001#;
+   CKS_PCLKB_DIV4   : constant := 2#010#;
+   CKS_PCLKB_DIV8   : constant := 2#011#;
+   CKS_PCLKB_DIV16  : constant := 2#100#;
+   CKS_PCLKB_DIV32  : constant := 2#101#;
+   CKS_PCLKB_DIV64  : constant := 2#110#;
+   CKS_PCLKB_DIV128 : constant := 2#111#;
 
    type AGTMR2_Type is record
-      CKS      : Bits_3  := CKS_DIV1; -- AGTSCLK/AGTLCLK Count Source Clock Frequency Division Ratio
+      CKS      : Bits_3  := CKS_PCLKB_DIV1; -- AGTSCLK/AGTLCLK Count Source Clock Frequency Division Ratio
       Reserved : Bits_4  := 0;
-      LPM      : Boolean := False;    -- Low Power Mode
+      LPM      : Boolean := False;          -- Low Power Mode
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2489,13 +2489,81 @@ pragma Warnings (On);
    BCP_372 : constant BCP_Type := (2#10#, 1);
    BCP_256 : constant BCP_Type := (2#11#, 1);
 
+   -- 34.2.2 Receive Data Register (RDR)
+
+   type RDR_Type is record
+      DATA : Unsigned_8; -- data
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RDR_Type use record
+      DATA at 0 range 0 .. 7;
+   end record;
+
+   -- 34.2.4 Receive FIFO Data Register H, L, HL (FRDRH, FRDRL, FRDRHL)
+
+   MPB_DATA : constant := 0;
+   MPB_ID   : constant := 1;
+
+   type FRDRHL_Type is record
+      RDAT     : Bits_9  := 0;        -- Serial Receive Data
+      MPB      : Bits_1  := MPB_DATA; -- Multi-Processor Bit Flag
+      DR       : Boolean := False;    -- Receive Data Ready Flag
+      PER      : Boolean := False;    -- Parity Error Flag
+      FER      : Boolean := False;    -- Framing Error Flag
+      ORER     : Boolean := False;    -- Overrun Error Flag
+      RDF      : Boolean := False;    -- Receive FIFO Data Full Flag
+      Reserved : Bits_1  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for FRDRHL_Type use record
+      RDAT     at 0 range  0 ..  8;
+      MPB      at 0 range  9 ..  9;
+      DR       at 0 range 10 .. 10;
+      PER      at 0 range 11 .. 11;
+      FER      at 0 range 12 .. 12;
+      ORER     at 0 range 13 .. 13;
+      RDF      at 0 range 14 .. 14;
+      Reserved at 0 range 15 .. 15;
+   end record;
+
+   -- 34.2.5 Transmit Data Register (TDR)
+
+   type TDR_Type is record
+      DATA : Unsigned_8; -- data
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TDR_Type use record
+      DATA at 0 range 0 .. 7;
+   end record;
+
+   -- 34.2.7 Transmit FIFO Data Register H, L, HL (FTDRH, FTDRL, FTDRHL)
+
+   MPBT_DATA : constant := 0;
+   MPBT_ID   : constant := 1;
+
+   type FTDRHL_Type is record
+      TDAT     : Bits_9 := 16#1FF#;   -- Serial Transmit Data
+      MPBT     : Bits_1 := MPBT_ID;   -- Multi-Processor Transfer Bit Flag
+      Reserved : Bits_6 := 2#111111#;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for FTDRHL_Type use record
+      TDAT     at 0 range  0 ..  8;
+      MPBT     at 0 range  9 ..  9;
+      Reserved at 0 range 10 .. 15;
+   end record;
+
    -- 34.2.9 Serial Mode Register (SMR) for Non-Smart Card Interface Mode (SCMR.SMIF = 0)
    -- 34.2.10 Serial Mode Register for Smart Card Interface Mode (SMR_SMCI) (SCMR.SMIF = 1)
 
-   CKS_PCLKA   : constant := 2#00#; -- PCLKA clock (n = 0)
-   CKS_PCLKA4  : constant := 2#01#; -- PCLKA/4 clock (n = 1)
-   CKS_PCLKA16 : constant := 2#10#; -- PCLKA/16 clock (n = 2)
-   CKS_PCLKA64 : constant := 2#11#; -- PCLKA/64 clock (n = 3)
+   CKS_PCLKA_DIV1  : constant := 2#00#; -- PCLKA clock (n = 0)
+   CKS_PCLKA_DIV4  : constant := 2#01#; -- PCLKA/4 clock (n = 1)
+   CKS_PCLKA_DIV16 : constant := 2#10#; -- PCLKA/16 clock (n = 2)
+   CKS_PCLKA_DIV64 : constant := 2#11#; -- PCLKA/64 clock (n = 3)
 
    STOP_1 : constant := 0; -- 1 stop bit
    STOP_2 : constant := 1; -- 2 stop bit
@@ -2507,13 +2575,13 @@ pragma Warnings (On);
    CM_SYNC  : constant := 1; -- Clock synchronous mode or simple SPI mode
 
    type SMR_NORMAL_Type is record
-      CKS  : Bits_2;  -- Clock Select
-      MP   : Boolean; -- Multi-Processor Mode
-      STOP : Bits_1;  -- Stop Bit Length
-      PM   : Bits_1;  -- Parity Mode
-      PE   : Boolean; -- Parity Enable
-      CHR  : Bits_1;  -- Character Length
-      CM   : Bits_1;  -- Communication Mode
+      CKS  : Bits_2  := CKS_PCLKA_DIV1; -- Clock Select
+      MP   : Boolean := False;          -- Multi-Processor Mode
+      STOP : Bits_1  := STOP_1;         -- Stop Bit Length
+      PM   : Bits_1  := PM_EVEN;        -- Parity Mode
+      PE   : Boolean := False;          -- Parity Enable
+      CHR  : Bits_1  := CHR_8.CHR;      -- Character Length
+      CM   : Bits_1  := CM_ASYNC;       -- Communication Mode
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2528,12 +2596,12 @@ pragma Warnings (On);
    end record;
 
    type SMR_SMIF_Type is record
-      CKS   : Bits_2;                  -- Clock Select
-      BCP10 : Bits_2  := BCP_32.BCP10; -- Base Clock Pulse
-      PM    : Bits_1;                  -- Parity Mode
-      PE    : Boolean;                 -- Parity Enable
-      BLK   : Boolean;                 -- Block Transfer Mode
-      GM    : Boolean;                 -- GSM Mode
+      CKS   : Bits_2  := CKS_PCLKA_DIV1; -- Clock Select
+      BCP10 : Bits_2  := BCP_32.BCP10;   -- Base Clock Pulse
+      PM    : Bits_1  := PM_EVEN;        -- Parity Mode
+      PE    : Boolean := False;          -- Parity Enable
+      BLK   : Boolean := False;          -- Block Transfer Mode
+      GM    : Boolean := False;          -- GSM Mode
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2558,20 +2626,36 @@ pragma Warnings (On);
    -- 34.2.11 Serial Control Register (SCR) for Non-Smart Card Interface Mode (SCMR.SMIF = 0)
    -- 34.2.12 Serial Control Register for Smart Card Interface Mode (SCR_SMCI) (SCMR.SMIF = 1)
 
-   CKE_Async_On_Chip_BRG_SCK_IO  : constant := 2#00#;
-   CKE_Async_On_Chip_BRG_SCK_CLK : constant := 2#01#;
-   CKE_Async_Ext_BRG             : constant := 2#10#; -- also 2#11#
-   CKE_Sync_Int_CLK              : constant := 2#00#; -- also 2#01#
-   CKE_Sync_Ext_CLK              : constant := 2#10#; -- also 2#11#
+   -- Asynchronous mode:
+   CKE_ASYNC_ONCHIP_SCK_IO  : constant := 2#00#; -- On-chip baud rate generator The SCKn pin is available for use as an I/O port based on the I/O port settings
+   CKE_ASYNC_ONCHIP_SCK_CLK : constant := 2#01#; -- On-chip baud rate generator A clock with the same frequency as the bit rate is output from the SCKn pin
+   CKE_ASYNC_EXT_BRG        : constant := 2#10#; -- External clock
+   CKE_ASYNC_EXT_BRG_2      : constant := 2#11#; -- ''
+   -- Clock synchronous mode:
+   CKE_SYNC_INT_CLK         : constant := 2#00#; -- Internal clock
+   CKE_SYNC_INT_CLK_2       : constant := 2#01#; -- ''
+   CKE_SYNC_EXT_CLK         : constant := 2#10#; -- External clock.
+   CKE_SYNC_EXT_CLK_2       : constant := 2#11#; -- ''
+
+   -- When SMR_SMCI.GM = 0:
+   CKE_DisableOutput : constant := 2#00#; -- Disable output
+   CKE_OutputClock   : constant := 2#01#; -- Output clock
+   CKE_RSVD1         : constant := 2#10#; -- Setting prohibited.
+   CKE_RSVD2         : constant := 2#11#; -- ''
+   -- When SMR_SMCI.GM = 1:
+   CKE_FIXLOW        : constant := 2#00#; -- Fix output low
+   CKE_OUTCLK        : constant := 2#01#; -- Output clock
+   CKE_OUTCLK_2      : constant := 2#11#; -- ''
+   CKE_OUTHIGH       : constant := 2#10#; -- Fix output high.
 
    type SCR_Type is record
-      CKE  : Bits_2;           -- Clock Enable
-      TEIE : Boolean;          -- Transmit End Interrupt Enable
-      MPIE : Boolean := False; -- Multi-Processor Interrupt Enable
-      RE   : Boolean;          -- Receive Enable
-      TE   : Boolean;          -- Transmit Enable
-      RIE  : Boolean;          -- Receive Interrupt Enable
-      TIE  : Boolean;          -- Transmit Interrupt Enable
+      CKE  : Bits_2  := CKE_ASYNC_ONCHIP_SCK_IO; -- Clock Enable
+      TEIE : Boolean := False;                   -- Transmit End Interrupt Enable
+      MPIE : Boolean := False;                   -- Multi-Processor Interrupt Enable
+      RE   : Boolean := False;                   -- Receive Enable
+      TE   : Boolean := False;                   -- Transmit Enable
+      RIE  : Boolean := False;                   -- Receive Interrupt Enable
+      TIE  : Boolean := False;                   -- Transmit Interrupt Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2587,22 +2671,24 @@ pragma Warnings (On);
 
    -- 34.2.13 Serial Status Register (SSR) for Non-Smart Card Interface and Non-FIFO Mode (SCMR.SMIF = 0 and FCR.FM = 0)
 
-   MPBT_DATA : constant := 0;
-   MPBT_ID   : constant := 1;
+   -- already defined at 34.2.7
+   -- MPBT_DATA : constant := 0;
+   -- MPBT_ID   : constant := 1;
 
-   MPB_DATA : constant := 0;
-   MPB_ID   : constant := 1;
+   -- already defined at 34.2.4
+   -- MPB_DATA : constant := 0;
+   -- MPB_ID   : constant := 1;
 
    type SSR_NORMAL_Type is
    record
-      MPBT : Bits_1;  -- Multi-Processor Bit Transfer
-      MPB  : Bits_1;  -- Multi-Processor
-      TEND : Boolean; -- Transmit End Flag
-      PER  : Boolean; -- Parity Error Flag
-      FER  : Boolean; -- Framing Error Flag
-      ORER : Boolean; -- Overrun Error Flag
-      RDRF : Boolean; -- Receive Data Full Flag
-      TDRE : Boolean; -- Transmit Data Empty Flag
+      MPBT : Bits_1  := MPBT_DATA; -- Multi-Processor Bit Transfer
+      MPB  : Bits_1  := MPB_DATA;  -- Multi-Processor
+      TEND : Boolean := True;      -- Transmit End Flag
+      PER  : Boolean := False;     -- Parity Error Flag
+      FER  : Boolean := False;     -- Framing Error Flag
+      ORER : Boolean := False;     -- Overrun Error Flag
+      RDRF : Boolean := False;     -- Receive Data Full Flag
+      TDRE : Boolean := True;      -- Transmit Data Empty Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2620,14 +2706,14 @@ pragma Warnings (On);
    -- 34.2.14 Serial Status Register for Non-Smart Card Interface and FIFO Mode (SSR_FIFO) (SCMR.SMIF = 0 and FCR.FM = 1)
 
    type SSR_FIFO_Type is record
-      DR       : Boolean;      -- Receive Data Ready Flag
+      DR       : Boolean := False; -- Receive Data Ready Flag
       Reserved : Bits_1  := 1;
-      TEND     : Boolean;      -- Transmit End Flag
-      PER      : Boolean;      -- Parity Error Flag
-      FER      : Boolean;      -- Framing Error Flag
-      ORER     : Boolean;      -- Overrun Error Flag
-      RDF      : Boolean;      -- Receive FIFO Data Full Flag
-      TDFE     : Boolean;      -- Transmit FIFO Data Empty Flag
+      TEND     : Boolean := False; -- Transmit End Flag
+      PER      : Boolean := False; -- Parity Error Flag
+      FER      : Boolean := False; -- Framing Error Flag
+      ORER     : Boolean := False; -- Overrun Error Flag
+      RDF      : Boolean := False; -- Receive FIFO Data Full Flag
+      TDFE     : Boolean := True;  -- Transmit FIFO Data Empty Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2645,14 +2731,14 @@ pragma Warnings (On);
    -- 34.2.15 Serial Status Register for Smart Card Interface Mode (SSR_SMCI) (SCMR.SMIF = 1)
 
    type SSR_SMIF_Type is record
-      MPBT : Bits_1;  -- Multi-Processor Bit Transfer
-      MPB  : Bits_1;  -- Multi-Processor
-      TEND : Boolean; -- Transmit End Flag
-      PER  : Boolean; -- Parity Error Flag
-      ERS  : Boolean; -- Error Signal Status Flag
-      ORER : Boolean; -- Overrun Error Flag
-      RDRF : Boolean; -- Receive Data Full Flag
-      TDRE : Boolean; -- Transmit Data Empty Flag
+      MPBT : Bits_1  := MPBT_DATA; -- Multi-Processor Bit Transfer
+      MPB  : Bits_1  := MPB_DATA;  -- Multi-Processor
+      TEND : Boolean := True;      -- Transmit End Flag
+      PER  : Boolean := False;     -- Parity Error Flag
+      ERS  : Boolean := False;     -- Error Signal Status Flag
+      ORER : Boolean := False;     -- Overrun Error Flag
+      RDRF : Boolean := False;     -- Receive Data Full Flag
+      TDRE : Boolean := True;      -- Transmit Data Empty Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2680,18 +2766,18 @@ pragma Warnings (On);
 
    -- 34.2.16 Smart Card Mode Register (SCMR)
 
-   SINV_NO  : constant := 0;
-   SINV_YES : constant := 1;
+   SINV_NO  : constant := 0; -- TDR register contents are transmitted as they are.
+   SINV_YES : constant := 1; -- TDR register contents are inverted before transmission.
 
-   SDIR_LSB : constant := 0;
-   SDIR_MSB : constant := 1;
+   SDIR_LSB : constant := 0; -- Transfer LSB-first
+   SDIR_MSB : constant := 1; -- Transfer MSB-first.
 
    type SCMR_Type is record
-      SMIF      : Boolean;                -- Smart Card Interface Mode Select
+      SMIF      : Boolean := False;       -- Smart Card Interface Mode Select
       Reserved1 : Bits_1  := 1;
-      SINV      : Bits_1;                 -- Transmitted/Received Data Invert
-      SDIR      : Bits_1;                 -- Transmitted/Received Data Transfer Direction
-      CHR1      : Bits_1;                 -- Character Length 1
+      SINV      : Bits_1  := SINV_NO;     -- Transmitted/Received Data Invert
+      SDIR      : Bits_1  := SDIR_LSB;    -- Transmitted/Received Data Transfer Direction
+      CHR1      : Bits_1  := CHR_8.CHR1;  -- Character Length 1
       Reserved2 : Bits_2  := 2#11#;
       BCP2      : Bits_1  := BCP_32.BCP2; -- Base Clock Pulse 2
    end record
@@ -2707,16 +2793,38 @@ pragma Warnings (On);
       BCP2      at 0 range 7 .. 7;
    end record;
 
+   -- 34.2.17 Bit Rate Register (BRR)
+
+   type BRR_Type is record
+      BITRATE : Unsigned_8 := 16#FF#; -- bit rate
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for BRR_Type use record
+      BITRATE at 0 range 0 .. 7;
+   end record;
+
+   -- 34.2.18 Modulation Duty Register (MDDR)
+
+   type MDDR_Type is record
+      BITRATE : Unsigned_8 := 16#FF#; -- bit rate adjusted
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MDDR_Type use record
+      BITRATE at 0 range 0 .. 7;
+   end record;
+
    -- 34.2.19 Serial Extended Mode Register (SEMR)
 
    type SEMR_Type is record
       Reserved : Bits_2  := 0;
-      BRME     : Boolean;      -- Bit Rate Modulation Enable
-      ABCSE    : Boolean;      -- Asynchronous Mode Extended Base Clock Select 1
-      ABCS     : Boolean;      -- Asynchronous Mode Base Clock Select
-      NFEN     : Boolean;      -- Digital Noise Filter Function Enable
-      BGDM     : Boolean;      -- Baud Rate Generator Double-Speed Mode Select
-      RXDESEL  : Boolean;      -- Asynchronous Start Bit Edge Detection Select
+      BRME     : Boolean := False; -- Bit Rate Modulation Enable
+      ABCSE    : Boolean := False; -- Asynchronous Mode Extended Base Clock Select 1
+      ABCS     : Boolean := False; -- Asynchronous Mode Base Clock Select
+      NFEN     : Boolean := False; -- Digital Noise Filter Function Enable
+      BGDM     : Boolean := False; -- Baud Rate Generator Double-Speed Mode Select
+      RXDESEL  : Boolean := False; -- Asynchronous Start Bit Edge Detection Select
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2739,7 +2847,7 @@ pragma Warnings (On);
    NFCS_IIC_8   : constant := 2#100#; -- Use clock signal divided by 8 with noise filter.
 
    type SNFR_Type is record
-      NFCS     : Bits_3;      -- Noise Filter Clock Select
+      NFCS     : Bits_3 := NFCS_ASYNC_1; -- Noise Filter Clock Select
       Reserved : Bits_5 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2752,9 +2860,9 @@ pragma Warnings (On);
    -- 34.2.21 IIC Mode Register 1 (SIMR1)
 
    type SIMR1_Type is record
-      IICM     : Boolean;      -- Simple IIC Mode Select
+      IICM     : Boolean := False; -- Simple IIC Mode Select
       Reserved : Bits_2  := 0;
-      IICDL    : Bits_5;       -- SDA Delay Output Select
+      IICDL    : Bits_5  := 0;     -- SDA Delay Output Select
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2766,17 +2874,17 @@ pragma Warnings (On);
 
    -- 34.2.22 IIC Mode Register 2 (SIMR2)
 
-   IICINTM_ACKNACK : constant := 0;
-   IICINTM_RXTX    : constant := 1;
+   IICINTM_ACKNACK : constant := 0; -- Use ACK/NACK interrupts
+   IICINTM_RXTX    : constant := 1; -- Use reception and transmission interrupts.
 
-   IICACKT_ACK  : constant := 0;
-   IICACKT_NACK : constant := 1;
+   IICACKT_ACK  : constant := 0; -- ACK transmission
+   IICACKT_NACK : constant := 1; -- NACK transmission and ACK/NACK reception.
 
    type SIMR2_Type is record
-      IICINTM   : Bits_1;       -- IIC Interrupt Mode Select
-      IICCSC    : Boolean;      -- Clock Synchronization
+      IICINTM   : Bits_1  := IICINTM_ACKNACK; -- IIC Interrupt Mode Select
+      IICCSC    : Boolean := False;           -- Clock Synchronization
       Reserved1 : Bits_3  := 0;
-      IICACKT   : Bits_1;       -- ACK Transmission Data
+      IICACKT   : Bits_1  := IICACKT_ACK;     -- ACK Transmission Data
       Reserved2 : Bits_2  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2791,23 +2899,23 @@ pragma Warnings (On);
 
    -- 34.2.23 IIC Mode Register 3 (SIMR3)
 
-   IICSDAS_OUTSER : constant := 2#00#;
-   IICSDAS_GEN    : constant := 2#01#;
-   IICSDAS_SDALOW : constant := 2#10#;
-   IICSDAS_SDAHIZ : constant := 2#11#;
+   IICSDAS_OUTSER : constant := 2#00#; -- Output serial data
+   IICSDAS_GEN    : constant := 2#01#; -- Generate start, restart, or stop condition
+   IICSDAS_SDALOW : constant := 2#10#; -- Output low on SDAn pin
+   IICSDAS_SDAHIZ : constant := 2#11#; -- Drive SDAn pin to high-impedance state.
 
-   IICSCLS_OUTSER : constant := 2#00#;
-   IICSCLS_GEN    : constant := 2#01#;
-   IICSCLS_SDALOW : constant := 2#10#;
-   IICSCLS_SDAHIZ : constant := 2#11#;
+   IICSCLS_OUTSER : constant := 2#00#; -- Output serial clock
+   IICSCLS_GEN    : constant := 2#01#; -- Generate start, restart, or stop condition
+   IICSCLS_SDALOW : constant := 2#10#; -- Output low on SCLn pin
+   IICSCLS_SDAHIZ : constant := 2#11#; -- Drive SCLn pin to high-impedance state.
 
    type SIMR3_Type is record
-      IICSTAREQ  : Boolean; -- Start Condition Generation
-      IICRSTAREQ : Boolean; -- Restart Condition Generation
-      IICSTPREQ  : Boolean; -- Stop Condition Generation
-      IICSTIF    : Boolean; -- Issuing of Start, Restart, or Stop Condition Completed Flag
-      IICSDAS    : Bits_2;  -- SDA Output Select
-      IICSCLS    : Bits_2;  -- SCL Output Select
+      IICSTAREQ  : Boolean := False;          -- Start Condition Generation
+      IICRSTAREQ : Boolean := False;          -- Restart Condition Generation
+      IICSTPREQ  : Boolean := False;          -- Stop Condition Generation
+      IICSTIF    : Boolean := False;          -- Issuing of Start, Restart, or Stop Condition Completed Flag
+      IICSDAS    : Bits_2  := IICSDAS_OUTSER; -- SDA Output Select
+      IICSCLS    : Bits_2  := IICSCLS_OUTSER; -- SCL Output Select
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2823,8 +2931,8 @@ pragma Warnings (On);
    -- 34.2.24 IIC Status Register (SISR)
 
    type SISR_Type is record
-      IICACKR  : Boolean;           -- ACK Reception Data Flag
-      Reserved : Bits_7  := 16#7F#;
+      IICACKR  : Boolean; -- ACK Reception Data Flag
+      Reserved : Bits_7;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2835,24 +2943,24 @@ pragma Warnings (On);
 
    -- 34.2.25 SPI Mode Register (SPMR)
 
-   MSS_Master : constant := 0;
-   MSS_Slave  : constant := 1;
+   MSS_MASTER : constant := 0; -- Transmit through TXDn pin and receive through RXDn pin (master mode)
+   MSS_SLAVE  : constant := 1; -- Receive through TXDn pin and transmit through RXDn pin (slave mode).
 
-   CKPOL_NORMAL : constant := 0;
-   CKPOL_INVERT : constant := 1;
+   CKPOL_NORMAL : constant := 0; -- Do not invert clock polarity
+   CKPOL_INVERT : constant := 1; -- Invert clock polarity.
 
-   CKPH_NORMAL : constant := 0;
-   CKPH_DELAY  : constant := 1;
+   CKPH_NORMAL : constant := 0; -- Do not delay clock
+   CKPH_DELAY  : constant := 1; -- Delay clock.
 
    type SPMR_Type is record
-      SSE       : Boolean;      -- SSn Pin Function Enable
-      CTSE      : Boolean;      -- CTS Enable
-      MSS       : Bits_1;       -- Master Slave Select
+      SSE       : Boolean := False;        -- SSn Pin Function Enable
+      CTSE      : Boolean := False;        -- CTS Enable
+      MSS       : Bits_1  := MSS_MASTER;   -- Master Slave Select
       Reserved1 : Bits_1  := 0;
-      MFF       : Boolean;      -- Mode Fault Flag
+      MFF       : Boolean := False;        -- Mode Fault Flag
       Reserved2 : Bits_1  := 0;
-      CKPOL     : Bits_1;       -- Clock Polarity Select
-      CKPH      : Bits_1;       -- Clock Phase Select
+      CKPOL     : Bits_1  := CKPOL_NORMAL; -- Clock Polarity Select
+      CKPH      : Bits_1  := CKPH_NORMAL;  -- Clock Phase Select
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2870,13 +2978,13 @@ pragma Warnings (On);
    -- 34.2.26 FIFO Control Register (FCR)
 
    type FCR_Type is record
-      FM    : Boolean; -- FIFO Mode Select
-      RFRST : Boolean; -- Receive FIFO Data Register Reset
-      TFRST : Boolean; -- Transmit FIFO Data Register Reset
-      DRES  : Boolean; -- Receive Data Ready Error Select Bit
-      TTRG  : Bits_4;  -- Transmit FIFO Data Trigger Number
-      RTRG  : Bits_4;  -- Receive FIFO Data Trigger Number
-      RSTRG : Bits_4;  -- RTS Output Active Trigger Number Select
+      FM    : Boolean := False; -- FIFO Mode Select
+      RFRST : Boolean := False; -- Receive FIFO Data Register Reset
+      TFRST : Boolean := False; -- Transmit FIFO Data Register Reset
+      DRES  : Boolean := False; -- Receive Data Ready Error Select Bit
+      TTRG  : Bits_4  := 0;     -- Transmit FIFO Data Trigger Number
+      RTRG  : Bits_4  := 8;     -- Receive FIFO Data Trigger Number
+      RSTRG : Bits_4  := 15;    -- RTS Output Active Trigger Number Select
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -2893,10 +3001,10 @@ pragma Warnings (On);
    -- 34.2.27 FIFO Data Count Register (FDR)
 
    type FDR_Type is record
-      R         : Bits_5;      -- Receive FIFO Data Count
-      Reserved1 : Bits_3 := 0;
-      T         : Bits_5;      -- Transmit FIFO Data Count
-      Reserved2 : Bits_3 := 0;
+      R         : Bits_5; -- Receive FIFO Data Count
+      Reserved1 : Bits_3;
+      T         : Bits_5; -- Transmit FIFO Data Count
+      Reserved2 : Bits_3;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -2910,12 +3018,12 @@ pragma Warnings (On);
    -- 34.2.28 Line Status Register (LSR)
 
    type LSR_Type is record
-      ORER      : Boolean;      -- Overrun Error Flag
-      Reserved1 : Bits_1  := 0;
-      FNUM      : Bits_5;       -- Framing Error Count
-      Reserved2 : Bits_1  := 0;
-      PNUM      : Bits_5;       -- Parity Error Count
-      Reserved3 : Bits_3  := 0;
+      ORER      : Boolean; -- Overrun Error Flag
+      Reserved1 : Bits_1;
+      FNUM      : Bits_5;  -- Framing Error Count
+      Reserved2 : Bits_1;
+      PNUM      : Bits_5;  -- Parity Error Count
+      Reserved3 : Bits_3;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -2931,7 +3039,7 @@ pragma Warnings (On);
    -- 34.2.29 Compare Match Data Register (CDR)
 
    type CDR_Type is record
-      CMPD     : Bits_9;      -- Compare Match Data
+      CMPD     : Bits_9 := 0; -- Compare Match Data
       Reserved : Bits_7 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2943,17 +3051,17 @@ pragma Warnings (On);
 
    -- 34.2.30 Data Compare Match Control Register (DCCR)
 
-   IDSEL_Always  : constant := 0;
-   IDSEL_IDFrame : constant := 1;
+   IDSEL_ALWAYS  : constant := 0;
+   IDSEL_IDFRAME : constant := 1;
 
    type DCCR_Type is record
-      DCMF      : Boolean;      -- Data Compare Match Flag
+      DCMF      : Boolean := False;         -- Data Compare Match Flag
       Reserved1 : Bits_2  := 0;
-      DPER      : Boolean;      -- Data Compare Match Parity Error Flag
-      DFER      : Boolean;      -- Data Compare Match Framing Error Flag
+      DPER      : Boolean := False;         -- Data Compare Match Parity Error Flag
+      DFER      : Boolean := False;         -- Data Compare Match Framing Error Flag
       Reserved2 : Bits_1  := 0;
-      IDSEL     : Bits_1;       -- ID Frame Select
-      DCME      : Boolean;      -- Data Compare Match Enable
+      IDSEL     : Bits_1  := IDSEL_IDFRAME; -- ID Frame Select
+      DCME      : Boolean := False;         -- Data Compare Match Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2970,9 +3078,9 @@ pragma Warnings (On);
    -- 34.2.31 Serial Port Register (SPTR)
 
    type SPTR_Type is record
-      RXDMON   : Boolean;      -- Serial Input Data Monitor
-      SPB2DT   : Boolean;      -- Serial Port Break Data Select
-      SPB2IO   : Boolean;      -- Serial Port Break I/O
+      RXDMON   : Boolean := True;  -- Serial Input Data Monitor
+      SPB2DT   : Boolean := True;  -- Serial Port Break Data Select
+      SPB2IO   : Boolean := False; -- Serial Port Break I/O
       Reserved : Bits_5  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -2988,11 +3096,11 @@ pragma Warnings (On);
 
    type SCI_Type is record
       SMR      : SMR_Type    with Volatile_Full_Access => True;
-      BRR      : Unsigned_8  with Volatile_Full_Access => True;
+      BRR      : BRR_Type    with Volatile_Full_Access => True;
       SCR      : SCR_Type    with Volatile_Full_Access => True;
-      TDR      : Unsigned_8  with Volatile_Full_Access => True;
+      TDR      : TDR_Type    with Volatile_Full_Access => True;
       SSR      : SSR_Type    with Volatile_Full_Access => True;
-      RDR      : Unsigned_8  with Volatile_Full_Access => True;
+      RDR      : RDR_Type    with Volatile_Full_Access => True;
       SCMR     : SCMR_Type   with Volatile_Full_Access => True;
       SEMR     : SEMR_Type   with Volatile_Full_Access => True;
       SNFR     : SNFR_Type   with Volatile_Full_Access => True;
@@ -3001,9 +3109,9 @@ pragma Warnings (On);
       SIMR3    : SIMR3_Type  with Volatile_Full_Access => True;
       SISR     : SISR_Type   with Volatile_Full_Access => True;
       SPMR     : SPMR_Type   with Volatile_Full_Access => True;
-      TDRHL    : Unsigned_16 with Volatile_Full_Access => True; -- 8/16-bit
-      RDRHL    : Unsigned_16 with Volatile_Full_Access => True; -- 8/16-bit
-      MDDR     : Unsigned_8  with Volatile_Full_Access => True;
+      TDRHL    : FTDRHL_Type with Volatile_Full_Access => True;
+      RDRHL    : FRDRHL_Type with Volatile_Full_Access => True;
+      MDDR     : MDDR_Type   with Volatile_Full_Access => True;
       DCCR     : DCCR_Type   with Volatile_Full_Access => True;
       FCR      : FCR_Type    with Volatile_Full_Access => True;
       FDR      : FDR_Type    with Volatile_Full_Access => True;
@@ -3056,14 +3164,14 @@ pragma Warnings (On);
    -- 36.2.1 I2C Bus Control Register 1 (ICCR1)
 
    type ICCR1_Type is record
-      SDAI   : Boolean; -- SDA Line Monitor
-      SCLI   : Boolean; -- SCL Line Monitor
-      SDAO   : Boolean; -- SDA Output Control/Monitor
-      SCLO   : Boolean; -- SCL Output Control/Monitor
-      SOWP   : Boolean; -- SCLO/SDAO Write Protect
-      CLO    : Boolean; -- Extra SCL Clock Cycle Output
-      IICRST : Boolean; -- IIC-Bus Interface Internal Reset
-      ICE    : Boolean; -- IIC-Bus Interface Enable
+      SDAI   : Boolean := True;  -- SDA Line Monitor
+      SCLI   : Boolean := True;  -- SCL Line Monitor
+      SDAO   : Boolean := True;  -- SDA Output Control/Monitor
+      SCLO   : Boolean := True;  -- SCL Output Control/Monitor
+      SOWP   : Boolean := True;  -- SCLO/SDAO Write Protect
+      CLO    : Boolean := False; -- Extra SCL Clock Cycle Output
+      IICRST : Boolean := False; -- IIC-Bus Interface Internal Reset
+      ICE    : Boolean := False; -- IIC-Bus Interface Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -3080,15 +3188,21 @@ pragma Warnings (On);
 
    -- 36.2.2 I2C Bus Control Register 2 (ICCR2)
 
+   TRS_RX : constant := 0; -- Receive mode
+   TRS_TX : constant := 1; -- Transmit mode.
+
+   MST_SLAVE  : constant := 0; -- Slave mode
+   MST_MASTER : constant := 1; -- Master mode.
+
    type ICCR2_Type is record
       Reserved1 : Bits_1  := 0;
-      ST        : Boolean;      -- Start Condition Issuance Request
-      RS        : Boolean;      -- Restart Condition Issuance Request
-      SP        : Boolean;      -- Stop Condition Issuance Request
+      ST        : Boolean := False;     -- Start Condition Issuance Request
+      RS        : Boolean := False;     -- Restart Condition Issuance Request
+      SP        : Boolean := False;     -- Stop Condition Issuance Request
       Reserved2 : Bits_1  := 0;
-      TRS       : Boolean;      -- Transmit/Receive Mode
-      MST       : Boolean;      -- Master/Slave Mode
-      BBSY      : Boolean;      -- Bus Busy Detection Flag
+      TRS       : Bits_1  := TRS_RX;    -- Transmit/Receive Mode
+      MST       : Bits_1  := MST_SLAVE; -- Master/Slave Mode
+      BBSY      : Boolean := False;     -- Bus Busy Detection Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -3105,11 +3219,30 @@ pragma Warnings (On);
 
    -- 36.2.3 I2C Bus Mode Register 1 (ICMR1)
 
+   BC_9 : constant := 2#000#; -- 9 bits
+   BC_2 : constant := 2#001#; -- 2 bits
+   BC_3 : constant := 2#010#; -- 3 bits
+   BC_4 : constant := 2#011#; -- 4 bits
+   BC_5 : constant := 2#100#; -- 5 bits
+   BC_6 : constant := 2#101#; -- 6 bits
+   BC_7 : constant := 2#110#; -- 7 bits
+   BC_8 : constant := 2#111#; -- 8 bits.
+
+   -- already defined at 25.2.6
+   -- CKS_PCLKB_DIV1   : constant := 2#000#; -- PCLKB clock
+   -- CKS_PCLKB_DIV2   : constant := 2#001#; -- PCLKB/2 clock
+   -- CKS_PCLKB_DIV4   : constant := 2#010#; -- PCLKB/4 clock
+   -- CKS_PCLKB_DIV8   : constant := 2#011#; -- PCLKB/8 clock
+   -- CKS_PCLKB_DIV16  : constant := 2#100#; -- PCLKB/16 clock
+   -- CKS_PCLKB_DIV32  : constant := 2#101#; -- PCLKB/32 clock
+   -- CKS_PCLKB_DIV64  : constant := 2#110#; -- PCLKB/64 clock
+   -- CKS_PCLKB_DIV128 : constant := 2#111#; -- PCLKB/128 clock.
+
    type ICMR1_Type is record
-      BC   : Bits_3;  -- Bit Counter
-      BCWP : Boolean; -- BC Write Protect
-      CKS  : Bits_3;  -- Internal Reference Clock Select
-      MTWP : Boolean; -- MST/TRS Write Protect
+      BC   : Bits_3  := BC_9;           -- Bit Counter
+      BCWP : Boolean := True;           -- BC Write Protect
+      CKS  : Bits_3  := CKS_PCLKB_DIV1; -- Internal Reference Clock Select
+      MTWP : Boolean := False;          -- MST/TRS Write Protect
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -3122,13 +3255,38 @@ pragma Warnings (On);
 
    -- 36.2.4 I2C Bus Mode Register 2 (ICMR2)
 
+   TMOS_LONG  : constant := 0; -- Select long mode
+   TMOS_SHORT : constant := 1; -- Select short mode.
+
+   -- When ICMR2.DLCS = 0 (IICphi)
+   SDDL_0 : constant := 2#000#; -- No output delay
+   SDDL_1 : constant := 2#001#; -- 1 IICphi cycle
+   SDDL_2 : constant := 2#010#; -- 2 IICphi cycles
+   SDDL_3 : constant := 2#011#; -- 3 IICphi cycles
+   SDDL_4 : constant := 2#100#; -- 4 IICphi cycles
+   SDDL_5 : constant := 2#101#; -- 5 IICphi cycles
+   SDDL_6 : constant := 2#110#; -- 6 IICphi cycles
+   SDDL_7 : constant := 2#111#; -- 7 IICphi cycles.
+   -- When ICMR2.DLCS = 1 (IICphi/2)
+   -- SDDL_0    : constant := 2#000#; -- No output delay
+   SDDL_12   : constant := 2#001#; -- 1 or 2 IICphi cycles
+   SDDL_34   : constant := 2#010#; -- 3 or 4 IICphi cycles
+   SDDL_56   : constant := 2#011#; -- 5 or 6 IICphi cycles
+   SDDL_78   : constant := 2#100#; -- 7 or 8 IICphi cycles
+   SDDL_910  : constant := 2#101#; -- 9 or 10 IICphi cycles
+   SDDL_1112 : constant := 2#110#; -- 11 or 12 IICphi cycles
+   SDDL_1314 : constant := 2#111#; -- 13 or 14 IICphi cycles.
+
+   DLCS_DIV1 : constant := 0; -- Select internal reference clock (IICphi) as clock source for SDA output delay counter
+   DLCS_DIV2 : constant := 1; -- Select internal reference clock divided by 2 (IICphi/2) as clock source for SDA output delay counter.
+
    type ICMR2_Type is record
-      TMOS     : Boolean;      -- Timeout Detection Time Select
-      TMOL     : Boolean;      -- Timeout L Count Control
-      TMOH     : Boolean;      -- Timeout H Count Control
+      TMOS     : Bits_1  := TMOS_LONG; -- Timeout Detection Time Select
+      TMOL     : Boolean := True;      -- Timeout L Count Control
+      TMOH     : Boolean := True;      -- Timeout H Count Control
       Reserved : Bits_1  := 0;
-      SDDL     : Bits_3;       -- SDA Output Delay Counter
-      DLCS     : Boolean;      -- SDA Output Delay Clock Source Select
+      SDDL     : Bits_3  := SDDL_0;    -- SDA Output Delay Counter
+      DLCS     : Bits_1  := DLCS_DIV1; -- SDA Output Delay Clock Source Select
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -3148,14 +3306,20 @@ pragma Warnings (On);
    NF_3 : constant := 2#10#; -- Filter out noise of up to 3 IIC cycles (3-stage filter)
    NF_4 : constant := 2#11#; -- Filter out noise of up to 4 IIC cycles (4-stage filter).
 
+   RDRFS_9TH : constant := 0; -- Set the RDRF flag on the rising edge of the ninth SCL clock cycle (no low-hold on the SCLn line on the falling edge of the eighth clock cycle)
+   RDRFS_8TH : constant := 1; -- Set the RDRF flag on the rising edge of the eighth SCL clock cycle (low-hold on the SCLn line low on the falling edge of the eighth clock cycle).
+
+   SMBS_I2C   : constant := 0; -- Select I2C bus
+   SMBS_SMBus : constant := 1; -- Select SMBus.
+
    type ICMR3_Type is record
-      NF    : Bits_2;  -- Noise Filter Stage Select
-      ACKBR : Boolean; -- Receive Acknowledge
-      ACKBT : Boolean; -- Transmit Acknowledge
-      ACKWP : Boolean; -- ACKBT Write Protect
-      RDRFS : Boolean; -- RDRF Flag Set Timing Select
-      WAIT  : Boolean; -- WAIT
-      SMBS  : Boolean; -- SMBus/IIC-Bus Select
+      NF    : Bits_2  := NF_1;      -- Noise Filter Stage Select
+      ACKBR : Boolean := False;     -- Receive Acknowledge
+      ACKBT : Boolean := False;     -- Transmit Acknowledge
+      ACKWP : Boolean := False;     -- ACKBT Write Protect
+      RDRFS : Bits_1  := RDRFS_9TH; -- RDRF Flag Set Timing Select
+      WAIT  : Boolean := False;     -- WAIT
+      SMBS  : Bits_1  := SMBS_I2C;  -- SMBus/IIC-Bus Select
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -3172,14 +3336,14 @@ pragma Warnings (On);
    -- 36.2.6 I2C Bus Function Enable Register (ICFER)
 
    type ICFER_Type is record
-      TMOE  : Boolean; -- Timeout Function Enable
-      MALE  : Boolean; -- Master Arbitration-Lost Detection Enable
-      NALE  : Boolean; -- NACK Transmission Arbitration-Lost Detection Enable
-      SALE  : Boolean; -- Slave Arbitration-Lost Detection Enable
-      NACKE : Boolean; -- NACK Reception Transfer Suspension Enable
-      NFE   : Boolean; -- Digital Noise Filter Circuit Enable
-      SCLE  : Boolean; -- SCL Synchronous Circuit Enable
-      FMPE  : Boolean; -- Fast-Mode Plus Enable
+      TMOE  : Boolean := False; -- Timeout Function Enable
+      MALE  : Boolean := True;  -- Master Arbitration-Lost Detection Enable
+      NALE  : Boolean := False; -- NACK Transmission Arbitration-Lost Detection Enable
+      SALE  : Boolean := False; -- Slave Arbitration-Lost Detection Enable
+      NACKE : Boolean := True;  -- NACK Reception Transfer Suspension Enable
+      NFE   : Boolean := True;  -- Digital Noise Filter Circuit Enable
+      SCLE  : Boolean := True;  -- SCL Synchronous Circuit Enable
+      FMPE  : Boolean := False; -- Fast-Mode Plus Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -3197,14 +3361,14 @@ pragma Warnings (On);
    -- 36.2.7 I2C Bus Status Enable Register (ICSER)
 
    type ICSER_Type is record
-      SAR0E     : Boolean;      -- Slave Address Register 0 Enable
-      SAR1E     : Boolean;      -- Slave Address Register 1 Enable
-      SAR2E     : Boolean;      -- Slave Address Register 2 Enable
-      GCAE      : Boolean;      -- General Call Address Enable
+      SAR0E     : Boolean := True;  -- Slave Address Register 0 Enable
+      SAR1E     : Boolean := False; -- Slave Address Register 1 Enable
+      SAR2E     : Boolean := False; -- Slave Address Register 2 Enable
+      GCAE      : Boolean := True;  -- General Call Address Enable
       Reserved1 : Bits_1  := 0;
-      DIDE      : Boolean;      -- Device-ID Address Detection Enable
+      DIDE      : Boolean := False; -- Device-ID Address Detection Enable
       Reserved2 : Bits_1  := 0;
-      HOAE      : Boolean;      -- Host Address Enable
+      HOAE      : Boolean := False; -- Host Address Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -3222,14 +3386,14 @@ pragma Warnings (On);
    -- 36.2.8 I2C Bus Interrupt Enable Register (ICIER)
 
    type ICIER_Type is record
-      TMOIE  : Boolean; -- Timeout Interrupt Request Enable
-      ALIE   : Boolean; -- Arbitration-Lost Interrupt Request Enable
-      STIE   : Boolean; -- Start Condition Detection Interrupt Request Enable
-      SPIE   : Boolean; -- Stop Condition Detection Interrupt Request Enable
-      NACKIE : Boolean; -- NACK Reception Interrupt Request Enable
-      RIE    : Boolean; -- Receive Data Full Interrupt Request Enable
-      TEIE   : Boolean; -- Transmit End Interrupt Request Enable
-      TIE    : Boolean; -- Transmit Data Empty Interrupt Request Enable
+      TMOIE  : Boolean := False; -- Timeout Interrupt Request Enable
+      ALIE   : Boolean := False; -- Arbitration-Lost Interrupt Request Enable
+      STIE   : Boolean := False; -- Start Condition Detection Interrupt Request Enable
+      SPIE   : Boolean := False; -- Stop Condition Detection Interrupt Request Enable
+      NACKIE : Boolean := False; -- NACK Reception Interrupt Request Enable
+      RIE    : Boolean := False; -- Receive Data Full Interrupt Request Enable
+      TEIE   : Boolean := False; -- Transmit End Interrupt Request Enable
+      TIE    : Boolean := False; -- Transmit Data Empty Interrupt Request Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -3247,14 +3411,14 @@ pragma Warnings (On);
    -- 36.2.9 I2C Bus Status Register 1 (ICSR1)
 
    type ICSR1_Type is record
-      AAS0      : Boolean;      -- Slave Address 0 Detection Flag
-      AAS1      : Boolean;      -- Slave Address 1 Detection Flag
-      AAS2      : Boolean;      -- Slave Address 2 Detection Flag
-      GCA       : Boolean;      -- General Call Address Detection Flag
+      AAS0      : Boolean := False; -- Slave Address 0 Detection Flag
+      AAS1      : Boolean := False; -- Slave Address 1 Detection Flag
+      AAS2      : Boolean := False; -- Slave Address 2 Detection Flag
+      GCA       : Boolean := False; -- General Call Address Detection Flag
       Reserved1 : Bits_1  := 0;
-      DID       : Boolean;      -- Device-ID Address Detection Flag
+      DID       : Boolean := False; -- Device-ID Address Detection Flag
       Reserved2 : Bits_1  := 0;
-      HOA       : Boolean;      -- Host Address Detection Flag
+      HOA       : Boolean := False; -- Host Address Detection Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -3272,14 +3436,14 @@ pragma Warnings (On);
    -- 36.2.10 I2C Bus Status Register 2 (ICSR2)
 
    type ICSR2_Type is record
-      TMOF  : Boolean; -- Timeout Detection Flag
-      AL    : Boolean; -- Arbitration-Lost Flag
-      START : Boolean; -- Start Condition Detection Flag
-      STOP  : Boolean; -- Stop Condition Detection Flag
-      NACKF : Boolean; -- NACK Detection Flag
-      RDRF  : Boolean; -- Receive Data Full Flag
-      TEND  : Boolean; -- Transmit End Flag
-      TDRE  : Boolean; -- Transmit Data Empty Flag
+      TMOF  : Boolean := False; -- Timeout Detection Flag
+      AL    : Boolean := False; -- Arbitration-Lost Flag
+      START : Boolean := False; -- Start Condition Detection Flag
+      STOP  : Boolean := False; -- Stop Condition Detection Flag
+      NACKF : Boolean := False; -- NACK Detection Flag
+      RDRF  : Boolean := False; -- Receive Data Full Flag
+      TEND  : Boolean := False; -- Transmit End Flag
+      TDRE  : Boolean := False; -- Transmit Data Empty Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -3297,12 +3461,12 @@ pragma Warnings (On);
    -- 36.2.11 I2C Bus Wakeup Unit Register (ICWUR)
 
    type ICWUR_Type is record
-      WUAFA    : Boolean;      -- Wakeup Analog Filter Additional Selection
+      WUAFA    : Boolean := False; -- Wakeup Analog Filter Additional Selection
       Reserved : Bits_3  := 0;
-      WUACK    : Boolean;      -- ACK Bit for Wakeup Mode
-      WUF      : Boolean;      -- Wakeup Event Occurrence Flag
-      WUIE     : Boolean;      -- Wakeup Interrupt Request Enable
-      WUE      : Boolean;      -- Wakeup Function Enable
+      WUACK    : Boolean := True;  -- ACK Bit for Wakeup Mode
+      WUF      : Boolean := False; -- Wakeup Event Occurrence Flag
+      WUIE     : Boolean := False; -- Wakeup Interrupt Request Enable
+      WUE      : Boolean := False; -- Wakeup Function Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -3318,9 +3482,9 @@ pragma Warnings (On);
    -- 36.2.12 I2C Bus Wakeup Unit Register 2 (ICWUR2)
 
    type ICWUR2_Type is record
-      WUSEN    : Boolean;           -- Wakeup Analog Filter Additional Selection
-      WUASYF   : Boolean;           -- Wakeup Analog Filter Additional Selection
-      WUSYF    : Boolean;           -- Wakeup Analog Filter Additional Selection
+      WUSEN    : Boolean := True;   -- Wakeup Analog Filter Additional Selection
+      WUASYF   : Boolean := False;  -- Wakeup Analog Filter Additional Selection
+      WUSYF    : Boolean := True;   -- Wakeup Analog Filter Additional Selection
       Reserved : Bits_5  := 16#1F#;
    end record
       with Bit_Order => Low_Order_First,
@@ -3332,22 +3496,134 @@ pragma Warnings (On);
       Reserved at 0 range 3 .. 7;
    end record;
 
+   -- 36.2.13 Slave Address Register L y (SARLy) (y = 0 to 2)
+
+   type SARLy_Type is record
+      SVA0 : Bits_1 := 0; -- 10-Bit Address LSB
+      SVA  : Bits_7 := 0; -- 7-Bit Address/10-Bit Address Lower Bits
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SARLy_Type use record
+      SVA0 at 0 range 0 .. 0;
+      SVA  at 0 range 1 .. 7;
+   end record;
+
+   -- 36.2.14 Slave Address Register U y (SARUy) (y = 0 to 2)
+
+   FS_7  : constant := 0; -- Select 7-bit address format
+   FS_10 : constant := 1; -- Select 10-bit address format.
+
+   type SARUy_Type is record
+      FS       : Bits_1 := FS_7; -- 7-Bit/10-Bit Address Format Select
+      SVA      : Bits_2 := 0;    -- 10-Bit Address Upper Bits
+      Reserved : Bits_5 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SARUy_Type use record
+      FS       at 0 range 0 .. 0;
+      SVA      at 0 range 1 .. 2;
+      Reserved at 0 range 3 .. 7;
+   end record;
+
+   -- Array types for SAR? registers
+
+   type SARLU_Type is record
+      SARL : SARLy_Type with Volatile_Full_Access => True;
+      SARU : SARUy_Type with Volatile_Full_Access => True;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for SARLU_Type use record
+      SARL at 0 range 0 .. 7;
+      SARU at 1 range 0 .. 7;
+   end record;
+
+   type SAR_Array_Type is array (0 .. 2) of SARLU_Type
+      with Pack => True;
+
+   -- 36.2.15 I2C Bus Bit Rate Low-Level Register (ICBRL)
+
+   type ICBRL_Type is record
+      BRL      : Bits_5 := 2#11111#; -- Low-level period of SCL clock.
+      Reserved : Bits_3 := 2#111#;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ICBRL_Type use record
+      BRL      at 0 range 0 .. 4;
+      Reserved at 0 range 5 .. 7;
+   end record;
+
+   -- 36.2.16 I2C Bus Bit Rate High-Level Register (ICBRH)
+
+   type ICBRH_Type is record
+      BRH      : Bits_5 := 2#11111#; -- High-level period of SCL clock.
+      Reserved : Bits_3 := 2#111#;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ICBRH_Type use record
+      BRH      at 0 range 0 .. 4;
+      Reserved at 0 range 5 .. 7;
+   end record;
+
+   -- 36.2.17 I2C Bus Transmit Data Register (ICDRT)
+
+   type ICDRT_Type is record
+      DATA : Unsigned_8; -- data
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ICDRT_Type use record
+      DATA at 0 range 0 .. 7;
+   end record;
+
+   -- 36.2.18 I2C Bus Receive Data Register (ICDRR)
+
+   type ICDRR_Type is record
+      DATA : Unsigned_8; -- data
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ICDRR_Type use record
+      DATA at 0 range 0 .. 7;
+   end record;
+
+   -- 36.2.19 I2C Bus Shift Register (ICDRS)
+
+   type ICDRS_Type is record
+      DATA : Unsigned_8; -- Data
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ICDRS_Type use record
+      DATA at 0 range 0 .. 7;
+   end record;
+
    -- I2C
 
 pragma Warnings (Off);
    type I2C_Type is record
-      ICCR1  : ICCR1_Type  with Volatile_Full_Access => True;
-      ICCR2  : ICCR2_Type  with Volatile_Full_Access => True;
-      ICMR1  : ICMR1_Type  with Volatile_Full_Access => True;
-      ICMR2  : ICMR2_Type  with Volatile_Full_Access => True;
-      ICMR3  : ICMR3_Type  with Volatile_Full_Access => True;
-      ICFER  : ICFER_Type  with Volatile_Full_Access => True;
-      ICSER  : ICSER_Type  with Volatile_Full_Access => True;
-      ICIER  : ICIER_Type  with Volatile_Full_Access => True;
-      ICSR1  : ICSR1_Type  with Volatile_Full_Access => True;
-      ICSR2  : ICSR2_Type  with Volatile_Full_Access => True;
-      ICWUR  : ICWUR_Type  with Volatile_Full_Access => True;
-      ICWUR2 : ICWUR2_Type with Volatile_Full_Access => True;
+      ICCR1  : ICCR1_Type     with Volatile_Full_Access => True;
+      ICCR2  : ICCR2_Type     with Volatile_Full_Access => True;
+      ICMR1  : ICMR1_Type     with Volatile_Full_Access => True;
+      ICMR2  : ICMR2_Type     with Volatile_Full_Access => True;
+      ICMR3  : ICMR3_Type     with Volatile_Full_Access => True;
+      ICFER  : ICFER_Type     with Volatile_Full_Access => True;
+      ICSER  : ICSER_Type     with Volatile_Full_Access => True;
+      ICIER  : ICIER_Type     with Volatile_Full_Access => True;
+      ICSR1  : ICSR1_Type     with Volatile_Full_Access => True;
+      ICSR2  : ICSR2_Type     with Volatile_Full_Access => True;
+      ICWUR  : ICWUR_Type     with Volatile_Full_Access => True;
+      ICWUR2 : ICWUR2_Type    with Volatile_Full_Access => True;
+      SAR    : SAR_Array_Type;
+      ICBRL  : ICBRL_Type     with Volatile_Full_Access => True;
+      ICBRH  : ICBRH_Type     with Volatile_Full_Access => True;
+      ICDRT  : ICDRT_Type     with Volatile_Full_Access => True;
+      ICDRR  : ICDRR_Type     with Volatile_Full_Access => True;
+      ICDRS  : ICDRS_Type     with Volatile_Full_Access => True;
    end record
       with Size                    => 16#100# * 8,
            Suppress_Initialization => True;
@@ -3362,6 +3638,11 @@ pragma Warnings (Off);
       ICIER  at 16#07# range 0 .. 7;
       ICSR1  at 16#08# range 0 .. 7;
       ICSR2  at 16#09# range 0 .. 7;
+      SAR    at 16#0A# range 0 .. 3 * 16 - 1;
+      ICBRL  at 16#10# range 0 .. 7;
+      ICBRH  at 16#11# range 0 .. 7;
+      ICDRT  at 16#12# range 0 .. 7;
+      ICDRR  at 16#13# range 0 .. 7;
       ICWUR  at 16#16# range 0 .. 7;
       ICWUR2 at 16#17# range 0 .. 7;
    end record;
