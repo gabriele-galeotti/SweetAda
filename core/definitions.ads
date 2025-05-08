@@ -114,7 +114,7 @@ package Definitions
    GiB1024 renames Gi1024;
    TiB1    renames Ti1;
 
-   -- various constants
+   -- frequency rates
    kHz1 : constant := 1_000;
    MHz1 : constant := 1_000 * kHz1;
    GHz1 : constant := 1_000 * MHz1;
