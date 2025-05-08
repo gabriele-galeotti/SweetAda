@@ -28,6 +28,7 @@ package Clocks
 
    CLK_Core : Natural;
    CLK_PCKA : Natural;
+   CLK_PCKB : Natural;
 
    procedure Init;
 

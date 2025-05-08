@@ -86,18 +86,19 @@ package body Clocks
       SCKSCR.CKSEL := CKSEL_PLL;
       -- select module frequencies
       SCKDIVCR := (
-         ICK    => SCKDIVCR_DIV1,  -- System Clock              -> 120     MHz - CPU
-         BCK    => SCKDIVCR_DIV4,  -- External Bus Clock        ->  30     MHz
-         FCK    => SCKDIVCR_DIV4,  -- Flash Interface Clock     ->  30     MHz
-         PCKA   => SCKDIVCR_DIV4,  -- Peripheral Module Clock A ->  30     MHz - SCI3 SPI0 ETHERC
-         PCKB   => SCKDIVCR_DIV64, -- Peripheral Module Clock B ->   1.875 MHz
-         PCKC   => SCKDIVCR_DIV4,  -- Peripheral Module Clock C ->  30     MHz
-         PCKD   => SCKDIVCR_DIV4,  -- Peripheral Module Clock D ->  30     MHz
+         ICK    => SCKDIVCR_DIV1, -- System Clock              -> 120 MHz - CPU
+         BCK    => SCKDIVCR_DIV4, -- External Bus Clock        ->  30 MHz
+         FCK    => SCKDIVCR_DIV4, -- Flash Interface Clock     ->  30 MHz
+         PCKA   => SCKDIVCR_DIV4, -- Peripheral Module Clock A ->  30 MHz - SCI3 SPI0 ETHERC
+         PCKB   => SCKDIVCR_DIV8, -- Peripheral Module Clock B ->  15 MHz - I2C2
+         PCKC   => SCKDIVCR_DIV4, -- Peripheral Module Clock C ->  30 MHz
+         PCKD   => SCKDIVCR_DIV4, -- Peripheral Module Clock D ->  30 MHz
          others => <>
          );
       -- setup clock values
       CLK_Core := 120 * MHz1;
       CLK_PCKA := 30 * MHz1;
+      CLK_PCKB := 15 * MHz1;
    end Init;
 
 end Clocks;
