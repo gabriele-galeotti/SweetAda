@@ -12,6 +12,7 @@
 # Environment variables:
 # NULL
 # SPACE
+# DEL
 # OSTYPE
 # VERBOSE
 # UPDATETM
@@ -37,7 +38,7 @@ __CHARACTERS__ += p  q  r  s  t  u  v  w  x  y  z  {  |  }  ~
 # Return a substring of string, starting at start and ending at end.
 #
 substring = $(strip \
-              $(eval __t__ := $$(subst $$(SPACE), ,$$1))\
+              $(eval __t__ := $$(subst $$(SPACE),$(DEL) ,$$1))\
               $(eval \
                 $$(foreach c,$$(__CHARACTERS__),\
                   $$(eval \
@@ -46,7 +47,7 @@ substring = $(strip \
                   )\
                )\
               $(eval __t__ := $(wordlist $2,$3,$(__t__)))\
-             )$(subst ,$(SPACE),$(subst $(SPACE),,$(__t__)))
+             )$(subst $(DEL),$(SPACE),$(subst $(SPACE),,$(__t__)))
 
 #
 # unquote
@@ -56,7 +57,7 @@ substring = $(strip \
 #
 # Remove delimiting double-quotes from a text string.
 #
-unquote = $(subst ,$(SPACE),$(patsubst "%",%,$(subst $(SPACE),,$1)))
+unquote = $(subst $(DEL),$(SPACE),$(patsubst "%",%,$(subst $(SPACE),$(DEL),$1)))
 
 #
 # echo-print
