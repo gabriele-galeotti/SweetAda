@@ -15,6 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
+with Bits;
+
 package SJA1000
    is
 
@@ -25,6 +28,9 @@ package SJA1000
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use System;
+   use Bits;
 
 pragma Style_Checks (Off);
 
@@ -106,6 +112,31 @@ pragma Style_Checks (Off);
       TS  at 0 range 5 .. 5;
       ES  at 0 range 6 .. 6;
       BS  at 0 range 7 .. 7;
+   end record;
+
+   -- 6.3.6 INTERRUPT REGISTER (IR)
+
+   type IR_Type is record
+      RI        : Boolean; -- Receive Interrupt
+      TI        : Boolean; -- Transmit Interrupt
+      EI        : Boolean; -- Error Interrupt
+      DOI       : Boolean; -- Data Overrun Interrupt
+      WUI       : Boolean; -- Wake-Up Interrupt
+      Reserved1 : Bits_1;
+      Reserved2 : Bits_1;
+      Reserved3 : Bits_1;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for IR_Type use record
+      RI        at 0 range 0 .. 0;
+      TI        at 0 range 1 .. 1;
+      EI        at 0 range 2 .. 2;
+      DOI       at 0 range 3 .. 3;
+      WUI       at 0 range 4 .. 4;
+      Reserved1 at 0 range 5 .. 5;
+      Reserved2 at 0 range 6 .. 6;
+      Reserved3 at 0 range 7 .. 7;
    end record;
 
 pragma Style_Checks (On);
