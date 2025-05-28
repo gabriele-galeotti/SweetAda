@@ -25,6 +25,7 @@ MAKEFILE_OS_IN_INCLUDED := Y
 NULL  :=
 SPACE := $(NULL) $(NULL)
 TAB   := $(NULL)	$(NULL)
+DEL   := $(NULL)$(NULL)
 
 # detect OS type
 # detected OS names: "cmd"/"msys"/"darwin"/"linux"
