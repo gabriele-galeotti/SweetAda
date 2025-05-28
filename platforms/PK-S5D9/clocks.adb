@@ -99,6 +99,8 @@ package body Clocks
       CLK_Core := 120 * MHz1;
       CLK_PCKA := 30 * MHz1;
       CLK_PCKB := 15 * MHz1;
+      CLK_PCKC := 30 * MHz1;
+      CLK_PCKD := 30 * MHz1;
    end Init;
 
 end Clocks;
