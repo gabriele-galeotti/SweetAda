@@ -46,8 +46,17 @@ export VERBOSE
 
 KERNEL_BASENAME := kernel
 
+CONFIGURE_DEPS :=
+
 # include operating system setup
 include Makefile.os.in
+CONFIGURE_DEPS += Makefile.os.in
+# include build system utilities
+include Makefile.ut.in
+CONFIGURE_DEPS += Makefile.ut.in
+# load complex functions
+include Makefile.fn.in
+CONFIGURE_DEPS += Makefile.fn.in
 
 ################################################################################
 #                                                                              #
@@ -173,12 +182,6 @@ PROGRAM_FILES_x86 := $(shell ECHO %ProgramFiles(x86)%)
 export PROGRAM_FILES_x86
 endif
 
-# include build system utilities
-include Makefile.ut.in
-
-# load complex functions
-include Makefile.fn.in
-
 # check basic utilities
 ifeq ($(TOOLS_CHECK),Y)
 -include Makefile.ck.in
@@ -217,6 +220,9 @@ KERNEL_GPRFILE := sweetada.gpr
 # GPRbuild configuration
 CONFIGUREGPR_FILENAME := configure.gpr
 
+# initialize GPRbuild dependencies
+GPRBUILD_DEPS  :=
+
 # cleaning
 CLEAN_OBJECTS_COMMON     := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst \
                             *.map *.o *.out* *.srec *.td *.tmp
@@ -242,12 +248,6 @@ KERNEL_ENTRY_POINT := _start
 IMPLICIT_ALI_UNITS :=
 EXTERNAL_OBJECTS   :=
 EXTERNAL_ALIS      :=
-
-# initialize configuration dependencies
-CONFIGURE_DEPS           := Makefile.os.in Makefile.ut.in Makefile.fn.in \
-                            Makefile.lb.in Makefile.tc.in
-GPRBUILD_DEPS            :=
-CONFIGURE_FILES_PLATFORM :=
 
 # read the master configuration file
 include configuration.in
@@ -345,7 +345,7 @@ endif
 
 ################################################################################
 #                                                                              #
-# Initialize toolchain variables.                                              #
+# Initialize variables.                                                        #
 #                                                                              #
 ################################################################################
 
@@ -432,16 +432,21 @@ IMPLICIT_CORE_UNITS     :=
 IMPLICIT_CLIBRARY_UNITS :=
 
 #
-# Initialize other support variables.
+# Support variables.
 #
-GPR_CORE_CPU   :=
 GCCDEFINES_CPU :=
+GPR_CORE_CPU   :=
 
 #
 # Various features.
 #
 GNATBIND_SECSTACK  :=
 ENABLE_SPLIT_DWARF :=
+
+#
+# Platform configuration files.
+#
+CONFIGURE_FILES_PLATFORM :=
 
 ################################################################################
 #                                                                              #
@@ -555,6 +560,13 @@ endif
 IMPLICIT_ALI_UNITS += $(IMPLICIT_CORE_UNITS)     \
                       $(IMPLICIT_CLIBRARY_UNITS)
 
+# toolchain specifications
+include Makefile.tc.in
+CONFIGURE_DEPS += Makefile.tc.in
+
+# build fragment included by all library sub-makefiles
+CONFIGURE_DEPS += Makefile.lb.in
+
 # GPRbuild configuration dependencies
 ifeq ($(BUILD_MODE),GPRbuild)
 ifneq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
@@ -575,9 +587,6 @@ GPRBUILD_DEPS += $(sort $(shell                                  \
 endif
 endif
 endif
-
-# toolchain specifications
-include Makefile.tc.in
 
 ################################################################################
 #                                                                              #
@@ -791,7 +800,7 @@ endif
 
 ifeq ($(OSTYPE),cmd)
 $(foreach s,                                              \
-  $(subst |,$(SPACE),$(subst $(SPACE),,$(shell          \
+  $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell      \
     SET "GNUMAKEFLAGS=$(GNUMAKEFLAGS)"                 && \
     SET "VERBOSE="                                     && \
     SET "PATH=$(PATH)"                                 && \
@@ -801,20 +810,20 @@ $(foreach s,                                              \
     SET "MULTILIB=$(GCC_MULTIDIR)"                     && \
     "$(MAKE)" -C $(RTS_DIRECTORY)                         \
       PROBEVARIABLES="LIBGNAT LIBGNARL" probevariables    \
-    2>nul))),$(eval $(subst ,$(SPACE),$(s))))
+    2>nul))),$(eval $(subst $(DEL),$(SPACE),$(s))))
 else
-$(foreach s,                                           \
-  $(subst |,$(SPACE),$(subst $(SPACE),,$(shell       \
-    GNUMAKEFLAGS="$(GNUMAKEFLAGS)"                     \
-    VERBOSE=                                           \
-    PATH="$(PATH)"                                     \
-    KERNEL_PARENT_PATH=..                              \
-    RTS=$(RTS)                                         \
-    TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)                   \
-    MULTILIB=$(GCC_MULTIDIR)                           \
-    "$(MAKE)" -C $(RTS_DIRECTORY)                      \
-      PROBEVARIABLES="LIBGNAT LIBGNARL" probevariables \
-    2> /dev/null))),$(eval $(subst ,$(SPACE),$(s))))
+$(foreach s,                                               \
+  $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell       \
+    GNUMAKEFLAGS="$(GNUMAKEFLAGS)"                         \
+    VERBOSE=                                               \
+    PATH="$(PATH)"                                         \
+    KERNEL_PARENT_PATH=..                                  \
+    RTS=$(RTS)                                             \
+    TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)                       \
+    MULTILIB=$(GCC_MULTIDIR)                               \
+    "$(MAKE)" -C $(RTS_DIRECTORY)                          \
+      PROBEVARIABLES="LIBGNAT LIBGNARL" probevariables     \
+    2> /dev/null))),$(eval $(subst $(DEL),$(SPACE),$(s))))
 endif
 LIBGNAT_OBJECT  := $(RTS_DIRECTORY)/$(LIBGNAT)
 LIBGNARL_OBJECT := $(RTS_DIRECTORY)/$(LIBGNARL)
