@@ -120,20 +120,20 @@ for t in ${textlines} ; do
   IFS=':' read -r tag symbol_name Ada_identifier << EOF
 ${t}
 EOF
-linkerads=${linkerads}"${indent}function ${Ada_identifier}"${NL}
-linkerads=${linkerads}"${indent}   return System.Storage_Elements.Integer_Address"${NL}
-linkerads=${linkerads}"${indent}   with Inline => True;"${NL}
-linkerads=${linkerads}${NL}
-linkeradb=${linkeradb}"${indent}function ${Ada_identifier}"${NL}
-linkeradb=${linkeradb}"${indent}   return System.Storage_Elements.Integer_Address"${NL}
-linkeradb=${linkeradb}"${indent}   is"${NL}
-linkeradb=${linkeradb}"${indent}   Symbol : aliased constant Symbol_Type"${NL}
-linkeradb=${linkeradb}"${indent}      with Import    => True,"${NL}
-linkeradb=${linkeradb}"${indent}           Link_Name => \"${symbol_name}\";"${NL}
-linkeradb=${linkeradb}"${indent}begin"${NL}
-linkeradb=${linkeradb}"${indent}   return System.Storage_Elements.To_Integer (Symbol'Address);"${NL}
-linkeradb=${linkeradb}"${indent}end ${Ada_identifier};"${NL}
-linkeradb=${linkeradb}${NL}
+  linkerads=${linkerads}"${indent}function ${Ada_identifier}"${NL}
+  linkerads=${linkerads}"${indent}   return System.Storage_Elements.Integer_Address"${NL}
+  linkerads=${linkerads}"${indent}   with Inline => True;"${NL}
+  linkerads=${linkerads}${NL}
+  linkeradb=${linkeradb}"${indent}function ${Ada_identifier}"${NL}
+  linkeradb=${linkeradb}"${indent}   return System.Storage_Elements.Integer_Address"${NL}
+  linkeradb=${linkeradb}"${indent}   is"${NL}
+  linkeradb=${linkeradb}"${indent}   Symbol : aliased constant Symbol_Type"${NL}
+  linkeradb=${linkeradb}"${indent}      with Import    => True,"${NL}
+  linkeradb=${linkeradb}"${indent}           Link_Name => \"${symbol_name}\";"${NL}
+  linkeradb=${linkeradb}"${indent}begin"${NL}
+  linkeradb=${linkeradb}"${indent}   return System.Storage_Elements.To_Integer (Symbol'Address);"${NL}
+  linkeradb=${linkeradb}"${indent}end ${Ada_identifier};"${NL}
+  linkeradb=${linkeradb}${NL}
 done
 linkerads=${linkerads}$(printf "%s\n" "end ${PACKAGE};")${NL}
 linkeradb=${linkeradb}$(printf "%s\n" "end ${PACKAGE};")${NL}
