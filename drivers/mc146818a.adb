@@ -369,11 +369,13 @@ package body MC146818A
       -- clear pending interrupts
       Unused := Register_Read (D, RegisterC);
       -- enable PIE interrupt in Register B
-      RB := To_RB (Register_Read (D, RegisterB));
-      RB.DM  := DM_BCD;
-      RB.AIE := False;
-      RB.PIE := True;
-      RB.SET := False;
+      RB := (
+         To_RB (Register_Read (D, RegisterB))
+         with delta DM  => DM_BCD,
+                    AIE => False,
+                    PIE => True,
+                    SET => False
+         );
       Register_Write (D, RegisterB, To_U8 (RB));
    end Init;
 
