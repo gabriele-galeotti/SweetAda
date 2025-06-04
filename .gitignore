@@ -19,6 +19,7 @@ sweetada-loc.xml
 SweetAda.gpj
 # KDE Kate
 .kateproject.d/
+.kateproject
 # Visual Studio Code
 .vscode/
 
