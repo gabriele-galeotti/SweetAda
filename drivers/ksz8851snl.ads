@@ -45,17 +45,17 @@ pragma Style_Checks (Off);
 
    CIDER : constant := 16#C0#;
 
-   type Opcode_Type is new Bits_2;
-   Opcode_RegRead  : constant Opcode_Type := 2#00#; -- Internal I/O Register Read
-   Opcode_RegWrite : constant Opcode_Type := 2#01#; -- Internal I/O Register Write
-   Opcode_RXQFIFO  : constant Opcode_Type := 2#10#; -- RXQ FIFO Read
-   Opcode_TXQFIFO  : constant Opcode_Type := 2#11#; -- TXQ FIFO Write
-
    -- 3.4 Serial Peripheral Interface (SPI)
 
    type Byte_Enable_Idx is (BYTE0, BYTE1, BYTE2, BYTE3);
    type Byte_Enable_Type is array (Byte_Enable_Idx) of Boolean
       with Pack => True;
+
+   type Opcode_Type is new Bits_2;
+   Opcode_RegRead  : constant Opcode_Type := 2#00#; -- Internal I/O Register Read
+   Opcode_RegWrite : constant Opcode_Type := 2#01#; -- Internal I/O Register Write
+   Opcode_RXQFIFO  : constant Opcode_Type := 2#10#; -- RXQ FIFO Read
+   Opcode_TXQFIFO  : constant Opcode_Type := 2#11#; -- TXQ FIFO Write
 
    type Command_IntRegs_Type is record
       DONTCARE         : Bits_4           := 0;
