@@ -221,7 +221,7 @@ KERNEL_GPRFILE := sweetada.gpr
 CONFIGUREGPR_FILENAME := configure.gpr
 
 # initialize GPRbuild dependencies
-GPRBUILD_DEPS  :=
+GPRBUILD_DEPS :=
 
 # cleaning
 CLEAN_OBJECTS_COMMON     := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst \
@@ -328,6 +328,7 @@ endif
 ifeq ($(OSTYPE),cmd)
 RTSES := $(shell                                  \
            SET "GNUMAKEFLAGS=$(GNUMAKEFLAGS)"  && \
+           SET "VERBOSE="                      && \
            SET "PATH=$(PATH)"                  && \
            SET "KERNEL_PARENT_PATH=.."         && \
            "$(MAKE)" -C $(RTS_DIRECTORY)          \
@@ -336,6 +337,7 @@ RTSES := $(shell                                  \
 else
 RTSES := $(shell                               \
            GNUMAKEFLAGS="$(GNUMAKEFLAGS)"      \
+           VERBOSE=                            \
            PATH="$(PATH)"                      \
            KERNEL_PARENT_PATH=..               \
            "$(MAKE)" -C $(RTS_DIRECTORY)       \
