@@ -580,11 +580,11 @@ GPRBUILD_DEPS += $(sort $(shell                                      \
                    $(GPRDEPS) $(KERNEL_GPRFILE)                      \
                    2>nul))
 else
-GPRBUILD_DEPS += $(sort $(shell                                  \
-                   PATH="$(PATH)"                             && \
-                   SWEETADA_PATH="$(SWEETADA_PATH)"           && \
-                   LIBUTILS_DIRECTORY="$(LIBUTILS_DIRECTORY)" && \
-                   $(GPRDEPS) $(KERNEL_GPRFILE)                  \
+GPRBUILD_DEPS += $(sort $(shell                               \
+                   PATH="$(PATH)"                             \
+                   SWEETADA_PATH="$(SWEETADA_PATH)"           \
+                   LIBUTILS_DIRECTORY="$(LIBUTILS_DIRECTORY)" \
+                   $(GPRDEPS) $(KERNEL_GPRFILE)               \
                    2> /dev/null))
 endif
 endif
