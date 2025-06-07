@@ -4098,7 +4098,7 @@ pragma Style_Checks (Off);
       EOQF_RE    : Boolean := False;         -- Finished Request Enable
       Reserved10 : Bits_1  := 0;
       Reserved11 : Bits_1  := 0;
-      TCF_RE     : Boolean := False;         -- FalseTransmission Complete Request Enable
+      TCF_RE     : Boolean := False;         -- Transmission Complete Request Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
