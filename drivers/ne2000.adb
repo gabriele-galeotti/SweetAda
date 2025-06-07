@@ -558,14 +558,14 @@ package body NE2000
    ----------------------------------------------------------------------------
 
    function Port_Address
-      (Base_Address : in Unsigned_16;
-       R            : in Register_Type)
+      (Base_Address : Unsigned_16;
+       R            : Register_Type)
       return Unsigned_16
       with Inline => True;
    -- shorthand
    function PA
-      (Base_Address : in Unsigned_16;
-       R            : in Register_Type)
+      (Base_Address : Unsigned_16;
+       R            : Register_Type)
       return Unsigned_16
       renames Port_Address;
    procedure Reset
@@ -587,8 +587,8 @@ package body NE2000
    -- Port_Address
    ----------------------------------------------------------------------------
    function Port_Address
-      (Base_Address : in Unsigned_16;
-       R            : in Register_Type)
+      (Base_Address : Unsigned_16;
+       R            : Register_Type)
       return Unsigned_16
       is
    begin
