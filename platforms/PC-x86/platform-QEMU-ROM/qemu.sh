@@ -77,11 +77,18 @@ fi
 # QEMU executable and CPU model
 QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-i386"
 
+# CAN options
+QEMU_CAN_OPTIONS=
+if [ "x${QEMU_CAN}" = "xY" ] ; then
+  QEMU_CAN_OPTIONS="${QEMU_CAN_OPTIONS} -object can-bus,id=canbus0"
+  QEMU_CAN_OPTIONS="${QEMU_CAN_OPTIONS} -object can-host-socketcan,id=canhost0,if=vcan0,canbus=canbus0"
+  QEMU_CAN_OPTIONS="${QEMU_CAN_OPTIONS} -device kvaser_pci,canbus=canbus0"
+fi
+
 # debug options
+QEMU_DEBUG_OPTIONS=
 if [ "x$1" = "x-debug" ] ; then
-  QEMU_DEBUG="-S -gdb tcp:localhost:1234,ipv4"
-else
-  QEMU_DEBUG=
+  QEMU_DEBUG_OPTIONS="-S -gdb tcp:localhost:1234,ipv4"
 fi
 
 # telnet port numbers and listening timeout in s
@@ -108,7 +115,8 @@ export QEMU_IPADDRESS="192.168.3.1"
   -device "ide-hd,drive=disk,bus=ide.0" \
   -drive "id=disk,if=none,format=raw,file=${PLATFORM_DIRECTORY}/disk.dsk" \
   -usb -device "usb-hub,bus=usb-bus.0,port=1" \
-  ${QEMU_DEBUG} \
+  ${QEMU_CAN_OPTIONS} \
+  ${QEMU_DEBUG_OPTIONS} \
   &
 QEMU_PID=$!
 
