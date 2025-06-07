@@ -3824,6 +3824,446 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- Chapter 54 Serial Peripheral Interface (SPI)
+   ----------------------------------------------------------------------------
+
+   -- 54.3.1 Module Configuration Register (SPIx_MCR)
+
+   SMPL_PT_0    : constant := 2#00#; -- 0 protocol clock cycles between SCK edge and SIN sample
+   SMPL_PT_1    : constant := 2#01#; -- 1 protocol clock cycle between SCK edge and SIN sample
+   SMPL_PT_2    : constant := 2#10#; -- 2 protocol clock cycles between SCK edge and SIN sample
+   SMPL_PT_RSVD : constant := 2#11#; -- Reserved
+
+   PCSIS_LOW  : constant := 0; -- The inactive state of PCSx is low.
+   PCSIS_HIGH : constant := 1; -- The inactive state of PCSx is high.
+
+   DCONF_SPI   : constant := 2#00#; -- SPI
+   DCONF_RSVD1 : constant := 2#01#; -- Reserved
+   DCONF_RSVD2 : constant := 2#10#; -- Reserved
+   DCONF_RSVD3 : constant := 2#11#; -- Reserved
+
+   type SPIx_MCR_Type is record
+      HALT      : Boolean := False;     -- Halt
+      Reserved1 : Bits_1  := 0;
+      Reserved2 : Bits_1  := 0;
+      Reserved3 : Bits_5  := 0;
+      SMPL_PT   : Bits_2  := SMPL_PT_0; -- Sample Point
+      CLR_RXF   : Boolean := False;     -- CLR_RXF
+      CLR_TXF   : Boolean := False;     -- Clear TX FIFO
+      DIS_RXF   : Boolean := False;     -- Disable Receive FIFO
+      DIS_TXF   : Boolean := False;     -- Disable Transmit FIFO
+      MDIS      : Boolean := True;      -- Module Disable
+      DOZE      : Boolean := False;     -- Doze Enable
+      PCSIS0    : Bits_1  := PCSIS_LOW; -- Peripheral Chip Select x Inactive State
+      PCSIS1    : Bits_1  := PCSIS_LOW; -- ''
+      PCSIS2    : Bits_1  := PCSIS_LOW; -- ''
+      PCSIS3    : Bits_1  := PCSIS_LOW; -- ''
+      PCSIS4    : Bits_1  := PCSIS_LOW; -- ''
+      PCSIS5    : Bits_1  := PCSIS_LOW; -- ''
+      Reserved4 : Bits_2  := 0;
+      ROOE      : Boolean := False;     -- Receive FIFO Overflow Overwrite Enable
+      PCSSE     : Boolean := False;     -- Peripheral Chip Select Strobe Enable
+      MTFE      : Boolean := False;     -- Modified Transfer Format Enable
+      FRZ       : Boolean := False;     -- Freeze
+      DCONF     : Bits_2  := DCONF_SPI; -- SPI Configuration.
+      CONT_SCKE : Boolean := False;     -- Continuous SCK Enable
+      MSTR      : Boolean := False;     -- Master/Slave Mode Select
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SPIx_MCR_Type use record
+      HALT      at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  1;
+      Reserved2 at 0 range  2 ..  2;
+      Reserved3 at 0 range  3 ..  7;
+      SMPL_PT   at 0 range  8 ..  9;
+      CLR_RXF   at 0 range 10 .. 10;
+      CLR_TXF   at 0 range 11 .. 11;
+      DIS_RXF   at 0 range 12 .. 12;
+      DIS_TXF   at 0 range 13 .. 13;
+      MDIS      at 0 range 14 .. 14;
+      DOZE      at 0 range 15 .. 15;
+      PCSIS0    at 0 range 16 .. 16;
+      PCSIS1    at 0 range 17 .. 17;
+      PCSIS2    at 0 range 18 .. 18;
+      PCSIS3    at 0 range 19 .. 19;
+      PCSIS4    at 0 range 20 .. 20;
+      PCSIS5    at 0 range 21 .. 21;
+      Reserved4 at 0 range 22 .. 23;
+      ROOE      at 0 range 24 .. 24;
+      PCSSE     at 0 range 25 .. 25;
+      MTFE      at 0 range 26 .. 26;
+      FRZ       at 0 range 27 .. 27;
+      DCONF     at 0 range 28 .. 29;
+      CONT_SCKE at 0 range 30 .. 30;
+      MSTR      at 0 range 31 .. 31;
+   end record;
+
+   -- 54.3.2 Transfer Count Register (SPIx_TCR)
+
+   type SPIx_TCR_Type is record
+      Reserved : Bits_16     := 0;
+      SPI_TCNT : Unsigned_16 := 0; -- SPI Transfer Counter
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SPIx_TCR_Type use record
+      Reserved at 0 range  0 .. 15;
+      SPI_TCNT at 0 range 16 .. 31;
+   end record;
+
+   -- 54.3.3 Clock and Transfer Attributes Register (In Master Mode) (SPIx_CTARn)
+   -- 54.3.4Clock and Transfer Attributes Register (In Slave Mode) (SPIx_CTARn_SLAVE)
+
+   BR_DIV2   : constant := 2#0000#; -- Baud Rate Scaler Value = 2
+   BR_DIV4   : constant := 2#0001#; -- Baud Rate Scaler Value = 4
+   BR_DIV6   : constant := 2#0010#; -- Baud Rate Scaler Value = 6
+   BR_DIV8   : constant := 2#0011#; -- Baud Rate Scaler Value = 8
+   BR_DIV16  : constant := 2#0100#; -- Baud Rate Scaler Value = 16
+   BR_DIV32  : constant := 2#0101#; -- Baud Rate Scaler Value = 32
+   BR_DIV64  : constant := 2#0110#; -- Baud Rate Scaler Value = 64
+   BR_DIV128 : constant := 2#0111#; -- Baud Rate Scaler Value = 128
+   BR_DIV256 : constant := 2#1000#; -- Baud Rate Scaler Value = 256
+   BR_DIV512 : constant := 2#1001#; -- Baud Rate Scaler Value = 512
+   BR_DIV1k  : constant := 2#1010#; -- Baud Rate Scaler Value = 1024
+   BR_DIV2k  : constant := 2#1011#; -- Baud Rate Scaler Value = 2048
+   BR_DIV4k  : constant := 2#1100#; -- Baud Rate Scaler Value = 4096
+   BR_DIV8k  : constant := 2#1101#; -- Baud Rate Scaler Value = 8192
+   BR_DIV16k : constant := 2#1110#; -- Baud Rate Scaler Value = 16384
+   BR_DIV32k : constant := 2#1111#; -- Baud Rate Scaler Value = 32768
+
+   CSSCK_2   : constant := 2#0000#; -- Delay Scaler Value = 2
+   CSSCK_4   : constant := 2#0001#; -- Delay Scaler Value = 4
+   CSSCK_8   : constant := 2#0010#; -- Delay Scaler Value = 8
+   CSSCK_16  : constant := 2#0011#; -- Delay Scaler Value = 16
+   CSSCK_32  : constant := 2#0100#; -- Delay Scaler Value = 32
+   CSSCK_64  : constant := 2#0101#; -- Delay Scaler Value = 64
+   CSSCK_128 : constant := 2#0110#; -- Delay Scaler Value = 128
+   CSSCK_256 : constant := 2#0111#; -- Delay Scaler Value = 256
+   CSSCK_512 : constant := 2#1000#; -- Delay Scaler Value = 512
+   CSSCK_1k  : constant := 2#1001#; -- Delay Scaler Value = 1024
+   CSSCK_2k  : constant := 2#1010#; -- Delay Scaler Value = 2048
+   CSSCK_4k  : constant := 2#1011#; -- Delay Scaler Value = 4096
+   CSSCK_8k  : constant := 2#1100#; -- Delay Scaler Value = 8192
+   CSSCK_16k : constant := 2#1101#; -- Delay Scaler Value = 16384
+   CSSCK_32k : constant := 2#1110#; -- Delay Scaler Value = 32768
+   CSSCK_64k : constant := 2#1111#; -- Delay Scaler Value = 65536
+
+   PBR_2 : constant := 2#00#; -- Baud Rate Prescaler value is 2.
+   PBR_3 : constant := 2#01#; -- Baud Rate Prescaler value is 3.
+   PBR_5 : constant := 2#10#; -- Baud Rate Prescaler value is 5.
+   PBR_7 : constant := 2#11#; -- Baud Rate Prescaler value is 7.
+
+   PDT_1 : constant := 2#00#; -- Delay after Transfer Prescaler value is 1.
+   PDT_3 : constant := 2#01#; -- Delay after Transfer Prescaler value is 3.
+   PDT_5 : constant := 2#10#; -- Delay after Transfer Prescaler value is 5.
+   PDT_7 : constant := 2#11#; -- Delay after Transfer Prescaler value is 7.
+
+   PASC_1 : constant := 2#00#; -- Delay after Transfer Prescaler value is 1.
+   PASC_3 : constant := 2#01#; -- Delay after Transfer Prescaler value is 3.
+   PASC_5 : constant := 2#10#; -- Delay after Transfer Prescaler value is 5.
+   PASC_7 : constant := 2#11#; -- Delay after Transfer Prescaler value is 7.
+
+   PCSSCK_1 : constant := 2#00#; -- PCS to SCK Prescaler value is 1.
+   PCSSCK_3 : constant := 2#01#; -- PCS to SCK Prescaler value is 3.
+   PCSSCK_5 : constant := 2#10#; -- PCS to SCK Prescaler value is 5.
+   PCSSCK_7 : constant := 2#11#; -- PCS to SCK Prescaler value is 7.
+
+   CPHA_CAPLCHGF : constant := 0; -- Data is captured on the leading edge of SCK and changed on the following edge.
+   CPHA_CHGLCAPF : constant := 1; -- Data is changed on the leading edge of SCK and captured on the following edge.
+
+   CPOL_LOW  : constant := 0; -- The inactive state value of SCK is low.
+   CPOL_HIGH : constant := 1; -- The inactive state value of SCK is high.
+
+   FMSZ_4  : constant := 2#0011#; -- Frame Size = 4
+   FMSZ_5  : constant := 2#0100#; -- Frame Size = 5
+   FMSZ_6  : constant := 2#0101#; -- Frame Size = 6
+   FMSZ_7  : constant := 2#0110#; -- Frame Size = 7
+   FMSZ_8  : constant := 2#0111#; -- Frame Size = 8
+   FMSZ_9  : constant := 2#1000#; -- Frame Size = 9
+   FMSZ_10 : constant := 2#1001#; -- Frame Size = 10
+   FMSZ_11 : constant := 2#1010#; -- Frame Size = 11
+   FMSZ_12 : constant := 2#1011#; -- Frame Size = 12
+   FMSZ_13 : constant := 2#1100#; -- Frame Size = 13
+   FMSZ_14 : constant := 2#1101#; -- Frame Size = 14
+   FMSZ_15 : constant := 2#1110#; -- Frame Size = 15
+   FMSZ_16 : constant := 2#1111#; -- Frame Size = 16
+
+   type SPIx_CTARn_Type is record
+      BR     : Bits_4  := BR_DIV2;       -- Baud Rate Scaler
+      DT     : Bits_4  := 0;             -- Delay After Transfer Scaler
+      ASC    : Bits_4  := 0;             -- After SCK Delay Scaler
+      CSSCK  : Bits_4  := CSSCK_2;       -- PCS to SCK Delay Scaler
+      PBR    : Bits_2  := PBR_2;         -- Baud Rate Prescaler
+      PDT    : Bits_2  := PDT_1;         -- Delay after Transfer Prescaler
+      PASC   : Bits_2  := PASC_1;        -- After SCK Delay Prescaler
+      PCSSCK : Bits_2  := PCSSCK_1;      -- PCS to SCK Delay Prescaler
+      LSBFE  : Boolean := False;         -- LSB First
+      CPHA   : Bits_1  := CPHA_CAPLCHGF; -- Clock Phase
+      CPOL   : Bits_1  := CPOL_LOW;      -- Clock Polarity
+      FMSZ   : Bits_4  := FMSZ_16;       -- Frame Size
+      DBR    : Boolean := False;         -- Double Baud Rate
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SPIx_CTARn_Type use record
+      BR     at 0 range  0 ..  3;
+      DT     at 0 range  4 ..  7;
+      ASC    at 0 range  8 .. 11;
+      CSSCK  at 0 range 12 .. 15;
+      PBR    at 0 range 16 .. 17;
+      PDT    at 0 range 18 .. 19;
+      PASC   at 0 range 20 .. 21;
+      PCSSCK at 0 range 22 .. 23;
+      LSBFE  at 0 range 24 .. 24;
+      CPHA   at 0 range 25 .. 25;
+      CPOL   at 0 range 26 .. 26;
+      FMSZ   at 0 range 27 .. 30;
+      DBR    at 0 range 31 .. 31;
+   end record;
+
+   -- 54.3.5 Status Register (SPIx_SR)
+
+   type SPIx_SR_Type is record
+      POPNXTPTR : Bits_4  := 0;     -- Pop Next Pointer
+      RXCTR     : Bits_4  := 0;     -- RX FIFO Counter
+      TXNXTPTR  : Bits_4  := 0;     -- Transmit Next Pointer
+      TXCTR     : Bits_4  := 0;     -- TX FIFO Counter
+      Reserved1 : Bits_1  := 0;
+      RFDF      : Boolean := False; -- Receive FIFO Drain Flag
+      Reserved2 : Bits_1  := 0;
+      RFOF      : Boolean := False; -- Receive FIFO Overflow Flag
+      Reserved3 : Bits_1  := 0;
+      Reserved4 : Bits_1  := 0;
+      Reserved5 : Bits_1  := 0;
+      Reserved6 : Bits_1  := 0;
+      Reserved7 : Bits_1  := 0;
+      TFFF      : Boolean := True;  -- Transmit FIFO Fill Flag
+      Reserved8 : Bits_1  := 0;
+      TFUF      : Boolean := False; -- Transmit FIFO Underflow Flag
+      EOQF      : Boolean := False; -- End of Queue Flag
+      Reserved9 : Bits_1  := 0;
+      TXRXS     : Boolean := False; -- TX and RX Status
+      TCF       : Boolean := False; -- Transfer Complete Flag
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SPIx_SR_Type use record
+      POPNXTPTR at 0 range  0 ..  3;
+      RXCTR     at 0 range  4 ..  7;
+      TXNXTPTR  at 0 range  8 .. 11;
+      TXCTR     at 0 range 12 .. 15;
+      Reserved1 at 0 range 16 .. 16;
+      RFDF      at 0 range 17 .. 17;
+      Reserved2 at 0 range 18 .. 18;
+      RFOF      at 0 range 19 .. 19;
+      Reserved3 at 0 range 20 .. 20;
+      Reserved4 at 0 range 21 .. 21;
+      Reserved5 at 0 range 22 .. 22;
+      Reserved6 at 0 range 23 .. 23;
+      Reserved7 at 0 range 24 .. 24;
+      TFFF      at 0 range 25 .. 25;
+      Reserved8 at 0 range 26 .. 26;
+      TFUF      at 0 range 27 .. 27;
+      EOQF      at 0 range 28 .. 28;
+      Reserved9 at 0 range 29 .. 29;
+      TXRXS     at 0 range 30 .. 30;
+      TCF       at 0 range 31 .. 31;
+   end record;
+
+   -- 54.3.6 DMA/Interrupt Request Select and Enable Register (SPIx_RSER)
+
+   RFDF_DIRS_IRQ : constant := 0; -- Interrupt request.
+   RFDF_DIRS_DMA : constant := 1; -- DMA request.
+
+   TFFF_DIRS_IRQ : constant := 0; -- TFFF flag generates interrupt requests.
+   TFFF_DIRS_DMA : constant := 1; -- TFFF flag generates DMA requests.
+
+   type SPIx_RSER_Type is record
+      Reserved1  : Bits_14 := 0;
+      Reserved2  : Bits_1  := 0;
+      Reserved3  : Bits_1  := 0;
+      RFDF_DIRS  : Bits_1  := RFDF_DIRS_IRQ; -- Receive FIFO Drain DMA or Interrupt Request Select
+      RFDF_RE    : Boolean := False;         -- Receive FIFO Drain Request Enable
+      Reserved4  : Bits_1  := 0;
+      RFOF_RE    : Boolean := False;         -- Receive FIFO Overflow Request Enable
+      Reserved5  : Bits_1  := 0;
+      Reserved6  : Bits_1  := 0;
+      Reserved7  : Bits_1  := 0;
+      Reserved8  : Bits_1  := 0;
+      TFFF_DIRS  : Bits_1  := TFFF_DIRS_IRQ; -- Transmit FIFO Fill DMA or Interrupt Request Select
+      TFFF_RE    : Boolean := False;         -- Transmit FIFO Fill Request Enable
+      Reserved9  : Bits_1  := 0;
+      TFUF_RE    : Boolean := False;         -- Transmit FIFO Underflow Request Enable
+      EOQF_RE    : Boolean := False;         -- Finished Request Enable
+      Reserved10 : Bits_1  := 0;
+      Reserved11 : Bits_1  := 0;
+      TCF_RE     : Boolean := False;         -- FalseTransmission Complete Request Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SPIx_RSER_Type use record
+      Reserved1  at 0 range  0 .. 13;
+      Reserved2  at 0 range 14 .. 14;
+      Reserved3  at 0 range 15 .. 15;
+      RFDF_DIRS  at 0 range 16 .. 16;
+      RFDF_RE    at 0 range 17 .. 17;
+      Reserved4  at 0 range 18 .. 18;
+      RFOF_RE    at 0 range 19 .. 19;
+      Reserved5  at 0 range 20 .. 20;
+      Reserved6  at 0 range 21 .. 21;
+      Reserved7  at 0 range 22 .. 22;
+      Reserved8  at 0 range 23 .. 23;
+      TFFF_DIRS  at 0 range 24 .. 24;
+      TFFF_RE    at 0 range 25 .. 25;
+      Reserved9  at 0 range 26 .. 26;
+      TFUF_RE    at 0 range 27 .. 27;
+      EOQF_RE    at 0 range 28 .. 28;
+      Reserved10 at 0 range 29 .. 29;
+      Reserved11 at 0 range 30 .. 30;
+      TCF_RE     at 0 range 31 .. 31;
+   end record;
+
+   -- 54.3.7 PUSH TX FIFO Register In Master Mode (SPIx_PUSHR)
+   -- 54.3.8 PUSH TX FIFO Register In Slave Mode (SPIx_PUSHR_SLAVE)
+
+   PCS_NEGATE : constant := 0; -- Negate the PCS[x] signal.
+   PCS_ASSERT : constant := 1; -- Assert the PCS[x] signal.
+
+   CTAS_CTAR0 : constant := 2#000#; -- CTAR0
+   CTAS_CTAR1 : constant := 2#001#; -- CTAR1
+   CTAS_RSVD1 : constant := 2#010#; -- Reserved
+   CTAS_RSVD2 : constant := 2#011#; -- ''
+   CTAS_RSVD3 : constant := 2#100#; -- ''
+   CTAS_RSVD4 : constant := 2#101#; -- ''
+   CTAS_RSVD5 : constant := 2#110#; -- ''
+   CTAS_RSVD6 : constant := 2#111#; -- ''
+
+   type SPIx_PUSHR_Type is record
+      TXDATA    : Bits_16;               -- Transmit Data
+      PCS0      : Bits_1  := PCS_NEGATE; -- Select which PCS signals are to be asserted for the transfer.
+      PCS1      : Bits_1  := PCS_NEGATE; -- ''
+      PCS2      : Bits_1  := PCS_NEGATE; -- ''
+      PCS3      : Bits_1  := PCS_NEGATE; -- ''
+      PCS4      : Bits_1  := PCS_NEGATE; -- ''
+      PCS5      : Bits_1  := PCS_NEGATE; -- ''
+      Reserved1 : Bits_2  := 0;
+      Reserved2 : Bits_2  := 0;
+      CTCNT     : Boolean := False;      -- Clear Transfer Counter
+      EOQ       : Boolean := False;      -- End Of Queue
+      CTAS      : Bits_3  := CTAS_CTAR0; -- Clock and Transfer Attributes Select
+      CONT      : Boolean := False;      -- Continuous Peripheral Chip Select Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SPIx_PUSHR_Type use record
+      TXDATA    at 0 range  0 .. 15;
+      PCS0      at 0 range 16 .. 16;
+      PCS1      at 0 range 17 .. 17;
+      PCS2      at 0 range 18 .. 18;
+      PCS3      at 0 range 19 .. 19;
+      PCS4      at 0 range 20 .. 20;
+      PCS5      at 0 range 21 .. 21;
+      Reserved1 at 0 range 22 .. 23;
+      Reserved2 at 0 range 24 .. 25;
+      CTCNT     at 0 range 26 .. 26;
+      EOQ       at 0 range 27 .. 27;
+      CTAS      at 0 range 28 .. 30;
+      CONT      at 0 range 31 .. 31;
+   end record;
+
+   -- 54.3.9 POP RX FIFO Register (SPIx_POPR)
+
+   type SPIx_POPR_Type is record
+      RXDATA : Bits_32 := 0; -- Received Data
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SPIx_POPR_Type use record
+      RXDATA at 0 range 0 .. 31;
+   end record;
+
+   -- 54.3.10 Transmit FIFO Registers (SPIx_TXFRn)
+
+   type SPIx_TXFRn_Type is record
+      TXDATA       : Bits_16; -- Transmit Data
+      TXCMD_TXDATA : Bits_16; -- Transmit Command or Transmit Data
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SPIx_TXFRn_Type use record
+      TXDATA       at 0 range  0 .. 15;
+      TXCMD_TXDATA at 0 range 16 .. 31;
+   end record;
+
+   -- 54.3.11 Receive FIFO Registers (SPIx_RXFRn)
+
+   type SPIx_RXFRn_Type is record
+      RXDATA : Bits_32; -- Receive Data
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SPIx_RXFRn_Type use record
+      RXDATA at 0 range 0 .. 31;
+   end record;
+
+   -- 54.3 Memory Map/Register Definition
+
+   type SPI_Type is record
+      MCR   : SPIx_MCR_Type   with Volatile_Full_Access => True;
+      TCR   : SPIx_TCR_Type   with Volatile_Full_Access => True;
+      CTAR0 : SPIx_CTARn_Type with Volatile_Full_Access => True;
+      CTAR1 : SPIx_CTARn_Type with Volatile_Full_Access => True;
+      SR    : SPIx_SR_Type    with Volatile_Full_Access => True;
+      RSER  : SPIx_RSER_Type  with Volatile_Full_Access => True;
+      PUSHR : SPIx_PUSHR_Type with Volatile_Full_Access => True;
+      POPR  : SPIx_POPR_Type  with Volatile_Full_Access => True;
+      TXFR0 : SPIx_TXFRn_Type with Volatile_Full_Access => True;
+      TXFR1 : SPIx_TXFRn_Type with Volatile_Full_Access => True;
+      TXFR2 : SPIx_TXFRn_Type with Volatile_Full_Access => True;
+      TXFR3 : SPIx_TXFRn_Type with Volatile_Full_Access => True;
+      RXFR0 : SPIx_RXFRn_Type with Volatile_Full_Access => True;
+      RXFR1 : SPIx_RXFRn_Type with Volatile_Full_Access => True;
+      RXFR2 : SPIx_RXFRn_Type with Volatile_Full_Access => True;
+      RXFR3 : SPIx_RXFRn_Type with Volatile_Full_Access => True;
+   end record
+      with Size => 16#8C# * 8;
+   for SPI_Type use record
+      MCR   at 16#00# range 0 .. 31;
+      TCR   at 16#08# range 0 .. 31;
+      CTAR0 at 16#0C# range 0 .. 31;
+      CTAR1 at 16#10# range 0 .. 31;
+      SR    at 16#2C# range 0 .. 31;
+      RSER  at 16#30# range 0 .. 31;
+      PUSHR at 16#34# range 0 .. 31;
+      POPR  at 16#38# range 0 .. 31;
+      TXFR0 at 16#3C# range 0 .. 31;
+      TXFR1 at 16#40# range 0 .. 31;
+      TXFR2 at 16#44# range 0 .. 31;
+      TXFR3 at 16#48# range 0 .. 31;
+      RXFR0 at 16#7C# range 0 .. 31;
+      RXFR1 at 16#80# range 0 .. 31;
+      RXFR2 at 16#84# range 0 .. 31;
+      RXFR3 at 16#88# range 0 .. 31;
+   end record;
+
+   SPI0 : aliased SPI_Type
+      with Address    => System'To_Address (16#4002_C000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   SPI1 : aliased SPI_Type
+      with Address    => System'To_Address (16#4002_D000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+   SPI2 : aliased SPI_Type
+      with Address    => System'To_Address (16#400A_C000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ----------------------------------------------------------------------------
    -- Chapter 55 Inter-Integrated Circuit (I2C)
    ----------------------------------------------------------------------------
 
