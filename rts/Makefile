@@ -81,6 +81,15 @@ endif
 
 TARGET := $(CPU)
 
+# assemble RTS source paths
+RTS_SOURCE_PATH            := ./src/$(RTS)
+RTS_SOURCE_PATH_TARGET     := ./src/targets/$(TARGET)
+ifeq ($(OSTYPE),cmd)
+RTS_SOURCE_PATH_CMD        := $(subst /,\,$(RTS_SOURCE_PATH))
+RTS_SOURCE_PATH_TARGET_CMD := $(subst /,\,$(RTS_SOURCE_PATH_TARGET))
+endif
+
+ifneq ($(MULTILIB),)
 ifeq ($(OSTYPE),cmd)
 MULTILIB_DIRECTORY := $(shell $(ECHO) $(MULTILIB)| $(SED) -e "s|;.*$$||")
 MULTILIB_SWITCHES  := $(shell $(ECHO) $(MULTILIB)| $(SED) -e "s|^[^;]*;||" -e "s|@| -|g" -e "s|^ ||")
@@ -88,17 +97,12 @@ else
 MULTILIB_DIRECTORY := $(shell $(ECHO) "$(MULTILIB)" | $(SED) -e "s|;.*\$$||")
 MULTILIB_SWITCHES  := $(shell $(ECHO) "$(MULTILIB)" | $(SED) -e "s|^[^;]*;||" -e "s|@| -|g" -e "s|^ ||")
 endif
-
-# assemble RTS paths
-RTS_SOURCE_PATH            := ./src/$(RTS)
-RTS_SOURCE_PATH_TARGET     := ./src/targets/$(TARGET)
-ADAINCLUDE_PATH            := ./$(RTS)/$(TOOLCHAIN_NAME)/$(MULTILIB_DIRECTORY)/adainclude
-ADALIB_PATH                := ./$(RTS)/$(TOOLCHAIN_NAME)/$(MULTILIB_DIRECTORY)/adalib
+ADAINCLUDE_PATH     := ./$(RTS)/$(TOOLCHAIN_NAME)/$(MULTILIB_DIRECTORY)/adainclude
+ADALIB_PATH         := ./$(RTS)/$(TOOLCHAIN_NAME)/$(MULTILIB_DIRECTORY)/adalib
 ifeq ($(OSTYPE),cmd)
-RTS_SOURCE_PATH_CMD        := $(subst /,\,$(RTS_SOURCE_PATH))
-RTS_SOURCE_PATH_TARGET_CMD := $(subst /,\,$(RTS_SOURCE_PATH_TARGET))
-ADAINCLUDE_PATH_CMD        := $(subst /,\,$(ADAINCLUDE_PATH))
-ADALIB_PATH_CMD            := $(subst /,\,$(ADALIB_PATH))
+ADAINCLUDE_PATH_CMD := $(subst /,\,$(ADAINCLUDE_PATH))
+ADALIB_PATH_CMD     := $(subst /,\,$(ADALIB_PATH))
+endif
 endif
 
 ADAC   := $(TOOLCHAIN_ADAC)
@@ -128,11 +132,6 @@ CC_SWITCHES += $(MULTILIB_SWITCHES)
 CC_SWITCHES += -ffreestanding
 CC_SWITCHES += -Wall
 
-# include additional system-wide, target-dependent compiler switches
--include $(RTS_SOURCE_PATH_TARGET)/rts.cs.in
-ADAC_SWITCHES += $(ADAC_SWITCHES_RTS)
-CC_SWITCHES   += $(CC_SWITCHES_RTS)
-
 LIBGNAT_SRCS         :=
 LIBGNAT_SRCS_COMMON  :=
 LIBGNAT_SRCS_TARGET  :=
@@ -144,6 +143,11 @@ LIBGNARL_SRCS_TARGET :=
 -include $(RTS_SOURCE_PATH)/configuration.in
 # RTS target-dependent part
 -include $(RTS_SOURCE_PATH_TARGET)/configuration.in
+
+# include additional system-wide, target-dependent compiler switches
+-include $(RTS_SOURCE_PATH_TARGET)/rts.cs.in
+ADAC_SWITCHES += $(ADAC_SWITCHES_RTS)
+CC_SWITCHES   += $(CC_SWITCHES_RTS)
 
 MULTILIB_SKIPS := $(foreach m,$(MULTILIB_DIRECTORIES_SKIP),"$(m)")
 
