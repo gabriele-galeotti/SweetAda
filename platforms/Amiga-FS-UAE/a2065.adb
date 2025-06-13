@@ -132,17 +132,19 @@ package body A2065
       -- the board S/N offsets
       -- offsets 0x18/0x1A contain the first 8 bits of the board S/N and so are
       -- discarded
-      A2065_MAC (0) := 16#02#;
-      A2065_MAC (1) := 16#80#;
-      A2065_MAC (2) := 16#10#;
-      A2065_MAC (3) := NByte (PIC.Serial_Number);
-      A2065_MAC (4) := MByte (PIC.Serial_Number);
-      A2065_MAC (5) := LByte (PIC.Serial_Number);
+      A2065_MAC := [
+         16#02#,
+         16#80#,
+         16#10#,
+         NByte (PIC.Serial_Number),
+         MByte (PIC.Serial_Number),
+         LByte (PIC.Serial_Number)
+         ];
       -- configure A2065 address
       ZorroII.Setup (A2065_BASEADDRESS);
       -- log informations
-      Console.Print (Unsigned_32'(A2065_BASEADDRESS), Prefix => "A2065: Ethernet card @ ", NL => True);
-      Console.Print (Byte_Array (A2065_MAC), Prefix => "A2065: MAC address ", Separator => ':', NL => True);
+      Console.Print (Prefix => "A2065: Ethernet card @ ", Value => Unsigned_32'(A2065_BASEADDRESS), NL => True);
+      Console.Print (Prefix => "A2065: MAC address ", ByteArray => Byte_Array (A2065_MAC), Separator => ':', NL => True);
       Success := True;
    end Probe;
 
@@ -154,14 +156,20 @@ package body A2065
       RDRA                : Ring_Descriptor_Pointer_Type;
       TDRA                : Ring_Descriptor_Pointer_Type;
       Ethernet_Descriptor : Ethernet.Descriptor_Type := Ethernet.DESCRIPTOR_INVALID;
+      function To_U16 is new Ada.Unchecked_Conversion (CSR0_Type, Unsigned_16);
+      function To_U16 is new Ada.Unchecked_Conversion (CSR3_Type, Unsigned_16);
+
       function To_R_RDP is new Ada.Unchecked_Conversion (Unsigned_32, Ring_Descriptor_Pointer_Type);
       function To_U32 is new Ada.Unchecked_Conversion (Ring_Descriptor_Pointer_Type, Unsigned_32);
    begin
       -- Am7990 ---------------------------------------------------------------
-      Am7990_Descriptor.Base_Address  := To_Address (A2065_BASEADDRESS + A2065_CHIP_OFFSET);
-      Am7990_Descriptor.Scale_Address := 0;
-      Am7990_Descriptor.Read_16       := MMIO.ReadA'Access;
-      Am7990_Descriptor.Write_16      := MMIO.WriteA'Access;
+      Am7990_Descriptor := (
+         Base_Address  => To_Address (A2065_BASEADDRESS + A2065_CHIP_OFFSET),
+         Scale_Address => 0,
+         Read_16       => MMIO.ReadA'Access,
+         Write_16      => MMIO.WriteA'Access,
+         others        => <>
+         );
       Am7990_Descriptor_Initialized := True;
       -- begin initialization sequence by setting STOP bit
       Register_Write (
@@ -197,21 +205,19 @@ package body A2065
          );
       -- setup Receive Message Descriptors
       for Index in Receive_Ring'Range loop
-         Receive_Ring (Index).RMD0 :=
-            (
-             LADR => Bits_16 (LLutils.Select_Address_Bits (Receive_Buffers (Index)'Address, 0, 15))
+         Receive_Ring (Index).RMD0 := (
+            LADR => Bits_16 (LLutils.Select_Address_Bits (Receive_Buffers (Index)'Address, 0, 15))
             );
-         Receive_Ring (Index).RMD1 :=
-            (
-             HADR => Bits_8 (LLutils.Select_Address_Bits (Receive_Buffers (Index)'Address, 16, 23)),
-             ENP  => False,
-             STP  => False,
-             BUFF => False,
-             CRC  => False,
-             OFLO => False,
-             FRAM => False,
-             ERR  => False,
-             OWN  => False
+         Receive_Ring (Index).RMD1 := (
+            HADR => Bits_8 (LLutils.Select_Address_Bits (Receive_Buffers (Index)'Address, 16, 23)),
+            ENP  => False,
+            STP  => False,
+            BUFF => False,
+            CRC  => False,
+            OFLO => False,
+            FRAM => False,
+            ERR  => False,
+            OWN  => False
             );
          Receive_Ring (Index).RMD2 := (BCNT => Bits_12'(-PACKET_BUFFER_SIZE), others => <>);
       end loop;
@@ -221,15 +227,13 @@ package body A2065
       end loop;
       -- setup Transmit Message Descriptors
       for Index in Transmit_Ring'Range loop
-         Transmit_Ring (Index).TMD0 :=
-            (
-             LADR => Bits_16 (LLutils.Select_Address_Bits (Transmit_Buffers (Index)'Address, 0, 15))
+         Transmit_Ring (Index).TMD0 := (
+            LADR => Bits_16 (LLutils.Select_Address_Bits (Transmit_Buffers (Index)'Address, 0, 15))
             );
-         Transmit_Ring (Index).TMD1 :=
-            (
-             HADR => Bits_8 (LLutils.Select_Address_Bits (Transmit_Buffers (Index)'Address, 16, 23)),
-             ENP => False, STP => False, DEF => False, ONE => False,
-             MORE => False, ADD_FCS => False, ERR => False, OWN => False
+         Transmit_Ring (Index).TMD1 := (
+            HADR => Bits_8 (LLutils.Select_Address_Bits (Transmit_Buffers (Index)'Address, 16, 23)),
+            ENP  => False, STP => False, DEF => False, ONE => False,
+            MORE => False, ADD_FCS => False, ERR => False, OWN => False
             );
          Transmit_Ring (Index).TMD2 := (BCNT => Bits_12'(-PACKET_BUFFER_SIZE), others => <>);
       end loop;
@@ -251,12 +255,9 @@ package body A2065
          Reserved => 0,
          PROM     => True
          );
-      Initialization_Block.PADR0 := A2065_MAC (0);
-      Initialization_Block.PADR1 := A2065_MAC (1);
-      Initialization_Block.PADR2 := A2065_MAC (2);
-      Initialization_Block.PADR3 := A2065_MAC (3);
-      Initialization_Block.PADR4 := A2065_MAC (4);
-      Initialization_Block.PADR5 := A2065_MAC (5);
+      MMIO.Write_U16 (Initialization_Block.PADR0'Address, MMIO.ReadS_U16 (A2065_MAC (0)'Address));
+      MMIO.Write_U16 (Initialization_Block.PADR2'Address, MMIO.ReadS_U16 (A2065_MAC (2)'Address));
+      MMIO.Write_U16 (Initialization_Block.PADR4'Address, MMIO.ReadS_U16 (A2065_MAC (4)'Address));
       -- RDRA
       RDRA.Ring_Pointer := Bits_21 (LLutils.Select_Address_Bits (Receive_Ring'Address, 3, 23));
       RDRA.Length       := RDR_ORDER;
@@ -276,9 +277,7 @@ package body A2065
             ))
          );
       -- wait for initialization done
-      loop
-         exit when Initialization_Done;
-      end loop;
+      loop exit when Initialization_Done; end loop;
       -- enable LANCE to send and receive packets
       Register_Write (
          Am7990_Descriptor,
@@ -299,6 +298,8 @@ package body A2065
       Result       : Boolean;
       A2065_Status : CSR0_Type;
       P            : PBUF.Pbuf_Ptr;
+      function To_U16 is new Ada.Unchecked_Conversion (CSR0_Type, Unsigned_16);
+      function To_CSR0 is new Ada.Unchecked_Conversion (Unsigned_16, CSR0_Type);
    begin
       Result := False;
       if not Am7990_Descriptor_Initialized then
@@ -384,6 +385,7 @@ package body A2065
        P            : in PBUF.Pbuf_Ptr)
       is
       pragma Unreferenced (Data_Address);
+      function To_U16 is new Ada.Unchecked_Conversion (CSR0_Type, Unsigned_16);
    begin
       -- __FIX__
       if P.all.Size < 60 then
