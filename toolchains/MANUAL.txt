@@ -162,7 +162,7 @@ system has a 1-1 match with the GDB's configure idea about which (if exists)
 Python is actually installed in the system.
 
 If you experience problems, try to uncomment this option, then, if the problem
-persists, try to discover potential issues by checking if python-config
+persists, try to discover potential issues by checking whether python-config
 (usually located in /usr/bin) provides correct responses and change parameters
 thereof.
 
