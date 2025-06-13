@@ -126,7 +126,7 @@ package body QSPI
       QSPI0.sckdiv.div    := 3;
       QSPI0.sckmode       := (pha => pha_SALSHT, pol => pol_INACTIVE0, others => <>);
       QSPI0.fmt           := (
-                              proto =>  proto_SINGLE,
+                              proto  => proto_SINGLE,
                               endian => endian_MSB,
                               dir    => dir_RX,
                               len    => 8,
