@@ -17,7 +17,6 @@
 
 with System;
 with System.Storage_Elements;
-with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 with MMIO;
@@ -95,9 +94,6 @@ package Am7990
       ERR  at 0 range 15 .. 15;
    end record;
 
-   function To_U16 is new Ada.Unchecked_Conversion (CSR0_Type, Unsigned_16);
-   function To_CSR0 is new Ada.Unchecked_Conversion (Unsigned_16, CSR0_Type);
-
    type CSR3_Type is record
       BCON     : Bits_1;
       ACON     : Bits_1;
@@ -112,9 +108,6 @@ package Am7990
       BSWP     at 0 range 2 ..  2;
       Reserved at 0 range 3 .. 15;
    end record;
-
-   function To_U16 is new Ada.Unchecked_Conversion (CSR3_Type, Unsigned_16);
-   function To_CSR3 is new Ada.Unchecked_Conversion (Unsigned_16, CSR3_Type);
 
    ----------------------------------------------------------------------------
    -- Receive Message Descriptor
