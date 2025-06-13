@@ -170,10 +170,16 @@ package body Exceptions
             -- turn on/off the PPI INIT signal at a "human" rate
             if not QEMU then
                if BSP.Tick_Count mod 1_000 = 0 then
-                  PC.PPI_ControlOut (PC.To_PPI_Control (16#04#));
+                  PC.PPI_ControlOut (PC.PPI_Control_Type'(
+                     INIT   => True,
+                     others => <>
+                     ));
                end if;
                if (BSP.Tick_Count + 500) mod 1_000 = 0 then
-                  PC.PPI_ControlOut (PC.To_PPI_Control (0));
+                  PC.PPI_ControlOut (PC.PPI_Control_Type'(
+                     INIT   => False,
+                     others => <>
+                     ));
                end if;
             end if;
             PC.PIC1_EOI;
