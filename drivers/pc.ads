@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with Ada.Unchecked_Conversion;
 with Interfaces;
 with Definitions;
 with Bits;
@@ -85,9 +84,6 @@ package PC
       KDBDATA   at 0 range 7 .. 7;
    end record;
 
-   function To_U8 is new Ada.Unchecked_Conversion (i8042_OUTPORT_Type, Unsigned_8);
-   function To_i8042_OUTPORT is new Ada.Unchecked_Conversion (Unsigned_8, i8042_OUTPORT_Type);
-
    type PORTB_Type is record
       TIM2GATESPK : Boolean; -- RW
       SPKRDATA    : Boolean; -- RW
@@ -110,9 +106,6 @@ package PC
       IOCHCK      at 0 range 6 .. 6;
       PCK         at 0 range 7 .. 7;
    end record;
-
-   function To_U8 is new Ada.Unchecked_Conversion (PORTB_Type, Unsigned_8);
-   function To_PORTB is new Ada.Unchecked_Conversion (Unsigned_8, PORTB_Type);
 
    ----------------------------------------------------------------------------
    -- i8259 PIC
@@ -230,8 +223,6 @@ package PC
       SC   at 0 range 6 .. 7;
    end record;
 
-   function To_U8 is new Ada.Unchecked_Conversion (PIT_Control_Word_Type, Unsigned_8);
-
    type PIT_Status_Type is record
       BCD        : Boolean;
       MODE       : Bits_3;
@@ -248,8 +239,6 @@ package PC
       Null_Count at 0 range 6 .. 6;
       OUT_Pin    at 0 range 7 .. 7;
    end record;
-
-   function To_PIT_Status is new Ada.Unchecked_Conversion (Unsigned_8, PIT_Status_Type);
 
    procedure PIT_Counter0_Init
       (Count : in Unsigned_16);
@@ -288,7 +277,7 @@ package PC
       SelectIn : Boolean;
       PaperOut : Boolean;
       ACK      : Boolean;
-      Busy     : Boolean; -- negated
+      Busy     : NBoolean; -- negated
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -302,16 +291,14 @@ package PC
       Busy     at 0 range 7 .. 7;
    end record;
 
-   function To_PPI_Status is new Ada.Unchecked_Conversion (Unsigned_8, PPI_Status_Type);
-
    type PPI_Control_Type is record
-      Strobe    : Boolean;     -- negated
-      AUTOLF    : Boolean;     -- negated
-      INIT      : Boolean;
-      SelectOut : Boolean;     -- negated
-      IRQEN     : Boolean;
-      BIDIR     : Boolean;
-      Unused    : Bits_2 := 0;
+      Strobe    : NBoolean := NFalse; -- negated
+      AUTOLF    : NBoolean := NFalse; -- negated
+      INIT      : Boolean  := False;
+      SelectOut : NBoolean := NFalse; -- negated
+      IRQEN     : Boolean  := False;
+      BIDIR     : Boolean  := False;
+      Unused    : Bits_2   := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -324,9 +311,6 @@ package PC
       BIDIR     at 0 range 5 .. 5;
       Unused    at 0 range 6 .. 7;
    end record;
-
-   function To_U8 is new Ada.Unchecked_Conversion (PPI_Control_Type, Unsigned_8);
-   function To_PPI_Control is new Ada.Unchecked_Conversion (Unsigned_8, PPI_Control_Type);
 
    procedure PPI_DataIn
       (Value : out Unsigned_8);
