@@ -132,6 +132,9 @@ CC_SWITCHES += $(MULTILIB_SWITCHES)
 CC_SWITCHES += -ffreestanding
 CC_SWITCHES += -Wall
 
+ADAC_SWITCHES_RTS :=
+CC_SWITCHES_RTS   :=
+
 LIBGNAT_SRCS         :=
 LIBGNAT_SRCS_COMMON  :=
 LIBGNAT_SRCS_TARGET  :=
@@ -144,12 +147,8 @@ LIBGNARL_SRCS_TARGET :=
 # RTS target-dependent part
 -include $(RTS_SOURCE_PATH_TARGET)/configuration.in
 
-# include additional system-wide, target-dependent compiler switches
--include $(RTS_SOURCE_PATH_TARGET)/rts.cs.in
 ADAC_SWITCHES += $(ADAC_SWITCHES_RTS)
 CC_SWITCHES   += $(CC_SWITCHES_RTS)
-
-MULTILIB_SKIPS := $(foreach m,$(MULTILIB_DIRECTORIES_SKIP),"$(m)")
 
 LIBGNAT_SRCS  += $(LIBGNAT_SRCS_COMMON) $(LIBGNAT_SRCS_TARGET)
 LIBGNARL_SRCS += $(LIBGNARL_SRCS_COMMON) $(LIBGNARL_SRCS_TARGET)
@@ -163,6 +162,8 @@ LIBGNARL      := $(ADALIB_PATH)/libgnarl.a
 LIBGNARL_ADS  := $(filter-out %.adb,$(LIBGNARL_SRCS))
 LIBGNARL_OBJS := $(addprefix $(ADALIB_PATH)/,$(notdir $(LIBGNARL_ADS:.ads=.o)))
 LIBGNARL_ALIS := $(addprefix $(ADALIB_PATH)/,$(notdir $(LIBGNARL_ADS:.ads=.ali)))
+
+MULTILIB_SKIPS := $(foreach m,$(MULTILIB_DIRECTORIES_SKIP),"$(m)")
 
 ADAC_SWITCHES := $(filter-out ,$(ADAC_SWITCHES))
 CC_SWITCHES   := $(filter-out ,$(CC_SWITCHES))
@@ -225,7 +226,6 @@ ifeq ($(OSTYPE),cmd)
             $(CP) "$(RTS_SOURCE_PATH_TARGET_CMD)"\%%F "$(ADAINCLUDE_PATH_CMD)"\%%~nF%%~xF           \
             || EXIT /B 1                                                                            \
           )
-	$(CP) $(RTS_SOURCE_PATH_TARGET_CMD)\rts.cs.in $(RTS)\$(TOOLCHAIN_NAME)\ $(NULL)
 else
 	@for f in $(LIBGNAT_SRCS_TARGET) $(LIBGNARL_SRCS_TARGET) ; do                                \
           (                                                                                          \
@@ -236,7 +236,6 @@ else
            fi                                                                                        \
           ) || exit $$? ;                                                                            \
         done
-	$(CP) $(RTS_SOURCE_PATH_TARGET)/rts.cs.in $(RTS)/$(TOOLCHAIN_NAME)/
 endif
 
 .PHONY: create-dirs

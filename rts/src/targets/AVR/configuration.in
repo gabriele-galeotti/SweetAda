@@ -71,3 +71,6 @@ endif
 # secondary stack size
 export RUNTIME_DEFAULT_SEC_STACK_SIZE := 128
 
+ADAC_SWITCHES_RTS :=
+CC_SWITCHES_RTS   :=
+

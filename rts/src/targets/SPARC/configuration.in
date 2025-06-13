@@ -25,3 +25,6 @@ export SUPPRESS_STANDARD_LIBRARY := True
 export USE_ADA_MAIN_PROGRAM_NAME := False
 export ZCX_BY_DEFAULT            := False
 
+ADAC_SWITCHES_RTS := -mflat
+CC_SWITCHES_RTS   := -mflat
+

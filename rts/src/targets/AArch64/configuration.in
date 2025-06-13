@@ -27,3 +27,6 @@ export ZCX_BY_DEFAULT            := False
 
 export SIZE_TYPE_ASPECTS := with Alignment => 16
 
+ADAC_SWITCHES_RTS :=
+CC_SWITCHES_RTS   :=
+

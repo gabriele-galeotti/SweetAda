@@ -1,4 +1,0 @@
-
-ADAC_SWITCHES_RTS := -mflat
-CC_SWITCHES_RTS   := -mflat
-

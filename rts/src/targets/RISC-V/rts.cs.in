@@ -1,4 +1,0 @@
-
-ADAC_SWITCHES_RTS := -mcmodel=medany
-CC_SWITCHES_RTS   := -mcmodel=medany
-
