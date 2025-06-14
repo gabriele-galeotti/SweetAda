@@ -223,6 +223,21 @@ package Console
       renames Print_Address;
 
    ----------------------------------------------------------------------------
+   -- Print[_Storage_Offset]
+   ----------------------------------------------------------------------------
+   procedure Print_Storage_Offset
+      (Value  : in SSE.Storage_Offset;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "");
+   procedure Print
+      (Value  : in SSE.Storage_Offset;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      renames Print_Storage_Offset;
+
+   ----------------------------------------------------------------------------
    -- Print[_Integer8]
    ----------------------------------------------------------------------------
    procedure Print_Integer8

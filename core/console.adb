@@ -216,6 +216,17 @@ package body Console
    separate;
 
    ----------------------------------------------------------------------------
+   -- Print_Storage_Offset
+   ----------------------------------------------------------------------------
+   procedure Print_Storage_Offset
+      (Value  : in SSE.Storage_Offset;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      is
+   separate;
+
+   ----------------------------------------------------------------------------
    -- Print_Integer8
    ----------------------------------------------------------------------------
    procedure Print_Integer8
