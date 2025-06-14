@@ -65,6 +65,7 @@ library project Core is
       "console-print_newline.adb",
       "console-print_sizet.adb",
       "console-print_string.adb",
+      "console-print_storage_offset.adb",
       "console-print_stringsimple.adb",
       "console-print_unsigned16.adb",
       "console-print_unsigned32.adb",
