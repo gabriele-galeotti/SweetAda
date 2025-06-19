@@ -1380,6 +1380,64 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- Chapter 17 Miscellaneous Control Module (MCM)
+   ----------------------------------------------------------------------------
+
+   MCM_BASEADDRESS : constant := 16#E008_0000#;
+
+   -- 17.2.3 Control register (MCM_CR)
+
+   DDRSIZE_NONE : constant := 2#00#; -- DDR address translation is disabled
+   DDRSIZE_128M : constant := 2#01#; -- DDR size is 128 Mbytes
+   DDRSIZE_256M : constant := 2#10#; -- DDR size is 256 Mbytes
+   DDRSIZE_512M : constant := 2#11#; -- DDR size is 512 Mbytes
+
+   SRAMUAP_RR   : constant := 2#00#; -- Round robin
+   SRAMUAP_SRR  : constant := 2#01#; -- Special round robin (favors SRAM backoor accesses over the processor)
+   SRAMUAP_PROC : constant := 2#10#; -- Fixed priority. Processor has highest, backdoor has lowest
+   SRAMUAP_BD   : constant := 2#11#; -- Fixed priority. Backdoor has highest, processor has lowest
+
+   SRAMLAP_RR   : constant := 2#00#; -- Round robin
+   SRAMLAP_SRR  : constant := 2#01#; -- Special round robin (favors SRAM backoor accesses over the processor)
+   SRAMLAP_PROC : constant := 2#10#; -- Fixed priority. Processor has highest, backdoor has lowest
+   SRAMLAP_BD   : constant := 2#11#; -- Fixed priority. Backdoor has highest, processor has lowest
+
+   type MCM_CR_Type is record
+      Reserved1 : Bits_9  := 0;
+      Reserved2 : Bits_1  := 0;
+      Reserved3 : Bits_10 := 0;
+      DDRSIZE   : Bits_2  := DDRSIZE_128M; -- DDR address size translation
+      Reserved4 : Bits_2  := 0;
+      SRAMUAP   : Bits_2  := SRAMUAP_RR;   -- SRAM_U arbitration priority
+      SRAMUWP   : Boolean := False;        -- SRAM_U write protect
+      Reserved5 : Bits_1  := 0;
+      SRAMLAP   : Bits_2  := SRAMLAP_RR;   -- SRAM_L arbitration priority
+      SRAMLWP   : Boolean := False;        -- SRAM_L write protect
+      Reserved6 : Bits_1  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for MCM_CR_Type use record
+      Reserved1 at 0 range  0 ..  8;
+      Reserved2 at 0 range  9 ..  9;
+      Reserved3 at 0 range 10 .. 19;
+      DDRSIZE   at 0 range 20 .. 21;
+      Reserved4 at 0 range 22 .. 23;
+      SRAMUAP   at 0 range 24 .. 25;
+      SRAMUWP   at 0 range 26 .. 26;
+      Reserved5 at 0 range 27 .. 27;
+      SRAMLAP   at 0 range 28 .. 29;
+      SRAMLWP   at 0 range 30 .. 30;
+      Reserved6 at 0 range 31 .. 31;
+   end record;
+
+   MCM_CR : aliased MCM_CR_Type
+      with Address              => System'To_Address (MCM_BASEADDRESS + 16#C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
    -- Chapter 24 Watchdog Timer (WDOG)
    ----------------------------------------------------------------------------
 
@@ -1558,14 +1616,14 @@ pragma Style_Checks (Off);
 
    -- 25.3.5 MCG Control 5 Register (MCG_C5)
 
-   PRDIV0_DIV1  : constant := 2#000#; -- Divide Factor 1
-   PRDIV0_DIV2  : constant := 2#001#; -- Divide Factor 2
-   PRDIV0_DIV3  : constant := 2#010#; -- Divide Factor 3
-   PRDIV0_DIV4  : constant := 2#011#; -- Divide Factor 4
-   PRDIV0_DIV5  : constant := 2#100#; -- Divide Factor 5
-   PRDIV0_DIV6  : constant := 2#101#; -- Divide Factor 6
-   PRDIV0_DIV7  : constant := 2#110#; -- Divide Factor 7
-   PRDIV0_DIV8  : constant := 2#111#; -- Divide Factor 8
+   PRDIV0_DIV1 : constant := 2#000#; -- Divide Factor 1
+   PRDIV0_DIV2 : constant := 2#001#; -- Divide Factor 2
+   PRDIV0_DIV3 : constant := 2#010#; -- Divide Factor 3
+   PRDIV0_DIV4 : constant := 2#011#; -- Divide Factor 4
+   PRDIV0_DIV5 : constant := 2#100#; -- Divide Factor 5
+   PRDIV0_DIV6 : constant := 2#101#; -- Divide Factor 6
+   PRDIV0_DIV7 : constant := 2#110#; -- Divide Factor 7
+   PRDIV0_DIV8 : constant := 2#111#; -- Divide Factor 8
 
    PLLREFSEL0_OSC0 : constant := 0; -- Selects OSC0 clock source as its external reference clock.
    PLLREFSEL0_OSC1 : constant := 1; -- Selects OSC1 clock source as its external reference clock.
@@ -1844,14 +1902,14 @@ pragma Style_Checks (Off);
 
    -- 25.3.14 MCG Control 11 Register (MCG_C11)
 
-   PRDIV1_DIV1  : constant := 2#000#; -- Divide Factor 1
-   PRDIV1_DIV2  : constant := 2#001#; -- Divide Factor 2
-   PRDIV1_DIV3  : constant := 2#010#; -- Divide Factor 3
-   PRDIV1_DIV4  : constant := 2#011#; -- Divide Factor 4
-   PRDIV1_DIV5  : constant := 2#100#; -- Divide Factor 5
-   PRDIV1_DIV6  : constant := 2#101#; -- Divide Factor 6
-   PRDIV1_DIV7  : constant := 2#110#; -- Divide Factor 7
-   PRDIV1_DIV8  : constant := 2#111#; -- Divide Factor 8
+   PRDIV1_DIV1 : constant := 2#000#; -- Divide Factor 1
+   PRDIV1_DIV2 : constant := 2#001#; -- Divide Factor 2
+   PRDIV1_DIV3 : constant := 2#010#; -- Divide Factor 3
+   PRDIV1_DIV4 : constant := 2#011#; -- Divide Factor 4
+   PRDIV1_DIV5 : constant := 2#100#; -- Divide Factor 5
+   PRDIV1_DIV6 : constant := 2#101#; -- Divide Factor 6
+   PRDIV1_DIV7 : constant := 2#110#; -- Divide Factor 7
+   PRDIV1_DIV8 : constant := 2#111#; -- Divide Factor 8
 
    PLLCS_PLL0 : constant := 0; -- PLL0 output clock is selected.
    PLLCS_PLL1 : constant := 1; -- PLL1 output clock is selected.
