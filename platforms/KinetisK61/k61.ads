@@ -1385,6 +1385,44 @@ pragma Style_Checks (Off);
 
    MCM_BASEADDRESS : constant := 16#E008_0000#;
 
+   -- 17.2.1 Crossbar Switch (AXBS) Slave Configuration (MCM_PLASC)
+
+   type MCM_PLASC_Type is record
+      ASC      : Bitmap_8; -- Each bit in the ASC field indicates whether there is a corresponding connection to the crossbar switch's slave input port.
+      Reserved : Bits_8;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for MCM_PLASC_Type use record
+      ASC      at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 15;
+   end record;
+
+   MCM_PLASC : aliased MCM_PLASC_Type
+      with Address              => System'To_Address (MCM_BASEADDRESS + 16#08#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 17.2.2 Crossbar Switch (AXBS) Master Configuration (MCM_PLAMC)
+
+   type MCM_PLAMC_Type is record
+      AMC      : Bitmap_8; -- Each bit in the AMC field indicates whether there is a corresponding connection to the AXBS master input port.
+      Reserved : Bits_8;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for MCM_PLAMC_Type use record
+      AMC      at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 15;
+   end record;
+
+   MCM_PLAMC : aliased MCM_PLAMC_Type
+      with Address              => System'To_Address (MCM_BASEADDRESS + 16#0A#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 17.2.3 Control register (MCM_CR)
 
    DDRSIZE_NONE : constant := 2#00#; -- DDR address translation is disabled
@@ -1432,7 +1470,7 @@ pragma Style_Checks (Off);
    end record;
 
    MCM_CR : aliased MCM_CR_Type
-      with Address              => System'To_Address (MCM_BASEADDRESS + 16#C#),
+      with Address              => System'To_Address (MCM_BASEADDRESS + 16#0C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
