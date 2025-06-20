@@ -1993,7 +1993,7 @@ pragma Style_Checks (Off);
    end record;
 
    MCG_C12 : aliased MCG_C12_Type
-      with Address              => System'To_Address (MCG_BASEADDRESS + 16#10#),
+      with Address              => System'To_Address (MCG_BASEADDRESS + 16#11#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
