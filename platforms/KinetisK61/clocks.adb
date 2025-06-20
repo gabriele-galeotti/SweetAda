@@ -73,6 +73,7 @@ package body Clocks
          );
       loop exit when MCG_S.IREFST = IREFST_EXT; end loop;
       loop exit when MCG_S.CLKST = CLKST_EXT; end loop;
+      -- PLL0 (CPU and peripherals)
       MCG_C5 := (
          PRDIV0     => PRDIV0_DIV4,     -- 50 MHz / 4 = 12.5 MHz
          PLLCLKEN0  => True,
@@ -90,6 +91,19 @@ package body Clocks
       MCG_C1.CLKS := CLKS_FLLPLLCS;
       MCG_C6.PLLS := PLLS_PLLCS;
       loop exit when MCG_S.CLKST = CLKST_PLL; end loop;
+      -- PLL1 (DDR2)
+      MCG_C11 := (
+         PRDIV1     => PRDIV1_DIV4,     -- 50 MHz / 4 = 12.5 MHz
+         PLLCS      => PLLCS_PLL0,
+         PLLCLKEN1  => True,
+         PLLREFSEL1 => PLLREFSEL1_OSC0,
+         others     => <>
+         );
+      MCG_C12 := (
+         VDIV1  => VDIV1_x24,  -- 12.5 MHz * 24 = 300 MHz (VCO)
+         others => <>
+         );
+      loop exit when MCG_S2.LOCK1; end loop;
       -- clock signal output
       if False then
          -- 5.7.3 Debug trace clock
