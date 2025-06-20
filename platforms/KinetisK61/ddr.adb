@@ -46,6 +46,18 @@ package body DDR
    procedure Init
       is
    begin
+      SIM_SCGC3.DDR := True;
+      SIM_MCR := (
+         DDRPEN => True,
+         DDRCFG => DDRCFG_DDR2FS,
+         others => <>
+         );
+      DDR_RCR.RST := True;
+      DDR_PAD_CTRL := (
+         SPARE_DLY_CTRL => SPARE_DLY_CTRL_10,
+         PAD_ODT_CS0    => PAD_ODT_CS0_150OHM,
+         others         => <>
+         );
       -- parameters for MT47H64M16NF-25E:M
       DDR_CR00 := (DDRCLS => DDRCLS_DDR2, others => <>);
       -- DDR_CR01 = default
@@ -111,6 +123,9 @@ package body DDR
       -- DDR_CR61 = default
       -- DDR_CR62 = default
       -- DDR_CR63 = default
+      DDR_CR00.START := True;
+      loop exit when DDR_CR30.INTSTAT_DI; end loop;
+      MCM_CR.DDRSIZE := DDRSIZE_128M;
    end Init;
 
 end DDR;
