@@ -45,6 +45,102 @@ package body LCD
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- Digit_Set
+   ----------------------------------------------------------------------------
+   procedure Digit_Set
+      (Digit : in Natural;
+       Value : in Natural)
+      is
+      WaveForm1 : LCD_Waveform_Type;
+      WaveForm2 : LCD_Waveform_Type;
+      Pin1      : Natural;
+      Pin2      : Natural;
+   begin
+      pragma Style_Checks (Off);
+      case Value is
+         when 0 => ------------------------------------------------------
+                   --            DP  C   B   A
+                   WaveForm1 := (    B | C | D => True, others => False);
+                   --            D   E   G   F
+                   WaveForm2 := (A | B     | D => True, others => False);
+         when 1 => ------------------------------------------------------
+                   --            DP  C   B
+                   WaveForm1 := (    B | C     => True, others => False);
+                   --            D   E   G   F
+                   WaveForm2 := (                       others => False);
+         when 2 => ------------------------------------------------------
+                   --            DP  C   B   A
+                   WaveForm1 := (        C | D => True, others => False);
+                   --            D   E   G   F
+                   WaveForm2 := (A | B | C     => True, others => False);
+         when 3 => ------------------------------------------------------
+                   --            DP  C   B   A
+                   WaveForm1 := (    B | C | D => True, others => False);
+                   --            D   E   G   F
+                   WaveForm2 := (A     | C     => True, others => False);
+         when 4 => ------------------------------------------------------
+                   --            DP  C   B   A
+                   WaveForm1 := (    B | C     => True, others => False);
+                   --            D   E   G   F
+                   WaveForm2 := (        C | D => True, others => False);
+         when 5 => ------------------------------------------------------
+                   --            DP  C   B   A
+                   WaveForm1 := (    B     | D => True, others => False);
+                   --            D   E   G   F
+                   WaveForm2 := (A     | C | D => True, others => False);
+         when 6 => ------------------------------------------------------
+                   --            DP  C   B   A
+                   WaveForm1 := (    B     | D => True, others => False);
+                   --            D   E   G   F
+                   WaveForm2 := (A | B | C | D => True, others => False);
+         when 7 => ------------------------------------------------------
+                   --            DP  C   B   A
+                   WaveForm1 := (    B | C | D => True, others => False);
+                   --            D   E   G   F
+                   WaveForm2 := (                       others => False);
+         when 8 => ------------------------------------------------------
+                   --            DP  C   B   A
+                   WaveForm1 := (    B | C | D => True, others => False);
+                   --            D   E   G   F
+                   WaveForm2 := (A | B | C | D => True, others => False);
+         when 9 => ------------------------------------------------------
+                   --            DP  C   B   A
+                   WaveForm1 := (    B | C | D => True, others => False);
+                   --            D   E   G   F
+                   WaveForm2 := (A     | C | D => True, others => False);
+         when others => -------------------------------------------------
+                   --            DP  C   B   A
+                   WaveForm1 := (                       others => False);
+                   --            D   E   G   F
+                   WaveForm2 := (                       others => False);
+      end case;
+      pragma Style_Checks (On);
+      case Digit is
+         when 1      => Pin1 := 17; Pin2 := 37;
+         when 2      => Pin1 := 8;  Pin2 := 7;
+         when 3      => Pin1 := 38; Pin2 := 53;
+         when 4      => Pin1 := 11; Pin2 := 10;
+         when others => Pin1 := 0;  Pin2 := 0;
+      end case;
+      if Pin1 /= 0 and then Pin2 /= 0 then
+         LCD_WF (Pin1 / 4).WF (Pin1 mod 4) := WaveForm1;
+         LCD_WF (Pin2 / 4).WF (Pin2 mod 4) := WaveForm2;
+      end if;
+   end Digit_Set;
+
+   ----------------------------------------------------------------------------
+   -- Colon_Set
+   ----------------------------------------------------------------------------
+   procedure Colon_Set
+      (On : in Boolean)
+      is
+      Pin : Natural;
+   begin
+      Pin := 11;
+      LCD_WF (Pin / 4).WF (Pin mod 4).A := On;
+   end Colon_Set;
+
+   ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
@@ -97,21 +193,21 @@ package body LCD
          );
       -- frontplane and backplane enables
       LCD_PENL.PEN := [
-         7      => True, -- P7
-         8      => True, -- P8
-         10     => True, -- P10
-         11     => True, -- P11
-         17     => True, -- P17
-         18     => True, -- P18
-         19     => True, -- P19
+         7      => True, -- P7  2D/2E/2G/2F
+         8      => True, -- P8  DP2/2C/2B/2A
+         10     => True, -- P10 4D/4E/4G/4F
+         11     => True, -- P11 COL/4C/4B/4A
+         17     => True, -- P17 DP1/1C/1B/1A
+         18     => True, -- P18 COM3
+         19     => True, -- P19 COM2
          others => False
          ];
       LCD_PENH.PEN := [
-         37     => True, -- P37
-         38     => True, -- P38
-         40     => True, -- P40
-         52     => True, -- P52
-         53     => True, -- P53
+         37     => True, -- P37 1D/1E/1G/1F
+         38     => True, -- P38 DP3/3C/3B/3A
+         40     => True, -- P40 COM0
+         52     => True, -- P52 COM1
+         53     => True, -- P53 3D/3E/3G/3F
          others => False
          ];
       LCD_BPENL.BPEN := [

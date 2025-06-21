@@ -26,6 +26,13 @@ package LCD
    --                                                                        --
    --========================================================================--
 
+   procedure Digit_Set
+      (Digit : in Natural;
+       Value : in Natural);
+
+   procedure Colon_Set
+      (On : in Boolean);
+
    procedure Init;
 
 end LCD;
