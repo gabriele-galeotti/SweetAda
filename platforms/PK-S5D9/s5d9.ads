@@ -136,6 +136,119 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- 7. Option-Setting Memory
+   ----------------------------------------------------------------------------
+
+   -- 7.2.1 Option Function Select Register 0 (OFS0)
+
+   IWDTSTRT_ENABLE  : constant := 0; -- Automatically activate IWDT after a reset (auto start mode)
+   IWDTSTRT_DISABLE : constant := 1; -- Disable IWDT.
+
+   IWDTTOPS_128  : constant := 2#00#; -- 128 cycles (007Fh)
+   IWDTTOPS_512  : constant := 2#01#; -- 512 cycles (01FFh)
+   IWDTTOPS_1024 : constant := 2#10#; -- 1024 cycles (03FFh)
+   IWDTTOPS_2048 : constant := 2#11#; -- 2048 cycles (07FFh).
+
+   IWDTCKS_DIV1   : constant := 2#0000#; -- × 1
+   IWDTCKS_DIV16  : constant := 2#0010#; -- × 1/16
+   IWDTCKS_DIV32  : constant := 2#0011#; -- × 1/32
+   IWDTCKS_DIV64  : constant := 2#0100#; -- × 1/64
+   IWDTCKS_DIV128 : constant := 2#1111#; -- × 1/128
+   IWDTCKS_DIV256 : constant := 2#0101#; -- × 1/256.
+
+   IWDTRPES_75 : constant := 2#00#; -- 75%
+   IWDTRPES_50 : constant := 2#01#; -- 50%
+   IWDTRPES_25 : constant := 2#10#; -- 25%
+   IWDTRPES_0  : constant := 2#11#; -- 0% (no window end position setting).
+
+   IWDTRPSS_25  : constant := 2#00#; -- 25%
+   IWDTRPSS_50  : constant := 2#01#; -- 50%
+   IWDTRPSS_75  : constant := 2#10#; -- 75%
+   IWDTRPSS_100 : constant := 2#11#; -- 100% (no window start position setting).
+
+   IWDTRSTIRQS_NMIIRQ : constant := 0; -- Enable non-maskable interrupt requests or interrupt requests
+   IWDTRSTIRQS_RESETS : constant := 1; -- Enable resets.
+
+   IWDTSTPCTL_CONT : constant := 0; -- Continue counting
+   IWDTSTPCTL_STOP : constant := 1; -- Stop counting when in Sleep, Snooze mode, Software Standby, or Deep Software Standby mode.
+
+   WDTSTRT_ENABLE : constant := 0; -- Automatically activate WDT after a reset (auto start mode)
+   WDTSTRT_STOP   : constant := 1; -- Stop WDT after a reset (register start mode).
+
+   WDTTOPS_1k  : constant := 2#00#; -- 1024 cycles (03FFh)
+   WDTTOPS_4k  : constant := 2#01#; -- 4096 cycles (0FFFh)
+   WDTTOPS_8k  : constant := 2#10#; -- 8192 cycles (1FFFh)
+   WDTTOPS_16k : constant := 2#11#; -- 16384 cycles (3FFFh).
+
+   WDTCKS_DIV4    : constant := 2#0001#; -- PCLKB divided by 4
+   WDTCKS_DIV64   : constant := 2#0100#; -- PCLKB divided by 64
+   WDTCKS_DIV128  : constant := 2#1111#; -- PCLKB divided by 128
+   WDTCKS_DIV512  : constant := 2#0110#; -- PCLKB divided by 512
+   WDTCKS_DIV2048 : constant := 2#0111#; -- PCLKB divided by 2048
+   WDTCKS_DIV8192 : constant := 2#1000#; -- PCLKB divided by 8192.
+
+   WDTRPES_75 : constant := 2#00#; -- 75%
+   WDTRPES_50 : constant := 2#01#; -- 50%
+   WDTRPES_25 : constant := 2#10#; -- 25%
+   WDTRPES_0  : constant := 2#11#; -- 0% (No window end position setting).
+
+   WDTRPSS_25  : constant := 2#00#; -- 25%
+   WDTRPSS_50  : constant := 2#01#; -- 50%
+   WDTRPSS_75  : constant := 2#10#; -- 75%
+   WDTRPSS_100 : constant := 2#11#; -- 100% (No window start position setting).
+
+   WDTRSTIRQS_NMI   : constant := 0; -- NMI
+   WDTRSTIRQS_RESET : constant := 1; -- Reset.
+
+   WDTSTPCTL_CONT : constant := 0; -- Continue counting
+   WDTSTPCTL_STOP : constant := 1; -- Stop counting when entering Sleep mode.
+
+   type OFS0_Type is record
+      Reserved1   : Bits_1 := 1;
+      IWDTSTRT    : Bits_1;          -- IWDT Start Mode Select
+      IWDTTOPS    : Bits_2;          -- IWDT Timeout Period Select
+      IWDTCKS     : Bits_4;          -- IWDT-Dedicated Clock Frequency Division Ratio Select
+      IWDTRPES    : Bits_2;          -- IWDT Window End Position Select
+      IWDTRPSS    : Bits_2;          -- IWDT Window Start Position Select
+      IWDTRSTIRQS : Bits_1;          -- IWDT Reset Interrupt Request Select
+      Reserved2   : Bits_1 := 1;
+      IWDTSTPCTL  : Bits_1;          -- IWDT Stop Control
+      Reserved3   : Bits_2 := 2#11#;
+      WDTSTRT     : Bits_1;          -- WDT Start Mode Select
+      WDTTOPS     : Bits_2;          -- WDT Timeout Period Select
+      WDTCKS      : Bits_4;          -- WDT Clock Frequency Division Ratio Select
+      WDTRPES     : Bits_2;          -- WDT Window End Position Select
+      WDTRPSS     : Bits_2;          -- WDT Window Start Position Select
+      WDTRSTIRQS  : Bits_1;          -- WDT Reset Interrupt Request Select
+      Reserved4   : Bits_1 := 1;
+      WDTSTPCTL   : Bits_1;          -- WDT Stop Control
+      Reserved5   : Bits_1 := 1;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for OFS0_Type use record
+      Reserved1   at 0 range  0 ..  0;
+      IWDTSTRT    at 0 range  1 ..  1;
+      IWDTTOPS    at 0 range  2 ..  3;
+      IWDTCKS     at 0 range  4 ..  7;
+      IWDTRPES    at 0 range  8 ..  9;
+      IWDTRPSS    at 0 range 10 .. 11;
+      IWDTRSTIRQS at 0 range 12 .. 12;
+      Reserved2   at 0 range 13 .. 13;
+      IWDTSTPCTL  at 0 range 14 .. 14;
+      Reserved3   at 0 range 15 .. 16;
+      WDTSTRT     at 0 range 17 .. 17;
+      WDTTOPS     at 0 range 18 .. 19;
+      WDTCKS      at 0 range 20 .. 23;
+      WDTRPES     at 0 range 24 .. 25;
+      WDTRPSS     at 0 range 26 .. 27;
+      WDTRSTIRQS  at 0 range 28 .. 28;
+      Reserved4   at 0 range 29 .. 29;
+      WDTSTPCTL   at 0 range 30 .. 30;
+      Reserved5   at 0 range 31 .. 31;
+   end record;
+
+   ----------------------------------------------------------------------------
    -- 9. Clock Generation Circuit
    ----------------------------------------------------------------------------
 
