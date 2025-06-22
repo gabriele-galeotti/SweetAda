@@ -1475,6 +1475,237 @@ pragma Style_Checks (Off);
            Import               => True,
            Convention           => Ada;
 
+   -- 17.2.4 Interrupt Status and Control Register (MCM_ISCR)
+
+   type MCM_ISCR_Type is record
+      Reserved1 : Bits_1  := 0;
+      IRQ       : Boolean := False; -- Normal Interrupt Pending
+      NMI       : Boolean := False; -- Non-maskable Interrupt Pending
+      DHREQ     : Boolean := False; -- Debug Halt Request Indicator
+      CWBER     : Boolean := False; -- Cache write buffer error status
+      Reserved2 : Bits_3  := 0;
+      FIOC      : Boolean := False; -- FPU invalid operation interrupt status
+      FDZC      : Boolean := False; -- FPU divide-by-zero interrupt status
+      FOFC      : Boolean := False; -- FPU overflow interrupt status
+      FUFC      : Boolean := False; -- FPU underflow interrupt status
+      FIXC      : Boolean := False; -- FPU inexact interrupt status
+      Reserved3 : Bits_2  := 0;
+      FIDC      : Boolean := False; -- FPU input denormal interrupt status
+      Reserved4 : Bits_4  := 0;
+      CWBEE     : Boolean := False; -- Cache write buffer error enable
+      Reserved5 : Bits_3  := 0;
+      FIOCE     : Boolean := False; -- FPU invalid operation interrupt enable
+      FDZCE     : Boolean := False; -- FPU divide-by-zero interrupt enable
+      FOFCE     : Boolean := False; -- FPU overflow interrupt enable
+      FUFCE     : Boolean := False; -- FPU underflow interrupt enable
+      FIXCE     : Boolean := False; -- FPU inexact interrupt enable
+      Reserved6 : Bits_2  := 0;
+      FIDCE     : Boolean := False; -- FPU input denormal interrupt enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for MCM_ISCR_Type use record
+      Reserved1 at 0 range  0 ..  0;
+      IRQ       at 0 range  1 ..  1;
+      NMI       at 0 range  2 ..  2;
+      DHREQ     at 0 range  3 ..  3;
+      CWBER     at 0 range  4 ..  4;
+      Reserved2 at 0 range  5 ..  7;
+      FIOC      at 0 range  8 ..  8;
+      FDZC      at 0 range  9 ..  9;
+      FOFC      at 0 range 10 .. 10;
+      FUFC      at 0 range 11 .. 11;
+      FIXC      at 0 range 12 .. 12;
+      Reserved3 at 0 range 13 .. 14;
+      FIDC      at 0 range 15 .. 15;
+      Reserved4 at 0 range 16 .. 19;
+      CWBEE     at 0 range 20 .. 20;
+      Reserved5 at 0 range 21 .. 23;
+      FIOCE     at 0 range 24 .. 24;
+      FDZCE     at 0 range 25 .. 25;
+      FOFCE     at 0 range 26 .. 26;
+      FUFCE     at 0 range 27 .. 27;
+      FIXCE     at 0 range 28 .. 28;
+      Reserved6 at 0 range 29 .. 30;
+      FIDCE     at 0 range 31 .. 31;
+   end record;
+
+   MCM_ISCR : aliased MCM_ISCR_Type
+      with Address              => System'To_Address (MCM_BASEADDRESS + 16#10#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 17.2.5 ETB Counter Control register (MCM_ETBCC)
+
+   RSPT_NONE  : constant := 2#00#; -- No response when the ETB count expires
+   RSPT_IRQ   : constant := 2#01#; -- Generate a normal interrupt when the ETB count expires
+   RSPT_NMI   : constant := 2#10#; -- Generate an NMI when the ETB count expires
+   RSPT_DHREQ : constant := 2#11#; -- Generate a debug halt when the ETB count expires
+
+   type MCM_ETBCC_Type is record
+      CNTEN    : Boolean := False;     -- Counter Enable
+      RSPT     : Bits_2  := RSPT_NONE; -- Response Type
+      RLRQ     : Boolean := False;     -- Reload Request
+      ETDIS    : Boolean := False;     -- ETM-To-TPIU Disable
+      ITDIS    : Boolean := False;     -- ITM-To-TPIU Disable
+      Reserved : Bits_26 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for MCM_ETBCC_Type use record
+      CNTEN    at 0 range 0 ..  0;
+      RSPT     at 0 range 1 ..  2;
+      RLRQ     at 0 range 3 ..  3;
+      ETDIS    at 0 range 4 ..  4;
+      ITDIS    at 0 range 5 ..  5;
+      Reserved at 0 range 6 .. 31;
+   end record;
+
+   MCM_ETBCC : aliased MCM_ETBCC_Type
+      with Address              => System'To_Address (MCM_BASEADDRESS + 16#14#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 17.2.6 ETB Reload register (MCM_ETBRL)
+
+   type MCM_ETBRL_Type is record
+      RELOAD   : Bits_11 := 0; -- Byte Count Reload Value
+      Reserved : Bits_21 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for MCM_ETBRL_Type use record
+      RELOAD   at 0 range  0 .. 10;
+      Reserved at 0 range 11 .. 31;
+   end record;
+
+   MCM_ETBRL : aliased MCM_ETBRL_Type
+      with Address              => System'To_Address (MCM_BASEADDRESS + 16#18#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 17.2.7 ETB Counter Value register (MCM_ETBCNT)
+
+   type MCM_ETBCNT_Type is record
+      COUNTER  : Bits_11; -- Byte Count Counter Value
+      Reserved : Bits_21;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for MCM_ETBCNT_Type use record
+      COUNTER  at 0 range  0 .. 10;
+      Reserved at 0 range 11 .. 31;
+   end record;
+
+   MCM_ETBCNT : aliased MCM_ETBCNT_Type
+      with Address              => System'To_Address (MCM_BASEADDRESS + 16#1C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 17.2.8 Fault address register (MCM_FADR)
+
+   type MCM_FADR_Type is record
+      ADDRESS : Unsigned_32; -- Fault address
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for MCM_FADR_Type use record
+      ADDRESS at 0 range 0 .. 31;
+   end record;
+
+   MCM_FADR : aliased MCM_FADR_Type
+      with Address              => System'To_Address (MCM_BASEADDRESS + 16#20#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 17.2.9 Fault attributes register (MCM_FATR)
+
+   BEDA_INSTR : constant := 0; -- Instruction
+   BEDA_DATA  : constant := 1; -- Data
+
+   BEMD_USER : constant := 0; -- User mode
+   BEMD_SUPV : constant := 1; -- Supervisor/privileged mode
+
+   BESZ_8    : constant := 2#00#; -- 8-bit access
+   BESZ_16   : constant := 2#01#; -- 16-bit access
+   BESZ_32   : constant := 2#10#; -- 32-bit access
+   BESZ_RSVD : constant := 2#11#; -- Reserved
+
+   BEWT_READ  : constant := 0; -- Read access
+   BEWT_WRITE : constant := 1; -- Write access
+
+   type MCM_FATR_Type is record
+      BEDA      : Bits_1;  -- Bus error access type
+      BEMD      : Bits_1;  -- Bus error privilege level
+      Reserved1 : Bits_2;
+      BESZ      : Bits_2;  -- Bus error size
+      Reserved2 : Bits_1;
+      BEWT      : Bits_1;  -- Bus error write
+      BEMN      : Bits_4;  -- Bus error master number
+      Reserved3 : Bits_19;
+      BEOVR     : Boolean; -- Bus error overrun
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for MCM_FATR_Type use record
+      BEDA      at 0 range  0 ..  0;
+      BEMD      at 0 range  1 ..  1;
+      Reserved1 at 0 range  2 ..  3;
+      BESZ      at 0 range  4 ..  5;
+      Reserved2 at 0 range  6 ..  6;
+      BEWT      at 0 range  7 ..  7;
+      BEMN      at 0 range  8 .. 11;
+      Reserved3 at 0 range 12 .. 30;
+      BEOVR     at 0 range 31 .. 31;
+   end record;
+
+   MCM_FATR : aliased MCM_FATR_Type
+      with Address              => System'To_Address (MCM_BASEADDRESS + 16#24#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 17.2.10 Fault data register (MCM_FDR)
+
+   type MCM_FDR_Type is record
+      DATA : Unsigned_32; -- Fault data
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for MCM_FDR_Type use record
+      DATA at 0 range 0 .. 31;
+   end record;
+
+   MCM_FDR : aliased MCM_FDR_Type
+      with Address              => System'To_Address (MCM_BASEADDRESS + 16#28#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 17.2.11 Process ID register (MCM_PID)
+
+   type MCM_PID_Type is record
+      PID      : Bits_8  := 0; -- M0_PID And M1_PID For MPU
+      Reserved : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for MCM_PID_Type use record
+      PID      at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   MCM_PID : aliased MCM_PID_Type
+      with Address              => System'To_Address (MCM_BASEADDRESS + 16#30#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    ----------------------------------------------------------------------------
    -- Chapter 24 Watchdog Timer (WDOG)
    ----------------------------------------------------------------------------
