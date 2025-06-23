@@ -4185,7 +4185,7 @@ pragma Style_Checks (Off);
    -- 44.3.3 Current Timer Value Register (PIT_CVALn)
 
    type PIT_CVALn_Type is record
-      TVL : Unsigned_32 := 0; -- Current Timer Value
+      TVL : Unsigned_32; -- Current Timer Value
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
