@@ -3,6 +3,7 @@ with Interfaces;
 with Bits;
 with CPU;
 with KL46Z;
+with Switches;
 with LCD;
 with Console;
 
@@ -39,7 +40,7 @@ package body Application
       if True then
          declare
             Delay_Count : constant := 10_000_000;
-            N           : Natural;
+            N           : Integer;
             Colon       : Boolean;
          begin
             -- LED1 (GREEN)
@@ -54,9 +55,17 @@ package body Application
                LCD.Digit_Set (2, N + 1);
                LCD.Digit_Set (3, N + 2);
                LCD.Digit_Set (4, N + 3);
-               N := @ + 1;
-               if N > 6 then
-                  N := 0;
+               if not Switches.SW1_Read then
+                  N := @ + 1;
+                  if N > 6 then
+                     N := 0;
+                  end if;
+               end if;
+               if not Switches.SW3_Read then
+                  N := @ - 1;
+                  if N < 0 then
+                     N := 6;
+                  end if;
                end if;
                LCD.Colon_Set (Colon);
                Colon := not @;
