@@ -4151,6 +4151,109 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- Chapter 44 Periodic Interrupt Timer (PIT)
+   ----------------------------------------------------------------------------
+
+   -- 44.3.1 PIT Module Control Register (PIT_MCR)
+
+   type PIT_MCR_Type is record
+      FRZ       : Boolean := False; -- Freeze
+      MDIS      : Boolean := True;  -- Module Disable - (PIT section)
+      Reserved1 : Bits_1  := 0;
+      Reserved2 : Bits_29 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PIT_MCR_Type use record
+      FRZ       at 0 range 0 ..  0;
+      MDIS      at 0 range 1 ..  1;
+      Reserved1 at 0 range 2 ..  2;
+      Reserved2 at 0 range 3 .. 31;
+   end record;
+
+   -- 44.3.2 Timer Load Value Register (PIT_LDVALn)
+
+   type PIT_LDVALn_Type is record
+      TSV : Unsigned_32 := 0; -- Timer Start Value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PIT_LDVALn_Type use record
+      TSV at 0 range 0 .. 31;
+   end record;
+
+   -- 44.3.3 Current Timer Value Register (PIT_CVALn)
+
+   type PIT_CVALn_Type is record
+      TVL : Unsigned_32 := 0; -- Current Timer Value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PIT_CVALn_Type use record
+      TVL at 0 range 0 .. 31;
+   end record;
+
+   -- 44.3.4 Timer Control Register (PIT_TCTRLn)
+
+   type PIT_TCTRLn_Type is record
+      TEN      : Boolean := False; -- Timer Enable
+      TIE      : Boolean := False; -- Timer Interrupt Enable
+      CHN      : Boolean := False; -- Chain Mode
+      Reserved : Bits_29 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PIT_TCTRLn_Type use record
+      TEN      at 0 range 0 ..  0;
+      TIE      at 0 range 1 ..  1;
+      CHN      at 0 range 2 ..  2;
+      Reserved at 0 range 3 .. 31;
+   end record;
+
+   -- 44.3.5 Timer Flag Register (PIT_TFLGn)
+
+   type PIT_TFLGn_Type is record
+      TIF      : Boolean := False; -- Timer Interrupt Flag
+      Reserved : Bits_31 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PIT_TFLGn_Type use record
+      TIF      at 0 range 0 ..  0;
+      Reserved at 0 range 1 .. 31;
+   end record;
+
+   -- 44.3 Memory map/register description
+
+   type PITn_Type is record
+      LDVAL : PIT_LDVALn_Type with Volatile_Full_Access => True;
+      CVAL  : PIT_CVALn_Type  with Volatile_Full_Access => True;
+      TCTRL : PIT_TCTRLn_Type with Volatile_Full_Access => True;
+      TFLG  : PIT_TFLGn_Type  with Volatile_Full_Access => True;
+   end record
+      with Size => 4 * 32;
+
+   type PITn_Array_Type is array (0 .. 3) of PITn_Type
+      with Pack     => True,
+           Volatile => True;
+
+   type PIT_Type is record
+      MCR : PIT_MCR_Type;
+      PIT : PITn_Array_Type;
+   end record
+      with Volatile => True;
+   for PIT_Type use record
+      MCR at 16#000# range 0 .. 31;
+      PIT at 16#100# range 0 .. 4 * 4 * 32 - 1;
+   end record;
+
+   PIT : aliased PIT_Type
+      with Address    => System'To_Address (16#4003_7000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ----------------------------------------------------------------------------
    -- Chapter 54 Serial Peripheral Interface (SPI)
    ----------------------------------------------------------------------------
 
