@@ -84,13 +84,13 @@ pragma Style_Checks (Off);
    IRQC_RSVD7      : constant := 2#1111#; -- Reserved.
 
    type PORTx_PCRn_Type is record
-      PS        : Bits_1;                   -- Pull Select
-      PE        : Boolean;                  -- Pull Enable
-      SRE       : Boolean;                  -- Slew Rate Enable
+      PS        : Bits_1  := PS_PULLDOWN;   -- Pull Select
+      PE        : Boolean := False;         -- Pull Enable
+      SRE       : Boolean := False;         -- Slew Rate Enable
       Reserved1 : Bits_1  := 0;
-      PFE       : Boolean;                  -- Passive Filter Enable
+      PFE       : Boolean := False;         -- Passive Filter Enable
       Reserved2 : Bits_1  := 0;
-      DSE       : Boolean;                  -- Drive Strength Enable
+      DSE       : Boolean := False;         -- Drive Strength Enable
       Reserved3 : Bits_1  := 0;
       MUX       : Bits_3;                   -- Pin Mux Control
       Reserved4 : Bits_5  := 0;
