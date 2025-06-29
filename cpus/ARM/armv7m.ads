@@ -224,6 +224,24 @@ pragma Style_Checks (Off);
       (Value : in CONTROL_Type)
       with Inline => True;
 
+   -- B1.5.2 Exception number definition
+
+   Reset         : constant := 1;
+   NMI           : constant := 2;
+   HardFault     : constant := 3;
+   MemManage     : constant := 4;
+   BusFault      : constant := 5;
+   UsageFault    : constant := 6;
+   ReservedExc7  : constant := 7;
+   ReservedExc8  : constant := 8;
+   ReservedExc9  : constant := 9;
+   ReservedExc10 : constant := 10;
+   SVCall        : constant := 11;
+   DebugMonitor  : constant := 12;
+   ReservedExc13 : constant := 13;
+   PendSV        : constant := 14;
+   SysTick       : constant := 15;
+
    ----------------------------------------------------------------------------
    -- B3.2 System Control Space (SCS)
    ----------------------------------------------------------------------------
@@ -249,6 +267,7 @@ pragma Style_Checks (Off);
    BFAR_ADDRESS   : constant := 16#E000_ED38#;
    AFSR_ADDRESS   : constant := 16#E000_ED3C#;
    CPACR_ADDRESS  : constant := 16#E000_ED88#;
+   STIR_ADDRESS   : constant := 16#E000_EF00#;
    FPCCR_ADDRESS  : constant := 16#E000_EF34#;
    FPCAR_ADDRESS  : constant := 16#E000_EF38#;
    FPDSCR_ADDRESS : constant := 16#E000_EF3C#;
@@ -661,6 +680,25 @@ pragma Style_Checks (Off);
    -- IMPLEMENTATION DEFINED
 
    subtype ACTLR_Type is ARMv6M.ACTLR_Type;
+
+   -- B3.2.26 Software Triggered Interrupt Register, STIR
+
+   type STIR_Type is record
+      INTID    : Bits_9  := Reset; -- Indicates the interrupt to be triggered.
+      Reserved : Bits_23;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for STIR_Type use record
+      INTID    at 0 range 0 ..  8;
+      Reserved at 0 range 9 .. 31;
+   end record;
+
+   STIR : aliased STIR_Type
+      with Address              => System'To_Address (STIR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- B3.3 The system timer, SysTick
