@@ -19,7 +19,6 @@ with Definitions;
 with Bits;
 with CPU;
 with KL46Z;
-with BSP;
 
 package body LCD
    is
