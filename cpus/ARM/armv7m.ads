@@ -685,7 +685,7 @@ pragma Style_Checks (Off);
 
    type STIR_Type is record
       INTID    : Bits_9  := Reset; -- Indicates the interrupt to be triggered.
-      Reserved : Bits_23;
+      Reserved : Bits_23 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
