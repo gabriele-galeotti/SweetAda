@@ -185,6 +185,24 @@ pragma Style_Checks (Off);
       (Value : in CONTROL_Type)
       with Inline => True;
 
+   -- B1.5.2 Exception number definition
+
+   Reset         : constant := 1;
+   NMI           : constant := 2;
+   HardFault     : constant := 3;
+   ReservedExc4  : constant := 4;
+   ReservedExc5  : constant := 5;
+   ReservedExc6  : constant := 6;
+   ReservedExc7  : constant := 7;
+   ReservedExc8  : constant := 8;
+   ReservedExc9  : constant := 9;
+   ReservedExc10 : constant := 10;
+   SVCall        : constant := 11;
+   ReservedExc12 : constant := 12;
+   ReservedExc13 : constant := 13;
+   PendSV        : constant := 14;
+   SysTick       : constant := 15;
+
    ----------------------------------------------------------------------------
    -- B3.2 System Control Space (SCS)
    ----------------------------------------------------------------------------
