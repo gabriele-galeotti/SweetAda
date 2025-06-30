@@ -4151,6 +4151,263 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- Chapter 43 FlexTimer Module (FTM)
+   ----------------------------------------------------------------------------
+
+   -- 43.3.3 Status And Control (FTMx_SC)
+
+   PS_DIV1   : constant := 2#000#; -- Divide by 1
+   PS_DIV2   : constant := 2#001#; -- Divide by 2
+   PS_DIV4   : constant := 2#010#; -- Divide by 4
+   PS_DIV8   : constant := 2#011#; -- Divide by 8
+   PS_DIV16  : constant := 2#100#; -- Divide by 16
+   PS_DIV32  : constant := 2#101#; -- Divide by 32
+   PS_DIV64  : constant := 2#110#; -- Divide by 64
+   PS_DIV128 : constant := 2#111#; -- Divide by 128
+
+   CLKS_NONE   : constant := 2#00#; -- No clock selected.
+   CLKS_SYSTEM : constant := 2#01#; -- System clock
+   CLKS_FIXEDF : constant := 2#10#; -- Fixed frequency clock
+   CLKS_EXTERN : constant := 2#11#; -- External clock
+
+   CPWMS_UP     : constant := 0; -- FTM counter operates in Up Counting mode.
+   CPWMS_UPDOWN : constant := 1; -- FTM counter operates in Up-Down Counting mode.
+
+   type FTMx_SC_Type is record
+      PS       : Bits_3  := PS_DIV1;   -- Prescale Factor Selection
+      CLKS     : Bits_2  := CLKS_NONE; -- Clock Source Selection
+      CPWMS    : Bits_1  := CPWMS_UP;  -- Center-Aligned PWM Select
+      TOIE     : Boolean := False;     -- Timer Overflow Interrupt Enable
+      TOF      : Boolean := False;     -- Timer Overflow Flag
+      Reserved : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FTMx_SC_Type use record
+      PS       at 0 range 0 ..  2;
+      CLKS     at 0 range 3 ..  4;
+      CPWMS    at 0 range 5 ..  5;
+      TOIE     at 0 range 6 ..  6;
+      TOF      at 0 range 7 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   -- 43.3.4 Counter (FTMx_CNT)
+
+   type FTMx_CNT_Type is record
+      COUNT    : Unsigned_16 := 0; -- Counter Value
+      Reserved : Bits_16     := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FTMx_CNT_Type use record
+      COUNT    at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   -- 43.3.5 Modulo (FTMx_MOD)
+
+   type FTMx_MOD_Type is record
+      MODulo   : Unsigned_16 := 0; -- Modulo Value
+      Reserved : Bits_16     := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FTMx_MOD_Type use record
+      MODulo   at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   -- 43.3.8 Counter Initial Value (FTMx_CNTIN)
+
+   type FTMx_CNTIN_Type is record
+      INIT     : Unsigned_16 := 0; -- Initial Value Of The FTM Counter
+      Reserved : Bits_16     := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FTMx_CNTIN_Type use record
+      INIT     at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   -- 43.3.10 Features Mode Selection (FTMx_MODE)
+
+   FAULTM_DISABLE       : constant := 2#00#; -- Fault control is disabled for all channels.
+   FAULTM_EVENCHNMANCLR : constant := 2#01#; -- Fault control is enabled for even channels only (channels 0, 2, 4, and 6), and the selected mode is the manual fault clearing.
+   FAULTM_ALLCHNMANCLR  : constant := 2#10#; -- Fault control is enabled for all channels, and the selected mode is the manual fault clearing.
+   FAULTM_ALLCHNAUTOCLR : constant := 2#11#; -- Fault control is enabled for all channels, and the selected mode is the automatic fault clearing.
+
+   type FTMx_MODE_Type is record
+      FTMEN    : Boolean := False;          -- FTM Enable
+      INIT     : Boolean := False;          -- Initialize The Channels Output
+      WPDIS    : Boolean := True;           -- Write Protection Disable
+      PWMSYNC  : Boolean := False;          -- PWM Synchronization Mode
+      CAPTEST  : Boolean := False;          -- Capture Test Mode Enable
+      FAULTM   : Bits_2  := FAULTM_DISABLE; -- Fault Control Mode
+      FAULTIE  : Boolean := False;          -- Fault Interrupt Enable
+      Reserved : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FTMx_MODE_Type use record
+      FTMEN    at 0 range 0 ..  0;
+      INIT     at 0 range 1 ..  1;
+      WPDIS    at 0 range 2 ..  2;
+      PWMSYNC  at 0 range 3 ..  3;
+      CAPTEST  at 0 range 4 ..  4;
+      FAULTM   at 0 range 5 ..  6;
+      FAULTIE  at 0 range 7 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   -- 43.3.14 Function For Linked Channels (FTMx_COMBINE)
+
+   type FTMx_COMBINE_Type is record
+      COMBINE0  : Boolean := False; -- Combine Channels For n = 0
+      COMP0     : Boolean := False; -- Complement Of Channel (n) For n = 0
+      DECAPEN0  : Boolean := False; -- Dual Edge Capture Mode Enable For n = 0
+      DECAP0    : Boolean := False; -- Dual Edge Capture Mode Captures For n = 0
+      DTEN0     : Boolean := False; -- Deadtime Enable For n = 0
+      SYNCEN0   : Boolean := False; -- Synchronization Enable For n = 0
+      FAULTEN0  : Boolean := False; -- Fault Control Enable For n = 0
+      Reserved1 : Bits_1  := 0;
+      COMBINE1  : Boolean := False; -- Combine Channels For n = 2
+      COMP1     : Boolean := False; -- Complement Of Channel (n) For n = 2
+      DECAPEN1  : Boolean := False; -- Dual Edge Capture Mode Enable For n = 2
+      DECAP1    : Boolean := False; -- Dual Edge Capture Mode Captures For n = 2
+      DTEN1     : Boolean := False; -- Deadtime Enable For n = 2
+      SYNCEN1   : Boolean := False; -- Synchronization Enable For n = 2
+      FAULTEN1  : Boolean := False; -- Fault Control Enable For n = 2
+      Reserved2 : Bits_1  := 0;
+      COMBINE2  : Boolean := False; -- Combine Channels For n = 4
+      COMP2     : Boolean := False; -- Complement Of Channel (n) For n = 4
+      DECAPEN2  : Boolean := False; -- Dual Edge Capture Mode Enable For n = 4
+      DECAP2    : Boolean := False; -- Dual Edge Capture Mode Captures For n = 4
+      DTEN2     : Boolean := False; -- Deadtime Enable For n = 4
+      SYNCEN2   : Boolean := False; -- Synchronization Enable For n = 4
+      FAULTEN2  : Boolean := False; -- Fault Control Enable For n = 4
+      Reserved3 : Bits_1  := 0;
+      COMBINE3  : Boolean := False; -- Combine Channels For n = 6
+      COMP3     : Boolean := False; -- Complement Of Channel (n) For n = 6
+      DECAPEN3  : Boolean := False; -- Dual Edge Capture Mode Enable For n = 6
+      DECAP3    : Boolean := False; -- Dual Edge Capture Mode Captures For n = 6
+      DTEN3     : Boolean := False; -- Deadtime Enable For n = 6
+      SYNCEN3   : Boolean := False; -- Synchronization Enable For n = 6
+      FAULTEN3  : Boolean := False; -- Fault Control Enable For n = 6
+      Reserved4 : Bits_1  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FTMx_COMBINE_Type use record
+      COMBINE0  at 0 range  0 ..  0;
+      COMP0     at 0 range  1 ..  1;
+      DECAPEN0  at 0 range  2 ..  2;
+      DECAP0    at 0 range  3 ..  3;
+      DTEN0     at 0 range  4 ..  4;
+      SYNCEN0   at 0 range  5 ..  5;
+      FAULTEN0  at 0 range  6 ..  6;
+      Reserved1 at 0 range  7 ..  7;
+      COMBINE1  at 0 range  8 ..  8;
+      COMP1     at 0 range  9 ..  9;
+      DECAPEN1  at 0 range 10 .. 10;
+      DECAP1    at 0 range 11 .. 11;
+      DTEN1     at 0 range 12 .. 12;
+      SYNCEN1   at 0 range 13 .. 13;
+      FAULTEN1  at 0 range 14 .. 14;
+      Reserved2 at 0 range 15 .. 15;
+      COMBINE2  at 0 range 16 .. 16;
+      COMP2     at 0 range 17 .. 17;
+      DECAPEN2  at 0 range 18 .. 18;
+      DECAP2    at 0 range 19 .. 19;
+      DTEN2     at 0 range 20 .. 20;
+      SYNCEN2   at 0 range 21 .. 21;
+      FAULTEN2  at 0 range 22 .. 22;
+      Reserved3 at 0 range 23 .. 23;
+      COMBINE3  at 0 range 24 .. 24;
+      COMP3     at 0 range 25 .. 25;
+      DECAPEN3  at 0 range 26 .. 26;
+      DECAP3    at 0 range 27 .. 27;
+      DTEN3     at 0 range 28 .. 28;
+      SYNCEN3   at 0 range 29 .. 29;
+      FAULTEN3  at 0 range 30 .. 30;
+      Reserved4 at 0 range 31 .. 31;
+   end record;
+
+   -- 43.3.18 Fault Mode Status (FTMx_FMS)
+
+   type FTMx_FMS_Type is record
+      FAULTF0   : Boolean; -- Fault Detection Flag 0
+      FAULTF1   : Boolean; -- Fault Detection Flag 1
+      FAULTF2   : Boolean; -- Fault Detection Flag 2
+      FAULTF3   : Boolean; -- Fault Detection Flag 3
+      Reserved1 : Bits_1;
+      FAULTIN   : Boolean; -- Fault Inputs
+      WPEN      : Boolean; -- Write Protection Enable
+      FAULTF    : Boolean; -- Fault Detection Flag
+      Reserved2 : Bits_24;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FTMx_FMS_Type use record
+      FAULTF0   at 0 range 0 ..  0;
+      FAULTF1   at 0 range 1 ..  1;
+      FAULTF2   at 0 range 2 ..  2;
+      FAULTF3   at 0 range 3 ..  3;
+      Reserved1 at 0 range 4 ..  4;
+      FAULTIN   at 0 range 5 ..  5;
+      WPEN      at 0 range 6 ..  6;
+      FAULTF    at 0 range 7 ..  7;
+      Reserved2 at 0 range 8 .. 31;
+   end record;
+
+   -- 43.3.1 Memory map
+
+   type FTM_Type is record
+      SC      : FTMx_SC_Type      with Volatile_Full_Access => True;
+      CNT     : FTMx_CNT_Type     with Volatile_Full_Access => True;
+      MODulo  : FTMx_MOD_Type     with Volatile_Full_Access => True;
+      CNTIN   : FTMx_CNTIN_Type   with Volatile_Full_Access => True;
+      MODE    : FTMx_MODE_Type    with Volatile_Full_Access => True;
+      COMBINE : FTMx_COMBINE_Type with Volatile_Full_Access => True;
+      FMS     : FTMx_FMS_Type     with Volatile_Full_Access => True;
+   end record
+      with Size => 16#78# * 8;
+   for FTM_Type use record
+      SC      at 16#00# range 0 .. 31;
+      CNT     at 16#04# range 0 .. 31;
+      MODulo  at 16#08# range 0 .. 31;
+      CNTIN   at 16#4C# range 0 .. 31;
+      MODE    at 16#54# range 0 .. 31;
+      COMBINE at 16#64# range 0 .. 31;
+      FMS     at 16#74# range 0 .. 31;
+   end record;
+
+   FTM0 : aliased FTM_Type
+      with Address    => System'To_Address (16#4003_8000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   FTM1 : aliased FTM_Type
+      with Address    => System'To_Address (16#4003_9000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   FTM2 : aliased FTM_Type
+      with Address    => System'To_Address (16#400B_8000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   FTM3 : aliased FTM_Type
+      with Address    => System'To_Address (16#400B_9000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ----------------------------------------------------------------------------
    -- Chapter 44 Periodic Interrupt Timer (PIT)
    ----------------------------------------------------------------------------
 
