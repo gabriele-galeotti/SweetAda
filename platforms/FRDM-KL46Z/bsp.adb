@@ -21,6 +21,7 @@ with CPU;
 with ARMv6M;
 with KL46Z;
 with Clocks;
+with Switches;
 with LCD;
 with Exceptions;
 with Console;
@@ -144,6 +145,7 @@ package body BSP
       -------------------------------------------------------------------------
       Console.Print ("FRDM-KL46Z", NL => True);
       -------------------------------------------------------------------------
+      Switches.Init;
       LCD.Init;
       -------------------------------------------------------------------------
       ARMv6M.Irq_Enable;
