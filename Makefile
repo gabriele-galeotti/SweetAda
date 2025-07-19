@@ -110,7 +110,7 @@ INFO_GOALS := infodump
 
 # probe variables(s) goals
 PROBEVARIABLE_GOALS := probevariable  \
-              probevariables
+                       probevariables
 
 # clean/distclean goals
 CLEANING_GOALS := clean     \
