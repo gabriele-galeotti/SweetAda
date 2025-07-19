@@ -606,11 +606,17 @@ pragma Style_Checks (Off);
 
    -- 5.3.3 RCC clock configuration register (RCC_CFGR)
 
-   SW_HSI : constant := 2#00#; -- HSI oscillator selected as system clock
-   SW_HSE : constant := 2#01#; -- HSE oscillator selected as system clock
-   SW_PLL : constant := 2#10#; -- PLL selected as system clock
+   SW_HSI  : constant := 2#00#; -- HSI oscillator selected as system clock
+   SW_HSE  : constant := 2#01#; -- HSE oscillator selected as system clock
+   SW_PLL  : constant := 2#10#; -- PLL selected as system clock
+   SW_RSVD : constant := 2#11#;
 
-   HPRE_NONE   : constant := 2#0000#; -- system clock not divided
+   SWS_HSI  : constant := 2#00#; -- HSI oscillator used as the system clock
+   SWS_HSE  : constant := 2#01#; -- HSE oscillator used as the system clock
+   SWS_PLL  : constant := 2#10#; -- PLL used as the system clock
+   SWS_RSVD : constant := 2#11#; -- not applicable
+
+   HPRE_NODIV  : constant := 2#0000#; -- system clock not divided
    HPRE_DIV2   : constant := 2#1000#; -- system clock divided by 2
    HPRE_DIV4   : constant := 2#1001#; -- system clock divided by 4
    HPRE_DIV8   : constant := 2#1010#; -- system clock divided by 8
@@ -620,23 +626,58 @@ pragma Style_Checks (Off);
    HPRE_DIV256 : constant := 2#1110#; -- system clock divided by 256
    HPRE_DIV512 : constant := 2#1111#; -- system clock divided by 512
 
+   PPRE_NODIV : constant := 2#000#; -- AHB clock not divided
    PPRE_DIV2  : constant := 2#100#; -- AHB clock divided by 2
    PPRE_DIV4  : constant := 2#101#; -- AHB clock divided by 4
    PPRE_DIV8  : constant := 2#110#; -- AHB clock divided by 8
    PPRE_DIV16 : constant := 2#111#; -- AHB clock divided by 16
+
+   RTCPRE_NOCLOCK  : constant := 2#00000#; -- no clock
+   RTCPRE_NOCLOCK1 : constant := 2#00001#; -- no clock
+   RTCPRE_HSEDIV2  : constant := 2#00010#; -- HSE/2
+   RTCPRE_HSEDIV3  : constant := 2#00011#; -- HSE/3
+   RTCPRE_HSEDIV4  : constant := 2#00100#; -- HSE/4
+   RTCPRE_HSEDIV5  : constant := 2#00101#; -- ...
+   RTCPRE_HSEDIV6  : constant := 2#00110#;
+   RTCPRE_HSEDIV7  : constant := 2#00111#;
+   RTCPRE_HSEDIV8  : constant := 2#01000#;
+   RTCPRE_HSEDIV9  : constant := 2#01001#;
+   RTCPRE_HSEDIV10 : constant := 2#01010#;
+   RTCPRE_HSEDIV11 : constant := 2#01011#;
+   RTCPRE_HSEDIV12 : constant := 2#01100#;
+   RTCPRE_HSEDIV13 : constant := 2#01101#;
+   RTCPRE_HSEDIV14 : constant := 2#01110#;
+   RTCPRE_HSEDIV15 : constant := 2#01111#;
+   RTCPRE_HSEDIV16 : constant := 2#10000#;
+   RTCPRE_HSEDIV17 : constant := 2#10001#;
+   RTCPRE_HSEDIV18 : constant := 2#10010#;
+   RTCPRE_HSEDIV19 : constant := 2#10011#;
+   RTCPRE_HSEDIV20 : constant := 2#10100#;
+   RTCPRE_HSEDIV21 : constant := 2#10101#;
+   RTCPRE_HSEDIV22 : constant := 2#10110#;
+   RTCPRE_HSEDIV23 : constant := 2#10111#;
+   RTCPRE_HSEDIV24 : constant := 2#11000#;
+   RTCPRE_HSEDIV25 : constant := 2#11001#;
+   RTCPRE_HSEDIV26 : constant := 2#11010#;
+   RTCPRE_HSEDIV27 : constant := 2#11011#;
+   RTCPRE_HSEDIV28 : constant := 2#11100#;
+   RTCPRE_HSEDIV29 : constant := 2#11101#;
+   RTCPRE_HSEDIV30 : constant := 2#11110#; -- HSE/30
+   RTCPRE_HSEDIV31 : constant := 2#11111#; -- HSE/31
 
    MCO1_HSI : constant := 2#00#; -- HSI clock selected
    MCO1_LSE : constant := 2#01#; -- LSE oscillator selected
    MCO1_HSE : constant := 2#10#; -- HSE oscillator clock selected
    MCO1_PLL : constant := 2#11#; -- PLL clock selected
 
-   I2SSCR_PLLI2S : constant := 2#0#; -- PLLI2S clock used as I2S clock source
-   I2SSCR_EXT    : constant := 2#1#; -- External clock mapped on the I2S_CKIN pin used as I2S clock source
+   I2SSCR_PLLI2S : constant := 0; -- PLLI2S clock used as I2S clock source
+   I2SSCR_EXT    : constant := 1; -- External clock mapped on the I2S_CKIN pin used as I2S clock source
 
-   MCOPRE_DIV2 : constant := 2#100#; -- division by 2
-   MCOPRE_DIV3 : constant := 2#101#; -- division by 3
-   MCOPRE_DIV4 : constant := 2#110#; -- division by 4
-   MCOPRE_DIV5 : constant := 2#111#; -- division by 5
+   MCOPRE_NODIV : constant := 2#000#; -- no division
+   MCOPRE_DIV2  : constant := 2#100#; -- division by 2
+   MCOPRE_DIV3  : constant := 2#101#; -- division by 3
+   MCOPRE_DIV4  : constant := 2#110#; -- division by 4
+   MCOPRE_DIV5  : constant := 2#111#; -- division by 5
 
    MCO2_SYSCLK : constant := 2#00#; -- System clock (SYSCLK) selected
    MCO2_PLLI2S : constant := 2#01#; -- PLLI2S clock selected
@@ -644,18 +685,18 @@ pragma Style_Checks (Off);
    MCO2_PLL    : constant := 2#11#; -- PLL clock selected
 
    type RCC_CFGR_Type is record
-      SW        : Bits_2 := 0; -- System clock switch
-      SWS       : Bits_2 := 0; -- System clock switch status
-      HPRE      : Bits_4 := 0; -- AHB prescaler
+      SW        : Bits_2 := SW_HSI;         -- System clock switch
+      SWS       : Bits_2 := SWS_HSI;        -- System clock switch status
+      HPRE      : Bits_4 := HPRE_NODIV;     -- AHB prescaler
       Reserved1 : Bits_2 := 0;
-      PPRE1     : Bits_3 := 0; -- APB Low-speed prescaler (APB1)
-      PPRE2     : Bits_3 := 0; -- APB high-speed prescaler (APB2)
-      RTCPRE    : Bits_5 := 0; -- HSE division factor for RTC clock
-      MCO1      : Bits_2 := 0; -- Microcontroller clock output 1
-      I2SSCR    : Bits_1 := 0; -- I2S clock selection
-      MCO1PRE   : Bits_3 := 0; -- MCO1 prescaler
-      MCO2PRE   : Bits_3 := 0; -- MCO2 prescaler
-      MCO2      : Bits_2 := 0; -- Microcontroller clock output 2
+      PPRE1     : Bits_3 := PPRE_NODIV;     -- APB Low-speed prescaler (APB1)
+      PPRE2     : Bits_3 := PPRE_NODIV;     -- APB high-speed prescaler (APB2)
+      RTCPRE    : Bits_5 := RTCPRE_NOCLOCK; -- HSE division factor for RTC clock
+      MCO1      : Bits_2 := MCO1_HSI;       -- Microcontroller clock output 1
+      I2SSCR    : Bits_1 := I2SSCR_PLLI2S;  -- I2S clock selection
+      MCO1PRE   : Bits_3 := MCOPRE_NODIV;   -- MCO1 prescaler
+      MCO2PRE   : Bits_3 := MCOPRE_NODIV;   -- MCO2 prescaler
+      MCO2      : Bits_2 := MCO2_SYSCLK;    -- Microcontroller clock output 2
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -1842,38 +1883,71 @@ pragma Style_Checks (Off);
 
    -- 5.3.25 RCC dedicated clocks configuration register (RCC_DCKCFGR1)
 
-   PLLI2SorSAIDIVQ_NONE  : constant := 0;  -- PLLI2SorSAIDIVQ = /1
-   PLLI2SorSAIDIVQ_DIV2  : constant := 1;  -- PLLI2SorSAIDIVQ = /2
-   PLLI2SorSAIDIVQ_DIV3  : constant := 2;  -- PLLI2SorSAIDIVQ = /3
-   PLLI2SorSAIDIVQ_DIV4  : constant := 3;  -- PLLI2SorSAIDIVQ = /4
-   PLLI2SorSAIDIVQ_DIV5  : constant := 4;  -- PLLI2SorSAIDIVQ = /5
-   PLLI2SorSAIDIVQ_DIV6  : constant := 5;  -- ..
-   PLLI2SorSAIDIVQ_DIV7  : constant := 6;
-   PLLI2SorSAIDIVQ_DIV8  : constant := 7;
-   PLLI2SorSAIDIVQ_DIV9  : constant := 8;
-   PLLI2SorSAIDIVQ_DIV10 : constant := 9;
-   PLLI2SorSAIDIVQ_DIV11 : constant := 10;
-   PLLI2SorSAIDIVQ_DIV12 : constant := 11;
-   PLLI2SorSAIDIVQ_DIV13 : constant := 12;
-   PLLI2SorSAIDIVQ_DIV14 : constant := 13;
-   PLLI2SorSAIDIVQ_DIV15 : constant := 14;
-   PLLI2SorSAIDIVQ_DIV16 : constant := 15;
-   PLLI2SorSAIDIVQ_DIV17 : constant := 16;
-   PLLI2SorSAIDIVQ_DIV18 : constant := 17;
-   PLLI2SorSAIDIVQ_DIV19 : constant := 18;
-   PLLI2SorSAIDIVQ_DIV20 : constant := 19;
-   PLLI2SorSAIDIVQ_DIV21 : constant := 20;
-   PLLI2SorSAIDIVQ_DIV22 : constant := 21;
-   PLLI2SorSAIDIVQ_DIV23 : constant := 22;
-   PLLI2SorSAIDIVQ_DIV24 : constant := 23;
-   PLLI2SorSAIDIVQ_DIV25 : constant := 24;
-   PLLI2SorSAIDIVQ_DIV26 : constant := 25;
-   PLLI2SorSAIDIVQ_DIV27 : constant := 26;
-   PLLI2SorSAIDIVQ_DIV28 : constant := 27;
-   PLLI2SorSAIDIVQ_DIV29 : constant := 28;
-   PLLI2SorSAIDIVQ_DIV30 : constant := 29;
-   PLLI2SorSAIDIVQ_DIV31 : constant := 30;
-   PLLI2SorSAIDIVQ_DIV32 : constant := 31; -- PLLI2SorSAIDIVQ = /32
+   PLLI2SDIVQ_DIV1  : constant := 0;  -- PLLI2SDIVQ = /1
+   PLLI2SDIVQ_DIV2  : constant := 1;  -- PLLI2SDIVQ = /2
+   PLLI2SDIVQ_DIV3  : constant := 2;  -- PLLI2SDIVQ = /3
+   PLLI2SDIVQ_DIV4  : constant := 3;  -- PLLI2SDIVQ = /4
+   PLLI2SDIVQ_DIV5  : constant := 4;  -- PLLI2SDIVQ = /5
+   PLLI2SDIVQ_DIV6  : constant := 5;  -- ..
+   PLLI2SDIVQ_DIV7  : constant := 6;
+   PLLI2SDIVQ_DIV8  : constant := 7;
+   PLLI2SDIVQ_DIV9  : constant := 8;
+   PLLI2SDIVQ_DIV10 : constant := 9;
+   PLLI2SDIVQ_DIV11 : constant := 10;
+   PLLI2SDIVQ_DIV12 : constant := 11;
+   PLLI2SDIVQ_DIV13 : constant := 12;
+   PLLI2SDIVQ_DIV14 : constant := 13;
+   PLLI2SDIVQ_DIV15 : constant := 14;
+   PLLI2SDIVQ_DIV16 : constant := 15;
+   PLLI2SDIVQ_DIV17 : constant := 16;
+   PLLI2SDIVQ_DIV18 : constant := 17;
+   PLLI2SDIVQ_DIV19 : constant := 18;
+   PLLI2SDIVQ_DIV20 : constant := 19;
+   PLLI2SDIVQ_DIV21 : constant := 20;
+   PLLI2SDIVQ_DIV22 : constant := 21;
+   PLLI2SDIVQ_DIV23 : constant := 22;
+   PLLI2SDIVQ_DIV24 : constant := 23;
+   PLLI2SDIVQ_DIV25 : constant := 24;
+   PLLI2SDIVQ_DIV26 : constant := 25;
+   PLLI2SDIVQ_DIV27 : constant := 26;
+   PLLI2SDIVQ_DIV28 : constant := 27;
+   PLLI2SDIVQ_DIV29 : constant := 28;
+   PLLI2SDIVQ_DIV30 : constant := 29;
+   PLLI2SDIVQ_DIV31 : constant := 30;
+   PLLI2SDIVQ_DIV32 : constant := 31; -- PLLI2SDIVQ = /32
+
+   PLLSAIDIVQ_DIV1  : constant := 0;  -- PLLSAIDIVQ = /1
+   PLLSAIDIVQ_DIV2  : constant := 1;  -- PLLSAIDIVQ = /2
+   PLLSAIDIVQ_DIV3  : constant := 2;  -- PLLSAIDIVQ = /3
+   PLLSAIDIVQ_DIV4  : constant := 3;  -- PLLSAIDIVQ = /4
+   PLLSAIDIVQ_DIV5  : constant := 4;  -- PLLSAIDIVQ = /5
+   PLLSAIDIVQ_DIV6  : constant := 5;  -- ..
+   PLLSAIDIVQ_DIV7  : constant := 6;
+   PLLSAIDIVQ_DIV8  : constant := 7;
+   PLLSAIDIVQ_DIV9  : constant := 8;
+   PLLSAIDIVQ_DIV10 : constant := 9;
+   PLLSAIDIVQ_DIV11 : constant := 10;
+   PLLSAIDIVQ_DIV12 : constant := 11;
+   PLLSAIDIVQ_DIV13 : constant := 12;
+   PLLSAIDIVQ_DIV14 : constant := 13;
+   PLLSAIDIVQ_DIV15 : constant := 14;
+   PLLSAIDIVQ_DIV16 : constant := 15;
+   PLLSAIDIVQ_DIV17 : constant := 16;
+   PLLSAIDIVQ_DIV18 : constant := 17;
+   PLLSAIDIVQ_DIV19 : constant := 18;
+   PLLSAIDIVQ_DIV20 : constant := 19;
+   PLLSAIDIVQ_DIV21 : constant := 20;
+   PLLSAIDIVQ_DIV22 : constant := 21;
+   PLLSAIDIVQ_DIV23 : constant := 22;
+   PLLSAIDIVQ_DIV24 : constant := 23;
+   PLLSAIDIVQ_DIV25 : constant := 24;
+   PLLSAIDIVQ_DIV26 : constant := 25;
+   PLLSAIDIVQ_DIV27 : constant := 26;
+   PLLSAIDIVQ_DIV28 : constant := 27;
+   PLLSAIDIVQ_DIV29 : constant := 28;
+   PLLSAIDIVQ_DIV30 : constant := 29;
+   PLLSAIDIVQ_DIV31 : constant := 30;
+   PLLSAIDIVQ_DIV32 : constant := 31; -- PLLSAIDIVQ = /32
 
    PLLSAIDIVR_DIV2  : constant := 2#00#; -- PLLSAIDIVR = /2
    PLLSAIDIVR_DIV4  : constant := 2#01#; -- PLLSAIDIVR = /4
@@ -1895,17 +1969,17 @@ pragma Style_Checks (Off);
    ADFSDM1SEL_SAI2 : constant := 1; -- SAI2 clock selected as DFSDM1 Audio clock source
 
    type RCC_DCKCFGR1_Type is record
-      PLLI2SDIVQ : Bits_5 := PLLI2SorSAIDIVQ_NONE; -- PLLI2S division factor for SAI1 clock
+      PLLI2SDIVQ : Bits_5 := PLLI2SDIVQ_DIV1; -- PLLI2S division factor for SAI1 clock
       Reserved1  : Bits_3 := 0;
-      PLLSAIDIVQ : Bits_5 := PLLI2SorSAIDIVQ_NONE; -- PLLSAI division factor for SAI1 clock
+      PLLSAIDIVQ : Bits_5 := PLLSAIDIVQ_DIV1; -- PLLSAI division factor for SAI1 clock
       Reserved2  : Bits_3 := 0;
-      PLLSAIDIVR : Bits_2 := PLLSAIDIVR_DIV2;      -- division factor for LCD_CLK
+      PLLSAIDIVR : Bits_2 := PLLSAIDIVR_DIV2; -- division factor for LCD_CLK
       Reserved3  : Bits_2 := 0;
-      SAI1SEL    : Bits_2 := SAIxSEL_SAI;          -- SAI1 clock source selection
-      SAI2SEL    : Bits_2 := SAIxSEL_SAI;          -- SAI2 clock source selection:
-      TIMPRE     : Bits_1 := TIMPRE_2xPCLKx;       -- Timers clocks prescalers selection
-      DFSDM1SEL  : Bits_1 := DFSDM1SEL_APB2;       -- DFSDM1 clock source selection:
-      ADFSDM1SEL : Bits_1 := ADFSDM1SEL_SAI1;      -- DFSDM1 AUDIO clock source selection:
+      SAI1SEL    : Bits_2 := SAIxSEL_SAI;     -- SAI1 clock source selection
+      SAI2SEL    : Bits_2 := SAIxSEL_SAI;     -- SAI2 clock source selection:
+      TIMPRE     : Bits_1 := TIMPRE_2xPCLKx;  -- Timers clocks prescalers selection
+      DFSDM1SEL  : Bits_1 := DFSDM1SEL_APB2;  -- DFSDM1 clock source selection:
+      ADFSDM1SEL : Bits_1 := ADFSDM1SEL_SAI1; -- DFSDM1 AUDIO clock source selection:
       Reserved4  : Bits_5 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -3062,6 +3136,10 @@ pragma Warnings (On);
            Convention => Ada;
 
    ----------------------------------------------------------------------------
+   -- 9 Chrom-ART AcceleratorTM controller (DMA2D)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
    -- 10 Nested vectored interrupt controller (NVIC)
    ----------------------------------------------------------------------------
 
@@ -3177,6 +3255,74 @@ pragma Warnings (On);
    IRQ_CAN3_SCE           : constant := 107; -- CAN3 SCE interrupt
    IRQ_JPEG               : constant := 108; -- JPEG global interrupt
    IRQ_MDIOS              : constant := 109; -- MDIO slave global interrupt
+
+   ----------------------------------------------------------------------------
+   -- 11 Extended interrupts and events controller (EXTI)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 12 Cyclic redundancy check calculation unit (CRC)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 13 Flexible memory controller (FMC)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 14 Quad-SPI interface (QUADSPI)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 15 Analog-to-digital converter (ADC)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 16 Digital-to-analog converter (DAC)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 17 Digital filter for sigma delta modulators (DFSDM)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 18 Digital camera interface (DCMI)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 19 LCD-TFT display controller (LTDC)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 20 DSI Host (DSI)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 21 JPEG codec (JPEG)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 22 True random number generator (RNG)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 23 Cryptographic processor (CRYP)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 24 Hash processor (HASH)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 25 Advanced-control timers (TIM1/TIM8)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 26 General-purpose timers (TIM2/TIM3/TIM4/TIM5)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 27 General-purpose timers (TIM9/TIM10/TIM11/TIM12/TIM13/TIM14)
+   ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
    -- 28 Basic timers (TIM6/TIM7)
@@ -3329,6 +3475,18 @@ pragma Warnings (On);
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 29 Low-power timer (LPTIM)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 30 Independent watchdog (IWDG)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 31 System window watchdog (WWDG)
+   ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
    -- 32 Real-time clock (RTC)
@@ -4018,6 +4176,10 @@ pragma Warnings (On);
            Convention => Ada;
 
    ----------------------------------------------------------------------------
+   -- 33 Inter-integrated circuit (I2C) interface
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
    -- 34 Universal synchronous asynchronous receiver transmitter (USART)
    ----------------------------------------------------------------------------
 
@@ -4507,6 +4669,42 @@ pragma Warnings (On);
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 35 Serial peripheral interface / integrated interchip sound (SPI/I2S)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 36 Serial audio interface (SAI)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 37 SPDIF receiver interface (SPDIFRX)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 38 Management data input/output (MDIOS)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 39 SD/SDIO/MMC card host interface (SDMMC)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 40 Controller area network (bxCAN)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 41 USB on-the-go full-speed/high-speed (OTG_FS/OTG_HS)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 42 Ethernet (ETH): media access control (MAC) with DMA controller
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 43 HDMI-CEC controller (CEC)
+   ----------------------------------------------------------------------------
 
 pragma Style_Checks (On);
 
