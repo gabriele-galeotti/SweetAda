@@ -2491,20 +2491,20 @@ pragma Style_Checks (Off);
    CAPTIO0CTL_BASEADDRESS : constant := 16#4000_5400#;
 
    CAPTIO0CTL : aliased CAPTIOxCTL_Type
-      with Address    => System'To_Address (CAPTIO0CTL_BASEADDRESS + 16#0E#),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
+      with Address              => System'To_Address (CAPTIO0CTL_BASEADDRESS + 16#0E#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- Table 6-24. Capacitive Touch I/O 1 Registers
 
    CAPTIO1CTL_BASEADDRESS : constant := 16#4000_5800#;
 
    CAPTIO1CTL : aliased CAPTIOxCTL_Type
-      with Address    => System'To_Address (CAPTIO1CTL_BASEADDRESS + 16#0E#),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
+      with Address              => System'To_Address (CAPTIO1CTL_BASEADDRESS + 16#0E#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 17 Watchdog Timer (WDT_A)
@@ -2555,10 +2555,10 @@ pragma Style_Checks (Off);
    WDT_A_BASEADDRESS : constant := 16#4000_4800#;
 
    WDTCTL : aliased WDTCTL_Type
-      with Address    => System'To_Address (WDT_A_BASEADDRESS + 16#0C#),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
+      with Address              => System'To_Address (WDT_A_BASEADDRESS + 16#0C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 20 Real-Time Clock (RTC_C)
