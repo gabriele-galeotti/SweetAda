@@ -2436,6 +2436,77 @@ pragma Style_Checks (Off);
    P7MAP67 : aliased PMAP16_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#3E#), Volatile_Full_Access => True, Import => True, Convention => Ada;
 
    ----------------------------------------------------------------------------
+   -- 14 Capacitive Touch IO (CAPTIO)
+   ----------------------------------------------------------------------------
+
+   -- 14.3.1 CAPTIOxCTL Register
+
+   CAPTIOPISELx_0 : constant := 2#000#; -- Px.0
+   CAPTIOPISELx_1 : constant := 2#001#; -- Px.1
+   CAPTIOPISELx_2 : constant := 2#010#; -- Px.2
+   CAPTIOPISELx_3 : constant := 2#011#; -- Px.3
+   CAPTIOPISELx_4 : constant := 2#100#; -- Px.4
+   CAPTIOPISELx_5 : constant := 2#101#; -- Px.5
+   CAPTIOPISELx_6 : constant := 2#110#; -- Px.6
+   CAPTIOPISELx_7 : constant := 2#111#; -- Px.7
+
+   CAPTIOPOSELx_PJ  : constant := 2#0000#; -- Px = PJ
+   CAPTIOPOSELx_P1  : constant := 2#0001#; -- Px = P1
+   CAPTIOPOSELx_P2  : constant := 2#0010#; -- Px = P2
+   CAPTIOPOSELx_P3  : constant := 2#0011#; -- Px = P3
+   CAPTIOPOSELx_P4  : constant := 2#0100#; -- Px = P4
+   CAPTIOPOSELx_P5  : constant := 2#0101#; -- Px = P5
+   CAPTIOPOSELx_P6  : constant := 2#0110#; -- Px = P6
+   CAPTIOPOSELx_P7  : constant := 2#0111#; -- Px = P7
+   CAPTIOPOSELx_P8  : constant := 2#1000#; -- Px = P8
+   CAPTIOPOSELx_P9  : constant := 2#1001#; -- Px = P9
+   CAPTIOPOSELx_P10 : constant := 2#1010#; -- Px = P10
+   CAPTIOPOSELx_P11 : constant := 2#1011#; -- Px = P11
+   CAPTIOPOSELx_P12 : constant := 2#1100#; -- Px = P12
+   CAPTIOPOSELx_P13 : constant := 2#1101#; -- Px = P13
+   CAPTIOPOSELx_P14 : constant := 2#1110#; -- Px = P14
+   CAPTIOPOSELx_P15 : constant := 2#1111#; -- Px = P15
+
+   type CAPTIOxCTL_Type is record
+      Reserved1    : Bits_1  := 0;
+      CAPTIOPISELx : Bits_3  := CAPTIOPISELx_0;  -- Capacitive Touch IO pin select.
+      CAPTIOPOSELx : Bits_4  := CAPTIOPOSELx_PJ; -- Capacitive Touch IO port select.
+      CAPTIOEN     : Boolean := False;           -- Capacitive Touch IO enable
+      CAPTIO       : Boolean := False;           -- Capacitive Touch IO state.
+      Reserved2    : Bits_6  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for CAPTIOxCTL_Type use record
+      Reserved1    at 0 range  0 ..  0;
+      CAPTIOPISELx at 0 range  1 ..  3;
+      CAPTIOPOSELx at 0 range  4 ..  7;
+      CAPTIOEN     at 0 range  8 ..  8;
+      CAPTIO       at 0 range  9 ..  9;
+      Reserved2    at 0 range 10 .. 15;
+   end record;
+
+   -- Table 6-23. Capacitive Touch I/O 0 Registers
+
+   CAPTIO0CTL_BASEADDRESS : constant := 16#4000_5400#;
+
+   CAPTIO0CTL : aliased CAPTIOxCTL_Type
+      with Address    => System'To_Address (CAPTIO0CTL_BASEADDRESS + 16#0E#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   -- Table 6-24. Capacitive Touch I/O 1 Registers
+
+   CAPTIO1CTL_BASEADDRESS : constant := 16#4000_5800#;
+
+   CAPTIO1CTL : aliased CAPTIOxCTL_Type
+      with Address    => System'To_Address (CAPTIO1CTL_BASEADDRESS + 16#0E#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ----------------------------------------------------------------------------
    -- 17 Watchdog Timer (WDT_A)
    ----------------------------------------------------------------------------
 
