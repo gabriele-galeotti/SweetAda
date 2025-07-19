@@ -83,10 +83,10 @@ package body Clocks
       loop exit when RCC_CR.PLLRDY; end loop;
       -- configure main clocks
       RCC_CFGR := (
-         SW     => SW_PLL,    -- SYSCLK = PLL
-         HPRE   => HPRE_NONE, -- AHB prescaler
-         PPRE1  => PPRE_DIV4, -- APB Low-speed prescaler (APB1)
-         PPRE2  => PPRE_DIV2, -- APB high-speed prescaler (APB2)
+         SW     => SW_PLL,     -- SYSCLK = PLL
+         HPRE   => HPRE_NODIV, -- AHB prescaler
+         PPRE1  => PPRE_DIV4,  -- APB Low-speed prescaler (APB1)
+         PPRE2  => PPRE_DIV2,  -- APB high-speed prescaler (APB2)
          others => <>
          );
    end Init;
