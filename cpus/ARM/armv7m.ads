@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 with ARMv6M;
@@ -89,9 +88,6 @@ pragma Style_Checks (Off);
       N         at 0 range 31 .. 31;
    end record;
 
-   function To_U32 is new Ada.Unchecked_Conversion (APSR_Type, Unsigned_32);
-   function To_APSR is new Ada.Unchecked_Conversion (Unsigned_32, APSR_Type);
-
    function APSR_Read
       return APSR_Type
       with Inline => True;
@@ -109,9 +105,6 @@ pragma Style_Checks (Off);
       Exception_Number at 0 range 0 ..  8;
       Reserved         at 0 range 9 .. 31;
    end record;
-
-   function To_U32 is new Ada.Unchecked_Conversion (IPSR_Type, Unsigned_32);
-   function To_IPSR is new Ada.Unchecked_Conversion (Unsigned_32, IPSR_Type);
 
    function IPSR_Read
       return IPSR_Type
@@ -140,9 +133,6 @@ pragma Style_Checks (Off);
       ICIIT2    at 0 range 25 .. 26;
       Reserved3 at 0 range 27 .. 31;
    end record;
-
-   function To_U32 is new Ada.Unchecked_Conversion (EPSR_Type, Unsigned_32);
-   function To_EPSR is new Ada.Unchecked_Conversion (Unsigned_32, EPSR_Type);
 
    function EPSR_Read
       return EPSR_Type
@@ -199,8 +189,8 @@ pragma Style_Checks (Off);
 
    -- B1.4.4 The special-purpose CONTROL register
 
-   SPSEL_SP_main    : constant := 0; -- Use SP_main as the current stack
-   SPSEL_SP_process : constant := 1; -- In Thread mode, use SP_process as the current stack.
+   SPSEL_SP_main    renames ARMv6M.SPSEL_SP_main;
+   SPSEL_SP_process renames ARMv6M.SPSEL_SP_process;
 
    type CONTROL_Type is record
       nPRIV    : Boolean; -- defines the execution privilege in Thread mode
@@ -246,9 +236,11 @@ pragma Style_Checks (Off);
    -- B3.2 System Control Space (SCS)
    ----------------------------------------------------------------------------
 
+   SCS_BASEADDRESS renames ARMv6M.SCS_BASEADDRESS;
+
    -- B3.2.2 System control and ID registers
 
-   ICTR_ADDRESS   : constant := 16#E000_E004#;
+   ICTR_ADDRESS   : constant := SCS_BASEADDRESS + 16#0004#;
    ACTLR_ADDRESS  renames ARMv6M.ACTLR_ADDRESS;
    CPUID_ADDRESS  renames ARMv6M.CPUID_ADDRESS;
    ICSR_ADDRESS   renames ARMv6M.ICSR_ADDRESS;
@@ -256,30 +248,26 @@ pragma Style_Checks (Off);
    AIRCR_ADDRESS  renames ARMv6M.AIRCR_ADDRESS;
    SCR_ADDRESS    renames ARMv6M.SCR_ADDRESS;
    CCR_ADDRESS    renames ARMv6M.CCR_ADDRESS;
-   SHPR1_ADDRESS  : constant := 16#E000_ED18#;
+   SHPR1_ADDRESS  : constant := SCS_BASEADDRESS + 16#0D18#;
    SHPR2_ADDRESS  renames ARMv6M.SHPR2_ADDRESS;
    SHPR3_ADDRESS  renames ARMv6M.SHPR3_ADDRESS;
    SHCSR_ADDRESS  renames ARMv6M.SHCSR_ADDRESS;
-   CFSR_ADDRESS   : constant := 16#E000_ED28#;
-   HFSR_ADDRESS   : constant := 16#E000_ED2C#;
+   CFSR_ADDRESS   : constant := SCS_BASEADDRESS + 16#0D28#;
+   HFSR_ADDRESS   : constant := SCS_BASEADDRESS + 16#0D2C#;
    DFSR_ADDRESS   renames ARMv6M.DFSR_ADDRESS;
-   MMFAR_ADDRESS  : constant := 16#E000_ED34#;
-   BFAR_ADDRESS   : constant := 16#E000_ED38#;
-   AFSR_ADDRESS   : constant := 16#E000_ED3C#;
-   CPACR_ADDRESS  : constant := 16#E000_ED88#;
-   STIR_ADDRESS   : constant := 16#E000_EF00#;
-   FPCCR_ADDRESS  : constant := 16#E000_EF34#;
-   FPCAR_ADDRESS  : constant := 16#E000_EF38#;
-   FPDSCR_ADDRESS : constant := 16#E000_EF3C#;
+   MMFAR_ADDRESS  : constant := SCS_BASEADDRESS + 16#0D34#;
+   BFAR_ADDRESS   : constant := SCS_BASEADDRESS + 16#0D38#;
+   AFSR_ADDRESS   : constant := SCS_BASEADDRESS + 16#0D3C#;
+   CPACR_ADDRESS  : constant := SCS_BASEADDRESS + 16#0D88#;
+   STIR_ADDRESS   : constant := SCS_BASEADDRESS + 16#0F00#;
+   FPCCR_ADDRESS  : constant := SCS_BASEADDRESS + 16#0F34#;
+   FPCAR_ADDRESS  : constant := SCS_BASEADDRESS + 16#0F38#;
+   FPDSCR_ADDRESS : constant := SCS_BASEADDRESS + 16#0F3C#;
 
    -- B3.2.3 CPUID Base Register
 
    subtype CPUID_Type is ARMv6M.CPUID_Type;
    CPUID : CPUID_Type renames ARMv6M.CPUID;
-   function To_U32
-      (S : CPUID_Type)
-      return Unsigned_32
-      renames ARMv6M.To_U32;
 
    -- B3.2.4 Interrupt Control and State Register, ICSR
 
@@ -680,6 +668,7 @@ pragma Style_Checks (Off);
    -- IMPLEMENTATION DEFINED
 
    subtype ACTLR_Type is ARMv6M.ACTLR_Type;
+   ACTLR : ACTLR_Type renames ARMv6M.ACTLR;
 
    -- B3.2.26 Software Triggered Interrupt Register, STIR
 
