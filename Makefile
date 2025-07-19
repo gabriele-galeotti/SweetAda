@@ -74,17 +74,19 @@ CONFIGURE_DEPS += Makefile.fn.in
 # P  = platform goal
 # R  = RTS goal
 # S  = service goal
+# V  = probe variable(s) goal
 #
 # libutils-elftool      L       S       NP
 # libutils-gcc-wrapper  L       S       NP
 # libutils-gnat-wrapper L       S       NP
 # infodump              I               NP
-# probevariable         I               NP
-# probevariables        I               NP
+# probevariable         V               NP
+# probevariables        V               NP
 # clean                 C               NP
 # distclean             C               NP
 # createkernelcfg               S       NP
 # help                          S       NP
+# tools-check                   S       NP
 # rts                   R               NP
 # configure                             P
 # $(KERNEL_BASENAME)                    P
@@ -104,8 +106,10 @@ LIBUTILS_GOALS := libutils-elftool      \
                   libutils-gnat-wrapper
 
 # info goals
-INFO_GOALS := infodump       \
-              probevariable  \
+INFO_GOALS := infodump
+
+# probe variables(s) goals
+PROBEVARIABLE_GOALS := probevariable  \
               probevariables
 
 # clean/distclean goals
@@ -115,12 +119,14 @@ CLEANING_GOALS := clean     \
 # general service goals
 SERVICE_GOALS := createkernelcfg   \
                  help              \
+                 tools-check       \
                  $(LIBUTILS_GOALS)
 
 # not-platform-related goals
-NOT_PLATFORM_GOALS := $(SERVICE_GOALS)  \
-                      $(INFO_GOALS)     \
-                      $(CLEANING_GOALS) \
+NOT_PLATFORM_GOALS := $(SERVICE_GOALS)       \
+                      $(INFO_GOALS)          \
+                      $(CLEANING_GOALS)      \
+                      $(PROBEVARIABLE_GOALS) \
                       rts
 
 # platform-related goals
@@ -180,11 +186,6 @@ PROGRAM_FILES := $(shell ECHO %ProgramFiles%)
 export PROGRAM_FILES
 PROGRAM_FILES_x86 := $(shell ECHO %ProgramFiles(x86)%)
 export PROGRAM_FILES_x86
-endif
-
-# check basic utilities
-ifeq ($(TOOLS_CHECK),Y)
--include Makefile.ck.in
 endif
 
 ################################################################################
@@ -253,6 +254,7 @@ EXTERNAL_ALIS      :=
 include configuration.in
 CONFIGURE_DEPS += configuration.in
 
+# check for a configured toolchain
 ifneq ($(filter rts $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(TOOLCHAIN_PREFIX),)
 $(error Error: no valid TOOLCHAIN_PREFIX)
@@ -883,6 +885,8 @@ help:
 	@$(call echo-print,"  Clean object files.")
 	@$(call echo-print,"make distclean")
 	@$(call echo-print,"  Clean object files and all configuration/support files.")
+	@$(call echo-print,"make tools-check")
+	@$(call echo-print,"  Check wheter Makefile tools are available.")
 	@$(call echo-print,"make libutils-elftool")
 	@$(call echo-print,"  Build ELFtool.")
 	@$(call echo-print,"make libutils-gcc-wrapper")
@@ -891,6 +895,9 @@ help:
 	@$(call echo-print,"  Build GNAT-wrapper.")
 	@$(call echo-print,"make PROBEVARIABLE=<variablename> probevariable")
 	@$(call echo-print,"  Obtain the value of a variable.")
+	@$(call echo-print,"make PROBEVARIABLES=<variablename_list> probevariables")
+	@$(call echo-print,"  Generate a list of assignments to define variables$(COMMA) \
+                              each assignment ends with a '|'.")
 	@$(call echo-print,"")
 	@$(call echo-print,"Available CPUs: $(CPUS)")
 	@$(call echo-print,"")
@@ -1514,6 +1521,22 @@ endif
 #
 # Utility targets.
 #
+
+#
+# Check basic tools.
+#
+.PHONY: tools-check
+tools-check:
+ifeq ($(OSTYPE),darwin)
+	$(ECHO) "sed" | $(SED)
+else
+	$(SED) --version | $(SED) -n "1p"
+endif
+	$(GCC_WRAPPER) -v
+	$(GNAT_WRAPPER) -v
+ifeq ($(USE_ELFTOOL),Y)
+	$(ELFTOOL) -v
+endif
 
 #
 # Libutils tools.
