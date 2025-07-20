@@ -45,18 +45,25 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
+   -- 5. Memory Mirror Function (MMF)
+   ----------------------------------------------------------------------------
+
+   -- 5.2.1 MemMirror Special Function Register (MMSFR)
+   -- 5.2.2 MemMirror Enable Register (MMEN)
+
+   ----------------------------------------------------------------------------
    -- 6. Resets
    ----------------------------------------------------------------------------
 
    -- 6.2.1 Reset Status Register 0 (RSTSR0)
 
    type RSTSR0_Type is record
-      PORF     : Boolean;      -- Power-On Reset Detect Flag
-      LVD0RF   : Boolean;      -- Voltage Monitor 0 Reset Detect Flag
-      LVD1RF   : Boolean;      -- Voltage Monitor 1 Reset Detect Flag
-      LVD2RF   : Boolean;      -- Voltage Monitor 2 Reset Detect Flag
+      PORF     : Boolean := True; -- Power-On Reset Detect Flag
+      LVD0RF   : Boolean := True; -- Voltage Monitor 0 Reset Detect Flag
+      LVD1RF   : Boolean := True; -- Voltage Monitor 1 Reset Detect Flag
+      LVD2RF   : Boolean := True; -- Voltage Monitor 2 Reset Detect Flag
       Reserved : Bits_3  := 0;
-      DPSRSTF  : Boolean;      -- Deep Software Standby Reset Flag
+      DPSRSTF  : Boolean := True; -- Deep Software Standby Reset Flag
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -80,15 +87,15 @@ pragma Style_Checks (Off);
    -- 6.2.2 Reset Status Register 1 (RSTSR1)
 
    type RSTSR1_Type is record
-      IWDTRF    : Boolean;      -- Independent Watchdog Timer Reset Detect Flag
-      WDTRF     : Boolean;      -- Watchdog Timer Reset Detect Flag
-      SWRF      : Boolean;      -- Software Reset Detect Flag
+      IWDTRF    : Boolean := True; -- Independent Watchdog Timer Reset Detect Flag
+      WDTRF     : Boolean := True; -- Watchdog Timer Reset Detect Flag
+      SWRF      : Boolean := True; -- Software Reset Detect Flag
       Reserved1 : Bits_5  := 0;
-      RPERF     : Boolean;      -- SRAM Parity Error Reset Detect Flag
-      REERF     : Boolean;      -- SRAM ECC Error Reset Detect Flag
-      BUSSRF    : Boolean;      -- Bus Slave MPU Error Reset Detect Flag
-      BUSMRF    : Boolean;      -- Bus Master MPU Error Reset Detect Flag
-      SPERF     : Boolean;      -- SP Error Reset Detect Flag
+      RPERF     : Boolean := True; -- SRAM Parity Error Reset Detect Flag
+      REERF     : Boolean := True; -- SRAM ECC Error Reset Detect Flag
+      BUSSRF    : Boolean := True; -- Bus Slave MPU Error Reset Detect Flag
+      BUSMRF    : Boolean := True; -- Bus Master MPU Error Reset Detect Flag
+      SPERF     : Boolean := True; -- SP Error Reset Detect Flag
       Reserved2 : Bits_3  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -116,9 +123,12 @@ pragma Style_Checks (Off);
 
    -- 6.2.3 Reset Status Register 2 (RSTSR2)
 
+   CWSF_COLD : constant := 0; -- Cold start
+   CWSF_WARM : constant := 1; -- Warm start.
+
    type RSTSR2_Type is record
-      CWSF     : Boolean;      -- Cold/Warm Start Determination Flag
-      Reserved : Bits_7  := 0;
+      CWSF     : Bits_1 := CWSF_COLD; -- Cold/Warm Start Determination Flag
+      Reserved : Bits_7 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -247,6 +257,31 @@ pragma Style_Checks (Off);
       WDTSTPCTL   at 0 range 30 .. 30;
       Reserved5   at 0 range 31 .. 31;
    end record;
+
+   OFS0_ADDRESS : constant := 16#0000_0400#;
+
+   OFS0 : aliased OFS0_Type
+      with Address              => System'To_Address (OFS0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 7.2.2 Option Function Select Register 1 (OFS1)
+   -- 7.2.3 Access Window Setting Register (AWS)
+   -- 7.2.4 OCD/Serial Programmer ID Setting Register (OSIS)
+
+   ----------------------------------------------------------------------------
+   -- 8. Low Voltage Detection (LVD)
+   ----------------------------------------------------------------------------
+
+   -- 8.2.1 Voltage Monitor 1 Circuit Control Register 1 (LVD1CR1)
+   -- 8.2.2 Voltage Monitor 1 Circuit Status Register (LVD1SR)
+   -- 8.2.3 Voltage Monitor 2 Circuit Control Register 1 (LVD2CR1)
+   -- 8.2.4 Voltage Monitor 2 Circuit Status Register (LVD2SR)
+   -- 8.2.5 Voltage Monitor Circuit Control Register (LVCMPCR)
+   -- 8.2.6 Voltage Detection Level Select Register (LVDLVLR)
+   -- 8.2.7 Voltage Monitor 1 Circuit Control Register 0 (LVD1CR0)
+   -- 8.2.8 Voltage Monitor 2 Circuit Control Register 0 (LVD2CR0)
 
    ----------------------------------------------------------------------------
    -- 9. Clock Generation Circuit
@@ -790,6 +825,45 @@ pragma Style_Checks (Off);
            Import               => True,
            Convention           => Ada;
 
+   -- 9.2.20 Subclock Oscillator Mode Control Register (SOMCR)
+
+   SODRV1_STANDARD : constant := 0; -- Standard
+   SODRV1_LOW      : constant := 1; -- Low.
+
+   type SOMCR_Type is record
+      Reserved1 : Bits_1 := 0;
+      SODRV1    : Bits_1 := SODRV1_STANDARD; -- Sub-Clock Oscillator Drive Capability Switching
+      Reserved2 : Bits_6 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for SOMCR_Type use record
+      Reserved1 at 0 range 0 .. 0;
+      SODRV1    at 0 range 1 .. 1;
+      Reserved2 at 0 range 2 .. 7;
+   end record;
+
+   SOMCR_ADDRESS : constant := 16#4001_E481#;
+
+   SOMCR : aliased SOMCR_Type
+      with Address              => System'To_Address (SOMCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 10. Clock Frequency Accuracy Measurement Circuit (CAC)
+   ----------------------------------------------------------------------------
+
+   -- 10.2.1 CAC Control Register 0 (CACR0)
+   -- 10.2.2 CAC Control Register 1 (CACR1)
+   -- 10.2.3 CAC Control Register 2 (CACR2)
+   -- 10.2.4 CAC Interrupt Control Register (CAICR)
+   -- 10.2.5 CAC Status Register (CASTR)
+   -- 10.2.6 CAC Upper-Limit Value Setting Register (CAULVR)
+   -- 10.2.7 CAC Lower-Limit Value Setting Register (CALLVR)
+   -- 10.2.8 CAC Counter Buffer Register (CACNTBR)
+
    ----------------------------------------------------------------------------
    -- 11. Low Power Modes
    ----------------------------------------------------------------------------
@@ -1038,6 +1112,33 @@ pragma Style_Checks (Off);
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
+   -- 11.2.6 Operating Power Control Register (OPCCR)
+   -- 11.2.7 Sub Operating Power Control Register (SOPCCR)
+   -- 11.2.8 Snooze Control Register (SNZCR)
+   -- 11.2.9 Snooze End Control Register (SNZEDCR)
+   -- 11.2.10 Snooze Request Control Register (SNZREQCR)
+   -- 11.2.11 Deep Software Standby Control Register (DPSBYCR)
+   -- 11.2.12 Deep Software Standby Interrupt Enable Register 0 (DPSIER0)
+   -- 11.2.13 Deep Software Standby Interrupt Enable Register 1 (DPSIER1)
+   -- 11.2.14 Deep Software Standby Interrupt Enable Register 2 (DPSIER2)
+   -- 11.2.15 Deep Software Standby Interrupt Enable Register 3 (DPSIER3)
+   -- 11.2.16 Deep Software Standby Interrupt Flag Register 0 (DPSIFR0)
+   -- 11.2.17 Deep Software Standby Interrupt Flag Register 1 (DPSIFR1)
+   -- 11.2.18 Deep Software Standby Interrupt Flag Register 2 (DPSIFR2)
+   -- 11.2.19 Deep Software Standby Interrupt Flag Register 3 (DPSIFR3)
+   -- 11.2.20 Deep Software Standby Interrupt Edge Register 0 (DPSIEGR0)
+   -- 11.2.21 Deep Software Standby Interrupt Edge Register 1 (DPSIEGR1)
+   -- 11.2.22 Deep Software Standby Interrupt Edge Register 2 (DPSIEGR2)
+   -- 11.2.23 System Control OCD Control Register (SYOCDCR)
+   -- 11.2.24 Standby Condition Register (STCONR)
+
+   ----------------------------------------------------------------------------
+   -- 12. Battery Backup Function
+   ----------------------------------------------------------------------------
+
+   -- 12.2.1 VBATT Backup Register (VBTBKRn) (n = 0 to 511)
+   -- 12.2.2 VBATT Input Control Register (VBTICTLR)
 
    ----------------------------------------------------------------------------
    -- 13. Register Write Protection
@@ -1718,6 +1819,75 @@ pragma Warnings (On);
            Convention => Ada;
 
    ----------------------------------------------------------------------------
+   -- 15. Buses
+   ----------------------------------------------------------------------------
+
+   -- 15.3.1 CSn Control Register (CSnCR) (n = 0 to 7)
+   -- 15.3.2 CSn Recovery Cycle Register (CSnREC) (n = 0 to 7)
+   -- 15.3.3 CS Recovery Cycle Insertion Enable Register (CSRECEN)
+   -- 15.3.4 CSn Mode Register (CSnMOD) (n = 0 to 7)
+   -- 15.3.5 CSn Wait Control Register 1 (CSnWCR1) (n = 0 to 7)
+   -- 15.3.6 CSn Wait Control Register 2 (CSnWCR2) (n = 0 to 7)
+   -- 15.3.7 SDC Control Register (SDCCR)
+   -- 15.3.8 SDC Mode Register (SDCMOD)
+   -- 15.3.9 SDRAM Access Mode Register (SDAMOD)
+   -- 15.3.10 SDRAM Self-Refresh Control Register (SDSELF)
+   -- 15.3.11 SDRAM Refresh Control Register (SDRFCR)
+   -- 15.3.12 SDRAM Auto-Refresh Control Register (SDRFEN)
+   -- 15.3.13 SDRAM Initialization Sequence Control Register (SDICR)
+   -- 15.3.14 SDRAM Initialization Register (SDIR)
+   -- 15.3.15 SDRAM Address Register (SDADR)
+   -- 15.3.16 SDRAM Timing Register (SDTR)
+   -- 15.3.17 SDRAM Mode Register (SDMOD)
+   -- 15.3.18 SDRAM Status Register (SDSR)
+   -- 15.3.19 Master Bus Control Register (BUSMCNT<master>)
+   -- 15.3.20 Slave Bus Control Register (BUSSCNT<slave>)
+   -- 15.3.21 Bus Error Address Register (BUSnERRADD) (n = 1 to 11)
+   -- 15.3.22 Bus Error Status Register (BUSnERRSTAT) (n = 1 to 11)
+
+   ----------------------------------------------------------------------------
+   -- 16. Memory Protection Unit (MPU)
+   ----------------------------------------------------------------------------
+
+   -- 16.2.1.1 Main Stack Pointer Monitor Start Address Register (MSPMPUSA)
+   -- 16.2.1.2 Main Stack Pointer Monitor End Address Register (MSPMPUEA)
+   -- 16.2.1.3 Process Stack Pointer Monitor Start Address Register (PSPMPUSA)
+   -- 16.2.1.4 Process Stack Pointer Monitor End Address Register (PSPMPUEA)
+   -- 16.2.1.5 Stack Pointer Monitor Operation After Detection Register (MSPMPUOAD, PSPMPUOAD)
+   -- 16.2.1.6 Stack Pointer Monitor Access Control Register (MSPMPUCTL, PSPMPUCTL)
+   -- 16.2.1.7 Stack Pointer Monitor Protection Register (MSPMPUPT, PSPMPUPT)
+
+   -- 16.4.1.1 Group m Region n Start Address Register (MMPUSmn) (m = A to C; n = 0 to 31)
+   -- 16.4.1.2 Group m Region n End Address Register (MMPUEmn) (m = A to C; n = 0 to 31)
+   -- 16.4.1.3 Group m Region n Access Control Register (MMPUACmn) (m = A to C; n = 0 to 31)
+   -- 16.4.1.4 Bus Master MPU Control Register (MMPUCTLm) (m = A to C)
+   -- 16.4.1.5 Group m Protection of Register (MMPUPTm) (m = A to C)
+
+   -- 16.5.1.1 Access Control Register for Memory Bus 3 (SMPUMBIU)
+   -- 16.5.1.2 Access Control Register for Internal Peripheral Bus 9 (SMPUFBIU)
+   -- 16.5.1.3 Access Control Register for Memory Bus 4 (SMPUSRAM0)
+   -- 16.5.1.4 Access Control Register for Memory Bus 5 (SMPUSRAM1)
+   -- 16.5.1.5 Access Control Register for Internal Peripheral Bus 1 (SMPUP0BIU)
+   -- 16.5.1.6 Access Control Register for Internal Peripheral Bus 3 (SMPUP2BIU)
+   -- 16.5.1.7 Access Control Register for Internal Peripheral Bus 7 (SMPUP6BIU)
+   -- 16.5.1.8 Access Control Register for Internal Peripheral Bus 8 (SMPUP7BIU)
+   -- 16.5.1.9 Access Control Register for CS Area and SDRAM Area (SMPUEXBIU)
+   -- 16.5.1.10 Access Control Register for QSPI Area (SMPUEXBIU2)
+   -- 16.5.1.11 Slave MPU Control Register (SMPUCTL)
+
+   -- 16.6.1.1 Security MPU Program Counter Start Address Register (SECMPUPCSn) (n = 0, 1)
+   -- 16.6.1.2 Security MPU Program Counter End Address Register (SECMPUPCEn) (n = 0, 1)
+   -- 16.6.1.3 Security MPU Region 0 Start Address Register (SECMPUS0)
+   -- 16.6.1.4 Security MPU Region 0 End Address Register (SECMPUE0)
+   -- 16.6.1.5 Security MPU Region 1 Start Address Register (SECMPUS1)
+   -- 16.6.1.6 Security MPU Region 1 End Address Register (SECMPUE1)
+   -- 16.6.1.7 Security MPU Region 2 Start Address Register (SECMPUS2)
+   -- 16.6.1.8 Security MPU Region 2 End Address Register (SECMPUE2)
+   -- 16.6.1.9 Security MPU Region 3 Start Address Register (SECMPUS3)
+   -- 16.6.1.10 Security MPU Region 3 End Address Register (SECMPUE3)
+   -- 16.6.1.11 Security MPU Access Control Register (SECMPUAC)
+
+   ----------------------------------------------------------------------------
    -- 17. DMA Controller (DMAC)
    ----------------------------------------------------------------------------
 
@@ -2047,6 +2217,29 @@ pragma Warnings (On);
            Convention => Ada;
 
    ----------------------------------------------------------------------------
+   -- 18. Data Transfer Controller (DTC)
+   ----------------------------------------------------------------------------
+
+   -- 18.2.1 DTC Mode Register A (MRA)
+   -- 18.2.2 DTC Mode Register B (MRB)
+   -- 18.2.3 DTC Transfer Source Register (SAR)
+   -- 18.2.4 DTC Transfer Destination Register (DAR)
+   -- 18.2.5 DTC Transfer Count Register A (CRA)
+   -- 18.2.6 DTC Transfer Count Register B (CRB)
+   -- 18.2.7 DTC Control Register (DTCCR)
+   -- 18.2.8 DTC Vector Base Register (DTCVBR)
+   -- 18.2.9 DTC Module Start Register (DTCST)
+   -- 18.2.10 DTC Status Register (DTCSTS)
+
+   ----------------------------------------------------------------------------
+   -- 19. Event Link Controller (ELC)
+   ----------------------------------------------------------------------------
+
+   -- 19.2.1 Event Link Controller Register (ELCR)
+   -- 19.2.2 Event Link Software Event Generation Register n (ELSEGRn) (n = 0, 1)
+   -- 19.2.3 Event Link Setting Register n (ELSRn) (n = 0 to 18)
+
+   ----------------------------------------------------------------------------
    -- 20. I/O Ports
    ----------------------------------------------------------------------------
 
@@ -2132,21 +2325,21 @@ pragma Warnings (On);
    PSEL_TraceDebug        : constant := 2#11010#; -- - - - - - - - - - - - -
 
    type PFSR_Type is record
-      PODR      : Boolean := False;           -- Port Output Data
-      PIDR      : Boolean := False;           -- Pmn State
-      PDR       : Bits_1  := PDR_PORTIN;      -- Port Direction
+      PODR      : Boolean := False;             -- Port Output Data
+      PIDR      : Boolean := False;             -- Pmn State
+      PDR       : Bits_1  := PDR_PORTIN;        -- Port Direction
       Reserved1 : Bits_1  := 0;
-      PCR       : Boolean := False;           -- Pull-up Control
+      PCR       : Boolean := False;             -- Pull-up Control
       Reserved2 : Bits_1  := 0;
-      NCODR     : Bits_1  := NCODR_CMOS;      -- N-Channel Open-Drain Control
+      NCODR     : Bits_1  := NCODR_CMOS;        -- N-Channel Open-Drain Control
       Reserved3 : Bits_3  := 0;
-      DSCR      : Bits_2  := DSCR_LowDrive;   -- Port Drive Capability
-      EOFEOR    : Bits_2  := EOFEOR_Dontcare; -- Event on Falling/Event on Rising
-      ISEL      : Boolean := False;           -- IRQ Input Enable
-      ASEL      : Boolean := False;           -- Analog Input Enable
-      PMR       : Boolean := False;           -- Port Mode Control
+      DSCR      : Bits_2  := DSCR_LowDrive;     -- Port Drive Capability
+      EOFEOR    : Bits_2  := EOFEOR_Dontcare;   -- Event on Falling/Event on Rising
+      ISEL      : Boolean := False;             -- IRQ Input Enable
+      ASEL      : Boolean := False;             -- Analog Input Enable
+      PMR       : Boolean := False;             -- Port Mode Control
       Reserved4 : Bits_7  := 0;
-      PSEL      : Bits_5;                     -- Peripheral Select
+      PSEL      : Bits_5  := PSEL_HiZ_JTAG_SWD; -- Peripheral Select
       Reserved5 : Bits_3  := 0;
    end record
       with Bit_Order               => Low_Order_First,
@@ -2256,8 +2449,8 @@ pragma Warnings (On);
 
    type PWPR_Type is record
       Reserved : Bits_6  := 0;
-      PFSWE    : Boolean;      -- PmnPFS Register Write Enable
-      B0WI     : Boolean;      -- PFSWE Bit Write Disable
+      PFSWE    : Boolean := False; -- PmnPFS Register Write Enable
+      B0WI     : Boolean := True;  -- PFSWE Bit Write Disable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -2274,6 +2467,68 @@ pragma Warnings (On);
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 21. Key Interrupt Function (KINT)
+   ----------------------------------------------------------------------------
+
+   -- 21.2.1 Key Return Control Register (KRCTL)
+   -- 21.2.2 Key Return Flag Register (KRF)
+   -- 21.2.3 Key Return Mode Register (KRM)
+
+   ----------------------------------------------------------------------------
+   -- 22. Port Output Enable for GPT (POEG)
+   ----------------------------------------------------------------------------
+
+   -- 22.2.1 POEG Group n Setting Register (POEGGn) (n = A to D)
+
+   ----------------------------------------------------------------------------
+   -- 23. General PWM Timer (GPT)
+   ----------------------------------------------------------------------------
+
+   -- 23.2.1 General PWM Timer Write-Protection Register (GTWP)
+   -- 23.2.2 General PWM Timer Software Start Register (GTSTR)
+   -- 23.2.3 General PWM Timer Software Stop Register (GTSTP)
+   -- 23.2.4 General PWM Timer Software Clear Register (GTCLR)
+   -- 23.2.5 General PWM Timer Start Source Select Register (GTSSR)
+   -- 23.2.6 General PWM Timer Stop Source Select Register (GTPSR)
+   -- 23.2.7 General PWM Timer Clear Source Select Register (GTCSR)
+   -- 23.2.8 General PWM Timer Up Count Source Select Register (GTUPSR)
+   -- 23.2.9 General PWM Timer Down Count Source Select Register (GTDNSR)
+   -- 23.2.10 General PWM Timer Input Capture Source Select Register A (GTICASR)
+   -- 23.2.11 General PWM Timer Input Capture Source Select Register B (GTICBSR)
+   -- 23.2.12 General PWM Timer Control Register (GTCR)
+   -- 23.2.13 General PWM Timer Count Direction and Duty Setting Register (GTUDDTYC)
+   -- 23.2.14 General PWM Timer I/O Control Register (GTIOR)
+   -- 23.2.15 General PWM Timer Interrupt Output Setting Register (GTINTAD)
+   -- 23.2.16 General PWM Timer Status Register (GTST)
+   -- 23.2.17 General PWM Timer Buffer Enable Register (GTBER)
+   -- 23.2.18 General PWM Timer Interrupt and A/D Converter Start Request Skipping Setting Register (GTITC)
+   -- 23.2.19 General PWM Timer Counter (GTCNT)
+   -- 23.2.20 General PWM Timer Compare Capture Register n (GTCCRn) (n = A to F)
+   -- 23.2.21 General PWM Timer Cycle Setting Register (GTPR)
+   -- 23.2.22 General PWM Timer Cycle Setting Buffer Register (GTPBR)
+   -- 23.2.23 General PWM Timer Cycle Setting Double-Buffer Register (GTPDBR)
+   -- 23.2.24 A/D Converter Start Request Timing Register n (GTADTRn) (n = A, B)
+   -- 23.2.25 A/D Converter Start Request Timing Buffer Register n (GTADTBRn) (n = A, B)
+   -- 23.2.26 A/D Converter Start Request Timing Double-Buffer Register n (GTADTDBRn) (n = A, B)
+   -- 23.2.27 General PWM Timer Dead Time Control Register (GTDTCR)
+   -- 23.2.28 General PWM Timer Dead Time Value Register n (GTDVn) (n = U, D)
+   -- 23.2.29 General PWM Timer Dead Time Buffer Register n (GTDBn) (n = U, D)
+   -- 23.2.30 General PWM Timer Output Protection Function Status Register (GTSOS)
+   -- 23.2.31 General PWM Timer Output Protection Function Temporary Release Register (GTSOTR)
+   -- 23.2.32 Output Phase Switching Control Register (OPSCR)
+
+   ----------------------------------------------------------------------------
+   -- 24. PWM Delay Generation Circuit
+   ----------------------------------------------------------------------------
+
+   -- 24.2.1 PWM Output Delay Control Register (GTDLYCR)
+   -- 24.2.2 PWM Output Delay Control Register 2 (GTDLYCR2)
+   -- 24.2.3 GTIOCnA Rising Output Delay Register (GTDLYRnA) (n = 0 to 3)
+   -- 24.2.4 GTIOCnA Falling Output Delay Register (GTDLYFnA) (n = 0 to 3)
+   -- 24.2.5 GTIOCnB Rising Output Delay Register (GTDLYRnB) (n = 0 to 3)
+   -- 24.2.6 GTIOCnB Falling Output Delay Register (GTDLYFnB) (n = 0 to 3)
 
    ----------------------------------------------------------------------------
    -- 25. Asynchronous General-Purpose Timer (AGT)
@@ -2524,8 +2779,354 @@ pragma Warnings (On);
            Convention => Ada;
 
    ----------------------------------------------------------------------------
+   -- 26. Realtime Clock (RTC)
+   ----------------------------------------------------------------------------
+
+   -- 26.2.1 64-Hz Counter (R64CNT)
+
+   type R64CNT_Type is record
+      F64HZ    : Boolean; -- 64 Hz
+      F32HZ    : Boolean; -- 32 Hz
+      F16HZ    : Boolean; -- 16 Hz
+      F8HZ     : Boolean; -- 8 Hz
+      F4HZ     : Boolean; -- 4 Hz
+      F2HZ     : Boolean; -- 2 Hz
+      F1HZ     : Boolean; -- 1 Hz
+      Reserved : Bits_1;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for R64CNT_Type use record
+      F64HZ    at 0 range 0 .. 0;
+      F32HZ    at 0 range 1 .. 1;
+      F16HZ    at 0 range 2 .. 2;
+      F8HZ     at 0 range 3 .. 3;
+      F4HZ     at 0 range 4 .. 4;
+      F2HZ     at 0 range 5 .. 5;
+      F1HZ     at 0 range 6 .. 6;
+      Reserved at 0 range 7 .. 7;
+   end record;
+
+   R64CNT_ADDRESS : constant := 16#4004_4000#;
+
+   R64CNT : aliased R64CNT_Type
+      with Address              => System'To_Address (R64CNT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 26.2.2 Second Counter (RSECCNT)/Binary Counter 0 (BCNT0)
+
+   type RSECCNT_Type is record
+      SEC1     : Bits_4;      -- 1-Second Count
+      SEC10    : Bits_3;      -- 10-Second Count
+      Reserved : Bits_1 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RSECCNT_Type use record
+      SEC1     at 0 range 0 .. 3;
+      SEC10    at 0 range 4 .. 6;
+      Reserved at 0 range 7 .. 7;
+   end record;
+
+   RSECCNT_ADDRESS : constant := 16#4004_4002#;
+
+   RSECCNT : aliased RSECCNT_Type
+      with Address              => System'To_Address (RSECCNT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 26.2.3 Minute Counter (RMINCNT)/Binary Counter 1 (BCNT1)
+
+   type RMINCNT_Type is record
+      MIN1     : Bits_4;      -- 1-Minute Count
+      MIN10    : Bits_3;      -- 10-Minute Count
+      Reserved : Bits_1 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RMINCNT_Type use record
+      MIN1     at 0 range 0 .. 3;
+      MIN10    at 0 range 4 .. 6;
+      Reserved at 0 range 7 .. 7;
+   end record;
+
+   RMINCNT_ADDRESS : constant := 16#4004_4004#;
+
+   RMINCNT : aliased RMINCNT_Type
+      with Address              => System'To_Address (RMINCNT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 26.2.4 Hour Counter (RHRCNT)/Binary Counter 2 (BCNT2)
+
+   type RHRCNT_Type is record
+      HR1      : Bits_4;      -- 1-Hour Count
+      HR10     : Bits_3;      -- 10-Hour Count
+      Reserved : Bits_1 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RHRCNT_Type use record
+      HR1      at 0 range 0 .. 3;
+      HR10     at 0 range 4 .. 6;
+      Reserved at 0 range 7 .. 7;
+   end record;
+
+   RHRCNT_ADDRESS : constant := 16#4004_4006#;
+
+   RHRCNT : aliased RHRCNT_Type
+      with Address              => System'To_Address (RHRCNT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 26.2.5 Day-of-Week Counter (RWKCNT)/Binary Counter 3 (BCNT3)
+
+   DAYW_SUN  : constant := 2#000#; -- Sunday
+   DAYW_MON  : constant := 2#001#; -- Monday
+   DAYW_TUE  : constant := 2#010#; -- Tuesday
+   DAYW_WED  : constant := 2#011#; -- Wednesday
+   DAYW_THU  : constant := 2#100#; -- Thursday
+   DAYW_FRI  : constant := 2#101#; -- Friday
+   DAYW_SAT  : constant := 2#110#; -- Saturday
+   DAYW_RSVD : constant := 2#111#; -- Setting prohibited.
+
+   type RWKCNT_Type is record
+      DAYW     : Bits_3;      -- Day-of-Week Counting
+      Reserved : Bits_5 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RWKCNT_Type use record
+      DAYW     at 0 range 0 .. 2;
+      Reserved at 0 range 3 .. 7;
+   end record;
+
+   RWKCNT_ADDRESS : constant := 16#4004_4008#;
+
+   RWKCNT : aliased RWKCNT_Type
+      with Address              => System'To_Address (RWKCNT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 26.2.6 Day Counter (RDAYCNT)
+
+   type RDAYCNT_Type is record
+      DATE1    : Bits_4;      -- 1-Day Count
+      DATE10   : Bits_2;      -- 10-Day Count
+      Reserved : Bits_2 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RDAYCNT_Type use record
+      DATE1    at 0 range 0 .. 3;
+      DATE10   at 0 range 4 .. 5;
+      Reserved at 0 range 6 .. 7;
+   end record;
+
+   RDAYCNT_ADDRESS : constant := 16#4004_400A#;
+
+   RDAYCNT : aliased RDAYCNT_Type
+      with Address              => System'To_Address (RDAYCNT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 26.2.7 Month Counter (RMONCNT)
+
+   type RMONCNT_Type is record
+      MON1     : Bits_4;      -- 1-Month Count
+      MON10    : Bits_1;      -- 10-Month Count
+      Reserved : Bits_3 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RMONCNT_Type use record
+      MON1     at 0 range 0 .. 3;
+      MON10    at 0 range 4 .. 4;
+      Reserved at 0 range 5 .. 7;
+   end record;
+
+   RMONCNT_ADDRESS : constant := 16#4004_400C#;
+
+   RMONCNT : aliased RMONCNT_Type
+      with Address              => System'To_Address (RMONCNT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 26.2.8 Year Counter (RYRCNT)
+
+   type RYRCNT_Type is record
+      YR1      : Bits_4;      -- 1-Year Count
+      YR10     : Bits_4;      -- 10-Year Count
+      Reserved : Bits_8 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for RYRCNT_Type use record
+      YR1      at 0 range 0 ..  3;
+      YR10     at 0 range 4 ..  7;
+      Reserved at 0 range 8 .. 15;
+   end record;
+
+   RYRCNT_ADDRESS : constant := 16#4004_400E#;
+
+   RYRCNT : aliased RYRCNT_Type
+      with Address              => System'To_Address (RYRCNT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 26.2.9 Second Alarm Register (RSECAR)/Binary Counter 0 Alarm Register (BCNT0AR)
+   -- 26.2.10 Minute Alarm Register (RMINAR)/Binary Counter 1 Alarm Register (BCNT1AR)
+   -- 26.2.11 Hour Alarm Register (RHRAR)/Binary Counter 2 Alarm Register (BCNT2AR)
+   -- 26.2.12 Day-of-Week Alarm Register (RWKAR)/Binary Counter 3 Alarm Register (BCNT3AR)
+   -- 26.2.13 Date Alarm Register (RDAYAR)/Binary Counter 0 Alarm Enable Register (BCNT0AER)
+   -- 26.2.14 Month Alarm Register (RMONAR)/Binary Counter 1 Alarm Enable Register (BCNT1AER)
+   -- 26.2.15 Year Alarm Register (RYRAR)/Binary Counter 2 Alarm Enable Register (BCNT2AER)
+   -- 26.2.16 Year Alarm Enable Register (RYRAREN)/Binary Counter 3 Alarm Enable Register (BCNT3AER)
+
+   -- 26.2.17 RTC Control Register 1 (RCR1)
+
+   RTCOS_1HZ  : constant := 0; -- RTCOUT outputs 1 Hz
+   RTCOS_64HZ : constant := 1; -- RTCOUT outputs 64 Hz.
+
+   PES_RSVD1  : constant := 2#0000#;
+   PES_RSVD2  : constant := 2#0001#;
+   PES_RSVD3  : constant := 2#0010#;
+   PES_RSVD4  : constant := 2#0011#;
+   PES_RSVD5  : constant := 2#0100#;
+   PES_RSVD6  : constant := 2#0101#;
+   PES_DIV256 : constant := 2#0110#; -- Generate periodic interrupt every 1/256 second
+   PES_DIV128 : constant := 2#0111#; -- Generate periodic interrupt every 1/128 second
+   PES_DIV64  : constant := 2#1000#; -- Generate periodic interrupt every 1/64 second
+   PES_DIV32  : constant := 2#1001#; -- Generate periodic interrupt every 1/32 second
+   PES_DIV16  : constant := 2#1010#; -- Generate periodic interrupt every 1/16 second
+   PES_DIV8   : constant := 2#1011#; -- Generate periodic interrupt every 1/8 second
+   PES_DIV4   : constant := 2#1100#; -- Generate periodic interrupt every 1/4 second
+   PES_DIV2   : constant := 2#1101#; -- Generate periodic interrupt every 1/2 second
+   PES_1      : constant := 2#1110#; -- Generate periodic interrupt every 1 second
+   PES_2      : constant := 2#1111#; -- Generate periodic interrupt every 2 seconds.
+
+   type RCR1_Type is record
+      AIE   : Boolean := False;     -- Alarm Interrupt Enable
+      CIE   : Boolean := False;     -- Carry Interrupt Enable
+      PIE   : Boolean := False;     -- Periodic Interrupt Enable
+      RTCOS : Bits_1  := RTCOS_1HZ; -- RTCOUT Output Select
+      PES   : Bits_4  := PES_1;     -- Periodic Interrupt Select
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RCR1_Type use record
+      AIE   at 0 range 0 .. 0;
+      CIE   at 0 range 1 .. 1;
+      PIE   at 0 range 2 .. 2;
+      RTCOS at 0 range 3 .. 3;
+      PES   at 0 range 4 .. 7;
+   end record;
+
+   RCR1_ADDRESS : constant := 16#4004_4022#;
+
+   RCR1 : aliased RCR1_Type
+      with Address              => System'To_Address (RCR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 26.2.18 RTC Control Register 2 (RCR2)
+
+   CNTMD_CALENDAR : constant := 0; -- Calendar count mode
+   CNTMD_BINARY   : constant := 1; -- Binary count mode.
+
+   type RCR2_Type is record
+      START    : Boolean := False;          -- Start
+      RESET    : Boolean := False;          -- RTC Software Reset
+      Reserved : Bits_5  := 0;
+      CNTMD    : Bits_1  := CNTMD_CALENDAR; -- Count Mode Select
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RCR2_Type use record
+      START    at 0 range 0 .. 0;
+      RESET    at 0 range 1 .. 1;
+      Reserved at 0 range 2 .. 6;
+      CNTMD    at 0 range 7 .. 7;
+   end record;
+
+   RCR2_ADDRESS : constant := 16#4004_4024#;
+
+   RCR2 : aliased RCR2_Type
+      with Address              => System'To_Address (RCR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 26.2.19 RTC Control Register 4 (RCR4)
+
+   RCKSEL_SOSC : constant := 0; -- Sub-clock oscillator is selected
+   RCKSEL_LOC0 : constant := 1; -- LOCO is selected.
+
+   type RCR4_Type is record
+      RCKSEL   : Bits_1 := RCKSEL_SOSC; -- Count Source Select
+      Reserved : Bits_7 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RCR4_Type use record
+      RCKSEL   at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 7;
+   end record;
+
+   RCR4_ADDRESS : constant := 16#4004_4028#;
+
+   RCR4 : aliased RCR4_Type
+      with Address              => System'To_Address (RCR4_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 26.2.20 Frequency Register (RFRH/RFRL)
+   -- 26.2.21 Time Error Adjustment Register (RADJ)
+   -- 26.2.22 Time Capture Control Register y (RTCCRy) (y = 0 to 2)
+   -- 26.2.23 Second Capture Register y (RSECCPy) (y = 0 to 2)/BCNT0 Capture Register y (BCNT0CPy) (y = 0 to 2)
+   -- 26.2.24 Minute Capture Register y (RMINCPy) (y = 0 to 2)/BCNT1 Capture Register y (BCNT1CPy) (y = 0 to 2)
+   -- 26.2.25 Hour Capture Register y (RHRCPy) (y = 0 to 2)/BCNT2 Capture Register y (BCNT2CPy) (y = 0 to 2)
+   -- 26.2.26 Date Capture Register y (RDAYCPy) (y = 0 to 2)/BCNT3 Capture Register y (BCNT3CPy) (y = 0 to 2)
+   -- 26.2.27 Month Capture Register y (RMONCPy) (y = 0 to 2)
+
+   ----------------------------------------------------------------------------
+   -- 27. Watchdog Timer (WDT)
+   ----------------------------------------------------------------------------
+
+   -- 27.2.1 WDT Refresh Register (WDTRR)
+   -- 27.2.2 WDT Control Register (WDTCR)
+   -- 27.2.3 WDT Status Register (WDTSR)
+   -- 27.2.4 WDT Reset Control Register (WDTRCR)
+   -- 27.2.5 WDT Count Stop Control Register (WDTCSTPR)
+   -- 27.2.6 Option Function Select Register 0 (OFS0)
+
+   ----------------------------------------------------------------------------
+   -- 28. Independent Watchdog Timer (IWDT)
+   ----------------------------------------------------------------------------
+
+   -- 28.2.1 IWDT Refresh Register (IWDTRR)
+   -- 28.2.2 IWDT Status Register (IWDTSR)
+   -- 28.2.3 Option Function Select Register 0 (OFS0)
+
+   ----------------------------------------------------------------------------
    -- 29. Ethernet MAC Controller (ETHERC)
    ----------------------------------------------------------------------------
+
+   -- 29.2.1 ETHERC Mode Register (ECMR)
+   -- 29.2.2 Receive Frame Maximum Length Register (RFLR)
+   -- 29.2.3 ETHERC Status Register (ECSR)
+   -- 29.2.4 ETHERC Interrupt Enable Register (ECSIPR)
 
    -- 29.2.5 PHY Interface Register (PIR)
 
@@ -2559,6 +3160,27 @@ pragma Warnings (On);
       Reserved at 0 range 1 .. 31;
    end record;
 
+   -- 29.2.7 Random Number Generation Counter Upper Limit Setting Register (RDMLR)
+   -- 29.2.8 Interpacket Gap Register (IPGR)
+   -- 29.2.9 Automatic PAUSE Frame Register (APR)
+   -- 29.2.10 Manual PAUSE Frame Register (MPR)
+   -- 29.2.11 Received PAUSE Frame Counter (RFCF)
+   -- 29.2.12 PAUSE Frame Retransmit Count Setting Register (TPAUSER)
+   -- 29.2.13 PAUSE Frame Retransmit Counter (TPAUSECR)
+   -- 29.2.14 Broadcast Frame Receive Count Setting Register (BCFRR)
+   -- 29.2.15 MAC Address Upper Bit Register (MAHR)
+   -- 29.2.16 MAC Address Lower Bit Register (MALR)
+   -- 29.2.17 Transmit Retry Over Counter Register (TROCR)
+   -- 29.2.18 Late Collision Detect Counter Register (CDCR)
+   -- 29.2.19 Lost Carrier Counter Register (LCCR)
+   -- 29.2.20 Carrier Not Detect Counter Register (CNDCR)
+   -- 29.2.21 CRC Error Frame Receive Counter Register (CEFCR)
+   -- 29.2.22 Frame Receive Error Counter Register (FRECR)
+   -- 29.2.23 Too-Short Frame Receive Counter Register (TSFRCR)
+   -- 29.2.24 Too-Long Frame Receive Counter Register (TLFRCR)
+   -- 29.2.25 Received Alignment Error Frame Counter Register (RFCR)
+   -- 29.2.26 Multicast Address Frame Receive Counter Register (MAFCR)
+
    ETHERC_BASEADDRESS : constant := 16#4006_4100#;
 
    PIR : aliased PIR_Type
@@ -2574,10 +3196,26 @@ pragma Warnings (On);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- 30. Ethernet PTP Controller (EPTPC)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 31. Ethernet DMA Controller (EDMAC)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 32. USB 2.0 Full-Speed Module (USBFS)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 33. USB 2.0 High-Speed Module (USBHS)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
    -- 34. Serial Communications Interface (SCI)
    ----------------------------------------------------------------------------
 
-   type SCI_Kind is (NORMAL, FIFO, SMIF);
+   type SCI_Mode is (NORMAL, FIFO, SMIF);
 
    type CHR_Data_Length_Type is record
       CHR  : Bits_1;
@@ -2727,7 +3365,7 @@ pragma Warnings (On);
       GM    at 0 range 7 .. 7;
    end record;
 
-   type SMR_Type (S : SCI_Kind := NORMAL) is record
+   type SMR_Type (S : SCI_Mode := NORMAL) is record
       case S is
          when NORMAL | FIFO => NORMAL : SMR_NORMAL_Type;
          when SMIF          => SMIF   : SMR_SMIF_Type;
@@ -2867,7 +3505,7 @@ pragma Warnings (On);
       TDRE  at 0 range 7 .. 7;
    end record;
 
-   type SSR_Type (S : SCI_Kind := NORMAL) is record
+   type SSR_Type (S : SCI_Mode := NORMAL) is record
       case S is
          when NORMAL => NORMAL : SSR_NORMAL_Type;
          when FIFO   => FIFO   : SSR_FIFO_Type;
@@ -3267,6 +3905,37 @@ pragma Warnings (On);
    SCI : aliased array (0 .. 9) of SCI_Type
       with Address    => System'To_Address (SCI_BASEADDRESS),
            Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 35. IrDA Interface
+   ----------------------------------------------------------------------------
+
+   -- 35.2.1 IrDA Control Register (IRCR)
+
+   type IRCR_Type is record
+      Reserved1 : Bits_2  := 0;
+      IRRXINV   : Boolean := False; -- IRRXD Polarity Switching
+      IRTXINV   : Boolean := False; -- IRTXD Polarity Switching
+      Reserved2 : Bits_3  := 0;
+      IRE       : Boolean := False; -- IrDA Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for IRCR_Type use record
+      Reserved1 at 0 range 0 .. 1;
+      IRRXINV   at 0 range 2 .. 2;
+      IRTXINV   at 0 range 3 .. 3;
+      Reserved2 at 0 range 4 .. 6;
+      IRE       at 0 range 7 .. 7;
+   end record;
+
+   IRCR_ADDRESS : constant := 16#4007_0F00#;
+
+   IRCR : aliased IRCR_Type
+      with Address              => System'To_Address (IRCR_ADDRESS),
+           Volatile_Full_Access => True,
            Import     => True,
            Convention => Ada;
 
@@ -3768,6 +4437,37 @@ pragma Warnings (On);
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 37. Controller Area Network (CAN) Module
+   ----------------------------------------------------------------------------
+
+   -- 37.2.1 Control Register (CTLR)
+   -- 37.2.2 Bit Configuration Register (BCR)
+   -- 37.2.3 Mask Register k (MKRk) (k = 0 to 7)
+   -- 37.2.4 FIFO Received ID Compare Registers 0 and 1 (FIDCR0 and FIDCR1)
+   -- 37.2.5 Mask Invalid Register (MKIVLR)
+   -- 37.2.6 Mailbox Register j (MBj_ID, MBj_DL, MBj_Dm, MBj_TS) (j = 0 to 31; m = 0 to 7)
+   -- 37.2.7 Mailbox Interrupt Enable Register (MIER)
+   -- 37.2.8 Mailbox Interrupt Enable Register for FIFO Mailbox Mode (MIER_FIFO)
+   -- 37.2.9 Message Control Register for Transmit (MCTL_TXj) (j = 0 to 31)
+   -- 37.2.10 Message Control Register for Receive (MCTL_RXj) (j = 0 to 31)
+   -- 37.2.11 Receive FIFO Control Register (RFCR)
+   -- 37.2.12 Receive FIFO Pointer Control Register (RFPCR)
+   -- 37.2.13 Transmit FIFO Control Register (TFCR)
+   -- 37.2.14 Transmit FIFO Pointer Control Register (TFPCR)
+   -- 37.2.15 Status Register (STR)
+   -- 37.2.16 Mailbox Search Mode Register (MSMR)
+   -- 37.2.17 Mailbox Search Status Register (MSSR)
+   -- 37.2.18 Channel Search Support Register (CSSR)
+   -- 37.2.19 Acceptance Filter Support Register (AFSR)
+   -- 37.2.20 Error Interrupt Enable Register (EIER)
+   -- 37.2.21 Error Interrupt Factor Judge Register (EIFR)
+   -- 37.2.22 Receive Error Count Register (RECR)
+   -- 37.2.23 Transmit Error Count Register (TECR)
+   -- 37.2.24 Error Code Store Register (ECSR)
+   -- 37.2.25 Time Stamp Register (TSR)
+   -- 37.2.26 Test Control Register (TCR)
 
    ----------------------------------------------------------------------------
    -- 38. Serial Peripheral Interface (SPI)
@@ -4584,6 +5284,128 @@ pragma Warnings (On);
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 40. Cyclic Redundancy Check (CRC) Calculator
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 41. Serial Sound Interface Enhanced (SSIE)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 42. Sampling Rate Converter (SRC)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 43. SD/MMC Host Interface (SDHI)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 44. Parallel Data Capture Unit (PDC)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 45. Boundary Scan
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 46. Secure Cryptographic Engine (SCE7)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 47. 12-Bit A/D Converter (ADC12)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 48. 12-Bit D/A Converter (DAC12)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 49. Temperature Sensor (TSN)
+   ----------------------------------------------------------------------------
+
+   -- 49.2.1 Temperature Sensor Control Register (TSCR)
+
+   type TSCR_Type is record
+      Reserved1 : Bits_4  := 0;
+      TSOE      : Boolean := False; -- Temperature Sensor Output Enable
+      Reserved2 : Bits_2  := 0;
+      TSEN      : Boolean := False; -- Temperature Sensor Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TSCR_Type use record
+      Reserved1 at 0 range 0 .. 3;
+      TSOE      at 0 range 4 .. 4;
+      Reserved2 at 0 range 5 .. 6;
+      TSEN      at 0 range 7 .. 7;
+   end record;
+
+   TSCR_ADDRESS : constant := 16#4005_D000#;
+
+   TSCR : aliased TSCR_Type
+      with Address              => System'To_Address (TSCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 49.2.2 Temperature Sensor Calibration Data Register(TSCDR)
+
+   type TSCDR_Type is record
+      DATA     : Bits_12; -- temperature sensor calibration data measured for each MCU at factory shipment.
+      Reserved : Bits_20;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TSCDR_Type use record
+      DATA     at 0 range  0 .. 11;
+      Reserved at 0 range 12 .. 31;
+   end record;
+
+   TSCDR_ADDRESS : constant := 16#407F_B17C#;
+
+   TSCDR : aliased TSCDR_Type
+      with Address              => System'To_Address (TSCDR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 50. High-Speed Analog Comparator (ACMPHS)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 51. Capacitive Touch Sensing Unit (CTSU)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 52. Data Operation Circuit (DOC)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 53. SRAM
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 54. Standby SRAM
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 55. Flash Memory
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 56. 2D Drawing Engine (DRW)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 57. JPEG Codec (JPEG)
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 58. Graphics LCD Controller (GLCDC)
+   ----------------------------------------------------------------------------
 
 pragma Style_Checks (On);
 
