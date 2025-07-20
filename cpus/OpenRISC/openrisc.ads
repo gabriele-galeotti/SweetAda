@@ -17,7 +17,6 @@
 
 with System;
 with System.Storage_Elements;
-with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 
@@ -109,9 +108,6 @@ pragma Style_Checks (Off);
       (Value : in SR_Type)
       with Inline => True;
 
-   function To_U32 is new Ada.Unchecked_Conversion (SR_Type, Unsigned_32);
-   function To_SR is new Ada.Unchecked_Conversion (Unsigned_32, SR_Type);
-
    -- 15.4 Tick Timer Mode Register (TTMR)
 
    M_DISABLED : constant := 2#00#; -- Tick timer is disabled
@@ -172,8 +168,6 @@ pragma Style_Checks (Off);
    function VR_Read
       return VR_Type
       with Inline => True;
-
-   function To_U32 is new Ada.Unchecked_Conversion (VR_Type, Unsigned_32);
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
