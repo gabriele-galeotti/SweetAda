@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Ada.Unchecked_Conversion;
 with Definitions;
 with Bits;
 with ARMv7M;
@@ -43,6 +44,7 @@ package body BSP
    use Bits;
    use S5D9;
 
+   function To_U32 is new Ada.Unchecked_Conversion (ARMv7M.CPUID_Type, Unsigned_32);
    procedure SysTick_Init;
    procedure LED_Init;
    procedure Serial_Console_Init;
@@ -230,7 +232,7 @@ package body BSP
       Console.Print ("Synergy PK-S5D9", NL => True);
       -------------------------------------------------------------------------
       pragma Warnings (Off);
-      Console.Print (Prefix => "CPUID: ", Value => ARMv7M.To_U32 (ARMv7M.CPUID), NL => True);
+      Console.Print (Prefix => "CPUID: ", Value => To_U32 (ARMv7M.CPUID), NL => True);
       pragma Warnings (On);
       Console.Print (Prefix => "ACTLR: DISMCYCINT: ", Value => CortexM4.ACTLR.DISMCYCINT, NL => True);
       Console.Print (Prefix => "ACTLR: DISDEFWBUF: ", Value => CortexM4.ACTLR.DISDEFWBUF, NL => True);
