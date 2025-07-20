@@ -92,7 +92,7 @@ pragma Style_Checks (Off);
       Reserved2 : Bits_1  := 0;
       DSE       : Boolean := False;         -- Drive Strength Enable
       Reserved3 : Bits_1  := 0;
-      MUX       : Bits_3;                   -- Pin Mux Control
+      MUX       : Bits_3  := MUX_DISABLED;  -- Pin Mux Control
       Reserved4 : Bits_5  := 0;
       IRQC      : Bits_4  := IRQC_DISABLED; -- Interrupt Configuration
       Reserved5 : Bits_4  := 0;
