@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
+with Ada.Unchecked_Conversion;
 with Definitions;
 
 package body RISCV
@@ -141,6 +142,24 @@ pragma Style_Checks (Off);
       is function CSRR is new CSR_Read ("mcause", mcause_Type); begin return CSRR; end mcause_Read;
 
 pragma Style_Checks (On);
+
+   function To_MXLEN
+      (mcause : mcause_Type)
+      return MXLEN_Type
+      is
+      function Convert is new Ada.Unchecked_Conversion (mcause_Type, MXLEN_Type);
+   begin
+      return Convert (mcause);
+   end To_MXLEN;
+
+   function To_mcause
+      (mcause : MXLEN_Type)
+      return mcause_Type
+      is
+      function Convert is new Ada.Unchecked_Conversion (MXLEN_Type, mcause_Type);
+   begin
+      return Convert (mcause);
+   end To_mcause;
 
    ----------------------------------------------------------------------------
    -- NOP
