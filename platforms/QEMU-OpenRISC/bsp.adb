@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with Ada.Unchecked_Conversion;
 with Configure;
 with Definitions;
 with Bits;
@@ -115,7 +116,11 @@ package body BSP
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("OpenRISC " & Configure.CPU_MODEL & " (QEMU emulator)", NL => True);
-      Console.Print (Prefix => "VR: ", Value => OpenRISC.To_U32 (OpenRISC.VR_Read), NL => True);
+      declare
+         function To_U32 is new Ada.Unchecked_Conversion (OpenRISC.VR_Type, Unsigned_32);
+      begin
+         Console.Print (Prefix => "VR: ", Value => To_U32 (OpenRISC.VR_Read), NL => True);
+      end;
       -------------------------------------------------------------------------
       OpenRISC.TEE_Enable (True);
       Tick_Timer_Init;
