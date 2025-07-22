@@ -133,7 +133,7 @@ package Definitions
    CLK_UART3M6  : constant :=   3_686_400; -- CLK_UART1M8 * 2
    CLK_4M       : constant :=    4 * MHz1; -- standard value
    CLK_RTC4M    : constant :=   4_194_304; -- 2**22
-   CLK_PAL      : constant :=   4_433_619; -- 283.75 * 15625 + 25
+   CLK_PAL      : constant :=   4_433_619; -- 283.75 * 15_625 + 25
    CLK_PC5150   : constant :=   4_772_727; -- CLK_NTSC * 4/3
    CLK_UART4M9  : constant :=   4_915_200; -- CLK_UART1M8 * 8/3
    CLK_6M       : constant :=    6 * MHz1; -- standard value
