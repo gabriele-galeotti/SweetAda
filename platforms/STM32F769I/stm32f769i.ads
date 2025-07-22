@@ -3272,6 +3272,488 @@ pragma Warnings (On);
    -- 14 Quad-SPI interface (QUADSPI)
    ----------------------------------------------------------------------------
 
+   -- 14.5.1 QUADSPI control register (QUADSPI_CR)
+
+   SSHIFT_NONE      : constant := 0; -- No shift
+   SSHIFT_HALFCYCLE : constant := 1; -- 1/2 cycle shift
+
+   FSEL_FLASH1 : constant := 0; -- FLASH 1 selected
+   FSEL_FLASH2 : constant := 1; -- FLASH 2 selected
+
+   FTHRES_1  : constant := 0;  -- In indirect write mode (FMODE = 00): FTF is set if there are 1 or more free bytes available to be written to in the FIFO
+                               -- In indirect read mode (FMODE = 01): FTF is set if there are 1 or more valid bytes that can be read from the FIFO
+   FTHRES_2  : constant := 1;  -- In indirect write mode (FMODE = 00): FTF is set if there are 2 or more free bytes available to be written to in the FIFO
+                               -- In indirect read mode (FMODE = 01): FTF is set if there are 2 or more valid bytes that can be read from the FIFO
+   FTHRES_3  : constant := 2;
+   FTHRES_4  : constant := 3;
+   FTHRES_5  : constant := 4;
+   FTHRES_6  : constant := 5;
+   FTHRES_7  : constant := 6;
+   FTHRES_8  : constant := 7;
+   FTHRES_9  : constant := 8;
+   FTHRES_10 : constant := 9;
+   FTHRES_11 : constant := 10;
+   FTHRES_12 : constant := 11;
+   FTHRES_13 : constant := 12;
+   FTHRES_14 : constant := 13;
+   FTHRES_15 : constant := 14;
+   FTHRES_16 : constant := 15;
+   FTHRES_17 : constant := 16;
+   FTHRES_18 : constant := 17;
+   FTHRES_19 : constant := 18;
+   FTHRES_20 : constant := 19;
+   FTHRES_21 : constant := 20;
+   FTHRES_22 : constant := 21;
+   FTHRES_23 : constant := 22;
+   FTHRES_24 : constant := 23;
+   FTHRES_25 : constant := 24;
+   FTHRES_26 : constant := 25;
+   FTHRES_27 : constant := 26;
+   FTHRES_28 : constant := 27;
+   FTHRES_29 : constant := 28;
+   FTHRES_30 : constant := 29;
+   FTHRES_31 : constant := 30;
+   FTHRES_32 : constant := 31; -- In indirect write mode (FMODE = 00): FTF is set if there are 32 free bytes available to be written to in the FIFO
+                               -- In indirect read mode (FMODE = 01): FTF is set if there are 32 valid bytes that can be read from the FIFO
+
+   APMS_ABORTDISABLE : constant := 0; -- Automatic polling mode is stopped only by abort or by disabling the QUADSPI.
+   APMS_MATCH        : constant := 1; -- Automatic polling mode stops as soon as there is a match.
+
+   PMM_AND : constant := 0; -- AND match mode.
+   PMM_OR  : constant := 1; -- OR match mode.
+
+   PRESCALER_FAHB        : constant := 0;   -- FCLK = FAHB, AHB clock used directly as QUADSPI CLK (prescaler bypassed)
+   PRESCALER_FAHB_DIV2   : constant := 1;   -- FCLK = FAHB/2
+   PRESCALER_FAHB_DIV3   : constant := 2;   -- FCLK = FAHB/3
+   PRESCALER_FAHB_DIV256 : constant := 255; -- FCLK = FAHB/256
+
+   type QUADSPI_CR_Type is record
+      EN        : Boolean    := False;             -- Enable
+      ABORTR    : Boolean    := False;             -- Abort request
+      DMAEN     : Boolean    := False;             -- DMA enable
+      TCEN      : Boolean    := False;             -- Timeout counter enable
+      SSHIFT    : Bits_1     := SSHIFT_NONE;       -- Sample shift
+      Reserved1 : Bits_1     := 0;
+      DFM       : Boolean    := False;             -- Dual-flash mode
+      FSEL      : Bits_1     := FSEL_FLASH1;       -- Flash memory selection
+      FTHRES    : Bits_5     := FTHRES_1;          -- FIFO threshold level
+      Reserved2 : Bits_3     := 0;
+      TEIE      : Boolean    := False;             -- Transfer error interrupt enable
+      TCIE      : Boolean    := False;             -- Transfer complete interrupt enable
+      FTIE      : Boolean    := False;             -- FIFO threshold interrupt enable
+      SMIE      : Boolean    := False;             -- Status match interrupt enable
+      TOIE      : Boolean    := False;             -- TimeOut interrupt enable
+      Reserved3 : Bits_1     := 0;
+      APMS      : Bits_1     := APMS_ABORTDISABLE; -- Automatic poll mode stop
+      PMM       : Bits_1     := PMM_AND;           -- Polling match mode
+      PRESCALER : Unsigned_8 := PRESCALER_FAHB;    -- Clock prescaler
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for QUADSPI_CR_Type use record
+      EN        at 0 range  0 ..  0;
+      ABORTR    at 0 range  1 ..  1;
+      DMAEN     at 0 range  2 ..  2;
+      TCEN      at 0 range  3 ..  3;
+      SSHIFT    at 0 range  4 ..  4;
+      Reserved1 at 0 range  5 ..  5;
+      DFM       at 0 range  6 ..  6;
+      FSEL      at 0 range  7 ..  7;
+      FTHRES    at 0 range  8 .. 12;
+      Reserved2 at 0 range 13 .. 15;
+      TEIE      at 0 range 16 .. 16;
+      TCIE      at 0 range 17 .. 17;
+      FTIE      at 0 range 18 .. 18;
+      SMIE      at 0 range 19 .. 19;
+      TOIE      at 0 range 20 .. 20;
+      Reserved3 at 0 range 21 .. 21;
+      APMS      at 0 range 22 .. 22;
+      PMM       at 0 range 23 .. 23;
+      PRESCALER at 0 range 24 .. 31;
+   end record;
+
+   QUADSPI_CR_ADDRESS : constant := 16#A000_1000#;
+
+   QUADSPI_CR : aliased QUADSPI_CR_Type
+      with Address              => System'To_Address (QUADSPI_CR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 14.5.2 QUADSPI device configuration register (QUADSPI_DCR)
+
+   CKMODE_MODE0 : constant := 0; -- CLK must stay low while NCS is high (chip select released).
+   CKMODE_MODE3 : constant := 1; -- CLK must stay high while NCS is high (chip select released).
+
+   CSHT_1 : constant := 0; -- NCS stays high for at least 1 cycle between flash memory commands
+   CSHT_2 : constant := 1; -- NCS stays high for at least 2 cycles between flash memory commands
+   CSHT_3 : constant := 2;
+   CSHT_4 : constant := 3;
+   CSHT_5 : constant := 4;
+   CSHT_6 : constant := 5;
+   CSHT_7 : constant := 6;
+   CSHT_8 : constant := 7; -- NCS stays high for at least 8 cycles between flash memory commands
+
+   FSIZE_2    : constant := 0;  -- Number of bytes in flash memory = 2^[FSIZE+1]
+   FSIZE_4    : constant := 1;
+   FSIZE_8    : constant := 2;
+   FSIZE_16   : constant := 3;
+   FSIZE_32   : constant := 4;
+   FSIZE_64   : constant := 5;
+   FSIZE_128  : constant := 6;
+   FSIZE_256  : constant := 7;
+   FSIZE_512  : constant := 8;
+   FSIZE_1K   : constant := 9;
+   FSIZE_2K   : constant := 10;
+   FSIZE_4K   : constant := 11;
+   FSIZE_8K   : constant := 12;
+   FSIZE_16K  : constant := 13;
+   FSIZE_32K  : constant := 14;
+   FSIZE_64K  : constant := 15;
+   FSIZE_128K : constant := 16;
+   FSIZE_256K : constant := 17;
+   FSIZE_512K : constant := 18;
+   FSIZE_1M   : constant := 19;
+   FSIZE_2M   : constant := 20;
+   FSIZE_4M   : constant := 21;
+   FSIZE_8M   : constant := 22;
+   FSIZE_16M  : constant := 23;
+   FSIZE_32M  : constant := 24;
+   FSIZE_64M  : constant := 25;
+   FSIZE_128M : constant := 26;
+   FSIZE_256M : constant := 27;
+   FSIZE_512M : constant := 28;
+   FSIZE_1G   : constant := 29;
+   FSIZE_2G   : constant := 30;
+   FSIZE_4G   : constant := 31;
+
+   type QUADSPI_DCR_Type is record
+      CKMODE    : Bits_1  := CKMODE_MODE0; -- Mode 0/mode 3
+      Reserved1 : Bits_7  := 0;
+      CSHT      : Bits_3  := CSHT_1;       -- Chip select high time
+      Reserved2 : Bits_5  := 0;
+      FSIZE     : Bits_5  := FSIZE_2;      -- Flash memory size
+      Reserved3 : Bits_11 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for QUADSPI_DCR_Type use record
+      CKMODE    at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  7;
+      CSHT      at 0 range  8 .. 10;
+      Reserved2 at 0 range 11 .. 15;
+      FSIZE     at 0 range 16 .. 20;
+      Reserved3 at 0 range 21 .. 31;
+   end record;
+
+   QUADSPI_DCR_ADDRESS : constant := 16#A000_1004#;
+
+   QUADSPI_DCR : aliased QUADSPI_DCR_Type
+      with Address              => System'To_Address (QUADSPI_DCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 14.5.3 QUADSPI status register (QUADSPI_SR)
+
+   type QUADSPI_SR_Type is record
+      TEF       : Boolean; -- Transfer error flag
+      TCF       : Boolean; -- Transfer complete flag
+      FTF       : Boolean; -- FIFO threshold flag
+      SMF       : Boolean; -- Status match flag
+      TOF       : Boolean; -- Timeout flag
+      BUSY      : Boolean; -- Busy
+      Reserved1 : Bits_2;
+      FLEVEL    : Bits_6;  -- FIFO level
+      Reserved2 : Bits_18;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for QUADSPI_SR_Type use record
+      TEF       at 0 range  0 ..  0;
+      TCF       at 0 range  1 ..  1;
+      FTF       at 0 range  2 ..  2;
+      SMF       at 0 range  3 ..  3;
+      TOF       at 0 range  4 ..  4;
+      BUSY      at 0 range  5 ..  5;
+      Reserved1 at 0 range  6 ..  7;
+      FLEVEL    at 0 range  8 .. 13;
+      Reserved2 at 0 range 14 .. 31;
+   end record;
+
+   QUADSPI_SR_ADDRESS : constant := 16#A000_1008#;
+
+   QUADSPI_SR : aliased QUADSPI_SR_Type
+      with Address              => System'To_Address (QUADSPI_SR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 14.5.4 QUADSPI flag clear register (QUADSPI_FCR)
+
+   type QUADSPI_FCR_Type is record
+      CTEF      : Boolean := False; -- Clear transfer error flag
+      CTCF      : Boolean := False; -- Clear transfer complete flag
+      Reserved1 : Bits_1  := 0;
+      CSMF      : Boolean := False; -- Clear status match flag
+      CTOF      : Boolean := False; -- Clear timeout flag
+      Reserved2 : Bits_27 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for QUADSPI_FCR_Type use record
+      CTEF      at 0 range 0 ..  0;
+      CTCF      at 0 range 1 ..  1;
+      Reserved1 at 0 range 2 ..  2;
+      CSMF      at 0 range 3 ..  3;
+      CTOF      at 0 range 4 ..  4;
+      Reserved2 at 0 range 5 .. 31;
+   end record;
+
+   QUADSPI_FCR_ADDRESS : constant := 16#A000_100C#;
+
+   QUADSPI_FCR : aliased QUADSPI_FCR_Type
+      with Address              => System'To_Address (QUADSPI_FCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 14.5.5 QUADSPI data length register (QUADSPI_DLR)
+
+   type QUADSPI_DLR_Type is record
+      DL : Unsigned_32 := 0; -- Data length
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for QUADSPI_DLR_Type use record
+      DL at 0 range 0 .. 31;
+   end record;
+
+   QUADSPI_DLR_ADDRESS : constant := 16#A000_1010#;
+
+   QUADSPI_DLR : aliased QUADSPI_DLR_Type
+      with Address              => System'To_Address (QUADSPI_DLR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 14.5.6 QUADSPI communication configuration register (QUADSPI_CCR)
+
+   IMODE_NONE   : constant := 2#00#; -- No instruction
+   IMODE_LINES1 : constant := 2#01#; -- Instruction on a single line
+   IMODE_LINES2 : constant := 2#10#; -- Instruction on two lines
+   IMODE_LINES4 : constant := 2#11#; -- Instruction on four lines
+
+   ADMODE_NONE   : constant := 2#00#; -- No address
+   ADMODE_LINES1 : constant := 2#01#; -- Address on a single line
+   ADMODE_LINES2 : constant := 2#10#; -- Address on two lines
+   ADMODE_LINES4 : constant := 2#11#; -- Address on four lines
+
+   ADSIZE_8  : constant := 2#00#; -- 8-bit address
+   ADSIZE_16 : constant := 2#01#; -- 16-bit address
+   ADSIZE_24 : constant := 2#10#; -- 24-bit address
+   ADSIZE_32 : constant := 2#11#; -- 32-bit address
+
+   ABMODE_NONE   : constant := 2#00#; -- No alternate bytes
+   ABMODE_LINES1 : constant := 2#01#; -- Alternate bytes on a single line
+   ABMODE_LINES2 : constant := 2#10#; -- Alternate bytes on two lines
+   ABMODE_LINES4 : constant := 2#11#; -- Alternate bytes on four lines
+
+   ABSIZE_8  : constant := 2#00#; -- 8-bit alternate byte
+   ABSIZE_16 : constant := 2#01#; -- 16-bit alternate bytes
+   ABSIZE_24 : constant := 2#10#; -- 24-bit alternate bytes
+   ABSIZE_32 : constant := 2#11#; -- 32-bit alternate bytes
+
+   DMODE_NONE   : constant := 2#00#; -- No data
+   DMODE_LINES1 : constant := 2#01#; -- Data on a single line
+   DMODE_LINES2 : constant := 2#10#; -- Data on two lines
+   DMODE_LINES4 : constant := 2#11#; -- Data on four lines
+
+   FMODE_INDWRITE : constant := 2#00#; -- Indirect-write mode
+   FMODE_INDREAD  : constant := 2#01#; -- Indirect-read mode
+   FMODE_AUTOPOLL : constant := 2#10#; -- Automatic status-polling mode
+   FMODE_MEMMAP   : constant := 2#11#; -- Memory-mapped mode
+
+   type QUADSPI_CCR_Type is record
+      INSTRUCTION : Bits_8  := 0;              -- Instruction
+      IMODE       : Bits_2  := IMODE_NONE;     -- Instruction mode
+      ADMODE      : Bits_2  := ADMODE_NONE;    -- Address mode
+      ADSIZE      : Bits_2  := ADSIZE_8;       -- Address size
+      ABMODE      : Bits_2  := ABMODE_NONE;    -- Alternate byte mode
+      ABSIZE      : Bits_2  := ABSIZE_8;       -- Alternate-byte size
+      DCYC        : Bits_5  := 0;              -- Number of dummy cycles
+      Reserved1   : Bits_1  := 0;
+      DMODE       : Bits_2  := DMODE_NONE;     -- Data mode
+      FMODE       : Bits_2  := FMODE_INDWRITE; -- Functional mode
+      SIOO        : Boolean := False;          -- Send instruction only once mode
+      Reserved2   : Bits_1  := 0;
+      DHHC        : Boolean := False;          -- DDR hold
+      DDRM        : Boolean := False;          -- Double data rate mode
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for QUADSPI_CCR_Type use record
+      INSTRUCTION at 0 range  0 ..  7;
+      IMODE       at 0 range  8 ..  9;
+      ADMODE      at 0 range 10 .. 11;
+      ADSIZE      at 0 range 12 .. 13;
+      ABMODE      at 0 range 14 .. 15;
+      ABSIZE      at 0 range 16 .. 17;
+      DCYC        at 0 range 18 .. 22;
+      Reserved1   at 0 range 23 .. 23;
+      DMODE       at 0 range 24 .. 25;
+      FMODE       at 0 range 26 .. 27;
+      SIOO        at 0 range 28 .. 28;
+      Reserved2   at 0 range 29 .. 29;
+      DHHC        at 0 range 30 .. 30;
+      DDRM        at 0 range 31 .. 31;
+   end record;
+
+   QUADSPI_CCR_ADDRESS : constant := 16#A000_1014#;
+
+   QUADSPI_CCR : aliased QUADSPI_CCR_Type
+      with Address              => System'To_Address (QUADSPI_CCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 14.5.7 QUADSPI address register (QUADSPI_AR)
+
+   type QUADSPI_AR_Type is record
+      ADDRESS : Unsigned_32 := 0; -- Address
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for QUADSPI_AR_Type use record
+      ADDRESS at 0 range 0 .. 31;
+   end record;
+
+   QUADSPI_AR_ADDRESS : constant := 16#A000_1018#;
+
+   QUADSPI_AR : aliased QUADSPI_AR_Type
+      with Address              => System'To_Address (QUADSPI_AR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 14.5.8 QUADSPI alternate-byte register (QUADSPI_ABR)
+
+   type QUADSPI_ABR_Type is record
+      ALTERNATE : Unsigned_32 := 0; -- Alternate bytes
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for QUADSPI_ABR_Type use record
+      ALTERNATE at 0 range 0 .. 31;
+   end record;
+
+   QUADSPI_ABR_ADDRESS : constant := 16#A000_101C#;
+
+   QUADSPI_ABR : aliased QUADSPI_ABR_Type
+      with Address              => System'To_Address (QUADSPI_ABR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 14.5.9 QUADSPI data register (QUADSPI_DR)
+
+   type QUADSPI_DR_Type is record
+      DATA : Unsigned_32; -- Data
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for QUADSPI_DR_Type use record
+      DATA at 0 range 0 .. 31;
+   end record;
+
+   QUADSPI_DR_ADDRESS : constant := 16#A000_1020#;
+
+   QUADSPI_DR : aliased QUADSPI_DR_Type
+      with Address              => System'To_Address (QUADSPI_DR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 14.5.10 QUADSPI polling status mask register (QUADSPI_PSMKR)
+
+   type QUADSPI_PSMKR_Type is record
+      MASK : Unsigned_32 := 0; -- Status mask
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for QUADSPI_PSMKR_Type use record
+      MASK at 0 range 0 .. 31;
+   end record;
+
+   QUADSPI_PSMKR_ADDRESS : constant := 16#A000_1024#;
+
+   QUADSPI_PSMKR : aliased QUADSPI_PSMKR_Type
+      with Address              => System'To_Address (QUADSPI_PSMKR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 14.5.11 QUADSPI polling status match register (QUADSPI_PSMAR)
+
+   type QUADSPI_PSMAR_Type is record
+      MATCH : Unsigned_32 := 0; -- Status match
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for QUADSPI_PSMAR_Type use record
+      MATCH at 0 range 0 .. 31;
+   end record;
+
+   QUADSPI_PSMAR_ADDRESS : constant := 16#A000_1028#;
+
+   QUADSPI_PSMAR : aliased QUADSPI_PSMAR_Type
+      with Address              => System'To_Address (QUADSPI_PSMAR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 14.5.12 QUADSPI polling interval register (QUADSPI_PIR)
+
+   type QUADSPI_PIR_Type is record
+      INTERVAL : Unsigned_16 := 0; -- Polling interval
+      Reserved : Bits_16     := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for QUADSPI_PIR_Type use record
+      INTERVAL at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   QUADSPI_PIR_ADDRESS : constant := 16#A000_102C#;
+
+   QUADSPI_PIR : aliased QUADSPI_PIR_Type
+      with Address              => System'To_Address (QUADSPI_PIR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 14.5.13 QUADSPI low-power timeout register (QUADSPI_LPTR)
+
+   type QUADSPI_LPTR_Type is record
+      TIMEOUT  : Unsigned_16 := 0; -- Timeout period
+      Reserved : Bits_16     := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for QUADSPI_LPTR_Type use record
+      TIMEOUT  at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   QUADSPI_LPTR_ADDRESS : constant := 16#A000_1030#;
+
+   QUADSPI_LPTR : aliased QUADSPI_LPTR_Type
+      with Address              => System'To_Address (QUADSPI_LPTR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    ----------------------------------------------------------------------------
    -- 15 Analog-to-digital converter (ADC)
    ----------------------------------------------------------------------------
