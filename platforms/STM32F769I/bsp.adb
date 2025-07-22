@@ -56,7 +56,7 @@ package body BSP
    procedure SysTick_Init
       is
    begin
-      ARMv7M.SYST_RVR.RELOAD := Bits_24 (Configure.SYSCLK_FREQUENCY / Configure.TICK_FREQUENCY);
+      ARMv7M.SYST_RVR.RELOAD := Bits_24 (Clocks.CLK_Core / Configure.TICK_FREQUENCY);
       ARMv7M.SHPR3.PRI_15 := 16#FF#;
       ARMv7M.SYST_CVR.CURRENT := 0;
       ARMv7M.SYST_CSR := (
@@ -123,8 +123,7 @@ package body BSP
       GPIOA.MODER (9) := GPIO_ALT;
       GPIOA.MODER (10) := GPIO_ALT;
       USART1.USART_CR1.UE := False;
-      -- USART1.USART_BRR.BRR := Unsigned_16 (96 * MHz1 / 115_200); -- assume HSI192, fck = 96 MHz, 115200 baud
-      USART1.USART_BRR.BRR := Unsigned_16 (100 * MHz1 / 115_200); -- (APB2) assume HSE200, fck = 100 MHz, 115200 baud
+      USART1.USART_BRR.BRR := Unsigned_16 (Clocks.CLK_Peripherals / 115_200);
       USART1.USART_CR1 := (
          RE     => True,
          TE     => True,

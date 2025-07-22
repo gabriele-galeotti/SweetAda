@@ -35,6 +35,32 @@ package body Clocks
    use Bits;
    use STM32F769I;
 
+   -- HSI, PLL, 192 MHz
+   RCCPLL_HSI192 : constant RCC_PLLCFGR_Type := (
+      PLLM   => 8,
+      PLLN   => 192,
+      PLLP   => PLLP_DIV2,
+      PLLSRC => PLLSRC_HSI,
+      PLLQ   => 4,
+      PLLR   => 2,
+      others => <>
+      );
+   -- HSE, PLL, 200 MHz @ 25 MHz external clock
+   RCCPLL_HSE200 : constant RCC_PLLCFGR_Type := (
+      PLLM   => 16,
+      PLLN   => 256,
+      PLLP   => PLLP_DIV2,
+      PLLSRC => PLLSRC_HSE,
+      PLLQ   => 4,
+      PLLR   => 2,
+      others => <>
+      );
+
+   type Clock_Type is (HSI192, HSE200);
+
+   -- Clock : constant Clock_Type := HSI192;
+   Clock : constant Clock_Type := HSE200;
+
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -55,15 +81,6 @@ package body Clocks
    ----------------------------------------------------------------------------
    procedure Init
       is
-      -- HSI, PLL, 192 MHz
-      HSI192 : constant RCC_PLLCFGR_Type :=
-         (PLLM => 8, PLLN => 192, PLLP => PLLP_DIV2, PLLSRC => PLLSRC_HSI, PLLQ => 4, PLLR => 2, others => <>);
-      -- HSE, PLL, 200 MHz @ 25 MHz external clock
-      HSE200 : constant RCC_PLLCFGR_Type :=
-         (PLLM => 16, PLLN => 256, PLLP => PLLP_DIV2, PLLSRC => PLLSRC_HSE, PLLQ => 4, PLLR => 2, others => <>);
-      -- use HSI192 or HSE200
-      -- Clk    : constant RCC_PLLCFGR_Type := HSI192;
-      Clk    : constant RCC_PLLCFGR_Type := HSE200;
    begin
       -- activate HSI
       RCC_CR.HSION := True;
@@ -71,13 +88,16 @@ package body Clocks
       RCC_CFGR.SW := SW_HSI;
       -- PLL disable
       RCC_CR.PLLON := False;
-      -- HSE requires setup
-      if Clk.PLLSRC = PLLSRC_HSE then
-         RCC_CR.HSEON := True;
-         loop exit when RCC_CR.HSERDY; end loop;
-      end if;
       -- setup PLL parameters
-      RCC_PLLCFGR := Clk;
+      case Clock is
+         when HSI192 =>
+            RCC_PLLCFGR := RCCPLL_HSI192;
+         when HSE200 =>
+            -- HSE requires setup
+            RCC_CR.HSEON := True;
+            loop exit when RCC_CR.HSERDY; end loop;
+            RCC_PLLCFGR := RCCPLL_HSE200;
+      end case;
       -- PLL enable
       RCC_CR.PLLON := True;
       loop exit when RCC_CR.PLLRDY; end loop;
@@ -89,6 +109,11 @@ package body Clocks
          PPRE2  => PPRE_DIV2,  -- APB high-speed prescaler (APB2)
          others => <>
          );
+      case Clock is
+         when HSI192 => CLK_Core := 192 * MHz1;
+         when HSE200 => CLK_Core := 200 * MHz1;
+      end case;
+      CLK_Peripherals := CLK_Core / 2;
    end Init;
 
 end Clocks;
