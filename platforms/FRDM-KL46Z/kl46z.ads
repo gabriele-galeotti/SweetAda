@@ -1637,6 +1637,113 @@ pragma Style_Checks (Off);
    -- Chapter 18 Miscellaneous Control Module (MCM)
    ----------------------------------------------------------------------------
 
+   -- 18.2.1 Crossbar Switch (AXBS) Slave Configuration (MCM_PLASC)
+
+   type MCM_PLASC_Type is record
+      ASC      : Bitmap_8; -- Each bit in the ASC field indicates whether there is a corresponding connection to the crossbar switch's slave input port.
+      Reserved : Bits_8;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for MCM_PLASC_Type use record
+      ASC      at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 15;
+   end record;
+
+   MSM_PLASC_ADDRESS : constant := 16#F000_3008#;
+
+   MCM_PLASC : aliased MCM_PLASC_Type
+      with Address              => System'To_Address (MSM_PLASC_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 18.2.2 Crossbar Switch (AXBS) Master Configuration (MCM_PLAMC)
+
+   type MCM_PLAMC_Type is record
+      AMC      : Bitmap_8; -- Each bit in the AMC field indicates whether there is a corresponding connection to the AXBS master input port.
+      Reserved : Bits_8;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for MCM_PLAMC_Type use record
+      AMC      at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 15;
+   end record;
+
+   MCM_PLAMC_ADDRESS : constant := 16#F000_300A#;
+
+   MCM_PLAMC : aliased MCM_PLAMC_Type
+      with Address              => System'To_Address (MCM_PLAMC_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 18.2.3 Platform Control Register (MCM_PLACR)
+
+   ARB_FIXED : constant := 0; -- Fixed-priority arbitration for the crossbar masters
+   ARB_RR    : constant := 1; -- Round-robin arbitration for the crossbar masters
+
+   type MCM_PLACR_Type is record
+      Reserved1 : Bits_9  := 0;
+      ARB       : Bits_1  := ARB_FIXED; -- Arbitration select
+      CFCC      : Boolean := False;     -- Clear Flash Controller Cache
+      DFCDA     : Boolean := False;     -- Disable Flash Controller Data Caching
+      DFCIC     : Boolean := False;     -- Disable Flash Controller Instruction Caching
+      DFCC      : Boolean := False;     -- Disable Flash Controller Cache
+      EFDS      : Boolean := False;     -- Enable Flash Data Speculation
+      DFCS      : Boolean := False;     -- Disable Flash Controller Speculation
+      ESFC      : Boolean := False;     -- Enable Stalling Flash Controller
+      Reserved2 : Bits_15 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for MCM_PLACR_Type use record
+      Reserved1 at 0 range  0 ..  8;
+      ARB       at 0 range  9 ..  9;
+      CFCC      at 0 range 10 .. 10;
+      DFCDA     at 0 range 11 .. 11;
+      DFCIC     at 0 range 12 .. 12;
+      DFCC      at 0 range 13 .. 13;
+      EFDS      at 0 range 14 .. 14;
+      DFCS      at 0 range 15 .. 15;
+      ESFC      at 0 range 16 .. 16;
+      Reserved2 at 0 range 17 .. 31;
+   end record;
+
+   MCM_PLACR_ADDRESS : constant := 16#F000_300C#;
+
+   MCM_PLACR : aliased MCM_PLACR_Type
+      with Address              => System'To_Address (MCM_PLACR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 18.2.4 Compute Operation Control Register (MCM_CPO)
+
+   type MCM_CPO_Type is record
+      CPOREQ   : Boolean := False; -- Compute Operation request
+      CPOACK   : Boolean := False; -- Compute Operation acknowledge
+      CPOWOI   : Boolean := False; -- Compute Operation wakeup on interrupt
+      Reserved : Bits_29 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for MCM_CPO_Type use record
+      CPOREQ    at 0 range 0 ..  0;
+      CPOACK    at 0 range 1 ..  1;
+      CPOWOI    at 0 range 2 ..  2;
+      Reserved  at 0 range 3 .. 31;
+   end record;
+
+   MCM_CPO_ADDRESS : constant := 16#F000_3040#;
+
+   MCM_CPO : aliased MCM_CPO_Type
+      with Address              => System'To_Address (MCM_CPO_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    ----------------------------------------------------------------------------
    -- Chapter 19 Micro Trace Buffer (MTB)
    ----------------------------------------------------------------------------
