@@ -1833,9 +1833,9 @@ pragma Style_Checks (Off);
    -- 22.3.1 Channel Configuration register (DMAMUXx_CHCFGn)
 
    type DMAMUXx_CHCFGn_Type is record
-      ENBL   : Boolean := False; -- DMA Channel Enable
-      TRIG   : Boolean := False; -- DMA Channel Trigger Enable
-      SOURCE : Bits_6  := 0;     -- DMA Channel Source (Slot)
+      ENBL   : Boolean := False;           -- DMA Channel Enable
+      TRIG   : Boolean := False;           -- DMA Channel Trigger Enable
+      SOURCE : Bits_6  := SOURCE_DISABLED; -- DMA Channel Source (Slot)
    end record
       with Bit_Order            => Low_Order_First,
            Size                 => 8,
