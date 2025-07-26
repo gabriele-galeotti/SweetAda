@@ -1749,12 +1749,285 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
+   -- Definitions for DMA
+   ----------------------------------------------------------------------------
+
+   -- constants for indexing DMA channels in array objects
+   DMA0 : constant := 0;
+   DMA1 : constant := 1;
+   DMA2 : constant := 2;
+   DMA3 : constant := 3;
+
+   ----------------------------------------------------------------------------
    -- Chapter 22 Direct Memory Access Multiplexer (DMAMUX)
    ----------------------------------------------------------------------------
+
+   -- Table 3-20. DMA request sources - MUX 0
+
+   -- Source number                     Source module       Source description      Async DMA capable
+   SOURCE_DISABLED : constant := 0;  -- —                   Channel disabled
+   SOURCE_RSVD1    : constant := 1;  -- Reserved            Not used
+   SOURCE_UART0RX  : constant := 2;  -- UART0               Receive                 Yes
+   SOURCE_UART0TX  : constant := 3;  -- UART0               Transmit                Yes
+   SOURCE_UART1RX  : constant := 4;  -- UART1               Receive
+   SOURCE_UART1TX  : constant := 5;  -- UART1               Transmit
+   SOURCE_UART2RX  : constant := 6;  -- UART2               Receive
+   SOURCE_UART2TX  : constant := 7;  -- UART2               Transmit
+   SOURCE_RSVD2    : constant := 8;  -- Reserved            —
+   SOURCE_RSVD3    : constant := 9;  -- Reserved            —
+   SOURCE_RSVD4    : constant := 10; -- Reserved            —
+   SOURCE_RSVD5    : constant := 11; -- Reserved            —
+   SOURCE_RSVD6    : constant := 12; -- Reserved            —
+   SOURCE_RSVD7    : constant := 13; -- Reserved            —
+   SOURCE_I2S0RX   : constant := 14; -- I2S0                Receive                 Yes
+   SOURCE_I2S0TX   : constant := 15; -- I2S0                Transmit                Yes
+   SOURCE_SPI0RX   : constant := 16; -- SPI0                Receive
+   SOURCE_SPI0TX   : constant := 17; -- SPI0                Transmit
+   SOURCE_SPI1RX   : constant := 18; -- SPI1                Receive
+   SOURCE_SPI1TX   : constant := 19; -- SPI1                Transmit
+   SOURCE_RSVD8    : constant := 20; -- Reserved            —
+   SOURCE_RSVD9    : constant := 21; -- Reserved            —
+   SOURCE_I2C0     : constant := 22; -- I2C0                —
+   SOURCE_I2C1     : constant := 23; -- I2C1                —
+   SOURCE_TPM0CH0  : constant := 24; -- TPM0                Channel 0               Yes
+   SOURCE_TPM0CH1  : constant := 25; -- TPM0                Channel 1               Yes
+   SOURCE_TPM0CH2  : constant := 26; -- TPM0                Channel 2               Yes
+   SOURCE_TPM0CH3  : constant := 27; -- TPM0                Channel 3               Yes
+   SOURCE_TPM0CH4  : constant := 28; -- TPM0                Channel 4               Yes
+   SOURCE_TPM0CH5  : constant := 29; -- TPM0                Channel 5               Yes
+   SOURCE_RSVD10   : constant := 30; -- Reserved            —
+   SOURCE_RSVD11   : constant := 31; -- Reserved            —
+   SOURCE_TPM1CH0  : constant := 32; -- TPM1                Channel 0               Yes
+   SOURCE_TPM1CH1  : constant := 33; -- TPM1                Channel 1               Yes
+   SOURCE_TPM2CH0  : constant := 34; -- TPM2                Channel 0               Yes
+   SOURCE_TPM2CH1  : constant := 35; -- TPM2                Channel 1               Yes
+   SOURCE_RSVD12   : constant := 36; -- Reserved            —
+   SOURCE_RSVD13   : constant := 37; -- Reserved            —
+   SOURCE_RSVD14   : constant := 38; -- Reserved            —
+   SOURCE_RSVD15   : constant := 39; -- Reserved            —
+   SOURCE_ADC0     : constant := 40; -- ADC0                —                       Yes
+   SOURCE_RSVD16   : constant := 41; -- Reserved            —
+   SOURCE_CMP0     : constant := 42; -- CMP0                —                       Yes
+   SOURCE_RSVD17   : constant := 43; -- Reserved            —
+   SOURCE_RSVD18   : constant := 44; -- Reserved            —
+   SOURCE_DAC0     : constant := 45; -- DAC0                —
+   SOURCE_RSVD19   : constant := 46; -- Reserved            —
+   SOURCE_RSVD20   : constant := 47; -- Reserved            —
+   SOURCE_RSVD21   : constant := 48; -- Reserved            —
+   SOURCE_PCMPORTA : constant := 49; -- Port control module Port A                  Yes
+   SOURCE_RSVD22   : constant := 50; -- Reserved            —
+   SOURCE_PCMPORTC : constant := 51; -- Port control module Port C                  Yes
+   SOURCE_PCMPORTD : constant := 52; -- Port control module Port D                  Yes
+   SOURCE_RSVD23   : constant := 53; -- Reserved            —
+   SOURCE_TPM0OVF  : constant := 54; -- TPM0                Overflow                Yes
+   SOURCE_TPM1OVF  : constant := 55; -- TPM1                Overflow                Yes
+   SOURCE_TPM2OVF  : constant := 56; -- TPM2                Overflow                Yes
+   SOURCE_TSI      : constant := 57; -- TSI                 —                       Yes
+   SOURCE_RSVD24   : constant := 58; -- Reserved            —
+   SOURCE_RSVD25   : constant := 59; -- Reserved            —
+   SOURCE_ENABLED1 : constant := 60; -- DMA MUX             Always enabled
+   SOURCE_ENABLED2 : constant := 61; -- DMA MUX             Always enabled
+   SOURCE_ENABLED3 : constant := 62; -- DMA MUX             Always enabled
+   SOURCE_ENABLED4 : constant := 63; -- DMA MUX             Always enabled
+
+   -- 22.3.1 Channel Configuration register (DMAMUXx_CHCFGn)
+
+   type DMAMUXx_CHCFGn_Type is record
+      ENBL   : Boolean := False; -- DMA Channel Enable
+      TRIG   : Boolean := False; -- DMA Channel Trigger Enable
+      SOURCE : Bits_6  := 0;     -- DMA Channel Source (Slot)
+   end record
+      with Bit_Order            => Low_Order_First,
+           Size                 => 8,
+           Volatile_Full_Access => True;
+   for DMAMUXx_CHCFGn_Type use record
+      ENBL   at 0 range 0 .. 0;
+      TRIG   at 0 range 1 .. 1;
+      SOURCE at 0 range 2 .. 7;
+   end record;
+
+   -- 22.3 Memory map/register definition
+
+   DMAMUX0_CHCFGn_BASEADDRESS : constant := 16#4002_1000#;
+
+   DMAMUX0_CHCFG : aliased array (DMA0 .. DMA3) of DMAMUXx_CHCFGn_Type
+      with Address    => System'To_Address (DMAMUX0_CHCFGn_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 23 DMA Controller Module
    ----------------------------------------------------------------------------
+
+   -- 23.3.1 Source Address Register (DMA_SARn)
+
+   type DMA_SARn_Type is record
+      SAR : Unsigned_32; -- Each SAR contains the byte address used by the DMA controller to read data.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_SARn_Type use record
+      SAR at 0 range 0 .. 31;
+   end record;
+
+   -- 23.3.2 Destination Address Register (DMA_DARn)
+
+   type DMA_DARn_Type is record
+      DAR : Unsigned_32; -- Each DAR contains the byte address used by the DMA controller to write data.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_DARn_Type use record
+      DAR at 0 range 0 .. 31;
+   end record;
+
+   -- 23.3.3 DMA Status Register / Byte Count Register (DMA_DSR_BCRn)
+
+   type DMA_DSR_BCRn_Type is record
+      BCR       : Bits_24; -- This field contains the number of bytes yet to be transferred for a given block.
+      DONE      : Boolean; -- Transactions done
+      BSY       : Boolean; -- Busy
+      REQ       : Boolean; -- Request
+      Reserved1 : Bits_1;
+      BED       : Boolean; -- Bus error on destination
+      BES       : Boolean; -- Bus error on source
+      CE        : Boolean; -- Configuration error
+      Reserved2 : Bits_1;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_DSR_BCRn_Type use record
+      BCR       at 0 range  0 .. 23;
+      DONE      at 0 range 24 .. 24;
+      BSY       at 0 range 25 .. 25;
+      REQ       at 0 range 26 .. 26;
+      Reserved1 at 0 range 27 .. 27;
+      BED       at 0 range 28 .. 28;
+      BES       at 0 range 29 .. 29;
+      CE        at 0 range 30 .. 30;
+      Reserved2 at 0 range 31 .. 31;
+   end record;
+
+   -- 23.3.4 DMA Control Register (DMA_DCRn)
+
+   LINKCC_NONE         : constant := 2#00#; -- No channel-to-channel linking
+   LINKCC_CYCSTEALBCR0 : constant := 2#01#; -- Perform a link to channel LCH1 after each cycle-steal transfer followed by a link to LCH2 after the BCR decrements to zero
+   LINKCC_CYCSTEAL     : constant := 2#10#; -- Perform a link to channel LCH1 after each cycle-steal transfer
+   LINKCC_BCR0         : constant := 2#11#; -- Perform a link to channel LCH1 after the BCR decrements to zero
+
+   DMOD_NONE : constant := 2#0000#; -- Buffer disabled
+   DMOD_16   : constant := 2#0001#; -- Circular buffer size is 16 bytes
+   DMOD_32   : constant := 2#0010#; -- Circular buffer size is 32 bytes
+   DMOD_64   : constant := 2#0011#; -- Circular buffer size is 64 bytes
+   DMOD_128  : constant := 2#0100#; -- Circular buffer size is 128 bytes
+   DMOD_256  : constant := 2#0101#; -- Circular buffer size is 256 bytes
+   DMOD_512  : constant := 2#0110#; -- Circular buffer size is 512 bytes
+   DMOD_1K   : constant := 2#0111#; -- Circular buffer size is 1 KB
+   DMOD_2K   : constant := 2#1000#; -- Circular buffer size is 2 KB
+   DMOD_4K   : constant := 2#1001#; -- Circular buffer size is 4 KB
+   DMOD_8K   : constant := 2#1010#; -- Circular buffer size is 8 KB
+   DMOD_16K  : constant := 2#1011#; -- Circular buffer size is 16 KB
+   DMOD_32K  : constant := 2#1100#; -- Circular buffer size is 32 KB
+   DMOD_64K  : constant := 2#1101#; -- Circular buffer size is 64 KB
+   DMOD_128K : constant := 2#1110#; -- Circular buffer size is 128 KB
+   DMOD_256K : constant := 2#1111#; -- Circular buffer size is 256 KB
+
+   SMOD_NONE renames DMOD_NONE;
+   SMOD_16   renames DMOD_16;
+   SMOD_32   renames DMOD_32;
+   SMOD_64   renames DMOD_64;
+   SMOD_128  renames DMOD_128;
+   SMOD_256  renames DMOD_256;
+   SMOD_512  renames DMOD_512;
+   SMOD_1K   renames DMOD_1K;
+   SMOD_2K   renames DMOD_2K;
+   SMOD_4K   renames DMOD_4K;
+   SMOD_8K   renames DMOD_8K;
+   SMOD_16K  renames DMOD_16K;
+   SMOD_32K  renames DMOD_32K;
+   SMOD_64K  renames DMOD_64K;
+   SMOD_128K renames DMOD_128K;
+   SMOD_256K renames DMOD_256K;
+
+   DSIZE_32   : constant := 2#00#; -- 32-bit
+   DSIZE_8    : constant := 2#01#; -- 8-bit
+   DSIZE_16   : constant := 2#10#; -- 16-bit
+   DSIZE_RSVD : constant := 2#11#; -- Reserved (generates a configuration error (DSRn[CE]) if incorrectly specified at time of channel activation)
+
+   SSIZE_32   renames DSIZE_32;
+   SSIZE_8    renames DSIZE_8;
+   SSIZE_16   renames DSIZE_16;
+   SSIZE_RSVD renames DSIZE_RSVD;
+
+   type DMA_DCRn_Type is record
+      LCH2      : Bits_2  := DMA0;        -- Link channel 2
+      LCH1      : Bits_2  := DMA0;        -- Link channel 1
+      LINKCC    : Bits_2  := LINKCC_NONE; -- Link channel control
+      Reserved1 : Bits_1  := 0;
+      D_REQ     : Boolean := False;       -- Disable request
+      DMOD      : Bits_4  := DMOD_NONE;   -- Destination address modulo
+      SMOD      : Bits_4  := SMOD_NONE;   -- Source address modulo
+      START     : Boolean := False;       -- Start transfer
+      DSIZE     : Bits_2  := DSIZE_32;    -- Destination size
+      DINC      : Boolean := False;       -- Destination increment
+      SSIZE     : Bits_2  := SSIZE_32;    -- Source size
+      SINC      : Boolean := False;       -- Source increment
+      EADREQ    : Boolean := False;       -- Enable asynchronous DMA requests
+      Reserved2 : Bits_1  := 0;
+      Reserved3 : Bits_3  := 0;
+      AA        : Boolean := False;       -- Auto-align
+      CS        : Boolean := False;       -- Cycle steal
+      ERQ       : Boolean := False;       -- Enable peripheral request
+      EINT      : Boolean := False;       -- Enable interrupt on completion of transfer
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_DCRn_Type use record
+      LCH2      at 0 range  0 ..  1;
+      LCH1      at 0 range  2 ..  3;
+      LINKCC    at 0 range  4 ..  5;
+      Reserved1 at 0 range  6 ..  6;
+      D_REQ     at 0 range  7 ..  7;
+      DMOD      at 0 range  8 .. 11;
+      SMOD      at 0 range 12 .. 15;
+      START     at 0 range 16 .. 16;
+      DSIZE     at 0 range 17 .. 18;
+      DINC      at 0 range 19 .. 19;
+      SSIZE     at 0 range 20 .. 21;
+      SINC      at 0 range 22 .. 22;
+      EADREQ    at 0 range 23 .. 23;
+      Reserved2 at 0 range 24 .. 24;
+      Reserved3 at 0 range 25 .. 27;
+      AA        at 0 range 28 .. 28;
+      CS        at 0 range 29 .. 29;
+      ERQ       at 0 range 30 .. 30;
+      EINT      at 0 range 31 .. 31;
+   end record;
+
+   -- 23.3 Memory Map/Register Definition
+
+   type DMA_Type is record
+      SAR     : DMA_SARn_Type     with Volatile_Full_Access => True;
+      DAR     : DMA_DARn_Type     with Volatile_Full_Access => True;
+      DSR_BCR : DMA_DSR_BCRn_Type with Volatile_Full_Access => True;
+      DCR     : DMA_DCRn_Type     with Volatile_Full_Access => True;
+   end record
+      with Size => 4 * 32;
+   for DMA_Type use record
+      SAR     at 16#0# range 0 .. 31;
+      DAR     at 16#4# range 0 .. 31;
+      DSR_BCR at 16#8# range 0 .. 31;
+      DCR     at 16#C# range 0 .. 31;
+   end record;
+
+   DMA_BASEADDRESS : constant := 16#4000_8100#;
+
+   DMA : aliased array (DMA0 .. DMA3) of DMA_Type
+      with Address    => System'To_Address (DMA_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 24 Multipurpose Clock Generator (MCG)
