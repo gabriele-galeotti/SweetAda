@@ -80,6 +80,124 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- MCUCR
+   ----------------------------------------------------------------------------
+
+   -- 12.7.5. MCUCR – MCU Control Register
+   -- 14.9.1. MCUCR – MCU Control Register
+   -- 16.2.1. MCUCR – MCU Control Register
+
+   type SM_Type is record
+      SM2 : Bits_1;
+      SM0 : Bits_1;
+      SM1 : Bits_1;
+   end record;
+
+   SM_IDLE    : constant SM_Type := (SM2 => 0, SM1 => 0, SM0 => 0); -- Idle
+   SM_ADCNR   : constant SM_Type := (SM2 => 0, SM1 => 0, SM0 => 1); -- ADC Noise Reduction
+   SM_PWDOWN  : constant SM_Type := (SM2 => 0, SM1 => 1, SM0 => 0); -- Power-down
+   SM_PWSAVE  : constant SM_Type := (SM2 => 0, SM1 => 1, SM0 => 1); -- Power-save
+   SM_RSVD1   : constant SM_Type := (SM2 => 1, SM1 => 0, SM0 => 0); -- Reserved
+   SM_RSVD2   : constant SM_Type := (SM2 => 1, SM1 => 0, SM0 => 1); -- Reserved
+   SM_STBY    : constant SM_Type := (SM2 => 1, SM1 => 1, SM0 => 0); -- Standby
+   SM_EXTSTBY : constant SM_Type := (SM2 => 1, SM1 => 1, SM0 => 0); -- Extended Standby
+
+   type MCUCR_Type is record
+      IVCE  : Boolean := False;       -- Interrupt Vector Change Enable
+      IVSEL : Boolean := False;       -- Interrupt Vector Select
+      SM2   : Bits_1  := SM_IDLE.SM2; -- Sleep Mode Select Bit 2
+      SM0   : Bits_1  := SM_IDLE.SM0; -- Sleep Mode n Select Bits [n=1:0]
+      SM1   : Bits_1  := SM_IDLE.SM1; -- ''
+      SE    : Boolean := False;       -- Sleep Enable
+      SRW10 : Boolean := False;       -- Wait-state Select Bit
+      SRE   : Boolean := False;       -- External SRAM/XMEM Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MCUCR_Type use record
+      IVCE  at 0 range 0 .. 0;
+      IVSEL at 0 range 1 .. 1;
+      SM2   at 0 range 2 .. 2;
+      SM0   at 0 range 3 .. 3;
+      SM1   at 0 range 4 .. 4;
+      SE    at 0 range 5 .. 5;
+      SRW10 at 0 range 6 .. 6;
+      SRE   at 0 range 7 .. 7;
+   end record;
+
+   MCUCR_ADDRESS : constant := 16#55#;
+
+   MCUCR : aliased MCUCR_Type
+      with Address              => System'To_Address (MCUCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 12. AVR Memories
+   ----------------------------------------------------------------------------
+
+   -- 12.7.1. EEARL – The EEPROM Address Register Low
+
+   EEARL_ADDRESS : constant := 16#3E#;
+
+   EEARL : aliased Unsigned_8
+      with Address              => System'To_Address (EEARL_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 12.7.2. EEARH – The EEPROM Address Register High
+
+   EEARH_ADDRESS : constant := 16#3F#;
+
+   EEARH : aliased Unsigned_8
+      with Address              => System'To_Address (EEARH_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 12.7.3. EEDR – The EEPROM Data Register
+
+   EEDR_ADDRESS : constant := 16#3D#;
+
+   EEDR : aliased Unsigned_8
+      with Address              => System'To_Address (EEDR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 12.7.4. EECR – The EEPROM Control Register
+
+   type EECR_Type is record
+      EERE     : Boolean := False; -- EEPROM Read Enable
+      EEWE     : Boolean := False; -- EEPROM Write Enable
+      EEMWE    : Boolean := False; -- EEPROM Master Write Enable
+      EERIE    : Boolean := False; -- EEPROM Ready Interrupt Enable
+      Reserved : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for EECR_Type use record
+      EERE     at 0 range 0 .. 0;
+      EEWE     at 0 range 1 .. 1;
+      EEMWE    at 0 range 2 .. 2;
+      EERIE    at 0 range 3 .. 3;
+      Reserved at 0 range 4 .. 7;
+   end record;
+
+   EECR_ADDRESS : constant := 16#3C#;
+
+   EECR : aliased EECR_Type
+      with Address              => System'To_Address (EECR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 12.7.6. XMCRA – External Memory Control Register A
+   -- 12.7.7. XMCRB – External Memory Control Register B
+
+   ----------------------------------------------------------------------------
    -- 13. System Clock and Clock Options
    ----------------------------------------------------------------------------
 
@@ -110,34 +228,6 @@ pragma Style_Checks (Off);
 
    OSCCAL : aliased Unsigned_8
       with Address              => System'To_Address (OSCCAL_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
-
-   ----------------------------------------------------------------------------
-   -- 14. Power Management and Sleep Modes
-   ----------------------------------------------------------------------------
-
-   -- 14.9.1. MCUCR – MCU Control Register
-   -- 16.2.1. MCUCR – MCU Control Register
-
-   type MCUCR_Type is record
-      IVCE     : Boolean := False; -- Interrupt Vector Change Enable
-      IVSEL    : Boolean := False; -- Interrupt Vector Select
-      Reserved : Bits_6  := 0;
-   end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
-   for MCUCR_Type use record
-      IVCE     at 0 range 0 .. 0;
-      IVSEL    at 0 range 1 .. 1;
-      Reserved at 0 range 2 .. 7;
-   end record;
-
-   MCUCR_ADDRESS : constant := 16#55#;
-
-   MCUCR : aliased MCUCR_Type
-      with Address              => System'To_Address (MCUCR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
