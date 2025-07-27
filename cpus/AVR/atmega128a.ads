@@ -87,7 +87,7 @@ pragma Style_Checks (Off);
    SRW_NONE  : constant SRW_Type := (SRWn1 => 0, SRWn0 => 0); -- No wait-states
    SRW_RW1   : constant SRW_Type := (SRWn1 => 0, SRWn0 => 1); -- Wait one cycle during read/write strobe
    SRW_RW2   : constant SRW_Type := (SRWn1 => 1, SRWn0 => 0); -- Wait two cycles during read/write strobe
-   SRW_RW1D1 : constant SRW_Type := (SRWn1 => 1, SRWn0 => 1); -- Wait two cycles during read/write and wait one cycle before driving out new address
+   SRW_RW2D1 : constant SRW_Type := (SRWn1 => 1, SRWn0 => 1); -- Wait two cycles during read/write and wait one cycle before driving out new address
 
    -- Table 14-2 Sleep Mode Select
 
