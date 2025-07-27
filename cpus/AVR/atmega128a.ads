@@ -43,6 +43,70 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
+   -- Definitions for some fields in various registers
+   ----------------------------------------------------------------------------
+
+   -- Table 12-3 Sector limits with different settings of SRL2:0
+
+   SRL_Lxxxxxxxx_U1100FFFF : constant := 2#000#; -- Lower sector = N/A
+                                                 -- Upper sector = 0x1100 - 0xFFFF
+   SRL_L11001FFF_U2000FFFF : constant := 2#001#; -- Lower sector = 0x1100 - 0x1FFF
+                                                 -- Upper sector = 0x2000 - 0xFFFF
+   SRL_L11003FFF_U4000FFFF : constant := 2#010#; -- Lower sector = 0x1100 - 0x3FFF
+                                                 -- Upper sector = 0x4000 - 0xFFFF
+   SRL_L11005FFF_U6000FFFF : constant := 2#011#; -- Lower sector = 0x1100 - 0x5FFF
+                                                 -- Upper sector = 0x6000 - 0xFFFF
+   SRL_L11007FFF_U8000FFFF : constant := 2#100#; -- Lower sector = 0x1100 - 0x7FFF
+                                                 -- Upper sector = 0x8000 - 0xFFFF
+   SRL_L11009FFF_UA000FFFF : constant := 2#101#; -- Lower sector = 0x1100 - 0x9FFF
+                                                 -- Upper sector = 0xA000 - 0xFFFF
+   SRL_L1100BFFF_UC000FFFF : constant := 2#110#; -- Lower sector = 0x1100 - 0xBFFF
+                                                 -- Upper sector = 0xC000 - 0xFFFF
+   SRL_L1100DFFF_UE000FFFF : constant := 2#111#; -- Lower sector = 0x1100 - 0xDFFF
+                                                 -- Upper sector = 0xE000 - 0xFFFF
+
+   -- Table 12-5 Port C Pins Released as Normal Port Pins when the External Memory is Enabled
+
+   --                                   # Bits for External Memory Address Released Port Pins
+   XMM_NONE    : constant := 2#000#; -- 8 (Full 60 Kbytes space)           None
+   XMM_PC7     : constant := 2#001#; -- 7                                  PC7
+   XMM_PC7_PC6 : constant := 2#010#; -- 6                                  PC7 - PC6
+   XMM_PC7_PC5 : constant := 2#011#; -- 5                                  PC7 - PC5
+   XMM_PC7_PC4 : constant := 2#100#; -- 4                                  PC7 - PC4
+   XMM_PC7_PC3 : constant := 2#101#; -- 3                                  PC7 - PC3
+   XMM_PC7_PC2 : constant := 2#110#; -- 2                                  PC7 - PC2
+   XMM_FULL    : constant := 2#111#; -- No Address high bits               Full Port C
+
+   -- Table 12-4 Wait States
+
+   type SRW_Type is record
+      SRWn0 : Bits_1;
+      SRWn1 : Bits_1;
+   end record;
+
+   SRW_NONE  : constant SRW_Type := (SRWn1 => 0, SRWn0 => 0); -- No wait-states
+   SRW_RW1   : constant SRW_Type := (SRWn1 => 0, SRWn0 => 1); -- Wait one cycle during read/write strobe
+   SRW_RW2   : constant SRW_Type := (SRWn1 => 1, SRWn0 => 0); -- Wait two cycles during read/write strobe
+   SRW_RW1D1 : constant SRW_Type := (SRWn1 => 1, SRWn0 => 1); -- Wait two cycles during read/write and wait one cycle before driving out new address
+
+   -- Table 14-2 Sleep Mode Select
+
+   type SM_Type is record
+      SM2 : Bits_1;
+      SM0 : Bits_1;
+      SM1 : Bits_1;
+   end record;
+
+   SM_IDLE    : constant SM_Type := (SM2 => 0, SM1 => 0, SM0 => 0); -- Idle
+   SM_ADCNR   : constant SM_Type := (SM2 => 0, SM1 => 0, SM0 => 1); -- ADC Noise Reduction
+   SM_PWDOWN  : constant SM_Type := (SM2 => 0, SM1 => 1, SM0 => 0); -- Power-down
+   SM_PWSAVE  : constant SM_Type := (SM2 => 0, SM1 => 1, SM0 => 1); -- Power-save
+   SM_RSVD1   : constant SM_Type := (SM2 => 1, SM1 => 0, SM0 => 0); -- Reserved
+   SM_RSVD2   : constant SM_Type := (SM2 => 1, SM1 => 0, SM0 => 1); -- Reserved
+   SM_STBY    : constant SM_Type := (SM2 => 1, SM1 => 1, SM0 => 0); -- Standby
+   SM_EXTSTBY : constant SM_Type := (SM2 => 1, SM1 => 1, SM0 => 0); -- Extended Standby
+
+   ----------------------------------------------------------------------------
    -- 11. AVR CPU Core
    ----------------------------------------------------------------------------
 
@@ -87,30 +151,15 @@ pragma Style_Checks (Off);
    -- 14.9.1. MCUCR – MCU Control Register
    -- 16.2.1. MCUCR – MCU Control Register
 
-   type SM_Type is record
-      SM2 : Bits_1;
-      SM0 : Bits_1;
-      SM1 : Bits_1;
-   end record;
-
-   SM_IDLE    : constant SM_Type := (SM2 => 0, SM1 => 0, SM0 => 0); -- Idle
-   SM_ADCNR   : constant SM_Type := (SM2 => 0, SM1 => 0, SM0 => 1); -- ADC Noise Reduction
-   SM_PWDOWN  : constant SM_Type := (SM2 => 0, SM1 => 1, SM0 => 0); -- Power-down
-   SM_PWSAVE  : constant SM_Type := (SM2 => 0, SM1 => 1, SM0 => 1); -- Power-save
-   SM_RSVD1   : constant SM_Type := (SM2 => 1, SM1 => 0, SM0 => 0); -- Reserved
-   SM_RSVD2   : constant SM_Type := (SM2 => 1, SM1 => 0, SM0 => 1); -- Reserved
-   SM_STBY    : constant SM_Type := (SM2 => 1, SM1 => 1, SM0 => 0); -- Standby
-   SM_EXTSTBY : constant SM_Type := (SM2 => 1, SM1 => 1, SM0 => 0); -- Extended Standby
-
    type MCUCR_Type is record
-      IVCE  : Boolean := False;       -- Interrupt Vector Change Enable
-      IVSEL : Boolean := False;       -- Interrupt Vector Select
-      SM2   : Bits_1  := SM_IDLE.SM2; -- Sleep Mode Select Bit 2
-      SM0   : Bits_1  := SM_IDLE.SM0; -- Sleep Mode n Select Bits [n=1:0]
-      SM1   : Bits_1  := SM_IDLE.SM1; -- ''
-      SE    : Boolean := False;       -- Sleep Enable
-      SRW10 : Boolean := False;       -- Wait-state Select Bit
-      SRE   : Boolean := False;       -- External SRAM/XMEM Enable
+      IVCE  : Boolean := False;          -- Interrupt Vector Change Enable
+      IVSEL : Boolean := False;          -- Interrupt Vector Select
+      SM2   : Bits_1  := SM_IDLE.SM2;    -- Sleep Mode Select Bit 2
+      SM0   : Bits_1  := SM_IDLE.SM0;    -- Sleep Mode n Select Bits [n=1:0]
+      SM1   : Bits_1  := SM_IDLE.SM1;    -- ''
+      SE    : Boolean := False;          -- Sleep Enable
+      SRW10 : Bits_1  := SRW_NONE.SRWn0; -- Wait-state Select Bit
+      SRE   : Boolean := False;          -- External SRAM/XMEM Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -195,7 +244,56 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    -- 12.7.6. XMCRA – External Memory Control Register A
+
+   type XMCRA_Type is record
+      Reserved1 : Bits_1 := 0;
+      SRW11     : Bits_1 := SRW_NONE.SRWn1;          -- Wait-state Select Bits for Upper Sector
+      SRW00     : Bits_1 := SRW_NONE.SRWn0;          -- Wait-state Select Bits for Lower Sector [n = 1:0]
+      SRW01     : Bits_1 := SRW_NONE.SRWn1;          -- ''
+      SRL       : Bits_3 := SRL_Lxxxxxxxx_U1100FFFF; -- Wait-state Sector Limit [n = 2:0]
+      Reserved2 : Bits_1 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for XMCRA_Type use record
+      Reserved1 at 0 range 0 .. 0;
+      SRW11     at 0 range 1 .. 1;
+      SRW00     at 0 range 2 .. 2;
+      SRW01     at 0 range 3 .. 3;
+      SRL       at 0 range 4 .. 6;
+      Reserved2 at 0 range 7 .. 7;
+   end record;
+
+   XMCRA_ADDRESS : constant := 16#6D#;
+
+   XMCRA : aliased XMCRA_Type
+      with Address              => System'To_Address (XMCRA_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 12.7.7. XMCRB – External Memory Control Register B
+
+   type XMCRB_Type is record
+      XMM      : Bits_3  := XMM_NONE; -- External Memory High Mask [n = 2:0]
+      Reserved : Bits_4  := 0;
+      XMBK     : Boolean := False;    -- External Memory Bus-keeper Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for XMCRB_Type use record
+      XMM      at 0 range 0 .. 2;
+      Reserved at 0 range 3 .. 6;
+      XMBK     at 0 range 7 .. 7;
+   end record;
+
+   XMCRB_ADDRESS : constant := 16#6C#;
+
+   XMCRB : aliased XMCRB_Type
+      with Address              => System'To_Address (XMCRB_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 13. System Clock and Clock Options
