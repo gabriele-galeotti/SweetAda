@@ -368,6 +368,30 @@ pragma Style_Checks (Off);
       (Value : in NZCV_Type)
       with Inline => True;
 
+#if PAN
+   -- C5.2.11 PAN, Privileged Access Never
+
+   type PAN_Type is record
+      Reserved1 : Bits_22 := 0;
+      PAN       : Boolean;      -- Privileged Access Never
+      Reserved2 : Bits_32 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for PAN_Type use record
+      Reserved1 at 0 range  0 .. 21;
+      PAN       at 0 range 22 .. 22;
+      Reserved2 at 0 range 23 .. 63;
+   end record;
+
+   function PAN_Read
+      return PAN_Type
+      with Inline => True;
+   procedure PAN_Write
+      (Value : in PAN_Type)
+      with Inline => True;
+#end if;
+
    ----------------------------------------------------------------------------
    -- D19.2 General system control registers
    ----------------------------------------------------------------------------

@@ -1,4 +1,5 @@
 
+PAN          := False
 ALLINT       := False
 DIT          := False
 ELR_EL12     := False

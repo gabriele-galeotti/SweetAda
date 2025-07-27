@@ -242,6 +242,11 @@ pragma Style_Checks (Off);
    function NZCV_Read return NZCV_Type is function MRS_Read is new MRS ("nzcv", NZCV_Type); begin return MRS_Read; end NZCV_Read;
    procedure NZCV_Write (Value : in NZCV_Type) is procedure MSR_Write is new MSR ("nzcv", NZCV_Type); begin MSR_Write (Value); end NZCV_Write;
 
+#if PAN
+   function PAN_Read return PAN_Type is function MRS_Read is new MRS ("pan", PAN_Type); begin return MRS_Read; end PAN_Read;
+   procedure PAN_Write (Value : in PAN_Type) is procedure MSR_Write is new MSR ("pan", PAN_Type); begin MSR_Write (Value); end PAN_Write;
+#end if;
+
    function ACCDATA_EL1_Read return ACCDATA_EL1_Type is function MRS_Read is new MRS ("accdata_el1", ACCDATA_EL1_Type); begin return MRS_Read; end ACCDATA_EL1_Read;
    procedure ACCDATA_EL1_Write (Value : in ACCDATA_EL1_Type) is procedure MSR_Write is new MSR ("accdata_el1", ACCDATA_EL1_Type); begin MSR_Write (Value); end ACCDATA_EL1_Write;
 
