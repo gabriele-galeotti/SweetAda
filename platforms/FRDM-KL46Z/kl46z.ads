@@ -2988,7 +2988,7 @@ pragma Style_Checks (Off);
    -- 34.2.6 RTC Status Register (RTC_SR)
 
    type RTC_SR_Type is record
-      TIF       : Boolean := False; -- Time Invalid Flag
+      TIF       : Boolean := True;  -- Time Invalid Flag
       TOF       : Boolean := False; -- Time Overflow Flag
       TAF       : Boolean := False; -- Time Alarm Flag
       Reserved1 : Bits_1  := 0;
