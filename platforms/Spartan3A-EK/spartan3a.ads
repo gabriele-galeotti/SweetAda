@@ -42,7 +42,7 @@ package Spartan3A
       GPIO2_TRI  : Bitmap_32 with Volatile_Full_Access => True;
    end record
       with Bit_Order => High_Order_First,
-           Size      => 16 * 8;
+           Size      => 4 * 32;
    for GPIO_Type use record
       GPIO_DATA  at 16#00# range 0 .. 31;
       GPIO_TRI   at 16#04# range 0 .. 31;
