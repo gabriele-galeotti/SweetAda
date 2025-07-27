@@ -61,8 +61,9 @@ endif
 
 .PHONY: postbuild
 postbuild:
-	$(REM) bitstream file must have .elf extension
-	$(CP) $(KERNEL_PARENT_PATH)/$(KERNEL_OUTFILE) $(KERNEL_PARENT_PATH)/$(KERNEL_BASENAME).elf
+ifneq ($(POSTBUILD_COMMAND),)
+	$(POSTBUILD_COMMAND)
+endif
 
 .PHONY: clean-configure-files
 clean-configure-files:
