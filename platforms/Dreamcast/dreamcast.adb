@@ -58,7 +58,7 @@ package body Dreamcast
               Convention           => Ada;
    begin
       -- set PORT8 and PORT9 to input
-      PortA := (PortA and 16#FFF0FFFF#) or 16#000A_0000#;
+      PortA := (PortA and 16#FFF0_FFFF#) or 16#000A_0000#;
       case Bits_2 (Shift_Right (Port89, 8) and 16#0003#) is
          when 0 => return CABLE_VGA;
          when 1 => return CABLE_NONE;
