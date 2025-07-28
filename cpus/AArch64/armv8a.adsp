@@ -374,7 +374,7 @@ pragma Style_Checks (Off);
    type PAN_Type is record
       Reserved1 : Bits_22 := 0;
       PAN       : Boolean;      -- Privileged Access Never
-      Reserved2 : Bits_32 := 0;
+      Reserved2 : Bits_41 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 64;
