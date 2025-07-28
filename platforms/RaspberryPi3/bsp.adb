@@ -42,7 +42,7 @@ package body BSP
    use Definitions;
    use Bits;
 
-   Timer_Constant : constant := 2_000_000 / 1_000;
+   Timer_Constant : constant := 2 * MHz1 / 1_000;
 
    function Number_Of_CPUs
       return Interfaces.C.int

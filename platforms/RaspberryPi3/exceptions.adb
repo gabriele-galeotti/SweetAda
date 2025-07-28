@@ -76,7 +76,7 @@ package body Exceptions
       is
    begin
       BSP.Tick_Count := @ + 1;
-      if (BSP.Tick_Count and 16#0000_0100#) = 0 then
+      if (BSP.Tick_Count mod 1_000) = 0 then
          -- GPIO05 ON
          RPI3.GPSET0 := (SET5 => True, others => False);
       else

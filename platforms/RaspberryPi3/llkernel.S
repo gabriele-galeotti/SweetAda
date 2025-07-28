@@ -2,7 +2,7 @@
 //
 // llkernel.S - Low-level kernel routines and exception handling.
 //
-// Copyright (C) 2020-2024 Gabriele Galeotti
+// Copyright (C) 2020-2025 Gabriele Galeotti
 //
 // This work is licensed under the terms of the MIT License.
 // Please consult the LICENSE.txt file located in the top-level directory.
@@ -37,7 +37,7 @@ el3_celsp0_serr:b       .                       // + 0x180 SError/vSError
                 .align  7
 el3_celspx_syn: b       .                       // + 0x200 Synchronous
                 .align  7
-el3_celspx_irq: b       .                       // + 0x280 IRQ/vIRQ
+el3_celspx_irq: b       irq_handler             // + 0x280 IRQ/vIRQ
                 .align  7
 el3_celspx_fiq: b       .                       // + 0x300 FIQ/vFIQ
                 .align  7
@@ -75,7 +75,7 @@ el2_celsp0_fiq: b       .                       // + 0x100 FIQ/vFIQ
 el2_celsp0_serr:b       .                       // + 0x180 SError/vSError
                 // Current EL with SPx
                 .align  7
-el2_celspx_syn: b       .                       // + 0x200 Synchronous
+el2_celspx_syn: b       el_handler              // + 0x200 Synchronous
                 .align  7
 el2_celspx_irq: b       irq_handler             // + 0x280 IRQ/vIRQ
                 .align  7

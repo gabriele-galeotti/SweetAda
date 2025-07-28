@@ -10,6 +10,8 @@
 
 #define __ASSEMBLER__ 1
 
+#include "mmu.h"
+
 ////////////////////////////////////////////////////////////////////////////////
 
                 .arch   armv8-a
@@ -28,13 +30,10 @@ _start:
                 //
                 // CPACR_EL1/FPEN Advanced SIMD and floating-point registers.
                 //
+#define CPACR_FPEN_NOTRAP (3<<20)
                 mrs     x1,cpacr_el1
-                orr     x0,x1,#(3<<20)
+                orr     x0,x1,#CPACR_FPEN_NOTRAP
                 msr     cpacr_el1,x0
-
-                //
-                // Ensure completion of previous instructions.
-                //
                 isb
 
 #if defined(STARTUP_EL1)
@@ -67,6 +66,50 @@ _start:
                 eret
 1:
 #endif
+
+                //
+                // Enable CPUECTLR_EL1.SMPEN.
+                //
+#define CPUECTLR_SMPEN (1<<6)
+                mrs     x0,s3_1_c15_c2_1
+                //orr     x0,x0,#CPUECTLR_SMPEN
+                //msr     s3_1_c15_c2_1,x0
+                //isb
+                cmp     x0,#CPUECTLR_SMPEN
+                beq     1f
+                b       .
+1:
+
+                //
+                // Enable MMU.
+                //
+                .extern mmu_l1
+                .extern mmu_l2
+                tlbi    alle2
+                movz    x0,#(0<<8|0xEE<<0)
+                msr     mair_el2,x0
+                adrp    x0,mmu_l1
+                adrp    x1,mmu_l2
+                orr     x1,x1,#MMU_TABLE_DESCRIPTOR
+                str     x1,[x0]
+                msr     ttbr0_el2,x0
+                ldr     x0,=(TCR_T0SZ_31|TCR_IRGN0|TCR_ORGN0|TCR_SH0)
+                msr     tcr_el2,x0
+                isb
+
+                //
+                // Enable cache.
+                //
+#define SCTLR_M   (1<<0)
+#define SCTLR_C   (1<<2)
+#define SCTLR_I   (1<<12)
+#define SCTLR_WXN (1<<19)
+                mrs     x0,sctlr_el2
+                bic     x0,x0,#SCTLR_WXN
+                movz    x1,#(SCTLR_M|SCTLR_C|SCTLR_I)
+                orr     x0,x0,x1
+                msr     sctlr_el2, x0
+                isb
 
                 //
                 // Allow only master core to execute code.
