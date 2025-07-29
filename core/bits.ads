@@ -342,24 +342,195 @@ package Bits
    Bits_64_NMask : constant := 2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000#;
 
    -- Bitmaps
-   type Bitmap_4 is array (0 .. 3) of Boolean
+   type Bitmap_1  is array (0 .. 0) of Boolean
+      with Component_Size => 1,
+           Size           => 1;
+   type Bitmap_2  is array (0 .. 1) of Boolean
+      with Component_Size => 1,
+           Size           => 2;
+   type Bitmap_3  is array (0 .. 2) of Boolean
+      with Component_Size => 1,
+           Size           => 3;
+   type Bitmap_4  is array (0 .. 3) of Boolean
       with Component_Size => 1,
            Size           => 4;
-   type Bitmap_8 is array (0 .. 7) of Boolean
+   type Bitmap_5  is array (0 .. 4) of Boolean
+      with Component_Size => 1,
+           Size           => 5;
+   type Bitmap_6  is array (0 .. 5) of Boolean
+      with Component_Size => 1,
+           Size           => 6;
+   type Bitmap_7  is array (0 .. 6) of Boolean
+      with Component_Size => 1,
+           Size           => 7;
+   type Bitmap_8  is array (0 .. 7) of Boolean
       with Component_Size => 1,
            Size           => 8;
+   type Bitmap_9  is array (0 .. 8) of Boolean
+      with Component_Size => 1,
+           Size           => 9;
+   type Bitmap_10 is array (0 .. 9) of Boolean
+      with Component_Size => 1,
+           Size           => 10;
+   type Bitmap_11 is array (0 .. 10) of Boolean
+      with Component_Size => 1,
+           Size           => 11;
    type Bitmap_12 is array (0 .. 11) of Boolean
       with Component_Size => 1,
            Size           => 12;
+   type Bitmap_13 is array (0 .. 12) of Boolean
+      with Component_Size => 1,
+           Size           => 13;
+   type Bitmap_14 is array (0 .. 13) of Boolean
+      with Component_Size => 1,
+           Size           => 14;
+   type Bitmap_15 is array (0 .. 14) of Boolean
+      with Component_Size => 1,
+           Size           => 15;
    type Bitmap_16 is array (0 .. 15) of Boolean
       with Component_Size => 1,
            Size           => 16;
+   type Bitmap_17 is array (0 .. 16) of Boolean
+      with Component_Size => 1,
+           Size           => 17;
+   type Bitmap_18 is array (0 .. 17) of Boolean
+      with Component_Size => 1,
+           Size           => 18;
+   type Bitmap_19 is array (0 .. 18) of Boolean
+      with Component_Size => 1,
+           Size           => 19;
+   type Bitmap_20 is array (0 .. 19) of Boolean
+      with Component_Size => 1,
+           Size           => 20;
+   type Bitmap_21 is array (0 .. 20) of Boolean
+      with Component_Size => 1,
+           Size           => 21;
+   type Bitmap_22 is array (0 .. 21) of Boolean
+      with Component_Size => 1,
+           Size           => 22;
+   type Bitmap_23 is array (0 .. 22) of Boolean
+      with Component_Size => 1,
+           Size           => 23;
    type Bitmap_24 is array (0 .. 23) of Boolean
       with Component_Size => 1,
            Size           => 24;
+   type Bitmap_25 is array (0 .. 24) of Boolean
+      with Component_Size => 1,
+           Size           => 25;
+   type Bitmap_26 is array (0 .. 25) of Boolean
+      with Component_Size => 1,
+           Size           => 26;
+   type Bitmap_27 is array (0 .. 26) of Boolean
+      with Component_Size => 1,
+           Size           => 27;
+   type Bitmap_28 is array (0 .. 27) of Boolean
+      with Component_Size => 1,
+           Size           => 28;
+   type Bitmap_29 is array (0 .. 28) of Boolean
+      with Component_Size => 1,
+           Size           => 29;
+   type Bitmap_30 is array (0 .. 29) of Boolean
+      with Component_Size => 1,
+           Size           => 30;
+   type Bitmap_31 is array (0 .. 30) of Boolean
+      with Component_Size => 1,
+           Size           => 31;
    type Bitmap_32 is array (0 .. 31) of Boolean
       with Component_Size => 1,
            Size           => 32;
+   type Bitmap_33 is array (0 .. 32) of Boolean
+      with Component_Size => 1,
+           Size           => 33;
+   type Bitmap_34 is array (0 .. 33) of Boolean
+      with Component_Size => 1,
+           Size           => 34;
+   type Bitmap_35 is array (0 .. 34) of Boolean
+      with Component_Size => 1,
+           Size           => 35;
+   type Bitmap_36 is array (0 .. 35) of Boolean
+      with Component_Size => 1,
+           Size           => 36;
+   type Bitmap_37 is array (0 .. 36) of Boolean
+      with Component_Size => 1,
+           Size           => 37;
+   type Bitmap_38 is array (0 .. 37) of Boolean
+      with Component_Size => 1,
+           Size           => 38;
+   type Bitmap_39 is array (0 .. 38) of Boolean
+      with Component_Size => 1,
+           Size           => 39;
+   type Bitmap_40 is array (0 .. 39) of Boolean
+      with Component_Size => 1,
+           Size           => 40;
+   type Bitmap_41 is array (0 .. 40) of Boolean
+      with Component_Size => 1,
+           Size           => 41;
+   type Bitmap_42 is array (0 .. 41) of Boolean
+      with Component_Size => 1,
+           Size           => 42;
+   type Bitmap_43 is array (0 .. 42) of Boolean
+      with Component_Size => 1,
+           Size           => 43;
+   type Bitmap_44 is array (0 .. 43) of Boolean
+      with Component_Size => 1,
+           Size           => 44;
+   type Bitmap_45 is array (0 .. 44) of Boolean
+      with Component_Size => 1,
+           Size           => 45;
+   type Bitmap_46 is array (0 .. 45) of Boolean
+      with Component_Size => 1,
+           Size           => 46;
+   type Bitmap_47 is array (0 .. 46) of Boolean
+      with Component_Size => 1,
+           Size           => 47;
+   type Bitmap_48 is array (0 .. 47) of Boolean
+      with Component_Size => 1,
+           Size           => 48;
+   type Bitmap_49 is array (0 .. 48) of Boolean
+      with Component_Size => 1,
+           Size           => 49;
+   type Bitmap_50 is array (0 .. 49) of Boolean
+      with Component_Size => 1,
+           Size           => 50;
+   type Bitmap_51 is array (0 .. 50) of Boolean
+      with Component_Size => 1,
+           Size           => 51;
+   type Bitmap_52 is array (0 .. 51) of Boolean
+      with Component_Size => 1,
+           Size           => 52;
+   type Bitmap_53 is array (0 .. 52) of Boolean
+      with Component_Size => 1,
+           Size           => 53;
+   type Bitmap_54 is array (0 .. 53) of Boolean
+      with Component_Size => 1,
+           Size           => 54;
+   type Bitmap_55 is array (0 .. 54) of Boolean
+      with Component_Size => 1,
+           Size           => 55;
+   type Bitmap_56 is array (0 .. 55) of Boolean
+      with Component_Size => 1,
+           Size           => 56;
+   type Bitmap_57 is array (0 .. 56) of Boolean
+      with Component_Size => 1,
+           Size           => 57;
+   type Bitmap_58 is array (0 .. 57) of Boolean
+      with Component_Size => 1,
+           Size           => 58;
+   type Bitmap_59 is array (0 .. 58) of Boolean
+      with Component_Size => 1,
+           Size           => 59;
+   type Bitmap_60 is array (0 .. 59) of Boolean
+      with Component_Size => 1,
+           Size           => 60;
+   type Bitmap_61 is array (0 .. 60) of Boolean
+      with Component_Size => 1,
+           Size           => 61;
+   type Bitmap_62 is array (0 .. 61) of Boolean
+      with Component_Size => 1,
+           Size           => 62;
+   type Bitmap_63 is array (0 .. 62) of Boolean
+      with Component_Size => 1,
+           Size           => 63;
    type Bitmap_64 is array (0 .. 63) of Boolean
       with Component_Size => 1,
            Size           => 64;
