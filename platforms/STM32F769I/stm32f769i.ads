@@ -3260,6 +3260,164 @@ pragma Warnings (On);
    -- 11 Extended interrupts and events controller (EXTI)
    ----------------------------------------------------------------------------
 
+   type EXTI_Index_Type is range 0 .. 24;
+
+   EXTI_LINE0            : constant EXTI_Index_Type := 0;  -- PA0 .. PK0
+   EXTI_LINE1            : constant EXTI_Index_Type := 1;  -- PA1 .. PK1
+   EXTI_LINE2            : constant EXTI_Index_Type := 2;  -- PA2 .. PK2
+   EXTI_LINE3            : constant EXTI_Index_Type := 3;  -- PA3 .. PK3
+   EXTI_LINE4            : constant EXTI_Index_Type := 4;  -- PA4 .. PK4
+   EXTI_LINE5            : constant EXTI_Index_Type := 5;  -- PA5 .. PK5
+   EXTI_LINE6            : constant EXTI_Index_Type := 6;  -- PA6 .. PK6
+   EXTI_LINE7            : constant EXTI_Index_Type := 7;  -- PA7 .. PK7
+   EXTI_LINE8            : constant EXTI_Index_Type := 8;  -- PA8 .. PJ8
+   EXTI_LINE9            : constant EXTI_Index_Type := 9;  -- PA9 .. PJ9
+   EXTI_LINE10           : constant EXTI_Index_Type := 10; -- PA10 .. PJ10
+   EXTI_LINE11           : constant EXTI_Index_Type := 11; -- PA11 .. PJ11
+   EXTI_LINE12           : constant EXTI_Index_Type := 12; -- PA12 .. PJ12
+   EXTI_LINE13           : constant EXTI_Index_Type := 13; -- PA13 .. PJ13
+   EXTI_LINE14           : constant EXTI_Index_Type := 14; -- PA14 .. PJ14
+   EXTI_LINE15           : constant EXTI_Index_Type := 15; -- PA15 .. PJ15
+   EXTI_PVD              : constant EXTI_Index_Type := 16; -- PVD output
+   EXTI_RTC_ALARM        : constant EXTI_Index_Type := 17; -- RTC Alarm event
+   EXTI_USB_OTGFS_WAKEUP : constant EXTI_Index_Type := 18; -- USB OTG FS Wakeup event
+   EXTI_ETH_WAKEUP       : constant EXTI_Index_Type := 19; -- Ethernet Wakeup event
+   EXTI_USB_OTGHS_WAKEUP : constant EXTI_Index_Type := 20; -- USB OTG HS (configured in FS) Wakeup event
+   EXTI_RTC_TAMPER       : constant EXTI_Index_Type := 21; -- RTC Tamper and TimeStamp events
+   EXTI_RTC_WAKEUP       : constant EXTI_Index_Type := 22; -- RTC Wakeup event
+   EXTI_LPTIM1           : constant EXTI_Index_Type := 23; -- LPTIM1 asynchronous event
+   EXTI_MDIO             : constant EXTI_Index_Type := 24; -- MDIO Slave asynchronous interrupt
+
+   type EXTI_Bitmap_Type is array (EXTI_Index_Type) of Boolean
+      with Component_Size => 1,
+           Size           => 25;
+
+   -- 11.9.1 Interrupt mask register (EXTI_IMR)
+
+   type EXTI_IMR_Type is record
+      MR       : EXTI_Bitmap_Type := [others => False]; -- Interrupt mask on line x
+      Reserved : Bits_7           := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for EXTI_IMR_Type use record
+      MR       at 0 range  0 .. 24;
+      Reserved at 0 range 25 .. 31;
+   end record;
+
+   EXTI_IMR_ADDRESS : constant := 16#4001_3C00#;
+
+   EXTI_IMR : aliased EXTI_IMR_Type
+      with Address              => System'To_Address (EXTI_IMR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 11.9.2 Event mask register (EXTI_EMR)
+
+   type EXTI_EMR_Type is record
+      MR       : EXTI_Bitmap_Type := [others => False]; -- Event mask on line x
+      Reserved : Bits_7           := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for EXTI_EMR_Type use record
+      MR       at 0 range  0 .. 24;
+      Reserved at 0 range 25 .. 31;
+   end record;
+
+   EXTI_EMR_ADDRESS : constant := 16#4001_3C04#;
+
+   EXTI_EMR : aliased EXTI_EMR_Type
+      with Address              => System'To_Address (EXTI_EMR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 11.9.3 Rising trigger selection register (EXTI_RTSR)
+
+   type EXTI_RTSR_Type is record
+      TR       : EXTI_Bitmap_Type := [others => False]; -- Rising trigger event configuration bit of line x
+      Reserved : Bits_7           := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for EXTI_RTSR_Type use record
+      TR       at 0 range  0 .. 24;
+      Reserved at 0 range 25 .. 31;
+   end record;
+
+   EXTI_RTSR_ADDRESS : constant := 16#4001_3C08#;
+
+   EXTI_RTSR : aliased EXTI_RTSR_Type
+      with Address              => System'To_Address (EXTI_RTSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 11.9.4 Falling trigger selection register (EXTI_FTSR)
+
+   type EXTI_FTSR_Type is record
+      TR       : EXTI_Bitmap_Type := [others => False]; -- Falling trigger event configuration bit of line x
+      Reserved : Bits_7           := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for EXTI_FTSR_Type use record
+      TR       at 0 range  0 .. 24;
+      Reserved at 0 range 25 .. 31;
+   end record;
+
+   EXTI_FTSR_ADDRESS : constant := 16#4001_3C0C#;
+
+   EXTI_FTSR : aliased EXTI_FTSR_Type
+      with Address              => System'To_Address (EXTI_FTSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 11.9.5 Software interrupt event register (EXTI_SWIER)
+
+   type EXTI_SWIER_Type is record
+      SWIER    : EXTI_Bitmap_Type := [others => False]; -- Software Interrupt on line x
+      Reserved : Bits_7           := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for EXTI_SWIER_Type use record
+      SWIER    at 0 range  0 .. 24;
+      Reserved at 0 range 25 .. 31;
+   end record;
+
+   EXTI_SWIER_ADDRESS : constant := 16#4001_3C10#;
+
+   EXTI_SWIER : aliased EXTI_SWIER_Type
+      with Address              => System'To_Address (EXTI_SWIER_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 11.9.6 Pending register (EXTI_PR)
+
+   type EXTI_PR_Type is record
+      PR       : EXTI_Bitmap_Type := [others => False]; -- Pending bit
+      Reserved : Bits_7           := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for EXTI_PR_Type use record
+      PR       at 0 range  0 .. 24;
+      Reserved at 0 range 25 .. 31;
+   end record;
+
+   EXTI_PR_ADDRESS : constant := 16#4001_3C14#;
+
+   EXTI_PR : aliased EXTI_PR_Type
+      with Address              => System'To_Address (EXTI_PR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    ----------------------------------------------------------------------------
    -- 12 Cyclic redundancy check calculation unit (CRC)
    ----------------------------------------------------------------------------
