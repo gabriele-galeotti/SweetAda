@@ -35,7 +35,14 @@ package LEON3
    use Interfaces;
    use Bits;
 
-   type Bitmap_15 is array (1 .. 15) of Boolean
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
+   -- GR712RC Dual-Core LEON3FT SPARC V8 Processor
+   -- User’s Manual
+   ----------------------------------------------------------------------------
+
+   type I_Bitmap_15 is array (1 .. 15) of Boolean
       with Component_Size => 1,
            Size           => 15;
 
@@ -47,7 +54,7 @@ package LEON3
 
    type INTC_LEVEL_Type is record
       Reserved1 : Bits_1;
-      IL        : Bitmap_15; -- Interrupt Level n (IL[n]): Interrupt level for interrupt n.
+      IL        : I_Bitmap_15; -- Interrupt Level n (IL[n]): Interrupt level for interrupt n.
       Reserved2 : Bits_16;
    end record
       with Bit_Order => Low_Order_First,
@@ -70,8 +77,8 @@ package LEON3
 
    type INTC_PENDING_Type is record
       Reserved : Bits_1;
-      IP       : Bitmap_15; -- Interrupt Pending n (IP[n]): Interrupt pending for interrupt n.
-      EIP      : Bitmap_16; -- Extended Interrupt Pending n (EIP[n]).
+      IP       : I_Bitmap_15; -- Interrupt Pending n (IP[n]): Interrupt pending for interrupt n.
+      EIP      : Bitmap_16;   -- Extended Interrupt Pending n (EIP[n]).
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -92,9 +99,9 @@ package LEON3
    -- 8.3.3 Interrupt force register, processor 0
 
    type INTC_P0FORCE_Type is record
-      Reserved1 : Bits_1;
-      IForce    : Bitmap_15; -- Interrupt Force n (IF[n]): Force interrupt no. n.
-      Reserved2 : Bits_16;
+      Reserved1 : Bits_1      := 0;
+      IForce    : I_Bitmap_15 := [others => False]; -- Interrupt Force n (IF[n]): Force interrupt no. n.
+      Reserved2 : Bits_16     := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -115,9 +122,9 @@ package LEON3
    -- 8.3.4 Interrupt clear register
 
    type INTC_CLEAR_Type is record
-      Reserved1 : Bits_1;
-      IC        : Bitmap_15; -- Interrupt Clear n (IC[n])
-      Reserved2 : Bits_16;
+      Reserved1 : Bits_1      := 0;
+      IC        : I_Bitmap_15 := [others => False]; -- Interrupt Clear n (IC[n])
+      Reserved2 : Bits_16     := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -138,11 +145,11 @@ package LEON3
    -- 8.3.5 Multiprocessor status register
 
    type MULTIPROC_STATUS_Type is record
-      PowerDown : Bitmap_16;             -- Power-down status of CPU [n]
-      EIRQ      : Natural range 1 .. 15; -- EIRQ. Interrupt number (1 - 15) used for extended interrupts.
-      Reserved  : Bits_7;
-      BA        : Boolean;               -- Broadcast Available (BA).
-      NCPU      : Natural range 0 .. 15; -- NCPU. Number of CPU’s in the system -1.
+      PowerDown : Bitmap_16             := [others => False]; -- Power-down status of CPU [n]
+      EIRQ      : Natural range 1 .. 15 := 12;                -- EIRQ. Interrupt number (1 - 15) used for extended interrupts.
+      Reserved  : Bits_7                := 0;
+      BA        : Boolean               := True;              -- Broadcast Available (BA).
+      NCPU      : Natural range 0 .. 15 := 1;                 -- NCPU. Number of CPU’s in the system -1.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -165,9 +172,9 @@ package LEON3
    -- 8.3.6 Processor interrupt mask register
 
    type INTC_PROCMASK_Type is record
-      Reserved : Bits_1;
-      IM       : Bitmap_15; -- Interrupt Mask n (IM[n])
-      EIM      : Bitmap_16; -- Interrupt mask for extended interrupts
+      Reserved : Bits_1      := 0;
+      IM       : I_Bitmap_15 := [others => False]; -- Interrupt Mask n (IM[n])
+      EIM      : Bitmap_16   := [others => False]; -- Interrupt mask for extended interrupts
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -196,9 +203,9 @@ package LEON3
    -- 8.3.7 Broadcast register
 
    type INTC_BROADCAST_Type is record
-      Reserved1 : Bits_1;
-      IM        : Bitmap_15; -- Broadcast Mask n (BM[n])
-      Reserved2 : Bits_16;
+      Reserved1 : Bits_1      := 0;
+      IM        : I_Bitmap_15 := [others => False]; -- Broadcast Mask n (BM[n])
+      Reserved2 : Bits_16     := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -219,10 +226,10 @@ package LEON3
    -- 8.3.8 Processor interrupt force register
 
    type INTC_FORCE_Type is record
-      Reserved1   : Bits_1;
-      IForce      : Bitmap_15; -- Interrupt Force n (IF[n])
-      Reserved2   : Bits_1;
-      IForceClear : Bitmap_15; -- Interrupt Force Clear n (IFC[n])
+      Reserved1   : Bits_1      := 0;
+      IForce      : I_Bitmap_15 := [others => False]; -- Interrupt Force n (IF[n])
+      Reserved2   : Bits_1      := 0;
+      IForceClear : I_Bitmap_15 := [others => False]; -- Interrupt Force Clear n (IFC[n])
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -496,5 +503,7 @@ package LEON3
       (Data : in Unsigned_8);
    procedure UART1_RX
       (Data : out Unsigned_8);
+
+pragma Style_Checks (On);
 
 end LEON3;
