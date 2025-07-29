@@ -43,7 +43,7 @@ package body Exceptions
    use LLutils;
    use SPARC;
 
-   Trap_Table : array (Natural range 0 .. 255) of aliased TrapTable_Item_Type;
+   Trap_Table : aliased array (Natural range 0 .. 255) of TrapTable_Item_Type;
 
    --========================================================================--
    --                                                                        --
