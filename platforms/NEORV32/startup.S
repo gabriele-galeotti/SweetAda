@@ -27,6 +27,12 @@ _start:
                 csrw    mie,zero
 
                 //
+                // Boot hart #0.
+                //
+                csrr  x1,mhartid
+                bnez  x1,hart_idle
+
+                //
                 // Setup stack pointer.
                 //
                 la      sp,kernel_stack
@@ -64,7 +70,7 @@ _start:
                 la      t1,_ebss
                 ble     t1,t0,2f
 1:              sw      zero,(t0)
-                add     t0,t0,__SIZEOF_POINTER__
+                addi    t0,t0,__SIZEOF_POINTER__
                 blt     t0,t1,1b
 2:
 
