@@ -29,8 +29,8 @@ _start:
                 //
                 // Boot hart #0.
                 //
-                csrr  x1,mhartid
-                bnez  x1,hart_idle
+                csrr    x1,mhartid
+                bnez    x1,hart_idle
 
                 //
                 // Setup stack pointer.
