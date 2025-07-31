@@ -17,7 +17,6 @@
 
 with System;
 with System.Storage_Elements;
-with Ada.Unchecked_Conversion;
 with Interfaces;
 with Definitions;
 with Bits;
@@ -78,8 +77,14 @@ package x86
 
    NULL_Selector : constant Selector_Type := (PL0, TI_GDT, 0);
 
-   function To_U16 is new Ada.Unchecked_Conversion (Selector_Type, Unsigned_16);
-   function To_Selector is new Ada.Unchecked_Conversion (Unsigned_16, Selector_Type);
+   function To_U16
+      (Selector : Selector_Type)
+      return Unsigned_16
+      with Inline => True;
+   function To_Selector
+      (Value : Unsigned_16)
+      return Selector_Type
+      with Inline => True;
 
    -- Descriptor type
 

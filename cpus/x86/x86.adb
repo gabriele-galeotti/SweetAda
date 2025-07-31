@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
+with Ada.Unchecked_Conversion;
 with LLutils;
 
 package body x86
@@ -41,6 +42,24 @@ package body x86
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   function To_U16
+      (Selector : Selector_Type)
+      return Unsigned_16
+      is
+      function Convert is new Ada.Unchecked_Conversion (Selector_Type, Unsigned_16);
+   begin
+      return Convert (Selector);
+   end To_U16;
+
+   function To_Selector
+      (Value : Unsigned_16)
+      return Selector_Type
+      is
+      function Convert is new Ada.Unchecked_Conversion (Unsigned_16, Selector_Type);
+   begin
+      return Convert (Value);
+   end To_Selector;
 
    ----------------------------------------------------------------------------
    -- NOP
