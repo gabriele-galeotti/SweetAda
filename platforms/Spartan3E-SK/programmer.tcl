@@ -69,7 +69,7 @@ if {[file exists $DOWNLOAD_BIT]} {
     file rename -force $DOWNLOAD_BIT $DOWNLOAD_BIT.tmp
 }
 exec -ignorestderr >@stdout 2>@stderr sh -c "\
-source ${XILINX_PATH}/settings64.sh &&             \
+. ${XILINX_PATH}/settings64.sh &&                  \
 bitinit                                            \
   ${PROJECT_PATH}/system.mhs                       \
   -bm ${PROJECT_PATH}/implementation/system_bd.bmm \
@@ -109,8 +109,8 @@ close $impact_cmd_fd
 # Run iMPACT.
 #
 exec -ignorestderr >@stdout 2>@stderr sh -c "\
-source ${XILINX_PATH}/settings64.sh && \
-impact -batch ${IMPACT_CMD}            \
+. ${XILINX_PATH}/settings64.sh && \
+impact -batch ${IMPACT_CMD}       \
 "
 
 #
@@ -132,8 +132,8 @@ close $xmd_ini_fd
 # Run XMD.
 #
 exec -ignorestderr >@stdout 2>@stderr sh -c "\
-source ${XILINX_PATH}/settings64.sh && \
-xmd -nx -opt ${XMD_INI}                \
+. ${XILINX_PATH}/settings64.sh && \
+xmd -nx -opt ${XMD_INI}           \
 "
 
 exit 0
