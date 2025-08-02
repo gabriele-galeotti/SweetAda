@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 with x86;
@@ -99,8 +98,14 @@ package i586
       Reserved3          at 0 range 36 .. 63;
    end record;
 
-   function To_U64 is new Ada.Unchecked_Conversion (IA32_APIC_BASE_Type, Unsigned_64);
-   function To_IA32_APIC_BASE is new Ada.Unchecked_Conversion (Unsigned_64, IA32_APIC_BASE_Type);
+   function To_U64
+      (APIC_Base : IA32_APIC_BASE_Type)
+      return Unsigned_64
+      with Inline => True;
+   function To_IA32_APIC_BASE
+      (Value : Unsigned_64)
+      return IA32_APIC_BASE_Type
+      with Inline => True;
 
    -- subprograms
 

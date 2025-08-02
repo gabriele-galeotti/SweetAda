@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
+with Ada.Unchecked_Conversion;
 with Definitions;
 
 package body i586
@@ -40,6 +41,24 @@ package body i586
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   function To_U64
+      (APIC_Base : IA32_APIC_BASE_Type)
+      return Unsigned_64
+      is
+      function Convert is new Ada.Unchecked_Conversion (IA32_APIC_BASE_Type, Unsigned_64);
+   begin
+      return Convert (APIC_Base);
+   end To_U64;
+
+   function To_IA32_APIC_BASE
+      (Value : Unsigned_64)
+      return IA32_APIC_BASE_Type
+      is
+      function Convert is new Ada.Unchecked_Conversion (Unsigned_64, IA32_APIC_BASE_Type);
+   begin
+      return Convert (Value);
+   end To_IA32_APIC_BASE;
 
    ----------------------------------------------------------------------------
    -- RDMSR/WRMSR
