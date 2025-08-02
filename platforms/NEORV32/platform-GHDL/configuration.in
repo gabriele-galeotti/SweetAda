@@ -55,11 +55,15 @@ LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 # NEORV32 archive.
 #
 # In order to create a SweetAda executable, the image_gen utility must be
-# available:
-# 1) go into the "<NEORV32_HOME>/sw/image_gen" and issue:
-#    gcc -o image_gen image_gen.c
-# 2) go into the "<NEORV32_HOME>/sw/example/hello_world" and issue:
-#    make ../../../sw/image_gen/image_gen
+# available; either:
+#
+# - go into the "<NEORV32_HOME>/sw/image_gen" and issue:
+#   gcc -o image_gen image_gen.c
+#
+# or:
+#
+# - go into the "<NEORV32_HOME>/sw/example/hello_world" and issue:
+#   make ../../../sw/image_gen/image_gen
 #
 # Then, check whether the shell script "<NEORV32_HOME>/sim/ghdl.sh" has
 # execute permission.
