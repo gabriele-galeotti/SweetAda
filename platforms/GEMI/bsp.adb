@@ -36,9 +36,9 @@ package body BSP
    --========================================================================--
 
    use System;
+   use Interfaces;
    use Definitions;
    use Bits;
-   use Interfaces;
 
    procedure GEMI_Last_Chance_Handler
       (Source_Location : in Address;
