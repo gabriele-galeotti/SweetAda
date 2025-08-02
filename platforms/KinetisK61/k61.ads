@@ -5150,6 +5150,9 @@ pragma Style_Checks (Off);
       SAD      at 0 range 1 .. 7;
    end record;
 
+   -- 55.3.11 I2C SCL Low Timeout Register High (I2Cx_SLTH)
+   -- 55.3.12 I2C SCL Low Timeout Register Low (I2Cx_SLTL)
+
    -- 55.3 Memory map/register definition
 
    type I2C_Type is record
