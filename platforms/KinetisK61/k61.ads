@@ -203,20 +203,20 @@ pragma Style_Checks (Off);
    IRQC_RSVD7      : constant := 2#1111#; -- Reserved.
 
    type PORTx_PCRn_Type is record
-      PS        : Bits_1;       -- Pull Select
-      PE        : Boolean;      -- Pull Enable
-      SRE       : Boolean;      -- Slew Rate Enable
+      PS        : Bits_1  := PS_PULLDOWN;   -- Pull Select
+      PE        : Boolean := False;         -- Pull Enable
+      SRE       : Boolean := False;         -- Slew Rate Enable
       Reserved1 : Bits_1  := 0;
-      PFE       : Boolean;      -- Passive Filter Enable
-      ODE       : Boolean;      -- Open Drain Enable
-      DSE       : Boolean;      -- Drive Strength Enable
+      PFE       : Boolean := False;         -- Passive Filter Enable
+      ODE       : Boolean := False;         -- Open Drain Enable
+      DSE       : Boolean := False;         -- Drive Strength Enable
       Reserved2 : Bits_1  := 0;
-      MUX       : Bits_3;       -- Pin Mux Control
+      MUX       : Bits_3  := MUX_DISABLED;  -- Pin Mux Control
       Reserved3 : Bits_4  := 0;
-      LK        : Boolean;      -- Lock Register
-      IRQC      : Bits_4;       -- Interrupt Configuration
+      LK        : Boolean := False;         -- Lock Register
+      IRQC      : Bits_4  := IRQC_DISABLED; -- Interrupt Configuration
       Reserved4 : Bits_4  := 0;
-      ISF       : Boolean;      -- Interrupt Status Flag
+      ISF       : Boolean := False;         -- Interrupt Status Flag
       Reserved5 : Bits_7  := 0;
    end record
       with Bit_Order            => Low_Order_First,
