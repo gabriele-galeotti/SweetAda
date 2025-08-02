@@ -3495,10 +3495,10 @@ pragma Style_Checks (Off);
    FLT_BYPASS : constant := 0; -- No filter/bypass
 
    type I2Cx_FLT_Type is record
-      FLT       : Bits_5 := FLT_BYPASS; -- I2C Programmable Filter Factor
-      STOPIE    : Boolean := False;     -- I2C Bus Stop Interrupt Enable
-      STOPF     : Boolean := False;     -- I2C Bus Stop Detect Flag
-      SHEN      : Boolean := False;     -- Stop Hold Enable
+      FLT       : Bits_5  := FLT_BYPASS; -- I2C Programmable Filter Factor
+      STOPIE    : Boolean := False;      -- I2C Bus Stop Interrupt Enable
+      STOPF     : Boolean := False;      -- I2C Bus Stop Detect Flag
+      SHEN      : Boolean := False;      -- Stop Hold Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
