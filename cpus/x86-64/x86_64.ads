@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 
@@ -492,8 +491,14 @@ package x86_64
       Reserved4 at 0 range 32 .. 63;
    end record;
 
-   function To_U64 is new Ada.Unchecked_Conversion (CR0_Type, Unsigned_64);
-   function To_CR0 is new Ada.Unchecked_Conversion (Unsigned_64, CR0_Type);
+   function To_U64
+      (CR0 : CR0_Type)
+      return Unsigned_64
+      with Inline => True;
+   function To_CR0
+      (Value : Unsigned_64)
+      return CR0_Type
+      with Inline => True;
 
    -- CR3
 
@@ -514,8 +519,14 @@ package x86_64
       PDB       at 0 range 12 .. 63;
    end record;
 
-   function To_U64 is new Ada.Unchecked_Conversion (CR3_Type, Unsigned_64);
-   function To_CR3 is new Ada.Unchecked_Conversion (Unsigned_64, CR3_Type);
+   function To_U64
+      (CR3 : CR3_Type)
+      return Unsigned_64
+      with Inline => True;
+   function To_CR3
+      (Value : Unsigned_64)
+      return CR3_Type
+      with Inline => True;
 
    -- CR4
 
@@ -574,8 +585,14 @@ package x86_64
       Reserved5  at 0 range 32 .. 63;
    end record;
 
-   function To_U64 is new Ada.Unchecked_Conversion (CR4_Type, Unsigned_64);
-   function To_CR4 is new Ada.Unchecked_Conversion (Unsigned_64, CR4_Type);
+   function To_U64
+      (CR4 : CR4_Type)
+      return Unsigned_64
+      with Inline => True;
+   function To_CR4
+      (Value : Unsigned_64)
+      return CR4_Type
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- MSRs
@@ -637,8 +654,14 @@ package x86_64
       Reserved3          at 0 range 36 .. 63;
    end record;
 
-   function To_U64 is new Ada.Unchecked_Conversion (IA32_APIC_BASE_Type, Unsigned_64);
-   function To_IA32_APIC_BASE is new Ada.Unchecked_Conversion (Unsigned_64, IA32_APIC_BASE_Type);
+   function To_U64
+      (APIC_Base : IA32_APIC_BASE_Type)
+      return Unsigned_64
+      with Inline => True;
+   function To_IA32_APIC_BASE
+      (Value : Unsigned_64)
+      return IA32_APIC_BASE_Type
+      with Inline => True;
 
    -- IA32_EFER
 
@@ -665,8 +688,14 @@ package x86_64
       Reserved4 at 0 range 32 .. 63;
    end record;
 
-   function To_U64 is new Ada.Unchecked_Conversion (IA32_EFER_Type, Unsigned_64);
-   function To_IA32_EFER is new Ada.Unchecked_Conversion (Unsigned_64, IA32_EFER_Type);
+   function To_U64
+      (EFER : IA32_EFER_Type)
+      return Unsigned_64
+      with Inline => True;
+   function To_IA32_EFER
+      (Value : Unsigned_64)
+      return IA32_EFER_Type
+      with Inline => True;
 
    -- subprograms
 
