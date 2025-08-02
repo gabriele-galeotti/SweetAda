@@ -3365,6 +3365,251 @@ pragma Style_Checks (Off);
    -- Chapter 38 Inter-Integrated Circuit (I2C)
    ----------------------------------------------------------------------------
 
+   -- 38.3.1 I2C Address Register 1 (I2Cx_A1)
+
+   type I2Cx_A1_Type is record
+      Reserved : Bits_1 := 0;
+      AD       : Bits_7 := 0; -- Address
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for I2Cx_A1_Type use record
+      Reserved at 0 range 0 .. 0;
+      AD       at 0 range 1 .. 7;
+   end record;
+
+   -- 38.3.2 I2C Frequency Divider register (I2Cx_F)
+
+   MULT_1    : constant := 2#00#; -- mul = 1
+   MULT_2    : constant := 2#01#; -- mul = 2
+   MULT_4    : constant := 2#10#; -- mul = 4
+   MULT_RSVD : constant := 2#11#; -- Reserved
+
+   type I2Cx_F_Type is record
+      ICR  : Bits_6 := 0;      -- ClockRate
+      MULT : Bits_2 := MULT_1; -- The MULT bits define the multiplier factor mul.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for I2Cx_F_Type use record
+      ICR  at 0 range 0 .. 5;
+      MULT at 0 range 6 .. 7;
+   end record;
+
+   -- 38.3.3 I2C Control Register 1 (I2Cx_C1)
+
+   TXAK_ACK : constant := 0; -- An acknowledge signal is sent to the bus on the following receiving byte (if FACK is cleared) or the current receiving byte (if FACK is set).
+   TXAK_NAK : constant := 1; -- No acknowledge signal is sent to the bus on the following receiving data byte (if FACK is cleared) or the current receiving data byte (if FACK is set).
+
+   TX_RX : constant := 0; -- Receive
+   TX_TX : constant := 1; -- Transmit
+
+   MST_SLV : constant := 0; -- Slave mode
+   MST_MST : constant := 1; -- Master mode
+
+   type I2Cx_C1_Type is record
+      DMAEN : Boolean := False;    -- DMA Enable
+      WUEN  : Boolean := False;    -- Wakeup Enable
+      RSTA  : Boolean := False;    -- Repeat START
+      TXAK  : Bits_1  := TXAK_ACK; -- Transmit Acknowledge Enable
+      TX    : Bits_1  := TX_RX;    -- Transmit Mode Select
+      MST   : Bits_1  := MST_MST;  -- Master Mode Select
+      IICIE : Boolean := False;    -- I2C Interrupt Enable
+      IICEN : Boolean := False;    -- I2C Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for I2Cx_C1_Type use record
+      DMAEN at 0 range 0 .. 0;
+      WUEN  at 0 range 1 .. 1;
+      RSTA  at 0 range 2 .. 2;
+      TXAK  at 0 range 3 .. 3;
+      TX    at 0 range 4 .. 4;
+      MST   at 0 range 5 .. 5;
+      IICIE at 0 range 6 .. 6;
+      IICEN at 0 range 7 .. 7;
+   end record;
+
+   -- 38.3.4 I2C Status register (I2Cx_S)
+
+   RXAK_ACK : constant := 0; -- Acknowledge signal was received after the completion of one byte of data transmission on the bus
+   RXAK_NAK : constant := 1; -- No acknowledge signal detected
+
+   SRW_MSTWR_SLVRX : constant := 0; -- Slave receive, master writing to slave
+   SRW_MSTRD_SLVTX : constant := 1; -- Slave transmit, master reading from slave
+
+   type I2Cx_S_Type is record
+      RXAK  : Bits_1  := RXAK_ACK;        -- Receive Acknowledge
+      IICIF : Boolean := False;           -- Interrupt Flag
+      SRW   : Bits_1  := SRW_MSTWR_SLVRX; -- Slave Read/Write
+      RAM   : Boolean := False;           -- Range Address Match
+      ARBL  : Boolean := False;           -- Arbitration Lost
+      BUSY  : Boolean := False;           -- Bus Busy
+      IAAS  : Boolean := False;           -- Addressed As A Slave
+      TCF   : Boolean := True;            -- Transfer Complete Flag
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for I2Cx_S_Type use record
+      RXAK  at 0 range 0 .. 0;
+      IICIF at 0 range 1 .. 1;
+      SRW   at 0 range 2 .. 2;
+      RAM   at 0 range 3 .. 3;
+      ARBL  at 0 range 4 .. 4;
+      BUSY  at 0 range 5 .. 5;
+      IAAS  at 0 range 6 .. 6;
+      TCF   at 0 range 7 .. 7;
+   end record;
+
+   -- 38.3.5 I2C Data I/O register (I2Cx_D)
+
+   -- 38.3.6 I2C Control Register 2 (I2Cx_C2)
+
+   SBRC_FOLLOW : constant := 0; -- The slave baud rate follows the master baud rate and clock stretching may occur
+   SBRC_NOTDEP : constant := 1; -- Slave baud rate is independent of the master baud rate
+
+   ADEXT_7  : constant := 0; -- 7-bit address scheme
+   ADEXT_10 : constant := 1; -- 10-bit address scheme
+
+   type I2Cx_C2_Type is record
+      AD    : Bits_3  := 0;           -- Slave Address
+      RMEN  : Boolean := False;       -- Range Address Matching Enable
+      SBRC  : Bits_1  := SBRC_FOLLOW; -- Slave Baud Rate Control
+      HDRS  : Boolean := False;       -- High Drive Select
+      ADEXT : Bits_1  := ADEXT_7;     -- Address Extension
+      GCAEN : Boolean := False;       -- General Call Address Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for I2Cx_C2_Type use record
+      AD    at 0 range 0 .. 2;
+      RMEN  at 0 range 3 .. 3;
+      SBRC  at 0 range 4 .. 4;
+      HDRS  at 0 range 5 .. 5;
+      ADEXT at 0 range 6 .. 6;
+      GCAEN at 0 range 7 .. 7;
+   end record;
+
+   -- 38.3.7 I2C Programmable Input Glitch Filter Register (I2Cx_FLT)
+
+   FLT_BYPASS : constant := 0; -- No filter/bypass
+
+   type I2Cx_FLT_Type is record
+      FLT       : Bits_5 := FLT_BYPASS; -- I2C Programmable Filter Factor
+      STOPIE    : Boolean := False;     -- I2C Bus Stop Interrupt Enable
+      STOPF     : Boolean := False;     -- I2C Bus Stop Detect Flag
+      SHEN      : Boolean := False;     -- Stop Hold Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for I2Cx_FLT_Type use record
+      FLT       at 0 range 0 .. 4;
+      STOPIE    at 0 range 5 .. 5;
+      STOPF     at 0 range 6 .. 6;
+      SHEN      at 0 range 7 .. 7;
+   end record;
+
+   -- 38.3.8 I2C Range Address register (I2Cx_RA)
+
+   type I2Cx_RA_Type is record
+      Reserved : Bits_1 := 0;
+      RAD      : Bits_7 := 0; -- Range Slave Address
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for I2Cx_RA_Type use record
+      Reserved at 0 range 0 .. 0;
+      RAD      at 0 range 1 .. 7;
+   end record;
+
+   -- 38.3.9 I2C SMBus Control and Status register (I2Cx_SMB)
+
+   TCKSEL_DIV64 : constant := 0; -- Timeout counter counts at the frequency of the I2C module clock / 64
+   TCKSEL_DIV1  : constant := 1; -- Timeout counter counts at the frequency of the I2C module clock
+
+   type I2Cx_SMB_Type is record
+      SHTF2IE : Boolean := False;        -- SHTF2 Interrupt Enable
+      SHTF2   : Boolean := False;        -- SCL High Timeout Flag 2
+      SHTF1   : Boolean := False;        -- SCL High Timeout Flag 1
+      SLTF    : Boolean := False;        -- SCL Low Timeout Flag
+      TCKSEL  : Bits_1  := TCKSEL_DIV64; -- Timeout Counter Clock Select
+      SIICAEN : Boolean := False;        -- Second I2C Address Enable
+      ALERTEN : Boolean := False;        -- SMBus Alert Response Address Enable
+      FACK    : Boolean := False;        -- Fast NACK/ACK Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for I2Cx_SMB_Type use record
+      SHTF2IE at 0 range 0 .. 0;
+      SHTF2   at 0 range 1 .. 1;
+      SHTF1   at 0 range 2 .. 2;
+      SLTF    at 0 range 3 .. 3;
+      TCKSEL  at 0 range 4 .. 4;
+      SIICAEN at 0 range 5 .. 5;
+      ALERTEN at 0 range 6 .. 6;
+      FACK    at 0 range 7 .. 7;
+   end record;
+
+   -- 38.3.10 I2C Address Register 2 (I2Cx_A2)
+
+   type I2Cx_A2_Type is record
+      Reserved : Bits_1 := 0;
+      SAD      : Bits_7 := 2#1100001#; -- SMBus Address
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for I2Cx_A2_Type use record
+      Reserved at 0 range 0 .. 0;
+      SAD      at 0 range 1 .. 7;
+   end record;
+
+   -- 38.3.11 I2C SCL Low Timeout Register High (I2Cx_SLTH)
+   -- 38.3.12 I2C SCL Low Timeout Register Low (I2Cx_SLTL)
+
+   -- 38.3 Memory map/register definition
+
+   type I2C_Type is record
+      A1   : I2Cx_A1_Type  with Volatile_Full_Access => True;
+      F    : I2Cx_F_Type   with Volatile_Full_Access => True;
+      C1   : I2Cx_C1_Type  with Volatile_Full_Access => True;
+      S    : I2Cx_S_Type   with Volatile_Full_Access => True;
+      D    : Unsigned_8    with Volatile_Full_Access => True;
+      C2   : I2Cx_C2_Type  with Volatile_Full_Access => True;
+      FLT  : I2Cx_FLT_Type with Volatile_Full_Access => True;
+      RA   : I2Cx_RA_Type  with Volatile_Full_Access => True;
+      SMB  : I2Cx_SMB_Type with Volatile_Full_Access => True;
+      A2   : I2Cx_A2_Type  with Volatile_Full_Access => True;
+      SLTH : Unsigned_8    with Volatile_Full_Access => True;
+      SLTL : Unsigned_8    with Volatile_Full_Access => True;
+   end record
+      with Size => 16#C# * 8;
+   for I2C_Type use record
+      A1   at 16#0# range 0 .. 7;
+      F    at 16#1# range 0 .. 7;
+      C1   at 16#2# range 0 .. 7;
+      S    at 16#3# range 0 .. 7;
+      D    at 16#4# range 0 .. 7;
+      C2   at 16#5# range 0 .. 7;
+      FLT  at 16#6# range 0 .. 7;
+      RA   at 16#7# range 0 .. 7;
+      SMB  at 16#8# range 0 .. 7;
+      A2   at 16#9# range 0 .. 7;
+      SLTH at 16#A# range 0 .. 7;
+      SLTL at 16#B# range 0 .. 7;
+   end record;
+
+   I2C0 : aliased I2C_Type
+      with Address    => System'To_Address (16#4006_6000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   I2C1 : aliased I2C_Type
+      with Address    => System'To_Address (16#4006_7000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    ----------------------------------------------------------------------------
    -- Chapter 39 Universal Asynchronous Receiver/Transmitter (UART0)
    ----------------------------------------------------------------------------
