@@ -44,7 +44,8 @@ package PCICAN
        Device_Number :    out PCI.Device_Number_Type;
        Success       :    out Boolean);
    procedure Init
-      (Descriptor : in PCI.Descriptor_Type);
+      (Descriptor    : in PCI.Descriptor_Type;
+       Device_Number : in PCI.Device_Number_Type);
 
    procedure TX;
 

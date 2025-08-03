@@ -17,6 +17,7 @@
 
 with System;
 with System.Storage_Elements;
+with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 with CPU.IO;
@@ -136,9 +137,20 @@ package body PCICAN
        Success       :    out Boolean)
       is
    begin
-      PCI.Cfg_Find_Device_By_Id (Descriptor, PCI.BUS0, PCI.VENDOR_ID_AMCC, PCI.DEVICE_ID_PCICAN, Device_Number, Success);
+      PCI.Cfg_Find_Device_By_Id (
+         Descriptor,
+         PCI.BUS0,
+         PCI.VENDOR_ID_AMCC,
+         PCI.DEVICE_ID_PCICAN,
+         Device_Number,
+         Success
+         );
       if Success then
-         Console.Print (Unsigned_8 (Device_Number), Prefix => "AMCC PCIcanx/PCIcan @ PCI DevNum ", NL => True);
+         Console.Print (
+            Prefix => "AMCC PCIcanx/PCIcan @ PCI DevNum ",
+            Value  => Unsigned_8 (Device_Number),
+            NL     => True
+            );
       end if;
    end Probe;
 
@@ -146,26 +158,61 @@ package body PCICAN
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      (Descriptor : in PCI.Descriptor_Type)
+      (Descriptor    : in PCI.Descriptor_Type;
+       Device_Number : in PCI.Device_Number_Type)
       is
+      function To_U16 is new Ada.Unchecked_Conversion (PCI.Command_Type, Unsigned_16);
    begin
-      -- initialize PCI interface, setup BAR __FIX__ device number hardwired @ 4
-      PCI.Cfg_Write (Descriptor, PCI.BUS0, 4, 0, PCI.BAR0_Offset, Unsigned_32'(16#D000#)); -- S5920
-      PCI.Cfg_Write (Descriptor, PCI.BUS0, 4, 0, PCI.BAR1_Offset, Unsigned_32'(16#D100#)); -- SJA100
-      PCI.Cfg_Write (Descriptor, PCI.BUS0, 4, 0, PCI.BAR2_Offset, Unsigned_32'(16#D200#)); -- Xilinx FPGA
-      -- enable IOEN
-      PCI.Cfg_Write (Descriptor, PCI.BUS0, 4, 0, PCI.Command_Offset, Unsigned_8'(16#03#));
+      -- enable MEMEN/IOEN
+      PCI.Cfg_Write (
+         Descriptor,
+         PCI.BUS0,
+         Device_Number,
+         0,
+         PCI.Command_Offset,
+         To_U16 (PCI.Command_Type'(
+            IOEN  => True,
+            MEMEN => True,
+            others => <>
+            ))
+         );
+      -- BAR0 S5920
+      PCI.Cfg_Write (
+         Descriptor,
+         PCI.BUS0,
+         Device_Number,
+         0,
+         PCI.BAR0_Offset,
+         Unsigned_32'(16#D000#)
+         );
+      -- BAR1 SJA100
+      PCI.Cfg_Write (
+         Descriptor,
+         PCI.BUS0,
+         Device_Number,
+         0,
+         PCI.BAR1_Offset,
+         Unsigned_32'(16#D100#)
+         );
+      -- BAR2 Xilinx FPGA
+      PCI.Cfg_Write (
+         Descriptor,
+         PCI.BUS0,
+         Device_Number,
+         0,
+         PCI.BAR2_Offset,
+         Unsigned_32'(16#D200#)
+         );
    end Init;
 
    ----------------------------------------------------------------------------
    -- TX
    ----------------------------------------------------------------------------
-   -- __TBD__ stub for test, transmit something
-   ----------------------------------------------------------------------------
    procedure TX
       is
       Data32 : Unsigned_32 with Unreferenced => True;
    begin
+      -- __TBD__ stub for test, transmit something
       Data32 := CPU.IO.PortIn (16#D038#);        -- D000+38 S5920+INTCSR
       CPU.IO.PortOut (16#D101#, Unsigned_8'(1)); -- D100+01 SJA1000+TX
    end TX;
