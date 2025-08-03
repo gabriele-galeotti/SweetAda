@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
+with Ada.Unchecked_Conversion;
 with Definitions;
 
 package body P8
@@ -43,6 +44,17 @@ package body P8
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   -- LPC_CMD_Type <-> Unsigned_64
+
+   function To_U64
+      (Value : LPC_CMD_Type)
+      return Unsigned_64
+      is
+      function Convert is new Ada.Unchecked_Conversion (LPC_CMD_Type, Unsigned_64);
+   begin
+      return Convert (Value);
+   end To_U64;
 
    ----------------------------------------------------------------------------
    -- SYNC

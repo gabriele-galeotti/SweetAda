@@ -17,7 +17,6 @@
 
 with System;
 with System.Storage_Elements;
-with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 
@@ -76,7 +75,10 @@ package P8
       Address at 0 range 32 .. 63;
    end record;
 
-   function To_U64 is new Ada.Unchecked_Conversion (LPC_CMD_Type, Unsigned_64);
+   function To_U64
+      (Value : LPC_CMD_Type)
+      return Unsigned_64
+      with Inline => True;
 
    procedure HMER_Clear
       with Inline => True;
