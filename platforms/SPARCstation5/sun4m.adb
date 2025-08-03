@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Ada.Unchecked_Conversion;
+
 package body Sun4m
    is
 
@@ -25,6 +27,26 @@ package body Sun4m
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   -- E_CSR conversion functions
+
+   function To_U32
+      (Value : E_CSR_Type)
+      return Unsigned_32
+      is
+      function Convert is new Ada.Unchecked_Conversion (E_CSR_Type, Unsigned_32);
+   begin
+      return Convert (Value);
+   end To_U32;
+
+   function To_E_CSR
+      (Value : Unsigned_32)
+      return E_CSR_Type
+      is
+      function Convert is new Ada.Unchecked_Conversion (Unsigned_32, E_CSR_Type);
+   begin
+      return Convert (Value);
+   end To_E_CSR;
 
    ----------------------------------------------------------------------------
    -- System_Timer_ClearLR

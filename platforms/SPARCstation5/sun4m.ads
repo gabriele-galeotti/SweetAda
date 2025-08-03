@@ -17,7 +17,6 @@
 
 with System;
 with Interfaces;
-with Ada.Unchecked_Conversion;
 with Bits;
 
 package Sun4m
@@ -292,10 +291,14 @@ pragma Style_Checks (Off);
            Import               => True,
            Convention           => Ada;
 
-pragma Warnings (Off, "volatile actual passed by copy");
-   function To_U32 is new Ada.Unchecked_Conversion (E_CSR_Type, Unsigned_32);
-   function To_E_CSR is new Ada.Unchecked_Conversion (Unsigned_32, E_CSR_Type);
-pragma Warnings (On, "volatile actual passed by copy");
+   function To_U32
+      (Value : E_CSR_Type)
+      return Unsigned_32
+      with Inline => True;
+   function To_E_CSR
+      (Value : Unsigned_32)
+      return E_CSR_Type
+      with Inline => True;
 
    -- Test Control/Status Reg
 
