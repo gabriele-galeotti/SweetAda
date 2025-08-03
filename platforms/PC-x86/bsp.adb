@@ -322,12 +322,13 @@ package body BSP
       Ethernet.Init (Ethernet_Descriptor);
       -- CAN (PCI) ------------------------------------------------------------
       declare
-         Device_Number : PCI.Device_Number_Type with Unreferenced => True;
+         Device_Number : PCI.Device_Number_Type;
          Success       : Boolean;
       begin
          PCICAN.Probe (PCI_Descriptor, Device_Number, Success);
          if Success then
-            PCICAN.Init (PCI_Descriptor);
+            PCICAN.Init (PCI_Descriptor, Device_Number);
+            PCICAN.TX;
          end if;
       end;
       -------------------------------------------------------------------------
