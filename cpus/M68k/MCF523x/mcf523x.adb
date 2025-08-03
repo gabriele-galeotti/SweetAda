@@ -15,9 +15,21 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Ada.Unchecked_Conversion;
+
 package body MCF523x
    with Preelaborate => True
    is
+
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Local declarations                           --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
+   generic function UC renames Ada.Unchecked_Conversion;
 
    --========================================================================--
    --                                                                        --
@@ -26,6 +38,19 @@ package body MCF523x
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   -- Core register conversion functions
+
+pragma Style_Checks (Off);
+   function To_U32 (Value : SYNCR_Type) return Unsigned_32 is function Convert is new UC (SYNCR_Type, Unsigned_32); begin return Convert (Value); end To_U32;
+   function To_SYNCR (Value : Unsigned_32) return SYNCR_Type is function Convert is new UC (Unsigned_32, SYNCR_Type); begin return Convert (Value); end To_SYNCR;
+   function To_U32 (Value : SYNSR_Type) return Unsigned_32 is function Convert is new UC (SYNSR_Type, Unsigned_32); begin return Convert (Value); end To_U32;
+   function To_SYNSR (Value : Unsigned_32) return SYNSR_Type is function Convert is new UC (Unsigned_32, SYNSR_Type); begin return Convert (Value); end To_SYNSR;
+   function To_U32 (Value : IPSBAR_Type) return Unsigned_32 is function Convert is new UC (IPSBAR_Type, Unsigned_32); begin return Convert (Value); end To_U32;
+   function To_IPSBAR (Value : Unsigned_32) return IPSBAR_Type is function Convert is new UC (Unsigned_32, IPSBAR_Type); begin return Convert (Value); end To_IPSBAR;
+pragma Style_Checks (On);
+
+   -- IRQ indexing
 
    function IRQ_Index
       (IRQ       : INTC0_Source_Type;

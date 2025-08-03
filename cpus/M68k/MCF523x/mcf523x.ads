@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 
@@ -115,8 +114,14 @@ pragma Style_Checks (Off);
            Import     => True,
            Convention => Ada;
 
-   function To_U32 is new Ada.Unchecked_Conversion (SYNCR_Type, Unsigned_32);
-   function To_SYNCR is new Ada.Unchecked_Conversion (Unsigned_32, SYNCR_Type);
+   function To_U32
+      (Value : SYNCR_Type)
+      return Unsigned_32
+      with Inline => True;
+   function To_SYNCR
+      (Value : Unsigned_32)
+      return SYNCR_Type
+      with Inline => True;
 
    -- 7.3.1.2 Synthesizer Status Register (SYNSR)
 
@@ -164,8 +169,14 @@ pragma Style_Checks (Off);
            Import     => True,
            Convention => Ada;
 
-   function To_U32 is new Ada.Unchecked_Conversion (SYNSR_Type, Unsigned_32);
-   function To_SYNSR is new Ada.Unchecked_Conversion (Unsigned_32, SYNSR_Type);
+   function To_U32
+      (Value : SYNSR_Type)
+      return Unsigned_32
+      with Inline => True;
+   function To_SYNSR
+      (Value : Unsigned_32)
+      return SYNSR_Type
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Chapter 8 Power Management
@@ -279,8 +290,14 @@ pragma Style_Checks (Off);
            Import     => True,
            Convention => Ada;
 
-   function To_U32 is new Ada.Unchecked_Conversion (IPSBAR_Type, Unsigned_32);
-   function To_IPSBAR is new Ada.Unchecked_Conversion (Unsigned_32, IPSBAR_Type);
+   function To_U32
+      (Value : IPSBAR_Type)
+      return Unsigned_32
+      with Inline => True;
+   function To_IPSBAR
+      (Value : Unsigned_32)
+      return IPSBAR_Type
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Chapter 12 General Purpose I/O Module
