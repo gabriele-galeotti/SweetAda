@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 with MIPS;
@@ -64,8 +63,14 @@ package VMIPS
       Unused  at 0 range 2 .. 31;
    end record;
 
-   function To_U32 is new Ada.Unchecked_Conversion (Device_Control_Type, Unsigned_32);
-   function To_DCT is new Ada.Unchecked_Conversion (Unsigned_32, Device_Control_Type);
+   function To_U32
+      (Value : Device_Control_Type)
+      return Unsigned_32
+      with Inline => True;
+   function To_DCT
+      (Value : Unsigned_32)
+      return Device_Control_Type
+      with Inline => True;
 
    type Device_Data_Type is record
       DATA   : Unsigned_8;
@@ -78,8 +83,14 @@ package VMIPS
       Unused at 0 range 8 .. 31;
    end record;
 
-   function To_U32 is new Ada.Unchecked_Conversion (Device_Data_Type, Unsigned_32);
-   function To_DDT is new Ada.Unchecked_Conversion (Unsigned_32, Device_Data_Type);
+   function To_U32
+      (Value : Device_Data_Type)
+      return Unsigned_32
+      with Inline => True;
+   function To_DDT
+      (Value : Unsigned_32)
+      return Device_Data_Type
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- 11.1 SPIM-compatible console device
