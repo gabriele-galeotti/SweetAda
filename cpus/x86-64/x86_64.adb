@@ -34,6 +34,8 @@ package body x86_64
    use System.Machine_Code;
    use LLutils;
 
+   generic function UC renames Ada.Unchecked_Conversion;
+
    CRLF : String renames Definitions.CRLF;
 
    --========================================================================--
@@ -48,59 +50,14 @@ package body x86_64
    -- CRx <-> Unsigned_64
    ----------------------------------------------------------------------------
 
-   function To_U64
-      (CR0 : CR0_Type)
-      return Unsigned_64
-      is
-      function Convert is new Ada.Unchecked_Conversion (CR0_Type, Unsigned_64);
-   begin
-      return Convert (CR0);
-   end To_U64;
-
-   function To_CR0
-      (Value : Unsigned_64)
-      return CR0_Type
-      is
-      function Convert is new Ada.Unchecked_Conversion (Unsigned_64, CR0_Type);
-   begin
-      return Convert (Value);
-   end To_CR0;
-
-   function To_U64
-      (CR3 : CR3_Type)
-      return Unsigned_64
-      is
-      function Convert is new Ada.Unchecked_Conversion (CR3_Type, Unsigned_64);
-   begin
-      return Convert (CR3);
-   end To_U64;
-
-   function To_CR3
-      (Value : Unsigned_64)
-      return CR3_Type
-      is
-      function Convert is new Ada.Unchecked_Conversion (Unsigned_64, CR3_Type);
-   begin
-      return Convert (Value);
-   end To_CR3;
-
-   function To_U64
-      (CR4 : CR4_Type)
-      return Unsigned_64
-      is
-      function Convert is new Ada.Unchecked_Conversion (CR4_Type, Unsigned_64);
-   begin
-      return Convert (CR4);
-   end To_U64;
-
-   function To_CR4
-      (Value : Unsigned_64)
-      return CR4_Type
-      is
-      function Convert is new Ada.Unchecked_Conversion (Unsigned_64, CR4_Type);
-   begin
-      return Convert (Value);
-   end To_CR4;
+pragma Style_Checks (Off);
+   function To_U64 (Value : CR0_Type) return Unsigned_64 is function Convert is new UC (CR0_Type, Unsigned_64); begin return Convert (Value); end To_U64;
+   function To_CR0 (Value : Unsigned_64) return CR0_Type is function Convert is new UC (Unsigned_64, CR0_Type); begin return Convert (Value); end To_CR0;
+   function To_U64 (Value : CR3_Type) return Unsigned_64 is function Convert is new UC (CR3_Type, Unsigned_64); begin return Convert (Value); end To_U64;
+   function To_CR3 (Value : Unsigned_64) return CR3_Type is function Convert is new UC (Unsigned_64, CR3_Type); begin return Convert (Value); end To_CR3;
+   function To_U64 (Value : CR4_Type) return Unsigned_64 is function Convert is new UC (CR4_Type, Unsigned_64); begin return Convert (Value); end To_U64;
+   function To_CR4 (Value : Unsigned_64) return CR4_Type is function Convert is new UC (Unsigned_64, CR4_Type); begin return Convert (Value); end To_CR4;
+pragma Style_Checks (On);
 
    ----------------------------------------------------------------------------
    -- LIDTR
@@ -167,12 +124,12 @@ package body x86_64
    ----------------------------------------------------------------------------
 
    function To_U64
-      (APIC_Base : IA32_APIC_BASE_Type)
+      (Value : IA32_APIC_BASE_Type)
       return Unsigned_64
       is
       function Convert is new Ada.Unchecked_Conversion (IA32_APIC_BASE_Type, Unsigned_64);
    begin
-      return Convert (APIC_Base);
+      return Convert (Value);
    end To_U64;
 
    function To_IA32_APIC_BASE
@@ -189,12 +146,12 @@ package body x86_64
    ----------------------------------------------------------------------------
 
    function To_U64
-      (EFER : IA32_EFER_Type)
+      (Value : IA32_EFER_Type)
       return Unsigned_64
       is
       function Convert is new Ada.Unchecked_Conversion (IA32_EFER_Type, Unsigned_64);
    begin
-      return Convert (EFER);
+      return Convert (Value);
    end To_U64;
 
    function To_IA32_EFER

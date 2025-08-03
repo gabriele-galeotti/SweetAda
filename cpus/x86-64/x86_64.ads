@@ -492,7 +492,7 @@ package x86_64
    end record;
 
    function To_U64
-      (CR0 : CR0_Type)
+      (Value : CR0_Type)
       return Unsigned_64
       with Inline => True;
    function To_CR0
@@ -520,7 +520,7 @@ package x86_64
    end record;
 
    function To_U64
-      (CR3 : CR3_Type)
+      (Value : CR3_Type)
       return Unsigned_64
       with Inline => True;
    function To_CR3
@@ -586,7 +586,7 @@ package x86_64
    end record;
 
    function To_U64
-      (CR4 : CR4_Type)
+      (Value : CR4_Type)
       return Unsigned_64
       with Inline => True;
    function To_CR4
@@ -655,7 +655,7 @@ package x86_64
    end record;
 
    function To_U64
-      (APIC_Base : IA32_APIC_BASE_Type)
+      (Value : IA32_APIC_BASE_Type)
       return Unsigned_64
       with Inline => True;
    function To_IA32_APIC_BASE
@@ -689,7 +689,7 @@ package x86_64
    end record;
 
    function To_U64
-      (EFER : IA32_EFER_Type)
+      (Value : IA32_EFER_Type)
       return Unsigned_64
       with Inline => True;
    function To_IA32_EFER
