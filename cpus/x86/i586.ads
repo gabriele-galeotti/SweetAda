@@ -99,7 +99,7 @@ package i586
    end record;
 
    function To_U64
-      (APIC_Base : IA32_APIC_BASE_Type)
+      (Value : IA32_APIC_BASE_Type)
       return Unsigned_64
       with Inline => True;
    function To_IA32_APIC_BASE

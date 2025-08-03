@@ -78,7 +78,7 @@ package x86
    NULL_Selector : constant Selector_Type := (PL0, TI_GDT, 0);
 
    function To_U16
-      (Selector : Selector_Type)
+      (Value : Selector_Type)
       return Unsigned_16
       with Inline => True;
    function To_Selector

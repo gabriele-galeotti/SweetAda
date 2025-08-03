@@ -44,12 +44,12 @@ package body x86
    --========================================================================--
 
    function To_U16
-      (Selector : Selector_Type)
+      (Value : Selector_Type)
       return Unsigned_16
       is
       function Convert is new Ada.Unchecked_Conversion (Selector_Type, Unsigned_16);
    begin
-      return Convert (Selector);
+      return Convert (Value);
    end To_U16;
 
    function To_Selector
