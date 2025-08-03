@@ -17,7 +17,6 @@
 
 with System;
 with System.Storage_Elements;
-with Ada.Unchecked_Conversion;
 with Interfaces;
 with Configure;
 with Bits;
@@ -326,8 +325,14 @@ pragma Style_Checks (Off);
       RxRTS at 0 range 7 .. 7;
    end record;
 
-   function To_U8 is new Ada.Unchecked_Conversion (UMR1_Type, Unsigned_8);
-   function To_UMR1 is new Ada.Unchecked_Conversion (Unsigned_8, UMR1_Type);
+   function To_U8
+      (Value : UMR1_Type)
+      return Unsigned_8
+      with Inline => True;
+   function To_UMR1
+      (Value : Unsigned_8)
+      return UMR1_Type
+      with Inline => True;
 
    -- 11.4.1.2 MODE REGISTER 2 (UMR2).
 
@@ -369,8 +374,14 @@ pragma Style_Checks (Off);
       CM    at 0 range 6 .. 7;
    end record;
 
-   function To_U8 is new Ada.Unchecked_Conversion (UMR2_Type, Unsigned_8);
-   function To_UMR2 is new Ada.Unchecked_Conversion (Unsigned_8, UMR2_Type);
+   function To_U8
+      (Value : UMR2_Type)
+      return Unsigned_8
+      with Inline => True;
+   function To_UMR2
+      (Value : Unsigned_8)
+      return UMR2_Type
+      with Inline => True;
 
    -- 11.4.1.3 STATUS REGISTER (USR).
 
@@ -397,8 +408,14 @@ pragma Style_Checks (Off);
       RB    at 0 range 7 .. 7;
    end record;
 
-   function To_U8 is new Ada.Unchecked_Conversion (USR_Type, Unsigned_8);
-   function To_USR is new Ada.Unchecked_Conversion (Unsigned_8, USR_Type);
+   function To_U8
+      (Value : USR_Type)
+      return Unsigned_8
+      with Inline => True;
+   function To_USR
+      (Value : Unsigned_8)
+      return USR_Type
+      with Inline => True;
 
    -- 11.4.1.4 CLOCK-SELECT REGISTER (UCSR).
 
@@ -421,8 +438,14 @@ pragma Style_Checks (Off);
       RCS at 0 range 4 .. 7;
    end record;
 
-   function To_U8 is new Ada.Unchecked_Conversion (UCSR_Type, Unsigned_8);
-   function To_UCSR is new Ada.Unchecked_Conversion (Unsigned_8, UCSR_Type);
+   function To_U8
+      (Value : UCSR_Type)
+      return Unsigned_8
+      with Inline => True;
+   function To_UCSR
+      (Value : Unsigned_8)
+      return UCSR_Type
+      with Inline => True;
 
    -- 11.4.1.5 COMMAND REGISTER (UCR).
 
@@ -458,8 +481,14 @@ pragma Style_Checks (Off);
       Reserved at 0 range 7 .. 7;
    end record;
 
-   function To_U8 is new Ada.Unchecked_Conversion (UCR_Type, Unsigned_8);
-   function To_UCR is new Ada.Unchecked_Conversion (Unsigned_8, UCR_Type);
+   function To_U8
+      (Value : UCR_Type)
+      return Unsigned_8
+      with Inline => True;
+   function To_UCR
+      (Value : Unsigned_8)
+      return UCR_Type
+      with Inline => True;
 
    -- 11.4.1.8 INPUT PORT CHANGE REGISTER (UIPCR).
 
@@ -481,8 +510,14 @@ pragma Style_Checks (Off);
       Reserved2 at 0 range 5 .. 7;
    end record;
 
-   function To_U8 is new Ada.Unchecked_Conversion (UIPCR_Type, Unsigned_8);
-   function To_UIPCR is new Ada.Unchecked_Conversion (Unsigned_8, UIPCR_Type);
+   function To_U8
+      (Value : UIPCR_Type)
+      return Unsigned_8
+      with Inline => True;
+   function To_UIPCR
+      (Value : Unsigned_8)
+      return UIPCR_Type
+      with Inline => True;
 
    -- 11.4.1.9 AUXILIARY CONTROL REGISTER (UACR).
 
@@ -497,8 +532,14 @@ pragma Style_Checks (Off);
       Reserved at 0 range 1 .. 7;
    end record;
 
-   function To_U8 is new Ada.Unchecked_Conversion (UACR_Type, Unsigned_8);
-   function To_UACR is new Ada.Unchecked_Conversion (Unsigned_8, UACR_Type);
+   function To_U8
+      (Value : UACR_Type)
+      return Unsigned_8
+      with Inline => True;
+   function To_UACR
+      (Value : Unsigned_8)
+      return UACR_Type
+      with Inline => True;
 
    -- 11.4.1.10 INTERRUPT STATUS REGISTER (UISR).
 
@@ -519,8 +560,14 @@ pragma Style_Checks (Off);
       COS      at 0 range 7 .. 7;
    end record;
 
-   function To_U8 is new Ada.Unchecked_Conversion (UISR_Type, Unsigned_8);
-   function To_UISR is new Ada.Unchecked_Conversion (Unsigned_8, UISR_Type);
+   function To_U8
+      (Value : UISR_Type)
+      return Unsigned_8
+      with Inline => True;
+   function To_UISR
+      (Value : Unsigned_8)
+      return UISR_Type
+      with Inline => True;
 
    -- 11.4.1.11 INTERRUPT MASK REGISTER (UIMR).
 
@@ -541,8 +588,14 @@ pragma Style_Checks (Off);
       COS      at 0 range 7 .. 7;
    end record;
 
-   function To_U8 is new Ada.Unchecked_Conversion (UIMR_Type, Unsigned_8);
-   function To_UIMR is new Ada.Unchecked_Conversion (Unsigned_8, UIMR_Type);
+   function To_U8
+      (Value : UIMR_Type)
+      return Unsigned_8
+      with Inline => True;
+   function To_UIMR
+      (Value : Unsigned_8)
+      return UIMR_Type
+      with Inline => True;
 
    -- 11.4.1.14.1 Input Port Register (UIP).
 
@@ -557,8 +610,14 @@ pragma Style_Checks (Off);
       Reserved at 0 range 1 .. 7;
    end record;
 
-   function To_U8 is new Ada.Unchecked_Conversion (UIP_Type, Unsigned_8);
-   function To_UIP is new Ada.Unchecked_Conversion (Unsigned_8, UIP_Type);
+   function To_U8
+      (Value : UIP_Type)
+      return Unsigned_8
+      with Inline => True;
+   function To_UIP
+      (Value : Unsigned_8)
+      return UIP_Type
+      with Inline => True;
 
    -- 11.4.1.14.2 Output Port Data Registers (UOP1, UOP0).
 
@@ -573,8 +632,14 @@ pragma Style_Checks (Off);
       Reserved at 0 range 1 .. 7;
    end record;
 
-   function To_U8 is new Ada.Unchecked_Conversion (UOP_Type, Unsigned_8);
-   function To_UOP is new Ada.Unchecked_Conversion (Unsigned_8, UOP_Type);
+   function To_U8
+      (Value : UOP_Type)
+      return Unsigned_8
+      with Inline => True;
+   function To_UOP
+      (Value : Unsigned_8)
+      return UOP_Type
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- SECTION 13 TIMER MODULE
