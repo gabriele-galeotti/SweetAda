@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with Ada.Unchecked_Conversion;
+-- with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 
@@ -103,8 +103,14 @@ pragma Style_Checks (Off);
       Reserved4          at 0 range 26 .. 31;
    end record;
 
-   function To_U32 is new Ada.Unchecked_Conversion (CPU_Interface_Configuration_Type, Unsigned_32);
-   function To_CPUIC is new Ada.Unchecked_Conversion (Unsigned_32, CPU_Interface_Configuration_Type);
+   function To_U32
+      (Value : CPU_Interface_Configuration_Type)
+      return Unsigned_32
+      with Inline => True;
+   function To_CPUIC
+      (Value : Unsigned_32)
+      return CPU_Interface_Configuration_Type
+      with Inline => True;
 
    -- 20.4 CPU Address Decode
 
@@ -119,8 +125,14 @@ pragma Style_Checks (Off);
       Reserved at 0 range 15 .. 31;
    end record;
 
-   function To_U32 is new Ada.Unchecked_Conversion (PCI_Low_Decode_Address_Type, Unsigned_32);
-   function To_PCILD is new Ada.Unchecked_Conversion (Unsigned_32, PCI_Low_Decode_Address_Type);
+   function To_U32
+      (Value : PCI_Low_Decode_Address_Type)
+      return Unsigned_32
+      with Inline => True;
+   function To_PCILD
+      (Value : Unsigned_32)
+      return PCI_Low_Decode_Address_Type
+      with Inline => True;
 
    type PCI_High_Decode_Address_Type is record
       High     : Bits_7  := 0; -- The PCI_0 I/O address space is accessed when the decoded addresses are between Low and High.
@@ -133,8 +145,14 @@ pragma Style_Checks (Off);
       Reserved at 0 range 7 .. 31;
    end record;
 
-   function To_U32 is new Ada.Unchecked_Conversion (PCI_High_Decode_Address_Type, Unsigned_32);
-   function To_PCIHD is new Ada.Unchecked_Conversion (Unsigned_32, PCI_High_Decode_Address_Type);
+   function To_U32
+      (Value : PCI_High_Decode_Address_Type)
+      return Unsigned_32
+      with Inline => True;
+   function To_PCIHD
+      (Value : Unsigned_32)
+      return PCI_High_Decode_Address_Type
+      with Inline => True;
 
    -- 20.16 PCI Internal
 

@@ -18,7 +18,8 @@
 with System.Storage_Elements;
 with MMIO;
 -- with MIPS;
-with PIIX4;
+-- with PIIX4;
+with Malta;
 
 package body CPU.IO
    is
@@ -46,7 +47,7 @@ package body CPU.IO
       return Unsigned_8
       is
    begin
-      return MMIO.Read (To_Address (PIIX4.BASEADDRESS + Integer_Address (Port)));
+      return MMIO.Read (To_Address (Malta.PIIX4_BASEADDRESS + Integer_Address (Port)));
    end PortIn;
 
    procedure PortOut
@@ -54,7 +55,7 @@ package body CPU.IO
        Value : in Unsigned_8)
       is
    begin
-      MMIO.Write (To_Address (PIIX4.BASEADDRESS + Integer_Address (Port)), Value);
+      MMIO.Write (To_Address (Malta.PIIX4_BASEADDRESS + Integer_Address (Port)), Value);
    end PortOut;
 
 end CPU.IO;

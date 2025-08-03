@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Ada.Unchecked_Conversion;
 with MMIO;
 
 package body GT64120
@@ -56,9 +57,46 @@ package body GT64120
       end if;
    end CPUIC_Write;
 
+   function To_U32
+      (Value : CPU_Interface_Configuration_Type)
+      return Unsigned_32
+      is
+      function Convert is new Ada.Unchecked_Conversion (CPU_Interface_Configuration_Type, Unsigned_32);
+   begin
+      return Convert (Value);
+   end To_U32;
+
+   function To_CPUIC
+      (Value : Unsigned_32)
+      return CPU_Interface_Configuration_Type
+      is
+      function Convert is new Ada.Unchecked_Conversion (Unsigned_32, CPU_Interface_Configuration_Type);
+   begin
+      return Convert (Value);
+   end To_CPUIC;
+
    ----------------------------------------------------------------------------
-   -- Make_PCILD
+   -- PCILD
    ----------------------------------------------------------------------------
+
+   function To_U32
+      (Value : PCI_Low_Decode_Address_Type)
+      return Unsigned_32
+      is
+      function Convert is new Ada.Unchecked_Conversion (PCI_Low_Decode_Address_Type, Unsigned_32);
+   begin
+      return Convert (Value);
+   end To_U32;
+
+   function To_PCILD
+      (Value : Unsigned_32)
+      return PCI_Low_Decode_Address_Type
+      is
+      function Convert is new Ada.Unchecked_Conversion (Unsigned_32, PCI_Low_Decode_Address_Type);
+   begin
+      return Convert (Value);
+   end To_PCILD;
+
    function Make_PCILD
       (Start_Address : Unsigned_64)
       return PCI_Low_Decode_Address_Type
@@ -74,8 +112,27 @@ package body GT64120
    end Make_PCILD;
 
    ----------------------------------------------------------------------------
-   -- Make_PCIHD
+   -- PCIHD
    ----------------------------------------------------------------------------
+
+   function To_U32
+      (Value : PCI_High_Decode_Address_Type)
+      return Unsigned_32
+      is
+      function Convert is new Ada.Unchecked_Conversion (PCI_High_Decode_Address_Type, Unsigned_32);
+   begin
+      return Convert (Value);
+   end To_U32;
+
+   function To_PCIHD
+      (Value : Unsigned_32)
+      return PCI_High_Decode_Address_Type
+      is
+      function Convert is new Ada.Unchecked_Conversion (Unsigned_32, PCI_High_Decode_Address_Type);
+   begin
+      return Convert (Value);
+   end To_PCIHD;
+
    function Make_PCIHD
       (Start_Address : Unsigned_64;
        Size          : Unsigned_64)

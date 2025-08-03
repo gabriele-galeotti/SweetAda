@@ -18,7 +18,6 @@
 with Interfaces;
 
 package CPU.IO
-   with Preelaborate => True
    is
 
    --========================================================================--
