@@ -15,8 +15,20 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Ada.Unchecked_Conversion;
+
 package body PIIX
    is
+
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Local declarations                           --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
+
+   generic function UC renames Ada.Unchecked_Conversion;
 
    --========================================================================--
    --                                                                        --
@@ -25,6 +37,20 @@ package body PIIX
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   -- Register type conversion functions
+
+pragma Style_Checks (Off);
+   function To_U16 (Value : PCICMD0_Type) return Unsigned_16 is function Convert is new UC (PCICMD0_Type, Unsigned_16); begin return Convert (Value); end To_U16;
+   function To_U16 (Value : XBCS_Type) return Unsigned_16 is function Convert is new Ada.Unchecked_Conversion (XBCS_Type, Unsigned_16); begin return Convert (Value); end To_U16;
+   function To_U8 (Value : PIRQC_Type) return Unsigned_8  is function Convert is new Ada.Unchecked_Conversion (PIRQC_Type, Unsigned_8); begin return Convert (Value); end To_U8;
+   function To_U8 (Value : TOM_Type) return Unsigned_8 is function Convert is new Ada.Unchecked_Conversion (TOM_Type, Unsigned_8); begin return Convert (Value); end To_U8;
+   function To_U16 (Value : MSTAT_Type) return Unsigned_16 is function Convert is new Ada.Unchecked_Conversion (MSTAT_Type, Unsigned_16); begin return Convert (Value); end To_U16;
+   function To_U8 (Value : MBIRQ_Type) return Unsigned_8 is function Convert is new Ada.Unchecked_Conversion (MBIRQ_Type, Unsigned_8); begin return Convert (Value); end To_U8;
+   function To_U8 (Value : APICBASE_Type) return Unsigned_8 is function Convert is new Ada.Unchecked_Conversion (APICBASE_Type, Unsigned_8); begin return Convert (Value); end To_U8;
+   function To_U16 (Value : PCICMD1_Type) return Unsigned_16 is function Convert is new Ada.Unchecked_Conversion (PCICMD1_Type, Unsigned_16); begin return Convert (Value); end To_U16;
+   function To_U16 (Value : PCICMD2_Type) return Unsigned_16 is function Convert is new Ada.Unchecked_Conversion (PCICMD2_Type, Unsigned_16); begin return Convert (Value); end To_U16;
+pragma Style_Checks (On);
 
    ----------------------------------------------------------------------------
    -- Probe

@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
 with PCI;
@@ -67,7 +66,10 @@ package PIIX
       Reserved2 at 0 range 10 .. 15;
    end record;
 
-   function To_U16 is new Ada.Unchecked_Conversion (PCICMD0_Type, Unsigned_16);
+   function To_U16
+      (Value : PCICMD0_Type)
+      return Unsigned_16
+      with Inline => True;
 
    -- 2.2.9. XBCS-X-BUS CHIP SELECT REGISTER (Function 0)
 
@@ -98,7 +100,10 @@ package PIIX
       Reserved2  at 0 range 9 .. 15;
    end record;
 
-   function To_U16 is new Ada.Unchecked_Conversion (XBCS_Type, Unsigned_16);
+   function To_U16
+      (Value : XBCS_Type)
+      return Unsigned_16
+      with Inline => True;
 
    -- 2.2.10. PIRQRC[A:D]-PIRQx ROUTE CONTROL REGISTERS (Function 0)
 
@@ -132,7 +137,10 @@ package PIIX
       IRQROUTEEN at 0 range 7 .. 7;
    end record;
 
-   function To_U8 is new Ada.Unchecked_Conversion (PIRQC_Type, Unsigned_8);
+   function To_U8
+      (Value : PIRQC_Type)
+      return Unsigned_8
+      with Inline => True;
 
    -- 2.2.11. TOM-TOP OF MEMORY REGISTER (Function 0)
 
@@ -170,7 +178,10 @@ package PIIX
       TOM             at 0 range 4 .. 7;
    end record;
 
-   function To_U8 is new Ada.Unchecked_Conversion (TOM_Type, Unsigned_8);
+   function To_U8
+      (Value : TOM_Type)
+      return Unsigned_8
+      with Inline => True;
 
    -- 2.2.12. MSTAT-MISCELLANEOUS STATUS REGISTER (Function 0)
 
@@ -207,7 +218,10 @@ package PIIX
       SERRG     at 0 range 15 .. 15;
    end record;
 
-   function To_U16 is new Ada.Unchecked_Conversion (MSTAT_Type, Unsigned_16);
+   function To_U16
+      (Value : MSTAT_Type)
+      return Unsigned_16
+      with Inline => True;
 
    -- 2.2.13. MBIRQ[1:0]-MOTHERBOARD DEVICE IRQ ROUTE CONTROL REGISTERS (Function 0)
 
@@ -230,7 +244,10 @@ package PIIX
       IRQROUTEEN at 0 range 7 .. 7;
    end record;
 
-   function To_U8 is new Ada.Unchecked_Conversion (MBIRQ_Type, Unsigned_8);
+   function To_U8
+      (Value : MBIRQ_Type)
+      return Unsigned_8
+      with Inline => True;
 
    -- 2.2.16. APICBASE-APIC BASE ADDRESS RELOCATION REGISTER (Function 0) (PIIX3 Only)
 
@@ -249,7 +266,10 @@ package PIIX
       Reserved at 0 range 7 .. 7;
    end record;
 
-   function To_U8 is new Ada.Unchecked_Conversion (APICBASE_Type, Unsigned_8);
+   function To_U8
+      (Value : APICBASE_Type)
+      return Unsigned_8
+      with Inline => True;
 
    -- 2.1. Register Access
 
@@ -292,7 +312,10 @@ package PIIX
       Reserved2 at 0 range 10 .. 15;
    end record;
 
-   function To_U16 is new Ada.Unchecked_Conversion (PCICMD1_Type, Unsigned_16);
+   function To_U16
+      (Value : PCICMD1_Type)
+      return Unsigned_16
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- 2.4. PCI Configuration Registers - Universal Serial Bus (Function 2) (PIIX3 Only)
@@ -323,7 +346,10 @@ package PIIX
       Reserved2 at 0 range 10 .. 15;
    end record;
 
-   function To_U16 is new Ada.Unchecked_Conversion (PCICMD2_Type, Unsigned_16);
+   function To_U16
+      (Value : PCICMD2_Type)
+      return Unsigned_16
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- subprograms
