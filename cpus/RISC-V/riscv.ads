@@ -153,12 +153,13 @@ package RISCV
    function mcause_Read
       return mcause_Type
       with Inline => True;
+
    function To_MXLEN
-      (mcause : mcause_Type)
+      (Value : mcause_Type)
       return MXLEN_Type
       with Inline => True;
    function To_mcause
-      (mcause : MXLEN_Type)
+      (Value : MXLEN_Type)
       return mcause_Type
       with Inline => True;
 

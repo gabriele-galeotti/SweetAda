@@ -144,21 +144,21 @@ pragma Style_Checks (Off);
 pragma Style_Checks (On);
 
    function To_MXLEN
-      (mcause : mcause_Type)
+      (Value : mcause_Type)
       return MXLEN_Type
       is
       function Convert is new Ada.Unchecked_Conversion (mcause_Type, MXLEN_Type);
    begin
-      return Convert (mcause);
+      return Convert (Value);
    end To_MXLEN;
 
    function To_mcause
-      (mcause : MXLEN_Type)
+      (Value : MXLEN_Type)
       return mcause_Type
       is
       function Convert is new Ada.Unchecked_Conversion (MXLEN_Type, mcause_Type);
    begin
-      return Convert (mcause);
+      return Convert (Value);
    end To_mcause;
 
    ----------------------------------------------------------------------------
