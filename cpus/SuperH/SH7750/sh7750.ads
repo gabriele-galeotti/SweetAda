@@ -142,7 +142,7 @@ pragma Style_Checks (Off);
       return SR_Type
       with Inline => True;
    procedure SR_Write
-      (Value : in SR_Type)
+      (SR : in SR_Type)
       with Inline => True;
 
    -- Floating-point status/control register, FPSCR

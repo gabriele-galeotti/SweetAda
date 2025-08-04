@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
-with Ada.Unchecked_Conversion;
 with Definitions;
 
 package body SH7750
@@ -102,32 +101,30 @@ package body SH7750
    function SR_Read
       return SR_Type
       is
-      Value : Unsigned_32;
-      function To_SR is new Ada.Unchecked_Conversion (Unsigned_32, SR_Type);
+      SR : SR_Type;
    begin
       Asm (
            Template => ""                      & CRLF &
                        "        stc     sr,%0" & CRLF &
                        "",
-           Outputs  => Unsigned_32'Asm_Output ("=r", Value),
+           Outputs  => SR_Type'Asm_Output ("=r", SR),
            Inputs   => No_Input_Operands,
            Clobber  => "",
            Volatile => True
           );
-      return To_SR (Value);
+      return SR;
    end SR_Read;
 
    procedure SR_Write
-      (Value : in SR_Type)
+      (SR : in SR_Type)
       is
-      function To_U32 is new Ada.Unchecked_Conversion (SR_Type, Unsigned_32);
    begin
       Asm (
            Template => ""                      & CRLF &
                        "        ldc     %0,sr" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => Unsigned_32'Asm_Input ("r", To_U32 (Value)),
+           Inputs   => SR_Type'Asm_Input ("r", SR),
            Clobber  => "",
            Volatile => True
           );
