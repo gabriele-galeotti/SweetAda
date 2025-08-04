@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with Interfaces;
 with Bits;
 
 package SJA1000
@@ -30,6 +31,7 @@ package SJA1000
    --========================================================================--
 
    use System;
+   use Interfaces;
    use Bits;
 
 pragma Style_Checks (Off);
@@ -139,6 +141,10 @@ pragma Style_Checks (Off);
       Reserved3 at 0 range 7 .. 7;
    end record;
 
+   -- 6.3.9.1 Acceptance Code Register (ACR)
+
+   -- 6.3.9.2 Acceptance Mask Register (AMR)
+
    -- 6.5.1 BUS TIMING REGISTER 0 (BTR0)
 
    type BTR0_Type is record
@@ -198,6 +204,32 @@ pragma Style_Checks (Off);
       OCTP1  at 0 range 7 .. 7;
    end record;
 
+   -- 6.3.7.1 Identifier (ID)
+   -- 6.3.7.2 Remote Transmission Request (RTR)
+   -- 6.3.7.3 Data Length Code (DLC)
+
+   type ID1_Type is record
+      ID310 : Bits_8 := 0; -- ID.3 to ID.10
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ID1_Type use record
+      ID310 at 0 range 0 .. 7;
+   end record;
+
+   type ID2_Type is record
+      DLC  : Bits_4  := 0;     -- Data Length Code
+      RTR  : Boolean := False; -- Remote Transmission Request
+      ID02 : Bits_3  := 0;     -- ID.0 to ID.2
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ID2_Type use record
+      DLC  at 0 range 0 .. 3;
+      RTR  at 0 range 4 .. 4;
+      ID02 at 0 range 5 .. 7;
+   end record;
+
    -- 6.5.4 CLOCK DIVIDER REGISTER (CDR)
 
    CD_FOSCDIV2  : constant := 2#000#; -- fosc/2
@@ -229,6 +261,52 @@ pragma Style_Checks (Off);
       RXINTEN   at 0 range 5 .. 5;
       CBP       at 0 range 6 .. 6;
       CAN_mode  at 0 range 7 .. 7;
+   end record;
+
+   -- Table 1 BasicCAN address allocation
+
+   type Buffer_Type is array (1 .. 8) of Unsigned_8;
+
+   type SJA1000_Type is record
+      CR      : CR_Type     with Volatile_Full_Access => True;
+      CMR     : CMR_Type    with Volatile_Full_Access => True;
+      SR      : SR_Type     with Volatile_Full_Access => True;
+      IR      : IR_Type     with Volatile_Full_Access => True;
+      ACR     : Unsigned_8  with Volatile_Full_Access => True;
+      AMR     : Unsigned_8  with Volatile_Full_Access => True;
+      BTR0    : BTR0_Type   with Volatile_Full_Access => True;
+      BTR1    : BTR1_Type   with Volatile_Full_Access => True;
+      OCR     : OCR_Type    with Volatile_Full_Access => True;
+      TEST    : Unsigned_8  with Volatile_Full_Access => True;
+      TX_ID1  : ID1_Type    with Volatile_Full_Access => True;
+      TX_ID2  : ID2_Type    with Volatile_Full_Access => True;
+      TX_DATA : Buffer_Type with Volatile => True;
+      RX_ID1  : ID1_Type    with Volatile_Full_Access => True;
+      RX_ID2  : ID2_Type    with Volatile_Full_Access => True;
+      RX_DATA : Buffer_Type with Volatile => True;
+      Unused  : Bits_8;
+      CDR     : CDR_Type    with Volatile_Full_Access => True;
+   end record
+      with Size => 32 * 8;
+   for SJA1000_Type use record
+      CR      at 00 range 0 .. 7;
+      CMR     at 01 range 0 .. 7;
+      SR      at 02 range 0 .. 7;
+      IR      at 03 range 0 .. 7;
+      ACR     at 04 range 0 .. 7;
+      AMR     at 05 range 0 .. 7;
+      BTR0    at 06 range 0 .. 7;
+      BTR1    at 07 range 0 .. 7;
+      OCR     at 08 range 0 .. 7;
+      TEST    at 09 range 0 .. 7;
+      TX_ID1  at 10 range 0 .. 7;
+      TX_ID2  at 11 range 0 .. 7;
+      TX_DATA at 12 range 0 .. 8 * 8 - 1;
+      RX_ID1  at 20 range 0 .. 7;
+      RX_ID2  at 21 range 0 .. 7;
+      RX_DATA at 22 range 0 .. 8 * 8 - 1;
+      Unused  at 30 range 0 .. 7;
+      CDR     at 31 range 0 .. 7;
    end record;
 
 pragma Style_Checks (On);
