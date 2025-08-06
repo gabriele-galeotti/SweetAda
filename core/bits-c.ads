@@ -28,13 +28,26 @@ package Bits.C
    --                                                                        --
    --========================================================================--
 
-   CHAR_BIT : constant := 8;
-
    type int is new Integer;
+
+   -- Bytesize is defined the same as Interfaces.C.size_t.
+   subtype size_t is Bytesize;
+
+   -- Declarations based on C's <limits.h>.
+   CHAR_BIT  : constant := 8;
+   SCHAR_MIN : constant := -128;
+   SCHAR_MAX : constant := 127;
+   UCHAR_MAX : constant := 255;
+
+   type unsigned_char is mod (UCHAR_MAX + 1)
+      with Size => CHAR_BIT;
+
+   type signed_char is range SCHAR_MIN .. SCHAR_MAX
+      with Size => CHAR_BIT;
 
    type char is new Character;
 
-   subtype size_t is Bytesize;
+   nul : constant char := char'First;
 
    type char_array is array (size_t range <>) of aliased char
       with Component_Size => CHAR_BIT;
