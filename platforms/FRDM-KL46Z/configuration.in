@@ -28,7 +28,7 @@ CPU_MODEL := CORTEXM0
 #                                                                              #
 ################################################################################
 
-GCC_SWITCHES_PLATFORM     := -mcpu=cortex-m0
+GCC_SWITCHES_PLATFORM     := -mcpu=cortex-m0 -mthumb
 LD_SWITCHES_PLATFORM      := --undefined=vectors --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
