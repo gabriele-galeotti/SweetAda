@@ -3413,7 +3413,7 @@ pragma Style_Checks (Off);
       RSTA  : Boolean := False;    -- Repeat START
       TXAK  : Bits_1  := TXAK_ACK; -- Transmit Acknowledge Enable
       TX    : Bits_1  := TX_RX;    -- Transmit Mode Select
-      MST   : Bits_1  := MST_MST;  -- Master Mode Select
+      MST   : Bits_1  := MST_SLV;  -- Master Mode Select
       IICIE : Boolean := False;    -- I2C Interrupt Enable
       IICEN : Boolean := False;    -- I2C Enable
    end record
