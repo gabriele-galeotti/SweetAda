@@ -35,9 +35,11 @@ package RISCV_Definitions
    use Interfaces;
    use Bits;
 
+   ----------------------------------------------------------------------------
    -- The RISC-V Instruction Set Manual
    -- Volume II: Privileged Architecture
    -- Document Version 20211203
+   ----------------------------------------------------------------------------
 
    XLEN : constant := 32;
 
