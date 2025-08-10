@@ -199,13 +199,13 @@ configuregpr=""
 #
 # Initial empty line.
 #
-configuregpr=$NL
+configuregpr=${NL}
 
 #
 # Declare project.
 #
-configuregpr=${configuregpr}$(print_I "abstract project ${CONFIGURE_PROJECT} is")$NL
-configuregpr=${configuregpr}$NL
+configuregpr=${configuregpr}$(print_I "abstract project ${CONFIGURE_PROJECT} is")${NL}
+configuregpr=${configuregpr}${NL}
 INDENTATION_LEVEL=$((INDENTATION_LEVEL+1))
 
 #
@@ -270,7 +270,7 @@ configuregpr=${configuregpr}$(print_I "                                     );")
 # Close project.
 #
 INDENTATION_LEVEL=$((INDENTATION_LEVEL-1))
-configuregpr=${configuregpr}$NL
+configuregpr=${configuregpr}${NL}
 configuregpr=${configuregpr}$(print_I "end ${CONFIGURE_PROJECT};")${NL}
 
 printf "%s" "${configuregpr}" > "${CONFIGURE_FILENAME}"
