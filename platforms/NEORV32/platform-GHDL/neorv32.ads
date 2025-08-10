@@ -46,9 +46,53 @@ pragma Style_Checks (Off);
    -- 2.8.6. Direct Memory Access Controller (DMA)
    ----------------------------------------------------------------------------
 
+   type DMA_Type is record
+      CTRL : Unsigned_32 with Volatile_Full_Access => True;
+      DESC : Unsigned_32 with Volatile_Full_Access => True;
+   end record
+      with Size => 2 * 32;
+   for DMA_Type use record
+      CTRL at 0 range 0 .. 31;
+      DESC at 4 range 0 .. 31;
+   end record;
+
+   DMA_BASEADDRESS : constant := 16#FFED_0000#;
+
+   DMA : aliased DMA_Type
+      with Address    => System'To_Address (DMA_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 2.8.7. Processor-External Bus Interface (XBUS)
+   ----------------------------------------------------------------------------
+
    ----------------------------------------------------------------------------
    -- 2.8.8. Stream Link Interface (SLINK)
    ----------------------------------------------------------------------------
+
+   type SLINK_Type is record
+      CTRL      : Unsigned_32 with Volatile_Full_Access => True;
+      ROUTE     : Unsigned_32 with Volatile_Full_Access => True;
+      DATA      : Unsigned_32 with Volatile_Full_Access => True;
+      DATA_LAST : Unsigned_32 with Volatile_Full_Access => True;
+   end record
+      with Size => 4 * 32;
+   for SLINK_Type use record
+      CTRL      at 16#0# range 0 .. 31;
+      ROUTE     at 16#4# range 0 .. 31;
+      DATA      at 16#8# range 0 .. 31;
+      DATA_LAST at 16#C# range 0 .. 31;
+   end record;
+
+   SLINK_BASEADDRESS : constant := 16#FFEC_0000#;
+
+   SLINK : aliased SLINK_Type
+      with Address    => System'To_Address (SLINK_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- 2.8.9. General Purpose Input and Output Port (GPIO)
@@ -161,28 +205,37 @@ pragma Style_Checks (Off);
    -- 2.8.13. Secondary Universal Asynchronous Receiver and Transmitter (UART1)
    ----------------------------------------------------------------------------
 
+   UART_CTRL_PRSC_DIV2    : constant := 2#000#; -- Resulting clock_prescaler = 2
+   UART_CTRL_PRSC_DIV4    : constant := 2#001#; -- Resulting clock_prescaler = 4
+   UART_CTRL_PRSC_DIV8    : constant := 2#010#; -- Resulting clock_prescaler = 8
+   UART_CTRL_PRSC_DIV64   : constant := 2#011#; -- Resulting clock_prescaler = 64
+   UART_CTRL_PRSC_DIV128  : constant := 2#100#; -- Resulting clock_prescaler = 128
+   UART_CTRL_PRSC_DIV1024 : constant := 2#101#; -- Resulting clock_prescaler = 1024
+   UART_CTRL_PRSC_DIV2048 : constant := 2#110#; -- Resulting clock_prescaler = 2048
+   UART_CTRL_PRSC_DIV4096 : constant := 2#111#; -- Resulting clock_prescaler = 4096
+
    type UART_CTRL_Type is record
-      UART_CTRL_EN            : Boolean;      -- UART enable
-      UART_CTRL_SIM_MODE      : Boolean;      -- enable simulation mode
-      UART_CTRL_HWFC_EN       : Boolean;      -- enable RTS/CTS hardware flow-control
-      UART_CTRL_PRSC          : Bits_3;       -- Baud rate clock prescaler select
-      UART_CTRL_BAUD          : Bits_10;      -- 12-bit Baud value configuration value
-      UART_CTRL_RX_NEMPTY     : Boolean;      -- RX FIFO not empty
-      UART_CTRL_RX_HALF       : Boolean;      -- RX FIFO at least half-full
-      UART_CTRL_RX_FULL       : Boolean;      -- RX FIFO full
-      UART_CTRL_TX_EMPTY      : Boolean;      -- TX FIFO empty
-      UART_CTRL_TX_NHALF      : Boolean;      -- TX FIFO not at least half-full
-      UART_CTRL_TX_NFULL      : Boolean;      -- TX FIFO not full
-      UART_CTRL_IRQ_RX_NEMPTY : Boolean;      -- fire RX-IRQ if RX FIFO not empty
-      UART_CTRL_IRQ_RX_HALF   : Boolean;      -- fire RX-IRQ if RX FIFO at least half full
-      UART_CTRL_IRQ_RX_FULL   : Boolean;      -- fire RX-IRQ if RX FIFO full
-      UART_CTRL_IRQ_TX_EMPTY  : Boolean;      -- fire TX-IRQ if TX FIFO empty
-      UART_CTRL_IRQ_TX_NHALF  : Boolean;      -- fire TX-IRQ if TX FIFO not at least half full
-      UART_CTRL_IRQ_TX_NFULL  : Boolean;      -- fire TX-IRQ if TX not full
-      UART_CTRL_RX_CLR        : Boolean;      -- Clear RX FIFO, flag auto-clears
-      UART_CTRL_TX_CLR        : Boolean;      -- Clear TX FIFO, flag auto-clears
-      UART_CTRL_RX_OVER       : Boolean;      -- RX FIFO overflow; cleared by disabling the module
-      UART_CTRL_TX_BUSY       : Boolean;      -- TX busy or TX FIFO not empty
+      UART_CTRL_EN            : Boolean; -- UART enable
+      UART_CTRL_SIM_MODE      : Boolean; -- enable simulation mode
+      UART_CTRL_HWFC_EN       : Boolean; -- enable RTS/CTS hardware flow-control
+      UART_CTRL_PRSC          : Bits_3;  -- Baud rate clock prescaler select
+      UART_CTRL_BAUD          : Bits_10; -- 12-bit Baud value configuration value
+      UART_CTRL_RX_NEMPTY     : Boolean; -- RX FIFO not empty
+      UART_CTRL_RX_HALF       : Boolean; -- RX FIFO at least half-full
+      UART_CTRL_RX_FULL       : Boolean; -- RX FIFO full
+      UART_CTRL_TX_EMPTY      : Boolean; -- TX FIFO empty
+      UART_CTRL_TX_NHALF      : Boolean; -- TX FIFO not at least half-full
+      UART_CTRL_TX_NFULL      : Boolean; -- TX FIFO not full
+      UART_CTRL_IRQ_RX_NEMPTY : Boolean; -- fire RX-IRQ if RX FIFO not empty
+      UART_CTRL_IRQ_RX_HALF   : Boolean; -- fire RX-IRQ if RX FIFO at least half full
+      UART_CTRL_IRQ_RX_FULL   : Boolean; -- fire RX-IRQ if RX FIFO full
+      UART_CTRL_IRQ_TX_EMPTY  : Boolean; -- fire TX-IRQ if TX FIFO empty
+      UART_CTRL_IRQ_TX_NHALF  : Boolean; -- fire TX-IRQ if TX FIFO not at least half full
+      UART_CTRL_IRQ_TX_NFULL  : Boolean; -- fire TX-IRQ if TX not full
+      UART_CTRL_RX_CLR        : Boolean; -- Clear RX FIFO, flag auto-clears
+      UART_CTRL_TX_CLR        : Boolean; -- Clear TX FIFO, flag auto-clears
+      UART_CTRL_RX_OVER       : Boolean; -- RX FIFO overflow; cleared by disabling the module
+      UART_CTRL_TX_BUSY       : Boolean; -- TX busy or TX FIFO not empty
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -277,25 +330,130 @@ pragma Style_Checks (Off);
    -- 2.8.15. Serial Data Interface Controller (SDI)
    ----------------------------------------------------------------------------
 
+   type SDI_Type is record
+      CTRL : Unsigned_32 with Volatile_Full_Access => True;
+      DATA : Unsigned_32 with Volatile_Full_Access => True;
+   end record
+      with Size => 2 * 32;
+   for SDI_Type use record
+      CTRL at 0 range 0 .. 31;
+      DATA at 4 range 0 .. 31;
+   end record;
+
+   SDI_BASEADDRESS : constant := 16#FFF7_0000#;
+
+   SDI : aliased SDI_Type
+      with Address    => System'To_Address (SDI_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    ----------------------------------------------------------------------------
    -- 2.8.16. Two-Wire Serial Interface Controller (TWI)
    ----------------------------------------------------------------------------
+
+   type TWI_Type is record
+      CTRL : Unsigned_32 with Volatile_Full_Access => True;
+      DCMD : Unsigned_32 with Volatile_Full_Access => True;
+   end record
+      with Size => 2 * 32;
+   for TWI_Type use record
+      CTRL at 0 range 0 .. 31;
+      DCMD at 4 range 0 .. 31;
+   end record;
+
+   TWI_BASEADDRESS : constant := 16#FFF9_0000#;
+
+   TWI : aliased TWI_Type
+      with Address    => System'To_Address (TWI_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- 2.8.17. Two-Wire Serial Device Controller (TWD)
    ----------------------------------------------------------------------------
 
+   type TWD_Type is record
+      CTRL : Unsigned_32 with Volatile_Full_Access => True;
+      DATA : Unsigned_32 with Volatile_Full_Access => True;
+   end record
+      with Size => 2 * 32;
+   for TWD_Type use record
+      CTRL at 0 range 0 .. 31;
+      DATA at 4 range 0 .. 31;
+   end record;
+
+   TWD_BASEADDRESS : constant := 16#FFEA_0000#;
+
+   TWD : aliased TWD_Type
+      with Address    => System'To_Address (TWD_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    ----------------------------------------------------------------------------
    -- 2.8.18. One-Wire Serial Interface Controller (ONEWIRE)
    ----------------------------------------------------------------------------
+
+   type ONEWIRE_Type is record
+      CTRL : Unsigned_32 with Volatile_Full_Access => True;
+      DCMD : Unsigned_32 with Volatile_Full_Access => True;
+   end record
+      with Size => 2 * 32;
+   for ONEWIRE_Type use record
+      CTRL at 0 range 0 .. 31;
+      DCMD at 4 range 0 .. 31;
+   end record;
+
+   ONEWIRE_BASEADDRESS : constant := 16#FFF2_0000#;
+
+   ONEWIRE : aliased ONEWIRE_Type
+      with Address    => System'To_Address (ONEWIRE_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- 2.8.19. Pulse-Width Modulation Controller (PWM)
    ----------------------------------------------------------------------------
 
+   type PWM_Channel_Type is new Unsigned_32
+      with Size                 => 32,
+           Volatile_Full_Access => True;
+
+   type PWM_Type is array (0 .. 15) of PWM_Channel_Type
+      with Pack => True;
+
+   PWM_BASEADDRESS : constant := 16#FFF0_0000#;
+
+   PWM : aliased PWM_Type
+      with Address    => System'To_Address (PWM_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    ----------------------------------------------------------------------------
    -- 2.8.20. True Random-Number Generator (TRNG)
    ----------------------------------------------------------------------------
+
+   type TRNG_Type is record
+      CTRL : Unsigned_32 with Volatile_Full_Access => True;
+      DATA : Unsigned_32 with Volatile_Full_Access => True;
+   end record
+      with Size => 2 * 32;
+   for TRNG_Type use record
+      CTRL at 0 range 0 .. 31;
+      DATA at 4 range 0 .. 31;
+   end record;
+
+   TRNG_BASEADDRESS : constant := 16#FFFA_0000#;
+
+   TRNG : aliased TRNG_Type
+      with Address    => System'To_Address (TRNG_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- 2.8.21. Custom Functions Subsystem (CFS)
@@ -305,13 +463,73 @@ pragma Style_Checks (Off);
    -- 2.8.22. Smart LED Interface (NEOLED)
    ----------------------------------------------------------------------------
 
+   type NEOLED_Type is record
+      CTRL : Unsigned_32 with Volatile_Full_Access => True;
+      DATA : Unsigned_32 with Volatile_Full_Access => True;
+   end record
+      with Size => 2 * 32;
+   for NEOLED_Type use record
+      CTRL at 0 range 0 .. 31;
+      DATA at 4 range 0 .. 31;
+   end record;
+
+   NEOLED_BASEADDRESS : constant := 16#FFFD_0000#;
+
+   NEOLED : aliased NEOLED_Type
+      with Address    => System'To_Address (NEOLED_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    ----------------------------------------------------------------------------
    -- 2.8.23. General Purpose Timer (GPTMR)
    ----------------------------------------------------------------------------
 
+   type GPTMR_Type is record
+      CTRL  : Unsigned_32 with Volatile_Full_Access => True;
+      THRES : Unsigned_32 with Volatile_Full_Access => True;
+      COUNT : Unsigned_32 with Volatile_Full_Access => True;
+   end record
+      with Size => 3 * 32;
+   for GPTMR_Type use record
+      CTRL  at 0 range 0 .. 31;
+      THRES at 4 range 0 .. 31;
+      COUNT at 8 range 0 .. 31;
+   end record;
+
+   GPTMR_BASEADDRESS : constant := 16#FFF1_0000#;
+
+   GPTMR : aliased GPTMR_Type
+      with Address    => System'To_Address (GPTMR_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    ----------------------------------------------------------------------------
    -- 2.8.24. Execution Trace Buffer (TRACER)
    ----------------------------------------------------------------------------
+
+   type TRACER_Type is record
+      CTRL      : Unsigned_32 with Volatile_Full_Access => True;
+      STOP_ADDR : Unsigned_32 with Volatile_Full_Access => True;
+      DELTA_SRC : Unsigned_32 with Volatile_Full_Access => True;
+      DELTA_DST : Unsigned_32 with Volatile_Full_Access => True;
+   end record
+      with Size => 4 * 32;
+   for TRACER_Type use record
+      CTRL      at 16#0# range 0 .. 31;
+      STOP_ADDR at 16#4# range 0 .. 31;
+      DELTA_SRC at 16#8# range 0 .. 31;
+      DELTA_DST at 16#C# range 0 .. 31;
+   end record;
+
+   TRACER_BASEADDRESS : constant := 16#FFF3_0000#;
+
+   TRACER : aliased TRACER_Type
+      with Address    => System'To_Address (TRACER_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- 2.8.25. System Configuration Information Memory (SYSINFO)
