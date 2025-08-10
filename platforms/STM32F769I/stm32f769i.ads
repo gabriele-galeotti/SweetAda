@@ -2469,10 +2469,7 @@ pragma Warnings (On);
            Import               => True,
            Convention           => Ada;
 
-   -- 7.2.3 SYSCFG external interrupt configuration register 1 (SYSCFG_EXTICR1)
-   -- 7.2.4 SYSCFG external interrupt configuration register 2 (SYSCFG_EXTICR2)
-   -- 7.2.5 SYSCFG external interrupt configuration register 3 (SYSCFG_EXTICR3)
-   -- 7.2.6 SYSCFG external interrupt configuration register 4 (SYSCFG_EXTICR4)
+   -- EXTI mapping
 
    EXTI_PA : constant := 2#0000#; -- PA[x] pin
    EXTI_PB : constant := 2#0001#; -- PB[x] pin
@@ -2485,6 +2482,8 @@ pragma Warnings (On);
    EXTI_PI : constant := 2#1000#; -- PI[x] pin
    EXTI_PJ : constant := 2#1001#; -- PJ[x] pin
    EXTI_PK : constant := 2#1010#; -- PK[x] pin
+
+   -- 7.2.3 SYSCFG external interrupt configuration register 1 (SYSCFG_EXTICR1)
 
    type SYSCFG_EXTICR1_Type is record
       EXTI0    : Bits_4  := EXTI_PA; -- EXTI 0 configuration
@@ -2511,6 +2510,8 @@ pragma Warnings (On);
            Import               => True,
            Convention           => Ada;
 
+   -- 7.2.4 SYSCFG external interrupt configuration register 2 (SYSCFG_EXTICR2)
+
    type SYSCFG_EXTICR2_Type is record
       EXTI4    : Bits_4  := EXTI_PA; -- EXTI 4 configuration
       EXTI5    : Bits_4  := EXTI_PA; -- EXTI 5 configuration
@@ -2536,6 +2537,8 @@ pragma Warnings (On);
            Import               => True,
            Convention           => Ada;
 
+   -- 7.2.5 SYSCFG external interrupt configuration register 3 (SYSCFG_EXTICR3)
+
    type SYSCFG_EXTICR3_Type is record
       EXTI8    : Bits_4  := EXTI_PA; -- EXTI 8 configuration
       EXTI9    : Bits_4  := EXTI_PA; -- EXTI 9 configuration
@@ -2560,6 +2563,8 @@ pragma Warnings (On);
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
+   -- 7.2.6 SYSCFG external interrupt configuration register 4 (SYSCFG_EXTICR4)
 
    type SYSCFG_EXTICR4_Type is record
       EXTI12   : Bits_4  := EXTI_PA; -- EXTI 12 configuration
@@ -3139,6 +3144,32 @@ pragma Warnings (On);
    -- 9 Chrom-ART AcceleratorTM controller (DMA2D)
    ----------------------------------------------------------------------------
 
+   -- 9.5.1 DMA2D control register (DMA2D_CR)
+   -- 9.5.2 DMA2D interrupt status register (DMA2D_ISR)
+   -- 9.5.3 DMA2D interrupt flag clear register (DMA2D_IFCR)
+   -- 9.5.4 DMA2D foreground memory address register (DMA2D_FGMAR)
+   -- 9.5.5 DMA2D foreground offset register (DMA2D_FGOR)
+   -- 9.5.6 DMA2D background memory address register (DMA2D_BGMAR)
+   -- 9.5.7 DMA2D background offset register (DMA2D_BGOR)
+   -- 9.5.8 DMA2D foreground PFC control register (DMA2D_FGPFCCR)
+   -- 9.5.9 DMA2D foreground color register (DMA2D_FGCOLR)
+   -- 9.5.10 DMA2D background PFC control register (DMA2D_BGPFCCR)
+   -- 9.5.11 DMA2D background color register (DMA2D_BGCOLR)
+   -- 9.5.12 DMA2D foreground CLUT memory address register (DMA2D_FGCMAR)
+   -- 9.5.13 DMA2D background CLUT memory address register (DMA2D_BGCMAR)
+   -- 9.5.14 DMA2D output PFC control register (DMA2D_OPFCCR)
+   -- 9.5.15 DMA2D output color register (DMA2D_OCOLR)
+   -- 9.5.16 DMA2D output color register [alternate] (DMA2D_OCOLR)
+   -- 9.5.17 DMA2D output color register [alternate] (DMA2D_OCOLR)
+   -- 9.5.18 DMA2D output color register [alternate] (DMA2D_OCOLR)
+   -- 9.5.19 DMA2D output memory address register (DMA2D_OMAR)
+   -- 9.5.20 DMA2D output offset register (DMA2D_OOR)
+   -- 9.5.21 DMA2D number of line register (DMA2D_NLR)
+   -- 9.5.22 DMA2D line watermark register (DMA2D_LWR)
+   -- 9.5.23 DMA2D AHB master timer configuration register (DMA2D_AMTCR)
+   -- 9.5.24 DMA2D foreground CLUT (DMA2D_FGCLUTx)
+   -- 9.5.25 DMA2D background CLUT (DMA2D_BGCLUTx)
+
    ----------------------------------------------------------------------------
    -- 10 Nested vectored interrupt controller (NVIC)
    ----------------------------------------------------------------------------
@@ -3422,9 +3453,34 @@ pragma Warnings (On);
    -- 12 Cyclic redundancy check calculation unit (CRC)
    ----------------------------------------------------------------------------
 
+   -- 12.4.1 CRC data register (CRC_DR)
+   -- 12.4.2 CRC independent data register (CRC_IDR)
+   -- 12.4.3 CRC control register (CRC_CR)
+   -- 12.4.4 CRC initial value (CRC_INIT)
+   -- 12.4.5 CRC polynomial (CRC_POL)
+
    ----------------------------------------------------------------------------
    -- 13 Flexible memory controller (FMC)
    ----------------------------------------------------------------------------
+
+   -- 13.6.6 NOR/PSRAM controller registers
+   -- SRAM/NOR-flash chip-select control register for bank x (FMC_BCRx)
+   -- SRAM/NOR-flash chip-select timing register for bank x (FMC_BTRx)
+   -- SRAM/NOR-flash write timing registers x (FMC_BWTRx)
+
+   -- 13.7.7 NAND flash controller registers
+   -- NAND flash control registers (FMC_PCR)
+   -- FIFO status and interrupt register (FMC_SR)
+   -- Common memory space timing register (FMC_PMEM)
+   -- Attribute memory space timing register (FMC_PATT)
+   -- ECC result registers (FMC_ECCR)
+
+   -- 13.8.5 SDRAM controller registers
+   -- SDRAM control register x (FMC_SDCRx)
+   -- SDRAM timing register x (FMC_SDTRx)
+   -- SDRAM Command Mode register (FMC_SDCMR)
+   -- SDRAM refresh timer register (FMC_SDRTR)
+   -- SDRAM status register (FMC_SDSR)
 
    ----------------------------------------------------------------------------
    -- 14 Quad-SPI interface (QUADSPI)
@@ -3916,45 +3972,293 @@ pragma Warnings (On);
    -- 15 Analog-to-digital converter (ADC)
    ----------------------------------------------------------------------------
 
+   -- 15.13.1 ADC status register (ADC_SR)
+   -- 15.13.2 ADC control register 1 (ADC_CR1)
+   -- 15.13.3 ADC control register 2 (ADC_CR2)
+   -- 15.13.4 ADC sample time register 1 (ADC_SMPR1)
+   -- 15.13.5 ADC sample time register 2 (ADC_SMPR2)
+   -- 15.13.6 ADC injected channel data offset register x (ADC_JOFRx) (x=1..4)
+   -- 15.13.7 ADC watchdog higher threshold register (ADC_HTR)
+   -- 15.13.8 ADC watchdog lower threshold register (ADC_LTR)
+   -- 15.13.9 ADC regular sequence register 1 (ADC_SQR1)
+   -- 15.13.10 ADC regular sequence register 2 (ADC_SQR2)
+   -- 15.13.11 ADC regular sequence register 3 (ADC_SQR3)
+   -- 15.13.12 ADC injected sequence register (ADC_JSQR)
+   -- 15.13.13 ADC injected data register x (ADC_JDRx) (x= 1..4)
+   -- 15.13.14 ADC regular data register (ADC_DR)
+   -- 15.13.15 ADC Common status register (ADC_CSR)
+   -- 15.13.16 ADC common control register (ADC_CCR)
+   -- 15.13.17 ADC common regular data register for dual and triple modes (ADC_CDR)
+
    ----------------------------------------------------------------------------
    -- 16 Digital-to-analog converter (DAC)
    ----------------------------------------------------------------------------
+
+   -- 16.5.1 DAC control register (DAC_CR)
+   -- 16.5.2 DAC software trigger register (DAC_SWTRIGR)
+   -- 16.5.3 DAC channel1 12-bit right-aligned data holding register (DAC_DHR12R1)
+   -- 16.5.4 DAC channel1 12-bit left aligned data holding register (DAC_DHR12L1)
+   -- 16.5.5 DAC channel1 8-bit right aligned data holding register (DAC_DHR8R1)
+   -- 16.5.6 DAC channel2 12-bit right aligned data holding register (DAC_DHR12R2)
+   -- 16.5.7 DAC channel2 12-bit left aligned data holding register (DAC_DHR12L2)
+   -- 16.5.8 DAC channel2 8-bit right-aligned data holding register (DAC_DHR8R2)
+   -- 16.5.9 Dual DAC 12-bit right-aligned data holding register (DAC_DHR12RD)
+   -- 16.5.10 DUAL DAC 12-bit left aligned data holding register (DAC_DHR12LD)
+   -- 16.5.11 DUAL DAC 8-bit right aligned data holding register (DAC_DHR8RD)
+   -- 16.5.12 DAC channel1 data output register (DAC_DOR1)
+   -- 16.5.13 DAC channel2 data output register (DAC_DOR2)
+   -- 16.5.14 DAC status register (DAC_SR)
 
    ----------------------------------------------------------------------------
    -- 17 Digital filter for sigma delta modulators (DFSDM)
    ----------------------------------------------------------------------------
 
+   -- 17.7 DFSDM channel y registers (y=0..7)
+   -- 17.7.1 DFSDM channel y configuration register (DFSDM_CHyCFGR1)
+   -- 17.7.2 DFSDM channel y configuration register (DFSDM_CHyCFGR2)
+   -- 17.7.3 DFSDM channel y analog watchdog and short-circuit detector register (DFSDM_CHyAWSCDR)
+   -- 17.7.4 DFSDM channel y watchdog filter data register (DFSDM_CHyWDATR)
+   -- 17.7.5 DFSDM channel y data input register (DFSDM_CHyDATINR)
+   -- 17.8 DFSDM filter x module registers (x=0..3)
+   -- 17.8.1 DFSDM filter x control register 1 (DFSDM_FLTxCR1)
+   -- 17.8.2 DFSDM filter x control register 2 (DFSDM_FLTxCR2)
+   -- 17.8.3 DFSDM filter x interrupt and status register (DFSDM_FLTxISR)
+   -- 17.8.4 DFSDM filter x interrupt flag clear register (DFSDM_FLTxICR)
+   -- 17.8.5 DFSDM filter x injected channel group selection register (DFSDM_FLTxJCHGR)
+   -- 17.8.6 DFSDM filter x control register (DFSDM_FLTxFCR)
+   -- 17.8.7 DFSDM filter x data register for injected group (DFSDM_FLTxJDATAR)
+   -- 17.8.8 DFSDM filter x data register for the regular channel (DFSDM_FLTxRDATAR)
+   -- 17.8.9 DFSDM filter x analog watchdog high threshold register (DFSDM_FLTxAWHTR)
+   -- 17.8.10 DFSDM filter x analog watchdog low threshold register (DFSDM_FLTxAWLTR)
+   -- 17.8.11 DFSDM filter x analog watchdog status register (DFSDM_FLTxAWSR)
+   -- 17.8.12 DFSDM filter x analog watchdog clear flag register (DFSDM_FLTxAWCFR)
+   -- 17.8.13 DFSDM filter x extremes detector maximum register (DFSDM_FLTxEXMAX)
+   -- 17.8.14 DFSDM filter x extremes detector minimum register (DFSDM_FLTxEXMIN)
+   -- 17.8.15 DFSDM filter x conversion timer register (DFSDM_FLTxCNVTIMR)
+
    ----------------------------------------------------------------------------
    -- 18 Digital camera interface (DCMI)
    ----------------------------------------------------------------------------
+
+   -- 18.5.1 DCMI control register (DCMI_CR)
+   -- 18.5.2 DCMI status register (DCMI_SR)
+   -- 18.5.3 DCMI raw interrupt status register (DCMI_RIS)
+   -- 18.5.4 DCMI interrupt enable register (DCMI_IER)
+   -- 18.5.5 DCMI masked interrupt status register (DCMI_MIS)
+   -- 18.5.6 DCMI interrupt clear register (DCMI_ICR)
+   -- 18.5.7 DCMI embedded synchronization code register (DCMI_ESCR)
+   -- 18.5.8 DCMI embedded synchronization unmask register (DCMI_ESUR)
+   -- 18.5.9 DCMI crop window start (DCMI_CWSTRT)
+   -- 18.5.10 DCMI crop window size (DCMI_CWSIZE)
+   -- 18.5.11 DCMI data register (DCMI_DR)
 
    ----------------------------------------------------------------------------
    -- 19 LCD-TFT display controller (LTDC)
    ----------------------------------------------------------------------------
 
+   -- 19.7.1 LTDC synchronization size configuration register (LTDC_SSCR)
+   -- 19.7.2 LTDC back porch configuration register (LTDC_BPCR)
+   -- 19.7.3 LTDC active width configuration register (LTDC_AWCR)
+   -- 19.7.4 LTDC total width configuration register (LTDC_TWCR)
+   -- 19.7.5 LTDC global control register (LTDC_GCR)
+   -- 19.7.6 LTDC shadow reload configuration register (LTDC_SRCR)
+   -- 19.7.7 LTDC background color configuration register (LTDC_BCCR)
+   -- 19.7.8 LTDC interrupt enable register (LTDC_IER)
+   -- 19.7.9 LTDC interrupt status register (LTDC_ISR)
+   -- 19.7.10 LTDC Interrupt clear register (LTDC_ICR)
+   -- 19.7.11 LTDC line interrupt position configuration register (LTDC_LIPCR)
+   -- 19.7.12 LTDC current position status register (LTDC_CPSR)
+   -- 19.7.13 LTDC current display status register (LTDC_CDSR)
+   -- 19.7.14 LTDC layer x control register (LTDC_LxCR)
+   -- 19.7.15 LTDC layer x window horizontal position configuration register (LTDC_LxWHPCR)
+   -- 19.7.16 LTDC layer x window vertical position configuration register (LTDC_LxWVPCR)
+   -- 19.7.17 LTDC layer x color keying configuration register (LTDC_LxCKCR)
+   -- 19.7.18 LTDC layer x pixel format configuration register (LTDC_LxPFCR)
+   -- 19.7.19 LTDC layer x constant alpha configuration register (LTDC_LxCACR)
+   -- 19.7.20 LTDC layer x default color configuration register (LTDC_LxDCCR)
+   -- 19.7.21 LTDC layer x blending factors configuration register (LTDC_LxBFCR)
+   -- 19.7.22 LTDC layer x color frame buffer address register (LTDC_LxCFBAR)
+   -- 19.7.23 LTDC layer x color frame buffer length register (LTDC_LxCFBLR)
+   -- 19.7.24 LTDC layer x color frame buffer line number register (LTDC_LxCFBLNR)
+   -- 19.7.25 LTDC layer x CLUT write register (LTDC_LxCLUTWR)
+
    ----------------------------------------------------------------------------
    -- 20 DSI Host (DSI)
    ----------------------------------------------------------------------------
+
+   -- 20.15.1 DSI Host version register (DSI_VR)
+   -- 20.15.2 DSI Host control register (DSI_CR)
+   -- 20.15.3 DSI Host clock control register (DSI_CCR)
+   -- 20.15.4 DSI Host LTDC VCID register (DSI_LVCIDR)
+   -- 20.15.5 DSI Host LTDC color coding register (DSI_LCOLCR)
+   -- 20.15.6 DSI Host LTDC polarity configuration register (DSI_LPCR)
+   -- 20.15.7 DSI Host low-power mode configuration register (DSI_LPMCR)
+   -- 20.15.8 DSI Host protocol configuration register (DSI_PCR)
+   -- 20.15.9 DSI Host generic VCID register (DSI_GVCIDR)
+   -- 20.15.10 DSI Host mode configuration register (DSI_MCR)
+   -- 20.15.11 DSI Host video mode configuration register (DSI_VMCR)
+   -- 20.15.12 DSI Host video packet configuration register (DSI_VPCR)
+   -- 20.15.13 DSI Host video chunks configuration register (DSI_VCCR)
+   -- 20.15.14 DSI Host video null packet configuration register (DSI_VNPCR)
+   -- 20.15.15 DSI Host video HSA configuration register (DSI_VHSACR)
+   -- 20.15.16 DSI Host video HBP configuration register (DSI_VHBPCR)
+   -- 20.15.17 DSI Host video line configuration register (DSI_VLCR)
+   -- 20.15.18 DSI Host video VSA configuration register (DSI_VVSACR)
+   -- 20.15.19 DSI Host video VBP configuration register (DSI_VVBPCR)
+   -- 20.15.20 DSI Host video VFP configuration register (DSI_VVFPCR)
+   -- 20.15.21 DSI Host video VA configuration register (DSI_VVACR)
+   -- 20.15.22 DSI Host LTDC command configuration register (DSI_LCCR)
+   -- 20.15.23 DSI Host command mode configuration register (DSI_CMCR)
+   -- 20.15.24 DSI Host generic header configuration register (DSI_GHCR)
+   -- 20.15.25 DSI Host generic payload data register (DSI_GPDR)
+   -- 20.15.26 DSI Host generic packet status register (DSI_GPSR)
+   -- 20.15.27 DSI Host timeout counter configuration register 0 (DSI_TCCR0)
+   -- 20.15.28 DSI Host timeout counter configuration register 1 (DSI_TCCR1)
+   -- 20.15.29 DSI Host timeout counter configuration register 2 (DSI_TCCR2)
+   -- 20.15.30 DSI Host timeout counter configuration register 3 (DSI_TCCR3)
+   -- 20.15.31 DSI Host timeout counter configuration register 4 (DSI_TCCR4)
+   -- 20.15.32 DSI Host timeout counter configuration register 5 (DSI_TCCR5)
+   -- 20.15.33 DSI Host clock lane configuration register (DSI_CLCR)
+   -- 20.15.34 DSI Host clock lane timer configuration register (DSI_CLTCR)
+   -- 20.15.35 DSI Host data lane timer configuration register (DSI_DLTCR)
+   -- 20.15.36 DSI Host PHY control register (DSI_PCTLR)
+   -- 20.15.37 DSI Host PHY configuration register (DSI_PCONFR)
+   -- 20.15.38 DSI Host PHY ULPS control register (DSI_PUCR)
+   -- 20.15.39 DSI Host PHY TX triggers configuration register (DSI_PTTCR)
+   -- 20.15.40 DSI Host PHY status register (DSI_PSR)
+   -- 20.15.41 DSI Host interrupt and status register 0 (DSI_ISR0)
+   -- 20.15.42 DSI Host interrupt and status register 1 (DSI_ISR1)
+   -- 20.15.43 DSI Host interrupt enable register 0 (DSI_IER0)
+   -- 20.15.44 DSI Host interrupt enable register 1 (DSI_IER1)
+   -- 20.15.45 DSI Host force interrupt register 0 (DSI_FIR0)
+   -- 20.15.46 DSI Host force interrupt register 1 (DSI_FIR1)
+   -- 20.15.47 DSI Host video shadow control register (DSI_VSCR)
+   -- 20.15.48 DSI Host LTDC current VCID register (DSI_LCVCIDR)
+   -- 20.15.49 DSI Host LTDC current color coding register (DSI_LCCCR)
+   -- 20.15.50 DSI Host low-power mode current configuration register (DSI_LPMCCR)
+   -- 20.15.51 DSI Host video mode current configuration register (DSI_VMCCR)
+   -- 20.15.52 DSI Host video packet current configuration register (DSI_VPCCR)
+   -- 20.15.53 DSI Host video chunks current configuration register (DSI_VCCCR)
+   -- 20.15.54 DSI Host video null packet current configuration register (DSI_VNPCCR)
+   -- 20.15.55 DSI Host video HSA current configuration register (DSI_VHSACCR)
+   -- 20.15.56 DSI Host video HBP current configuration register (DSI_VHBPCCR)
+   -- 20.15.57 DSI Host video line current configuration register (DSI_VLCCR)
+   -- 20.15.58 DSI Host video VSA current configuration register (DSI_VVSACCR)
+   -- 20.15.59 DSI Host video VBP current configuration register (DSI_VVBPCCR)
+   -- 20.15.60 DSI Host video VFP current configuration register (DSI_VVFPCCR)
+   -- 20.15.61 DSI Host video VA current configuration register (DSI_VVACCR)
+
+   -- 20.16.1 DSI Wrapper configuration register (DSI_WCFGR)
+   -- 20.16.2 DSI Wrapper control register (DSI_WCR)
+   -- 20.16.3 DSI Wrapper interrupt enable register (DSI_WIER)
+   -- 20.16.4 DSI Wrapper interrupt and status register (DSI_WISR)
+   -- 20.16.5 DSI Wrapper interrupt flag clear register (DSI_WIFCR)
+   -- 20.16.6 DSI Wrapper PHY configuration register 0 (DSI_WPCR0)
+   -- 20.16.7 DSI Wrapper PHY configuration register 1 (DSI_WPCR1)
+   -- 20.16.8 DSI Wrapper PHY configuration register 2 (DSI_WPCR2)
+   -- 20.16.9 DSI Wrapper PHY configuration register 3 (DSI_WPCR3)
+   -- 20.16.10 DSI Wrapper PHY configuration register 4 (DSI_WPCR4)
+   -- 20.16.11 DSI Wrapper regulator and PLL control register (DSI_WRPCR)
 
    ----------------------------------------------------------------------------
    -- 21 JPEG codec (JPEG)
    ----------------------------------------------------------------------------
 
+   -- 21.5.1 JPEG codec control register (JPEG_CONFR0)
+   -- 21.5.2 JPEG codec configuration register 1 (JPEG_CONFR1)
+   -- 21.5.3 JPEG codec configuration register 2 (JPEG_CONFR2)
+   -- 21.5.4 JPEG codec configuration register 3 (JPEG_CONFR3)
+   -- 21.5.5 JPEG codec configuration register x (JPEG_CONFRx)
+   -- 21.5.6 JPEG control register (JPEG_CR)
+   -- 21.5.7 JPEG status register (JPEG_SR)
+   -- 21.5.8 JPEG clear flag register (JPEG_CFR)
+   -- 21.5.9 JPEG data input register (JPEG_DIR)
+   -- 21.5.10 JPEG data output register (JPEG_DOR)
+   -- 21.5.11 JPEG quantization memory x (JPEG_QMEMx_y)
+   -- 21.5.12 JPEG Huffman min (JPEG_HUFFMINx_y)
+   -- 21.5.13 JPEG Huffman min x (JPEG_HUFFMINx_y)
+   -- 21.5.14 JPEG Huffman base (JPEG_HUFFBASEx)
+   -- 21.5.15 JPEG Huffman symbol (JPEG_HUFFSYMBx)
+   -- 21.5.16 JPEG DHT memory (JPEG_DHTMEMx)
+   -- 21.5.17 JPEG Huffman encoder ACx (JPEG_HUFFENC_ACx_y)
+   -- 21.5.18 JPEG Huffman encoder DCx (JPEG_HUFFENC_DCx_y)
+
    ----------------------------------------------------------------------------
    -- 22 True random number generator (RNG)
    ----------------------------------------------------------------------------
+
+   -- 22.7.1 RNG control register (RNG_CR)
+   -- 22.7.2 RNG status register (RNG_SR)
+   -- 22.7.3 RNG data register (RNG_DR)
 
    ----------------------------------------------------------------------------
    -- 23 Cryptographic processor (CRYP)
    ----------------------------------------------------------------------------
 
+   -- 23.7.1 CRYP control register (CRYP_CR)
+   -- 23.7.2 CRYP status register (CRYP_SR)
+   -- 23.7.3 CRYP data input register (CRYP_DIN)
+   -- 23.7.4 CRYP data output register (CRYP_DOUT)
+   -- 23.7.5 CRYP DMA control register (CRYP_DMACR)
+   -- 23.7.6 CRYP interrupt mask set/clear register (CRYP_IMSCR)
+   -- 23.7.7 CRYP raw interrupt status register (CRYP_RISR)
+   -- 23.7.8 CRYP masked interrupt status register (CRYP_MISR)
+   -- 23.7.9 CRYP key register 0L (CRYP_K0LR)
+   -- 23.7.10 CRYP key register 0R (CRYP_K0RR)
+   -- 23.7.11 CRYP key register 1L (CRYP_K1LR)
+   -- 23.7.12 CRYP key register 1R (CRYP_K1RR)
+   -- 23.7.13 CRYP key register 2L (CRYP_K2LR)
+   -- 23.7.14 CRYP key register 2R (CRYP_K2RR)
+   -- 23.7.15 CRYP key register 3L (CRYP_K3LR)
+   -- 23.7.16 CRYP key register 3R (CRYP_K3RR)
+   -- 23.7.17 CRYP initialization vector register 0L (CRYP_IV0LR)
+   -- 23.7.18 CRYP initialization vector register 0R (CRYP_IV0RR)
+   -- 23.7.19 CRYP initialization vector register 1L (CRYP_IV1LR)
+   -- 23.7.20 CRYP initialization vector register 1R (CRYP_IV1RR)
+
    ----------------------------------------------------------------------------
    -- 24 Hash processor (HASH)
    ----------------------------------------------------------------------------
 
+   -- 24.6.1 HASH control register (HASH_CR)
+   -- 24.6.2 HASH data input register (HASH_DIN)
+   -- 24.6.3 HASH start register (HASH_STR)
+   -- 24.6.4 HASH digest registers
+   -- 24.6.5 HASH interrupt enable register (HASH_IMR)
+   -- 24.6.6 HASH status register (HASH_SR)
+   -- 24.6.7 HASH context swap registers
+
    ----------------------------------------------------------------------------
    -- 25 Advanced-control timers (TIM1/TIM8)
    ----------------------------------------------------------------------------
+
+   -- 25.4.1 TIMx control register 1 (TIMx_CR1)(x = 1, 8)
+   -- 25.4.2 TIMx control register 2 (TIMx_CR2)(x = 1, 8)
+   -- 25.4.3 TIMx slave mode control register (TIMx_SMCR)(x = 1, 8)
+   -- 25.4.4 TIMx DMA/interrupt enable register (TIMx_DIER)(x = 1, 8)
+   -- 25.4.5 TIMx status register (TIMx_SR)(x = 1, 8)
+   -- 25.4.6 TIMx event generation register (TIMx_EGR)(x = 1, 8)
+   -- 25.4.7 TIMx capture/compare mode register 1 (TIMx_CCMR1)(x = 1, 8)
+   -- 25.4.8 TIMx capture/compare mode register 1 [alternate] (TIMx_CCMR1)(x = 1, 8)
+   -- 25.4.9 TIMx capture/compare mode register 2 (TIMx_CCMR2)(x = 1, 8)
+   -- 25.4.10 TIMx capture/compare mode register 2 [alternate] (TIMx_CCMR2)(x = 1, 8)
+   -- 25.4.11 TIMx capture/compare enable register (TIMx_CCER)(x = 1, 8)
+   -- 25.4.12 TIMx counter (TIMx_CNT)(x = 1, 8)
+   -- 25.4.13 TIMx prescaler (TIMx_PSC)(x = 1, 8)
+   -- 25.4.14 TIMx auto-reload register (TIMx_ARR)(x = 1, 8)
+   -- 25.4.15 TIMx repetition counter register (TIMx_RCR)(x = 1, 8)
+   -- 25.4.16 TIMx capture/compare register 1 (TIMx_CCR1)(x = 1, 8)
+   -- 25.4.17 TIMx capture/compare register 2 (TIMx_CCR2)(x = 1, 8)
+   -- 25.4.18 TIMx capture/compare register 3 (TIMx_CCR3)(x = 1, 8)
+   -- 25.4.19 TIMx capture/compare register 4 (TIMx_CCR4)(x = 1, 8)
+   -- 25.4.20 TIMx break and dead-time register (TIMx_BDTR)(x = 1, 8)
+   -- 25.4.21 TIMx DMA control register (TIMx_DCR)(x = 1, 8)
+   -- 25.4.22 TIMx DMA address for full transfer (TIMx_DMAR)(x = 1, 8)
+   -- 25.4.23 TIMx capture/compare mode register 3 (TIMx_CCMR3)(x = 1, 8)
+   -- 25.4.24 TIMx capture/compare register 5 (TIMx_CCR5)(x = 1, 8)
+   -- 25.4.25 TIMx capture/compare register 6 (TIMx_CCR6)(x = 1, 8)
+   -- 25.4.26 TIMx alternate function option register 1 (TIMx_AF1)(x = 1, 8)
+   -- 25.4.27 TIMx alternate function option register 2 (TIMx_AF2)(x = 1, 8)
 
    ----------------------------------------------------------------------------
    -- 26 General-purpose timers (TIM2/TIM3/TIM4/TIM5)
@@ -4120,13 +4424,32 @@ pragma Warnings (On);
    -- 29 Low-power timer (LPTIM)
    ----------------------------------------------------------------------------
 
+   -- 29.7.1 LPTIM interrupt and status register (LPTIM_ISR)
+   -- 29.7.2 LPTIM interrupt clear register (LPTIM_ICR)
+   -- 29.7.3 LPTIM interrupt enable register (LPTIM_IER)
+   -- 29.7.4 LPTIM configuration register (LPTIM_CFGR)
+   -- 29.7.5 LPTIM control register (LPTIM_CR)
+   -- 29.7.6 LPTIM compare register (LPTIM_CMP)
+   -- 29.7.7 LPTIM autoreload register (LPTIM_ARR)
+   -- 29.7.8 LPTIM counter register (LPTIM_CNT)
+
    ----------------------------------------------------------------------------
    -- 30 Independent watchdog (IWDG)
    ----------------------------------------------------------------------------
 
+   -- 30.4.1 IWDG key register (IWDG_KR)
+   -- 30.4.2 IWDG prescaler register (IWDG_PR)
+   -- 30.4.3 IWDG reload register (IWDG_RLR)
+   -- 30.4.4 IWDG status register (IWDG_SR)
+   -- 30.4.5 IWDG window register (IWDG_WINR)
+
    ----------------------------------------------------------------------------
    -- 31 System window watchdog (WWDG)
    ----------------------------------------------------------------------------
+
+   -- 31.5.1 WWDG control register (WWDG_CR)
+   -- 31.5.2 WWDG configuration register (WWDG_CFR)
+   -- 31.5.3 WWDG status register (WWDG_SR)
 
    ----------------------------------------------------------------------------
    -- 32 Real-time clock (RTC)
@@ -4819,6 +5142,18 @@ pragma Warnings (On);
    -- 33 Inter-integrated circuit (I2C) interface
    ----------------------------------------------------------------------------
 
+   -- 33.9.1 I2C control register 1 (I2C_CR1)
+   -- 33.9.2 I2C control register 2 (I2C_CR2)
+   -- 33.9.3 I2C own address 1 register (I2C_OAR1)
+   -- 33.9.4 I2C own address 2 register (I2C_OAR2)
+   -- 33.9.5 I2C timing register (I2C_TIMINGR)
+   -- 33.9.6 I2C timeout register (I2C_TIMEOUTR)
+   -- 33.9.7 I2C interrupt and status register (I2C_ISR)
+   -- 33.9.8 I2C interrupt clear register (I2C_ICR)
+   -- 33.9.9 I2C PEC register (I2C_PECR)
+   -- 33.9.10 I2C receive data register (I2C_RXDR)
+   -- 33.9.11 I2C transmit data register (I2C_TXDR)
+
    ----------------------------------------------------------------------------
    -- 34 Universal synchronous asynchronous receiver transmitter (USART)
    ----------------------------------------------------------------------------
@@ -5338,13 +5673,148 @@ pragma Warnings (On);
    -- 41 USB on-the-go full-speed/high-speed (OTG_FS/OTG_HS)
    ----------------------------------------------------------------------------
 
+   -- 41.15.1 OTG control and status register (OTG_GOTGCTL)
+   -- 41.15.2 OTG interrupt register (OTG_GOTGINT)
+   -- 41.15.3 OTG AHB configuration register (OTG_GAHBCFG)
+   -- 41.15.4 OTG USB configuration register (OTG_GUSBCFG)
+   -- 41.15.5 OTG reset register (OTG_GRSTCTL)
+   -- 41.15.6 OTG core interrupt register (OTG_GINTSTS)
+   -- 41.15.7 OTG interrupt mask register (OTG_GINTMSK)
+   -- 41.15.8 OTG receive status debug read register (OTG_GRXSTSR)
+   -- 41.15.9 OTG receive status debug read [alternate] (OTG_GRXSTSR)
+   -- 41.15.10 OTG status read and pop registers (OTG_GRXSTSP)
+   -- 41.15.11 OTG status read and pop registers [alternate] (OTG_GRXSTSP)
+   -- 41.15.12 OTG receive FIFO size register (OTG_GRXFSIZ)
+   -- 41.15.13 OTG host non-periodic transmit FIFO size register (OTG_HNPTXFSIZ)/Endpoint 0 Transmit FIFO size (OTG_DIEPTXF0)
+   -- 41.15.14 OTG non-periodic transmit FIFO/queue status register (OTG_HNPTXSTS)
+   -- 41.15.15 OTG general core configuration register (OTG_GCCFG)
+   -- 41.15.16 OTG core ID register (OTG_CID)
+   -- 41.15.17 OTG core LPM configuration register (OTG_GLPMCFG)
+   -- 41.15.18 OTG host periodic transmit FIFO size register (OTG_HPTXFSIZ)
+   -- 41.15.19 OTG device IN endpoint transmit FIFO x size register (OTG_DIEPTXFx)
+   -- 41.15.20 Host-mode registers
+   -- 41.15.21 OTG host configuration register (OTG_HCFG)
+   -- 41.15.22 OTG host frame interval register (OTG_HFIR)
+   -- 41.15.23 OTG host frame number/frame time remaining register (OTG_HFNUM)
+   -- 41.15.24 OTG_Host periodic transmit FIFO/queue status register (OTG_HPTXSTS)
+   -- 41.15.25 OTG host all channels interrupt register (OTG_HAINT)
+   -- 41.15.26 OTG host all channels interrupt mask register (OTG_HAINTMSK)
+   -- 41.15.27 OTG host port control and status register (OTG_HPRT)
+   -- 41.15.28 OTG host channel x characteristics register (OTG_HCCHARx)
+   -- 41.15.29 OTG host channel x split control register (OTG_HCSPLTx)
+   -- 41.15.30 OTG host channel x interrupt register (OTG_HCINTx)
+   -- 41.15.31 OTG host channel x interrupt mask register (OTG_HCINTMSKx)
+   -- 41.15.32 OTG host channel x transfer size register (OTG_HCTSIZx)
+   -- 41.15.33 OTG host channel x DMA address register (OTG_HCDMAx)
+   -- 41.15.34 Device-mode registers
+   -- 41.15.35 OTG device configuration register (OTG_DCFG)
+   -- 41.15.36 OTG device control register (OTG_DCTL)
+   -- 41.15.37 OTG device status register (OTG_DSTS)
+   -- 41.15.38 OTG device IN endpoint common interrupt mask register (OTG_DIEPMSK)
+   -- 41.15.39 OTG device OUT endpoint common interrupt mask register (OTG_DOEPMSK)
+   -- 41.15.40 OTG device all endpoints interrupt register (OTG_DAINT)
+   -- 41.15.41 OTG all endpoints interrupt mask register (OTG_DAINTMSK)
+   -- 41.15.42 OTG device VBUS discharge time register (OTG_DVBUSDIS)
+   -- 41.15.43 OTG device VBUS pulsing time register (OTG_DVBUSPULSE)
+   -- 41.15.44 OTG device threshold control register (OTG_DTHRCTL)
+   -- 41.15.45 OTG device IN endpoint FIFO empty interrupt mask register (OTG_DIEPEMPMSK)
+   -- 41.15.46 OTG device each endpoint interrupt register (OTG_DEACHINT)
+   -- 41.15.47 OTG device each endpoint interrupt mask register (OTG_DEACHINTMSK)
+   -- 41.15.48 OTG device each IN endpoint-1 interrupt mask register (OTG_HS_DIEPEACHMSK1)
+   -- 41.15.49 OTG device each OUT endpoint-1 interrupt mask register (OTG_HS_DOEPEACHMSK1)
+   -- 41.15.50 OTG device control IN endpoint 0 control register (OTG_DIEPCTL0)
+   -- 41.15.51 OTG device IN endpoint x control register (OTG_DIEPCTLx)
+   -- 41.15.52 OTG device IN endpoint x interrupt register (OTG_DIEPINTx)
+   -- 41.15.53 OTG device IN endpoint 0 transfer size register (OTG_DIEPTSIZ0)
+   -- 41.15.54 OTG device IN endpoint x DMA address register (OTG_DIEPDMAx)
+   -- 41.15.55 OTG device IN endpoint transmit FIFO status register (OTG_DTXFSTSx)
+   -- 41.15.56 OTG device IN endpoint x transfer size register (OTG_DIEPTSIZx)
+   -- 41.15.57 OTG device control OUT endpoint 0 control register (OTG_DOEPCTL0)
+   -- 41.15.58 OTG device OUT endpoint x interrupt register (OTG_DOEPINTx)
+   -- 41.15.59 OTG device OUT endpoint 0 transfer size register (OTG_DOEPTSIZ0)
+   -- 41.15.60 OTG device OUT endpoint x DMA address register (OTG_DOEPDMAx)
+   -- 41.15.61 OTG device OUT endpoint x control register (OTG_DOEPCTLx)
+   -- 41.15.62 OTG device OUT endpoint x transfer size register (OTG_DOEPTSIZx)
+   -- 41.15.63 OTG power and clock gating control register (OTG_PCGCCTL)
+
    ----------------------------------------------------------------------------
    -- 42 Ethernet (ETH): media access control (MAC) with DMA controller
    ----------------------------------------------------------------------------
 
+   -- 42.8.1 MAC register description
+   -- Ethernet MAC configuration register (ETH_MACCR)
+   -- Ethernet MAC frame filter register (ETH_MACFFR)
+   -- Ethernet MAC hash table high register (ETH_MACHTHR)
+   -- Ethernet MAC hash table low register (ETH_MACHTLR)
+   -- Ethernet MAC MII address register (ETH_MACMIIAR)
+   -- Ethernet MAC MII data register (ETH_MACMIIDR)
+   -- Ethernet MAC flow control register (ETH_MACFCR)
+   -- Ethernet MAC VLAN tag register (ETH_MACVLANTR)
+   -- Ethernet MAC remote wakeup frame filter register (ETH_MACRWUFFR)
+   -- Ethernet MAC PMT control and status register (ETH_MACPMTCSR)
+   -- Ethernet MAC debug register (ETH_MACDBGR)
+   -- Ethernet MAC interrupt status register (ETH_MACSR)
+   -- Ethernet MAC interrupt mask register (ETH_MACIMR)
+   -- Ethernet MAC address 0 high register (ETH_MACA0HR)
+   -- Ethernet MAC address 0 low register (ETH_MACA0LR)
+   -- Ethernet MAC address 1 high register (ETH_MACA1HR)
+   -- Ethernet MAC address1 low register (ETH_MACA1LR)
+   -- Ethernet MAC address 2 high register (ETH_MACA2HR)
+   -- Ethernet MAC address 2 low register (ETH_MACA2LR)
+   -- Ethernet MAC address 3 high register (ETH_MACA3HR)
+   -- Ethernet MAC address 3 low register (ETH_MACA3LR)
+
+   -- 42.8.2 MMC register description
+   -- Ethernet MMC control register (ETH_MMCCR)
+   -- Ethernet MMC receive interrupt register (ETH_MMCRIR)
+   -- Ethernet MMC transmit interrupt register (ETH_MMCTIR)
+   -- Ethernet MMC receive interrupt mask register (ETH_MMCRIMR)
+   -- Ethernet MMC transmit interrupt mask register (ETH_MMCTIMR)
+   -- Ethernet MMC transmitted good frames after a single collision counter register (ETH_MMCTGFSCCR)
+   -- Ethernet MMC transmitted good frames after more than a single collision counter register (ETH_MMCTGFMSCCR)
+   -- Ethernet MMC transmitted good frames counter register (ETH_MMCTGFCR)
+   -- Ethernet MMC received frames with CRC error counter register (ETH_MMCRFCECR)
+   -- Ethernet MMC received frames with alignment error counter register (ETH_MMCRFAECR)
+   -- MMC received good unicast frames counter register (ETH_MMCRGUFCR)
+
+   -- 42.8.3 IEEE 1588 time stamp registers
+   -- Ethernet PTP time stamp control register (ETH_PTPTSCR)
+   -- Ethernet PTP subsecond increment register (ETH_PTPSSIR)
+   -- Ethernet PTP time stamp high register (ETH_PTPTSHR)
+   -- Ethernet PTP time stamp low register (ETH_PTPTSLR)
+   -- Ethernet PTP time stamp high update register (ETH_PTPTSHUR)
+   -- Ethernet PTP time stamp low update register (ETH_PTPTSLUR)
+   -- Ethernet PTP time stamp addend register (ETH_PTPTSAR)
+   -- Ethernet PTP target time high register (ETH_PTPTTHR)
+   -- Ethernet PTP target time low register (ETH_PTPTTLR)
+   -- Ethernet PTP time stamp status register (ETH_PTPTSSR)
+   -- Ethernet PTP PPS control register (ETH_PTPPPSCR)
+
+   -- 42.8.4 DMA register description
+   -- Ethernet DMA bus mode register (ETH_DMABMR)
+   -- Ethernet DMA transmit poll demand register (ETH_DMATPDR)
+   -- EHERNET DMA receive poll demand register (ETH_DMARPDR)
+   -- Ethernet DMA receive descriptor list address register (ETH_DMARDLAR)
+   -- Ethernet DMA transmit descriptor list address register (ETH_DMATDLAR)
+   -- Ethernet DMA status register (ETH_DMASR)
+   -- Ethernet DMA operation mode register (ETH_DMAOMR)
+   -- Ethernet DMA interrupt enable register (ETH_DMAIER)
+   -- Ethernet DMA missed frame and buffer overflow counter register (ETH_DMAMFBOCR)
+   -- Ethernet DMA receive status watchdog timer register (ETH_DMARSWTR)
+   -- Ethernet DMA current host transmit descriptor register (ETH_DMACHTDR)
+   -- Ethernet DMA current host transmit buffer address register (ETH_DMACHTBAR)
+   -- Ethernet DMA current host receive buffer address register (ETH_DMACHRBAR)
+
    ----------------------------------------------------------------------------
    -- 43 HDMI-CEC controller (CEC)
    ----------------------------------------------------------------------------
+
+   -- 43.7.1 CEC control register (CEC_CR)
+   -- 43.7.2 CEC configuration register (CEC_CFGR)
+   -- 43.7.3 CEC Tx data register (CEC_TXDR)
+   -- 43.7.4 CEC Rx data register (CEC_RXDR)
+   -- 43.7.5 CEC interrupt and status register (CEC_ISR)
+   -- 43.7.6 CEC interrupt enable register (CEC_IER)
 
 pragma Style_Checks (On);
 
