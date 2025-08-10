@@ -211,22 +211,22 @@ package body LCD
       -- Software Reset
       CS_Assert;
       Command_Assert;
-      Command_Send (Software_Reset);
+      Command_Send (SWRESET);
       CS_Deassert;
       -- Sleep Out
       CS_Assert;
       Command_Assert;
-      Command_Send (Sleep_Out);
+      Command_Send (SLPOUT);
       CS_Deassert;
       -- Display ON
       CS_Assert;
       Command_Assert;
-      Command_Send (Display_ON);
+      Command_Send (DISPON);
       CS_Deassert;
       -- Write CTRL Display
       CS_Assert;
       Command_Assert;
-      Command_Send (Write_CTRL_Display);
+      Command_Send (WRCTRLD);
       Data_Assert;
       DataArray_Send (Byte_Array'([
          To_U8 (CTRL_Type'(BL => True, others => <>))
@@ -235,7 +235,7 @@ package body LCD
       -- Memory Access Control
       CS_Assert;
       Command_Assert;
-      Command_Send (Memory_Access_Control);
+      Command_Send (MADCTL);
       Data_Assert;
       DataArray_Send (Byte_Array'([
          To_U8 (MADCTL_Type'(
@@ -252,19 +252,19 @@ package body LCD
       -- Normal Display Mode ON
       CS_Assert;
       Command_Assert;
-      Command_Send (Normal_Display_Mode_ON);
+      Command_Send (NORON);
       CS_Deassert;
       -- Pixel Format Set
       CS_Assert;
       Command_Assert;
-      Command_Send (Pixel_Format_Set);
+      Command_Send (PIXSET);
       Data_Assert;
       DataArray_Send (Byte_Array'([16#66#]));
       CS_Deassert;
       -- Color Set RGB565
       CS_Assert;
       Command_Assert;
-      Command_Send (Color_Set);
+      Command_Send (RGBSET);
       Data_Assert;
       for Idx in 0 .. 31 loop Data_Send (Unsigned_8 (Idx)); end loop;
       for Idx in 0 .. 63 loop Data_Send (Unsigned_8 (Idx)); end loop;
@@ -273,28 +273,28 @@ package body LCD
       -- Column Address Set
       CS_Assert;
       Command_Assert;
-      Command_Send (Column_Address_Set);
+      Command_Send (CASET);
       Data_Assert;
       DataArray_Send (Byte_Array'([0, 0, 0, 16#EF#]));
       CS_Deassert;
       -- Page Address Set
       CS_Assert;
       Command_Assert;
-      Command_Send (Page_Address_Set);
+      Command_Send (PASET);
       Data_Assert;
       DataArray_Send (Byte_Array'([0, 0, 1, 16#3F#]));
       CS_Deassert;
       -- Vertical Scrolling Start Address
       CS_Assert;
       Command_Assert;
-      Command_Send (Vertical_Scrolling_Start_Address);
+      Command_Send (VSCRSADD);
       Data_Assert;
       DataArray_Send (Byte_Array'([0, 0]));
       CS_Deassert;
       -- draw a frame with switching colors
       CS_Assert;
       Command_Assert;
-      Command_Send (Memory_Write);
+      Command_Send (RAMWR);
       Data_Assert;
       declare
          Color_R  : Unsigned_8 := 0;
