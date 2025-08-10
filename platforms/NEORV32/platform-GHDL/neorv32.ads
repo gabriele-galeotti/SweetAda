@@ -46,9 +46,38 @@ pragma Style_Checks (Off);
    -- 2.8.6. Direct Memory Access Controller (DMA)
    ----------------------------------------------------------------------------
 
+   type DMA_CTRL_Type is record
+      DMA_CTRL_EN     : Boolean; -- DMA module enable; reset module when cleared
+      DMA_CTRL_START  : Boolean; -- Start programmed DMA transfer(s)
+      Reserved1       : Bits_14;
+      DMA_CTRL_DFIFO  : Bits_4;  -- Descriptor FIFO depth, log2(IO_DMA_DSC_FIFO)
+      Reserved2       : Bits_6;
+      DMA_CTRL_ACK    : Boolean; -- Write 1 to clear DMA interrupt (also clears DMA_CTRL_ERROR and DMA_CTRL_DONE)
+      DMA_CTRL_DEMPTY : Boolean; -- Descriptor FIFO is empty
+      DMA_CTRL_DFULL  : Boolean; -- Descriptor FIFO is full
+      DMA_CTRL_ERROR  : Boolean; -- Bus access error during transfer or incomplete descriptor data
+      DMA_CTRL_DONE   : Boolean; -- All transfers executed
+      DMA_CTRL_BUSY   : Boolean; -- DMA transfer(s) in progress
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for DMA_CTRL_Type use record
+      DMA_CTRL_EN     at 0 range  0 ..  0;
+      DMA_CTRL_START  at 0 range  1 ..  1;
+      Reserved1       at 0 range  2 .. 15;
+      DMA_CTRL_DFIFO  at 0 range 16 .. 19;
+      Reserved2       at 0 range 20 .. 25;
+      DMA_CTRL_ACK    at 0 range 26 .. 26;
+      DMA_CTRL_DEMPTY at 0 range 27 .. 27;
+      DMA_CTRL_DFULL  at 0 range 28 .. 28;
+      DMA_CTRL_ERROR  at 0 range 29 .. 29;
+      DMA_CTRL_DONE   at 0 range 30 .. 30;
+      DMA_CTRL_BUSY   at 0 range 31 .. 31;
+   end record;
+
    type DMA_Type is record
-      CTRL : Unsigned_32 with Volatile_Full_Access => True;
-      DESC : Unsigned_32 with Volatile_Full_Access => True;
+      CTRL : DMA_CTRL_Type with Volatile_Full_Access => True;
+      DESC : Unsigned_32   with Volatile_Full_Access => True;
    end record
       with Size => 2 * 32;
    for DMA_Type use record
