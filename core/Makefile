@@ -40,7 +40,7 @@ OBJECTS := $(patsubst %,$(OBJ_DIRECTORY)/%.o,$(IMPLICIT_CORE_UNITS))
 all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: configure
-configure:
+configure: clean-configure-files
 	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 	@$(GCCDEFINES)                                 \
           GCC.Defines gcc-defines.ads                  \
@@ -69,6 +69,9 @@ configure:
           __i386__:x86:Boolean:H                       \
           __x86_64__:x86_64:Boolean:H                  \
           $(GCCDEFINES_CPU)
+
+.PHONY: clean-configure-files
+clean-configure-files:
 
 .PHONY: clean
 clean:
