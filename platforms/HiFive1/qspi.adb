@@ -119,20 +119,20 @@ package body QSPI
       Id3     : Unsigned_8;
    begin
       -- initialization
-      QSPI0.fctrl.en      := False;
-      QSPI0.csid          := 0;
-      QSPI0.csdef         := 1;
-      QSPI0.csmode.mode   := mode_HOLD;
-      QSPI0.sckdiv.div    := 3;
-      QSPI0.sckmode       := (pha => pha_SALSHT, pol => pol_INACTIVE0, others => <>);
-      QSPI0.fmt           := (
-                              proto  => proto_SINGLE,
-                              endian => endian_MSB,
-                              dir    => dir_RX,
-                              len    => 8,
-                              others => <>
-                             );
-      QSPI0.ie            := (txwm => False, rxwm => False, others => <>);
+      QSPI0.fctrl.en := False;
+      QSPI0.csid := 0;
+      QSPI0.csdef := 1;
+      QSPI0.csmode.mode := mode_HOLD;
+      QSPI0.sckdiv.div := 3;
+      QSPI0.sckmode := (pha => pha_SALSHT, pol => pol_INACTIVE0, others => <>);
+      QSPI0.fmt := (
+         proto  => proto_SINGLE,
+         endian => endian_MSB,
+         dir    => dir_RX,
+         len    => 8,
+         others => <>
+         );
+      QSPI0.ie := (txwm => False, rxwm => False, others => <>);
       QSPI0.rxmark.rxmark := 1;
       QSPI0.txmark.txmark := 1;
       -- reset 66 + 99
