@@ -1748,6 +1748,39 @@ pragma Style_Checks (Off);
    -- Chapter 19 Micro Trace Buffer (MTB)
    ----------------------------------------------------------------------------
 
+   -- 19.31.1 MTB Position Register (MTB_POSITION)
+   -- 19.31.2 MTB Master Register (MTB_MASTER)
+   -- 19.31.3 MTB Flow Register (MTB_FLOW)
+   -- 19.31.4 MTB Base Register (MTB_BASE)
+   -- 19.31.5 Integration Mode Control Register (MTB_MODECTRL)
+   -- 19.31.6 Claim TAG Set Register (MTB_TAGSET)
+   -- 19.31.7 Claim TAG Clear Register (MTB_TAGCLEAR)
+   -- 19.31.8 Lock Access Register (MTB_LOCKACCESS)
+   -- 19.31.9 Lock Status Register (MTB_LOCKSTAT)
+   -- 19.31.10 Authentication Status Register (MTB_AUTHSTAT)
+   -- 19.31.11 Device Architecture Register (MTB_DEVICEARCH)
+   -- 19.31.12 Device Configuration Register (MTB_DEVICECFG)
+   -- 19.31.13 Device Type Identifier Register (MTB_DEVICETYPID)
+   -- 19.31.14 Peripheral ID Register (MTB_PERIPHIDn)
+   -- 19.31.15 Component ID Register (MTB_COMPIDn)
+
+   -- 19.32.1 MTB DWT Control Register (MTBDWT_CTRL)
+   -- 19.32.2 MTB_DWT Comparator Register (MTBDWT_COMPn)
+   -- 19.32.3 MTB_DWT Comparator Mask Register (MTBDWT_MASKn)
+   -- 19.32.4 MTB_DWT Comparator Function Register 0 (MTBDWT_FCT0)
+   -- 19.32.5 MTB_DWT Comparator Function Register 1 (MTBDWT_FCT1)
+   -- 19.32.6 MTB_DWT Trace Buffer Control Register (MTBDWT_TBCTRL)
+   -- 19.32.7 Device Configuration Register (MTBDWT_DEVICECFG)
+   -- 19.32.8 Device Type Identifier Register (MTBDWT_DEVICETYPID)
+   -- 19.32.9 Peripheral ID Register (MTBDWT_PERIPHIDn)
+   -- 19.32.10 Component ID Register (MTBDWT_COMPIDn)
+
+   -- 19.33.1 Entry (ROM_ENTRYn)
+   -- 19.33.2 End of Table Marker Register (ROM_TABLEMARK)
+   -- 19.33.3 System Access Register (ROM_SYSACCESS)
+   -- 19.33.4 Peripheral ID Register (ROM_PERIPHIDn)
+   -- 19.33.5 Component ID Register (ROM_COMPIDn)
+
    ----------------------------------------------------------------------------
    -- Definitions for DMA
    ----------------------------------------------------------------------------
@@ -2707,17 +2740,683 @@ pragma Style_Checks (Off);
    -- Chapter 28 Analog-to-Digital Converter (ADC)
    ----------------------------------------------------------------------------
 
+   -- 28.3.1 ADC Status and Control Registers 1 (ADCx_SC1n)
+
+   ADCH_0       : constant := 2#00000#; -- When DIFF=0, DADP0 is selected as input; when DIFF=1, DAD0 is selected as input.
+   ADCH_1       : constant := 2#00001#; -- When DIFF=0, DADP1 is selected as input; when DIFF=1, DAD1 is selected as input.
+   ADCH_2       : constant := 2#00010#; -- When DIFF=0, DADP2 is selected as input; when DIFF=1, DAD2 is selected as input.
+   ADCH_3       : constant := 2#00011#; -- When DIFF=0, DADP3 is selected as input; when DIFF=1, DAD3 is selected as input.
+   ADCH_4       : constant := 2#00100#; -- When DIFF=0, AD4 is selected as input; when DIFF=1, it is reserved.
+   ADCH_5       : constant := 2#00101#; -- When DIFF=0, AD5 is selected as input; when DIFF=1, it is reserved.
+   ADCH_6       : constant := 2#00110#; -- When DIFF=0, AD6 is selected as input; when DIFF=1, it is reserved.
+   ADCH_7       : constant := 2#00111#; -- When DIFF=0, AD7 is selected as input; when DIFF=1, it is reserved.
+   ADCH_8       : constant := 2#01000#; -- When DIFF=0, AD8 is selected as input; when DIFF=1, it is reserved.
+   ADCH_9       : constant := 2#01001#; -- When DIFF=0, AD9 is selected as input; when DIFF=1, it is reserved.
+   ADCH_10      : constant := 2#01010#; -- When DIFF=0, AD10 is selected as input; when DIFF=1, it is reserved.
+   ADCH_11      : constant := 2#01011#; -- When DIFF=0, AD11 is selected as input; when DIFF=1, it is reserved.
+   ADCH_12      : constant := 2#01100#; -- When DIFF=0, AD12 is selected as input; when DIFF=1, it is reserved.
+   ADCH_13      : constant := 2#01101#; -- When DIFF=0, AD13 is selected as input; when DIFF=1, it is reserved.
+   ADCH_14      : constant := 2#01110#; -- When DIFF=0, AD14 is selected as input; when DIFF=1, it is reserved.
+   ADCH_15      : constant := 2#01111#; -- When DIFF=0, AD15 is selected as input; when DIFF=1, it is reserved.
+   ADCH_16      : constant := 2#10000#; -- When DIFF=0, AD16 is selected as input; when DIFF=1, it is reserved.
+   ADCH_17      : constant := 2#10001#; -- When DIFF=0, AD17 is selected as input; when DIFF=1, it is reserved.
+   ADCH_18      : constant := 2#10010#; -- When DIFF=0, AD18 is selected as input; when DIFF=1, it is reserved.
+   ADCH_19      : constant := 2#10011#; -- When DIFF=0, AD19 is selected as input; when DIFF=1, it is reserved.
+   ADCH_20      : constant := 2#10100#; -- When DIFF=0, AD20 is selected as input; when DIFF=1, it is reserved.
+   ADCH_21      : constant := 2#10101#; -- When DIFF=0, AD21 is selected as input; when DIFF=1, it is reserved.
+   ADCH_22      : constant := 2#10110#; -- When DIFF=0, AD22 is selected as input; when DIFF=1, it is reserved.
+   ADCH_23      : constant := 2#10111#; -- When DIFF=0, AD23 is selected as input; when DIFF=1, it is reserved.
+   ADCH_RSVD1   : constant := 2#11000#; -- Reserved.
+   ADCH_RSVD2   : constant := 2#11001#; -- Reserved.
+   ADCH_TMPSENS : constant := 2#11010#; -- When DIFF=0, Temp Sensor (single-ended) is selected as input; when DIFF=1, Temp Sensor (differential) is selected as input.
+   ADCH_BANDGAP : constant := 2#11011#; -- When DIFF=0,Bandgap (single-ended) is selected as input; when DIFF=1, Bandgap (differential) is selected as input.
+   ADCH_RSVD3   : constant := 2#11100#; -- Reserved.
+   ADCH_VREFSH  : constant := 2#11101#; -- When DIFF=0,VREFSH is selected as input; when DIFF=1, -VREFSH (differential) is selected as input.
+   ADCH_VREFSL  : constant := 2#11110#; -- When DIFF=0,VREFSL is selected as input; when DIFF=1, it is reserved.
+   ADCH_DISABLE : constant := 2#11111#; -- Module is disabled.
+
+   type ADCx_SC1n_Type is record
+      ADCH     : Bits_5  := ADCH_DISABLE; -- Input channel select
+      DIFF     : Boolean := False;        -- Differential Mode Enable
+      AIEN     : Boolean := False;        -- Interrupt Enable
+      COCO     : Boolean := False;        -- Conversion Complete Flag
+      Reserved : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_SC1n_Type use record
+      ADCH     at 0 range 0 ..  4;
+      DIFF     at 0 range 5 ..  5;
+      AIEN     at 0 range 6 ..  6;
+      COCO     at 0 range 7 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   ADC0_SC1A_ADDRESS : constant := 16#4003_B000#;
+
+   ADC0_SC1A : aliased ADCx_SC1n_Type
+      with Address              => System'To_Address (ADC0_SC1A_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADC0_SC1B_ADDRESS : constant := 16#4003_B004#;
+
+   ADC0_SC1B : aliased ADCx_SC1n_Type
+      with Address              => System'To_Address (ADC0_SC1B_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.2 ADC Configuration Register 1 (ADCx_CFG1)
+
+   ADICLK_BUSDIV1 : constant := 2#00#; -- Bus clock
+   ADICLK_BUSDIV2 : constant := 2#01#; -- (Bus clock)/2
+   ADICLK_ALTCLK  : constant := 2#10#; -- Alternate clock (ALTCLK)
+   ADICLK_ADACK   : constant := 2#11#; -- Asynchronous clock (ADACK)
+
+   MODE_S8D9   : constant := 2#00#; -- When DIFF=0:It is single-ended 8-bit conversion; when DIFF=1, it is differential 9-bit conversion with 2's complement output.
+   MODE_S12D13 : constant := 2#01#; -- When DIFF=0:It is single-ended 12-bit conversion ; when DIFF=1, it is differential 13-bit conversion with 2's complement output.
+   MODE_S10D11 : constant := 2#10#; -- When DIFF=0:It is single-ended 10-bit conversion. ; when DIFF=1, it is differential 11-bit conversion with 2's complement output
+   MODE_S16D16 : constant := 2#11#; -- When DIFF=0:It is single-ended 16-bit conversion..; when DIFF=1, it is differential 16-bit conversion with 2's complement output
+
+   ADLSMP_SHORT : constant := 0; -- Short sample time.
+   ADLSMP_LONG  : constant := 1; -- Long sample time.
+
+   ADIV_DIV1 : constant := 2#00#; -- The divide ratio is 1 and the clock rate is input clock.
+   ADIV_DIV2 : constant := 2#01#; -- The divide ratio is 2 and the clock rate is (input clock)/2.
+   ADIV_DIV4 : constant := 2#10#; -- The divide ratio is 4 and the clock rate is (input clock)/4.
+   ADIV_DIV8 : constant := 2#11#; -- The divide ratio is 8 and the clock rate is (input clock)/8.
+
+   type ADCx_CFG1_Type is record
+      ADICLK   : Bits_2  := ADICLK_BUSDIV1; -- Input Clock Select
+      MODE     : Bits_2  := MODE_S8D9;      -- Conversion mode selection
+      ADLSMP   : Bits_1  := ADLSMP_SHORT;   -- Sample Time Configuration
+      ADIV     : Bits_2  := ADIV_DIV1;      -- Clock Divide Select
+      ADLPC    : Boolean := False;          -- Low-Power Configuration
+      Reserved : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_CFG1_Type use record
+      ADICLK   at 0 range 0 ..  1;
+      MODE     at 0 range 2 ..  3;
+      ADLSMP   at 0 range 4 ..  4;
+      ADIV     at 0 range 5 ..  6;
+      ADLPC    at 0 range 7 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   ADC0_CFG1_ADDRESS : constant := 16#4003_B008#;
+
+   ADC0_CFG1 : aliased ADCx_CFG1_Type
+      with Address              => System'To_Address (ADC0_CFG1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.3 ADC Configuration Register 2 (ADCx_CFG2)
+
+   ADLSTS_24 : constant := 2#00#; -- Default longest sample time; 20 extra ADCK cycles; 24 ADCK cycles total.
+   ADLSTS_16 : constant := 2#01#; -- 12 extra ADCK cycles; 16 ADCK cycles total sample time.
+   ADLSTS_10 : constant := 2#10#; -- 6 extra ADCK cycles; 10 ADCK cycles total sample time.
+   ADLSTS_6  : constant := 2#11#; -- 2 extra ADCK cycles; 6 ADCK cycles total sample time.
+
+   MUXSEL_ADxxa : constant := 0; -- ADxxa channels are selected.
+   MUXSEL_ADxxb : constant := 1; -- ADxxb channels are selected.
+
+   type ADCx_CFG2_Type is record
+      ADLSTS    : Bits_2  := ADLSTS_24;    -- Long Sample Time Select
+      ADHSC     : Boolean := False;        -- High-Speed Configuration
+      ADACKEN   : Boolean := False;        -- Asynchronous Clock Output Enable
+      MUXSEL    : Bits_1  := MUXSEL_ADxxa; -- ADC Mux Select
+      Reserved1 : Bits_3  := 0;
+      Reserved2 : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_CFG2_Type use record
+      ADLSTS    at 0 range 0 ..  1;
+      ADHSC     at 0 range 2 ..  2;
+      ADACKEN   at 0 range 3 ..  3;
+      MUXSEL    at 0 range 4 ..  4;
+      Reserved1 at 0 range 5 ..  7;
+      Reserved2 at 0 range 8 .. 31;
+   end record;
+
+   ADC0_CFG2_ADDRESS : constant := 16#4003_B00C#;
+
+   ADC0_CFG2 : aliased ADCx_CFG2_Type
+      with Address              => System'To_Address (ADC0_CFG2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.4 ADC Data Result Register (ADCx_Rn)
+
+   type ADCx_Rn_Type is record
+      D        : Bits_16; -- Data result
+      Reserved : Bits_16;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_Rn_Type use record
+      D        at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   ADC0_RA_ADDRESS : constant := 16#4003_B010#;
+
+   ADC0_RA : aliased ADCx_Rn_Type
+      with Address              => System'To_Address (ADC0_RA_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADC0_RB_ADDRESS : constant := 16#4003_B014#;
+
+   ADC0_RB : aliased ADCx_Rn_Type
+      with Address              => System'To_Address (ADC0_RB_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.5 Compare Value Registers (ADCx_CVn)
+
+   type ADCx_CVn_Type is record
+      CV       : Bits_16; -- Compare Value.
+      Reserved : Bits_16;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_CVn_Type use record
+      CV       at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   ADC0_CV1_ADDRESS : constant := 16#4003_B018#;
+
+   ADC0_CV1 : aliased ADCx_CVn_Type
+      with Address              => System'To_Address (ADC0_CV1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADC0_CV2_ADDRESS : constant := 16#4003_B01C#;
+
+   ADC0_CV2 : aliased ADCx_CVn_Type
+      with Address              => System'To_Address (ADC0_CV2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.6 Status and Control Register 2 (ADCx_SC2)
+
+   REFSEL_REF   : constant := 2#00#; -- Default voltage reference pin pair, that is, external pins VREFH and VREFL
+   REFSEL_ALT   : constant := 2#01#; -- Alternate reference pair, that is, VALTH and VALTL .
+   REFSEL_RSVD1 : constant := 2#10#; -- Reserved
+   REFSEL_RSVD2 : constant := 2#11#; -- Reserved
+
+   ADTRG_SOFT : constant := 0; -- Software trigger selected.
+   ADTRG_HARD : constant := 1; -- Hardware trigger selected.
+
+   type ADCx_SC2_Type is record
+      REFSEL   : Bits_2  := REFSEL_REF; -- Voltage Reference Selection
+      DMAEN    : Boolean := False;      -- DMA Enable
+      ACREN    : Boolean := False;      -- Compare Function Range Enable
+      ACFGT    : Boolean := False;      -- Compare Function Greater Than Enable
+      ACFE     : Boolean := False;      -- Compare Function Enable
+      ADTRG    : Bits_1  := ADTRG_SOFT; -- Conversion Trigger Select
+      ADACT    : Boolean := False;      -- Conversion Active
+      Reserved : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_SC2_Type use record
+      REFSEL   at 0 range 0 ..  1;
+      DMAEN    at 0 range 2 ..  2;
+      ACREN    at 0 range 3 ..  3;
+      ACFGT    at 0 range 4 ..  4;
+      ACFE     at 0 range 5 ..  5;
+      ADTRG    at 0 range 6 ..  6;
+      ADACT    at 0 range 7 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   ADC0_SC2_ADDRESS : constant := 16#4003_B020#;
+
+   ADC0_SC2 : aliased ADCx_SC2_Type
+      with Address              => System'To_Address (ADC0_SC2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.7 Status and Control Register 3 (ADCx_SC3)
+
+   AVGS_4  : constant := 2#00#; -- 4 samples averaged.
+   AVGS_8  : constant := 2#01#; -- 8 samples averaged.
+   AVGS_16 : constant := 2#10#; -- 16 samples averaged.
+   AVGS_32 : constant := 2#11#; -- 32 samples averaged.
+
+   type ADCx_SC3_Type is record
+      AVGS      : Bits_2  := AVGS_4; -- Hardware Average Select
+      AVGE      : Boolean := False;  -- Hardware Average Enable
+      ADCO      : Boolean := False;  -- Continuous Conversion Enable
+      Reserved1 : Bits_2  := 0;
+      CALF      : Boolean := False;  -- Calibration Failed Flag
+      CAL       : Boolean := False;  -- Calibration
+      Reserved2 : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_SC3_Type use record
+      AVGS      at 0 range 0 ..  1;
+      AVGE      at 0 range 2 ..  2;
+      ADCO      at 0 range 3 ..  3;
+      Reserved1 at 0 range 4 ..  5;
+      CALF      at 0 range 6 ..  6;
+      CAL       at 0 range 7 ..  7;
+      Reserved2 at 0 range 8 .. 31;
+   end record;
+
+   ADC0_SC3_ADDRESS : constant := 16#4003_B024#;
+
+   ADC0_SC3 : aliased ADCx_SC3_Type
+      with Address              => System'To_Address (ADC0_SC3_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.8 ADC Offset Correction Register (ADCx_OFS)
+
+   type ADCx_OFS_Type is record
+      OFS      : Integer_16 := 4; -- Offset Error Correction Value
+      Reserved : Bits_16    := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_OFS_Type use record
+      OFS      at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   ADC0_OFS_ADDRESS : constant := 16#4003_B028#;
+
+   ADC0_OFS : aliased ADCx_OFS_Type
+      with Address              => System'To_Address (ADC0_OFS_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.9 ADC Plus-Side Gain Register (ADCx_PG)
+
+   type ADCx_PG_Type is record
+      PG       : Bits_16 := 16#8200#; -- Plus-Side Gain
+      Reserved : Bits_16 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_PG_Type use record
+      PG       at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   ADC0_PG_ADDRESS : constant := 16#4003_B02C#;
+
+   ADC0_PG : aliased ADCx_PG_Type
+      with Address              => System'To_Address (ADC0_PG_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.10 ADC Minus-Side Gain Register (ADCx_MG)
+
+   type ADCx_MG_Type is record
+      MG       : Bits_16 := 16#8200#; -- Minus-Side Gain
+      Reserved : Bits_16 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_MG_Type use record
+      MG       at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   ADC0_MG_ADDRESS : constant := 16#4003_B030#;
+
+   ADC0_MG : aliased ADCx_MG_Type
+      with Address              => System'To_Address (ADC0_MG_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.11 ADC Plus-Side General Calibration Value Register (ADCx_CLPD)
+
+   type ADCx_CLPD_Type is record
+      CLPD     : Bits_6  := 16#0A#; -- Calibration Value
+      Reserved : Bits_26 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_CLPD_Type use record
+      CLPD     at 0 range 0 ..  5;
+      Reserved at 0 range 6 .. 31;
+   end record;
+
+   ADC0_CLPD_ADDRESS : constant := 16#4003_B034#;
+
+   ADC0_CLPD : aliased ADCx_CLPD_Type
+      with Address              => System'To_Address (ADC0_CLPD_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.12 ADC Plus-Side General Calibration Value Register (ADCx_CLPS)
+
+   type ADCx_CLPS_Type is record
+      CLPS     : Bits_6  := 16#20#; -- Calibration Value
+      Reserved : Bits_26 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_CLPS_Type use record
+      CLPS     at 0 range 0 ..  5;
+      Reserved at 0 range 6 .. 31;
+   end record;
+
+   ADC0_CLPS_ADDRESS : constant := 16#4003_B038#;
+
+   ADC0_CLPS : aliased ADCx_CLPS_Type
+      with Address              => System'To_Address (ADC0_CLPS_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.13 ADC Plus-Side General Calibration Value Register (ADCx_CLP4)
+
+   type ADCx_CLP4_Type is record
+      CLP4     : Bits_9  := 16#100#; -- Calibration Value
+      Reserved : Bits_23 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_CLP4_Type use record
+      CLP4     at 0 range 0 ..  8;
+      Reserved at 0 range 9 .. 31;
+   end record;
+
+   ADC0_CLP4_ADDRESS : constant := 16#4003_B03C#;
+
+   ADC0_CLP4 : aliased ADCx_CLP4_Type
+      with Address              => System'To_Address (ADC0_CLP4_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.14 ADC Plus-Side General Calibration Value Register (ADCx_CLP3)
+
+   type ADCx_CLP3_Type is record
+      CLP3     : Bits_9  := 16#100#; -- Calibration Value
+      Reserved : Bits_23 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_CLP3_Type use record
+      CLP3     at 0 range 0 ..  8;
+      Reserved at 0 range 9 .. 31;
+   end record;
+
+   ADC0_CLP3_ADDRESS : constant := 16#4003_B040#;
+
+   ADC0_CLP3 : aliased ADCx_CLP3_Type
+      with Address              => System'To_Address (ADC0_CLP3_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.15 ADC Plus-Side General Calibration Value Register (ADCx_CLP2)
+
+   type ADCx_CLP2_Type is record
+      CLP2     : Bits_8  := 16#80#; -- Calibration Value
+      Reserved : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_CLP2_Type use record
+      CLP2     at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   ADC0_CLP2_ADDRESS : constant := 16#4003_B044#;
+
+   ADC0_CLP2 : aliased ADCx_CLP2_Type
+      with Address              => System'To_Address (ADC0_CLP2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.16 ADC Plus-Side General Calibration Value Register (ADCx_CLP1)
+
+   type ADCx_CLP1_Type is record
+      CLP1     : Bits_7  := 16#40#; -- Calibration Value
+      Reserved : Bits_25 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_CLP1_Type use record
+      CLP1     at 0 range 0 ..  6;
+      Reserved at 0 range 7 .. 31;
+   end record;
+
+   ADC0_CLP1_ADDRESS : constant := 16#4003_B048#;
+
+   ADC0_CLP1 : aliased ADCx_CLP1_Type
+      with Address              => System'To_Address (ADC0_CLP1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.17 ADC Plus-Side General Calibration Value Register (ADCx_CLP0)
+
+   type ADCx_CLP0_Type is record
+      CLP0     : Bits_6  := 16#20#; -- Calibration Value
+      Reserved : Bits_26 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_CLP0_Type use record
+      CLP0     at 0 range 0 ..  5;
+      Reserved at 0 range 6 .. 31;
+   end record;
+
+   ADC0_CLP0_ADDRESS : constant := 16#4003_B04C#;
+
+   ADC0_CLP0 : aliased ADCx_CLP0_Type
+      with Address              => System'To_Address (ADC0_CLP0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.18 ADC Minus-Side General Calibration Value Register (ADCx_CLMD)
+
+   type ADCx_CLMD_Type is record
+      CLMD     : Bits_6  := 16#0A#; -- Calibration Value
+      Reserved : Bits_26 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_CLMD_Type use record
+      CLMD     at 0 range 0 ..  5;
+      Reserved at 0 range 6 .. 31;
+   end record;
+
+   ADC0_CLMD_ADDRESS : constant := 16#4003_B054#;
+
+   ADC0_CLMD : aliased ADCx_CLMD_Type
+      with Address              => System'To_Address (ADC0_CLMD_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.19 ADC Minus-Side General Calibration Value Register (ADCx_CLMS)
+
+   type ADCx_CLMS_Type is record
+      CLMS     : Bits_6  := 16#20#; -- Calibration Value
+      Reserved : Bits_26 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_CLMS_Type use record
+      CLMS     at 0 range 0 ..  5;
+      Reserved at 0 range 6 .. 31;
+   end record;
+
+   ADC0_CLMS_ADDRESS : constant := 16#4003_B058#;
+
+   ADC0_CLMS : aliased ADCx_CLMS_Type
+      with Address              => System'To_Address (ADC0_CLMS_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.20 ADC Minus-Side General Calibration Value Register (ADCx_CLM4)
+
+   type ADCx_CLM4_Type is record
+      CLM4     : Bits_10 := 16#200#; -- Calibration Value
+      Reserved : Bits_22 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_CLM4_Type use record
+      CLM4     at 0 range  0 ..  9;
+      Reserved at 0 range 10 .. 31;
+   end record;
+
+   ADC0_CLM4_ADDRESS : constant := 16#4003_B05C#;
+
+   ADC0_CLM4 : aliased ADCx_CLM4_Type
+      with Address              => System'To_Address (ADC0_CLM4_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.21 ADC Minus-Side General Calibration Value Register (ADCx_CLM3)
+
+   type ADCx_CLM3_Type is record
+      CLM3     : Bits_9  := 16#100#; -- Calibration Value
+      Reserved : Bits_23 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_CLM3_Type use record
+      CLM3     at 0 range 0 ..  8;
+      Reserved at 0 range 9 .. 31;
+   end record;
+
+   ADC0_CLM3_ADDRESS : constant := 16#4003_B060#;
+
+   ADC0_CLM3 : aliased ADCx_CLM3_Type
+      with Address              => System'To_Address (ADC0_CLM3_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.22 ADC Minus-Side General Calibration Value Register (ADCx_CLM2)
+
+   type ADCx_CLM2_Type is record
+      CLM2     : Bits_8  := 16#80#; -- Calibration Value
+      Reserved : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_CLM2_Type use record
+      CLM2     at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   ADC0_CLM2_ADDRESS : constant := 16#4003_B064#;
+
+   ADC0_CLM2 : aliased ADCx_CLM2_Type
+      with Address              => System'To_Address (ADC0_CLM2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.23 ADC Minus-Side General Calibration Value Register (ADCx_CLM1)
+
+   type ADCx_CLM1_Type is record
+      CLM1     : Bits_7  := 16#40#; -- Calibration Value
+      Reserved : Bits_25 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_CLM1_Type use record
+      CLM1     at 0 range 0 ..  6;
+      Reserved at 0 range 7 .. 31;
+   end record;
+
+   ADC0_CLM1_ADDRESS : constant := 16#4003_B068#;
+
+   ADC0_CLM1 : aliased ADCx_CLM1_Type
+      with Address              => System'To_Address (ADC0_CLM1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 28.3.24 ADC Minus-Side General Calibration Value Register (ADCx_CLM0)
+
+   type ADCx_CLM0_Type is record
+      CLM0     : Bits_6  := 16#20#; -- Calibration Value
+      Reserved : Bits_26 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADCx_CLM0_Type use record
+      CLM0     at 0 range 0 ..  5;
+      Reserved at 0 range 6 .. 31;
+   end record;
+
+   ADC0_CLM0_ADDRESS : constant := 16#4003_B06C#;
+
+   ADC0_CLM0 : aliased ADCx_CLM0_Type
+      with Address              => System'To_Address (ADC0_CLM0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    ----------------------------------------------------------------------------
-   -- Chapter 29 Comparator(CMP)
+   -- Chapter 29 Comparator (CMP)
    ----------------------------------------------------------------------------
+
+   -- 29.7.1 CMP Control Register 0 (CMPx_CR0)
+   -- 29.7.2 CMP Control Register 1 (CMPx_CR1)
+   -- 29.7.3 CMP Filter Period Register (CMPx_FPR)
+   -- 29.7.4 CMP Status and Control Register (CMPx_SCR)
+   -- 29.7.5 DAC Control Register (CMPx_DACCR)
+   -- 29.7.6 MUX Control Register (CMPx_MUXCR)
 
    ----------------------------------------------------------------------------
    -- Chapter 30 12-bit Digital-to-Analog Converter (DAC)
    ----------------------------------------------------------------------------
 
+   -- 30.4.1 DAC Data Low Register (DACx_DATnL)
+   -- 30.4.2 DAC Data High Register (DACx_DATnH)
+   -- 30.4.3 DAC Status Register (DACx_SR)
+   -- 30.4.4 DAC Control Register (DACx_C0)
+   -- 30.4.5 DAC Control Register 1 (DACx_C1)
+   -- 30.4.6 DAC Control Register 2 (DACx_C2)
+
    ----------------------------------------------------------------------------
    -- Chapter 31 Timer/PWM Module (TPM)
    ----------------------------------------------------------------------------
+
+   -- 31.3.1 Status and Control (TPMx_SC)
+   -- 31.3.2 Counter (TPMx_CNT)
+   -- 31.3.3 Modulo (TPMx_MOD)
+   -- 31.3.4 Channel (n) Status and Control (TPMx_CnSC)
+   -- 31.3.5 Channel (n) Value (TPMx_CnV)
+   -- 31.3.6 Capture and Compare Status (TPMx_STATUS)
+   -- 31.3.7 Configuration (TPMx_CONF)
 
    ----------------------------------------------------------------------------
    -- Chapter 32 Periodic Interrupt Timer (PIT)
@@ -2869,6 +3568,11 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
    -- Chapter 33 Low-Power Timer (LPTMR)
    ----------------------------------------------------------------------------
+
+   -- 33.3.1 Low Power Timer Control Status Register (LPTMRx_CSR)
+   -- 33.3.2 Low Power Timer Prescale Register (LPTMRx_PSR)
+   -- 33.3.3 Low Power Timer Compare Register (LPTMRx_CMR)
+   -- 33.3.4 Low Power Timer Counter Register (LPTMRx_CNR)
 
    ----------------------------------------------------------------------------
    -- Chapter 34 Real Time Clock (RTC)
@@ -3081,6 +3785,35 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
    -- Chapter 35 Universal Serial Bus Full Speed OTG Controller (USBOTG)
    ----------------------------------------------------------------------------
+
+   -- 35.4.1 Peripheral ID register (USBx_PERID)
+   -- 35.4.2 Peripheral ID Complement register (USBx_IDCOMP)
+   -- 35.4.3 Peripheral Revision register (USBx_REV)
+   -- 35.4.4 Peripheral Additional Info register (USBx_ADDINFO)
+   -- 35.4.5 OTG Interrupt Status register (USBx_OTGISTAT)
+   -- 35.4.6 OTG Interrupt Control register (USBx_OTGICR)
+   -- 35.4.7 OTG Status register (USBx_OTGSTAT)
+   -- 35.4.8 OTG Control register (USBx_OTGCTL)
+   -- 35.4.9 Interrupt Status register (USBx_ISTAT)
+   -- 35.4.10 Interrupt Enable register (USBx_INTEN)
+   -- 35.4.11 Error Interrupt Status register (USBx_ERRSTAT)
+   -- 35.4.12 Error Interrupt Enable register (USBx_ERREN)
+   -- 35.4.13 Status register (USBx_STAT)
+   -- 35.4.14 Control register (USBx_CTL)
+   -- 35.4.15 Address register (USBx_ADDR)
+   -- 35.4.16 BDT Page register 1 (USBx_BDTPAGE1)
+   -- 35.4.17 Frame Number register Low (USBx_FRMNUML)
+   -- 35.4.18 Frame Number register High (USBx_FRMNUMH)
+   -- 35.4.19 Token register (USBx_TOKEN)
+   -- 35.4.20 SOF Threshold register (USBx_SOFTHLD)
+   -- 35.4.21 BDT Page Register 2 (USBx_BDTPAGE2)
+   -- 35.4.22 BDT Page Register 3 (USBx_BDTPAGE3)
+   -- 35.4.23 Endpoint Control register (USBx_ENDPTn)
+   -- 35.4.24 USB Control register (USBx_USBCTRL)
+   -- 35.4.25 USB OTG Observe register (USBx_OBSERVE)
+   -- 35.4.26 USB OTG Control register (USBx_CONTROL)
+   -- 35.4.27 USB Transceiver Control register 0 (USBx_USBTRC0)
+   -- 35.4.28 Frame Adjust Register (USBx_USBFRMADJUST)
 
    ----------------------------------------------------------------------------
    -- Chapter 37 Serial Peripheral Interface (SPI)
@@ -3969,6 +4702,23 @@ pragma Style_Checks (Off);
    -- Chapter 41 Integrated Interchip Sound (I2S) / Synchronous Audio Interface (SAI)
    ----------------------------------------------------------------------------
 
+   -- 41.3.1 SAI Transmit Control Register (I2Sx_TCSR)
+   -- 41.3.2 SAI Transmit Configuration 2 Register (I2Sx_TCR2)
+   -- 41.3.3 SAI Transmit Configuration 3 Register (I2Sx_TCR3)
+   -- 41.3.4 SAI Transmit Configuration 4 Register (I2Sx_TCR4)
+   -- 41.3.5 SAI Transmit Configuration 5 Register (I2Sx_TCR5)
+   -- 41.3.6 SAI Transmit Data Register (I2Sx_TDRn)
+   -- 41.3.7 SAI Transmit Mask Register (I2Sx_TMR)
+   -- 41.3.8 SAI Receive Control Register (I2Sx_RCSR)
+   -- 41.3.9 SAI Receive Configuration 2 Register (I2Sx_RCR2)
+   -- 41.3.10 SAI Receive Configuration 3 Register (I2Sx_RCR3)
+   -- 41.3.11 SAI Receive Configuration 4 Register (I2Sx_RCR4)
+   -- 41.3.12 SAI Receive Configuration 5 Register (I2Sx_RCR5)
+   -- 41.3.13 SAI Receive Data Register (I2Sx_RDRn)
+   -- 41.3.14 SAI Receive Mask Register (I2Sx_RMR)
+   -- 41.3.15 SAI MCLK Control Register (I2Sx_MCR)
+   -- 41.3.16 SAI MCLK Divide Register (I2Sx_MDR)
+
    ----------------------------------------------------------------------------
    -- Chapter 42 General-Purpose Input/Output (GPIO)
    ----------------------------------------------------------------------------
@@ -4031,6 +4781,200 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
    -- Chapter 43 Touch Sensing Input (TSI)
    ----------------------------------------------------------------------------
+
+   -- 43.3.1 TSI General Control and Status Register (TSIx_GENCS)
+
+   STM_SOFT : constant := 0; -- Software trigger scan.
+   STM_HARD : constant := 1; -- Hardware trigger scan.
+
+   NSCN_1  : constant := 2#00000#; -- Once per electrode
+   NSCN_2  : constant := 2#00001#; -- Twice per electrode
+   NSCN_3  : constant := 2#00010#; -- 3 times per electrode
+   NSCN_4  : constant := 2#00011#; -- 4 times per electrode
+   NSCN_5  : constant := 2#00100#; -- 5 times per electrode
+   NSCN_6  : constant := 2#00101#; -- 6 times per electrode
+   NSCN_7  : constant := 2#00110#; -- 7 times per electrode
+   NSCN_8  : constant := 2#00111#; -- 8 times per electrode
+   NSCN_9  : constant := 2#01000#; -- 9 times per electrode
+   NSCN_10 : constant := 2#01001#; -- 10 times per electrode
+   NSCN_11 : constant := 2#01010#; -- 11 times per electrode
+   NSCN_12 : constant := 2#01011#; -- 12 times per electrode
+   NSCN_13 : constant := 2#01100#; -- 13 times per electrode
+   NSCN_14 : constant := 2#01101#; -- 14 times per electrode
+   NSCN_15 : constant := 2#01110#; -- 15 times per electrode
+   NSCN_16 : constant := 2#01111#; -- 16 times per electrode
+   NSCN_17 : constant := 2#10000#; -- 17 times per electrode
+   NSCN_18 : constant := 2#10001#; -- 18 times per electrode
+   NSCN_19 : constant := 2#10010#; -- 19 times per electrode
+   NSCN_20 : constant := 2#10011#; -- 20 times per electrode
+   NSCN_21 : constant := 2#10100#; -- 21 times per electrode
+   NSCN_22 : constant := 2#10101#; -- 22 times per electrode
+   NSCN_23 : constant := 2#10110#; -- 23 times per electrode
+   NSCN_24 : constant := 2#10111#; -- 24 times per electrode
+   NSCN_25 : constant := 2#11000#; -- 25 times per electrode
+   NSCN_26 : constant := 2#11001#; -- 26 times per electrode
+   NSCN_27 : constant := 2#11010#; -- 27 times per electrode
+   NSCN_28 : constant := 2#11011#; -- 28 times per electrode
+   NSCN_29 : constant := 2#11100#; -- 29 times per electrode
+   NSCN_30 : constant := 2#11101#; -- 30 times per electrode
+   NSCN_31 : constant := 2#11110#; -- 31 times per electrode
+   NSCN_32 : constant := 2#11111#; -- 32 times per electrode
+
+   PS_DIV1   : constant := 2#000#; -- Electrode Oscillator Frequency divided by 1
+   PS_DIV2   : constant := 2#001#; -- Electrode Oscillator Frequency divided by 2
+   PS_DIV4   : constant := 2#010#; -- Electrode Oscillator Frequency divided by 4
+   PS_DIV8   : constant := 2#011#; -- Electrode Oscillator Frequency divided by 8
+   PS_DIV16  : constant := 2#100#; -- Electrode Oscillator Frequency divided by 16
+   PS_DIV32  : constant := 2#101#; -- Electrode Oscillator Frequency divided by 32
+   PS_DIV64  : constant := 2#110#; -- Electrode Oscillator Frequency divided by 64
+   PS_DIV128 : constant := 2#111#; -- Electrode Oscillator Frequency divided by 128
+
+   EXTCHRG_500nA : constant := 2#000#; -- 500 nA.
+   EXTCHRG_1uA   : constant := 2#001#; -- 1 μA.
+   EXTCHRG_2uA   : constant := 2#010#; -- 2 μA.
+   EXTCHRG_4ua   : constant := 2#011#; -- 4 μA.
+   EXTCHRG_8uA   : constant := 2#100#; -- 8 μA.
+   EXTCHRG_16uA  : constant := 2#101#; -- 16 μA.
+   EXTCHRG_32uA  : constant := 2#110#; -- 32 μA.
+   EXTCHRG_64uA  : constant := 2#111#; -- 64 μA.
+
+   DVOLT_1V03 : constant := 2#00#; -- DV = 1.03 V; VP = 1.33 V; Vm = 0.30 V.
+   DVOLT_0V73 : constant := 2#01#; -- DV = 0.73 V; VP = 1.18 V; Vm = 0.45 V.
+   DVOLT_0V43 : constant := 2#10#; -- DV = 0.43 V; VP = 1.03 V; Vm = 0.60 V.
+   DVOLT_0V29 : constant := 2#11#; -- DV = 0.29 V; VP = 0.95 V; Vm = 0.67 V.
+
+   REFCHRG_500nA : constant := 2#000#; -- 500 nA.
+   REFCHRG_1uA   : constant := 2#001#; -- 1 μA.
+   REFCHRG_2uA   : constant := 2#010#; -- 2 μA.
+   REFCHRG_4uA   : constant := 2#011#; -- 4 μA.
+   REFCHRG_8uA   : constant := 2#100#; -- 8 μA.
+   REFCHRG_16uA  : constant := 2#101#; -- 16 μA.
+   REFCHRG_32uA  : constant := 2#110#; -- 32 μA.
+   REFCHRG_64uA  : constant := 2#111#; -- 64 μA.
+
+   MODE_CAPSENS : constant := 2#0000#; -- Set TSI in capacitive sensing(non-noise detection) mode.
+   MODE_TNDFDIS : constant := 2#0100#; -- Set TSI analog to work in single threshold noise detection mode and the frequency limitation circuit is disabled.
+   MODE_TNDFENB : constant := 2#1000#; -- Set TSI analog to work in single threshold noise detection mode and the frequency limitation circuit is enabled to work in higher frequencies operations.
+   MODE_AUTO    : constant := 2#1100#; -- Set TSI analog to work in automatic noise detection mode.
+
+   ESOR_OOR : constant := 0; -- Out-of-range interrupt is allowed.
+   ESOR_EOS : constant := 1; -- End-of-scan interrupt is allowed.
+
+   type TSIx_GENCS_Type is record
+      Reserved1 : Bits_1  := 0;
+      CURSW     : Boolean := False;         -- This bit specifies if the current sources of electrode oscillator and reference oscillator are swapped.
+      EOSF      : Boolean := False;         -- End of Scan Flag
+      SCNIP     : Boolean := False;         -- Scan In Progress Status
+      STM       : Bits_1  := STM_SOFT;      -- Scan Trigger Mode
+      STPE      : Boolean := False;         -- TSI STOP Enable
+      TSIIEN    : Boolean := False;         -- Touch Sensing Input Interrupt Enable
+      TSIEN     : Boolean := False;         -- Touch Sensing Input Module Enable
+      NSCN      : Bits_5  := NSCN_1;        -- These bits indicate the scan number for each electrode.
+      PS        : Bits_3  := PS_DIV1;       -- These bits indicate the prescaler of the output of electrode oscillator.
+      EXTCHRG   : Bits_3  := EXTCHRG_500nA; -- These bits indicate the electrode oscillator charge and discharge current value.
+      DVOLT     : Bits_2  := DVOLT_1V03;    -- These bits indicate the oscillator's voltage rails as below.
+      REFCHRG   : Bits_3  := REFCHRG_500nA; -- These bits indicate the reference oscillator charge and discharge current value.
+      MODE      : Bits_4  := MODE_CAPSENS;  -- TSI analog modes setup and status bits.
+      ESOR      : Bits_1  := ESOR_OOR;      -- End-of-scan or Out-of-Range Interrupt Selection
+      Reserved2 : Bits_2  := 0;
+      OUTRGF    : Boolean := False;         -- Out of Range Flag.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TSIx_GENCS_Type use record
+      Reserved1 at 0 range  0 ..  0;
+      CURSW     at 0 range  1 ..  1;
+      EOSF      at 0 range  2 ..  2;
+      SCNIP     at 0 range  3 ..  3;
+      STM       at 0 range  4 ..  4;
+      STPE      at 0 range  5 ..  5;
+      TSIIEN    at 0 range  6 ..  6;
+      TSIEN     at 0 range  7 ..  7;
+      NSCN      at 0 range  8 .. 12;
+      PS        at 0 range 13 .. 15;
+      EXTCHRG   at 0 range 16 .. 18;
+      DVOLT     at 0 range 19 .. 20;
+      REFCHRG   at 0 range 21 .. 23;
+      MODE      at 0 range 24 .. 27;
+      ESOR      at 0 range 28 .. 28;
+      Reserved2 at 0 range 29 .. 30;
+      OUTRGF    at 0 range 31 .. 31;
+   end record;
+
+   TSIx_GENCS_ADDRESS : constant := 16#4004_5000#;
+
+   TSIx_GENCS : aliased TSIx_GENCS_Type
+      with Address              => System'To_Address (TSIx_GENCS_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 43.3.2 TSI DATA Register (TSIx_DATA )
+
+   TSICH_0  : constant := 2#0000#; -- Channel 0.
+   TSICH_1  : constant := 2#0001#; -- Channel 1.
+   TSICH_2  : constant := 2#0010#; -- Channel 2.
+   TSICH_3  : constant := 2#0011#; -- Channel 3.
+   TSICH_4  : constant := 2#0100#; -- Channel 4.
+   TSICH_5  : constant := 2#0101#; -- Channel 5.
+   TSICH_6  : constant := 2#0110#; -- Channel 6.
+   TSICH_7  : constant := 2#0111#; -- Channel 7.
+   TSICH_8  : constant := 2#1000#; -- Channel 8.
+   TSICH_9  : constant := 2#1001#; -- Channel 9.
+   TSICH_10 : constant := 2#1010#; -- Channel 10.
+   TSICH_11 : constant := 2#1011#; -- Channel 11.
+   TSICH_12 : constant := 2#1100#; -- Channel 12.
+   TSICH_13 : constant := 2#1101#; -- Channel 13.
+   TSICH_14 : constant := 2#1110#; -- Channel 14.
+   TSICH_15 : constant := 2#1111#; -- Channel 15.
+
+   type TSIx_DATA_Type is record
+      TSICNT    : Unsigned_16 := 0;       -- TSI Conversion Counter Value
+      Reserved1 : Bits_6      := 0;
+      SWTS      : Boolean     := False;   -- Software Trigger Start
+      DMAEN     : Boolean     := False;   -- DMA Transfer Enabled
+      Reserved2 : Bits_4      := 0;
+      TSICH     : Bits_4      := TSICH_0; -- These bits specify current channel to be measured.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TSIx_DATA_Type use record
+      TSICNT    at 0 range  0 .. 15;
+      Reserved1 at 0 range 16 .. 21;
+      SWTS      at 0 range 22 .. 22;
+      DMAEN     at 0 range 23 .. 23;
+      Reserved2 at 0 range 24 .. 27;
+      TSICH     at 0 range 28 .. 31;
+   end record;
+
+   TSIx_DATA_ADDRESS : constant := 16#4004_5004#;
+
+   TSIx_DATA : aliased TSIx_DATA_Type
+      with Address              => System'To_Address (TSIx_DATA_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 43.3.3 TSI Threshold Register (TSIx_TSHD)
+
+   type TSIx_TSHD_Type is record
+      THRESL : Unsigned_16 := 0; -- TSI Wakeup Channel Low-threshold
+      THRESH : Unsigned_16 := 0; -- TSI Wakeup Channel High-threshold
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TSIx_TSHD_Type use record
+      THRESL at 0 range  0 .. 15;
+      THRESH at 0 range 16 .. 31;
+   end record;
+
+   TSIx_TSHD_ADDRESS : constant := 16#4004_5008#;
+
+   TSIx_TSHD : aliased TSIx_TSHD_Type
+      with Address              => System'To_Address (TSIx_TSHD_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 44 LCD Controller (SLCD)
