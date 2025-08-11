@@ -182,8 +182,8 @@ package body EtherLinkIII
          EtherLinkIII_Card.IF_Port := Shift_Right (Data, 14);
          Data := EEPROM_ID_Read (9);
          EtherLinkIII_Card.IRQ := Natural (Shift_Right (Data, 12));
-         Console.Print (EtherLinkIII_Card.Base_Address, Prefix => "IO address: ", NL => True);
-         Console.Print (EtherLinkIII_Card.IRQ, Prefix => "IRQ: ", NL => True);
+         Console.Print (Prefix => "IO address: ", Value => EtherLinkIII_Card.Base_Address, NL => True);
+         Console.Print (Prefix => "IRQ:        ", Value => EtherLinkIII_Card.IRQ, NL => True);
       end;
       -- set adapter tag register
       PortOut (ID_PORT, Unsigned_8'(16#D0# + 1));
