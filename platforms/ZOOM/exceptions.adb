@@ -67,7 +67,7 @@ package body Exceptions
    procedure Init
       is
    begin
-      CPU.VBR_Set (Vectors_Table'Address);
+      CPU.VBR_Set (Vector_Table'Address);
    end Init;
 
 end Exceptions;
