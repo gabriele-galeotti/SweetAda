@@ -71,7 +71,7 @@ package body Exceptions
    procedure Init
       is
    begin
-      CPU.VBR_Set (Vectors_Table'Address);
+      CPU.VBR_Set (Vector_Table'Address);
       IMRL0 (MASKALL0) := True;
       IMRL0 (MASKALL0) := False;
       IMRL1 (MASKALL1) := True;

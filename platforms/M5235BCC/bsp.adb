@@ -199,7 +199,7 @@ package body BSP
       begin
          IMRH0 (PIT0_PIF) := False;
          ICR0 (IRQ_Index (PIT0_PIF, False)) := (IP => 7, IL => 6, others => <>);
-         Exceptions.Vectors_Table (IRQ_Index (PIT0_PIF, True)) := To_U32 (VH_PIT0'Address);
+         Exceptions.Vector_Table (IRQ_Index (PIT0_PIF, True)) := To_U32 (VH_PIT0'Address);
          Timer_Init;
       end;
       CPU.Irq_Enable;

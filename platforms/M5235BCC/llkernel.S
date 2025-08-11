@@ -30,8 +30,8 @@
 
                 .extern _start
 
-                .global vectors_table
-vectors_table:
+                .global vector_table
+vector_table:
                                                 // #   offset
 initialsp:      .long   0                       // 000 0x0000 -
 initialpc:      .long   _start                  // 001 0x0004 -
