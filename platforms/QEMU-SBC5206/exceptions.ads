@@ -30,14 +30,14 @@ package Exceptions
 
    use Interfaces;
 
-   type Vectors_Table_Type is array (Natural range <>) of Unsigned_32
+   type Vector_Table_Type is array (Natural range <>) of Unsigned_32
       with Pack => True;
 
-   Vectors_Table : aliased Vectors_Table_Type (0 .. 255)
+   Vector_Table : aliased Vector_Table_Type (0 .. 255)
       with Size          => 256 * Unsigned_32'Object_Size,
            Volatile      => True,
            Import        => True,
-           External_Name => "vectors_table";
+           External_Name => "vector_table";
 
    procedure Exception_Process
       with Export        => True,
