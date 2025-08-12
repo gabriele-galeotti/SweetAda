@@ -35,6 +35,8 @@ package RPI3
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    -- 0x7Exxxxxx ---> 0x3Fxxxxxx
    PERIPHERALS_BASEADDRESS  : constant := 16#3F00_0000#;
    SYSTEM_TIMER_BASEADDRESS : constant := PERIPHERALS_BASEADDRESS + 16#0000_3000#;
@@ -1150,5 +1152,7 @@ package RPI3
    -- TEMPERATURE
    TAG_GET_TEMPERATURE : constant := TAG_HW + TAG_GET + TAG_TEMPERATURE;
    TEMPERATURE_ID      : constant := 16#0#;
+
+pragma Style_Checks (On);
 
 end RPI3;
