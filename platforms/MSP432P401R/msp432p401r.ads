@@ -43,7 +43,7 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
-   -- 3 Reset Controller (RSTCTL)
+   -- Chapter 3 Reset Controller (RSTCTL)
    ----------------------------------------------------------------------------
 
    -- 3.3.1 RSTCTL_RESET_REQ Register
@@ -195,7 +195,7 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- 4 System Controller (SYSCTL)
+   -- Chapter 4 System Controller (SYSCTL)
    ----------------------------------------------------------------------------
 
    -- 4.11.1 SYS_REBOOT_CTL Register
@@ -587,7 +587,7 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- 5 System Controller A (SYSCTL_A)
+   -- Chapter 5 System Controller A (SYSCTL_A)
    ----------------------------------------------------------------------------
 
    -- additional types for SYSCTL_A
@@ -723,7 +723,7 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- 6 Clock System (CS)
+   -- Chapter 6 Clock System (CS)
    ----------------------------------------------------------------------------
 
    -- 6.3.1 CSKEY Register Clock System Key Register
@@ -1307,7 +1307,7 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- 7 Power Supply System (PSS)
+   -- Chapter 7 Power Supply System (PSS)
    ----------------------------------------------------------------------------
 
    -- 7.3.1 PSSKEY Register PSS Key Register
@@ -1448,7 +1448,7 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- 8 Power Control Manager (PCM)
+   -- Chapter 8 Power Control Manager (PCM)
    ----------------------------------------------------------------------------
 
    PCMKEY_KEY : constant := 16#695A#;
@@ -1641,15 +1641,131 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- 9 Flash Controller (FLCTL)
+   -- Chapter 9 Flash Controller (FLCTL)
    ----------------------------------------------------------------------------
 
-   ----------------------------------------------------------------------------
-   -- 10 Flash Controller A (FLCTL_A)
-   ----------------------------------------------------------------------------
+   -- 9.4.1 FLCTL_POWER_STAT Register
+   -- 9.4.2 FLCTL_BANK0_RDCTL Register
+   -- 9.4.3 FLCTL_BANK1_RDCTL Register
+   -- 9.4.4 FLCTL_RDBRST_CTLSTAT Register
+   -- 9.4.5 FLCTL_RDBRST_STARTADDR Register
+   -- 9.4.6 FLCTL_RDBRST_LEN Register
+   -- 9.4.7 FLCTL_RDBRST_FAILADDR Register
+   -- 9.4.8 FLCTL_RDBRST_FAILCNT Register
+   -- 9.4.9 FLCTL_PRG_CTLSTAT Register
+   -- 9.4.10 FLCTL_PRGBRST_CTLSTAT
+   -- 9.4.11 FLCTL_PRGBRST_STARTADDR
+   -- 9.4.12 FLCTL_PRGBRST_DATA0_0 Register
+   -- 9.4.13 FLCTL_PRGBRST_DATA0_1 Register
+   -- 9.4.14 FLCTL_PRGBRST_DATA0_2 Register
+   -- 9.4.15 FLCTL_PRGBRST_DATA0_3 Register
+   -- 9.4.16 FLCTL_PRGBRST_DATA1_0 Register
+   -- 9.4.17 FLCTL_PRGBRST_DATA1_1 Register
+   -- 9.4.18 FLCTL_PRGBRST_DATA1_2 Register
+   -- 9.4.19 FLCTL_PRGBRST_DATA1_3 Register
+   -- 9.4.20 FLCTL_PRGBRST_DATA2_0 Register
+   -- 9.4.21 FLCTL_PRGBRST_DATA2_1 Register
+   -- 9.4.22 FLCTL_PRGBRST_DATA2_2 Register
+   -- 9.4.23 FLCTL_PRGBRST_DATA2_3 Register
+   -- 9.4.24 FLCTL_PRGBRST_DATA3_0 Register
+   -- 9.4.25 FLCTL_PRGBRST_DATA3_1 Register
+   -- 9.4.26 FLCTL_PRGBRST_DATA3_2 Register
+   -- 9.4.27 FLCTL_PRGBRST_DATA3_3 Register
+   -- 9.4.28 FLCTL_ERASE_CTLSTAT Register
+   -- 9.4.29 FLCTL_ERASE_SECTADDR Register
+   -- 9.4.30 FLCTL_BANK0_INFO_WEPROT Register
+   -- 9.4.31 FLCTL_BANK0_MAIN_WEPROT Register
+   -- 9.4.32 FLCTL_BANK1_INFO_WEPROT Register
+   -- 9.4.33 FLCTL_BANK1_MAIN_WEPROT Register
+   -- 9.4.34 FLCTL_BMRK_CTLSTAT Register
+   -- 9.4.35 FLCTL_BMRK_IFETCH Register
+   -- 9.4.36 FLCTL_BMRK_DREAD Register
+   -- 9.4.37 FLCTL_BMRK_CMP Register
+   -- 9.4.38 FLCTL_IFG Register
+   -- 9.4.39 FLCTL_IE Register
+   -- 9.4.40 FLCTL_CLRIFG Register
+   -- 9.4.41 FLCTL_SETIFG Register
+   -- 9.4.42 FLCTL_READ_TIMCTL Register
+   -- 9.4.43 FLCTL_READMARGIN_TIMCTL Register
+   -- 9.4.44 FLCTL_PRGVER_TIMCTL Register
+   -- 9.4.45 FLCTL_ERSVER_TIMCTL Register
+   -- 9.4.46 FLCTL_PROGRAM_TIMCTL Register
+   -- 9.4.47 FLCTL_ERASE_TIMCTL Register
+   -- 9.4.48 FLCTL_MASSERASE_TIMCTL Register
+   -- 9.4.49 FLCTL_BURSTPRG_TIMCTL Register
 
    ----------------------------------------------------------------------------
-   -- 11 DMA
+   -- Chapter 10 Flash Controller A (FLCTL_A)
+   ----------------------------------------------------------------------------
+
+   -- 10.4.1 FLCTL_POWER_STAT Register
+   -- 10.4.2 FLCTL_BANK0_RDCTL Register
+   -- 10.4.3 FLCTL_BANK1_RDCTL Register
+   -- 10.4.4 FLCTL_RDBRST_CTLSTAT Register
+   -- 10.4.5 FLCTL_RDBRST_STARTADDR Register
+   -- 10.4.6 FLCTL_RDBRST_LEN Register
+   -- 10.4.7 FLCTL_RDBRST_FAILADDR Register
+   -- 10.4.8 FLCTL_RDBRST_FAILCNT Register
+   -- 10.4.9 FLCTL_PRG_CTLSTAT Register
+   -- 10.4.10 FLCTL_PRGBRST_CTLSTAT Register
+   -- 10.4.11 FLCTL_PRGBRST_STARTADDR Register
+   -- 10.4.12 FLCTL_PRGBRST_DATA0_0 Register
+   -- 10.4.13 FLCTL_PRGBRST_DATA0_1 Register
+   -- 10.4.14 FLCTL_PRGBRST_DATA0_2 Register
+   -- 10.4.15 FLCTL_PRGBRST_DATA0_3 Register
+   -- 10.4.16 FLCTL_PRGBRST_DATA1_0 Register
+   -- 10.4.17 FLCTL_PRGBRST_DATA1_1 Register
+   -- 10.4.18 FLCTL_PRGBRST_DATA1_2 Register
+   -- 10.4.19 FLCTL_PRGBRST_DATA1_3 Register
+   -- 10.4.20 FLCTL_PRGBRST_DATA2_0 Register
+   -- 10.4.21 FLCTL_PRGBRST_DATA2_1 Register
+   -- 10.4.22 FLCTL_PRGBRST_DATA2_2 Register
+   -- 10.4.23 FLCTL_PRGBRST_DATA2_3 Register
+   -- 10.4.24 FLCTL_PRGBRST_DATA3_0 Register
+   -- 10.4.25 FLCTL_PRGBRST_DATA3_1 Register
+   -- 10.4.26 FLCTL_PRGBRST_DATA3_2 Register
+   -- 10.4.27 FLCTL_PRGBRST_DATA3_3 Register
+   -- 10.4.28 FLCTL_ERASE_CTLSTAT Register
+   -- 10.4.29 FLCTL_ERASE_SECTADDR Register
+   -- 10.4.30 FLCTL_BANK0_INFO_WEPROT Register
+   -- 10.4.31 FLCTL_BANK0_MAIN_WEPROT Register
+   -- 10.4.32 FLCTL_BANK1_INFO_WEPROT Register
+   -- 10.4.33 FLCTL_BANK1_MAIN_WEPROT Register
+   -- 10.4.34 FLCTL_BMRK_CTLSTAT Register
+   -- 10.4.35 FLCTL_BMRK_IFETCH Register
+   -- 10.4.36 FLCTL_BMRK_DREAD Register
+   -- 10.4.37 FLCTL_BMRK_CMP Register
+   -- 10.4.38 FLCTL_IFG Register
+   -- 10.4.39 FLCTL_IE Register
+   -- 10.4.40 FLCTL_CLRIFG Register
+   -- 10.4.41 FLCTL_SETIFG Register
+   -- 10.4.42 FLCTL_READ_TIMCTL Register
+   -- 10.4.43 FLCTL_READMARGIN_TIMCTL Register
+   -- 10.4.44 FLCTL_PRGVER_TIMCTL Register
+   -- 10.4.45 FLCTL_ERSVER_TIMCTL Register
+   -- 10.4.46 FLCTL_PROGRAM_TIMCTL Register
+   -- 10.4.47 FLCTL_ERASE_TIMCTL Register
+   -- 10.4.48 FLCTL_MASSERASE_TIMCTL Register
+   -- 10.4.49 FLCTL_BURSTPRG_TIMCTL Register
+   -- 10.4.50 FLCTL_BANK0_MAIN_WEPROT0 Register
+   -- 10.4.51 FLCTL_BANK0_MAIN_WEPROT1 Register
+   -- 10.4.52 FLCTL_BANK0_MAIN_WEPROT2 Register
+   -- 10.4.53 FLCTL_BANK0_MAIN_WEPROT3 Register
+   -- 10.4.54 FLCTL_BANK0_MAIN_WEPROT4 Register
+   -- 10.4.55 FLCTL_BANK0_MAIN_WEPROT5 Register
+   -- 10.4.56 FLCTL_BANK0_MAIN_WEPROT6 Register
+   -- 10.4.57 FLCTL_BANK0_MAIN_WEPROT7 Register
+   -- 10.4.58 FLCTL_BANK1_MAIN_WEPROT0 Register
+   -- 10.4.59 FLCTL_BANK1_MAIN_WEPROT1 Register
+   -- 10.4.60 FLCTL_BANK1_MAIN_WEPROT2 Register
+   -- 10.4.61 FLCTL_BANK1_MAIN_WEPROT3 Register
+   -- 10.4.62 FLCTL_BANK1_MAIN_WEPROT4 Register
+   -- 10.4.63 FLCTL_BANK1_MAIN_WEPROT5 Register
+   -- 10.4.64 FLCTL_BANK1_MAIN_WEPROT6 Register
+   -- 10.4.65 FLCTL_BANK1_MAIN_WEPROT7 Register
+
+   ----------------------------------------------------------------------------
+   -- Chapter 11 DMA
    ----------------------------------------------------------------------------
 
    -- 11.3.1 DMA_DEVICE_CFG Register
@@ -2188,7 +2304,7 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- 12 Digital I/O
+   -- Chapter 12 Digital I/O
    ----------------------------------------------------------------------------
 
    type PORT16_Type is record
@@ -2332,7 +2448,7 @@ pragma Style_Checks (Off);
    PJ  : aliased PORT16_Type with Address => System'To_Address (PORT_BASEADDRESS + 16#120#), Volatile => True, Import => True, Convention => Ada;
 
    ----------------------------------------------------------------------------
-   -- 13 Port Mapping Controller (PMAP)
+   -- Chapter 13 Port Mapping Controller (PMAP)
    ----------------------------------------------------------------------------
 
    -- 13.3.1 PMAPKEYID Register
@@ -2444,7 +2560,7 @@ pragma Style_Checks (Off);
    P7MAP67 : aliased PMAP16_Type with Address => System'To_Address (PMAP_BASEADDRESS + 16#3E#), Volatile_Full_Access => True, Import => True, Convention => Ada;
 
    ----------------------------------------------------------------------------
-   -- 14 Capacitive Touch IO (CAPTIO)
+   -- Chapter 14 Capacitive Touch IO (CAPTIO)
    ----------------------------------------------------------------------------
 
    -- 14.3.1 CAPTIOxCTL Register
@@ -2515,15 +2631,35 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- 15 CRC32 Module
+   -- Chapter 15 CRC32 Module
    ----------------------------------------------------------------------------
 
-   ----------------------------------------------------------------------------
-   -- 16 AES256 Accelerator
-   ----------------------------------------------------------------------------
+   -- 15.3.0.1 CRC32DI Register
+   -- 15.3.0.2 CRC32DIRB Register
+   -- 15.3.0.3 CRC32INIRES_LO Register
+   -- 15.3.0.4 CRC32INIRES_HI Register
+   -- 15.3.0.5 CRC32RESR_LO Register
+   -- 15.3.0.6 CRC32RESR_HI Register
+   -- 15.3.0.7 CRC16DI Register
+   -- 15.3.0.8 CRC16DIRB Register
+   -- 15.3.0.9 CRC16INIRES Register
+   -- 15.3.0.10 CRC16RESR Register
 
    ----------------------------------------------------------------------------
-   -- 17 Watchdog Timer (WDT_A)
+   -- Chapter 16 AES256 Accelerator
+   ----------------------------------------------------------------------------
+
+   -- 16.3.1 AESACTL0 Register
+   -- 16.3.2 AESACTL1 Register
+   -- 16.3.3 AESASTAT Register
+   -- 16.3.4 AESAKEY Register
+   -- 16.3.5 AESADIN Register
+   -- 16.3.6 AESADOUT Register
+   -- 16.3.7 AESAXDIN Register
+   -- 16.3.8 AESAXIN Register
+
+   ----------------------------------------------------------------------------
+   -- Chapter 17 Watchdog Timer (WDT_A)
    ----------------------------------------------------------------------------
 
    -- 17.3.1 WDTCTL Register
@@ -2577,15 +2713,37 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- 18 Timer32
+   -- Chapter 18 Timer32
    ----------------------------------------------------------------------------
 
-   ----------------------------------------------------------------------------
-   -- 19 Timer_A
-   ----------------------------------------------------------------------------
+   -- 18.5.1 T32LOAD1 Register
+   -- 18.5.2 T32VALUE1 Register
+   -- 18.5.3 T32CONTROL1 Register
+   -- 18.5.4 T32INTCLR1 Register
+   -- 18.5.5 T32RIS1 Register
+   -- 18.5.6 T32MIS1 Register
+   -- 18.5.7 T32BGLOAD1 Register
+   -- 18.5.8 T32LOAD2 Register
+   -- 18.5.9 T32VALUE2 Register
+   -- 18.5.10 T32CONTROL2 Register
+   -- 18.5.11 T32INTCLR2 Register
+   -- 18.5.12 T32RIS2 Register
+   -- 18.5.13 T32MIS2 Register
+   -- 18.5.14 T32BGLOAD2 Register
 
    ----------------------------------------------------------------------------
-   -- 20 Real-Time Clock (RTC_C)
+   -- Chapter 19 Timer_A
+   ----------------------------------------------------------------------------
+
+   -- 19.3.1 TAxCTL Register
+   -- 19.3.2 TAxR Register
+   -- 19.3.3 TAxCCTL0 to TAxCCTL6 Register
+   -- 19.3.4 TAxCCR0 to TAxCCR6 Register
+   -- 19.3.5 TAxIV Register
+   -- 19.3.6 TAxEX0 Register
+
+   ----------------------------------------------------------------------------
+   -- Chapter 20 Real-Time Clock (RTC_C)
    ----------------------------------------------------------------------------
 
    -- 20.3.1 RTCCTL0_L Register
@@ -3327,19 +3485,44 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- 21 Reference Module (REF_A)
+   -- Chapter 21 Reference Module (REF_A)
    ----------------------------------------------------------------------------
 
-   ----------------------------------------------------------------------------
-   -- 22 Precision ADC
-   ----------------------------------------------------------------------------
+   -- 21.3.1 REFCTL0 Register
 
    ----------------------------------------------------------------------------
-   -- 23 Comparator E Module (COMP_E)
+   -- Chapter 22 Precision ADC
    ----------------------------------------------------------------------------
 
+   -- 22.3.1 ADC14CTL0 Register
+   -- 22.3.2 ADC14CTL1 Register
+   -- 22.3.3 ADC14LO0 Register
+   -- 22.3.4 ADC14HI0 Register
+   -- 22.3.5 ADC14LO1 Register
+   -- 22.3.6 ADC14HI1 Register
+   -- 22.3.7 ADC14MCTL0 to ADC14MCTL31 Register
+   -- 22.3.8 ADC14MEM0 to ADC14MEM31 Register
+   -- 22.3.9 ADC14IER0 Register
+   -- 22.3.10 ADC14IER1 Register
+   -- 22.3.11 ADC14IFGR0 Register
+   -- 22.3.12 ADC14IFGR1 Register
+   -- 22.3.13 ADC14CLRIFGR0 Register
+   -- 22.3.14 ADC14CLRIFGR1 Register
+   -- 22.3.15 ADC14IV Register
+
    ----------------------------------------------------------------------------
-   -- 24 Enhanced Universal Serial Communication Interface (eUSCI) – UART Mode
+   -- Chapter 23 Comparator E Module (COMP_E)
+   ----------------------------------------------------------------------------
+
+   -- 23.3.1 CExCTL0 Register
+   -- 23.3.2 CExCTL1 Register
+   -- 23.3.3 CExCTL2 Register
+   -- 23.3.4 CExCTL3 Register
+   -- 23.3.5 CExINT Register
+   -- 23.3.6 CExIV Register
+
+   ----------------------------------------------------------------------------
+   -- Chapter 24 Enhanced Universal Serial Communication Interface (eUSCI) – UART Mode
    ----------------------------------------------------------------------------
 
    -- 24.4.1 UCAxCTLW0 Register eUSCI_Ax Control Word Register 0
@@ -3654,7 +3837,7 @@ pragma Style_Checks (Off);
            Convention => Ada;
 
    ----------------------------------------------------------------------------
-   -- 25 Enhanced Universal Serial Communication Interface (eUSCI) – SPI Mode
+   -- Chapter 25 Enhanced Universal Serial Communication Interface (eUSCI) – SPI Mode
    ----------------------------------------------------------------------------
 
    -- 25.4.1 UCAxCTLW0 Register eUSCI_Ax Control Register 0
@@ -3861,12 +4044,46 @@ pragma Style_Checks (Off);
            Convention => Ada;
 
    ----------------------------------------------------------------------------
-   -- 26 Enhanced Universal Serial Communication Interface (eUSCI) – I2C Mode
+   -- Chapter 26 Enhanced Universal Serial Communication Interface (eUSCI) – I2C Mode
    ----------------------------------------------------------------------------
 
+   -- 26.4.1 UCBxCTLW0 Register
+   -- 26.4.2 UCBxCTLW1 Register
+   -- 26.4.3 UCBxBRW Register
+   -- 26.4.4 UCBxSTATW
+   -- 26.4.5 UCBxTBCNT Register
+   -- 26.4.6 UCBxRXBUF Register
+   -- 26.4.7 UCBxTXBUF
+   -- 26.4.8 UCBxI2COA0 Register
+   -- 26.4.9 UCBxI2COA1 Register
+   -- 26.4.10 UCBxI2COA2 Register
+   -- 26.4.11 UCBxI2COA3 Register
+   -- 26.4.12 UCBxADDRX Register
+   -- 26.4.13 UCBxADDMASK Register
+   -- 26.4.14 UCBxI2CSA Register
+   -- 26.4.15 UCBxIE Register
+   -- 26.4.16 UCBxIFG Register
+   -- 26.4.17 UCBxIV Register
+
    ----------------------------------------------------------------------------
-   -- 27 LCD_F Controller
+   -- Chapter 27 LCD_F Controller
    ----------------------------------------------------------------------------
+
+   -- 27.3.1 LCDCTL Register
+   -- 27.3.2 LCDBMCTL Register
+   -- 27.3.3 LCDVCTL Register
+   -- 27.3.4 LCDPCTL0 Register
+   -- 27.3.5 LCDPCTL1 Register
+   -- 27.3.6 LCDCSSEL0 Register
+   -- 27.3.7 LCDCSSEL1 Register
+   -- 27.3.8 LCDANMCTL Register
+   -- 27.3.9 LCDIE Register
+   -- 27.3.10 LCDIFG Register
+   -- 27.3.11 LCDSETIFG Register
+   -- 27.3.12 LCDCLRIFG Register
+   -- 27.3.13 LCDM[index] Register
+   -- 27.3.14 LCDBM[index] Register
+   -- 27.3.15 LCDANM[index] Register
 
 pragma Style_Checks (On);
 
