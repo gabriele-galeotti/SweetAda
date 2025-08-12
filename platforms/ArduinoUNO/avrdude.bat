@@ -18,6 +18,14 @@ REM KERNEL_ROMFILE
 REM
 
 REM ############################################################################
+REM # Script initialization.                                                   #
+REM #                                                                          #
+REM ############################################################################
+
+SETLOCAL ENABLEEXTENSIONS
+SETLOCAL ENABLEDELAYEDEXPANSION
+
+REM ############################################################################
 REM # Main loop.                                                               #
 REM #                                                                          #
 REM ############################################################################
@@ -33,7 +41,7 @@ SET "AVRDUDE_ARGS=%AVRDUDE_ARGS% -D"
 SET "AVRDUDE_ARGS=%AVRDUDE_ARGS% -U flash:w:%KERNEL_ROMFILE%:i"
 
 ECHO Press RESET on board and press <ENTER>, then release RESET ...
-PAUSE > nul
+PAUSE >nul
 
 "%AVRDUDE_PREFIX%"\bin\avrdude.exe %AVRDUDE_ARGS%
 
