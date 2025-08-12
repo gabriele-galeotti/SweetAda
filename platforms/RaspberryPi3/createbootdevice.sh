@@ -21,6 +21,24 @@
 # none
 #
 
+#
+# This script allows a user to create a SweetAda SD card, which must have
+# standard low-level files already in place (except maybe an original kernel).
+# The script creates a new config.txt file and installs an executable, which
+# can be:
+#
+# - a SweetAda kernel executable (the kernel.o ELF produced by the build
+#   system)
+#
+# - a "bootloop" executable, which is found in share/arm64_bootloop.bin; this
+#   small executable holds the CPUs stuck in a loop, waiting for JTAG
+#   interaction (*); this way, you can then issue "make [run|debug]" in order
+#   to download the SweetAda executable in memory and start the kernel without
+#   even a power-cycle or a reset
+#
+# (*) issue a "make session-start" once to start the OpenOCD server
+#
+
 ################################################################################
 # Script initialization.                                                       #
 #                                                                              #
