@@ -18,6 +18,19 @@ REM SWEETADA_PATH
 REM LIBUTILS_DIRECTORY
 REM
 
+REM ############################################################################
+REM # Script initialization.                                                   #
+REM #                                                                          #
+REM ############################################################################
+
+SETLOCAL ENABLEEXTENSIONS
+SETLOCAL ENABLEDELAYEDEXPANSION
+
+REM ############################################################################
+REM # Main loop.                                                               #
+REM #                                                                          #
+REM ############################################################################
+
 powershell.exe                                             ^
   -NoProfile                                               ^
   -ExecutionPolicy Bypass                                  ^
