@@ -35,6 +35,13 @@ package STM32VLDISCOVERY
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
+   -- STM32F100xx advanced Arm®-based 32-bit MCUs
+   -- December 2022 RM0041 Rev 6
+   ----------------------------------------------------------------------------
+
    ----------------------------------------------------------------------------
    -- 17 Real-time clock (RTC)
    ----------------------------------------------------------------------------
@@ -438,5 +445,7 @@ package STM32VLDISCOVERY
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+pragma Style_Checks (On);
 
 end STM32VLDISCOVERY;
