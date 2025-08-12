@@ -94,11 +94,11 @@ pragma Style_Checks (Off);
 
    -- Register 0x27—ACT_INACT_CTL (Read/Write)
 
-   INACT_DC : constant := 0; -- 0 selects dc-coupled operation
-   INACT_AC : constant := 1; -- 1 enables ac-coupled operation
+   INACT_DC : constant := 0; -- selects dc-coupled operation
+   INACT_AC : constant := 1; -- enables ac-coupled operation
 
-   ACT_DC : constant := 0; -- 0 selects dc-coupled operation
-   ACT_AC : constant := 1; -- 1 enables ac-coupled operation
+   ACT_DC : constant := 0; -- selects dc-coupled operation
+   ACT_AC : constant := 1; -- enables ac-coupled operation
 
    type ACT_INACT_CTL_Type is record
       INACT_Z : Boolean; -- enable
