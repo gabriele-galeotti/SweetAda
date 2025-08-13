@@ -4137,18 +4137,18 @@ pragma Style_Checks (Off);
    TX_RX : constant := 0; -- Receive
    TX_TX : constant := 1; -- Transmit
 
-   MST_SLV : constant := 0; -- Slave mode
-   MST_MST : constant := 1; -- Master mode
+   MST_SLAVE  : constant := 0; -- Slave mode
+   MST_MASTER : constant := 1; -- Master mode
 
    type I2Cx_C1_Type is record
-      DMAEN : Boolean := False;    -- DMA Enable
-      WUEN  : Boolean := False;    -- Wakeup Enable
-      RSTA  : Boolean := False;    -- Repeat START
-      TXAK  : Bits_1  := TXAK_ACK; -- Transmit Acknowledge Enable
-      TX    : Bits_1  := TX_RX;    -- Transmit Mode Select
-      MST   : Bits_1  := MST_SLV;  -- Master Mode Select
-      IICIE : Boolean := False;    -- I2C Interrupt Enable
-      IICEN : Boolean := False;    -- I2C Enable
+      DMAEN : Boolean := False;     -- DMA Enable
+      WUEN  : Boolean := False;     -- Wakeup Enable
+      RSTA  : Boolean := False;     -- Repeat START
+      TXAK  : Bits_1  := TXAK_ACK;  -- Transmit Acknowledge Enable
+      TX    : Bits_1  := TX_RX;     -- Transmit Mode Select
+      MST   : Bits_1  := MST_SLAVE; -- Master Mode Select
+      IICIE : Boolean := False;     -- I2C Interrupt Enable
+      IICEN : Boolean := False;     -- I2C Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
