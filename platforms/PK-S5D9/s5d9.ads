@@ -267,8 +267,89 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    -- 7.2.2 Option Function Select Register 1 (OFS1)
+
+   VDSEL0_RSVD : constant := 2#00#; -- Setting prohibited
+   VDSEL0_2V94 : constant := 2#01#; -- Select 2.94 V
+   VDSEL0_2V87 : constant := 2#10#; -- Select 2.87 V
+   VDSEL0_2V80 : constant := 2#11#; -- Select 2.80 V.
+
+   HOCOFRQ0_16   : constant := 2#00#; -- 16 MHz
+   HOCOFRQ0_18   : constant := 2#01#; -- 18 MHz
+   HOCOFRQ0_20   : constant := 2#10#; -- 20 MHz
+   HOCOFRQ0_RSVD : constant := 2#11#; -- Setting prohibited.
+
+   type OFS1_Type is record
+      VDSEL0    : Bits_2;                 -- Voltage Detection 0 Level Select
+      LVDAS     : Bits_1;                 -- Voltage Detection 0 Circuit Start
+      Reserved1 : Bits_5   := 16#1F#;
+      HOCOEN    : NBoolean;               -- HOCO Oscillation Enable
+      HOCOFRQ0  : Bits_2;                 -- HOCO Frequency Setting 0
+      Reserved2 : Bits_21  := 16#1FFFFF#;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for OFS1_Type use record
+      VDSEL0    at 0 range  0 ..  1;
+      LVDAS     at 0 range  2 ..  2;
+      Reserved1 at 0 range  3 ..  7;
+      HOCOEN    at 0 range  8 ..  8;
+      HOCOFRQ0  at 0 range  9 .. 10;
+      Reserved2 at 0 range 11 .. 31;
+   end record;
+
+   OFS1_ADDRESS : constant := 16#0000_0404#;
+
+   OFS1 : aliased OFS1_Type
+      with Address              => System'To_Address (OFS1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 7.2.3 Access Window Setting Register (AWS)
+
+   type AWS_Type is record
+      FAWS      : Bits_11;             -- Access Window Start Block Address
+      Reserved1 : Bits_4   := 2#1111#;
+      FSPR      : Boolean;             -- Protection of Access Window and Startup Area Select Function
+      FAWE      : Bits_11;             -- Access Window End Block Address
+      Reserved2 : Bits_4   := 2#1111#;
+      BTFLG     : NBoolean;            -- Startup Area Select Flag
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for AWS_Type use record
+      FAWS      at 0 range  0 .. 10;
+      Reserved1 at 0 range 11 .. 14;
+      FSPR      at 0 range 15 .. 15;
+      FAWE      at 0 range 16 .. 26;
+      Reserved2 at 0 range 27 .. 30;
+      BTFLG     at 0 range 31 .. 31;
+   end record;
+
    -- 7.2.4 OCD/Serial Programmer ID Setting Register (OSIS)
+
+   type OSIS_Type is record
+      ID0 : Unsigned_32 with Volatile_Full_Access => True; -- ID code protection of the OCD/serial programmer
+      ID1 : Unsigned_32 with Volatile_Full_Access => True; -- ''
+      ID2 : Unsigned_32 with Volatile_Full_Access => True; -- ''
+      ID3 : Unsigned_32 with Volatile_Full_Access => True; -- ''
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 4 * 32;
+   for OSIS_Type use record
+      ID0 at 16#0# range 0 .. 31;
+      ID1 at 16#4# range 0 .. 31;
+      ID2 at 16#8# range 0 .. 31;
+      ID3 at 16#C# range 0 .. 31;
+   end record;
+
+   OSIS_ADDRESS : constant := 16#0100_A150#;
+
+   OSIS : aliased OSIS_Type
+      with Address    => System'To_Address (OSIS_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- 8. Low Voltage Detection (LVD)
@@ -3199,17 +3280,214 @@ pragma Warnings (On);
    -- 30. Ethernet PTP Controller (EPTPC)
    ----------------------------------------------------------------------------
 
+   -- 30.2.1 ETHER_MINT Interrupt Source Status Register (MIESR)
+   -- 30.2.2 ETHER_MINT Interrupt Request Enable Register (MIEIPR)
+   -- 30.2.3 ELC Output/ETHER_IPLS Interrupt Request Permission Register (ELIPPR)
+   -- 30.2.4 ELC Output/ETHER_IPLS Interrupt Permission Automatic Clearing Register (ELIPACR)
+   -- 30.2.5 STCA Status Register (STSR)
+   -- 30.2.6 STCA Status Notification Enable Register (STIPR)
+   -- 30.2.7 STCA Clock Frequency Setting Register (STCFR)
+   -- 30.2.8 STCA Operating Mode Register (STMR)
+   -- 30.2.9 Sync Message Reception Timeout Register (SYNTOR)
+   -- 30.2.10 ETHER_IPLS Interrupt Request Timer Select Register (IPTSELR)
+   -- 30.2.11 ETHER_MINT Interrupt Request Timer Select Register (MITSELR)
+   -- 30.2.12 ELC Output Timer Select Register (ELTSELR)
+   -- 30.2.13 Time Synchronization Channel Select Register (STCHSELR)
+   -- 30.2.14 Slave Time Synchronization Start Register (SYNSTARTR)
+   -- 30.2.15 Local Clock Counter Initial Value Load Directive Register (LCIVLDR)
+   -- 30.2.16 Synchronization Loss Detection Threshold Register (SYNTDARU, SYNTDARL)
+   -- 30.2.17 Synchronization Detection Threshold Register (SYNTDBRU, SYNTDBRL)
+   -- 30.2.18 Local Clock Counter Initial Value Register (LCIVRU, LCIVRM, LCIVRL)
+   -- 30.2.19 Worst 10 Acquisition Directive Register (GETW10R)
+   -- 30.2.20 Positive Gradient Limit Register (PLIMITRU, PLIMITRM, PLIMITRL)
+   -- 30.2.21 Negative Gradient Limit Register (MLIMITRU, MLIMITRM, MLIMITRL)
+   -- 30.2.22 Statistical Information Retention Control Register (GETINFOR)
+   -- 30.2.23 Local Clock Counter (LCCVRU, LCCVRM, LCCVRL)
+   -- 30.2.24 Positive Gradient Worst 10 Value Register (PW10VRU, PW10VRM, PW10VRL)
+   -- 30.2.25 Negative Gradient Worst 10 Value Register (MW10RU, MW10RM, MW10RL)
+   -- 30.2.26 Timer Start Time Setting Register m (TMSTTRUm, TMSTTRLm) (m = 0 to 5)
+   -- 30.2.27 Timer Cycle Setting Registers m (TMCYCRm) (m = 0 to 5)
+   -- 30.2.28 Timer Pulse Width Setting Register m (TMPLSRm) (m = 0 to 5)
+   -- 30.2.29 Timer Start Register (TMSTARTR)
+   -- 30.2.30 SYNFP Status Register (SYSR)
+   -- 30.2.31 SYNFP Status Notification Enable Register (SYIPR)
+   -- 30.2.32 SYNFP MAC Address Registers (SYMACRU, SYMACRL)
+   -- 30.2.33 SYNFP LLC-CTL Value Register (SYLLCCTLR)
+   -- 30.2.34 SYNFP Local IP Address Register (SYIPADDRR)
+   -- 30.2.35 SYNFP Specification Version Setting Register (SYSPVRR)
+   -- 30.2.36 SYNFP Domain Number Setting Register (SYDOMR)
+   -- 30.2.37 Announce Message Flag Field Setting Register (ANFR)
+   -- 30.2.38 Sync Message Flag Field Setting Register (SYNFR)
+   -- 30.2.39 Delay_Req Message Flag Field Setting Register (DYRQFR)
+   -- 30.2.40 Delay_Resp Message Flag Field Setting Register (DYRPFR)
+   -- 30.2.41 SYNFP Local Clock ID Register (SYCIDRU, SYCIDRL)
+   -- 30.2.42 SYNFP Local Port Number Register (SYPNUMR)
+   -- 30.2.43 SYNFP Register Value Load Directive Register (SYRVLDR)
+   -- 30.2.44 SYNFP Reception Filter Register 1 (SYRFL1R)
+   -- 30.2.45 SYNFP Reception Filter Register 2 (SYRFL2R)
+   -- 30.2.46 SYNFP Transmission Enable Register (SYTRENR)
+   -- 30.2.47 Master Clock ID Register (MTCIDU, MTCIDL)
+   -- 30.2.48 Master Clock Port Number Register (MTPID)
+   -- 30.2.49 SYNFP Transmission Interval Setting Register (SYTLIR)
+   -- 30.2.50 SYNFP Received logMessageInterval Value Indication Register (SYRLIR)
+   -- 30.2.51 offsetFromMaster Value Register (OFMRU, OFMRL)
+   -- 30.2.52 meanPathDelay Value Register (MPDRU, MPDRL)
+   -- 30.2.53 grandmasterPriority Field Setting Register (GMPR)
+   -- 30.2.54 grandmasterClockQuality Field Setting Register (GMCQR)
+   -- 30.2.55 grandmasterIdentity Field Setting Register (GMIDRU, GMIDRL)
+   -- 30.2.56 currentUtcOffset/timeSource Field Setting Register (CUOTSR)
+   -- 30.2.57 stepsRemoved Field Setting Register (SRR)
+   -- 30.2.58 PTP-primary Message Destination MAC Address Setting Register (PPMACRU, PPMACRL)
+   -- 30.2.59 PTP-pdelay Message MAC Address Setting Register (PDMACRU, PDMACRL)
+   -- 30.2.60 PTP Message Ethertype Setting Register (PETYPER)
+   -- 30.2.61 PTP-primary Message Destination IP Address Setting Register (PPIPR)
+   -- 30.2.62 PTP-pdelay Message Destination IP Address Setting Register (PDIPR)
+   -- 30.2.63 PTP Event Message TOS Setting Register (PETOSR)
+   -- 30.2.64 PTP general Message TOS Setting Register (PGTOSR)
+   -- 30.2.65 PTP-primary Message TTL Setting Register (PPTTLR)
+   -- 30.2.66 PTP-pdelay Message TTL Setting Register (PDTTLR)
+   -- 30.2.67 PTP Event Message UDP Destination Port Number Setting Register (PEUDPR)
+   -- 30.2.68 PTP general Message UDP Destination Port Number Setting Register (PGUDPR)
+   -- 30.2.69 Frame Reception Filter Setting Register (FFLTR)
+   -- 30.2.70 Frame Reception Filter MAC Address 0 Setting Register (FMAC0RU, FMAC0RL)
+   -- 30.2.71 Frame Reception Filter MAC Address 1 Setting Register (FMAC1RU, FMAC1RL)
+   -- 30.2.72 Asymmetric Delay Setting Register (DASYMRU, DASYMRL)
+   -- 30.2.73 Timestamp Latency Setting Register (TSLATR)
+   -- 30.2.74 SYNFP Operation Setting Register (SYCONFR)
+   -- 30.2.75 SYNFP Frame Format Setting Register (SYFORMR)
+   -- 30.2.76 Response Message Reception Timeout Register (RSTOUTR)
+   -- 30.2.77 PTP Reset Register (PTRSTR)
+   -- 30.2.78 STCA Clock Select Register (STCSELR)
+   -- 30.2.79 Bypass 1588 Module Register (BYPASS)
+
    ----------------------------------------------------------------------------
    -- 31. Ethernet DMA Controller (EDMAC)
    ----------------------------------------------------------------------------
+
+   -- 31.2.1 EDMAC Mode Register (EDMR)
+   -- 31.2.2 EDMAC Transmit Request Register (EDTRR)
+   -- 31.2.3 EDMAC Receive Request Register (EDRRR)
+   -- 31.2.4 Transmit Descriptor List Start Address Register (TDLAR)
+   -- 31.2.5 Receive Descriptor List Start Address Register (RDLAR)
+   -- 31.2.6 ETHERC/EDMAC Status Register (EDMAC0.EESR)
+   -- 31.2.7 PTP/EDMAC Status Register (PTPEDMAC.EESR)
+   -- 31.2.8 ETHERC/EDMAC Status Interrupt Enable Register (EDMAC0.EESIPR)
+   -- 31.2.9 PTP/EDMAC Status Interrupt Enable Register (PTPEDMAC.EESIPR)
+   -- 31.2.10 ETHERC/EDMAC Transmit/Receive Status Copy Enable Register (EDMAC0.TRSCER)
+   -- 31.2.11 Missed-Frame Counter Register (RMFCR)
+   -- 31.2.12 Transmit FIFO Threshold Register (TFTR)
+   -- 31.2.13 FIFO Depth Register (FDR)
+   -- 31.2.14 Receive Method Control Register (RMCR)
+   -- 31.2.15 Transmit FIFO Underflow Counter (TFUCR)
+   -- 31.2.16 Receive FIFO Overflow Counter (RFOCR)
+   -- 31.2.17 Independent Output Signal Setting Register (IOSR)
+   -- 31.2.18 Flow Control Start FIFO Threshold Setting Register (FCFTR)
+   -- 31.2.19 Receive Data Padding Insert Register (RPADIR)
+   -- 31.2.20 Transmit Interrupt Setting Register (TRIMD)
+   -- 31.2.21 Receive Buffer Write Address Register (RBWAR)
+   -- 31.2.22 Receive Descriptor Fetch Address Register (RDFAR)
+   -- 31.2.23 Transmit Buffer Read Address Register (TBRAR)
+   -- 31.2.24 Transmit Descriptor Fetch Address Register (TDFAR)
 
    ----------------------------------------------------------------------------
    -- 32. USB 2.0 Full-Speed Module (USBFS)
    ----------------------------------------------------------------------------
 
+   -- 32.2.1 System Configuration Control Register (SYSCFG)
+   -- 32.2.2 System Configuration Status Register 0 (SYSSTS0)
+   -- 32.2.3 Device State Control Register 0 (DVSTCTR0)
+   -- 32.2.4 CFIFO Port Register (CFIFO/CFIFOL) D0FIFO Port Register (D0FIFO/D0FIFOL) D1FIFO Port Register (D1FIFO/D1FIFOL)
+   -- 32.2.5 CFIFO Port Select Register (CFIFOSEL) D0FIFO Port Select Register (D0FIFOSEL) D1FIFO Port Select Register (D1FIFOSEL)
+   -- 32.2.6 CFIFO Port Control Register (CFIFOCTR) D0FIFO Port Control Register (D0FIFOCTR) D1FIFO Port Control Register (D1FIFOCTR)
+   -- 32.2.7 Interrupt Enable Register 0 (INTENB0)
+   -- 32.2.8 Interrupt Enable Register 1 (INTENB1)
+   -- 32.2.9 BRDY Interrupt Enable Register (BRDYENB)
+   -- 32.2.10 NRDY Interrupt Enable Register (NRDYENB)
+   -- 32.2.11 BEMP Interrupt Enable Register (BEMPENB)
+   -- 32.2.12 SOF Output Configuration Register (SOFCFG)
+   -- 32.2.13 Interrupt Status Register 0 (INTSTS0)
+   -- 32.2.14 Interrupt Status Register 1 (INTSTS1)
+   -- 32.2.15 BRDY Interrupt Status Register (BRDYSTS)
+   -- 32.2.16 NRDY Interrupt Status Register (NRDYSTS)
+   -- 32.2.17 BEMP Interrupt Status Register (BEMPSTS)
+   -- 32.2.18 Frame Number Register (FRMNUM)
+   -- 32.2.19 Device State Change Register (DVCHGR)
+   -- 32.2.20 USB Address Register (USBADDR)
+   -- 32.2.21 USB Request Type Register (USBREQ)
+   -- 32.2.22 USB Request Value Register (USBVAL)
+   -- 32.2.23 USB Request Index Register (USBINDX)
+   -- 32.2.24 USB Request Length Register (USBLENG)
+   -- 32.2.25 DCP Configuration Register (DCPCFG)
+   -- 32.2.26 DCP Maximum Packet Size Register (DCPMAXP)
+   -- 32.2.27 DCP Control Register (DCPCTR)
+   -- 32.2.28 Pipe Window Select Register (PIPESEL)
+   -- 32.2.29 Pipe Configuration Register (PIPECFG)
+   -- 32.2.30 Pipe Maximum Packet Size Register (PIPEMAXP)
+   -- 32.2.31 Pipe Cycle Control Register (PIPEPERI)
+   -- 32.2.32 PIPEn Control Registers (PIPEnCTR) (n = 1 to 9) PIPEnCTR (n = 1 to 5)
+   -- 32.2.33 PIPEn Transaction Counter Enable Register (PIPEnTRE) (n = 1 to 5)
+   -- 32.2.34 PIPEn Transaction Counter Register (PIPEnTRN) (n = 1 to 5)
+   -- 32.2.35 Device Address n Configuration Register (DEVADDn) (n = 0 to 5)
+   -- 32.2.36 PHY Cross Point Adjustment Register (PHYSLEW)
+   -- 32.2.37 Deep Software Standby USB Transceiver Control/Pin Monitor Register (DPUSR0R)
+   -- 32.2.38 Deep Software Standby USB Suspend/Resume Interrupt Register (DPUSR1R)
+
    ----------------------------------------------------------------------------
    -- 33. USB 2.0 High-Speed Module (USBHS)
    ----------------------------------------------------------------------------
+
+   -- 33.2.1 System Configuration Control Register (SYSCFG)
+   -- 33.2.2 CPU Bus Wait Register (BUSWAIT)
+   -- 33.2.3 System Configuration Status Register (SYSSTS0)
+   -- 33.2.4 PLL Status Register (PLLSTA)
+   -- 33.2.5 Device State Control Register 0 (DVSTCTR0)
+   -- 33.2.6 USB Test Mode Register (TESTMODE)
+   -- 33.2.7 CFIFO Port Register (CFIFO) D0FIFO Port Register (D0FIFO) D1FIFO Port Register (D1FIFO)
+   -- 33.2.8 CFIFO Port Selection Register (CFIFOSEL)
+   -- 33.2.9 D0FIFO Port Selection Register (D0FIFOSEL) D1FIFO Port Selection Register (D1FIFOSEL)
+   -- 33.2.10 CFIFO Port Control Register (CFIFOCTR) D0FIFO Port Control Register (D0FIFOCTR) D1FIFO Port Control Register (D1FIFOCTR)
+   -- 33.2.11 Interrupt Enable Register 0 (INTENB0)
+   -- 33.2.12 Interrupt Enable Register 1 (INTENB1)
+   -- 33.2.13 BRDY Interrupt Enable Register (BRDYENB)
+   -- 33.2.14 NRDY Interrupt Enable Register (NRDYENB)
+   -- 33.2.15 BEMP Interrupt Enable Register (BEMPENB)
+   -- 33.2.16 SOF Output Configuration Register (SOFCFG)
+   -- 33.2.17 PHY Setting Register (PHYSET)
+   -- 33.2.18 Interrupt Status Register 0 (INTSTS0)
+   -- 33.2.19 Interrupt Status Register 1 (INTSTS1)
+   -- 33.2.20 BRDY Interrupt Status Register (BRDYSTS)
+   -- 33.2.21 NRDY Interrupt Status Register (NRDYSTS)
+   -- 33.2.22 BEMP Interrupt Status Register (BEMPSTS)
+   -- 33.2.23 Frame Number Register (FRMNUM)
+   -- 33.2.24 μFrame Number Register (UFRMNUM)
+   -- 33.2.25 USB Address Register (USBADDR)
+   -- 33.2.26 USB Request Type Register (USBREQ)
+   -- 33.2.27 USB Request Value Register (USBVAL)
+   -- 33.2.28 USB Request Index Register (USBINDX)
+   -- 33.2.29 USB Request Length Register (USBLENG)
+   -- 33.2.30 DCP Configuration Register (DCPCFG)
+   -- 33.2.31 DCP Maximum Packet Size Register (DCPMAXP)
+   -- 33.2.32 DCP Control Register (DCPCTR)
+   -- 33.2.33 Pipe Window Select Register (PIPESEL)
+   -- 33.2.34 Pipe Configuration Register (PIPECFG)
+   -- 33.2.35 Pipe Buffer Register (PIPEBUF)
+   -- 33.2.36 Pipe Maximum Packet Size Register (PIPEMAXP)
+   -- 33.2.37 Pipe Cycle Control Register (PIPEPERI)
+   -- 33.2.38 Pipe n Control Register (PIPEnCTR) (n = 1 to 9)
+   -- 33.2.39 Pipe n Transaction Counter Enable Register (PIPEnTRE) (n = 1 to 5)
+   -- 33.2.40 Pipe n Transaction Counter Register (PIPEnTRN) (n = 1 to 5)
+   -- 33.2.41 Device Address m Configuration Register (DEVADDm) (m = 0 to A)
+   -- 33.2.42 Low Power Control Register (LPCTRL)
+   -- 33.2.43 Low Power Status Register (LPSTS)
+   -- 33.2.44 Battery Charging Control Register (BCCTRL)
+   -- 33.2.45 Function L1 Control Register 1 (PL1CTRL1)
+   -- 33.2.46 Function L1 Control Register 2 (PL1CTRL2)
+   -- 33.2.47 Host L1 Control Register 1 (HL1CTRL1)
+   -- 33.2.48 Host L1 Control Register 2 (HL1CTRL2)
+   -- 33.2.49 Deep Software Standby USB Transceiver Control/Pin Monitor Register (DPUSR0R)
+   -- 33.2.50 Deep Software Standby USB Suspend/Resume Interrupt Register (DPUSR1R)
+   -- 33.2.51 Deep Software Standby USB Suspend/Resume Interrupt Register (DPUSR2R)
+   -- 33.2.52 Deep Software Standby USB Suspend/Resume Command Register (DPUSRCR)
 
    ----------------------------------------------------------------------------
    -- 34. Serial Communications Interface (SCI)
@@ -5289,21 +5567,79 @@ pragma Warnings (On);
    -- 40. Cyclic Redundancy Check (CRC) Calculator
    ----------------------------------------------------------------------------
 
+   -- 40.2.1 CRC Control Register 0 (CRCCR0)
+   -- 40.2.2 CRC Control Register 1 (CRCCR1)
+   -- 40.2.3 CRC Data Input Register (CRCDIR/CRCDIR_BY)
+   -- 40.2.4 CRC Data Output Register (CRCDOR/CRCDOR_HA/CRCDOR_BY)
+   -- 40.2.5 Snoop Address Register (CRCSAR)
+
    ----------------------------------------------------------------------------
    -- 41. Serial Sound Interface Enhanced (SSIE)
    ----------------------------------------------------------------------------
+
+   -- 41.4.1 Control Register (SSICR)
+   -- 41.4.2 Status Register (SSISR)
+   -- 41.4.3 FIFO Control Register (SSIFCR)
+   -- 41.4.4 FIFO Status Register (SSIFSR)
+   -- 41.4.5 Transmit FIFO Data Register (SSIFTDR)
+   -- 41.4.6 Receive FIFO Data Register (SSIFRDR)
+   -- 41.4.7 Audio Format Register (SSIOFR)
+   -- 41.4.8 Status Control Register (SSISCR)
 
    ----------------------------------------------------------------------------
    -- 42. Sampling Rate Converter (SRC)
    ----------------------------------------------------------------------------
 
+   -- 42.2.1 Input Data Register (SRCID)
+   -- 42.2.2 Output Data Register (SRCOD)
+   -- 42.2.3 Input Data Control Register (SRCIDCTRL)
+   -- 42.2.4 Output Data Control Register (SRCODCTRL)
+   -- 42.2.5 Control Register (SRCCTRL)
+   -- 42.2.6 Status Register (SRCSTAT)
+   -- 42.2.7 Filter Coefficient Table n (SRCFCTRn) (n = 0 to 5551)
+
    ----------------------------------------------------------------------------
    -- 43. SD/MMC Host Interface (SDHI)
    ----------------------------------------------------------------------------
 
+   -- 43.2.1 Command Type Register (SD_CMD)
+   -- 43.2.2 SD Command Argument Register (SD_ARG)
+   -- 43.2.3 SD Command Argument Register 1 (SD_ARG1)
+   -- 43.2.4 Data Stop Register (SD_STOP)
+   -- 43.2.5 Block Count Register (SD_SECCNT)
+   -- 43.2.6 SD Card Response Register 10 (SD_RSP10), SD Card Response Register 32 (SD_RSP32), SD Card Response Register 54 (SD_RSP54)
+   -- 43.2.7 SD Card Response Register 1 (SD_RSP1), SD Card Response Register 3 (SD_RSP3), SD Card Response Register 5 (SD_RSP5)
+   -- 43.2.8 SD Card Response Register 76 (SD_RSP76)
+   -- 43.2.9 SD Card Response Register 7 (SD_RSP7)
+   -- 43.2.10 SD Card Interrupt Flag Register 1 (SD_INFO1)
+   -- 43.2.11 SD Card Interrupt Flag Register 2 (SD_INFO2)
+   -- 43.2.12 SD INFO1 Interrupt Mask Register (SD_INFO1_MASK)
+   -- 43.2.13 SD INFO2 Interrupt Mask Register (SD_INFO2_MASK)
+   -- 43.2.14 SD Clock Control Register (SD_CLK_CTRL)
+   -- 43.2.15 Transfer Data Length Register (SD_SIZE)
+   -- 43.2.16 SD Card Access Control Option Register (SD_OPTION)
+   -- 43.2.17 SD Error Status Register 1 (SD_ERR_STS1)
+   -- 43.2.18 SD Error Status Register 2 (SD_ERR_STS2)
+   -- 43.2.19 SD Buffer Register (SD_BUF0)
+   -- 43.2.20 SDIO Mode Control Register (SDIO_MODE)
+   -- 43.2.21 SDIO Interrupt Flag Register (SDIO_INFO1)
+   -- 43.2.22 SDIO INFO1 Interrupt Mask Register (SDIO_INFO1_MASK)
+   -- 43.2.23 DMA Mode Enable Register (SD_DMAEN)
+   -- 43.2.24 Software Reset Register (SOFT_RST)
+   -- 43.2.25 SD Interface Mode Setting Register (SDIF_MODE)
+   -- 43.2.26 Swap Control Register (EXT_SWAP)
+
    ----------------------------------------------------------------------------
    -- 44. Parallel Data Capture Unit (PDC)
    ----------------------------------------------------------------------------
+
+   -- 44.2.1 PDC Control Register 0 (PCCR0)
+   -- 44.2.2 PDC Control Register 1 (PCCR1)
+   -- 44.2.3 PDC Status Register (PCSR)
+   -- 44.2.4 PDC Pin Monitor Register (PCMONR)
+   -- 44.2.5 PDC Receive Data Register (PCDR)
+   -- 44.2.6 Vertical Capture Register (VCR)
+   -- 44.2.7 Horizontal Capture Register (HCR)
 
    ----------------------------------------------------------------------------
    -- 45. Boundary Scan
@@ -5317,9 +5653,53 @@ pragma Warnings (On);
    -- 47. 12-Bit A/D Converter (ADC12)
    ----------------------------------------------------------------------------
 
+   -- 47.2.1 A/D Data Registers y (ADDRy), A/D Data Duplexing Register (ADDBLDR), A/D Data Duplexing Register A (ADDBLDRA), A/D Data Duplexing Register B (ADDBLDRB), A/D Temperature Sensor Data Register (ADTSDR), A/D Internal Reference Voltage Data Register (ADOCDR)
+   -- 47.2.2 A/D Self-Diagnosis Data Register (ADRD)
+   -- 47.2.3 A/D Control Register (ADCSR)
+   -- 47.2.4 A/D Channel Select Register A0 (ADANSA0)
+   -- 47.2.5 A/D Channel Select Register A1 (ADANSA1)
+   -- 47.2.6 A/D Channel Select Register B0 (ADANSB0)
+   -- 47.2.7 A/D Channel Select Register B1 (ADANSB1)
+   -- 47.2.8 A/D-Converted Value Addition/Average Channel Select Register 0 (ADADS0)
+   -- 47.2.9 A/D-Converted Value Addition/Average Channel Select Register 1 (ADADS1)
+   -- 47.2.10 A/D-Converted Value Addition/Average Count Select Register (ADADC)
+   -- 47.2.11 A/D Control Extended Register (ADCER)
+   -- 47.2.12 A/D Conversion Start Trigger Select Register (ADSTRGR)
+   -- 47.2.13 A/D Conversion Extended Input Control Register (ADEXICR)
+   -- 47.2.14 A/D Sampling State Register n (ADSSTRn) (n = 00 to 07, L, T, O)
+   -- 47.2.15 A/D Sample and Hold Circuit Control Register (ADSHCR)
+   -- 47.2.16 A/D Sample and Hold Operation Mode Selection Register (ADSHMSR)
+   -- 47.2.17 A/D Disconnection Detection Control Register (ADDISCR)
+   -- 47.2.18 A/D Group Scan Priority Control Register (ADGSPCR)
+   -- 47.2.19 A/D Compare Function Control Register (ADCMPCR)
+   -- 47.2.20 A/D Compare Function Window A Channel Select Register 0 (ADCMPANSR0)
+   -- 47.2.21 A/D Compare Function Window A Channel Select Register 1 (ADCMPANSR1)
+   -- 47.2.22 A/D Compare Function Window A Extended Input Select Register (ADCMPANSER)
+   -- 47.2.23 A/D Compare Function Window A Comparison Condition Setting Register 0 (ADCMPLR0)
+   -- 47.2.24 A/D Compare Function Window A Comparison Condition Setting Register 1 (ADCMPLR1)
+   -- 47.2.25 A/D Compare Function Window A Extended Input Comparison Condition Setting Register (ADCMPLER)
+   -- 47.2.26 A/D Compare Function Window A Lower-Side Level Setting Register (ADCMPDR0), A/D Compare Function Window A Upper-Side Level Setting Register (ADCMPDR1), A/D Compare Function Window B Lower-Side Level Setting Register (ADWINLLB), A/D Compare Function Window B Upper-Side Level Setting Register (ADWINULB)
+   -- 47.2.27 A/D Compare Function Window A Channel Status Register 0 (ADCMPSR0)
+   -- 47.2.28 A/D Compare Function Window A Channel Status Register1 (ADCMPSR1)
+   -- 47.2.29 A/D Compare Function Window A Extended Input Channel Status Register (ADCMPSER)
+   -- 47.2.30 A/D Compare Function Window B Channel Select Register (ADCMPBNSR)
+   -- 47.2.31 A/D Compare Function Window B Status Register (ADCMPBSR)
+   -- 47.2.32 A/D Compare Function Window A/B Status Monitor Register (ADWINMON)
+   -- 47.2.33 A/D Programmable Gain Amplifier Control Register (ADPGACR)
+   -- 47.2.34 A/D Programmable Gain Amplifier Gain Setting Register 0 (ADPGAGS0)
+   -- 47.2.35 A/D Programmable Gain Amplifier Differential Input Control Register (ADPGADCR0)
+
    ----------------------------------------------------------------------------
    -- 48. 12-Bit D/A Converter (DAC12)
    ----------------------------------------------------------------------------
+
+   -- 48.2.1 D/A Data Register m (DADRm) (m = 0, 1)
+   -- 48.2.2 D/A Control Register (DACR)
+   -- 48.2.3 DADRm Format Select Register (DADPR)
+   -- 48.2.4 D/A A/D Synchronous Start Control Register (DAADSCR)
+   -- 48.2.5 D/A Output Amplifier Control Register (DAAMPCR)
+   -- 48.2.6 D/A Amplifier Stabilization Wait Control Register (DAASWCR)
+   -- 48.2.7 D/A A/D Synchronous Unit Select Register (DAADUSR)
 
    ----------------------------------------------------------------------------
    -- 49. Temperature Sensor (TSN)
@@ -5375,17 +5755,59 @@ pragma Warnings (On);
    -- 50. High-Speed Analog Comparator (ACMPHS)
    ----------------------------------------------------------------------------
 
+   -- 50.2.1 Comparator Control Register (CMPCTL)
+   -- 50.2.2 Comparator Input Select Register (CMPSEL0)
+   -- 50.2.3 Comparator Reference Voltage Select Register (CMPSEL1)
+   -- 50.2.4 Comparator Output Monitor Register (CMPMON)
+   -- 50.2.5 Comparator Output Control Register (CPIOC)
+
    ----------------------------------------------------------------------------
    -- 51. Capacitive Touch Sensing Unit (CTSU)
    ----------------------------------------------------------------------------
+
+   -- 51.2.1 CTSU Control Register 0 (CTSUCR0)
+   -- 51.2.2 CTSU Control Register 1 (CTSUCR1)
+   -- 51.2.3 CTSU Synchronous Noise Reduction Setting Register (CTSUSDPRS)
+   -- 51.2.4 CTSU Sensor Stabilization Wait Control Register (CTSUSST)
+   -- 51.2.5 CTSU Measurement Channel Register 0 (CTSUMCH0)
+   -- 51.2.6 CTSU Measurement Channel Register 1 (CTSUMCH1)
+   -- 51.2.7 CTSU Channel Enable Control Register 0 (CTSUCHAC0)
+   -- 51.2.8 CTSU Channel Enable Control Register 1 (CTSUCHAC1)
+   -- 51.2.9 CTSU Channel Enable Control Register 2 (CTSUCHAC2)
+   -- 51.2.10 CTSU Channel Transmit/Receive Control Register 0 (CTSUCHTRC0)
+   -- 51.2.11 CTSU Channel Transmit/Receive Control Register 1 (CTSUCHTRC1)
+   -- 51.2.12 CTSU Channel Transmit/Receive Control Register 2 (CTSUCHTRC2)
+   -- 51.2.13 CTSU High-Pass Noise Reduction Control Register (CTSUDCLKC)
+   -- 51.2.14 CTSU Status Register (CTSUST)
+   -- 51.2.15 CTSU High-Pass Noise Reduction Spectrum Diffusion Control Register (CTSUSSC)
+   -- 51.2.16 CTSU Sensor Offset Register 0 (CTSUSO0)
+   -- 51.2.17 CTSU Sensor Offset Register 1 (CTSUSO1)
+   -- 51.2.18 CTSU Sensor Counter (CTSUSC)
+   -- 51.2.19 CTSU Reference Counter (CTSURC)
+   -- 51.2.20 CTSU Error Status Register (CTSUERRS)
 
    ----------------------------------------------------------------------------
    -- 52. Data Operation Circuit (DOC)
    ----------------------------------------------------------------------------
 
+   -- 52.2.1 DOC Control Register (DOCR)
+   -- 52.2.2 DOC Data Input Register (DODIR)
+   -- 52.2.3 DOC Data Setting Register (DODSR)
+
    ----------------------------------------------------------------------------
    -- 53. SRAM
    ----------------------------------------------------------------------------
+
+   -- 53.2.1 SRAM Parity Error Operation After Detection Register (PARIOAD)
+   -- 53.2.2 SRAM Protection Register (SRAMPRCR)
+   -- 53.2.3 SRAM Wait State Control Register (SRAMWTSC)
+   -- 53.2.4 ECC Operating Mode Control Register (ECCMODE)
+   -- 53.2.5 ECC 2-Bit Error Status Register (ECC2STS)
+   -- 53.2.6 ECC 1-Bit Error Information Update Enable Register (ECC1STSEN)
+   -- 53.2.7 ECC 1-Bit Error Status Register (ECC1STS)
+   -- 53.2.8 ECC Protection Register (ECCPRCR)
+   -- 53.2.9 ECC Test Control Register (ECCETST)
+   -- 53.2.10 SRAM ECC Error Operation After Detection Register (ECCOAD)
 
    ----------------------------------------------------------------------------
    -- 54. Standby SRAM
