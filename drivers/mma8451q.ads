@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with Interfaces;
 with Bits;
 
 package MMA8451Q
@@ -30,6 +31,7 @@ package MMA8451Q
    --========================================================================--
 
    use System;
+   use Interfaces;
    use Bits;
 
 pragma Style_Checks (Off);
@@ -39,6 +41,13 @@ pragma Style_Checks (Off);
    -- Document Number: MMA8451Q
    -- Rev. 10.3, 02/2017
    ----------------------------------------------------------------------------
+
+   WHO_AM_I_ID : constant := 16#1A#; -- WHO_AM_I Device ID
+
+   -- Table 10. I2C address selection table
+
+   I2C_ADDRESS_LO : constant := 16#1C#; -- Slave address (SA0 = 0)
+   I2C_ADDRESS_HI : constant := 16#1D#; -- Slave address (SA0 = 1)
 
    ----------------------------------------------------------------------------
    -- 6.1 Data registers
@@ -246,7 +255,7 @@ pragma Style_Checks (Off);
    -- 0x0D: WHO_AM_I Device ID register (read only)
 
    type WHO_AM_I_Type is record
-      ID : Bits_8; -- The device identification register identifies the part.
+      ID : Bits_8 := WHO_AM_I_ID; -- The device identification register identifies the part.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -306,28 +315,127 @@ pragma Style_Checks (Off);
 
    -- 0x10: PL_STATUS register (read only)
 
-   type PL_STATUS_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for PL_STATUS_Type use record DATA at 0 range 0 .. 7; end record;
+   BAFRO_FRONT : constant := 0; -- Front: Equipment is in the front facing orientation.
+   BAFRO_BACK  : constant := 1; -- Back: Equipment is in the back facing orientation.
+
+   LAPO_PU : constant := 2#00#; -- Portrait up: Equipment standing vertically in the normal orientation
+   LAPO_PD : constant := 2#01#; -- Portrait down: Equipment standing vertically in the inverted orientation
+   LAPO_LR : constant := 2#10#; -- Landscape right: Equipment is in landscape mode to the right
+   LAPO_LL : constant := 2#11#; -- Landscape left: Equipment is in landscape mode to the left.
+
+   type PL_STATUS_Type is record
+      BAFRO  : Bits_1;  -- Back or front orientation.
+      LAPO   : Bits_2;  -- Landscape/portrait orientation.
+      Unused : Bits_3;
+      LO     : Boolean; -- Z-tilt angle lockout.
+      NEWLP  : Boolean; -- Landscape/portrait status change flag.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PL_STATUS_Type use record
+      BAFRO  at 0 range 0 .. 0;
+      LAPO   at 0 range 1 .. 2;
+      Unused at 0 range 3 .. 5;
+      LO     at 0 range 6 .. 6;
+      NEWLP  at 0 range 7 .. 7;
+   end record;
 
    -- 0x11: PL_CFG register (read/write)
 
-   type PL_CFG_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for PL_CFG_Type use record DATA at 0 range 0 .. 7; end record;
+   DBCNTM_DECRDB : constant := 0; -- Decrements debounce whenever condition of interest is no longer valid.
+   DBCNTM_CLRCNT : constant := 1; -- Clears counter whenever condition of interest is no longer valid.
+
+   type PL_CFG_Type is record
+      Unused : Bits_6;
+      PL_EN  : Boolean; -- Portrait/landscape detection enable.
+      DBCNTM : Bits_1;  -- Debounce counter mode selection.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PL_CFG_Type use record
+      Unused at 0 range 0 .. 5;
+      PL_EN  at 0 range 6 .. 6;
+      DBCNTM at 0 range 7 .. 7;
+   end record;
 
    -- 0x12: PL_COUNT register (read/write)
 
-   type PL_COUNT_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for PL_COUNT_Type use record DATA at 0 range 0 .. 7; end record;
+   type PL_COUNT_Type is record
+      DBCNE : Unsigned_8; -- Debounce count value.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PL_COUNT_Type use record
+      DBCNE at 0 range 0 .. 7;
+   end record;
 
    -- 0x13: PL_BF_ZCOMP register (read/write)
 
-   type PL_BF_ZCOMP_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for PL_BF_ZCOMP_Type use record DATA at 0 range 0 .. 7; end record;
+   ZLOCK_14 : constant := 16#00#; -- 14°
+   ZLOCK_18 : constant := 16#01#; -- 18°
+   ZLOCK_21 : constant := 16#02#; -- 21°
+   ZLOCK_25 : constant := 16#03#; -- 25°
+   ZLOCK_29 : constant := 16#04#; -- 29°
+   ZLOCK_33 : constant := 16#05#; -- 33°
+   ZLOCK_37 : constant := 16#06#; -- 37°
+   ZLOCK_42 : constant := 16#07#; -- 42°
+
+   -- Back/front transition
+   BKFR_BF80Z280 : constant := 2#00#; -- Z < 80° or Z > 280°
+   BKFR_BF75Z285 : constant := 2#01#; -- Z < 75° or Z > 285°
+   BKFR_BF70Z290 : constant := 2#10#; -- Z < 70° or Z > 290°
+   BKFR_BF65Z295 : constant := 2#11#; -- Z < 65° or Z > 295°
+   -- Front/back transition
+   BKFR_FB100Z260 : constant := 2#00#; -- Z > 100° and Z < 260°
+   BKFR_FB105Z255 : constant := 2#01#; -- Z > 105° and Z < 255°
+   BKFR_FB110Z250 : constant := 2#10#; -- Z > 110° and Z < 250°
+   BKFR_FB115Z245 : constant := 2#11#; -- Z > 115° and Z < 245°
+
+   type PL_BF_ZCOMP_Type is record
+      ZLOCK  : Bits_3; -- Z-lock angle threshold.
+      Unused : Bits_3;
+      BKFR   : Bits_2; -- Back/front trip angle threshold.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PL_BF_ZCOMP_Type use record
+      ZLOCK  at 0 range 0 .. 2;
+      Unused at 0 range 3 .. 5;
+      BKFR   at 0 range 6 .. 7;
+   end record;
 
    -- 0x14: PL_THS_REG register (read/write)
 
-   type PL_THS_REG_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for PL_THS_REG_Type use record DATA at 0 range 0 .. 7; end record;
+   HYS_0  : constant := 0; -- ±0 45° 45°
+   HYS_4  : constant := 1; -- ±4 49° 41°
+   HYS_7  : constant := 2; -- ±7 52° 38°
+   HYS_11 : constant := 3; -- ±11 56° 34°
+   HYS_14 : constant := 4; -- ±14 59° 31°
+   HYS_17 : constant := 5; -- ±17 62° 28°
+   HYS_21 : constant := 6; -- ±21 66° 24°
+   HYS_24 : constant := 7; -- ±24 69° 21°
+
+   PL_THS_15 : constant := 16#07#; -- 15°
+   PL_THS_20 : constant := 16#09#; -- 20°
+   PL_THS_30 : constant := 16#0C#; -- 30°
+   PL_THS_35 : constant := 16#0D#; -- 35°
+   PL_THS_40 : constant := 16#0F#; -- 40°
+   PL_THS_45 : constant := 16#10#; -- 45°
+   PL_THS_55 : constant := 16#13#; -- 55°
+   PL_THS_60 : constant := 16#14#; -- 60°
+   PL_THS_70 : constant := 16#17#; -- 70°
+   PL_THS_75 : constant := 16#19#; -- 75°
+
+   type PL_THS_REG_Type is record
+      HYS    : Bits_3; -- This angle is added to the threshold angle for a smoother transition from portrait to landscape and landscape to portrait.
+      PL_THS : Bits_5; -- Portrait/landscape trip threshold angle from 15° to 75°.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PL_THS_REG_Type use record
+      HYS    at 0 range 0 .. 2;
+      PL_THS at 0 range 3 .. 7;
+   end record;
 
    ----------------------------------------------------------------------------
    -- 6.4 Motion and freefall embedded function registers
@@ -335,8 +443,24 @@ pragma Style_Checks (Off);
 
    -- 0x15: FF_MT_CFG register (read/write)
 
-   type FF_MT_CFG_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for FF_MT_CFG_Type use record DATA at 0 range 0 .. 7; end record;
+   type FF_MT_CFG_Type is record
+      Unused : Bits_3;
+      XEFE   : Boolean; -- Event flag enable on X event.
+      YEFE   : Boolean; -- Event flag enable on Y event.
+      ZEFE   : Boolean; -- Event flag enable on Z.
+      OAE    : Boolean; -- Motion detect/freefall detect flag selection.
+      ELE    : Boolean; -- Event latch enable: Event flags are latched into FF_MT_SRC register.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for FF_MT_CFG_Type use record
+      Unused at 0 range 0 .. 2;
+      XEFE   at 0 range 3 .. 3;
+      YEFE   at 0 range 4 .. 4;
+      ZEFE   at 0 range 5 .. 5;
+      OAE    at 0 range 6 .. 6;
+      ELE    at 0 range 7 .. 7;
+   end record;
 
    -- 0x16: FF_MT_SRC freefall and motion source register (read only)
 
