@@ -40,6 +40,11 @@ pragma Style_Checks (Off);
    -- Rev. G
    ----------------------------------------------------------------------------
 
+   -- I2C
+
+   I2C_ADDRESS     : constant := 16#53#; -- SDO/ALT ADDRESS pin = GND
+   I2C_ADDRESS_ALT : constant := 16#1D#; -- SDO/ALT ADDRESS pin = HIGH
+
    -- REGISTER MAP Table 19
 
    DEVID          : constant := 16#00#; -- R   11100101 Device ID
