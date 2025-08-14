@@ -326,6 +326,14 @@ pragma Style_Checks (Off);
       BTFLG     at 0 range 31 .. 31;
    end record;
 
+   AWS_ADDRESS : constant := 16#0100_A164#;
+
+   AWS : aliased AWS_Type
+      with Address              => System'To_Address (AWS_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 7.2.4 OCD/Serial Programmer ID Setting Register (OSIS)
 
    type OSIS_Type is record
