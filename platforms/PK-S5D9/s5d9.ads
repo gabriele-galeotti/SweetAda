@@ -364,13 +364,243 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 8.2.1 Voltage Monitor 1 Circuit Control Register 1 (LVD1CR1)
+
+   IDTSEL_VCCRISE : constant := 2#00#; -- When VCC >= Vdet1 (rise) is detected
+   IDTSEL_VCCFALL : constant := 2#01#; -- When VCC < Vdet1 (fall) is detected
+   IDTSEL_VCCBOTH : constant := 2#10#; -- When fall and rise are detected
+   IDTSEL_RSVD    : constant := 2#11#; -- Settings prohibited.
+
+   IRQSEL_NONMASKINT : constant := 0; -- Non-maskable interrupt
+   IRQSEL_MASKINT    : constant := 1; -- Maskable interrupt.
+
+   type LVD1CR1_Type is record
+      IDTSEL   : Bits_2 := IDTSEL_VCCFALL;    -- Voltage Monitor 1 Interrupt Generation Condition Select
+      IRQSEL   : Bits_1 := IRQSEL_NONMASKINT; -- Voltage Monitor 1 Interrupt Type Select
+      Reserved : Bits_5 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LVD1CR1_Type use record
+      IDTSEL   at 0 range 0 .. 1;
+      IRQSEL   at 0 range 2 .. 2;
+      Reserved at 0 range 3 .. 7;
+   end record;
+
+   LVD1CR1_ADDRESS : constant := 16#4001_E0E0#;
+
+   LVD1CR1 : aliased LVD1CR1_Type
+      with Address    => System'To_Address (LVD1CR1_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    -- 8.2.2 Voltage Monitor 1 Circuit Status Register (LVD1SR)
+
+   type LVD1SR_Type is record
+      DET      : Boolean := False; -- Voltage Monitor 1 Voltage Change Detection Flag
+      MON      : Boolean := True;  -- Voltage Monitor 1 Signal Monitor Flag
+      Reserved : Bits_6  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LVD1SR_Type use record
+      DET      at 0 range 0 .. 0;
+      MON      at 0 range 1 .. 1;
+      Reserved at 0 range 2 .. 7;
+   end record;
+
+   LVD1SR_ADDRESS : constant := 16#4001_E0E1#;
+
+   LVD1SR : aliased LVD1SR_Type
+      with Address    => System'To_Address (LVD1SR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    -- 8.2.3 Voltage Monitor 2 Circuit Control Register 1 (LVD2CR1)
+
+   -- IDTSEL_* already defined at 8.2.1
+
+   -- IRQSEL_* already defined at 8.2.1
+
+   type LVD2CR1_Type is record
+      IDTSEL   : Bits_2 := IDTSEL_VCCFALL;    -- Voltage Monitor 2 Interrupt Generation Condition Select
+      IRQSEL   : Bits_1 := IRQSEL_NONMASKINT; -- Voltage Monitor 2 Interrupt Type Select
+      Reserved : Bits_5 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LVD2CR1_Type use record
+      IDTSEL   at 0 range 0 .. 1;
+      IRQSEL   at 0 range 2 .. 2;
+      Reserved at 0 range 3 .. 7;
+   end record;
+
+   LVD2CR1_ADDRESS : constant := 16#4001_E0E2#;
+
+   LVD2CR1 : aliased LVD2CR1_Type
+      with Address    => System'To_Address (LVD2CR1_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    -- 8.2.4 Voltage Monitor 2 Circuit Status Register (LVD2SR)
+
+   type LVD2SR_Type is record
+      DET      : Boolean := False; -- Voltage Monitor 2 Voltage Change Detection Flag
+      MON      : Boolean := True;  -- Voltage Monitor 2 Signal Monitor Flag
+      Reserved : Bits_6  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LVD2SR_Type use record
+      DET      at 0 range 0 .. 0;
+      MON      at 0 range 1 .. 1;
+      Reserved at 0 range 2 .. 7;
+   end record;
+
+   LVD2SR_ADDRESS : constant := 16#4001_E0E3#;
+
+   LVD2SR : aliased LVD2SR_Type
+      with Address    => System'To_Address (LVD2SR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    -- 8.2.5 Voltage Monitor Circuit Control Register (LVCMPCR)
+
+   type LVCMPCR_Type is record
+      Reserved1 : Bits_5  := 0;
+      LVD1E     : Boolean := False; -- Voltage Detection 1 Enable
+      LVD2E     : Boolean := False; -- Voltage Detection 2 Enable
+      Reserved2 : Bits_1  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LVCMPCR_Type use record
+      Reserved1 at 0 range 0 .. 4;
+      LVD1E     at 0 range 5 .. 5;
+      LVD2E     at 0 range 6 .. 6;
+      Reserved2 at 0 range 7 .. 7;
+   end record;
+
+   LVCMPCR_ADDRESS : constant := 16#4001_E417#;
+
+   LVCMPCR : aliased LVCMPCR_Type
+      with Address    => System'To_Address (LVCMPCR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    -- 8.2.6 Voltage Detection Level Select Register (LVDLVLR)
+
+   LVD1LVL_2V99 : constant := 2#10001#; -- 2.99 V (Vdet1_1 )
+   LVD1LVL_2V92 : constant := 2#10010#; -- 2.92 V (Vdet1_2 )
+   LVD1LVL_2V85 : constant := 2#10011#; -- 2.85 V (Vdet1_3 ).
+
+   LVD2LVL_2V99 : constant := 2#101#; -- 2.99 V (Vdet2_1)
+   LVD2LVL_2V92 : constant := 2#110#; -- 2.92 V (Vdet2_2)
+   LVD2LVL_2V85 : constant := 2#111#; -- 2.85 V Vdet2_3).
+
+   type LVDLVLR_Type is record
+      LVD1LVL : Bits_5 := LVD1LVL_2V85; -- Voltage Detection 1 Level Select
+      LVD2LVL : Bits_3 := LVD2LVL_2V85; -- Voltage Detection 2 Level Select
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LVDLVLR_Type use record
+      LVD1LVL at 0 range 0 .. 4;
+      LVD2LVL at 0 range 5 .. 7;
+   end record;
+
+   LVDLVLR_ADDRESS : constant := 16#4001_E418#;
+
+   LVDLVLR : aliased LVDLVLR_Type
+      with Address    => System'To_Address (LVDLVLR_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    -- 8.2.7 Voltage Monitor 1 Circuit Control Register 0 (LVD1CR0)
+
+   FSAMP_LOC0DIV2  : constant := 2#00#; -- 1/2 LOCO frequency
+   FSAMP_LOC0DIV4  : constant := 2#01#; -- 1/4 LOCO frequency
+   FSAMP_LOC0DIV8  : constant := 2#10#; -- 1/8 LOCO frequency
+   FSAMP_LOC0DIV16 : constant := 2#11#; -- 1/16 LOCO frequency.
+
+   RI_VM1INT : constant := 0; -- Generate voltage monitor 1 interrupt on Vdet1 passage
+   RI_VM1RST : constant := 1; -- Enable voltage monitor 1 reset when the voltage falls to and below V det1.
+
+   RN_VCCGTVDET1 : constant := 0; -- Negate after a stabilization time (tLVD1) when VCC > Vdet1 is detected
+   RN_LVD1RST    : constant := 1; -- Negate after a stabilization time (tLVD1) on assertion of the LVD1 reset.
+
+   type LVD1CR0_Type is record
+      RIE      : Boolean  := False;          -- Voltage Monitor 1 Interrupt/Reset Enable
+      DFDIS    : NBoolean := NFalse;         -- Voltage Monitor 1 Digital Filter Disable Mode Select
+      CMPE     : Boolean  := False;          -- Voltage Monitor 1 Circuit Comparison Result Output Enable
+      Reserved : Bits_1   := 0;
+      FSAMP    : Bits_2   := FSAMP_LOC0DIV2; -- Sampling Clock Select
+      RI       : Bits_1   := RI_VM1INT;      -- Voltage Monitor 1 Circuit Mode Select
+      RN       : Bits_1   := RN_LVD1RST;     -- Voltage Monitor 1 Reset Negate Select
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LVD1CR0_Type use record
+      RIE      at 0 range 0 .. 0;
+      DFDIS    at 0 range 1 .. 1;
+      CMPE     at 0 range 2 .. 2;
+      Reserved at 0 range 3 .. 3;
+      FSAMP    at 0 range 4 .. 5;
+      RI       at 0 range 6 .. 6;
+      RN       at 0 range 7 .. 7;
+   end record;
+
+   LVD1CR0_ADDRESS : constant := 16#4001_E41A#;
+
+   LVD1CR0 : aliased LVD1CR0_Type
+      with Address    => System'To_Address (LVD1CR0_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    -- 8.2.8 Voltage Monitor 2 Circuit Control Register 0 (LVD2CR0)
+
+   -- FSAMP_* already defined at 8.2.7
+
+   RI_VM2INT : constant := 0; -- Generate voltage monitor 2 interrupt on Vdet2 passage
+   RI_VM2RST : constant := 1; -- Enable voltage monitor 2 reset when the voltage falls to and below Vdet2.
+
+   RN_VCCGTVDET2 : constant := 0; -- Negate after a stabilization time (tLVD2) when VCC > Vdet2 is detected
+   RN_LVD2RST    : constant := 1; -- Negate after a stabilization time (tLVD2) on assertion of the LVD2 reset.
+
+   type LVD2CR0_Type is record
+      RIE      : Boolean  := False;          -- Voltage Monitor 2 Interrupt/Reset Enable
+      DFDIS    : NBoolean := NFalse;         -- Voltage Monitor 2 Digital Filter Disable Mode Select
+      CMPE     : Boolean  := False;          -- Voltage Monitor 2 Circuit Comparison Result Output Enable
+      Reserved : Bits_1   := 0;
+      FSAMP    : Bits_2   := FSAMP_LOC0DIV2; -- Sampling Clock Select
+      RI       : Bits_1   := RI_VM2INT;      -- Voltage Monitor 2 Circuit Mode Select
+      RN       : Bits_1   := RN_LVD2RST;     -- Voltage Monitor 2 Reset Negate Select
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for LVD2CR0_Type use record
+      RIE      at 0 range 0 .. 0;
+      DFDIS    at 0 range 1 .. 1;
+      CMPE     at 0 range 2 .. 2;
+      Reserved at 0 range 3 .. 3;
+      FSAMP    at 0 range 4 .. 5;
+      RI       at 0 range 6 .. 6;
+      RN       at 0 range 7 .. 7;
+   end record;
+
+   LVD2CR0_ADDRESS : constant := 16#4001_E41B#;
+
+   LVD2CR0 : aliased LVD2CR0_Type
+      with Address    => System'To_Address (LVD2CR0_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- 9. Clock Generation Circuit
@@ -3708,13 +3938,9 @@ pragma Warnings (On);
 
    -- 34.2.13 Serial Status Register (SSR) for Non-Smart Card Interface and Non-FIFO Mode (SCMR.SMIF = 0 and FCR.FM = 0)
 
-   -- already defined at 34.2.7
-   -- MPBT_DATA : constant := 0;
-   -- MPBT_ID   : constant := 1;
+   -- MPBT_* already defined at 34.2.7
 
-   -- already defined at 34.2.4
-   -- MPB_DATA : constant := 0;
-   -- MPB_ID   : constant := 1;
+   -- MPB_* already defined at 34.2.4
 
    type SSR_NORMAL_Type is
    record
@@ -4296,15 +4522,7 @@ pragma Warnings (On);
    BC_7 : constant := 2#110#; -- 7 bits
    BC_8 : constant := 2#111#; -- 8 bits.
 
-   -- already defined at 25.2.6
-   -- CKS_PCLKB_DIV1   : constant := 2#000#; -- PCLKB clock
-   -- CKS_PCLKB_DIV2   : constant := 2#001#; -- PCLKB/2 clock
-   -- CKS_PCLKB_DIV4   : constant := 2#010#; -- PCLKB/4 clock
-   -- CKS_PCLKB_DIV8   : constant := 2#011#; -- PCLKB/8 clock
-   -- CKS_PCLKB_DIV16  : constant := 2#100#; -- PCLKB/16 clock
-   -- CKS_PCLKB_DIV32  : constant := 2#101#; -- PCLKB/32 clock
-   -- CKS_PCLKB_DIV64  : constant := 2#110#; -- PCLKB/64 clock
-   -- CKS_PCLKB_DIV128 : constant := 2#111#; -- PCLKB/128 clock.
+   -- CKS_PCLKB_* already defined at 25.2.6
 
    type ICMR1_Type is record
       BC   : Bits_3  := BC_9;           -- Bit Counter
