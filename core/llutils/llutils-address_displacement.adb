@@ -17,9 +17,9 @@
 
 separate (LLutils)
 function Address_Displacement
-   (Local_Address  : System.Address;
-    Target_Address : System.Address;
-    Scale_Address  : Bits.Address_Shift)
+   (Base_Address : System.Address;
+    Offset       : System.Address;
+    Scale_Factor : Bits.Address_Shift)
    return SSE.Storage_Offset
    is
    type Address_Word_Type is mod 2**Standard'Address_Size;
@@ -31,6 +31,6 @@ function Address_Displacement
       with Import     => True,
            Convention => Intrinsic;
 begin
-   return (Target_Address - Local_Address) /
-      SSE.Storage_Offset (Shift_Left (Address_Word_Type'(1), Scale_Address));
+   return (Offset - Base_Address) /
+      SSE.Storage_Offset (Shift_Left (Address_Word_Type'(1), Scale_Factor));
 end Address_Displacement;

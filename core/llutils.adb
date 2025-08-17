@@ -146,9 +146,9 @@ package body LLutils
    -- Address_Displacement
    ----------------------------------------------------------------------------
    function Address_Displacement
-      (Local_Address  : System.Address;
-       Target_Address : System.Address;
-       Scale_Address  : Bits.Address_Shift)
+      (Base_Address : System.Address;
+       Offset       : System.Address;
+       Scale_Factor : Bits.Address_Shift)
       return SSE.Storage_Offset
       is
    separate;
@@ -157,9 +157,9 @@ package body LLutils
    -- Build_Address
    ----------------------------------------------------------------------------
    function Build_Address
-      (Base_Address  : System.Address;
-       Offset        : System.Storage_Elements.Storage_Offset;
-       Scale_Address : Bits.Address_Shift)
+      (Base_Address : System.Address;
+       Offset       : System.Storage_Elements.Storage_Offset;
+       Scale_Factor : Bits.Address_Shift)
       return System.Address
       is
    separate;

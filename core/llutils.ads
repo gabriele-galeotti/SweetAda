@@ -119,9 +119,9 @@ package LLutils
    -- unchecked conversion (Storage_Offset is a signed integer type).
    ----------------------------------------------------------------------------
    function Address_Displacement
-      (Local_Address  : System.Address;
-       Target_Address : System.Address;
-       Scale_Address  : Bits.Address_Shift)
+      (Base_Address : System.Address;
+       Offset       : System.Address;
+       Scale_Factor : Bits.Address_Shift)
       return SSE.Storage_Offset
       with Inline => True;
 
@@ -129,9 +129,9 @@ package LLutils
    -- Build an address from a base address plus offset, scaled by a factor.
    ----------------------------------------------------------------------------
    function Build_Address
-      (Base_Address  : System.Address;
-       Offset        : SSE.Storage_Offset;
-       Scale_Address : Bits.Address_Shift)
+      (Base_Address : System.Address;
+       Offset       : SSE.Storage_Offset;
+       Scale_Factor : Bits.Address_Shift)
       return System.Address
       with Inline => True;
 
