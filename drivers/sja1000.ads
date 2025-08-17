@@ -265,7 +265,7 @@ pragma Style_Checks (Off);
 
    -- Table 1 BasicCAN address allocation
 
-   type Buffer_Type is array (1 .. 8) of aliased Unsigned_8;
+   type Buffer_Type is array (1 .. 8) of Unsigned_8;
 
    type SJA1000_Type is record
       CR      : CR_Type     with Volatile_Full_Access => True;
