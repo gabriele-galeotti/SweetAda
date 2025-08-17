@@ -20,9 +20,9 @@ with Ada.Characters.Latin_1;
 
 separate (LLutils)
 function Build_Address
-   (Base_Address  : System.Address;
-    Offset        : SSE.Storage_Offset;
-    Scale_Address : Bits.Address_Shift)
+   (Base_Address : System.Address;
+    Offset       : SSE.Storage_Offset;
+    Scale_Factor : Bits.Address_Shift)
    return System.Address
    is
    use System.Machine_Code;
@@ -39,7 +39,7 @@ begin
         Inputs   => [
                      System.Address'Asm_Input ("a", Base_Address),
                      SSE.Storage_Offset'Asm_Input ("b", Offset),
-                     Bits.Address_Shift'Asm_Input ("c", Scale_Address)
+                     Bits.Address_Shift'Asm_Input ("c", Scale_Factor)
                     ],
         Clobber  => "",
         Volatile => True
