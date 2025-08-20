@@ -4,6 +4,19 @@ REM
 REM Start GNAT Studio.
 REM
 
+REM ############################################################################
+REM # Script initialization.                                                   #
+REM #                                                                          #
+REM ############################################################################
+
+SETLOCAL ENABLEEXTENSIONS
+SETLOCAL ENABLEDELAYEDEXPANSION
+
+REM ############################################################################
+REM # Main loop.                                                               #
+REM #                                                                          #
+REM ############################################################################
+
 REM force OSTYPE
 SET OSTYPE=cmd
 
