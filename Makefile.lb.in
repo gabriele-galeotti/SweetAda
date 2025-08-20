@@ -72,20 +72,20 @@ $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a: $(OBJECTS)
 %.o: %.adb
 $(OBJ_DIRECTORY)/%.o: %.adb $(DEP_DIRECTORY)/%.d
 	$(call brief-command,\
-        $(GNATMAKE)                             \
-                    -gnatec=$(GNATADC_FILENAME) \
-                    -D $(OBJ_DIRECTORY)         \
-                    $(GCC_SWITCHES_LIBRARY)     \
-                    -c $(INCLUDES) $<           \
+        $(GNATMAKE)                                                   \
+                    -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
+                    -D $(OBJ_DIRECTORY)                               \
+                    $(GCC_SWITCHES_LIBRARY)                           \
+                    -c $(INCLUDES) $<                                 \
         ,[GNATMAKE],$(notdir $<))
 	$(call brief-command,\
-        $(GNATMAKE_DEPEND)                             \
-                           -M                          \
-                           -gnatec=$(GNATADC_FILENAME) \
-                           -D $(OBJ_DIRECTORY)         \
-                           $(GCC_SWITCHES_LIBRARY)     \
-                           -c $(INCLUDES) $<           \
-                           > $(DEP_DIRECTORY)/$*.td    \
+        $(GNATMAKE_DEPEND)                                                   \
+                           -M                                                \
+                           -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
+                           -D $(OBJ_DIRECTORY)                               \
+                           $(GCC_SWITCHES_LIBRARY)                           \
+                           -c $(INCLUDES) $<                                 \
+                           > $(DEP_DIRECTORY)/$*.td                          \
         ,[GNATMAKE-D],$*.d)
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
@@ -106,20 +106,20 @@ endif
 %.o: %.ads
 $(OBJ_DIRECTORY)/%.o: %.ads $(DEP_DIRECTORY)/%.d
 	$(call brief-command,\
-        $(GNATMAKE)                             \
-                    -gnatec=$(GNATADC_FILENAME) \
-                    -D $(OBJ_DIRECTORY)         \
-                    $(GCC_SWITCHES_LIBRARY)     \
-                    -c $(INCLUDES) $<           \
+        $(GNATMAKE)                                                   \
+                    -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
+                    -D $(OBJ_DIRECTORY)                               \
+                    $(GCC_SWITCHES_LIBRARY)                           \
+                    -c $(INCLUDES) $<                                 \
         ,[GNATMAKE],$(notdir $<))
 	$(call brief-command,\
-        $(GNATMAKE_DEPEND)                             \
-                           -M                          \
-                           -gnatec=$(GNATADC_FILENAME) \
-                           -D $(OBJ_DIRECTORY)         \
-                           $(GCC_SWITCHES_LIBRARY)     \
-                           -c $(INCLUDES) $<           \
-                           > $(DEP_DIRECTORY)/$*.td    \
+        $(GNATMAKE_DEPEND)                                                   \
+                           -M                                                \
+                           -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
+                           -D $(OBJ_DIRECTORY)                               \
+                           $(GCC_SWITCHES_LIBRARY)                           \
+                           -c $(INCLUDES) $<                                 \
+                           > $(DEP_DIRECTORY)/$*.td                          \
         ,[GNATMAKE-D],$*.d)
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
