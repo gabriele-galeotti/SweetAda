@@ -20,9 +20,9 @@ with Ada.Characters.Latin_1;
 
 separate (LLutils)
 function Address_Displacement
-   (Base_Address : System.Address;
-    Offset       : System.Address;
-    Scale_Factor : Bits.Address_Shift)
+   (Base_Address   : System.Address;
+    Object_Address : System.Address;
+    Scale_Factor   : Bits.Address_Shift)
    return SSE.Storage_Offset
    is
    use System.Machine_Code;
@@ -37,7 +37,7 @@ begin
                     "",
         Outputs  => SSE.Storage_Offset'Asm_Output ("=r", Result),
         Inputs   => [
-                     System.Address'Asm_Input ("r", Offset),
+                     System.Address'Asm_Input ("r", Object_Address),
                      System.Address'Asm_Input ("r", Base_Address),
                      Bits.Address_Shift'Asm_Input ("r", Scale_Factor)
                     ],
