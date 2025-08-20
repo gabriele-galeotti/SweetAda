@@ -89,7 +89,11 @@ package body Exceptions
       Trap_Template.Code (3) := Opcode_NOP;
       for Index in Trap_Table'Range loop
          Vector_Address := To_Address (Integer_Address (16#100# + Index));
-         Displacement := Address_Displacement (Vector_Address, Trap_Table (Index).Code (0)'Address, 2);
+         Displacement := Address_Displacement (
+            Base_Address   => Vector_Address,
+            Object_Address => Trap_Table (Index).Code (0)'Address,
+            Scale_Factor   => 2
+            );
          Trap_Template.Code (0) := Opcode_BRANCH_ALWAYS or (To_U32 (Displacement) and 16#003F_FFFF#);
          Trap_Table (Index) := Trap_Template;
       end loop;
