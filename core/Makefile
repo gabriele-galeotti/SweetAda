@@ -41,7 +41,6 @@ all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: configure
 configure: clean-configure-files
-	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 	@$(GCCDEFINES)                                 \
           GCC.Defines gcc-defines.ads                  \
           __VERSION__:VERSION:String:S                 \
