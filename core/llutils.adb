@@ -146,9 +146,9 @@ package body LLutils
    -- Address_Displacement
    ----------------------------------------------------------------------------
    function Address_Displacement
-      (Base_Address : System.Address;
-       Offset       : System.Address;
-       Scale_Factor : Bits.Address_Shift)
+      (Base_Address   : System.Address;
+       Object_Address : System.Address;
+       Scale_Factor   : Bits.Address_Shift)
       return SSE.Storage_Offset
       is
    separate;
