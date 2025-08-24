@@ -47,7 +47,6 @@ installfiles:
 
 .PHONY: configure
 configure: clean-configure-files $(CONFIGURE_FILES_PLATFORM) $(LD_SCRIPT)
-	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 	@$(CREATESYMLINK)                                                   \
                           mmu/mmu-amiga-$(CPU_MODEL:M%=%).adb mmu-amiga.adb \
                           mmu/mmu-amiga-$(CPU_MODEL:M%=%).ads mmu-amiga.ads
