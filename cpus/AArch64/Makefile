@@ -41,7 +41,6 @@ all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: configure
 configure: armv8a.adb armv8a.ads
-	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 
 %.adb: %.adbp $(CPU_DEF)
 	$(call brief-command, \

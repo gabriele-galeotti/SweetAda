@@ -51,7 +51,6 @@ all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: configure
 configure: clean-installed-files
-	@$(CREATESYMLINK) $(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) $(GNATADC_FILENAME)
 ifneq ($(MMIO_FUNCTIONS),)
 	@$(CREATESYMLINK) -v -c -m Makefile.if.in $(foreach f,$(MMIO_FUNCTIONS),./mmio/$(f) $(f))
 endif
