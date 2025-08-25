@@ -153,6 +153,7 @@ package Definitions
    CLK_33M      : constant :=   33 * MHz1; -- standard value
    CLK_33M33    : constant :=  33_330_000; -- PCI
    CLK_40M      : constant :=   40 * MHz1; -- standard value
+   CLK_48M      : constant :=   48 * MHz1; -- standard value
    CLK_50M      : constant :=   50 * MHz1; -- RMII PHY
    CLK_66M      : constant :=   66 * MHz1; -- standard value
    CLK_66M66    : constant :=  66_667_000; -- PCI
