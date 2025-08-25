@@ -65,7 +65,7 @@ package body Clocks
    -- Init
    ----------------------------------------------------------------------------
    -- Initialize clocks, HFXT = 48 MHz
-   -- MCLK CPU:     24 MHz
+   -- MCLK CPU:     48 MHz
    -- HSMCLK/SMCLK: 12 MHz
    ----------------------------------------------------------------------------
    procedure Init
