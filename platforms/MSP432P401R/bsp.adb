@@ -112,6 +112,8 @@ package body BSP
       PMAPCTL.PMAPRECFG := True;
       -- clock setup ----------------------------------------------------------
       Clocks.Init;
+      -- SysTick LED blink ----------------------------------------------------
+      P1.PxDIR (0) := True;
       -- USCI_A0 --------------------------------------------------------------
       eUSCI_A0_UART.UCAxCTLW0.UCSWRST := True;
       eUSCI_A0_UART.UCAxIRCTL.UCIREN := False;

@@ -79,7 +79,6 @@ package body Exceptions
       BSP.Tick_Count := @ + 1;
       if BSP.Tick_Count mod 1_000 = 0 then
          -- LED1
-         MSP432P401R.P1.PxDIR (0) := True;
          MSP432P401R.P1.PxOUT (0) := not MSP432P401R.P1.PxIN (0);
       end if;
    end SysTick_Process;
