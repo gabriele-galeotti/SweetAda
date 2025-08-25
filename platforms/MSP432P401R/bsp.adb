@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Configure;
 with Definitions;
 with Bits;
 with CPU;
@@ -56,9 +57,7 @@ package body BSP
    procedure SysTick_Init
       is
    begin
-      -- The LED is toggled every 1000 ticks, so that in 2000 ticks a complete
-      -- 1s-cycle can be observed @ 24 MHz CPU clock (MCLK)
-      ARMv7M.SYST_RVR.RELOAD := Bits_24 (Clocks.MCLK / 1_000);
+      ARMv7M.SYST_RVR.RELOAD := Bits_24 (Clocks.MCLK / Configure.TICK_FREQUENCY);
       ARMv7M.SHPR3.PRI_15 := 16#01#;
       ARMv7M.SYST_CVR.CURRENT := 0;
       ARMv7M.SYST_CSR := (

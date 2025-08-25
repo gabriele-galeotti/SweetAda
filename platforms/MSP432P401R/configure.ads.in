@@ -14,5 +14,6 @@ package Configure
 
    -- basic configuration parameters
    HFXT_FREQUENCY : constant := 48 * MHz1;
+   TICK_FREQUENCY : constant := 1_000;
 
 end Configure;
