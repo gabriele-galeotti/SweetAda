@@ -35,6 +35,7 @@ package body BSP
    --                                                                        --
    --========================================================================--
 
+   use Interfaces;
    use Definitions;
    use Bits;
    use MSP432P401R;
@@ -57,7 +58,7 @@ package body BSP
    begin
       -- The LED is toggled every 1000 ticks, so that in 2000 ticks a complete
       -- 1s-cycle can be observed @ 24 MHz CPU clock (MCLK)
-      ARMv7M.SYST_RVR.RELOAD := Bits_24 (24 * MHz1 / 2_000);
+      ARMv7M.SYST_RVR.RELOAD := Bits_24 (Clocks.MCLK / 1_000);
       ARMv7M.SHPR3.PRI_15 := 16#01#;
       ARMv7M.SYST_CVR.CURRENT := 0;
       ARMv7M.SYST_CSR := (
@@ -115,7 +116,7 @@ package body BSP
       -- USCI_A0 --------------------------------------------------------------
       eUSCI_A0_UART.UCAxCTLW0.UCSWRST := True;
       eUSCI_A0_UART.UCAxIRCTL.UCIREN := False;
-      eUSCI_A0_UART.UCAxBRW.UCBRx := 78; -- 9600 bps @ SMCLK = 12 MHz
+      eUSCI_A0_UART.UCAxBRW.UCBRx := Unsigned_16 (Clocks.SMCLK / (16 * 9_600));
       eUSCI_A0_UART.UCAxMCTLW := (
          UCOS16 => True,
          UCBRFx => 2,

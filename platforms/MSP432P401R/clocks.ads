@@ -26,6 +26,12 @@ package Clocks
    --                                                                        --
    --========================================================================--
 
+   ACLK   : Natural;
+   MCLK   : Natural;
+   HSMCLK : Natural;
+   SMCLK  : Natural;
+   BCLK   : Natural;
+
    procedure Init;
 
 end Clocks;

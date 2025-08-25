@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Definitions;
 with CPU;
 with MSP432P401R;
 
@@ -29,6 +30,7 @@ package body Clocks
    --                                                                        --
    --========================================================================--
 
+   use Definitions;
    use MSP432P401R;
 
    function Status_Ready
@@ -105,17 +107,17 @@ package body Clocks
          REFO_EN   => True,
          MODOSC_EN => False,
          REFOFSEL  => REFOFSEL_32k,
-         others => <>
+         others    => <>
          );
       -- check for readiness
       loop exit when Status_Ready; end loop;
-      -- MCLK = 24 MHz (core clock), SMCLK = 12 MHz (peripherals)
+      -- MCLK = 48 MHz (core clock), SMCLK = 12 MHz (peripherals)
       CSCTL1 := (
          SELM   => SELM_HFXTCLK,
          SELS   => SELS_HFXTCLK,
          SELA   => SELA_REFOCLK,
          SELB   => SELB_REFOCLK,
-         DIVM   => DIVM_DIV2,
+         DIVM   => DIVM_DIV1,
          DIVHS  => DIVHS_DIV4,
          DIVA   => DIVA_DIV4,
          DIVS   => DIVS_DIV4,
@@ -131,6 +133,12 @@ package body Clocks
          DCOEN   => False,
          others  => <>
          );
+      -- setup clock values
+      ACLK   := CLK_12M;
+      MCLK   := CLK_48M;
+      HSMCLK := CLK_12M;
+      SMCLK  := CLK_12M;
+      BCLK   := CLK_RTC32k;
    end Init;
 
 end Clocks;
