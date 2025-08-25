@@ -20,12 +20,17 @@ REM SUBPLATFORM
 REM
 
 REM ############################################################################
-REM # Main loop.                                                               #
+REM # Script initialization.                                                   #
 REM #                                                                          #
 REM ############################################################################
 
 SETLOCAL ENABLEEXTENSIONS
 SETLOCAL ENABLEDELAYEDEXPANSION
+
+REM ############################################################################
+REM # Main loop.                                                               #
+REM #                                                                          #
+REM ############################################################################
 
 REM hidden feature: if the script is called with -p <logfile>, it acts
 REM like a "tee"
