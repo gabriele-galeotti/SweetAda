@@ -79,9 +79,9 @@ $GetEnvironmentVariable_signature = @'
 [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 public static extern uint
 GetEnvironmentVariable(
-  string                    lpName,
+  string lpName,
   System.Text.StringBuilder lpBuffer,
-  uint                      nSize
+  uint nSize
   );
 '@
 Add-Type                                              `
