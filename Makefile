@@ -146,7 +146,8 @@ ALL_GOALS := $(NOT_PLATFORM_GOALS) \
              $(PLATFORM_GOALS)
 
 # special set of goals for detection of all informations
-INFOCONFIG_GOALS := $(INFO_GOALS) \
+INFOCONFIG_GOALS := $(INFO_GOALS)          \
+                    $(PROBEVARIABLE_GOALS) \
                     configure
 
 # check Makefile target
@@ -464,7 +465,7 @@ endif
 
 ifneq ($(MAKECMDGOALS),)
 # PLATFORM processing
-ifneq ($(filter $(CLEANING_GOALS) $(INFO_GOALS) rts $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
+ifneq ($(filter $(sort $(CLEANING_GOALS) $(INFOCONFIG_GOALS) rts $(PLATFORM_GOALS)),$(MAKECMDGOALS)),)
 ifneq ($(PLATFORM),)
 # PLATFORM defined
 ifeq ($(filter $(PLATFORM),$(PLATFORMS)),)
@@ -490,7 +491,7 @@ endif
 # CPU processing
 ifneq ($(CPU),)
 # CPU defined
-ifneq ($(filter $(INFO_GOALS) rts $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
+ifneq ($(filter $(sort $(INFOCONFIG_GOALS) rts $(PLATFORM_GOALS)),$(MAKECMDGOALS)),)
 ifeq ($(filter $(CPU),$(CPUS)),)
 $(error Error: no valid CPU)
 else
@@ -803,31 +804,31 @@ LIBM_OBJECT :=
 endif
 
 ifeq ($(OSTYPE),cmd)
-$(foreach s,                                              \
-  $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell      \
-    SET "GNUMAKEFLAGS=$(GNUMAKEFLAGS)"                 && \
-    SET "VERBOSE="                                     && \
-    SET "PATH=$(PATH)"                                 && \
-    SET "KERNEL_PARENT_PATH=.."                        && \
-    SET "RTS=$(RTS)"                                   && \
-    SET "TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)"             && \
-    SET "MULTILIB=$(GCC_MULTIDIR)"                     && \
-    "$(MAKE)" -C $(RTS_DIRECTORY)                         \
-      PROBEVARIABLES="LIBGNAT LIBGNARL" probevariables    \
-    2>nul))),$(eval $(subst $(DEL),$(SPACE),$(s))))
+$(foreach s,                                                    \
+  $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell            \
+    SET "VERBOSE="                                           && \
+    SET "GNUMAKEFLAGS=$(GNUMAKEFLAGS)"                       && \
+    SET "PATH=$(PATH)"                                       && \
+    SET "KERNEL_PARENT_PATH=.."                              && \
+    SET "RTS=$(RTS)"                                         && \
+    SET "TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)"                   && \
+    SET "MULTILIB=$(GCC_MULTIDIR)"                           && \
+    "$(MAKE)" -C $(RTS_DIRECTORY)                               \
+      PROBEVARIABLES="LIBGNAT LIBGNARL" probevariables          \
+    2>nul))),$(eval $(strip $(subst $(DEL),$(SPACE),$(s)))))
 else
-$(foreach s,                                               \
-  $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell       \
-    GNUMAKEFLAGS="$(GNUMAKEFLAGS)"                         \
-    VERBOSE=                                               \
-    PATH="$(PATH)"                                         \
-    KERNEL_PARENT_PATH=..                                  \
-    RTS=$(RTS)                                             \
-    TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)                       \
-    MULTILIB=$(GCC_MULTIDIR)                               \
-    "$(MAKE)" -C $(RTS_DIRECTORY)                          \
-      PROBEVARIABLES="LIBGNAT LIBGNARL" probevariables     \
-    2> /dev/null))),$(eval $(subst $(DEL),$(SPACE),$(s))))
+$(foreach s,                                                        \
+  $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell                \
+    VERBOSE=                                                        \
+    GNUMAKEFLAGS="$(GNUMAKEFLAGS)"                                  \
+    PATH="$(PATH)"                                                  \
+    KERNEL_PARENT_PATH=..                                           \
+    RTS=$(RTS)                                                      \
+    TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)                                \
+    MULTILIB=$(GCC_MULTIDIR)                                        \
+    "$(MAKE)" -C $(RTS_DIRECTORY)                                   \
+      PROBEVARIABLES="LIBGNAT LIBGNARL" probevariables              \
+    2> /dev/null))),$(eval $(strip $(subst $(DEL),$(SPACE),$(s)))))
 endif
 LIBGNAT_OBJECT  := $(RTS_DIRECTORY)/$(LIBGNAT)
 LIBGNARL_OBJECT := $(RTS_DIRECTORY)/$(LIBGNARL)
