@@ -55,9 +55,11 @@ substring = $(strip \
 # Usage:
 # $(call unquote,"text")
 #
-# Remove delimiting double-quotes from a text string.
+# Remove double-quotes from a text string.
 #
-unquote = $(subst $(DEL),$(SPACE),$(patsubst "%",%,$(subst $(SPACE),$(DEL),$1)))
+unquote =  $(subst $(DEL),$(SPACE),$(subst $(SPACE),",$(strip \
+             $(subst ",$(SPACE),$(subst $(SPACE),$(DEL),$1))\
+             )))
 
 #
 # echo-print
@@ -65,8 +67,8 @@ unquote = $(subst $(DEL),$(SPACE),$(patsubst "%",%,$(subst $(SPACE),$(DEL),$1)))
 # Usage:
 # $(call echo-print,"something to print")
 #
-# When calling echo-print, the string should be always protected by
-# double-quotes.
+# Double-quotes must be used to delimit the string. The string must not
+# contain other double-quotes inside.
 #
 ifeq ($(OSTYPE),cmd)
 __echo-print-xform__ = $(subst <,^<,$(subst >,^>,$(subst &,^&,$(subst |,^|,$(call unquote,$1)))))
