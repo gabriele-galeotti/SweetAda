@@ -30,7 +30,6 @@
 # GNATMAKE_DEPEND
 # GCC_WRAPPER_TIMESTAMP_FILENAME
 # GNAT_WRAPPER_TIMESTAMP_FILENAME
-# GPRBUILD_ENABLE_<LIBRARY_NAME>
 #
 
 # export top-level directory reference
@@ -62,23 +61,23 @@ GCC_SWITCHES_LIBRARY :=
 endif
 
 $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a: $(OBJECTS)
-	$(call brief-command,\
+	$(call brief-command, \
         $(AR) cr $@ $(OBJECTS) \
         ,[AR],$(notdir $@))
-	$(call brief-command,\
+	$(call brief-command, \
         $(RANLIB) $@ \
         ,[RANLIB],$(notdir $@))
 
 %.o: %.adb
 $(OBJ_DIRECTORY)/%.o: %.adb $(DEP_DIRECTORY)/%.d
-	$(call brief-command,\
+	$(call brief-command, \
         $(GNATMAKE)                                                   \
                     -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
                     -D $(OBJ_DIRECTORY)                               \
                     $(GCC_SWITCHES_LIBRARY)                           \
                     -c $(INCLUDES) $<                                 \
         ,[GNATMAKE],$(notdir $<))
-	$(call brief-command,\
+	$(call brief-command, \
         $(GNATMAKE_DEPEND)                                                   \
                            -M                                                \
                            -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
@@ -105,14 +104,14 @@ endif
 
 %.o: %.ads
 $(OBJ_DIRECTORY)/%.o: %.ads $(DEP_DIRECTORY)/%.d
-	$(call brief-command,\
+	$(call brief-command, \
         $(GNATMAKE)                                                   \
                     -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
                     -D $(OBJ_DIRECTORY)                               \
                     $(GCC_SWITCHES_LIBRARY)                           \
                     -c $(INCLUDES) $<                                 \
         ,[GNATMAKE],$(notdir $<))
-	$(call brief-command,\
+	$(call brief-command, \
         $(GNATMAKE_DEPEND)                                                   \
                            -M                                                \
                            -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
@@ -139,7 +138,7 @@ endif
 
 %.o: %.S
 $(OBJ_DIRECTORY)/%.o: %.S $(DEP_DIRECTORY)/%.d
-	$(call brief-command,\
+	$(call brief-command, \
         $(CC)                            \
               -o $@                      \
               -MT $@ -MMD -MP            \
@@ -227,42 +226,33 @@ else ifeq ($(BUILD_MODE),GPRbuild)
 # GPRbuild
 #
 
-ifeq ($(OBJECTS)$(GPRBUILD_ENABLE_$(LIBRARY_NAME)),)
-
-$(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a:
-ifeq ($(OSTYPE),cmd)
-	$(call brief-command,\
-        $(call create-emptyfile,$(LIB_DIRECTORY_CMD)\lib$(LIBRARY_NAME).a) \
-        ,[NULL],$(notdir $@))
-else
-	$(call brief-command,\
-        $(call create-emptyfile,$(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a) \
-        ,[NULL],$(notdir $@))
-endif
-
-else
-
 export GPR_INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),$(KERNEL_PARENT_PATH)/$(d))
 
 .PHONY: FORCE
 FORCE:
 
 $(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a: FORCE
-	$(call brief-command,\
+	$(call brief-command, \
         $(GPRBUILD)                           \
                     -aP $(KERNEL_PARENT_PATH) \
                     -P $(LIBRARY_NAME).gpr    \
         ,[GPRBUILD-L],$(LIBRARY_NAME).gpr)
-
+ifeq ($(OSTYPE),cmd)
+	@IF NOT EXIST $(LIB_DIRECTORY_CMD)\lib$(LIBRARY_NAME).a \
+          $(call create-emptyfile,$(LIB_DIRECTORY_CMD)\lib$(LIBRARY_NAME).a)
+else
+	@if [ ! -e $(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a ] ; then \
+          $(call create-emptyfile,$(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a) ; \
+        fi
 endif
 
 $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a: $(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a
 ifeq ($(OSTYPE),cmd)
-	$(call brief-command,\
+	$(call brief-command, \
         $(CP) $(LIB_DIRECTORY_CMD)\lib$(LIBRARY_NAME).a $(OBJ_DIRECTORY_CMD)\ \
         ,[COPYOBJLIB],$(notdir $@))
 else
-	$(call brief-command,\
+	$(call brief-command, \
         $(CP) $(LIB_DIRECTORY)/lib$(LIBRARY_NAME).a $(OBJ_DIRECTORY)/ \
         ,[COPYOBJLIB],$(notdir $@))
 endif

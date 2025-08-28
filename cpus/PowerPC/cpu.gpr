@@ -19,6 +19,7 @@ library project Cpu is
 
    Kernel_Parent_Path := External ("KERNEL_PARENT_PATH", ".");
    Include_Directories := Split (External ("GPR_INCLUDES", ""), " ");
+   Source_Files_Exist := "";
 
    -- shorthands
    Obj_Dir := Kernel_Parent_Path & "/" & Configure.Object_Directory;
@@ -27,10 +28,11 @@ library project Cpu is
    for Target use Configure.Toolchain_Name;
    for Source_Dirs use Include_Directories & (".");
 
-   case Configure.Use_LibGCC is
+   case Source_Files_Exist is
+      when "Y" =>
+         null;
       when others =>
-         for Languages use ("Ada");
-         for Source_Files use ();
+         for Externally_Built use "true";
    end case;
 
    ----------------------------------------------------------------------------

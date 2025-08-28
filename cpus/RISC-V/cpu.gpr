@@ -19,6 +19,7 @@ library project Cpu is
 
    Kernel_Parent_Path := External ("KERNEL_PARENT_PATH", ".");
    Include_Directories := Split (External ("GPR_INCLUDES", ""), " ");
+   Source_Files_Exist := "";
 
    RiscV := External ("RISCV");
 
@@ -38,6 +39,7 @@ library project Cpu is
       when "Y" =>
          null;
       when others =>
+         Source_Files_Exist := "Y";
          Asm := "Y";
          Asm_Files := Asm_Files & ("div.S");
          case RiscV is
@@ -71,6 +73,13 @@ library project Cpu is
          for Source_Files use project'Source_Files & Ada_Files;
       when others =>
          null;
+   end case;
+
+   case Source_Files_Exist is
+      when "Y" =>
+         null;
+      when others =>
+         for Externally_Built use "true";
    end case;
 
    ----------------------------------------------------------------------------

@@ -19,6 +19,7 @@ library project Cpu is
 
    Kernel_Parent_Path := External ("KERNEL_PARENT_PATH", ".");
    Include_Directories := Split (External ("GPR_INCLUDES", ""), " ");
+   Source_Files_Exist := "";
 
    -- shorthands
    Obj_Dir := Kernel_Parent_Path & "/" & Configure.Object_Directory;
@@ -34,6 +35,7 @@ library project Cpu is
 
    case Configure.Cpu_Model is
       when "R3000" =>
+         Source_Files_Exist := "Y";
          Asm := "Y";
          Asm_Files := Asm_Files & ("cache.S");
       when others =>
@@ -46,6 +48,7 @@ library project Cpu is
       when others =>
          case Configure.Cpu_Model is
             when "R3000" | "MIPS32-24K" =>
+               Source_Files_Exist := "Y";
                Ada := "Y";
                Ada_Files := Ada_Files & (
                   "gcc.ads", "gcc-types.ads",
@@ -59,6 +62,7 @@ library project Cpu is
                   "libgcc-umoddi3.adb"
                   );
             when "MIPS64-20K" =>
+               Source_Files_Exist := "Y";
                Ada := "Y";
                Ada_Files := Ada_Files & (
                   "gcc.ads", "gcc-types.ads",
@@ -85,6 +89,13 @@ library project Cpu is
          for Source_Files use project'Source_Files & Ada_Files;
       when others =>
          null;
+   end case;
+
+   case Source_Files_Exist is
+      when "Y" =>
+         null;
+      when others =>
+         for Externally_Built use "true";
    end case;
 
    ----------------------------------------------------------------------------
