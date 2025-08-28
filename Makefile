@@ -1002,7 +1002,7 @@ else
 	-@$(RM) $(OBJECT_DIRECTORY)/main.bexch
 endif
 ifeq ($(OSTYPE),cmd)
-	$(call brief-command,                \
+	$(call brief-command, \
         (                                    \
          $(GPRBUILD)                         \
                      -b                      \
@@ -1011,7 +1011,7 @@ ifeq ($(OSTYPE),cmd)
         ) | $(GPRBINDFILT) gnatbind_elab.lst \
         ,[GPRBUILD-B],$(KERNEL_GPRFILE))
 else
-	$(call brief-command,                  \
+	$(call brief-command, \
         (                                      \
          $(GPRBUILD)                           \
                      -b                        \
