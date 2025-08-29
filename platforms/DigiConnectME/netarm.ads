@@ -163,9 +163,9 @@ pragma Style_Checks (Off);
    -- PORTA/PORTC registers
    ----------------------------------------------------------------------------
 
-   type LEBitmap_8_Idx_Type is (bi7, bi6, bi5, bi4, bi3, bi2, bi1, bi0);
+   type LEBitmap_8_IDX_Type is (bi7, bi6, bi5, bi4, bi3, bi2, bi1, bi0);
 
-   type LEBitmap_8 is array (LEBitmap_8_Idx_Type) of Boolean
+   type LEBitmap_8 is array (LEBitmap_8_IDX_Type) of Boolean
       with Component_Size => 1,
            Size           => 8;
 
