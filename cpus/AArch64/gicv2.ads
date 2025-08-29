@@ -35,6 +35,8 @@ package GICv2
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
    -- 4.3 Distributor register descriptions
    ----------------------------------------------------------------------------
@@ -541,5 +543,7 @@ pragma Warnings (On, "* bits of ""GICD_Type"" unused");
       GICC_IIDR   at 16#00FC# range 0 .. 31;
       GICC_DIR    at 16#1000# range 0 .. 31;
    end record;
+
+pragma Style_Checks (On);
 
 end GICv2;
