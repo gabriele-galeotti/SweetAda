@@ -1,22 +1,9 @@
 
-with System.Storage_Elements;
-with Interfaces;
 with CPU;
 with Console;
 
 package body Application
    is
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Local declarations                           --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   use System.Storage_Elements;
-   use Interfaces;
 
    --========================================================================--
    --                                                                        --
