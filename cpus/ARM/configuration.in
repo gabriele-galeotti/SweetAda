@@ -17,31 +17,31 @@ else ifeq ($(or                                   \
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/ARMv5
   GPR_CORE_CPU += armv4.adb armv4.ads \
                   armv5te.ads
-else ifeq ($(CPU_MODEL),CORTEXA7)
-  CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CortexA7
+else ifeq ($(CPU_MODEL),Cortex-A7)
+  CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/Cortex-A7
   GPR_CORE_CPU += armv7a.adb armv7a.ads
-else ifeq ($(CPU_MODEL),CORTEXA9)
-  CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CortexA9
+else ifeq ($(CPU_MODEL),Cortex-A9)
+  CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/Cortex-A9
   GPR_CORE_CPU += armv7a.adb armv7a.ads
-else ifeq ($(CPU_MODEL),CORTEXM0)
-  CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CortexM0
+else ifeq ($(CPU_MODEL),Cortex-M0)
+  CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/Cortex-M0
   GPR_CORE_CPU += armv6m.adb armv6m.ads
-else ifeq ($(CPU_MODEL),CORTEXM3)
-  CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CortexM3
+else ifeq ($(CPU_MODEL),Cortex-M3)
+  CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/Cortex-M3
   GPR_CORE_CPU += armv6m.adb armv6m.ads \
                   armv7m.adb armv7m.ads
-else ifeq ($(CPU_MODEL),CORTEXM4)
-  CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CortexM4
+else ifeq ($(CPU_MODEL),Cortex-M4)
+  CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/Cortex-M4
   GPR_CORE_CPU += armv6m.adb armv6m.ads \
                   armv7m.adb armv7m.ads
-else ifeq ($(CPU_MODEL),CORTEXM7)
-  CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CortexM7
+else ifeq ($(CPU_MODEL),Cortex-M7)
+  CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/Cortex-M7
   GPR_CORE_CPU += armv6m.adb armv6m.ads \
                   armv7m.adb armv7m.ads
 else
   ifneq ($(filter rts,$(MAKECMDGOALS)),rts)
     $(warning *** Warning: "$(CPU_MODEL)": no CPU model supported.\
-      Available CPU_MODEL are: ARMv4 ARM7TDMI ARMv5 ARM926EJ-S CORTEXA[7|9] CORTEXM[0|3|4|7].)
+      Available CPU_MODEL are: ARMv4 ARM7TDMI ARMv5 ARM926EJ-S Cortex-A[7|9] Cortex-M[0|3|4|7].)
   endif
 endif
 
