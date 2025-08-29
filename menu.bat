@@ -100,7 +100,7 @@ REM #                                                                          #
 REM ############################################################################
 :PIPE
 COPY /Y nul %LOGFILE% >nul 2>&1
-FOR /F "tokens=1* delims=]" %%A IN ('FIND /N /V ""') DO (
+FOR /F "tokens=1* delims=]" %%A IN ('%SystemRoot%\System32\find.exe /N /V ""') DO (
   >con ECHO.%%B
   >>%LOGFILE% ECHO.%%B
   )
