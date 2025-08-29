@@ -1,7 +1,11 @@
 
 TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_AArch64)
 
-CPU_DEF := cortex-a53.def
+ifeq      ($(CPU_MODEL),Cortex-A53)
+  CPU_DEF := cortex-a53.def
+else ifeq ($(CPU_MODEL),Cortex-A520)
+  CPU_DEF := cortex-a520.def
+endif
 export CPU_DEF
 
 CONFIGURE_DEPS += $(CPU_DIRECTORY)/$(CPU_DEF)  \

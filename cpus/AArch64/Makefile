@@ -40,7 +40,7 @@ OBJECTS :=
 all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: configure
-configure: armv8a.adb armv8a.ads
+configure: clean-gnatprep armv8a.adb armv8a.ads
 
 %.adb: %.adbp $(CPU_DEF)
 	$(call brief-command, \
@@ -52,6 +52,10 @@ configure: armv8a.adb armv8a.ads
         $(GNATPREP)                  \
                     $< $@ $(CPU_DEF) \
         ,[GNATPREP],$@)
+
+.PHONY: clean-gnatprep
+clean-gnatprep:
+	$(RM) armv8a.adb armv8a.ads
 
 .PHONY: clean
 clean:
