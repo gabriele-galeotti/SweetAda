@@ -21,6 +21,7 @@ with Definitions;
 with Bits;
 with MMIO;
 with SH;
+with SH7032;
 with GEMI;
 with Console;
 
@@ -39,6 +40,7 @@ package body BSP
    use Interfaces;
    use Definitions;
    use Bits;
+   use SH7032;
 
    procedure GEMI_Last_Chance_Handler
       (Source_Location : in Address;
@@ -84,7 +86,9 @@ package body BSP
       (C : in Character)
       is
    begin
-      UART16x50.TX (UART_Descriptor, To_U8 (C));
+      loop exit when SCI1.SSR.TDRE; end loop;
+      SCI1.TDR := To_U8 (C);
+      SCI1.SSR.TDRE := False;
    end Console_Putchar;
 
    procedure Console_Getchar
@@ -92,8 +96,10 @@ package body BSP
       is
       Data : Unsigned_8;
    begin
-      UART16x50.RX (UART_Descriptor, Data);
-      C := To_Ch (Data);
+      SCI1.SSR := (PER => False, FER => False, ORER => False, others => <>);
+      loop exit when SCI1.SSR.RDRF; end loop;
+      C := To_Ch (SCI1.RDR);
+      SCI1.SSR.RDRF := False;
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
@@ -101,7 +107,31 @@ package body BSP
    ----------------------------------------------------------------------------
    procedure Setup
       is
+      SCI1_BaudRate : constant := Baud_Rate_Type'Enum_Rep (BR_9600);
    begin
+      -- PFC ------------------------------------------------------------------
+      PBCR1 := (
+         PB10   => PB10_RxD1, -- select SCI1
+         PB11   => PB11_TxD1, -- ''
+         others => <>
+         );
+      -- SCI1 -----------------------------------------------------------------
+      SCI1.SCR := (@ with delta RE => False, TE => False);
+      -- async 8N1, clock prescaler = 1
+      SCI1.SMR := (
+         CKS  => CKS_SYSCLOCK,
+         MP   => False,
+         STOP => STOP_1,
+         OE   => OE_EVEN,
+         PE   => False,
+         CHR  => CHR_8,
+         CA   => CA_ASYNC
+         );
+      -- Table 13.3 Bit Rates and BRR Settings in Asynchronous Mode
+      -- CKS = CKS_SYSCLOCK => n = 0
+      SCI1.BRR := Unsigned_8 (CLK_16M / ((64 / 2) * SCI1_BaudRate) - 1);
+      SCI1.SCR.CKE := CKE_ASYNC_INTCLK_SCKIO;
+      SCI1.SCR := (@ with delta RE => True, TE => True);
       -- UART 16x50 -----------------------------------------------------------
       UART_Descriptor := (
          Uart_Model    => UART16x50.UART16450,
