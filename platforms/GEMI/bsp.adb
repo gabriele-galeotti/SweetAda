@@ -86,6 +86,7 @@ package body BSP
       (C : in Character)
       is
    begin
+      -- wait for transmitter available
       loop exit when SCI1.SSR.TDRE; end loop;
       SCI1.TDR := To_U8 (C);
       SCI1.SSR.TDRE := False;
@@ -94,9 +95,9 @@ package body BSP
    procedure Console_Getchar
       (C : out Character)
       is
-      Data : Unsigned_8;
    begin
       SCI1.SSR := (PER => False, FER => False, ORER => False, others => <>);
+      -- wait for receiver available
       loop exit when SCI1.SSR.RDRF; end loop;
       C := To_Ch (SCI1.RDR);
       SCI1.SSR.RDRF := False;
