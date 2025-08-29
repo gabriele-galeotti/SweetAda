@@ -21,7 +21,7 @@ USE_APPLICATION := test-qemu-stm32vldiscovery
 ################################################################################
 
 CPU       := ARM
-CPU_MODEL := CORTEXM3
+CPU_MODEL := Cortex-M3
 
 ################################################################################
 # Build system parameters.                                                     #

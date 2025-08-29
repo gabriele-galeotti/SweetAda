@@ -21,7 +21,7 @@ USE_APPLICATION := test-qemu-xilinxzynqa9
 ################################################################################
 
 CPU       := ARM
-CPU_MODEL := CORTEXA9
+CPU_MODEL := Cortex-A9
 
 ################################################################################
 # Build system parameters.                                                     #
