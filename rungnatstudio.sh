@@ -5,7 +5,7 @@
 #
 
 # detect OSTYPE
-OSTYPE=$(make PROBEVARIABLE=OSTYPE probevariable)
+OSTYPE=$(VERBOSE= make PROBEVARIABLE=OSTYPE probevariable 2> /dev/null)
 if [ "x${OSTYPE}" = "x" ] ; then
   printf "%s\n" "*** Warning: no OSTYPE detected." 1>&2
 else
@@ -27,7 +27,7 @@ export GNATSTUDIO_PREFIX
 GNATSTUDIO="${GNATSTUDIO_PREFIX}"/bin/${GNATSTUDIO_FILENAME}
 
 # detect toolchain from configuration.in
-TOOLCHAIN_PREFIX=$(make PROBEVARIABLE=TOOLCHAIN_PREFIX probevariable)
+TOOLCHAIN_PREFIX=$(VERBOSE= make PROBEVARIABLE=TOOLCHAIN_PREFIX probevariable 2> /dev/null)
 if [ "x${TOOLCHAIN_PREFIX}" = "x" ] ; then
   printf "%s\n" "*** Warning: no TOOLCHAIN_PREFIX detected." 1>&2
 fi
