@@ -101,11 +101,59 @@ pragma Style_Checks (Off);
    -- 2.8.8. Stream Link Interface (SLINK)
    ----------------------------------------------------------------------------
 
+   type SLINK_CTRL_Type is record
+      SLINK_CTRL_EN            : Boolean := False; -- SLINK global enable
+      Reserved1                : Bits_7  := 0;
+      SLINK_CTRL_RX_EMPTY      : Boolean := False; -- RX FIFO empty
+      SLINK_CTRL_RX_FULL       : Boolean := False; -- RX FIFO full
+      SLINK_CTRL_TX_EMPTY      : Boolean := False; -- TX FIFO empty
+      SLINK_CTRL_TX_FULL       : Boolean := False; -- TX FIFO full
+      SLINK_CTRL_RX_LAST       : Boolean := False; -- Last word read from DATA is end-of-stream
+      Reserved2                : Bits_3  := 0;
+      SLINK_CTRL_IRQ_RX_NEMPTY : Boolean := False; -- Fire interrupt if RX FIFO not empty
+      SLINK_CTRL_IRQ_RX_FULL   : Boolean := False; -- Fire interrupt if RX FIFO full
+      SLINK_CTRL_IRQ_TX_EMPTY  : Boolean := False; -- Fire interrupt if TX FIFO empty
+      SLINK_CTRL_IRQ_TX_NFULL  : Boolean := False; -- Fire interrupt if TX FIFO not full
+      Reserved3                : Bits_4  := 0;
+      SLINK_CTRL_RX_FIFO       : Bits_4  := 0;     -- log2(RX FIFO size)
+      SLINK_CTRL_TX_FIFO       : Bits_4  := 0;     -- log2(TX FIFO size)
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SLINK_CTRL_Type use record
+      SLINK_CTRL_EN            at 0 range  0 ..  0;
+      Reserved1                at 0 range  1 ..  7;
+      SLINK_CTRL_RX_EMPTY      at 0 range  8 ..  8;
+      SLINK_CTRL_RX_FULL       at 0 range  9 ..  9;
+      SLINK_CTRL_TX_EMPTY      at 0 range 10 .. 10;
+      SLINK_CTRL_TX_FULL       at 0 range 11 .. 11;
+      SLINK_CTRL_RX_LAST       at 0 range 12 .. 12;
+      Reserved2                at 0 range 13 .. 15;
+      SLINK_CTRL_IRQ_RX_NEMPTY at 0 range 16 .. 16;
+      SLINK_CTRL_IRQ_RX_FULL   at 0 range 17 .. 17;
+      SLINK_CTRL_IRQ_TX_EMPTY  at 0 range 18 .. 18;
+      SLINK_CTRL_IRQ_TX_NFULL  at 0 range 19 .. 19;
+      Reserved3                at 0 range 20 .. 23;
+      SLINK_CTRL_RX_FIFO       at 0 range 24 .. 27;
+      SLINK_CTRL_TX_FIFO       at 0 range 28 .. 31;
+   end record;
+
+   type SLINK_ROUTE_Type is record
+      ROUTE    : Bits_4  := 0; -- TX destination routing information (slink_tx_dst_o) RX source routing information (slink_rx_src_i)
+      Reserved : Bits_28 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SLINK_ROUTE_Type use record
+      ROUTE    at 0 range 0 ..  3;
+      Reserved at 0 range 4 .. 31;
+   end record;
+
    type SLINK_Type is record
-      CTRL      : Unsigned_32 with Volatile_Full_Access => True;
-      ROUTE     : Unsigned_32 with Volatile_Full_Access => True;
-      DATA      : Unsigned_32 with Volatile_Full_Access => True;
-      DATA_LAST : Unsigned_32 with Volatile_Full_Access => True;
+      CTRL      : SLINK_CTRL_Type  with Volatile_Full_Access => True;
+      ROUTE     : SLINK_ROUTE_Type with Volatile_Full_Access => True;
+      DATA      : Unsigned_32      with Volatile_Full_Access => True;
+      DATA_LAST : Unsigned_32      with Volatile_Full_Access => True;
    end record
       with Size => 4 * 32;
    for SLINK_Type use record
