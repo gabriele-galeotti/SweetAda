@@ -564,9 +564,9 @@ pragma Style_Checks (Off);
       with Bit_Order => Low_Order_First,
            Size      => 16;
    for CASCR_Type use record
-      Unused at 0 range  0 ..  11;
-      CASL   at 0 range 12 ..  13;
-      CASH   at 0 range 14 ..  15;
+      Unused at 0 range  0 .. 11;
+      CASL   at 0 range 12 .. 13;
+      CASH   at 0 range 14 .. 15;
    end record;
 
    CASCR : aliased CASCR_Type
