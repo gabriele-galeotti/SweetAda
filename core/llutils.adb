@@ -252,7 +252,10 @@ package body LLutils
          when others     => Success := False;
       end case;
       if Success then
-         Value := (if MSD then (@ and 16#0F#) or (Digit * 2**4) else (@ and 16#F0#) or Digit);
+         Value := (if MSD then
+                      (@ and 16#0F#) or (Digit * 2**4)
+                   else
+                      (@ and 16#F0#) or Digit);
       end if;
    end To_U8;
 
