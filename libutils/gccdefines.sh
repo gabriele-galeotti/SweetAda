@@ -176,6 +176,14 @@ gccdefines=${gccdefines}$(printf "%s%s\n" "${indent}" "     SPARK_Mode => On")${
 gccdefines=${gccdefines}$(printf "%s%s\n" "${indent}" "is")${NL}
 gccdefines=${gccdefines}${NL}
 
+# special handling for ARM
+if [ "x${CPU}" = "xARM" ] ; then
+  gccdefines=${gccdefines}$(printf "%s%s\n" "${indent}" "ARM_ARCH_PROFILE_A : constant := 65;")${NL}
+  gccdefines=${gccdefines}$(printf "%s%s\n" "${indent}" "ARM_ARCH_PROFILE_M : constant := 77;")${NL}
+  gccdefines=${gccdefines}$(printf "%s%s\n" "${indent}" "ARM_ARCH_PROFILE_R : constant := 82;")${NL}
+  gccdefines=${gccdefines}${NL}
+fi
+
 for i in "$@" ; do
   IFS=':' read -r i_macro i_tmacro i_type i_spec << EOF
 ${i}

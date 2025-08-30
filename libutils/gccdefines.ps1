@@ -268,6 +268,15 @@ $gcc_defines += "$($indent)     SPARK_Mode => On" + $nl
 $gcc_defines += "$($indent)is" + $nl
 $gcc_defines += $nl
 
+# special handling for ARM
+if ($(GetEnvVar "CPU") -eq "ARM")
+{
+  $gcc_defines += "$($indent)ARM_ARCH_PROFILE_A : constant := 65;" + $nl
+  $gcc_defines += "$($indent)ARM_ARCH_PROFILE_M : constant := 77;" + $nl
+  $gcc_defines += "$($indent)ARM_ARCH_PROFILE_R : constant := 82;" + $nl
+  $gcc_defines += $nl
+}
+
 foreach ($i in $items)
 {
   $i_splitted = $i.Split(":")
