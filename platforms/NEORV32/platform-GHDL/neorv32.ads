@@ -385,9 +385,72 @@ pragma Style_Checks (Off);
    -- 2.8.14. Serial Peripheral Interface Controller (SPI)
    ----------------------------------------------------------------------------
 
+   SPI_CTRL_CPHA_LEAD  : constant := 0; -- data sampled when clock becomes active
+   SPI_CTRL_CPHA_TRAIL : constant := 1; -- data sampled when clock becomes inactive
+
+   SPI_CTRL_CPOL_LOW  : constant := 0; -- clock inactive is logic LOW
+   SPI_CTRL_CPOL_HIGH : constant := 1; -- clock inactive is logic HIGH
+
+   SPI_CTRL_PRSC_2    : constant := 2#000#; -- Resulting clock_prescaler = 2
+   SPI_CTRL_PRSC_4    : constant := 2#001#; -- Resulting clock_prescaler = 4
+   SPI_CTRL_PRSC_8    : constant := 2#010#; -- Resulting clock_prescaler = 8
+   SPI_CTRL_PRSC_64   : constant := 2#011#; -- Resulting clock_prescaler = 64
+   SPI_CTRL_PRSC_128  : constant := 2#100#; -- Resulting clock_prescaler = 128
+   SPI_CTRL_PRSC_1024 : constant := 2#101#; -- Resulting clock_prescaler = 1024
+   SPI_CTRL_PRSC_2048 : constant := 2#110#; -- Resulting clock_prescaler = 2048
+   SPI_CTRL_PRSC_4096 : constant := 2#111#; -- Resulting clock_prescaler = 4096
+
+   type SPI_CTRL_Type is record
+      SPI_CTRL_EN       : Boolean := False;              -- SPI module enable
+      SPI_CTRL_CPHA     : Bits_1  := SPI_CTRL_CPHA_LEAD; -- clock phase
+      SPI_CTRL_CPOL     : Bits_1  := SPI_CTRL_CPOL_LOW;  -- clock polarity
+      SPI_CTRL_PRSC     : Bits_3  := SPI_CTRL_PRSC_2;    -- 3-bit clock prescaler select
+      SPI_CTRL_CDIV     : Bits_4  := 0;                  -- 4-bit clock divider for fine-tuning
+      Reserved1         : Bits_6  := 0;
+      SPI_CTRL_RX_AVAIL : Boolean := False;              -- RX FIFO data available (RX FIFO not empty)
+      SPI_CTRL_TX_EMPTY : Boolean := False;              -- TX FIFO empty
+      SPI_CTRL_TX_FULL  : Boolean := False;              -- TX FIFO full
+      Reserved2         : Bits_5  := 0;
+      SPI_CTRL_FIFO     : Bits_4  := 0;                  -- FIFO depth; log2(IO_SPI_FIFO)
+      Reserved3         : Bits_2  := 0;
+      SPI_CS_ACTIVE     : Boolean := False;              -- Set if any chip-select line is active
+      SPI_CTRL_BUSY     : Boolean := False;              -- SPI module busy when set (serial engine operation in progress and TX FIFO not empty yet)
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SPI_CTRL_Type use record
+      SPI_CTRL_EN       at 0 range  0 ..  0;
+      SPI_CTRL_CPHA     at 0 range  1 ..  1;
+      SPI_CTRL_CPOL     at 0 range  2 ..  2;
+      SPI_CTRL_PRSC     at 0 range  3 ..  5;
+      SPI_CTRL_CDIV     at 0 range  6 ..  9;
+      Reserved1         at 0 range 10 .. 15;
+      SPI_CTRL_RX_AVAIL at 0 range 16 .. 16;
+      SPI_CTRL_TX_EMPTY at 0 range 17 .. 17;
+      SPI_CTRL_TX_FULL  at 0 range 18 .. 18;
+      Reserved2         at 0 range 19 .. 23;
+      SPI_CTRL_FIFO     at 0 range 24 .. 27;
+      Reserved3         at 0 range 28 .. 29;
+      SPI_CS_ACTIVE     at 0 range 30 .. 30;
+      SPI_CTRL_BUSY     at 0 range 31 .. 31;
+   end record;
+
+   type SPI_DATA_Type is record
+      SPI_DATA     : Unsigned_8;          -- receive/transmit data (FIFO), only for data mode (SPI_DATA_CMD = 0) chip-select-enable (bit 3) and chip-select (bit 2:0), only for command mode (SPI_DATA_CMD = 1)
+      Reserved     : Bits_23    := 0;
+      SPI_DATA_CMD : Boolean    := False; -- 0 = data, 1 = chip-select-command
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SPI_DATA_Type use record
+      SPI_DATA     at 0 range  0 ..  7;
+      Reserved     at 0 range  8 .. 30;
+      SPI_DATA_CMD at 0 range 31 .. 31;
+   end record;
+
    type SPI_Type is record
-      CTRL : Unsigned_32 with Volatile_Full_Access => True;
-      DATA : Unsigned_32 with Volatile_Full_Access => True;
+      CTRL : SPI_CTRL_Type with Volatile_Full_Access => True;
+      DATA : SPI_DATA_Type with Volatile_Full_Access => True;
    end record
       with Size => 2 * 32;
    for SPI_Type use record
