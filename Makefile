@@ -330,8 +330,9 @@ endif
 # RTSes
 ifeq ($(OSTYPE),cmd)
 RTSES := $(shell                                  \
-           SET "GNUMAKEFLAGS=$(GNUMAKEFLAGS)"  && \
            SET "VERBOSE="                      && \
+           SET "MAKEFLAGS=s"                   && \
+           SET "GNUMAKEFLAGS=$(GNUMAKEFLAGS)"  && \
            SET "PATH=$(PATH)"                  && \
            SET "KERNEL_PARENT_PATH=.."         && \
            "$(MAKE)" -C $(RTS_DIRECTORY)          \
@@ -339,8 +340,9 @@ RTSES := $(shell                                  \
            2>nul)
 else
 RTSES := $(shell                               \
-           GNUMAKEFLAGS="$(GNUMAKEFLAGS)"      \
            VERBOSE=                            \
+           MAKEFLAGS=s                         \
+           GNUMAKEFLAGS="$(GNUMAKEFLAGS)"      \
            PATH="$(PATH)"                      \
            KERNEL_PARENT_PATH=..               \
            "$(MAKE)" -C $(RTS_DIRECTORY)       \
@@ -807,6 +809,7 @@ ifeq ($(OSTYPE),cmd)
 $(foreach s,                                                    \
   $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell            \
     SET "VERBOSE="                                           && \
+    SET "MAKEFLAGS=s"                                        && \
     SET "GNUMAKEFLAGS=$(GNUMAKEFLAGS)"                       && \
     SET "PATH=$(PATH)"                                       && \
     SET "KERNEL_PARENT_PATH=.."                              && \
@@ -820,6 +823,7 @@ else
 $(foreach s,                                                        \
   $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell                \
     VERBOSE=                                                        \
+    MAKEFLAGS=s                                                     \
     GNUMAKEFLAGS="$(GNUMAKEFLAGS)"                                  \
     PATH="$(PATH)"                                                  \
     KERNEL_PARENT_PATH=..                                           \
