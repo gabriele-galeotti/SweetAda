@@ -466,13 +466,83 @@ pragma Style_Checks (Off);
            Import     => True,
            Convention => Ada;
 
+   subtype SPI_CS_Type is Unsigned_8 range 2#000# .. 2#111#;
+
+   SPI_CS0 : constant SPI_CS_Type := 2#000#;
+   SPI_CS1 : constant SPI_CS_Type := 2#001#;
+   SPI_CS2 : constant SPI_CS_Type := 2#010#;
+   SPI_CS3 : constant SPI_CS_Type := 2#011#;
+   SPI_CS4 : constant SPI_CS_Type := 2#100#;
+   SPI_CS5 : constant SPI_CS_Type := 2#101#;
+   SPI_CS6 : constant SPI_CS_Type := 2#110#;
+   SPI_CS7 : constant SPI_CS_Type := 2#111#;
+
+   function SPI_CS
+      (Enable : Boolean;
+       CS     : SPI_CS_Type := SPI_CS0)
+      return Unsigned_8
+      with Inline => True;
+
    ----------------------------------------------------------------------------
    -- 2.8.15. Serial Data Interface Controller (SDI)
    ----------------------------------------------------------------------------
 
+   type SDI_CTRL_Type is record
+      SDI_CTRL_EN            : Boolean := False; -- SDI module enable
+      -- NOTE: documented as SDR_CTRL_CLR_RX
+      SDI_CTRL_CLR_RX        : Boolean := False; -- clear RX FIFO, flag auto-clears
+      -- NOTE: documented as SDR_CTRL_CLR_TX
+      SDI_CTRL_CLR_TX        : Boolean := False; -- clear TX FIFO, flag auto-clears
+      Reserved1              : Bits_1  := 0;
+      SDI_CTRL_FIFO          : Bits_4  := 0;     -- FIFO depth; log2(IO_SDI_FIFO)
+      Reserved2              : Bits_8  := 0;
+      SDI_CTRL_IRQ_RX_NEMPTY : Boolean := False; -- fire interrupt if RX FIFO is not empty
+      SDI_CTRL_IRQ_RX_FULL   : Boolean := False; -- fire interrupt if if RX FIFO is full
+      SDI_CTRL_IRQ_TX_EMPTY  : Boolean := False; -- fire interrupt if TX FIFO is empty
+      Reserved3              : Bits_5  := 0;
+      SDI_CTRL_RX_EMPTY      : Boolean := False; -- RX FIFO empty
+      SDI_CTRL_RX_FULL       : Boolean := False; -- RX FIFO full
+      SDI_CTRL_TX_EMPTY      : Boolean := False; -- TX FIFO empty
+      SDI_CTRL_TX_FULL       : Boolean := False; -- TX FIFO full
+      Reserved4              : Bits_3  := 0;
+      SDI_CTRL_CS_ACTIVE     : Boolean := False; -- Chip-select is active when set
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SDI_CTRL_Type use record
+      SDI_CTRL_EN            at 0 range  0 ..  0;
+      SDI_CTRL_CLR_RX        at 0 range  1 ..  1;
+      SDI_CTRL_CLR_TX        at 0 range  2 ..  2;
+      Reserved1              at 0 range  3 ..  3;
+      SDI_CTRL_FIFO          at 0 range  4 ..  7;
+      Reserved2              at 0 range  8 .. 15;
+      SDI_CTRL_IRQ_RX_NEMPTY at 0 range 16 .. 16;
+      SDI_CTRL_IRQ_RX_FULL   at 0 range 17 .. 17;
+      SDI_CTRL_IRQ_TX_EMPTY  at 0 range 18 .. 18;
+      Reserved3              at 0 range 19 .. 23;
+      SDI_CTRL_RX_EMPTY      at 0 range 24 .. 24;
+      SDI_CTRL_RX_FULL       at 0 range 25 .. 25;
+      SDI_CTRL_TX_EMPTY      at 0 range 26 .. 26;
+      SDI_CTRL_TX_FULL       at 0 range 27 .. 27;
+      Reserved4              at 0 range 28 .. 30;
+      SDI_CTRL_CS_ACTIVE     at 0 range 31 .. 31;
+   end record;
+
+   type SDI_DATA_Type is record
+      -- NOTE: documentation does not name this field
+      SDI_DATA : Unsigned_8;      -- receive/transmit data (FIFO)
+      Reserved : Bits_24    := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SDI_DATA_Type use record
+      SDI_DATA at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
    type SDI_Type is record
-      CTRL : Unsigned_32 with Volatile_Full_Access => True;
-      DATA : Unsigned_32 with Volatile_Full_Access => True;
+      CTRL : SDI_CTRL_Type with Volatile_Full_Access => True;
+      DATA : SDI_DATA_Type with Volatile_Full_Access => True;
    end record
       with Size => 2 * 32;
    for SDI_Type use record
