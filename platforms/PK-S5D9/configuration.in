@@ -21,7 +21,7 @@ USE_APPLICATION := test-pk-s5d9
 ################################################################################
 
 CPU       := ARM
-CPU_MODEL := CORTEXM4
+CPU_MODEL := Cortex-M4
 
 GCC_SWITCHES_PLATFORM     := -mcpu=cortex-m4 -mthumb
 LD_SWITCHES_PLATFORM      := --undefined=vectors --no-warn-rwx-segments
