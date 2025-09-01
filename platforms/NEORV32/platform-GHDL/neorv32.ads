@@ -477,6 +477,7 @@ pragma Style_Checks (Off);
    SPI_CS6 : constant SPI_CS_Type := 2#110#;
    SPI_CS7 : constant SPI_CS_Type := 2#111#;
 
+   -- assemble the DATA register CS bit pattern when SPI_DATA_CMD = True
    function SPI_CS
       (Enable : Boolean;
        CS     : SPI_CS_Type := SPI_CS0)
