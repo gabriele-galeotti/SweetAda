@@ -68,7 +68,7 @@ function Write-Stderr
 #                                                                              #
 ################################################################################
 
-$linestoprint = 10
+$textlinestoprint = 10
 
 $argsindex = 0
 while ($argsindex -lt $args.length)
@@ -81,7 +81,7 @@ while ($argsindex -lt $args.length)
   {
     if ([Int]$args[$argsindex] -ge 1 -and [Int]$args[$argsindex] -le 9)
     {
-      $linestoprint = [Int]$args[$argsindex]
+      $textlinestoprint = [Int]$args[$argsindex]
       break
     }
     else
@@ -93,7 +93,7 @@ while ($argsindex -lt $args.length)
   $argsindex++
 }
 
-$Input | Select-Object -First $linestoprint
+$Input | Select-Object -First $textlinestoprint
 
 ExitWithCode 0
 
