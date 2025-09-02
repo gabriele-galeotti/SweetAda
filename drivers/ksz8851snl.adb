@@ -23,50 +23,40 @@ package body KSZ8851SNL
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                           Local declarations                           --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   function To_B16 is new Ada.Unchecked_Conversion (Command_IntRegs_Type, Bits_16);
-
-   function To_RegAddress
-      (Register_Address : Unsigned_8)
-      return Bits_6
-      with Inline => True;
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
    --                           Package subprograms                          --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   function To_RegAddress
-      (Register_Address : Unsigned_8)
-      return Bits_6
-      is
-   begin
-      return Bits_6 (Shift_Right (Register_Address, 2));
-   end To_RegAddress;
-
    ----------------------------------------------------------------------------
-   -- Command_Create
+   -- Command_REGISTERS
    ----------------------------------------------------------------------------
-   function Command_Create
-      (Register    : Unsigned_8;
-       Byte_Enable : Byte_Enable_Type;
-       Opcode      : Opcode_Type)
+   function Command_REGISTERS
+      (Opcode      : OPCODE_REGS_Type;
+       Register    : Unsigned_8;
+       Byte_Enable : BYTE_ENABLE_Type)
       return Bits_16
       is
+      function To_B16 is new Ada.Unchecked_Conversion (Command_REGISTERS_Type, Bits_16);
    begin
-      return To_B16 (Command_IntRegs_Type'(
-         Register_Address => To_RegAddress (Register),
-         Byte_Enable      => Byte_Enable,
+      return To_B16 (Command_REGISTERS_Type'(
          Opcode           => Opcode,
+         Register_Address => Bits_6 (Shift_Right (Register, 2)),
+         Byte_Enable      => Byte_Enable,
          others           => <>
          ));
-   end Command_Create;
+   end Command_REGISTERS;
+
+   ----------------------------------------------------------------------------
+   -- Command_TXQRXQ
+   ----------------------------------------------------------------------------
+   function Command_TXQRXQ
+      (Opcode : OPCODE_FIFO_Type)
+      return Bits_16
+      is
+      function To_B16 is new Ada.Unchecked_Conversion (Command_TXQRXQ_Type, Bits_16);
+   begin
+      return To_B16 (Command_TXQRXQ_Type'(Opcode => Opcode, others => <>));
+   end Command_TXQRXQ;
 
 end KSZ8851SNL;
