@@ -46,6 +46,7 @@ pragma Style_Checks (Off);
 
    -- Table 10. I2C address selection table
 
+   -- 7-bit I2C address
    I2C_ADDRESS_LO : constant := 16#1C#; -- Slave address (SA0 = 0)
    I2C_ADDRESS_HI : constant := 16#1D#; -- Slave address (SA0 = 1)
 
