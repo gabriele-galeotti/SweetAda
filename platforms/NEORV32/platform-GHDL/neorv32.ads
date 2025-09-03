@@ -746,11 +746,132 @@ pragma Style_Checks (Off);
    -- 2.8.25. System Configuration Information Memory (SYSINFO)
    ----------------------------------------------------------------------------
 
+   -- Table 41. SYSINFO MEM Bits
+
+   SYSINFO_MISC_BOOT_Bootloader     : constant := 0; -- (default) Base of internal BOOTROM Implement the processor-internal Bootloader ROM (BOOTROM) as pre-initialized ROM and boot from there.
+   SYSINFO_MISC_BOOT_Custom_Address : constant := 1; -- BOOT_ADDR_CUSTOM generic           Start booting at user-defined address (BOOT_ADDR_CUSTOM top generic).
+   SYSINFO_MISC_BOOT_IMEM_Image     : constant := 2; -- Base of internal IMEM              Implement the processor-internal Instruction Memory (IMEM) as pre-initialized ROM and boot from there.
+
+   type MEM_Type is record
+      SYSINFO_MISC_IMEM : Unsigned_8; -- log2(internal IMEM size in bytes), via top’s IMEM_SIZE generic
+      SYSINFO_MISC_DMEM : Unsigned_8; -- log2(internal DMEM size in bytes), via top’s DMEM_SIZE generic
+      SYSINFO_MISC_HART : Bits_4;     -- number of physical CPU cores ("harts")
+      SYSINFO_MISC_BOOT : Bits_4;     -- boot mode configuration, via top’s BOOT_MODE_SELECT generic (see Boot Configuration))
+      SYSINFO_MISC_BTMO : Unsigned_8; -- log2(bus timeout cycles), see Bus Monitor and Timeout
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for MEM_Type use record
+      SYSINFO_MISC_IMEM at 0 range  0 ..  7;
+      SYSINFO_MISC_DMEM at 0 range  8 .. 15;
+      SYSINFO_MISC_HART at 0 range 16 .. 19;
+      SYSINFO_MISC_BOOT at 0 range 20 .. 23;
+      SYSINFO_MISC_BTMO at 0 range 24 .. 31;
+   end record;
+
+   -- Table 42. SYSINFO SOC Bits
+
+   type SOC_Type is record
+      SYSINFO_SOC_BOOTLOADER : Boolean; -- set if processor-internal bootloader is implemented (via top’s BOOT_MODE_SELECT generic; see Boot Configuration)
+      SYSINFO_SOC_XBUS       : Boolean; -- set if external bus interface is implemented (via top’s XBUS_EN generic)
+      SYSINFO_SOC_IMEM       : Boolean; -- set if processor-internal DMEM is implemented (via top’s IMEM_EN generic)
+      SYSINFO_SOC_DMEM       : Boolean; -- set if processor-internal IMEM is implemented (via top’s DMEM_EN generic)
+      SYSINFO_SOC_OCD        : Boolean; -- set if on-chip debugger is implemented (via top’s OCD_EN generic)
+      SYSINFO_SOC_ICACHE     : Boolean; -- set if processor-internal instruction cache is implemented (via top’s ICACHE_EN generic)
+      SYSINFO_SOC_DCACHE     : Boolean; -- set if processor-internal data cache is implemented (via top’s DCACHE_EN generic)
+      Reserved1              : Bits_1;
+      Reserved2              : Bits_1;
+      Reserved3              : Bits_1;
+      Reserved4              : Bits_1;
+      SYSINFO_SOC_OCD_AUTH   : Boolean; -- set if on-chip debugger authentication is implemented (via top’s OCD_AUTHENTICATION generic)
+      SYSINFO_SOC_IMEM_ROM   : Boolean; -- set if processor-internal IMEM is implemented as pre-initialized ROM (via top’s BOOT_MODE_SELECT generic; see Boot Configuration)
+      SYSINFO_SOC_IO_TWD     : Boolean; -- set if TWD is implemented (via top’s IO_TWD_EN generic)
+      SYSINFO_SOC_IO_DMA     : Boolean; -- set if direct memory access controller is implemented (via top’s IO_DMA_EN generic)
+      SYSINFO_SOC_IO_GPIO    : Boolean; -- set if GPIO is implemented (via top’s IO_GPIO_EN generic)
+      SYSINFO_SOC_IO_CLINT   : Boolean; -- set if CLINT is implemented (via top’s IO_CLINT_EN generic)
+      SYSINFO_SOC_IO_UART0   : Boolean; -- set if primary UART0 is implemented (via top’s IO_UART0_EN generic)
+      SYSINFO_SOC_IO_SPI     : Boolean; -- set if SPI is implemented (via top’s IO_SPI_EN generic)
+      SYSINFO_SOC_IO_TWI     : Boolean; -- set if TWI is implemented (via top’s IO_TWI_EN generic)
+      SYSINFO_SOC_IO_PWM     : Boolean; -- set if PWM is implemented (via top’s IO_PWM_NUM_CH generic)
+      SYSINFO_SOC_IO_WDT     : Boolean; -- set if WDT is implemented (via top’s IO_WDT_EN generic)
+      SYSINFO_SOC_IO_CFS     : Boolean; -- set if custom functions subsystem is implemented (via top’s IO_CFS_EN generic)
+      SYSINFO_SOC_IO_TRNG    : Boolean; -- set if TRNG is implemented (via top’s IO_TRNG_EN generic)
+      SYSINFO_SOC_IO_SDI     : Boolean; -- set if SDI is implemented (via top’s IO_SDI_EN generic)
+      SYSINFO_SOC_IO_UART1   : Boolean; -- set if secondary UART1 is implemented (via top’s IO_UART1_EN generic)
+      SYSINFO_SOC_IO_NEOLED  : Boolean; -- set if smart LED interface is implemented (via top’s IO_NEOLED_EN generic)
+      SYSINFO_SOC_IO_TRACER  : Boolean; -- set if execution tracer is implemented (via top’s IO_TRACER_EN generic)
+      SYSINFO_SOC_IO_GPTMR   : Boolean; -- set if GPTMR is implemented (via top’s IO_GPTMR_EN generic)
+      SYSINFO_SOC_IO_SLINK   : Boolean; -- set if stream link interface is implemented (via top’s IO_SLINK_EN generic)
+      SYSINFO_SOC_IO_ONEWIRE : Boolean; -- set if ONEWIRE interface is implemented (via top’s IO_ONEWIRE_EN generic)
+      Reserved5              : Bits_1;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SOC_Type use record
+      SYSINFO_SOC_BOOTLOADER at 0 range  0 ..  0;
+      SYSINFO_SOC_XBUS       at 0 range  1 ..  1;
+      SYSINFO_SOC_IMEM       at 0 range  2 ..  2;
+      SYSINFO_SOC_DMEM       at 0 range  3 ..  3;
+      SYSINFO_SOC_OCD        at 0 range  4 ..  4;
+      SYSINFO_SOC_ICACHE     at 0 range  5 ..  5;
+      SYSINFO_SOC_DCACHE     at 0 range  6 ..  6;
+      Reserved1              at 0 range  7 ..  7;
+      Reserved2              at 0 range  8 ..  8;
+      Reserved3              at 0 range  9 ..  9;
+      Reserved4              at 0 range 10 .. 10;
+      SYSINFO_SOC_OCD_AUTH   at 0 range 11 .. 11;
+      SYSINFO_SOC_IMEM_ROM   at 0 range 12 .. 12;
+      SYSINFO_SOC_IO_TWD     at 0 range 13 .. 13;
+      SYSINFO_SOC_IO_DMA     at 0 range 14 .. 14;
+      SYSINFO_SOC_IO_GPIO    at 0 range 15 .. 15;
+      SYSINFO_SOC_IO_CLINT   at 0 range 16 .. 16;
+      SYSINFO_SOC_IO_UART0   at 0 range 17 .. 17;
+      SYSINFO_SOC_IO_SPI     at 0 range 18 .. 18;
+      SYSINFO_SOC_IO_TWI     at 0 range 19 .. 19;
+      SYSINFO_SOC_IO_PWM     at 0 range 20 .. 20;
+      SYSINFO_SOC_IO_WDT     at 0 range 21 .. 21;
+      SYSINFO_SOC_IO_CFS     at 0 range 22 .. 22;
+      SYSINFO_SOC_IO_TRNG    at 0 range 23 .. 23;
+      SYSINFO_SOC_IO_SDI     at 0 range 24 .. 24;
+      SYSINFO_SOC_IO_UART1   at 0 range 25 .. 25;
+      SYSINFO_SOC_IO_NEOLED  at 0 range 26 .. 26;
+      SYSINFO_SOC_IO_TRACER  at 0 range 27 .. 27;
+      SYSINFO_SOC_IO_GPTMR   at 0 range 28 .. 28;
+      SYSINFO_SOC_IO_SLINK   at 0 range 29 .. 29;
+      SYSINFO_SOC_IO_ONEWIRE at 0 range 30 .. 30;
+      Reserved5              at 0 range 31 .. 31;
+   end record;
+
+   -- Table 43. SYSINFO CACHE Bits
+
+   type CACHE_Type is record
+      SYSINFO_CACHE_INST_BLOCK_SIZE : Bits_4;  -- log2(i-cache block size in bytes), via top’s ICACHE_BLOCK_SIZE generic
+      SYSINFO_CACHE_INST_NUM_BLOCKS : Bits_4;  -- log2(i-cache number of cache blocks), via top’s ICACHE_NUM_BLOCKS generic
+      SYSINFO_CACHE_DATA_BLOCK_SIZE : Bits_4;  -- log2(d-cache block size in bytes), via top’s DCACHE_BLOCK_SIZE generic
+      SYSINFO_CACHE_DATA_NUM_BLOCKS : Bits_4;  -- log2(d-cache number of cache blocks), via top’s DCACHE_NUM_BLOCKS generic
+      SYSINFO_CACHE_INST_BURSTS_EN  : Boolean; -- i-cache burst transfers enabled, via top’s CACHE_BURSTS_EN generic
+      Reserved1                     : Bits_7;
+      SYSINFO_CACHE_DATA_BURSTS_EN  : Boolean; -- d-cache burst transfers enabled, via top’s CACHE_BURSTS_EN generic
+      Reserved2                     : Bits_7;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CACHE_Type use record
+      SYSINFO_CACHE_INST_BLOCK_SIZE at 0 range  0 ..  3;
+      SYSINFO_CACHE_INST_NUM_BLOCKS at 0 range  4 ..  7;
+      SYSINFO_CACHE_DATA_BLOCK_SIZE at 0 range  8 .. 11;
+      SYSINFO_CACHE_DATA_NUM_BLOCKS at 0 range 12 .. 15;
+      SYSINFO_CACHE_INST_BURSTS_EN  at 0 range 16 .. 16;
+      Reserved1                     at 0 range 17 .. 23;
+      SYSINFO_CACHE_DATA_BURSTS_EN  at 0 range 24 .. 24;
+      Reserved2                     at 0 range 25 .. 31;
+   end record;
+
    type SYSINFO_Type is record
       CLK   : Unsigned_32 with Volatile_Full_Access => True;
-      MEM   : Unsigned_32 with Volatile_Full_Access => True;
-      SOC   : Unsigned_32 with Volatile_Full_Access => True;
-      CACHE : Unsigned_32 with Volatile_Full_Access => True;
+      MEM   : MEM_Type    with Volatile_Full_Access => True;
+      SOC   : SOC_Type    with Volatile_Full_Access => True;
+      CACHE : CACHE_Type  with Volatile_Full_Access => True;
    end record
       with Size => 4 * 32;
    for SYSINFO_Type use record
