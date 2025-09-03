@@ -109,6 +109,36 @@ package body BSP
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("NEORV32 1.11.8", NL => True);
+      Console.Print (
+         Prefix => "i-cache block size in bytes:     ",
+         Value  => Integer (2**Natural (SYSINFO.CACHE.SYSINFO_CACHE_INST_BLOCK_SIZE)),
+         NL     => True
+         );
+      Console.Print (
+         Prefix => "i-cache number of cache blocks:  ",
+         Value  => Integer (2**Natural (SYSINFO.CACHE.SYSINFO_CACHE_INST_NUM_BLOCKS)),
+         NL     => True
+         );
+      Console.Print (
+         Prefix => "i-cache burst transfers enabled: ",
+         Value  => SYSINFO.CACHE.SYSINFO_CACHE_INST_BURSTS_EN,
+         NL     => True
+         );
+      Console.Print (
+         Prefix => "d-cache block size in bytes:     ",
+         Value  => Integer (2**Natural (SYSINFO.CACHE.SYSINFO_CACHE_DATA_BLOCK_SIZE)),
+         NL     => True
+         );
+      Console.Print (
+         Prefix => "d-cache number of cache blocks:  ",
+         Value  => Integer (2**Natural (SYSINFO.CACHE.SYSINFO_CACHE_DATA_NUM_BLOCKS)),
+         NL     => True
+         );
+      Console.Print (
+         Prefix => "d-cache burst transfers enabled: ",
+         Value  => SYSINFO.CACHE.SYSINFO_CACHE_DATA_BURSTS_EN,
+         NL     => True
+         );
       -------------------------------------------------------------------------
       Exceptions.Init;
       -------------------------------------------------------------------------
