@@ -217,10 +217,10 @@ pragma Style_Checks (Off);
       IRQ_PENDING  at 16#1C# range 0 .. 31;
    end record;
 
-   GPIO_ADDRESS : constant := 16#FFFC_0000#;
+   GPIO_BASEADDRESS : constant := 16#FFFC_0000#;
 
    GPIO : aliased GPIO_Type
-      with Address    => System'To_Address (GPIO_ADDRESS),
+      with Address    => System'To_Address (GPIO_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -265,10 +265,10 @@ pragma Style_Checks (Off);
       RESET at 4 range 0 .. 31;
    end record;
 
-   WDT_ADDRESS : constant := 16#FFFB_0000#;
+   WDT_BASEADDRESS : constant := 16#FFFB_0000#;
 
    WDT : aliased WDT_Type
-      with Address    => System'To_Address (WDT_ADDRESS),
+      with Address    => System'To_Address (WDT_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -648,9 +648,39 @@ pragma Style_Checks (Off);
    -- 2.8.20. True Random-Number Generator (TRNG)
    ----------------------------------------------------------------------------
 
+   type TRNG_CTRL_Type is record
+      TRNG_CTRL_EN       : Boolean := False; -- enable
+      TRNG_CTRL_FIFO_CLR : Boolean := False; -- flush random data FIFO when set; auto-clears
+      TRNG_CTRL_FIFO     : Bits_4  := 0;     -- depth, log2(IO_TRNG_FIFO)
+      TRNG_CTRL_SIM_MODE : Boolean := False; -- simulation mode (PRNG!)
+      TRNG_CTRL_AVAIL    : Boolean := False; -- random data available when set
+      Reserved           : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TRNG_CTRL_Type use record
+      TRNG_CTRL_EN       at 0 range 0 ..  0;
+      TRNG_CTRL_FIFO_CLR at 0 range 1 ..  1;
+      TRNG_CTRL_FIFO     at 0 range 2 ..  5;
+      TRNG_CTRL_SIM_MODE at 0 range 6 ..  6;
+      TRNG_CTRL_AVAIL    at 0 range 7 ..  7;
+      Reserved           at 0 range 8 .. 31;
+   end record;
+
+   type TRNG_DATA_Type is record
+      TRNG_DATA : Unsigned_8;      -- random data byte
+      Reserved  : Bits_24    := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TRNG_DATA_Type use record
+      TRNG_DATA at 0 range 0 ..  7;
+      Reserved  at 0 range 8 .. 31;
+   end record;
+
    type TRNG_Type is record
-      CTRL : Unsigned_32 with Volatile_Full_Access => True;
-      DATA : Unsigned_32 with Volatile_Full_Access => True;
+      CTRL : TRNG_CTRL_Type with Volatile_Full_Access => True;
+      DATA : TRNG_DATA_Type with Volatile_Full_Access => True;
    end record
       with Size => 2 * 32;
    for TRNG_Type use record
