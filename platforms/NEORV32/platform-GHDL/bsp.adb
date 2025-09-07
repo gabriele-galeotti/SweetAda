@@ -110,6 +110,11 @@ package body BSP
       -------------------------------------------------------------------------
       Console.Print ("NEORV32 1.11.8", NL => True);
       Console.Print (
+         Prefix => "number of harts:                 ",
+         Value  => Natural (SYSINFO.MEM.SYSINFO_MISC_HART),
+         NL     => True
+         );
+      Console.Print (
          Prefix => "i-cache block size in bytes:     ",
          Value  => Integer (2**Natural (SYSINFO.CACHE.SYSINFO_CACHE_INST_BLOCK_SIZE)),
          NL     => True
