@@ -65,13 +65,13 @@ _start:
                 move.b  #0x3,CIAA_DDRA                  // CIAA: LED, OVL signals are outputs
                 move.b  #0x2,CIAA_PRA                   // CIAA: PWR LED on, disable aliased ROM and make RAM appears @ 0x00000000
 
-#if CODE_RAM == 1
+#if defined(CODE_RAM) && CODE_RAM == 1
                 //
                 // Code relocation.
                 //
                 fjsr    movcode
 #endif
-#if DATA_RELOC == 1
+#if defined(DATA_RELOC) && DATA_RELOC == 1
                 //
                 // Static data relocation.
                 //
@@ -123,7 +123,7 @@ dead:           jmp     .
 // A6 = return address                                                        //
 ////////////////////////////////////////////////////////////////////////////////
 
-#if CODE_RAM == 1
+#if defined(CODE_RAM) && CODE_RAM == 1
 movcode:
                 .extern _text_start
                 .extern _stext
@@ -144,7 +144,7 @@ movcode:
 // A6 = return address                                                        //
 ////////////////////////////////////////////////////////////////////////////////
 
-#if DATA_RELOC == 1
+#if defined(DATA_RELOC) && DATA_RELOC == 1
 movdata:
                 .extern _data_start
                 .extern _sdata
