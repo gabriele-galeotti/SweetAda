@@ -31,10 +31,10 @@ REM # Main loop.                                                               #
 REM #                                                                          #
 REM ############################################################################
 
-powershell.exe                                          ^
-  -NoProfile                                            ^
-  -ExecutionPolicy Bypass                               ^
-  -File "%SWEETADA_PATH%"/%LIBUTILS_DIRECTORY%/head.ps1 ^
+powershell.exe                                              ^
+  -NoProfile                                                ^
+  -ExecutionPolicy Bypass                                   ^
+  -File "%SWEETADA_PATH%"/%LIBUTILS_DIRECTORY%/filehead.ps1 ^
   %*
 
 EXIT /B %ERRORLEVEL%
