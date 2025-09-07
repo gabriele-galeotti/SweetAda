@@ -25,7 +25,7 @@
 # Ada_identifier: Ada identifier name
 #
 
-# shellcheck disable=SC2086,SC2268
+# shellcheck disable=SC2034,SC2086,SC2268
 
 ################################################################################
 # Script initialization.                                                       #
