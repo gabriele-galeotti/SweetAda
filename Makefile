@@ -48,16 +48,6 @@ KERNEL_BASENAME := kernel
 
 CONFIGURE_DEPS :=
 
-# include operating system setup
-include Makefile.os.in
-CONFIGURE_DEPS += Makefile.os.in
-# include build system utilities
-include Makefile.ut.in
-CONFIGURE_DEPS += Makefile.ut.in
-# load complex functions
-include Makefile.fn.in
-CONFIGURE_DEPS += Makefile.fn.in
-
 ################################################################################
 #                                                                              #
 # Partitioning of Makefile goals.                                              #
@@ -162,6 +152,10 @@ endif
 #                                                                              #
 ################################################################################
 
+# include operating system setup
+include Makefile.os.in
+CONFIGURE_DEPS += Makefile.os.in
+
 # generate SWEETADA_PATH
 MAKEFILEDIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 SWEETADA_PATH ?= $(MAKEFILEDIR)
@@ -180,6 +174,13 @@ else
 PATH := $(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY):$(PATH)
 endif
 export PATH
+
+# include build system utilities
+include Makefile.ut.in
+CONFIGURE_DEPS += Makefile.ut.in
+# load complex functions
+include Makefile.fn.in
+CONFIGURE_DEPS += Makefile.fn.in
 
 # make these useful variables available from now on
 ifeq ($(OSTYPE),cmd)
@@ -1369,6 +1370,7 @@ endif
 ifneq ($(EXTERNAL_OBJECTS),)
 	@$(call echo-print,"EXTERNAL OBJECTS:        $(EXTERNAL_OBJECTS)")
 endif
+	@$(call echo-print,"USE APPLICATION:         $(USE_APPLICATION)")
 	@$(call echo-print,"KERNEL ENTRY POINT:      $(KERNEL_ENTRY_POINT)")
 	@$(call echo-print,"")
 
