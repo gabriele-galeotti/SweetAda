@@ -40,8 +40,7 @@ pragma Style_Checks (Off);
    -- Rev. G
    ----------------------------------------------------------------------------
 
-   -- I2C
-
+   -- 7-bit I2C address
    I2C_ADDRESS     : constant := 16#53#; -- SDO/ALT ADDRESS pin = GND
    I2C_ADDRESS_ALT : constant := 16#1D#; -- SDO/ALT ADDRESS pin = HIGH
 
