@@ -77,8 +77,8 @@ package body BSP
       is
    begin
       -- wait for transmitter available
-      loop exit when USART1.USART_ISR.TXE; end loop;
-      USART1.USART_TDR.DR := To_U8 (C);
+      loop exit when USART1.ISR.TXE; end loop;
+      USART1.TDR.DR := To_U8 (C);
    end Console_Putchar;
 
    procedure Console_Getchar
@@ -87,8 +87,8 @@ package body BSP
       Data : Unsigned_8;
    begin
       -- wait for receiver available
-      loop exit when USART1.USART_ISR.RXNE; end loop;
-      Data := USART1.USART_TDR.DR;
+      loop exit when USART1.ISR.RXNE; end loop;
+      Data := USART1.TDR.DR;
       C := To_Ch (Data);
    end Console_Getchar;
 
@@ -122,9 +122,9 @@ package body BSP
       GPIOA.AFRH (10) := AF7;
       GPIOA.MODER (9) := GPIO_ALT;
       GPIOA.MODER (10) := GPIO_ALT;
-      USART1.USART_CR1.UE := False;
-      USART1.USART_BRR.BRR := Unsigned_16 (Clocks.CLK_Peripherals / 115_200);
-      USART1.USART_CR1 := (
+      USART1.CR1.UE := False;
+      USART1.BRR.BRR := Unsigned_16 (Clocks.CLK_Peripherals / 115_200);
+      USART1.CR1 := (
          RE     => True,
          TE     => True,
          PCE    => False,
@@ -133,7 +133,7 @@ package body BSP
          OVER8  => OVER8_16,
          others => <>
          );
-      USART1.USART_CR1.UE := True;
+      USART1.CR1.UE := True;
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor := (
          Write => Console_Putchar'Access,
