@@ -4382,26 +4382,26 @@ pragma Warnings (On);
    -- 28.4 TIM6/TIM7 registers
 
    type Basic_Timers_Type is record
-      TIMx_CR1  : TIMx_CR1_Type  with Volatile_Full_Access => True;
-      TIMx_CR2  : TIMx_CR2_Type  with Volatile_Full_Access => True;
-      TIMx_DIER : TIMx_DIER_Type with Volatile_Full_Access => True;
-      TIMx_SR   : TIMx_SR_Type   with Volatile_Full_Access => True;
-      TIMx_EGR  : TIMx_EGR_Type  with Volatile_Full_Access => True;
-      TIMx_CNT  : TIMx_CNT_Type  with Volatile_Full_Access => True;
-      TIMx_PSC  : Unsigned_16    with Volatile_Full_Access => True;
-      TIMx_ARR  : Unsigned_16    with Volatile_Full_Access => True;
+      CR1  : TIMx_CR1_Type  with Volatile_Full_Access => True;
+      CR2  : TIMx_CR2_Type  with Volatile_Full_Access => True;
+      DIER : TIMx_DIER_Type with Volatile_Full_Access => True;
+      SR   : TIMx_SR_Type   with Volatile_Full_Access => True;
+      EGR  : TIMx_EGR_Type  with Volatile_Full_Access => True;
+      CNT  : TIMx_CNT_Type  with Volatile_Full_Access => True;
+      PSC  : Unsigned_16    with Volatile_Full_Access => True;
+      ARR  : Unsigned_16    with Volatile_Full_Access => True;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16#30# * 8;
    for Basic_Timers_Type use record
-      TIMx_CR1  at 16#00# range 0 .. 15;
-      TIMx_CR2  at 16#04# range 0 .. 15;
-      TIMx_DIER at 16#0C# range 0 .. 15;
-      TIMx_SR   at 16#10# range 0 .. 15;
-      TIMx_EGR  at 16#14# range 0 .. 15;
-      TIMx_CNT  at 16#24# range 0 .. 31;
-      TIMx_PSC  at 16#28# range 0 .. 15;
-      TIMx_ARR  at 16#2C# range 0 .. 15;
+      CR1  at 16#00# range 0 .. 15;
+      CR2  at 16#04# range 0 .. 15;
+      DIER at 16#0C# range 0 .. 15;
+      SR   at 16#10# range 0 .. 15;
+      EGR  at 16#14# range 0 .. 15;
+      CNT  at 16#24# range 0 .. 31;
+      PSC  at 16#28# range 0 .. 15;
+      ARR  at 16#2C# range 0 .. 15;
    end record;
 
    TIM6_BASEADDRESS : constant := 16#4000_1000#;
@@ -5142,17 +5142,398 @@ pragma Warnings (On);
    -- 33 Inter-integrated circuit (I2C) interface
    ----------------------------------------------------------------------------
 
-   -- 33.9.1 I2C control register 1 (I2C_CR1)
-   -- 33.9.2 I2C control register 2 (I2C_CR2)
-   -- 33.9.3 I2C own address 1 register (I2C_OAR1)
-   -- 33.9.4 I2C own address 2 register (I2C_OAR2)
-   -- 33.9.5 I2C timing register (I2C_TIMINGR)
-   -- 33.9.6 I2C timeout register (I2C_TIMEOUTR)
-   -- 33.9.7 I2C interrupt and status register (I2C_ISR)
-   -- 33.9.8 I2C interrupt clear register (I2C_ICR)
-   -- 33.9.9 I2C PEC register (I2C_PECR)
-   -- 33.9.10 I2C receive data register (I2C_RXDR)
-   -- 33.9.11 I2C transmit data register (I2C_TXDR)
+   -- 33.7.1 I2C control register 1 (I2C_CR1)
+
+   DNF_DISABLED : constant := 2#0000#; -- Digital filter disabled
+   DNF_1        : constant := 2#0001#; -- Digital filter enabled and filtering capability up to 1 tI2CCLK
+   DNF_2        : constant := 2#0010#; -- Digital filter enabled and filtering capability up to 2 tI2CCLK
+   DNF_3        : constant := 2#0011#; -- Digital filter enabled and filtering capability up to 3 tI2CCLK
+   DNF_4        : constant := 2#0100#; -- Digital filter enabled and filtering capability up to 4 tI2CCLK
+   DNF_5        : constant := 2#0101#; -- Digital filter enabled and filtering capability up to 5 tI2CCLK
+   DNF_6        : constant := 2#0110#; -- Digital filter enabled and filtering capability up to 6 tI2CCLK
+   DNF_7        : constant := 2#0111#; -- Digital filter enabled and filtering capability up to 7 tI2CCLK
+   DNF_8        : constant := 2#1000#; -- Digital filter enabled and filtering capability up to 8 tI2CCLK
+   DNF_9        : constant := 2#1001#; -- Digital filter enabled and filtering capability up to 9 tI2CCLK
+   DNF_10       : constant := 2#1010#; -- Digital filter enabled and filtering capability up to 10 tI2CCLK
+   DNF_11       : constant := 2#1011#; -- Digital filter enabled and filtering capability up to 11 tI2CCLK
+   DNF_12       : constant := 2#1100#; -- Digital filter enabled and filtering capability up to 12 tI2CCLK
+   DNF_13       : constant := 2#1101#; -- Digital filter enabled and filtering capability up to 13 tI2CCLK
+   DNF_14       : constant := 2#1110#; -- Digital filter enabled and filtering capability up to 14 tI2CCLK
+   DNF_15       : constant := 2#1111#; -- digital filter enabled and filtering capability up to15 tI2CCLK
+
+   type I2C_CR1_Type is record
+      PE        : Boolean := False;        -- Peripheral enable
+      TXIE      : Boolean := False;        -- TX Interrupt enable
+      RXIE      : Boolean := False;        -- RX Interrupt enable
+      ADDRIE    : Boolean := False;        -- Address match Interrupt enable (slave only)
+      NACKIE    : Boolean := False;        -- Not acknowledge received Interrupt enable
+      STOPIE    : Boolean := False;        -- STOP detection Interrupt enable
+      TCIE      : Boolean := False;        -- Transfer Complete interrupt enable
+      ERRIE     : Boolean := False;        -- Error interrupts enable
+      DNF       : Bits_4  := DNF_DISABLED; -- Digital noise filter
+      ANFOFF    : Boolean := False;        -- Analog noise filter OFF
+      Reserved1 : Bits_1  := 0;
+      TXDMAEN   : Boolean := False;        -- DMA transmission requests enable
+      RXDMAEN   : Boolean := False;        -- DMA reception requests enable
+      SBC       : Boolean := False;        -- Slave byte control
+      NOSTRETCH : Boolean := False;        -- Clock stretching disable
+      Reserved2 : Bits_1  := 0;
+      GCEN      : Boolean := False;        -- General call enable
+      SMBHEN    : Boolean := False;        -- SMBus Host address enable
+      SMBDEN    : Boolean := False;        -- SMBus Device Default address enable
+      ALERTEN   : Boolean := False;        -- SMBus alert enable
+      PECEN     : Boolean := False;        -- PEC enable
+      Reserved3 : Bits_8  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for I2C_CR1_Type use record
+      PE        at 0 range  0 ..  0;
+      TXIE      at 0 range  1 ..  1;
+      RXIE      at 0 range  2 ..  2;
+      ADDRIE    at 0 range  3 ..  3;
+      NACKIE    at 0 range  4 ..  4;
+      STOPIE    at 0 range  5 ..  5;
+      TCIE      at 0 range  6 ..  6;
+      ERRIE     at 0 range  7 ..  7;
+      DNF       at 0 range  8 .. 11;
+      ANFOFF    at 0 range 12 .. 12;
+      Reserved1 at 0 range 13 .. 13;
+      TXDMAEN   at 0 range 14 .. 14;
+      RXDMAEN   at 0 range 15 .. 15;
+      SBC       at 0 range 16 .. 16;
+      NOSTRETCH at 0 range 17 .. 17;
+      Reserved2 at 0 range 18 .. 18;
+      GCEN      at 0 range 19 .. 19;
+      SMBHEN    at 0 range 20 .. 20;
+      SMBDEN    at 0 range 21 .. 21;
+      ALERTEN   at 0 range 22 .. 22;
+      PECEN     at 0 range 23 .. 23;
+      Reserved3 at 0 range 24 .. 31;
+   end record;
+
+   -- 33.7.2 I2C control register 2 (I2C_CR2)
+
+   RD_WRN_WRITE : constant := 0; -- Master requests a write transfer.
+   RD_WRN_READ  : constant := 1; -- Master requests a read transfer.
+
+   HEAD10R_COMPLETE : constant := 0; -- The master sends the complete 10 bit slave address read sequence: Start + 2 bytes 10bit address in write direction + Restart + 1st 7 bits of the 10 bit address in read direction.
+   HEAD10R_BIT7READ : constant := 1; -- The master only sends the 1st 7 bits of the 10 bit address, followed by Read direction.
+
+   type I2C_CR2_Type is record
+      SADD     : Bits_10    := 0;                -- Slave address bit(s)
+      RD_WRN   : Bits_1     := RD_WRN_WRITE;     -- Transfer direction (master mode)
+      ADD10    : Boolean    := False;            -- 10-bit addressing mode (master mode)
+      HEAD10R  : Bits_1     := HEAD10R_COMPLETE; -- 10-bit address header only read direction (master receiver mode)
+      START    : Boolean    := False;            -- Start generation
+      STOP     : Boolean    := False;            -- Stop generation (master mode)
+      NACK     : Boolean    := False;            -- NACK generation (slave mode)
+      NBYTES   : Unsigned_8 := 0;                -- Number of bytes
+      RELOAD   : Boolean    := False;            -- NBYTES reload mode
+      AUTOEND  : Boolean    := False;            -- Automatic end mode (master mode)
+      PECBYTE  : Boolean    := False;            -- Packet error checking byte
+      Reserved : Bits_5     := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for I2C_CR2_Type use record
+      SADD     at 0 range  0 ..  9;
+      RD_WRN   at 0 range 10 .. 10;
+      ADD10    at 0 range 11 .. 11;
+      HEAD10R  at 0 range 12 .. 12;
+      START    at 0 range 13 .. 13;
+      STOP     at 0 range 14 .. 14;
+      NACK     at 0 range 15 .. 15;
+      NBYTES   at 0 range 16 .. 23;
+      RELOAD   at 0 range 24 .. 24;
+      AUTOEND  at 0 range 25 .. 25;
+      PECBYTE  at 0 range 26 .. 26;
+      Reserved at 0 range 27 .. 31;
+   end record;
+
+   -- 33.7.3 I2C own address 1 register (I2C_OAR1)
+
+   OA1MODE_7  : constant := 0; -- Own address 1 is a 7-bit address.
+   OA1MODE_10 : constant := 1; -- Own address 1 is a 10-bit address.
+
+   type I2C_OAR1_Type is record
+      OA1       : Bits_10 := 0;         -- Own Address 1
+      OA1MODE   : Bits_1  := OA1MODE_7; -- Own Address 1 10-bit mode
+      Reserved1 : Bits_4  := 0;
+      OA1EN     : Boolean := False;     -- Own Address 1 enable
+      Reserved2 : Bits_16 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for I2C_OAR1_Type use record
+      OA1       at 0 range  0 ..  9;
+      OA1MODE   at 0 range 10 .. 10;
+      Reserved1 at 0 range 11 .. 14;
+      OA1EN     at 0 range 15 .. 15;
+      Reserved2 at 0 range 16 .. 31;
+   end record;
+
+   -- 33.7.4 I2C own address 2 register (I2C_OAR2)
+
+   OA2MSK_NONE : constant := 2#000#; -- No mask
+   OA2MSK_11   : constant := 2#001#; -- OA2[1] is masked and don’t care. Only OA2[7:2] are compared.
+   OA2MSK_21   : constant := 2#010#; -- OA2[2:1] are masked and don’t care. Only OA2[7:3] are compared.
+   OA2MSK_31   : constant := 2#011#; -- OA2[3:1] are masked and don’t care. Only OA2[7:4] are compared.
+   OA2MSK_41   : constant := 2#100#; -- OA2[4:1] are masked and don’t care. Only OA2[7:5] are compared.
+   OA2MSK_51   : constant := 2#101#; -- OA2[5:1] are masked and don’t care. Only OA2[7:6] are compared.
+   OA2MSK_61   : constant := 2#110#; -- OA2[6:1] are masked and don’t care. Only OA2[7] is compared.
+   OA2MSK_ALL  : constant := 2#111#; -- OA2[7:1] are masked and don’t care. No comparison is done, and all (except reserved) 7-bit received addresses are acknowledged.
+
+   type I2C_OAR2_Type is record
+      Reserved1 : Bits_1  := 0;
+      OA2       : Bits_7  := 0;           -- Interface address
+      OA2MSK    : Bits_3  := OA2MSK_NONE; -- Own Address 2 masks
+      Reserved2 : Bits_4  := 0;
+      OA2EN     : Boolean := False;       -- Own Address 2 enable
+      Reserved3 : Bits_16 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for I2C_OAR2_Type use record
+      Reserved1 at 0 range  0 ..  0;
+      OA2       at 0 range  1 ..  7;
+      OA2MSK    at 0 range  8 .. 10;
+      Reserved2 at 0 range 11 .. 14;
+      OA2EN     at 0 range 15 .. 15;
+      Reserved3 at 0 range 16 .. 31;
+   end record;
+
+   -- 33.7.5 I2C timing register (I2C_TIMINGR)
+
+   type I2C_TIMINGR_Type is record
+      SCLL     : Bits_8 := 0; -- SCL low period (master mode)
+      SCLH     : Bits_8 := 0; -- SCL high period (master mode)
+      SDADEL   : Bits_4 := 0; -- Data hold time
+      SCLDEL   : Bits_4 := 0; -- Data setup time
+      Reserved : Bits_4 := 0;
+      PRESC    : Bits_4 := 0; -- Timing prescaler
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for I2C_TIMINGR_Type use record
+      SCLL     at 0 range  0 ..  7;
+      SCLH     at 0 range  8 .. 15;
+      SDADEL   at 0 range 16 .. 19;
+      SCLDEL   at 0 range 20 .. 23;
+      Reserved at 0 range 24 .. 27;
+      PRESC    at 0 range 28 .. 31;
+   end record;
+
+   -- 33.7.6 I2C timeout register (I2C_TIMEOUTR)
+
+   TIDLE_TOUTASCLLOW     : constant := 0; -- TIMEOUTA is used to detect SCL low timeout
+   TIDLE_TOUTASCLSDAHIGH : constant := 1; -- TIMEOUTA is used to detect both SCL and SDA high timeout (bus idle condition)
+
+   type I2C_TIMEOUTR_Type is record
+      TIMEOUTA  : Bits_12 := 0;                 -- Bus Timeout A
+      TIDLE     : Bits_1  := TIDLE_TOUTASCLLOW; -- Idle clock timeout detection
+      Reserved1 : Bits_2  := 0;
+      TIMOUTEN  : Boolean := False;             -- Clock timeout enable
+      TIMEOUTB  : Bits_12 := 0;                 -- Bus timeout B
+      Reserved2 : Bits_3  := 0;
+      TEXTEN    : Boolean := False;             -- Extended clock timeout enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for I2C_TIMEOUTR_Type use record
+      TIMEOUTA  at 0 range  0 .. 11;
+      TIDLE     at 0 range 12 .. 12;
+      Reserved1 at 0 range 13 .. 14;
+      TIMOUTEN  at 0 range 15 .. 15;
+      TIMEOUTB  at 0 range 16 .. 27;
+      Reserved2 at 0 range 28 .. 30;
+      TEXTEN    at 0 range 31 .. 31;
+   end record;
+
+   -- 33.7.7 I2C interrupt and status register (I2C_ISR)
+
+   DIR_WRITE : constant := 0; -- Write transfer, slave enters receiver mode.
+   DIR_READ  : constant := 1; -- Read transfer, slave enters transmitter mode.
+
+   type I2C_ISR_Type is record
+      TXE       : Boolean := False;     -- Transmit data register empty (transmitters)
+      TXIS      : Boolean := False;     -- Transmit interrupt status (transmitters)
+      RXNE      : Boolean := False;     -- Receive data register not empty (receivers)
+      ADDR      : Boolean := False;     -- Address matched (slave mode)
+      NACKF     : Boolean := False;     -- Not Acknowledge received flag
+      STOPF     : Boolean := False;     -- Stop detection flag
+      TC        : Boolean := False;     -- Transfer Complete (master mode)
+      TCR       : Boolean := False;     -- Transfer Complete Reload
+      BERR      : Boolean := False;     -- Bus error
+      ARLO      : Boolean := False;     -- Arbitration lost
+      OVR       : Boolean := False;     -- Overrun/Underrun (slave mode)
+      PECERR    : Boolean := False;     -- PEC Error in reception
+      TIMEOUT   : Boolean := False;     -- Timeout or tLOW detection flag
+      ALERT     : Boolean := False;     -- SMBus alert
+      Reserved1 : Bits_1  := 0;
+      BUSY      : Boolean := False;     -- Bus busy
+      DIR       : Bits_1  := DIR_WRITE; -- Transfer direction (Slave mode)
+      ADDCODE   : Bits_7  := 0;         -- Address match code (Slave mode)
+      Reserved2 : Bits_8  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for I2C_ISR_Type use record
+      TXE       at 0 range  0 ..  0;
+      TXIS      at 0 range  1 ..  1;
+      RXNE      at 0 range  2 ..  2;
+      ADDR      at 0 range  3 ..  3;
+      NACKF     at 0 range  4 ..  4;
+      STOPF     at 0 range  5 ..  5;
+      TC        at 0 range  6 ..  6;
+      TCR       at 0 range  7 ..  7;
+      BERR      at 0 range  8 ..  8;
+      ARLO      at 0 range  9 ..  9;
+      OVR       at 0 range 10 .. 10;
+      PECERR    at 0 range 11 .. 11;
+      TIMEOUT   at 0 range 12 .. 12;
+      ALERT     at 0 range 13 .. 13;
+      Reserved1 at 0 range 14 .. 14;
+      BUSY      at 0 range 15 .. 15;
+      DIR       at 0 range 16 .. 16;
+      ADDCODE   at 0 range 17 .. 23;
+      Reserved2 at 0 range 24 .. 31;
+   end record;
+
+   -- 33.7.8 I2C interrupt clear register (I2C_ICR)
+
+   type I2C_ICR_Type is record
+      Reserved1 : Bits_3  := 0;
+      ADDRCF    : Boolean := False; -- Address matched flag clear
+      NACKCF    : Boolean := False; -- Not Acknowledge flag clear
+      STOPCF    : Boolean := False; -- Stop detection flag clear
+      Reserved2 : Bits_2  := 0;
+      BERRCF    : Boolean := False; -- Bus error flag clear
+      ARLOCF    : Boolean := False; -- Arbitration Lost flag clear
+      OVRCF     : Boolean := False; -- Overrun/Underrun flag clear
+      PECCF     : Boolean := False; -- PEC Error flag clear
+      TIMOUTCF  : Boolean := False; -- Timeout detection flag clear
+      ALERTCF   : Boolean := False; -- Alert flag clear
+      Reserved3 : Bits_18 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for I2C_ICR_Type use record
+      Reserved1 at 0 range  0 ..  2;
+      ADDRCF    at 0 range  3 ..  3;
+      NACKCF    at 0 range  4 ..  4;
+      STOPCF    at 0 range  5 ..  5;
+      Reserved2 at 0 range  6 ..  7;
+      BERRCF    at 0 range  8 ..  8;
+      ARLOCF    at 0 range  9 ..  9;
+      OVRCF     at 0 range 10 .. 10;
+      PECCF     at 0 range 11 .. 11;
+      TIMOUTCF  at 0 range 12 .. 12;
+      ALERTCF   at 0 range 13 .. 13;
+      Reserved3 at 0 range 14 .. 31;
+   end record;
+
+   -- 33.7.9 I2C PEC register (I2C_PECR)
+
+   type I2C_PECR_Type is record
+      PEC      : Unsigned_8; -- Packet error checking register
+      Reserved : Bits_24;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for I2C_PECR_Type use record
+      PEC      at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   -- 33.7.10 I2C receive data register (I2C_RXDR)
+
+   type I2C_RXDR_Type is record
+      RXDATA   : Unsigned_8; -- 8-bit receive data
+      Reserved : Bits_24;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for I2C_RXDR_Type use record
+      RXDATA   at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   -- 33.7.11 I2C transmit data register (I2C_TXDR)
+
+   type I2C_TXDR_Type is record
+      TXDATA   : Unsigned_8;      -- 8-bit transmit data RXDATA
+      Reserved : Bits_24    := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for I2C_TXDR_Type use record
+      TXDATA   at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   -- 33.7 I2C registers
+
+   type I2C_Type is record
+      CR1      : I2C_CR1_Type      with Volatile_Full_Access => True;
+      CR2      : I2C_CR2_Type      with Volatile_Full_Access => True;
+      OAR1     : I2C_OAR1_Type     with Volatile_Full_Access => True;
+      OAR2     : I2C_OAR2_Type     with Volatile_Full_Access => True;
+      TIMINGR  : I2C_TIMINGR_Type  with Volatile_Full_Access => True;
+      TIMEOUTR : I2C_TIMEOUTR_Type with Volatile_Full_Access => True;
+      ISR      : I2C_ISR_Type      with Volatile_Full_Access => True;
+      ICR      : I2C_ICR_Type      with Volatile_Full_Access => True;
+      PECR     : I2C_PECR_Type     with Volatile_Full_Access => True;
+      RXDR     : I2C_RXDR_Type     with Volatile_Full_Access => True;
+      TXDR     : I2C_TXDR_Type     with Volatile_Full_Access => True;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 11 * 32;
+   for I2C_Type use record
+      CR1      at 16#00# range 0 .. 31;
+      CR2      at 16#04# range 0 .. 31;
+      OAR1     at 16#08# range 0 .. 31;
+      OAR2     at 16#0C# range 0 .. 31;
+      TIMINGR  at 16#10# range 0 .. 31;
+      TIMEOUTR at 16#14# range 0 .. 31;
+      ISR      at 16#18# range 0 .. 31;
+      ICR      at 16#1C# range 0 .. 31;
+      PECR     at 16#20# range 0 .. 31;
+      RXDR     at 16#24# range 0 .. 31;
+      TXDR     at 16#28# range 0 .. 31;
+   end record;
+
+   I2C1_ADDRESS : constant := 16#4000_5400#;
+
+   I2C1 : aliased I2C_Type
+      with Address    => System'To_Address (I2C1_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   I2C2_ADDRESS : constant := 16#4000_5800#;
+
+   I2C2 : aliased I2C_Type
+      with Address    => System'To_Address (I2C2_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   I2C3_ADDRESS : constant := 16#4000_5C00#;
+
+   I2C3 : aliased I2C_Type
+      with Address    => System'To_Address (I2C3_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   I2C4_ADDRESS : constant := 16#4000_6000#;
+
+   I2C4 : aliased I2C_Type
+      with Address    => System'To_Address (I2C4_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- 34 Universal synchronous asynchronous receiver transmitter (USART)
@@ -5553,32 +5934,32 @@ pragma Warnings (On);
    -- 34.8 USART registers
 
    type USART_Type is record
-      USART_CR1  : USART_CR1_Type  with Volatile_Full_Access => True;
-      USART_CR2  : USART_CR2_Type  with Volatile_Full_Access => True;
-      USART_CR3  : USART_CR3_Type  with Volatile_Full_Access => True;
-      USART_BRR  : USART_BRR_Type  with Volatile_Full_Access => True;
-      USART_GTPR : USART_GTPR_Type with Volatile_Full_Access => True;
-      USART_RTOR : USART_RTOR_Type with Volatile_Full_Access => True;
-      USART_RQR  : USART_RQR_Type  with Volatile_Full_Access => True;
-      USART_ISR  : USART_ISR_Type  with Volatile_Full_Access => True;
-      USART_ICR  : USART_ICR_Type  with Volatile_Full_Access => True;
-      USART_RDR  : USART_DR_Type;
-      USART_TDR  : USART_DR_Type;
+      CR1  : USART_CR1_Type  with Volatile_Full_Access => True;
+      CR2  : USART_CR2_Type  with Volatile_Full_Access => True;
+      CR3  : USART_CR3_Type  with Volatile_Full_Access => True;
+      BRR  : USART_BRR_Type  with Volatile_Full_Access => True;
+      GTPR : USART_GTPR_Type with Volatile_Full_Access => True;
+      RTOR : USART_RTOR_Type with Volatile_Full_Access => True;
+      RQR  : USART_RQR_Type  with Volatile_Full_Access => True;
+      ISR  : USART_ISR_Type  with Volatile_Full_Access => True;
+      ICR  : USART_ICR_Type  with Volatile_Full_Access => True;
+      RDR  : USART_DR_Type;
+      TDR  : USART_DR_Type;
    end record
       with Bit_Order => Low_Order_First,
-           Size      => 16#2C# * 8;
+           Size      => 11 * 32;
    for USART_Type use record
-      USART_CR1  at 16#00# range 0 .. 31;
-      USART_CR2  at 16#04# range 0 .. 31;
-      USART_CR3  at 16#08# range 0 .. 31;
-      USART_BRR  at 16#0C# range 0 .. 31;
-      USART_GTPR at 16#10# range 0 .. 31;
-      USART_RTOR at 16#14# range 0 .. 31;
-      USART_RQR  at 16#18# range 0 .. 31;
-      USART_ISR  at 16#1C# range 0 .. 31;
-      USART_ICR  at 16#20# range 0 .. 31;
-      USART_RDR  at 16#24# range 0 .. 31;
-      USART_TDR  at 16#28# range 0 .. 31;
+      CR1  at 16#00# range 0 .. 31;
+      CR2  at 16#04# range 0 .. 31;
+      CR3  at 16#08# range 0 .. 31;
+      BRR  at 16#0C# range 0 .. 31;
+      GTPR at 16#10# range 0 .. 31;
+      RTOR at 16#14# range 0 .. 31;
+      RQR  at 16#18# range 0 .. 31;
+      ISR  at 16#1C# range 0 .. 31;
+      ICR  at 16#20# range 0 .. 31;
+      RDR  at 16#24# range 0 .. 31;
+      TDR  at 16#28# range 0 .. 31;
    end record;
 
    USART1_BASEADDRESS : constant := 16#4001_1000#;
@@ -5648,6 +6029,16 @@ pragma Warnings (On);
    ----------------------------------------------------------------------------
    -- 35 Serial peripheral interface / integrated interchip sound (SPI/I2S)
    ----------------------------------------------------------------------------
+
+   -- 35.9.1 SPI control register 1 (SPIx_CR1)
+   -- 35.9.2 SPI control register 2 (SPIx_CR2)
+   -- 35.9.3 SPI status register (SPIx_SR)
+   -- 35.9.4 SPI data register (SPIx_DR)
+   -- 35.9.5 SPI CRC polynomial register (SPIx_CRCPR)
+   -- 35.9.6 SPI Rx CRC register (SPIx_RXCRCR)
+   -- 35.9.7 SPI Tx CRC register (SPIx_TXCRCR)
+   -- 35.9.8 SPIx_I2S configuration register (SPIx_I2SCFGR)
+   -- 35.9.9 SPIx_I2S prescaler register (SPIx_I2SPR)
 
    ----------------------------------------------------------------------------
    -- 36 Serial audio interface (SAI)
