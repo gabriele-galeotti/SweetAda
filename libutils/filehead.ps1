@@ -17,6 +17,10 @@
 # none
 #
 
+#
+# NOTE: this utility works only with data piped into stdin.
+#
+
 ################################################################################
 # Script initialization.                                                       #
 #                                                                              #
@@ -79,9 +83,9 @@ while ($argsindex -lt $args.length)
   }
   else
   {
-    if ([Int]$args[$argsindex] -ge 1 -and [Int]$args[$argsindex] -le 9)
+    if ([int]$args[$argsindex] -ge 1 -and [int]$args[$argsindex] -le 9)
     {
-      $textlinestoprint = [Int]$args[$argsindex]
+      $textlinestoprint = [int]$args[$argsindex]
       break
     }
     else
