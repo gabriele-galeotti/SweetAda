@@ -79,7 +79,7 @@ HOST_LD_SWITCHES ?= -g
 endif
 
 OBJS :=
-OBJS += elftool.o
+OBJS += gnat-wrapper.o
 OBJS += library.o
 
 .PHONY: all
