@@ -563,9 +563,72 @@ pragma Style_Checks (Off);
    -- 2.8.16. Two-Wire Serial Interface Controller (TWI)
    ----------------------------------------------------------------------------
 
+   TWI_CTRL_PRSC_2    : constant := 2#000#; -- Resulting clock_prescaler = 2
+   TWI_CTRL_PRSC_4    : constant := 2#001#; -- Resulting clock_prescaler = 4
+   TWI_CTRL_PRSC_8    : constant := 2#010#; -- Resulting clock_prescaler = 8
+   TWI_CTRL_PRSC_64   : constant := 2#011#; -- Resulting clock_prescaler = 64
+   TWI_CTRL_PRSC_128  : constant := 2#100#; -- Resulting clock_prescaler = 128
+   TWI_CTRL_PRSC_1024 : constant := 2#101#; -- Resulting clock_prescaler = 1024
+   TWI_CTRL_PRSC_2048 : constant := 2#110#; -- Resulting clock_prescaler = 2048
+   TWI_CTRL_PRSC_4096 : constant := 2#111#; -- Resulting clock_prescaler = 4096
+
+   type TWI_CTRL_Type is record
+      TWI_CTRL_EN        : Boolean := False;           -- TWI enable, reset if cleared
+      TWI_CTRL_PRSC      : Bits_3  := TWI_CTRL_PRSC_2; -- 3-bit clock prescaler select
+      TWI_CTRL_CDIV      : Bits_4  := 0;               -- 4-bit clock divider
+      TWI_CTRL_CLKSTR    : Boolean := False;           -- Enable (allow) clock stretching
+      Reserved1          : Bits_6  := 0;
+      TWI_CTRL_FIFO      : Bits_4  := 0;               -- FIFO depth; log2(IO_TWI_FIFO)
+      Reserved2          : Bits_8  := 0;
+      TWI_CTRL_SENSE_SCL : Boolean := False;           -- current state of the SCL bus line
+      TWI_CTRL_SENSE_SDA : Boolean := False;           -- current state of the SDA bus line
+      TWI_CTRL_TX_FULL   : Boolean := False;           -- set if the TWI bus is claimed by any controller
+      TWI_CTRL_RX_AVAIL  : Boolean := False;           -- RX FIFO data available
+      TWI_CTRL_BUSY      : Boolean := False;           -- TWI bus engine busy or TX FIFO not empty
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TWI_CTRL_Type use record
+      TWI_CTRL_EN        at 0 range  0 ..  0;
+      TWI_CTRL_PRSC      at 0 range  1 ..  3;
+      TWI_CTRL_CDIV      at 0 range  4 ..  7;
+      TWI_CTRL_CLKSTR    at 0 range  8 ..  8;
+      Reserved1          at 0 range  9 .. 14;
+      TWI_CTRL_FIFO      at 0 range 15 .. 18;
+      Reserved2          at 0 range 19 .. 26;
+      TWI_CTRL_SENSE_SCL at 0 range 27 .. 27;
+      TWI_CTRL_SENSE_SDA at 0 range 28 .. 28;
+      TWI_CTRL_TX_FULL   at 0 range 29 .. 29;
+      TWI_CTRL_RX_AVAIL  at 0 range 30 .. 30;
+      TWI_CTRL_BUSY      at 0 range 31 .. 31;
+   end record;
+
+   TWI_DCMD_ACK_ACK  : constant := 0; -- device ACK
+   TWI_DCMD_ACK_NACK : constant := 1; -- device NACK
+
+   TWI_DCMD_CMD_NOP   : constant := 2#00#; -- NOP
+   TWI_DCMD_CMD_START : constant := 2#01#; -- START conditions
+   TWI_DCMD_CMD_STOP  : constant := 2#10#; -- STOP condition
+   TWI_DCMD_CMD_TX    : constant := 2#11#; -- data transmission
+
+   type TWI_DCMD_Type is record
+      TWI_DCMD     : Unsigned_8;                     -- write: TX data byte; read: RX data byte
+      TWI_DCMD_ACK : Bits_1     := TWI_DCMD_ACK_ACK; -- write: ACK issued by controller; read: 1 = device NACK, 0 = device ACK
+      TWI_DCMD_CMD : Bits_2     := TWI_DCMD_CMD_NOP; -- TWI operation (00 = NOP, 01 = START conditions, 10 = STOP condition, 11 = data transmission)
+      Reserved     : Bits_21    := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TWI_DCMD_Type use record
+      TWI_DCMD     at 0 range  0 ..  7;
+      TWI_DCMD_ACK at 0 range  8 ..  8;
+      TWI_DCMD_CMD at 0 range  9 .. 10;
+      Reserved     at 0 range 11 .. 31;
+   end record;
+
    type TWI_Type is record
-      CTRL : Unsigned_32 with Volatile_Full_Access => True;
-      DCMD : Unsigned_32 with Volatile_Full_Access => True;
+      CTRL : TWI_CTRL_Type with Volatile_Full_Access => True;
+      DCMD : TWI_DCMD_Type with Volatile_Full_Access => True;
    end record
       with Size => 2 * 32;
    for TWI_Type use record
