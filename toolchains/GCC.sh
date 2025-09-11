@@ -135,6 +135,10 @@ if [ "x${phase_configure}" = "xY" ] ; then
   CONFIGURE_OPTS+=("--disable-plugin")
   CONFIGURE_OPTS+=("--disable-werror")
   CONFIGURE_OPTS+=("--enable-multilib")
+  case ${TARGET} in
+    arm*-*) CONFIGURE_OPTS+=("--with-multilib-list=aprofile,rmprofile") ;;
+    *)      ;;
+  esac
   CONFIGURE_OPTS+=("--disable-decimal-float")
   CONFIGURE_OPTS+=("--disable-fixed-point")
   CONFIGURE_OPTS+=("--disable-threads")
