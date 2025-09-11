@@ -75,7 +75,7 @@ function Write-Stderr
 $textlinestoprint = 10
 
 $argsindex = 0
-while ($argsindex -lt $args.length)
+while ($argsindex -lt $args.Length)
 {
   if ($args[$argsindex] -eq "-n")
   {

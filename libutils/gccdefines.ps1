@@ -170,14 +170,14 @@ if ([string]::IsNullOrEmpty($output_filename))
   Write-Stderr "$($scriptname): *** Error: no output filename specified."
   ExitWithCode 1
 }
-if ($items.length -lt 1)
+if ($items.Length -lt 1)
 {
   Write-Stderr "$($scriptname): *** Error: no items specified."
   ExitWithCode 1
 }
 
 $max_tmacro_length = 0
-$max_type_length = "Boolean".length
+$max_type_length = "Boolean".Length
 foreach ($i in $items)
 {
   $i_splitted = $i.Split(":")
@@ -200,20 +200,20 @@ foreach ($i in $items)
         ExitWithCode 1
       }
   }
-  if ($tmacro.length -gt $max_tmacro_length)
+  if ($tmacro.Length -gt $max_tmacro_length)
   {
-    $max_tmacro_length = $tmacro.length
+    $max_tmacro_length = $tmacro.Length
   }
-  if ($type.length -gt $max_type_length)
+  if ($type.Length -gt $max_type_length)
   {
-    $max_type_length = $type.length
+    $max_type_length = $type.Length
   }
 }
 if ($max_type_length -gt 0)
 {
   $max_type_length++
 }
-$bseparator = " " * ($max_type_length - "Boolean".length)
+$bseparator = " " * ($max_type_length - "Boolean".Length)
 
 $indent = "   "
 
@@ -284,8 +284,8 @@ foreach ($i in $items)
   $i_tmacro = $i_splitted[1]
   $i_type   = $i_splitted[2]
   $i_spec   = $i_splitted[3]
-  $mseparator = " " * ($max_tmacro_length - $i_tmacro.length)
-  $tseparator = " " * ($max_type_length - $i_type.length)
+  $mseparator = " " * ($max_tmacro_length - $i_tmacro.Length)
+  $tseparator = " " * ($max_type_length - $i_type.Length)
   $found = ""
   foreach ($line in $lines)
   {

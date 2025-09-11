@@ -10,6 +10,7 @@
 
 #
 # Arguments:
+# optional starting "-c" to not create the file
 # optional starting "-r <reference_filename>"
 # $1 = input filename
 #
@@ -68,29 +69,53 @@ function Write-Stderr
 #                                                                              #
 ################################################################################
 
-[int]$argc = 0
+[bool]$createfile = $true
 [bool]$reffile = $false
 
-#
-# Basic input parameters check.
-#
-if ([string]$args[$argc] -eq "-r")
+# parse command line arguments
+$argsindex = 0
+while ($argsindex -lt $args.length)
 {
-  $reffile = $true
-  $argc++
-  $reffile_filename = $args[$argc]
-  if ([string]::IsNullOrEmpty($reffile_filename))
+  if ($args[$argsindex][0] -eq "-")
   {
-    Write-Stderr "$($scriptname): *** Error: no reference file specified."
-    ExitWithCode 1
+    $optionchar = $args[$argsindex].Substring(1)
+    if ($optionchar -eq "c")
+    {
+      $createfile = $false
+    }
+    elseif ($optionchar -eq "r")
+    {
+      $reffile = $true
+      $argsindex++
+      $reffile_filename = $args[$argsindex]
+      if ([string]::IsNullOrEmpty($reffile_filename))
+      {
+        Write-Stderr "$($scriptname): *** Error: no reference file specified."
+        ExitWithCode 1
+      }
+    }
+    else
+    {
+      Write-Stderr "$($scriptname): *** Error: unknown option `"$($optionchar)`"."
+      ExitWithCode 1
+    }
   }
-  $argc++
+  else
+  {
+    break
+  }
+  $argsindex++
 }
-$input_filename = $args[$argc]
+$input_filename = $args[$argsindex]
 if ([string]::IsNullOrEmpty($input_filename))
 {
   Write-Stderr "$($scriptname): *** Error: no input file specified."
   ExitWithCode 1
+}
+
+if (-not (Test-Path -Path $input_filename) -and $createfile)
+{
+  New-Item $input_filename
 }
 
 $file = Get-ChildItem -Force -Path $input_filename

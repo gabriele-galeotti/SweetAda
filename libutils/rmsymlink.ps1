@@ -13,8 +13,10 @@
 # $1 .. n = destination filename list
 # $n+1    = mandatory "-o" switch to separate destinations and targets
 # $n+2 .. = target filename list
-#
 # The two lists must have the same length.
+#
+# Environment variables:
+# none
 #
 
 ################################################################################
@@ -74,7 +76,7 @@ $destinationindex = 0
 $targetindex = 0
 $ndestination = 0
 $ntarget = 0
-while ($argsindex -lt $args.length)
+while ($argsindex -lt $args.Length)
 {
   if ($args[$argsindex] -eq "-o")
   {

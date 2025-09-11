@@ -230,12 +230,12 @@ if ($PSVersionTable.PSVersion.Major -eq "5")
 $verbose = $(GetEnvVar VERBOSE)
 
 # parse command line arguments
-$fileindex = 0
-while ($fileindex -lt $args.length)
+$argsindex = 0
+while ($argsindex -lt $args.Length)
 {
-  if ($args[$fileindex][0] -eq "-")
+  if ($args[$argsindex][0] -eq "-")
   {
-    $optionchar = $args[$fileindex].Substring(1)
+    $optionchar = $args[$argsindex].Substring(1)
     if ($optionchar -eq "c")
     {
       $wine = $(GetEnvVar WINEPREFIX)
@@ -246,8 +246,8 @@ while ($fileindex -lt $args.length)
     }
     elseif ($optionchar -eq "m")
     {
-      $fileindex++
-      $filelist_filename = $args[$fileindex]
+      $argsindex++
+      $filelist_filename = $args[$argsindex]
     }
     elseif ($optionchar -eq "v")
     {
@@ -263,11 +263,11 @@ while ($fileindex -lt $args.length)
   {
     break
   }
-  $fileindex++
+  $argsindex++
 }
 
 # check for at least one symlink target
-if ($fileindex -ge $args.length)
+if ($argsindex -ge $args.Length)
 {
   Write-Stderr "$($scriptname): *** Error: no symlink target specified."
   ExitWithCode 1
@@ -288,18 +288,18 @@ if (![string]::IsNullOrEmpty($filelist_filename))
 
 # loop as long as an argument exists
 # when arguments are exhausted, exit
-while ($fileindex -lt $args.length)
+while ($argsindex -lt $args.Length)
 {
-  $target = $args[$fileindex]
+  $target = $args[$argsindex]
   # then, the 2nd argument of the pair should exist
-  if (($fileindex + 1) -ge $args.length)
+  if (($argsindex + 1) -ge $args.Length)
   {
     Write-Stderr "$($scriptname): *** Error: no symlink link name specified."
     ExitWithCode 1
   }
   if (Test-Path -Path $target -PathType Leaf)
   {
-    $link_name = $args[$fileindex + 1]
+    $link_name = $args[$argsindex + 1]
     Remove-Item -Path $link_name -Force -ErrorAction Ignore
     if ($symlinkcopy -eq "Y")
     {
@@ -340,7 +340,7 @@ while ($fileindex -lt $args.length)
   }
   elseif (Test-Path -Path $target -PathType Container)
   {
-    $link_directory = $args[$fileindex + 1]
+    $link_directory = $args[$argsindex + 1]
     $files = (Get-ChildItem -Force -File $target).Name
     foreach ($f in $files)
     {
@@ -396,7 +396,7 @@ while ($fileindex -lt $args.length)
     ExitWithCode 1
   }
   # shift to the next argument pair
-  $fileindex += 2
+  $argsindex += 2
 }
 
 ExitWithCode 0

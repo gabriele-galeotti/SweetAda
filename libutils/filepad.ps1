@@ -84,7 +84,7 @@ if ([string]::IsNullOrEmpty($padstring))
   ExitWithCode 1
 }
 
-$last_character = $padstring.Substring($padstring.length - 1, 1)
+$last_character = $padstring.Substring($padstring.Length - 1, 1)
 if ($last_character -eq "K" -or $last_character -eq "k")
 {
   $padlength = [Convert]::ToInt32($padstring.Substring(0, $padstring.Length - 1)) * 1024
