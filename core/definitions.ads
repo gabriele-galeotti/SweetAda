@@ -149,6 +149,8 @@ package Definitions
    CLK_UART18M  : constant :=  18_432_000; -- CLK_UART1M8 * 10
    CLK_20M      : constant :=   20 * MHz1; -- standard value
    CLK_25M      : constant :=   25 * MHz1; -- MII PHY
+   CLK_VGA25M   : constant :=  25_175_000; -- VGA 800 ppl
+   CLK_VGA28M   : constant :=  28_322_000; -- VGA 900 ppl
    CLK_PAL28M   : constant :=  28_375_160; -- CLK_PAL * 64/10
    CLK_33M      : constant :=   33 * MHz1; -- standard value
    CLK_33M33    : constant :=  33_330_000; -- PCI
