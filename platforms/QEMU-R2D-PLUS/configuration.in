@@ -26,7 +26,7 @@ CPU_MODEL := SH7750
 #                                                                              #
 ################################################################################
 
-GCC_SWITCHES_PLATFORM     := -m4 -Wa,--isa=sh4
+GCC_SWITCHES_PLATFORM     := -m4 -matomic-model=none -mtas -Wa,--isa=sh4
 LD_SWITCHES_PLATFORM      := --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
