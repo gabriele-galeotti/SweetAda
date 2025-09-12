@@ -32,6 +32,7 @@ REM #                                                                          #
 REM ############################################################################
 
 powershell.exe                                              ^
+  -NoLogo                                                   ^
   -NoProfile                                                ^
   -ExecutionPolicy Bypass                                   ^
   -File "%SWEETADA_PATH%"/%LIBUTILS_DIRECTORY%/dos2unix.ps1 ^
