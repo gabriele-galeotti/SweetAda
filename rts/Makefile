@@ -39,6 +39,17 @@ MAKEFILE_RTS_INCLUDED := Y
 
 .NOTPARALLEL:
 
+ifneq ($(words $(MAKECMDGOALS)),1)
+$(error Error: only one Makefile target should be specified)
+endif
+
+# add silent operation in probevariable[s] targets
+ifneq ($(filter probevariable probevariables,$(MAKECMDGOALS)),)
+VERBOSE :=
+MAKEFLAGS += s
+GNUMAKEFLAGS += --no-print-directory
+endif
+
 include $(KERNEL_PARENT_PATH)/Makefile.os.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 include $(KERNEL_PARENT_PATH)/Makefile.fn.in
