@@ -54,19 +54,4 @@ package CPU
    procedure Irq_Disable
       renames SH.Irq_Disable;
 
-   ----------------------------------------------------------------------------
-   -- Locking
-   ----------------------------------------------------------------------------
-
-   procedure Lock_Try
-      (Lock_Object : in out SH.Lock_Type;
-       Success     :    out Boolean)
-      renames SH.Lock_Try;
-   procedure Lock
-      (Lock_Object : in out SH.Lock_Type)
-      renames SH.Lock;
-   procedure Unlock
-      (Lock_Object : out SH.Lock_Type)
-      renames SH.Unlock;
-
 end CPU;

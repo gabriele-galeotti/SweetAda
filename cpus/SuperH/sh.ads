@@ -56,25 +56,4 @@ package SH
    procedure Irq_Disable
       with Inline => True;
 
-   ----------------------------------------------------------------------------
-   -- Locking
-   ----------------------------------------------------------------------------
-
-   LOCK_UNLOCK : constant CPU_Unsigned := 0;
-   LOCK_LOCK   : constant CPU_Unsigned := 1;
-
-   type Lock_Type is
-   record
-      Lock : aliased CPU_Unsigned := LOCK_UNLOCK with Atomic => True;
-   end record with
-      Size => CPU_Unsigned'Size;
-
-   procedure Lock_Try
-      (Lock_Object : in out Lock_Type;
-       Success     :    out Boolean);
-   procedure Lock
-      (Lock_Object : in out Lock_Type);
-   procedure Unlock
-      (Lock_Object : out Lock_Type);
-
 end SH;
