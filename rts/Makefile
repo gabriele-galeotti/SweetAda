@@ -101,13 +101,12 @@ RTS_SOURCE_PATH_TARGET_CMD := $(subst /,\,$(RTS_SOURCE_PATH_TARGET))
 endif
 
 ifneq ($(MULTILIB),)
-ifeq ($(OSTYPE),cmd)
-MULTILIB_DIRECTORY := $(shell $(ECHO) $(MULTILIB)| $(SED) -e "s|;.*$$||")
-MULTILIB_SWITCHES  := $(shell $(ECHO) $(MULTILIB)| $(SED) -e "s|^[^;]*;||" -e "s|@| -|g" -e "s|^ ||")
-else
-MULTILIB_DIRECTORY := $(shell $(ECHO) "$(MULTILIB)" | $(SED) -e "s|;.*\$$||")
-MULTILIB_SWITCHES  := $(shell $(ECHO) "$(MULTILIB)" | $(SED) -e "s|^[^;]*;||" -e "s|@| -|g" -e "s|^ ||")
-endif
+MULTILIB_DIRECTORY  := $(firstword $(subst ;,$(SPACE),$(MULTILIB)))
+MULTILIB_SWITCHES   := $(strip \
+                         $(subst @,$(SPACE)-,\
+                           $(subst $(MULTILIB_DIRECTORY);,$(SPACE),$(MULTILIB))\
+                          )\
+                         )
 ADAINCLUDE_PATH     := ./$(RTS)/$(TOOLCHAIN_NAME)/$(MULTILIB_DIRECTORY)/adainclude
 ADALIB_PATH         := ./$(RTS)/$(TOOLCHAIN_NAME)/$(MULTILIB_DIRECTORY)/adalib
 ifeq ($(OSTYPE),cmd)
@@ -294,24 +293,24 @@ endif
 
 # Ada sources generic rules
 $(ADALIB_PATH)/%.o: $(ADAINCLUDE_PATH)/%.adb
-	$(ADAC) -o $@ -c       \
-          -g -O2               \
-          -I$(ADAINCLUDE_PATH) \
-          $(ADAC_SWITCHES)     \
+	$(ADAC) -o $@ -c        \
+          -g -O2                \
+          -I $(ADAINCLUDE_PATH) \
+          $(ADAC_SWITCHES)      \
           $<
 $(ADALIB_PATH)/%.o: $(ADAINCLUDE_PATH)/%.ads
-	$(ADAC) -o $@ -c       \
-          -g -O2               \
-          -I$(ADAINCLUDE_PATH) \
-          $(ADAC_SWITCHES)     \
+	$(ADAC) -o $@ -c        \
+          -g -O2                \
+          -I $(ADAINCLUDE_PATH) \
+          $(ADAC_SWITCHES)      \
           $<
 
 # C sources generic rules
 $(ADALIB_PATH)/%.o: $(ADAINCLUDE_PATH)/%.c
-	$(CC) -o $@ -c         \
-          -g -O2               \
-          -I$(ADAINCLUDE_PATH) \
-          $(CC_SWITCHES)       \
+	$(CC) -o $@ -c          \
+          -g -O2                \
+          -I $(ADAINCLUDE_PATH) \
+          $(CC_SWITCHES)        \
           $<
 
 .PHONY: probevariable
