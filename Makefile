@@ -951,7 +951,7 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
                     -D $(OBJECT_DIRECTORY)      \
                     $(foreach                   \
                       d,$(INCLUDE_DIRECTORIES), \
-                      -I$(d)                    \
+                      -I $(d)                   \
                       )                         \
                     main.adb                    \
         ,[GNATMAKE],main.adb)
@@ -985,7 +985,7 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
                     -O=gnatbind_objs.lst           \
                     $(foreach                      \
                       d,$(INCLUDE_DIRECTORIES),    \
-                      -I$(d)                       \
+                      -I $(d)                      \
                       )                            \
                     $(patsubst                     \
                       %,$(OBJECT_DIRECTORY)/%.ali, \

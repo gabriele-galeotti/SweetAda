@@ -45,7 +45,7 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
 # GNATMAKE
 #
 
-INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
+INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I $(KERNEL_PARENT_PATH)/$(d))
 VPATH    := $(foreach d,$(INCLUDE_DIRECTORIES),$(KERNEL_PARENT_PATH)/$(d))
 
 ifeq      ($(LIBRARY_NAME),clibrary)
