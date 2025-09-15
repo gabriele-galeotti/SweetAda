@@ -38,7 +38,7 @@ __CHARACTERS__ += p  q  r  s  t  u  v  w  x  y  z  {  |  }  ~
 # Return a substring of string, starting at start and ending at end.
 #
 substring = $(strip \
-              $(eval __t__ := $$(subst $$(SPACE),$(DEL) ,$$1))\
+              $(eval __t__ := $$(subst $$(SPACE),$(DEL)$(SPACE),$$1))\
               $(eval \
                 $$(foreach c,$$(__CHARACTERS__),\
                   $$(eval \
@@ -165,7 +165,7 @@ endif
 ifeq ($(OSTYPE),cmd)
 update-timestamp-reffile = $(UPDATETM) -r $1 $2
 else
-update-timestamp-reffile = touch -r $1 $2
+update-timestamp-reffile = touch -c -r $1 $2
 endif
 
 #
