@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ sh.adb                                                                                                    --
+-- __FLN__ sh7032.adb                                                                                                --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,25 +15,11 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with System.Machine_Code;
-with Definitions;
+with Ada.Unchecked_Conversion;
+with MMIO;
 
-package body SH
+package body SH7032
    is
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Local declarations                           --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   use System;
-   use System.Machine_Code;
-
-   CRLF : String renames Definitions.CRLF;
 
    --========================================================================--
    --                                                                        --
@@ -44,96 +30,94 @@ package body SH
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- NOP
+   -- Read the TCNT register
    ----------------------------------------------------------------------------
-   procedure NOP
+   function TCNT_Read
+      return Unsigned_8
       is
    begin
-      Asm (
-           Template => ""            & CRLF &
-                       "        nop" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-   end NOP;
+      return MMIO.ReadA (System'To_Address (TCNT_READ_ADDRESS));
+   end TCNT_Read;
 
    ----------------------------------------------------------------------------
-   -- SR_Read
+   -- Write the TCNT register
    ----------------------------------------------------------------------------
-   function SR_Read
-      return Unsigned_32
-      is
-      SR : Unsigned_32;
-   begin
-      Asm (
-           Template => ""                      & CRLF &
-                       "        stc     sr,%0" & CRLF &
-                       "",
-           Outputs  => Unsigned_32'Asm_Output ("=r", SR),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return SR;
-   end SR_Read;
-
-   ----------------------------------------------------------------------------
-   -- SR_Write
-   ----------------------------------------------------------------------------
-   procedure SR_Write
-      (SR : in Unsigned_32)
+   procedure TCNT_Write
+      (Value : in Unsigned_8)
       is
    begin
-      Asm (
-           Template => ""                      & CRLF &
-                       "        ldc     %0,sr" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => Unsigned_32'Asm_Input ("r", SR),
-           Clobber  => "",
-           Volatile => True
-          );
-   end SR_Write;
+      MMIO.WriteA (
+         System'To_Address (TCNT_WRITE_ADDRESS),
+         Make_Word (16#5A#, Value)
+         );
+   end TCNT_Write;
 
    ----------------------------------------------------------------------------
-   -- Intcontext_Get
+   -- Read the TCSR register
    ----------------------------------------------------------------------------
-   procedure Intcontext_Get
-      (Intcontext : out Intcontext_Type)
+   function TCSR_Read
+      return TCSR_Type
+      is
+      function To_TCSR is new Ada.Unchecked_Conversion (Unsigned_8, TCSR_Type);
+   begin
+      return To_TCSR (MMIO.ReadA (System'To_Address (TCSR_READ_ADDRESS)));
+   end TCSR_Read;
+
+   ----------------------------------------------------------------------------
+   -- Write the TCSR register
+   ----------------------------------------------------------------------------
+   procedure TCSR_Write
+      (Value : in TCSR_Type)
+      is
+      function To_U8 is new Ada.Unchecked_Conversion (TCSR_Type, Unsigned_8);
+   begin
+      MMIO.WriteA (
+         System'To_Address (TCSR_WRITE_ADDRESS),
+         Make_Word (16#A5#, To_U8 (Value))
+         );
+   end TCSR_Write;
+
+   ----------------------------------------------------------------------------
+   -- Read the RSTCSR register
+   ----------------------------------------------------------------------------
+   function RSTCSR_Read
+      return RSTCSR_Type
+      is
+      function To_RSTCSR is new Ada.Unchecked_Conversion (Unsigned_8, RSTCSR_Type);
+   begin
+      return To_RSTCSR (MMIO.ReadA (System'To_Address (RSTCSR_READ_ADDRESS)));
+   end RSTCSR_Read;
+
+   ----------------------------------------------------------------------------
+   -- Clear the WOVF flag in RSTCSR register
+   ----------------------------------------------------------------------------
+   procedure RSTCSR_WOVF_Clear
       is
    begin
-      Intcontext := 0; -- __TBD__
-   end Intcontext_Get;
+      MMIO.WriteA (
+         System'To_Address (RSTCSR_WRITE_ADDRESS),
+         Unsigned_16'(16#A500#)
+         );
+   end RSTCSR_WOVF_Clear;
 
    ----------------------------------------------------------------------------
-   -- Intcontext_Set
+   -- Write RSTS and RSTE flags in RSTCSR register
    ----------------------------------------------------------------------------
-   procedure Intcontext_Set
-      (Intcontext : in Intcontext_Type)
+   procedure RSTCSR_Write
+      (RSTS : in Bits_1;
+       RSTE : in Boolean)
       is
+      RSTCSR : constant RSTCSR_Type := (
+         RSTS   => RSTS,
+         RSTE   => RSTE,
+         others => <>
+         );
+      function To_U8 is new Ada.Unchecked_Conversion (RSTCSR_Type, Unsigned_8);
    begin
-      null; -- __TBD__
-   end Intcontext_Set;
+      MMIO.WriteA (
+         System'To_Address (RSTCSR_WRITE_ADDRESS),
+         Make_Word (16#5A#, To_U8 (RSTCSR))
+         );
+   end RSTCSR_Write;
 
-   ----------------------------------------------------------------------------
-   -- Irq_Enable
-   ----------------------------------------------------------------------------
-   procedure Irq_Enable
-      is
-   begin
-      SR_Write (SR_Read and 16#EFFF_FF0F#);
-   end Irq_Enable;
-
-   ----------------------------------------------------------------------------
-   -- Irq_Disable
-   ----------------------------------------------------------------------------
-   procedure Irq_Disable
-      is
-   begin
-         SR_Write ((SR_Read and 16#EFFF_FF0F#) or 16#0000_00F0#);
-   end Irq_Disable;
-
-end SH;
+end SH7032;

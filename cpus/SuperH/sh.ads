@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Bits;
+with Interfaces;
 
 package SH
    with Preelaborate => True
@@ -29,7 +29,7 @@ package SH
    --                                                                        --
    --========================================================================--
 
-   use Bits;
+   use Interfaces;
 
    ----------------------------------------------------------------------------
    -- Generic definitions
@@ -42,7 +42,14 @@ package SH
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   type Intcontext_Type is new Integer;
+   type Intcontext_Type is new Unsigned_32;
+
+   function SR_Read
+      return Unsigned_32
+      with Inline => True;
+   procedure SR_Write
+      (SR : in Unsigned_32)
+      with Inline => True;
 
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
