@@ -511,7 +511,7 @@ pragma Style_Checks (Off);
       STR3      : Boolean := False; -- Count Start 3
       STR4      : Boolean := False; -- Count Start 4
       Reserved1 : Bits_2  := 2#11#;
-      Reserved2 : Bits_1;
+      Reserved2 : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -542,7 +542,7 @@ pragma Style_Checks (Off);
       SYNC3     : Boolean := False; -- Timer Synchro 3
       SYNC4     : Boolean := False; -- Timer Synchro 4
       Reserved1 : Bits_2  := 2#11#;
-      Reserved2 : Bits_1;
+      Reserved2 : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -577,7 +577,7 @@ pragma Style_Checks (Off);
       PWM4     : Boolean := False;    -- PWM Mode 4
       FDIR     : Bits_1  := FDIR_ALL; -- Flag Direction
       MDF      : Boolean := False;    -- Phase Counting Mode
-      Reserved : Bits_1;
+      Reserved : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -614,7 +614,7 @@ pragma Style_Checks (Off);
       BFB4      : Boolean := False;      -- Buffer Mode B4
       CMD       : Bits_2  := CMD_NORMAL; -- Combination Mode 1 and 0
       Reserved1 : Bits_1  := 1;
-      Reserved2 : Bits_1;
+      Reserved2 : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -648,7 +648,7 @@ pragma Style_Checks (Off);
       OLS3      : Bits_1 := OLS3_DIRECT; -- Output Level Select 3
       OLS4      : Bits_1 := OLS4_DIRECT; -- Output Level Select 4
       Reserved1 : Bits_5 := 2#11111#;
-      Reserved2 : Bits_1;
+      Reserved2 : Bits_1 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -836,7 +836,7 @@ pragma Style_Checks (Off);
       TPSC     : Bits_3 := TPSC_ICLK;  -- Timer Prescaler 2–0
       CKEG     : Bits_2 := CKEG_REDGE; -- External Clock Edge 1/0
       CCLR     : Bits_2 := CCLR_NONE;  -- Counter Clear 1 and 0
-      Reserved : Bits_1;
+      Reserved : Bits_1 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -911,7 +911,7 @@ pragma Style_Checks (Off);
       IOA       : Bits_3 := IOA_OUTDISABLE; -- I/O Control A2–A0
       Reserved1 : Bits_1 := 1;
       IOB       : Bits_3 := IOB_OUTDISABLE; -- I/O Control B2–B0
-      Reserved2 : Bits_1;
+      Reserved2 : Bits_1 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -969,7 +969,7 @@ pragma Style_Checks (Off);
       IMFB      : Boolean := True;    -- Input Capture/Compare Match B
       OVF       : Boolean := True;    -- Overflow Flag
       Reserved1 : Bits_4  := 2#1111#;
-      Reserved2 : Bits_1;
+      Reserved2 : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -1024,7 +1024,7 @@ pragma Style_Checks (Off);
       IMIEB     : Boolean := False;   -- Input Capture/Compare Match Interrupt Enable B
       OVIE      : Boolean := False;   -- Overflow Interrupt Enable
       Reserved1 : Bits_4  := 2#1111#;
-      Reserved2 : Bits_1;
+      Reserved2 : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
