@@ -20,9 +20,11 @@ with Configure;
 with Definitions;
 with Bits;
 with MMIO;
+with CPU;
 with SH;
 with SH7032;
 with GEMI;
+with Exceptions;
 with Console;
 
 package body BSP
@@ -49,6 +51,8 @@ package body BSP
            Convention    => C,
            External_Name => "__gemi_last_chance_handler",
            No_Return     => True;
+
+   procedure Tclk_Init;
 
    --========================================================================--
    --                                                                        --
@@ -77,6 +81,31 @@ package body BSP
          Value := Value xor 16#10#;
       end loop;
    end GEMI_Last_Chance_Handler;
+
+   ----------------------------------------------------------------------------
+   -- Tclk_Init
+   ----------------------------------------------------------------------------
+   procedure Tclk_Init
+      is
+   begin
+      -- use ITU Channel 2, up-counter, compare with GRA
+      TMDR := (
+         PWM2   => False,
+         MDF    => False,
+         others => <>
+         );
+      TIOR2.IOA := IOA_OUTDISABLE;
+      -- internal clock scaled by a factor of 8
+      TCR2 := (
+         TPSC   => TPSC_ICLK_DIV8,
+         CCLR   => CCLR_GRA,
+         others => <>
+         );
+      -- timer tick @ 1 kHz
+      TGRA2 := Unsigned_16 ((Configure.CLK_FREQUENCY / 8) / kHz1);
+      TCNT2 := 0;
+      TSTR.STR2 := True;
+   end Tclk_Init;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -110,6 +139,8 @@ package body BSP
       is
       SCI1_BaudRate : constant := Baud_Rate_Type'Enum_Rep (BR_9600);
    begin
+      -------------------------------------------------------------------------
+      Exceptions.Init;
       -- PFC ------------------------------------------------------------------
       PBCR1 := (
          PB10   => PB10_RxD1, -- select SCI1
@@ -161,6 +192,8 @@ package body BSP
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("GEMI SH7032", NL => True);
+      -------------------------------------------------------------------------
+      Tclk_Init;
       -------------------------------------------------------------------------
    end Setup;
 
