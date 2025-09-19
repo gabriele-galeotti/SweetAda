@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
 with System.Machine_Code;
 with Definitions;
 
@@ -30,7 +29,6 @@ package body SH
    --                                                                        --
    --========================================================================--
 
-   use System;
    use System.Machine_Code;
 
    CRLF : String renames Definitions.CRLF;
@@ -99,6 +97,24 @@ package body SH
    end SR_Write;
 
    ----------------------------------------------------------------------------
+   -- VBR_Set
+   ----------------------------------------------------------------------------
+   procedure VBR_Set
+      (VBR : in Address)
+      is
+   begin
+      Asm (
+           Template => ""                       & CRLF &
+                       "        ldc     %0,vbr" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => System.Address'Asm_Input ("r", VBR),
+           Clobber  => "",
+           Volatile => True
+          );
+   end VBR_Set;
+
+   ----------------------------------------------------------------------------
    -- Intcontext_Get
    ----------------------------------------------------------------------------
    procedure Intcontext_Get
@@ -133,7 +149,7 @@ package body SH
    procedure Irq_Disable
       is
    begin
-         SR_Write ((SR_Read and 16#EFFF_FF0F#) or 16#0000_00F0#);
+      SR_Write ((SR_Read and 16#EFFF_FF0F#) or 16#0000_00F0#);
    end Irq_Disable;
 
 end SH;
