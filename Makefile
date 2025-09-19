@@ -1476,6 +1476,18 @@ endif
 
 .PHONY: clean
 clean:
+ifeq ($(OSTYPE),cmd)
+	-IF EXIST $(LIBRARY_DIRECTORY)\    \
+          $(CHDIR) $(LIBRARY_DIRECTORY) && \
+          DEL /F /Q 2>nul *.*
+	-IF EXIST $(OBJECT_DIRECTORY)\                \
+          $(CHDIR) $(OBJECT_DIRECTORY)             && \
+          DEL /F /Q 2>nul *.*                      && \
+          $(RMDIR) ..\$(OBJECT_DIRECTORY)\ $(NULL)
+else
+	-$(RM) $(LIBRARY_DIRECTORY)/*
+	-$(RMDIR) $(OBJECT_DIRECTORY)/*
+endif
 	$(MAKE) $(MAKE_APPLICATION) clean
 	$(MAKE) $(MAKE_CLIBRARY) clean
 	$(MAKE) $(MAKE_CORE) clean
@@ -1490,18 +1502,6 @@ ifneq ($(PLATFORM),)
 ifeq ($(filter $(PLATFORM),$(PLATFORMS)),$(PLATFORM))
 	$(MAKE) $(MAKE_PLATFORM) clean
 endif
-endif
-ifeq ($(OSTYPE),cmd)
-	-IF EXIST $(LIBRARY_DIRECTORY)\    \
-          $(CHDIR) $(LIBRARY_DIRECTORY) && \
-          $(RM) *.*
-	-IF EXIST $(OBJECT_DIRECTORY)\                \
-          $(CHDIR) $(OBJECT_DIRECTORY)             && \
-          $(RM) *.*                                && \
-          $(RMDIR) ..\$(OBJECT_DIRECTORY)\ $(NULL)
-else
-	-$(RM) $(LIBRARY_DIRECTORY)/*
-	-$(RMDIR) $(OBJECT_DIRECTORY)/*
 endif
 	-$(RM) $(CLEAN_OBJECTS)
 
