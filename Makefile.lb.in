@@ -45,7 +45,7 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
 # GNATMAKE
 #
 
-INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I $(KERNEL_PARENT_PATH)/$(d))
+INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
 VPATH    := $(foreach d,$(INCLUDE_DIRECTORIES),$(KERNEL_PARENT_PATH)/$(d))
 
 ifeq      ($(LIBRARY_NAME),clibrary)
@@ -89,8 +89,8 @@ $(OBJ_DIRECTORY)/%.o: %.adb $(DEP_DIRECTORY)/%.d
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
 	@$(SED) -i -e "s|^\(.* : .*\)$$|$$(OBJ_DIRECTORY)/\1|" $(DEP_DIRECTORY_CMD)\$*.d
-	@$(call update-timestamp,$(DEP_DIRECTORY_CMD)\$*.ali)
-	@$(call update-timestamp,$(OBJ_DIRECTORY_CMD)\$*.o)
+	@$(UPDATETM) $(DEP_DIRECTORY_CMD)\$*.ali
+	@$(UPDATETM) $(OBJ_DIRECTORY_CMD)\$*.o
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
 ifeq ($(OSTYPE),darwin)
@@ -98,8 +98,8 @@ ifeq ($(OSTYPE),darwin)
 else
 	@$(SED) -i -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|" $(DEP_DIRECTORY)/$*.d
 endif
-	@$(call update-timestamp,$(DEP_DIRECTORY)/$*.ali)
-	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
+	@$(UPDATETM) $(DEP_DIRECTORY)/$*.ali
+	@$(UPDATETM) $(OBJ_DIRECTORY)/$*.o
 endif
 
 %.o: %.ads
@@ -123,8 +123,8 @@ $(OBJ_DIRECTORY)/%.o: %.ads $(DEP_DIRECTORY)/%.d
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
 	@$(SED) -i -e "s|^\(.* : .*\)$$|$$(OBJ_DIRECTORY)/\1|" $(DEP_DIRECTORY_CMD)\$*.d
-	@$(call update-timestamp,$(DEP_DIRECTORY_CMD)\$*.ali)
-	@$(call update-timestamp,$(OBJ_DIRECTORY_CMD)\$*.o)
+	@$(UPDATETM) $(DEP_DIRECTORY_CMD)\$*.ali
+	@$(UPDATETM) $(OBJ_DIRECTORY_CMD)\$*.o
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
 ifeq ($(OSTYPE),darwin)
@@ -132,8 +132,8 @@ ifeq ($(OSTYPE),darwin)
 else
 	@$(SED) -i -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|" $(DEP_DIRECTORY)/$*.d
 endif
-	@$(call update-timestamp,$(DEP_DIRECTORY)/$*.ali)
-	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
+	@$(UPDATETM) $(DEP_DIRECTORY)/$*.ali
+	@$(UPDATETM) $(OBJ_DIRECTORY)/$*.o
 endif
 
 %.o: %.S
@@ -154,7 +154,7 @@ ifeq ($(OSTYPE),cmd)
                 -e "s|^$(KERNEL_PARENT_PATH)\(/[^ :]*\)|$$(KERNEL_PARENT_PATH)\1|g"  \
                 -e "s| $(KERNEL_PARENT_PATH)\(/[^ :]*\)| $$(KERNEL_PARENT_PATH)\1|g" \
                 $(DEP_DIRECTORY_CMD)\$*.d
-	@$(call update-timestamp,$(OBJ_DIRECTORY_CMD)\$*.o)
+	@$(UPDATETM) $(OBJ_DIRECTORY_CMD)\$*.o
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
 ifeq ($(OSTYPE),darwin)
@@ -172,7 +172,7 @@ else
                 -e "s| $(KERNEL_PARENT_PATH)\(/[^ :]*\)| \$$(KERNEL_PARENT_PATH)\1|g" \
                 $(DEP_DIRECTORY)/$*.d
 endif
-	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
+	@$(UPDATETM) $(OBJ_DIRECTORY)/$*.o
 endif
 
 %.o: %.c
@@ -193,7 +193,7 @@ ifeq ($(OSTYPE),cmd)
                 -e "s|^$(KERNEL_PARENT_PATH)\(/[^ :]*\)|$$(KERNEL_PARENT_PATH)\1|g"  \
                 -e "s| $(KERNEL_PARENT_PATH)\(/[^ :]*\)| $$(KERNEL_PARENT_PATH)\1|g" \
                 $(DEP_DIRECTORY_CMD)\$*.d
-	@$(call update-timestamp,$(OBJ_DIRECTORY_CMD)\$*.o)
+	@$(UPDATETM) $(OBJ_DIRECTORY_CMD)\$*.o
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
 ifeq ($(OSTYPE),darwin)
@@ -211,7 +211,7 @@ else
                 -e "s| $(KERNEL_PARENT_PATH)\(/[^ :]*\)| \$$(KERNEL_PARENT_PATH)\1|g" \
                 $(DEP_DIRECTORY)/$*.d
 endif
-	@$(call update-timestamp,$(OBJ_DIRECTORY)/$*.o)
+	@$(UPDATETM) $(OBJ_DIRECTORY)/$*.o
 endif
 
 DEP_FILES := $(OBJECTS:%.o=%.d)

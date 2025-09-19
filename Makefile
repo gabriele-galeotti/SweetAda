@@ -951,7 +951,7 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
                     -D $(OBJECT_DIRECTORY)      \
                     $(foreach                   \
                       d,$(INCLUDE_DIRECTORIES), \
-                      -I $(d)                   \
+                      -I$(d)                    \
                       )                         \
                     main.adb                    \
         ,[GNATMAKE],main.adb)
@@ -985,7 +985,7 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
                     -O=gnatbind_objs.lst           \
                     $(foreach                      \
                       d,$(INCLUDE_DIRECTORIES),    \
-                      -I $(d)                      \
+                      -I$(d)                       \
                       )                            \
                     $(patsubst                     \
                       %,$(OBJECT_DIRECTORY)/%.ali, \
@@ -1114,7 +1114,7 @@ endif
 ifneq ($(OSTYPE),cmd)
 	@chmod a-x $@
 endif
-	$(call update-timestamp-reffile,$@,$(DOTSWEETADA))
+	$(UPDATETM) -r $@ $(DOTSWEETADA)
 	$(call brief-command, \
         $(OBJDUMP) -dx $@ > $(KERNEL_BASENAME).lst \
         ,[OBJDUMP],$(KERNEL_BASENAME).lst)
@@ -1261,7 +1261,7 @@ DOTSWEETADA_DEPS += $(PLATFORM_DIRECTORY)/$(LD_SCRIPT)
 ./$(DOTSWEETADA): $(DOTSWEETADA_DEPS)
 	$(MAKE) clean
 	$(configure-subdirs-command)
-	$(call update-timestamp,$@)
+	$(UPDATETM) $@
 
 .PHONY: configure-gnatadc
 configure-gnatadc: $(GNATADC_FILENAME)
@@ -1306,7 +1306,7 @@ configure-aux: $(CONFIGURE_AUX_DEPS)
 
 .PHONY: configure
 configure: clean clean-configure configure-aux infodump
-	$(call update-timestamp,$(DOTSWEETADA))
+	$(UPDATETM) $(DOTSWEETADA)
 
 .PHONY: infodump
 infodump:

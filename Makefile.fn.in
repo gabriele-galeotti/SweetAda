@@ -131,43 +131,6 @@ __ls-dirs-ts__ = ls -A -d */
 ls-dirs = $(foreach d,$(call __ls-dirs-ts__),$(patsubst %/,%,$(d)))
 endif
 
-# UPDATETM (in cmd context) is the only non-native OS utility that should be
-# defined (usually via Makefile.ut.in) at the time of the inclusion; in order
-# to silence this warning, either define it properly or set UPDATETM := $(REM)
-ifeq ($(OSTYPE),cmd)
-ifeq ($(UPDATETM),)
-$(warning *** Warning: UPDATETM not defined.)
-endif
-endif
-
-#
-# update-timestamp
-#
-# Usage:
-# $(call update-timestamp,filename)
-#
-# Update a file timestamp using current datetime.
-#
-ifeq ($(OSTYPE),cmd)
-update-timestamp = $(UPDATETM) $1
-else
-update-timestamp = touch -c $1
-endif
-
-#
-# update-timestamp-reffile
-#
-# Usage:
-# $(call update-timestamp-reffile,reference_filename,filename)
-#
-# Update a file timestamp using a file reference.
-#
-ifeq ($(OSTYPE),cmd)
-update-timestamp-reffile = $(UPDATETM) -r $1 $2
-else
-update-timestamp-reffile = touch -c -r $1 $2
-endif
-
 #
 # create-emptyfile
 #
