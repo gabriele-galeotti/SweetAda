@@ -101,16 +101,16 @@ ifeq ($(OSTYPE),cmd)
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
 ifeq ($(OSTYPE),darwin)
-	@$(SED)                                                             \
-                -i ''                                                       \
-                -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|"               \
-                -e "s| $(KERNEL_PARENT_PATH_SED)| $$(KERNEL_PARENT_PATH)|g" \
+	@$(SED)                                                              \
+                -i ''                                                        \
+                -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|"                \
+                -e "s| $(KERNEL_PARENT_PATH_SED)| \$$(KERNEL_PARENT_PATH)|g" \
                 $(DEP_DIRECTORY)/$*.d
 else
-	@$(SED)                                                             \
-                -i                                                          \
-                -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|"               \
-                -e "s| $(KERNEL_PARENT_PATH_SED)| $$(KERNEL_PARENT_PATH)|g" \
+	@$(SED)                                                              \
+                -i                                                           \
+                -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|"                \
+                -e "s| $(KERNEL_PARENT_PATH_SED)| \$$(KERNEL_PARENT_PATH)|g" \
                 $(DEP_DIRECTORY)/$*.d
 endif
 	@$(UPDATETM) $(DEP_DIRECTORY)/$*.ali
@@ -147,16 +147,16 @@ ifeq ($(OSTYPE),cmd)
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
 ifeq ($(OSTYPE),darwin)
-	@$(SED)                                                             \
-                -i ''                                                       \
-                -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|"               \
-                -e "s| $(KERNEL_PARENT_PATH_SED)| $$(KERNEL_PARENT_PATH)|g" \
+	@$(SED)                                                              \
+                -i ''                                                        \
+                -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|"                \
+                -e "s| $(KERNEL_PARENT_PATH_SED)| \$$(KERNEL_PARENT_PATH)|g" \
                 $(DEP_DIRECTORY)/$*.d
 else
-	@$(SED)                                                             \
-                -i                                                          \
-                -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|"               \
-                -e "s| $(KERNEL_PARENT_PATH_SED)| $$(KERNEL_PARENT_PATH)|g" \
+	@$(SED)                                                              \
+                -i                                                           \
+                -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|"                \
+                -e "s| $(KERNEL_PARENT_PATH_SED)| \$$(KERNEL_PARENT_PATH)|g" \
                 $(DEP_DIRECTORY)/$*.d
 endif
 	@$(UPDATETM) $(DEP_DIRECTORY)/$*.ali
