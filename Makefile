@@ -39,18 +39,20 @@ MAKEFILE_MASTER_INCLUDED := Y
 
 .DEFAULT_GOAL := help
 
-# verbose output, "Y/y/1" = enabled
+# default kernel basename
+KERNEL_BASENAME := kernel
+
+# initialize configuration dependencies
+CONFIGURE_DEPS :=
+
+# verbose mode, "Y"/"y"/"1" = enabled
 VERBOSE ?=
 override VERBOSE := $(subst y,Y,$(subst 1,y,$(VERBOSE)))
 export VERBOSE
 
-KERNEL_BASENAME := kernel
-
-CONFIGURE_DEPS :=
-
 ################################################################################
 #                                                                              #
-# Partitioning of Makefile goals.                                              #
+# Partitioning and check of Makefile goals.                                    #
 #                                                                              #
 ################################################################################
 
@@ -146,6 +148,21 @@ ifneq ($(NOT_MAKEFILE_GOALS),)
 $(error Error: $(NOT_MAKEFILE_GOALS): no known Makefile target, try "make help")
 endif
 
+# when PROBEVARIABLE_GOALS are active, do not execute other targets
+ifneq ($(filter probevariable probevariables,$(MAKECMDGOALS)),)
+ifneq ($(words $(MAKECMDGOALS)),1)
+$(error Error: no multiple targets can be specified)
+endif
+endif
+
+# add silent operation in non-verbose mode, except when building utilities
+ifneq ($(VERBOSE),Y)
+ifeq ($(filter $(MAKECMDGOALS),$(LIBUTILS_GOALS)),)
+MAKEFLAGS += s
+endif
+GNUMAKEFLAGS += --no-print-directory
+endif
+
 ################################################################################
 #                                                                              #
 # Setup directories and utilities.                                             #
@@ -175,7 +192,7 @@ PATH := $(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY):$(PATH)
 endif
 export PATH
 
-# include build system utilities
+# load build system utilities
 include Makefile.ut.in
 CONFIGURE_DEPS += Makefile.ut.in
 # load complex functions
@@ -195,14 +212,6 @@ endif
 # Setup finalization.                                                          #
 #                                                                              #
 ################################################################################
-
-# check for RTS build
-ifeq ($(MAKECMDGOALS),rts)
-# before loading configuration.in (which defines the RTS type used by the
-# platform), save the RTS variable from the environment in order to correctly
-# build the RTS specified when issuing the "rts" target
-RTS_BUILD := $(RTS)
-endif
 
 # build flag and version control
 DOTSWEETADA := .sweetada
@@ -231,6 +240,14 @@ CLEAN_OBJECTS_COMMON     := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst \
                             *.map *.o *.out* *.srec *.td *.tmp
 DISTCLEAN_OBJECTS_COMMON := $(GNATADC_FILENAME)      \
                             $(CONFIGUREGPR_FILENAME)
+
+# check for RTS build
+ifeq ($(MAKECMDGOALS),rts)
+# before set a default RTS and loading configuration.in (which defines the RTS
+# type used by the platform), save the RTS variable from the environment in
+# order to correctly build the RTS specified when issuing the "rts" target
+RTS_BUILD := $(RTS)
+endif
 
 # default system parameters
 TOOLCHAIN_PREFIX   :=
@@ -292,14 +309,6 @@ endif
 # export PATH so that we can use everything
 export PATH
 
-# add silent operation in non-verbose mode, except when building utilities
-ifneq ($(VERBOSE),Y)
-GNUMAKEFLAGS += --no-print-directory
-ifeq ($(filter $(MAKECMDGOALS),$(LIBUTILS_GOALS)),)
-MAKEFLAGS += s
-endif
-endif
-
 ################################################################################
 #                                                                              #
 # Physical geometry of the build system.                                       #
@@ -319,36 +328,27 @@ OBJECT_DIRECTORY        := obj
 RTS_DIRECTORY           := rts
 SHARE_DIRECTORY         := share
 
-# PLATFORMS and CPUs
+# PLATFORMs - CPUs - RTSes
 ifeq ($(OSTYPE),cmd)
 PLATFORMS := $(shell $(CHDIR) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs) 2>nul)
 CPUS      := $(shell $(CHDIR) $(CPU_BASE_DIRECTORY) && $(call ls-dirs) 2>nul)
+RTSES     := $(shell                                  \
+               SET "VERBOSE="                      && \
+               SET "PATH=$(PATH)"                  && \
+               SET "KERNEL_PARENT_PATH=.."         && \
+               "$(MAKE)" -C $(RTS_DIRECTORY)          \
+                 PROBEVARIABLE=RTSES probevariable    \
+               2>nul)
 else
 PLATFORMS := $(shell ($(CHDIR) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
 CPUS      := $(shell ($(CHDIR) $(CPU_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
-endif
-
-# RTSes
-ifeq ($(OSTYPE),cmd)
-RTSES := $(shell                                  \
-           SET "VERBOSE="                      && \
-           SET "MAKEFLAGS=s"                   && \
-           SET "GNUMAKEFLAGS=$(GNUMAKEFLAGS)"  && \
-           SET "PATH=$(PATH)"                  && \
-           SET "KERNEL_PARENT_PATH=.."         && \
-           "$(MAKE)" -C $(RTS_DIRECTORY)          \
-             PROBEVARIABLE=RTSES probevariable    \
-           2>nul)
-else
-RTSES := $(shell                               \
-           VERBOSE=                            \
-           MAKEFLAGS=s                         \
-           GNUMAKEFLAGS="$(GNUMAKEFLAGS)"      \
-           PATH="$(PATH)"                      \
-           KERNEL_PARENT_PATH=..               \
-           "$(MAKE)" -C $(RTS_DIRECTORY)       \
-             PROBEVARIABLE=RTSES probevariable \
-           2> /dev/null)
+RTSES     := $(shell                               \
+               VERBOSE=                            \
+               PATH="$(PATH)"                      \
+               KERNEL_PARENT_PATH=..               \
+               "$(MAKE)" -C $(RTS_DIRECTORY)       \
+                 PROBEVARIABLE=RTSES probevariable \
+               2> /dev/null)
 endif
 
 ################################################################################
@@ -810,8 +810,6 @@ ifeq ($(OSTYPE),cmd)
 $(foreach s,                                                    \
   $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell            \
     SET "VERBOSE="                                           && \
-    SET "MAKEFLAGS=s"                                        && \
-    SET "GNUMAKEFLAGS=$(GNUMAKEFLAGS)"                       && \
     SET "PATH=$(PATH)"                                       && \
     SET "KERNEL_PARENT_PATH=.."                              && \
     SET "RTS=$(RTS)"                                         && \
@@ -824,8 +822,6 @@ else
 $(foreach s,                                                        \
   $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell                \
     VERBOSE=                                                        \
-    MAKEFLAGS=s                                                     \
-    GNUMAKEFLAGS="$(GNUMAKEFLAGS)"                                  \
     PATH="$(PATH)"                                                  \
     KERNEL_PARENT_PATH=..                                           \
     RTS=$(RTS)                                                      \
@@ -1032,25 +1028,44 @@ else
 endif
 endif
 ifeq      ($(OSTYPE),cmd)
-	@$(SED) -i                                                \
-                -e "s|\\|/|g" -e "s| |\\ |g"                      \
-                $(foreach u,$(IMPLICIT_ALI_UNITS),-e "/$(u).o/d") \
-                gnatbind_objs.lst
+	$(call create-emptyfile,gnatbind_objs.lst.tmp)
+ifeq      ($(BUILD_MODE),GNATMAKE)
+	@FOR /F %%U IN (gnatbind_objs.lst) DO                                     \
+          (                                                                       \
+           ECHO $(foreach u,$(IMPLICIT_ALI_UNITS),$(OBJECT_DIRECTORY)/$(u).o)|    \
+           %SystemRoot%\System32\findstr.exe >nul "%%U"                        || \
+           (CALL REM & ECHO %%U>>gnatbind_objs.lst.tmp)                           \
+          )
+else ifeq ($(BUILD_MODE),GPRbuild)
+	@SETLOCAL ENABLEDELAYEDEXPANSION                                             && \
+        SET "PWD=$(shell ECHO %CD%)" && SET "PWD=%PWD:\=/%" && SET "PWD=%PWD: =\ /%" && \
+        FOR /F %%U IN (gnatbind_objs.lst) DO                                            \
+          (                                                                             \
+           SET "U1=%%U" && SET "U2=!U1:\=/!" && SET "U3=!U2: =\ !"                   && \
+           ECHO $(foreach u,$(IMPLICIT_ALI_UNITS),%PWD%/$(OBJECT_DIRECTORY)/$(u).o)|    \
+           %SystemRoot%\System32\findstr.exe >nul "!U3!"                             || \
+           (CALL REM & ECHO !U3!>>gnatbind_objs.lst.tmp)                                \
+          )
+endif
+	-@$(MV) .\gnatbind_objs.lst.tmp .\gnatbind_objs.lst
 else ifeq ($(OSTYPE),msys)
-	@$(SED) -i                                                \
-                -e "s|\\\\|/|g" -e "s| |\\\\ |g"                  \
-                $(foreach u,$(IMPLICIT_ALI_UNITS),-e "/$(u).o/d") \
-                gnatbind_objs.lst
+	@sed                                                   \
+             -i                                                \
+             -e "s|\\\\|/|g" -e "s| |\\\\ |g"                  \
+             $(foreach u,$(IMPLICIT_ALI_UNITS),-e "/$(u).o/d") \
+             gnatbind_objs.lst
 else ifeq ($(OSTYPE),darwin)
-	@$(SED) -i ''                                             \
-                -e "s| |\\\\ |g"                                  \
-                $(foreach u,$(IMPLICIT_ALI_UNITS),-e "/$(u).o/d") \
-                gnatbind_objs.lst
+	@sed                                                   \
+             -i ''                                             \
+             -e "s| |\\\\ |g"                                  \
+             $(foreach u,$(IMPLICIT_ALI_UNITS),-e "/$(u).o/d") \
+             gnatbind_objs.lst
 else
-	@$(SED) -i                                                \
-                -e "s| |\\\\ |g"                                  \
-                $(foreach u,$(IMPLICIT_ALI_UNITS),-e "/$(u).o/d") \
-                gnatbind_objs.lst
+	@sed                                                   \
+             -i                                                \
+             -e "s| |\\\\ |g"                                  \
+             $(foreach u,$(IMPLICIT_ALI_UNITS),-e "/$(u).o/d") \
+             gnatbind_objs.lst
 endif
 
 #
@@ -1534,11 +1549,6 @@ endif
 #
 .PHONY: tools-check
 tools-check:
-ifeq ($(OSTYPE),darwin)
-	$(ECHO) "sed" | $(SED)
-else
-	$(SED) --version | $(SED) -n "1p"
-endif
 	$(GCC_WRAPPER) -v
 	$(GNAT_WRAPPER) -v
 ifeq ($(USE_ELFTOOL),Y)

@@ -11,7 +11,6 @@
 #
 # Environment variables:
 # OSTYPE
-# SED
 # BUILD_MODE
 # KERNEL_PARENT_PATH
 # LIB_DIRECTORY
@@ -71,47 +70,54 @@ $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a: $(OBJECTS)
         $(RANLIB) $@ \
         ,[RANLIB],$(notdir $@))
 
+define compile-gnatmake =
+$(call brief-command, \
+$(GNATMAKE)                                                   \
+            -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
+            -D $(OBJ_DIRECTORY)                               \
+            $(GCC_SWITCHES_LIBRARY)                           \
+            -c $(INCLUDES) $<                                 \
+,[GNATMAKE],$(notdir $<))
+endef
+
+define compile-gnatmake-deps =
+$(call brief-command, \
+$(GNATMAKE_DEPEND)                                                   \
+                   -M                                                \
+                   -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
+                   -D $(OBJ_DIRECTORY)                               \
+                   $(GCC_SWITCHES_LIBRARY)                           \
+                   -c $(INCLUDES) $<                                 \
+                   > $(DEP_DIRECTORY)/$*.td                          \
+,[GNATMAKE-D],$*.d)
+endef
+
 %.o: %.adb
 $(OBJ_DIRECTORY)/%.o: %.adb $(DEP_DIRECTORY)/%.d
-	$(call brief-command, \
-        $(GNATMAKE)                                                   \
-                    -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
-                    -D $(OBJ_DIRECTORY)                               \
-                    $(GCC_SWITCHES_LIBRARY)                           \
-                    -c $(INCLUDES) $<                                 \
-        ,[GNATMAKE],$(notdir $<))
-	$(call brief-command, \
-        $(GNATMAKE_DEPEND)                                                   \
-                           -M                                                \
-                           -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
-                           -D $(OBJ_DIRECTORY)                               \
-                           $(GCC_SWITCHES_LIBRARY)                           \
-                           -c $(INCLUDES) $<                                 \
-                           > $(DEP_DIRECTORY)/$*.td                          \
-        ,[GNATMAKE-D],$*.d)
+	$(compile-gnatmake)
+	$(compile-gnatmake-deps)
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
-	@$(SED)                                                             \
-                -i                                                          \
-                -e "s|^\(.* : .*\)$$|$$(OBJ_DIRECTORY)/\1|"                 \
-                -e "s| $(KERNEL_PARENT_PATH_SED)| $$(KERNEL_PARENT_PATH)|g" \
-                $(DEP_DIRECTORY_CMD)\$*.d
+	@adjmakedeps.bat                            \
+                         -tap +                     \
+                         -kpp $(KERNEL_PARENT_PATH) \
+                         $(DEP_DIRECTORY_CMD)\$*.d
 	@$(UPDATETM) $(DEP_DIRECTORY_CMD)\$*.ali
 	@$(UPDATETM) $(OBJ_DIRECTORY_CMD)\$*.o
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
 ifeq ($(OSTYPE),darwin)
-	@$(SED)                                                              \
-                -i ''                                                        \
-                -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|"                \
-                -e "s| $(KERNEL_PARENT_PATH_SED)| \$$(KERNEL_PARENT_PATH)|g" \
-                $(DEP_DIRECTORY)/$*.d
+	@sed                                                              \
+             -i ''                                                        \
+             -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|"                \
+             -e "s| $(KERNEL_PARENT_PATH_SED)| \$$(KERNEL_PARENT_PATH)|g" \
+             $(DEP_DIRECTORY)/$*.d
 else
-	@$(SED)                                                              \
-                -i                                                           \
-                -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|"                \
-                -e "s| $(KERNEL_PARENT_PATH_SED)| \$$(KERNEL_PARENT_PATH)|g" \
-                $(DEP_DIRECTORY)/$*.d
+	@sed                                                              \
+             -i                                                           \
+             -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|"                \
+             -e "s| $(KERNEL_PARENT_PATH_SED)| \$$(KERNEL_PARENT_PATH)|g" \
+             $(DEP_DIRECTORY)/$*.d
 endif
 	@$(UPDATETM) $(DEP_DIRECTORY)/$*.ali
 	@$(UPDATETM) $(OBJ_DIRECTORY)/$*.o
@@ -119,124 +125,102 @@ endif
 
 %.o: %.ads
 $(OBJ_DIRECTORY)/%.o: %.ads $(DEP_DIRECTORY)/%.d
-	$(call brief-command, \
-        $(GNATMAKE)                                                   \
-                    -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
-                    -D $(OBJ_DIRECTORY)                               \
-                    $(GCC_SWITCHES_LIBRARY)                           \
-                    -c $(INCLUDES) $<                                 \
-        ,[GNATMAKE],$(notdir $<))
-	$(call brief-command, \
-        $(GNATMAKE_DEPEND)                                                   \
-                           -M                                                \
-                           -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
-                           -D $(OBJ_DIRECTORY)                               \
-                           $(GCC_SWITCHES_LIBRARY)                           \
-                           -c $(INCLUDES) $<                                 \
-                           > $(DEP_DIRECTORY)/$*.td                          \
-        ,[GNATMAKE-D],$*.d)
+	$(compile-gnatmake)
+	$(compile-gnatmake-deps)
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
-	@$(SED)                                                             \
-                -i                                                          \
-                -e "s|^\(.* : .*\)$$|$$(OBJ_DIRECTORY)/\1|"                 \
-                -e "s| $(KERNEL_PARENT_PATH_SED)| $$(KERNEL_PARENT_PATH)|g" \
-                $(DEP_DIRECTORY_CMD)\$*.d
+	@adjmakedeps.bat                            \
+                         -tap +                     \
+                         -kpp $(KERNEL_PARENT_PATH) \
+                         $(DEP_DIRECTORY_CMD)\$*.d
 	@$(UPDATETM) $(DEP_DIRECTORY_CMD)\$*.ali
 	@$(UPDATETM) $(OBJ_DIRECTORY_CMD)\$*.o
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
 ifeq ($(OSTYPE),darwin)
-	@$(SED)                                                              \
-                -i ''                                                        \
-                -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|"                \
-                -e "s| $(KERNEL_PARENT_PATH_SED)| \$$(KERNEL_PARENT_PATH)|g" \
-                $(DEP_DIRECTORY)/$*.d
+	@sed                                                              \
+             -i ''                                                        \
+             -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|"                \
+             -e "s| $(KERNEL_PARENT_PATH_SED)| \$$(KERNEL_PARENT_PATH)|g" \
+             $(DEP_DIRECTORY)/$*.d
 else
-	@$(SED)                                                              \
-                -i                                                           \
-                -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|"                \
-                -e "s| $(KERNEL_PARENT_PATH_SED)| \$$(KERNEL_PARENT_PATH)|g" \
-                $(DEP_DIRECTORY)/$*.d
+	@sed                                                              \
+             -i                                                           \
+             -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|"                \
+             -e "s| $(KERNEL_PARENT_PATH_SED)| \$$(KERNEL_PARENT_PATH)|g" \
+             $(DEP_DIRECTORY)/$*.d
 endif
 	@$(UPDATETM) $(DEP_DIRECTORY)/$*.ali
 	@$(UPDATETM) $(OBJ_DIRECTORY)/$*.o
 endif
 
+define compile-asmcpp =
+$(call brief-command, \
+$(CC)                            \
+      -o $@                      \
+      -MT $@ -MMD -MP            \
+      -MF $(DEP_DIRECTORY)/$*.td \
+      $(GCC_SWITCHES_LIBRARY)    \
+      -c $(INCLUDES) $<          \
+,[CC/AS],$(notdir $<))
+endef
+
 %.o: %.S
 $(OBJ_DIRECTORY)/%.o: %.S $(DEP_DIRECTORY)/%.d
-	$(call brief-command, \
-        $(CC)                            \
-              -o $@                      \
-              -MT $@ -MMD -MP            \
-              -MF $(DEP_DIRECTORY)/$*.td \
-              $(GCC_SWITCHES_LIBRARY)    \
-              -c $(INCLUDES) $<          \
-        ,[CC/AS],$(notdir $<))
+	$(compile-asmcpp)
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
-	@$(SED)                                                                          \
-                -i                                                                       \
-                -e "s|^$(OBJ_DIRECTORY_SED)\(.* *: .*\)$$|$$(OBJ_DIRECTORY)\1|"          \
-                -e "s|^$(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)|$$(KERNEL_PARENT_PATH)\1|g"  \
-                -e "s| $(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)| $$(KERNEL_PARENT_PATH)\1|g" \
-                $(DEP_DIRECTORY_CMD)\$*.d
+	@adjmakedeps.bat                            \
+                         -tap $(OBJ_DIRECTORY)      \
+                         -kpp $(KERNEL_PARENT_PATH) \
+                         $(DEP_DIRECTORY_CMD)\$*.d
 	@$(UPDATETM) $(OBJ_DIRECTORY_CMD)\$*.o
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
 ifeq ($(OSTYPE),darwin)
-	@$(SED)                                                                           \
-                -i ''                                                                     \
-                -e "s|^$(OBJ_DIRECTORY_SED)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|"         \
-                -e "s|^$(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)|\$$(KERNEL_PARENT_PATH)\1|g"  \
-                -e "s| $(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)| \$$(KERNEL_PARENT_PATH)\1|g" \
-                $(DEP_DIRECTORY)/$*.d
+	@sed                                                                           \
+             -i ''                                                                     \
+             -e "s|^$(OBJ_DIRECTORY_SED)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|"         \
+             -e "s|^$(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)|\$$(KERNEL_PARENT_PATH)\1|g"  \
+             -e "s| $(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)| \$$(KERNEL_PARENT_PATH)\1|g" \
+             $(DEP_DIRECTORY)/$*.d
 else
-	@$(SED)                                                                           \
-                -i                                                                        \
-                -e "s|^$(OBJ_DIRECTORY_SED)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|"         \
-                -e "s|^$(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)|\$$(KERNEL_PARENT_PATH)\1|g"  \
-                -e "s| $(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)| \$$(KERNEL_PARENT_PATH)\1|g" \
-                $(DEP_DIRECTORY)/$*.d
+	@sed                                                                           \
+             -i                                                                        \
+             -e "s|^$(OBJ_DIRECTORY_SED)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|"         \
+             -e "s|^$(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)|\$$(KERNEL_PARENT_PATH)\1|g"  \
+             -e "s| $(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)| \$$(KERNEL_PARENT_PATH)\1|g" \
+             $(DEP_DIRECTORY)/$*.d
 endif
 	@$(UPDATETM) $(OBJ_DIRECTORY)/$*.o
 endif
 
 %.o: %.c
 $(OBJ_DIRECTORY)/%.o: %.c $(DEP_DIRECTORY)/%.d
-	$(call brief-command, \
-        $(CC)                            \
-              -o $@                      \
-              -MT $@ -MMD -MP            \
-              -MF $(DEP_DIRECTORY)/$*.td \
-              $(GCC_SWITCHES_LIBRARY)    \
-              -c $(INCLUDES) $<          \
-        ,[CC/AS],$(notdir $<))
+	$(compile-asmcpp)
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
-	@$(SED)                                                                          \
-                -i                                                                       \
-                -e "s|^$(OBJ_DIRECTORY_SED)\(.* *: .*\)$$|$$(OBJ_DIRECTORY)\1|"          \
-                -e "s|^$(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)|$$(KERNEL_PARENT_PATH)\1|g"  \
-                -e "s| $(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)| $$(KERNEL_PARENT_PATH)\1|g" \
-                $(DEP_DIRECTORY_CMD)\$*.d
+	@adjmakedeps.bat                            \
+                         -tap $(OBJ_DIRECTORY)      \
+                         -kpp $(KERNEL_PARENT_PATH) \
+                         $(DEP_DIRECTORY_CMD)\$*.d
 	@$(UPDATETM) $(OBJ_DIRECTORY_CMD)\$*.o
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
 ifeq ($(OSTYPE),darwin)
-	@$(SED)                                                                           \
-                -i ''                                                                     \
-                -e "s|^$(OBJ_DIRECTORY_SED)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|"         \
-                -e "s|^$(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)|\$$(KERNEL_PARENT_PATH)\1|g"  \
-                -e "s| $(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)| \$$(KERNEL_PARENT_PATH)\1|g" \
-                $(DEP_DIRECTORY)/$*.d
+	@sed                                                                           \
+             -i ''                                                                     \
+             -e "s|^$(OBJ_DIRECTORY_SED)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|"         \
+             -e "s|^$(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)|\$$(KERNEL_PARENT_PATH)\1|g"  \
+             -e "s| $(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)| \$$(KERNEL_PARENT_PATH)\1|g" \
+             $(DEP_DIRECTORY)/$*.d
 else
-	@$(SED)                                                                           \
-                -i                                                                        \
-                -e "s|^$(OBJ_DIRECTORY_SED)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|"         \
-                -e "s|^$(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)|\$$(KERNEL_PARENT_PATH)\1|g"  \
-                -e "s| $(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)| \$$(KERNEL_PARENT_PATH)\1|g" \
-                $(DEP_DIRECTORY)/$*.d
+	@sed                                                                           \
+             -i                                                                        \
+             -e "s|^$(OBJ_DIRECTORY_SED)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|"         \
+             -e "s|^$(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)|\$$(KERNEL_PARENT_PATH)\1|g"  \
+             -e "s| $(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)| \$$(KERNEL_PARENT_PATH)\1|g" \
+             $(DEP_DIRECTORY)/$*.d
 endif
 	@$(UPDATETM) $(OBJ_DIRECTORY)/$*.o
 endif

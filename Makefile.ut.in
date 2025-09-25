@@ -20,8 +20,6 @@
 ifneq ($(MAKEFILE_UT_IN_INCLUDED),Y)
 MAKEFILE_UT_IN_INCLUDED := Y
 
-SED := sed$(EXEEXT)
-
 ifeq      ($(OSTYPE),cmd)
 ELFTOOL      := elftool-win$(EXEEXT)
 GCC_WRAPPER  := gcc-wrapper-win$(EXEEXT)
@@ -74,12 +72,11 @@ PROCESSCFG         := processcfg$(SCREXT)
 RMSYMLINK          := rmsymlink$(SCREXT)
 UPDATETM           := updatetm$(SCREXT)
 ifeq ($(OSTYPE),cmd)
+ADJMAKEDEPS        := adjmakedeps$(SCREXT)
 DOS2UNIX           := dos2unix$(SCREXT)
 endif
 endif
 
-# used throughout the build system
-export SED
 # needed by GPRbuild
 export GCC_WRAPPER
 # needed by RTS Makefile

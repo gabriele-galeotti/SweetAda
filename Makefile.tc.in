@@ -14,7 +14,6 @@
 # PATH
 # EXEEXT
 # SCREXT
-# SED
 # VERBOSE
 # PLATFORM_GOALS
 # MAKECMDGOALS
@@ -240,8 +239,6 @@ ifeq ($(OSTYPE),cmd)
 $(foreach s,                                                               \
   $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell                       \
     SET "VERBOSE="                                                      && \
-    SET "MAKEFLAGS=s"                                                   && \
-    SET "GNUMAKEFLAGS=$(GNUMAKEFLAGS)"                                  && \
     SET "PATH=$(PATH)"                                                  && \
     SET "KERNEL_PARENT_PATH=.."                                         && \
     SET "CPU=$(CPU)"                                                    && \
@@ -255,8 +252,6 @@ else
 $(foreach s,                                                            \
   $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell                    \
     VERBOSE=                                                            \
-    MAKEFLAGS=s                                                         \
-    GNUMAKEFLAGS="$(GNUMAKEFLAGS)"                                      \
     PATH="$(PATH)"                                                      \
     KERNEL_PARENT_PATH=..                                               \
     CPU=$(CPU)                                                          \
