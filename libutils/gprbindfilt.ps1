@@ -93,7 +93,7 @@ foreach ($textline in $input)
     $exit_status = [int]$textlinearray[1]
     break
   }
-  if     ($textline.StartsWith("ELABORATION ORDER DEPENDENCIES"))
+  if ($textline.StartsWith("ELABORATION ORDER DEPENDENCIES"))
   {
     $elaboration = $true
     $elaboration_order_deps = $true
@@ -130,7 +130,7 @@ foreach ($textline in $input)
           New-Item -Name $elaboration_filename -ItemType File | Out-Null
         }
         $print = "FILE"
-        if     ($elaboration_order)
+        if ($elaboration_order)
         {
           $state = 2
         }

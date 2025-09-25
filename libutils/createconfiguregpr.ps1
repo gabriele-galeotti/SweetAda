@@ -205,7 +205,7 @@ function LFPL_list
   $LFPL = ""
   foreach ($f in $list.Split(" "))
   {
-     if     ($f.Trim().EndsWith(".S") -and -not $LFP_S_files)
+     if ($f.Trim().EndsWith(".S") -and -not $LFP_S_files)
      {
        $LFP_S_files = $true
        if ($LFPL.Length -gt 0)
