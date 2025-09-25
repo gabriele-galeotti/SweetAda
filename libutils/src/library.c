@@ -1510,7 +1510,7 @@ execute_exec(execute_t this)
                  * Note that we are in the parent process, and the child exit
                  * status (the child_exit_status field) can be one of:
                  * 0      exited normally
-                 * != 0   exited with errors (value is child''s decision)
+                 * != 0   exited with errors (value is child's decision)
                  * 126    command found but not executable (Bash convention)
                  * 127    command not found
                  * >= 128 terminated abnormally by a signal
