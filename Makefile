@@ -1236,8 +1236,8 @@ all: kernel_start       \
 # files (subsequent "configure" phase needs all target files in place)
 .PHONY: createkernelcfg
 createkernelcfg: kernel_lib_obj_dir
+ifneq ($(filter $(PLATFORM),$(PLATFORMS)),)
 	-$(MAKE) distclean
-ifneq ($(PLATFORM),)
 	@$(RM) $(KERNEL_CFGFILE)
 	@$(call echo-print,"PLATFORM := $(PLATFORM)")> $(KERNEL_CFGFILE)
 ifneq ($(SUBPLATFORM),)
