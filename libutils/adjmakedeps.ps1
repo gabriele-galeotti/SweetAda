@@ -145,7 +145,7 @@ for ($idx = 0; $idx -lt $textlines.Length; $idx++)
 
 try
 {
-  $textlines | Out-File -FilePath $depfile_filename
+  $textlines | Out-File -Encoding utf8 -FilePath $depfile_filename
 }
 catch
 {
