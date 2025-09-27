@@ -1322,8 +1322,159 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 14.2.1 A/D Data Registers A–D (ADDRA–ADDRD)
+
+   ADDRA_ADDRESS : constant := 16#05FF_FEE0#;
+
+   ADDRAH : aliased Unsigned_8
+      with Address              => System'To_Address (ADDRA_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADDRAL : aliased Unsigned_8
+      with Address              => System'To_Address (ADDRA_ADDRESS + 1),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADDRA : aliased Unsigned_16
+      with Address              => System'To_Address (ADDRA_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADDRB_ADDRESS : constant := 16#05FF_FEE2#;
+
+   ADDRBH : aliased Unsigned_8
+      with Address              => System'To_Address (ADDRB_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADDRBL : aliased Unsigned_8
+      with Address              => System'To_Address (ADDRB_ADDRESS + 1),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADDRB : aliased Unsigned_16
+      with Address              => System'To_Address (ADDRB_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADDRC_ADDRESS : constant := 16#05FF_FEE4#;
+
+   ADDRCH : aliased Unsigned_8
+      with Address              => System'To_Address (ADDRC_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADDRCL : aliased Unsigned_8
+      with Address              => System'To_Address (ADDRC_ADDRESS + 1),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADDRC : aliased Unsigned_16
+      with Address              => System'To_Address (ADDRC_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADDRD_ADDRESS : constant := 16#05FF_FEE6#;
+
+   ADDRDH : aliased Unsigned_8
+      with Address              => System'To_Address (ADDRD_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADDRDL : aliased Unsigned_8
+      with Address              => System'To_Address (ADDRD_ADDRESS + 1),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADDRD : aliased Unsigned_16
+      with Address              => System'To_Address (ADDRD_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 14.2.2 A/D Control/Status Register (ADCSR)
+
+   -- Single Mode
+   CH_SINGLE_AN0  : constant := 2#000#; -- AN0
+   CH_SINGLE_AN1  : constant := 2#001#; -- AN1
+   CH_SINGLE_AN2  : constant := 2#010#; -- AN2
+   CH_SINGLE_AN3  : constant := 2#011#; -- AN3
+   CH_SINGLE_AN4  : constant := 2#100#; -- AN4
+   CH_SINGLE_AN5  : constant := 2#101#; -- AN5
+   CH_SINGLE_AN6  : constant := 2#110#; -- AN6
+   CH_SINGLE_AN7  : constant := 2#111#; -- AN7
+   -- Scan Mode
+   CH_SCAN_AN0    : constant := 2#000#; -- AN0
+   CH_SCAN_AN01   : constant := 2#001#; -- AN0 and AN1
+   CH_SCAN_AN012  : constant := 2#010#; -- AN0–AN2
+   CH_SCAN_AN0123 : constant := 2#011#; -- AN0–AN3
+   CH_SCAN_AN4    : constant := 2#100#; -- AN4
+   CH_SCAN_AN45   : constant := 2#101#; -- AN4 and AN5
+   CH_SCAN_AN456  : constant := 2#110#; -- AN4–AN6
+   CH_SCAN_AN4567 : constant := 2#111#; -- AN4–AN7
+
+   CKS_266 : constant := 0; -- Conversion time = 266 states (maximum)
+   CKS_134 : constant := 1; -- Conversion time = 134 states (maximum)
+
+   SCAN_SINGLE : constant := 0; -- Single mode
+   SCAN_SCAN   : constant := 1; -- Scan mode
+
+   type ADCSR_Type is record
+      CH   : Bits_3  := CH_SINGLE_AN0; -- Channel Select
+      CKS  : Bits_1  := CKS_266;       -- Clock Select
+      SCAN : Bits_1  := SCAN_SINGLE;   -- Scan Mode
+      ADST : Boolean := False;         -- A/D Start
+      ADIE : Boolean := False;         -- A/D Interrupt Enable
+      ADF  : Boolean := True;          -- A/D End Flag
+   end record
+      with Size => 8;
+   for ADCSR_Type use record
+      CH   at 0 range 0 .. 2;
+      CKS  at 0 range 3 .. 3;
+      SCAN at 0 range 4 .. 4;
+      ADST at 0 range 5 .. 5;
+      ADIE at 0 range 6 .. 6;
+      ADF  at 0 range 7 .. 7;
+   end record;
+
+   ADCSR_ADDRESS : constant := 16#05FF_FEE8#;
+
+   ADCSR : aliased Unsigned_8
+      with Address              => System'To_Address (ADCSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 14.2.3 A/D Control Register (ADCR)
+
+   type ADCR_Type is record
+      TRGE     : Boolean := False;      -- Trigger Enable
+      Reserved : Bits_7  := 2#1111111#;
+   end record
+      with Size => 8;
+   for ADCR_Type use record
+      TRGE     at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 7;
+   end record;
+
+   ADCR_ADDRESS : constant := 16#05FF_FEE9#;
+
+   ADCR : aliased Unsigned_8
+      with Address              => System'To_Address (ADCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Section 15 Pin Function Controller (PFC)
