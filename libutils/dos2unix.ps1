@@ -11,7 +11,7 @@
 #
 # Arguments:
 # $1 = input filename
-# $2 = output filename
+# $2 = optional output filename
 #
 # Environment variables:
 # none
@@ -80,8 +80,7 @@ if ([string]::IsNullOrEmpty($input_filename))
 $output_filename = $args[1]
 if ([string]::IsNullOrEmpty($output_filename))
 {
-  Write-Stderr "$($scriptname): *** Error: no output file specified."
-  ExitWithCode 1
+  $output_filename = $input_filename
 }
 
 try
