@@ -12,6 +12,10 @@
 # Environment variables:
 # OSTYPE
 # BUILD_MODE
+# CP
+# MV
+# UPDATETM
+# GNATADC_FILENAME
 # KERNEL_PARENT_PATH
 # LIB_DIRECTORY
 # OBJ_DIRECTORY
@@ -27,8 +31,10 @@
 # CC
 # GNATMAKE
 # GNATMAKE_DEPEND
+# GPRBUILD
 # GCC_WRAPPER_TIMESTAMP_FILENAME
 # GNAT_WRAPPER_TIMESTAMP_FILENAME
+# GCC_SWITCHES_LOWLEVEL_PLATFORM
 #
 
 # export top-level directory reference
@@ -98,10 +104,10 @@ $(OBJ_DIRECTORY)/%.o: %.adb $(DEP_DIRECTORY)/%.d
 	$(compile-gnatmake-deps)
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
-	@adjmakedeps.bat                            \
-                         -tap +                     \
-                         -kpp $(KERNEL_PARENT_PATH) \
-                         $(DEP_DIRECTORY_CMD)\$*.d
+	@$(ADJMAKEDEPS)                            \
+                        -tap +                     \
+                        -kpp $(KERNEL_PARENT_PATH) \
+                        $(DEP_DIRECTORY_CMD)\$*.d
 	@$(UPDATETM) $(DEP_DIRECTORY_CMD)\$*.ali
 	@$(UPDATETM) $(OBJ_DIRECTORY_CMD)\$*.o
 else
@@ -129,10 +135,10 @@ $(OBJ_DIRECTORY)/%.o: %.ads $(DEP_DIRECTORY)/%.d
 	$(compile-gnatmake-deps)
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
-	@adjmakedeps.bat                            \
-                         -tap +                     \
-                         -kpp $(KERNEL_PARENT_PATH) \
-                         $(DEP_DIRECTORY_CMD)\$*.d
+	@$(ADJMAKEDEPS)                            \
+                        -tap +                     \
+                        -kpp $(KERNEL_PARENT_PATH) \
+                        $(DEP_DIRECTORY_CMD)\$*.d
 	@$(UPDATETM) $(DEP_DIRECTORY_CMD)\$*.ali
 	@$(UPDATETM) $(OBJ_DIRECTORY_CMD)\$*.o
 else
@@ -170,10 +176,10 @@ $(OBJ_DIRECTORY)/%.o: %.S $(DEP_DIRECTORY)/%.d
 	$(compile-asmcpp)
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
-	@adjmakedeps.bat                            \
-                         -tap $(OBJ_DIRECTORY)      \
-                         -kpp $(KERNEL_PARENT_PATH) \
-                         $(DEP_DIRECTORY_CMD)\$*.d
+	@$(ADJMAKEDEPS)                            \
+                        -tap $(OBJ_DIRECTORY)      \
+                        -kpp $(KERNEL_PARENT_PATH) \
+                        $(DEP_DIRECTORY_CMD)\$*.d
 	@$(UPDATETM) $(OBJ_DIRECTORY_CMD)\$*.o
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
@@ -200,10 +206,10 @@ $(OBJ_DIRECTORY)/%.o: %.c $(DEP_DIRECTORY)/%.d
 	$(compile-asmcpp)
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
-	@adjmakedeps.bat                            \
-                         -tap $(OBJ_DIRECTORY)      \
-                         -kpp $(KERNEL_PARENT_PATH) \
-                         $(DEP_DIRECTORY_CMD)\$*.d
+	@$(ADJMAKEDEPS)                            \
+                        -tap $(OBJ_DIRECTORY)      \
+                        -kpp $(KERNEL_PARENT_PATH) \
+                        $(DEP_DIRECTORY_CMD)\$*.d
 	@$(UPDATETM) $(OBJ_DIRECTORY_CMD)\$*.o
 else
 	@$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
