@@ -10,6 +10,8 @@
 
 #define __ASSEMBLER__ 1
 
+#include <sh.h>
+
 ////////////////////////////////////////////////////////////////////////////////
 
                 .sect   .vectors,"ax"
@@ -106,7 +108,7 @@ vector_table:
                 .long   0               //  85 ITU1 IMIB1
                 .long   0               //  86 ITU1 OVI1
                 .long   0               //  87 Reserved
-                .long   0               //  88 ITU2 IMIA2
+                .long   irq_itu2_imia2  //  88 ITU2 IMIA2
                 .long   0               //  89 ITU2 IMIB2
                 .long   0               //  90 ITU2 OVI2
                 .long   0               //  91 Reserved
@@ -135,4 +137,35 @@ vector_table:
                 .long   0               // 114 Reserved
                 .long   0               // 115 Reserved
                 .space  140*4           // 116 .. 255
+
+////////////////////////////////////////////////////////////////////////////////
+
+                .sect   .text,"ax"
+
+irq_itu2_imia2:
+                mov.l   r0,@-r15
+                mov.l   r1,@-r15
+                mov.l   r2,@-r15
+                mov.l   r3,@-r15
+                mov.l   r4,@-r15
+                mov.l   r5,@-r15
+                mov.l   r6,@-r15
+                mov.l   r7,@-r15
+                sts.l   pr,@-r15
+                mov.l   REF(irq_timer_process),r0
+                jsr     @r0
+                nop
+                lds.l   @r15+,pr
+                mov.l   @r15+,r7
+                mov.l   @r15+,r6
+                mov.l   @r15+,r5
+                mov.l   @r15+,r4
+                mov.l   @r15+,r3
+                mov.l   @r15+,r2
+                mov.l   @r15+,r1
+                mov.l   @r15+,r0
+                rte
+                nop
+
+DEF_EREFL(irq_timer_process)
 

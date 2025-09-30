@@ -104,6 +104,9 @@ package body BSP
       -- timer tick @ 1 kHz
       TGRA2 := Unsigned_16 ((Configure.CLK_FREQUENCY / 8) / kHz1);
       TCNT2 := 0;
+      -- enable interrupt
+      TIER2.IMIEA := True;
+      -- start timer
       TSTR.STR2 := True;
    end Tclk_Init;
 
@@ -161,7 +164,7 @@ package body BSP
          );
       -- Table 13.3 Bit Rates and BRR Settings in Asynchronous Mode
       -- CKS = CKS_SYSCLOCK => n = 0
-      SCI1.BRR := Unsigned_8 (CLK_16M / ((64 / 2) * SCI1_BaudRate) - 1);
+      SCI1.BRR := Unsigned_8 (Configure.CLK_FREQUENCY / ((64 / 2) * SCI1_BaudRate) - 1);
       SCI1.SCR.CKE := CKE_ASYNC_INTCLK_SCKIO;
       SCI1.SCR := (@ with delta RE => True, TE => True);
       -- UART 16x50 -----------------------------------------------------------
@@ -194,6 +197,8 @@ package body BSP
       Console.Print ("GEMI SH7032", NL => True);
       -------------------------------------------------------------------------
       Tclk_Init;
+      -------------------------------------------------------------------------
+      SH.Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;
 
