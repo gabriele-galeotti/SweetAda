@@ -135,7 +135,7 @@ pragma Style_Checks (Off);
    IPRD_ADDRESS : constant := 16#05FF_FF8A#;
 
    IPRD : aliased IPRD_Type
-      with Address              => System'To_Address (IPRC_ADDRESS),
+      with Address              => System'To_Address (IPRD_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -889,7 +889,7 @@ pragma Style_Checks (Off);
    IOA_OUTDISABLE : constant := 2#000#; -- Compare match with pin output disabled
    IOA_OUT0       : constant := 2#001#; -- 0 output at GRA compare match
    IOA_OUT1       : constant := 2#010#; -- 1 output at GRA compare match
-   IOA_OUTTOGGLE  : constant := 2#011#; -- Output toggles at GRA compare match (1 output for  channel 2 only)
+   IOA_OUTTOGGLE  : constant := 2#011#; -- Output toggles at GRA compare match (1 output for channel 2 only)
    -- GRA is an input capture register
    IOA_INREDGE   : constant := 2#100#; -- GRA captures rising edge of input input capture
    IOA_INFEDGE   : constant := 2#101#; -- GRA captures falling edge of input
