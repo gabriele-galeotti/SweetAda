@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ gemi.ads                                                                                                  --
+-- __FLN__ gemi.adb                                                                                                  --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,37 +15,46 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with Interfaces;
-
-package GEMI
-   with Preelaborate => True
+package body GEMI
    is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                               Public part                              --
+   --                           Local declarations                           --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use Interfaces;
+   LEDPORT_Status : Unsigned_8;
 
-   LEDPORT_ADDRESS  : constant := 16#0600_0000#;
-   UART_BASEADDRESS : constant := 16#0600_2000#;
-   RTC_BASEADDRESS  : constant := 16#0600_3000#;
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Package subprograms                          --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
 
-   LEDPORT : aliased Unsigned_8
-      with Address              => System'To_Address (LEDPORT_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
-
+   ----------------------------------------------------------------------------
+   -- LEDPORT_In
+   ----------------------------------------------------------------------------
    function LEDPORT_In
-      return Unsigned_8;
+      return Unsigned_8
+      is
+   begin
+      return LEDPORT_Status;
+   end LEDPORT_In;
+
+   ----------------------------------------------------------------------------
+   -- LEDPORT_Out
+   ----------------------------------------------------------------------------
    procedure LEDPORT_Out
-      (Value : in Unsigned_8);
+      (Value : in Unsigned_8)
+      is
+   begin
+      LEDPORT_Status := Value;
+      LEDPORT := LEDPORT_Status;
+   end LEDPORT_Out;
 
 end GEMI;
