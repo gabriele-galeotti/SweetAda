@@ -243,9 +243,9 @@ DISTCLEAN_OBJECTS_COMMON := $(GNATADC_FILENAME)      \
 
 # check for RTS build
 ifeq ($(MAKECMDGOALS),rts)
-# before set a default RTS and loading configuration.in (which defines the RTS
-# type used by the platform), save the RTS variable from the environment in
-# order to correctly build the RTS specified when issuing the "rts" target
+# before setting of a default RTS and loading configuration.in (which defines
+# the RTS type used by the platform), save RTS variable from the environment
+# in order to correctly build the RTS specified when issuing the "rts" target
 RTS_BUILD := $(RTS)
 endif
 
