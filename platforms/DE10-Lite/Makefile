@@ -44,7 +44,7 @@ all: $(CONFIGURE_FILES_PLATFORM) $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: configure
 configure: clean-configure-files $(CONFIGURE_FILES_PLATFORM) $(LD_SCRIPT)
-	@$(CREATELINKERADSB) $(LD_SCRIPT)
+	@$(LINKERADSB) $(LD_SCRIPT)
 	@$(PYTHON) design_parser.py $(QSYS_FILE) Quartus $(QSYS_IO_LIST)
 
 ifneq ($(CONFIGURE_FILES_PLATFORM),)

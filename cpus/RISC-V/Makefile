@@ -52,7 +52,7 @@ all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 .PHONY: configure
 configure: clean-installed-files
 ifneq ($(MMIO_FUNCTIONS),)
-	@$(CREATESYMLINK) -v -c -m Makefile.if.in $(foreach f,$(MMIO_FUNCTIONS),./mmio/$(f) $(f))
+	@$(SYMLINK) -v -c -m Makefile.if.in $(foreach f,$(MMIO_FUNCTIONS),./mmio/$(f) $(f))
 endif
 
 .PHONY: clean-installed-files

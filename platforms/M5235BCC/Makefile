@@ -47,13 +47,13 @@ all: $(CONFIGURE_FILES_PLATFORM) $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 .PHONY: installfiles
 installfiles:
 	@$(call echo-print,"Installing files for subplatform $(SUBPLATFORM):")
-	@$(CREATESYMLINK) -v -c -m Makefile.if.in platform-$(SUBPLATFORM) .
+	@$(SYMLINK) -v -c -m Makefile.if.in platform-$(SUBPLATFORM) .
 	@$(call echo-print,"installfiles: done")
 	@$(call echo-print,"")
 
 .PHONY: configure
 configure: clean-configure-files $(CONFIGURE_FILES_PLATFORM) $(LD_SCRIPT)
-	@$(CREATELINKERADSB) $(LD_SCRIPT)
+	@$(LINKERADSB) $(LD_SCRIPT)
 
 ifneq ($(CONFIGURE_FILES_PLATFORM),)
 $(CONFIGURE_FILES_PLATFORM): % : %.in

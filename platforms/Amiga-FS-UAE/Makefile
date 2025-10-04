@@ -47,10 +47,10 @@ installfiles:
 
 .PHONY: configure
 configure: clean-configure-files $(CONFIGURE_FILES_PLATFORM) $(LD_SCRIPT)
-	@$(CREATESYMLINK)                                                   \
-                          mmu/mmu-amiga-$(CPU_MODEL:M%=%).adb mmu-amiga.adb \
-                          mmu/mmu-amiga-$(CPU_MODEL:M%=%).ads mmu-amiga.ads
-	@$(CREATELINKERADSB) $(LD_SCRIPT)
+	@$(SYMLINK)                                                   \
+                    mmu/mmu-amiga-$(CPU_MODEL:M%=%).adb mmu-amiga.adb \
+                    mmu/mmu-amiga-$(CPU_MODEL:M%=%).ads mmu-amiga.ads
+	@$(LINKERADSB) $(LD_SCRIPT)
 
 ifneq ($(CONFIGURE_FILES_PLATFORM),)
 $(CONFIGURE_FILES_PLATFORM): % : %.in

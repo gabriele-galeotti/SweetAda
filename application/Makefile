@@ -21,9 +21,9 @@ include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 .PHONY: configure
 configure: clean-installed-files
 ifneq ($(USE_APPLICATION),)
-	@$(CREATESYMLINK) -v -c -m Makefile.if.in                \
-                          $(USE_APPLICATION).ads application.ads \
-                          $(USE_APPLICATION).adb application.adb
+	@$(SYMLINK) -v -c -m Makefile.if.in                \
+                    $(USE_APPLICATION).ads application.ads \
+                    $(USE_APPLICATION).adb application.adb
 endif
 
 .PHONY: clean-installed-files
