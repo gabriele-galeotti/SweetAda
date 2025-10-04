@@ -46,7 +46,7 @@ package body Application
       -------------------------------------------------------------------------
       if True then
          declare
-            Value          : Unsigned_8 := 16#10#;
+            Value          : Unsigned_8 := 16#20#;
             Direction_Left : Boolean := True;
             TM             : Time.TM_Time;
             procedure Wait;
@@ -62,7 +62,7 @@ package body Application
             end Wait;
          begin
             loop
-               LEDPORT := not Value;
+               LEDPORT_Out ((LEDPORT_In and 16#1F#) or (not Value));
                if Direction_Left then
                   Value := Rotate_Left (Value, 1);
                else
@@ -71,7 +71,7 @@ package body Application
                if Value = 16#80# then
                   Direction_Left := False;
                end if;
-               if Value = 16#10# then
+               if Value = 16#20# then
                   Direction_Left := True;
                end if;
                -- UART16x50.TX (BSP.UART_Descriptor, To_U8 ('.'));
