@@ -530,23 +530,84 @@ pragma Style_Checks (Off);
 
    -- 0x1D: TRANSIENT_CFG register (read/write)
 
-   type TRANSIENT_CFG_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for TRANSIENT_CFG_Type use record DATA at 0 range 0 .. 7; end record;
+   type TRANSIENT_CFG_Type is record
+      HPF_BYP : Boolean; -- Bypass high-pass filter.
+      XTEFE   : Boolean; -- Event flag enable on X transient acceleration greater than transient threshold event.
+      YTEFE   : Boolean; -- Event flag enable on Y transient acceleration greater than transient threshold event.
+      ZTEFE   : Boolean; -- Event flag enable on Z transient acceleration greater than transient threshold event.
+      ELE     : Boolean; -- Transient event flags are latched into the TRANSIENT_SRC register.
+      Unused  : Bits_3;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TRANSIENT_CFG_Type use record
+      HPF_BYP at 0 range 0 .. 0;
+      XTEFE   at 0 range 1 .. 1;
+      YTEFE   at 0 range 2 .. 2;
+      ZTEFE   at 0 range 3 .. 3;
+      ELE     at 0 range 4 .. 4;
+      Unused  at 0 range 5 .. 7;
+   end record;
 
    -- 0x1E: TRANSIENT_SRC register (read only)
 
-   type TRANSIENT_SRC_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for TRANSIENT_SRC_Type use record DATA at 0 range 0 .. 7; end record;
+   X_Trans_Pol_POSITIVE : constant := 0; -- 0: X event was positive g
+   X_Trans_Pol_NEGATIVE : constant := 1; -- 1: X event was negative g
+
+   Y_Trans_Pol_POSITIVE : constant := 0; -- 0: Y event was positive g
+   Y_Trans_Pol_NEGATIVE : constant := 1; -- 1: Y event was negative g
+
+   Z_Trans_Pol_POSITIVE : constant := 0; -- 0: Z event was positive g
+   Z_Trans_Pol_NEGATIVE : constant := 1; -- 1: Z event was negative g
+
+   type TRANSIENT_SRC_Type is record
+      X_Trans_Pol : Bits_1;  -- Polarity of X-transient event that triggered interrupt.
+      XTRANSE     : Boolean; -- X-transient event.
+      Y_Trans_Pol : Bits_1;  -- Polarity of X-transient event that triggered interrupt.
+      YTRANSE     : Boolean; -- Y-transient event.
+      Z_Trans_Pol : Bits_1;  -- Polarity of X-transient event that triggered interrupt.
+      ZTRANSE     : Boolean; -- X-transient event.
+      EA          : Boolean; -- Event active flag.
+      Unused      : Bits_1;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TRANSIENT_SRC_Type use record
+      X_Trans_Pol at 0 range 0 .. 0;
+      XTRANSE     at 0 range 1 .. 1;
+      Y_Trans_Pol at 0 range 2 .. 2;
+      YTRANSE     at 0 range 3 .. 3;
+      Z_Trans_Pol at 0 range 4 .. 4;
+      ZTRANSE     at 0 range 5 .. 5;
+      EA          at 0 range 6 .. 6;
+      Unused      at 0 range 7 .. 7;
+   end record;
 
    -- 0x1F: TRANSIENT_THS register (read/write)
 
-   type TRANSIENT_THS_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for TRANSIENT_THS_Type use record DATA at 0 range 0 .. 7; end record;
+   -- DBCNTM_* already defined at 6.4
+
+   type TRANSIENT_THS_Type is record
+      THS    : Bits_7; -- Transient threshold
+      DBCNTM : Bits_1; -- Debounce counter mode selection.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TRANSIENT_THS_Type use record
+      THS    at 0 range 0 .. 6;
+      DBCNTM at 0 range 7 .. 7;
+   end record;
 
    -- 0x20: TRANSIENT_COUNT register (read/write)
 
-   type TRANSIENT_COUNT_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for TRANSIENT_COUNT_Type use record DATA at 0 range 0 .. 7; end record;
+   type TRANSIENT_COUNT_Type is record
+      D : Unsigned_8; -- Count value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for TRANSIENT_COUNT_Type use record
+      D at 0 range 0 .. 7;
+   end record;
 
    ----------------------------------------------------------------------------
    -- 6.6 Single, double and directional tap detection registers
