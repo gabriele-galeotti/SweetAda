@@ -31,11 +31,11 @@ REM # Main loop.                                                               #
 REM #                                                                          #
 REM ############################################################################
 
-powershell.exe                                                      ^
-  -NoLogo                                                           ^
-  -NoProfile                                                        ^
-  -ExecutionPolicy Bypass                                           ^
-  -File "%SWEETADA_PATH%"/%LIBUTILS_DIRECTORY%/createlinkeradsb.ps1 ^
+powershell.exe                                                ^
+  -NoLogo                                                     ^
+  -NoProfile                                                  ^
+  -ExecutionPolicy Bypass                                     ^
+  -File "%SWEETADA_PATH%"/%LIBUTILS_DIRECTORY%/linkeradsb.ps1 ^
   %*
 
 EXIT /B %ERRORLEVEL%
