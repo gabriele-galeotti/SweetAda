@@ -465,18 +465,64 @@ pragma Style_Checks (Off);
 
    -- 0x16: FF_MT_SRC freefall and motion source register (read only)
 
-   type FF_MT_SRC_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for FF_MT_SRC_Type use record DATA at 0 range 0 .. 7; end record;
+   XHP_POSITIVE : constant := 0; -- X event was positive g
+   XHP_NEGATIVE : constant := 1; -- X event was negative g
+
+   YHP_POSITIVE : constant := 0; -- Y event was positive g
+   YHP_NEGATIVE : constant := 1; -- Y event was negative g
+
+   ZHP_POSITIVE : constant := 0; -- Z event was positive g
+   ZHP_NEGATIVE : constant := 1; -- Z event was negative g
+
+   type FF_MT_SRC_Type is record
+      XHP    : Bits_1;  -- X-motion polarity flag.
+      XHE    : Boolean; -- X-motion flag.
+      YHP    : Bits_1;  -- Y-motion polarity flag.
+      YHE    : Boolean; -- Y-motion flag.
+      ZHP    : Bits_1;  -- Z-motion polarity flag.
+      ZHE    : Boolean; -- Z-motion flag.
+      Unused : Bits_1;
+      EA     : Boolean; -- Event active flag.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for FF_MT_SRC_Type use record
+      XHP    at 0 range 0 .. 0;
+      XHE    at 0 range 1 .. 1;
+      YHP    at 0 range 2 .. 2;
+      YHE    at 0 range 3 .. 3;
+      ZHP    at 0 range 4 .. 4;
+      ZHE    at 0 range 5 .. 5;
+      Unused at 0 range 6 .. 6;
+      EA     at 0 range 7 .. 7;
+   end record;
 
    -- 0x17: FF_MT_THS register (read/write)
 
-   type FF_MT_THS_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for FF_MT_THS_Type use record DATA at 0 range 0 .. 7; end record;
+   DBCNTM_DEBOUNCE : constant := 0; -- increments or decrements debounce
+   DBCNTM_COUNTER  : constant := 1; -- increments or clears counter
+
+   type FF_MT_THS_Type is record
+      THS    : Bits_7; -- Freefall/motion threshold
+      DBCNTM : Bits_1; -- Debounce counter mode selection.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for FF_MT_THS_Type use record
+      THS    at 0 range 0 .. 6;
+      DBCNTM at 0 range 7 .. 7;
+   end record;
 
    -- 0x18: FF_MT_COUNT register (read/write)
 
-   type FF_MT_COUNT_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for FF_MT_COUNT_Type use record DATA at 0 range 0 .. 7; end record;
+   type FF_MT_COUNT_Type is record
+      D : Unsigned_8; -- Count value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for FF_MT_COUNT_Type use record
+      D at 0 range 0 .. 7;
+   end record;
 
    ----------------------------------------------------------------------------
    -- 6.5 Transient (HPF) acceleration detection
