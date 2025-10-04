@@ -87,7 +87,7 @@ $(GNATMAKE)                                                   \
 ,[GNATMAKE],$(notdir $<))
 endef
 
-define compile-gnatmake-deps =
+define compile-gnatmake-depend =
 $(call brief-command, \
 $(GNATMAKE_DEPEND)                                                   \
                    -M                                                \
@@ -102,7 +102,7 @@ endef
 %.o: %.adb
 $(OBJ_DIRECTORY)/%.o: %.adb $(DEP_DIRECTORY)/%.d
 	$(compile-gnatmake)
-	$(compile-gnatmake-deps)
+	$(compile-gnatmake-depend)
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
 	@$(ADJMAKEDEPS)                            \
@@ -133,7 +133,7 @@ endif
 %.o: %.ads
 $(OBJ_DIRECTORY)/%.o: %.ads $(DEP_DIRECTORY)/%.d
 	$(compile-gnatmake)
-	$(compile-gnatmake-deps)
+	$(compile-gnatmake-depend)
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
 	@$(ADJMAKEDEPS)                            \
