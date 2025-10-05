@@ -426,10 +426,13 @@ OBJCOPY_SWITCHES_PLATFORM      :=
 OBJDUMP_SWITCHES_PLATFORM      :=
 
 #
-# Initialize RTS-imported toolchain switches.
+# Initialize RTS-imported switches.
 #
-ADAC_SWITCHES_RTS :=
-CC_SWITCHES_RTS   :=
+ADAC_SWITCHES_RTS         :=
+CC_SWITCHES_RTS           :=
+LIBGNAT                   :=
+LIBGNARL                  :=
+SUPPRESS_STANDARD_LIBRARY :=
 
 #
 # Initialize include directories and implicit units.
@@ -598,6 +601,42 @@ endif
 
 ################################################################################
 #                                                                              #
+# Query about RTS characteristics.                                             #
+#                                                                              #
+################################################################################
+
+ifeq ($(OSTYPE),cmd)
+$(foreach s,                                                         \
+  $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell                 \
+    SET "VERBOSE="                                                && \
+    SET "PATH=$(PATH)"                                            && \
+    SET "KERNEL_PARENT_PATH=.."                                   && \
+    SET "RTS=$(RTS)"                                              && \
+    SET "TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)"                        && \
+    SET "MULTILIB=$(GCC_MULTIDIR)"                                && \
+    "$(MAKE)"                                                        \
+      -C $(RTS_DIRECTORY)                                            \
+      PROBEVARIABLES="SUPPRESS_STANDARD_LIBRARY LIBGNAT LIBGNARL"    \
+      probevariables                                                 \
+    2>nul))),$(eval $(strip $(subst $(DEL),$(SPACE),$(s)))))
+else
+$(foreach s,                                                        \
+  $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell                \
+    VERBOSE=                                                        \
+    PATH="$(PATH)"                                                  \
+    KERNEL_PARENT_PATH=..                                           \
+    RTS=$(RTS)                                                      \
+    TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)                                \
+    MULTILIB=$(GCC_MULTIDIR)                                        \
+    "$(MAKE)"                                                       \
+      -C $(RTS_DIRECTORY)                                           \
+      PROBEVARIABLES="SUPPRESS_STANDARD_LIBRARY LIBGNAT LIBGNARL"   \
+      probevariables                                                \
+    2> /dev/null))),$(eval $(strip $(subst $(DEL),$(SPACE),$(s)))))
+endif
+
+################################################################################
+#                                                                              #
 # Compilation debugging.                                                       #
 #                                                                              #
 ################################################################################
@@ -732,6 +771,7 @@ export                                \
        RTS                            \
        PROFILE                        \
        ADA_MODE                       \
+       SUPPRESS_STANDARD_LIBRARY      \
        USE_LIBGCC                     \
        USE_LIBM                       \
        USE_CLIBRARY                   \
@@ -806,31 +846,6 @@ else
 LIBM_OBJECT :=
 endif
 
-ifeq ($(OSTYPE),cmd)
-$(foreach s,                                                    \
-  $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell            \
-    SET "VERBOSE="                                           && \
-    SET "PATH=$(PATH)"                                       && \
-    SET "KERNEL_PARENT_PATH=.."                              && \
-    SET "RTS=$(RTS)"                                         && \
-    SET "TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)"                   && \
-    SET "MULTILIB=$(GCC_MULTIDIR)"                           && \
-    "$(MAKE)" -C $(RTS_DIRECTORY)                               \
-      PROBEVARIABLES="LIBGNAT LIBGNARL" probevariables          \
-    2>nul))),$(eval $(strip $(subst $(DEL),$(SPACE),$(s)))))
-else
-$(foreach s,                                                        \
-  $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell                \
-    VERBOSE=                                                        \
-    PATH="$(PATH)"                                                  \
-    KERNEL_PARENT_PATH=..                                           \
-    RTS=$(RTS)                                                      \
-    TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)                                \
-    MULTILIB=$(GCC_MULTIDIR)                                        \
-    "$(MAKE)" -C $(RTS_DIRECTORY)                                   \
-      PROBEVARIABLES="LIBGNAT LIBGNARL" probevariables              \
-    2> /dev/null))),$(eval $(strip $(subst $(DEL),$(SPACE),$(s)))))
-endif
 LIBGNAT_OBJECT  := $(RTS_DIRECTORY)/$(LIBGNAT)
 LIBGNARL_OBJECT := $(RTS_DIRECTORY)/$(LIBGNARL)
 
