@@ -1,24 +1,4 @@
 
-#
-# remove-basename
-#
-# Usage:
-# $(call remove-basename,<file_list>,<file_basename>)
-#
-# This function will remove a [relative-path-prefix]file from a list.
-# If:
-# LIBGNAT_SRCS_COMMON = xxx.ads ../common/yyy.ads ../common/zzz.ads
-# then, after the command:
-# $(call remove-basename,LIBGNAT_SRCS_COMMON,yyy.ads)
-# the unit will be removed from the list and the content of the list will be:
-# LIBGNAT_SRCS_COMMON = xxx.ads ../common/zzz.ads
-#
-ifeq ($(OSTYPE),cmd)
-remove-basename = $(eval $1 := $(shell $(ECHO) $($1)| $(SED) -e "s|[^ ]*$2||"))
-else
-remove-basename = $(eval $1 := $(shell $(ECHO) "$($1)" | $(SED) -e "s|[^ ]*$2||"))
-endif
-
 LIBGNAT_SRCS_TARGET += system.ads
 
 export BACKEND_DIVIDE_CHECKS     := False
@@ -48,7 +28,7 @@ export ZCX_BY_DEFAULT            := False
 #
 # AVR does not tolerate IEEE_Float_64.
 #
-$(call remove-basename,LIBGNAT_SRCS_COMMON,interfac.ads)
+LIBGNAT_SRCS_COMMON := $(filter-out %interfac.ads,$(LIBGNAT_SRCS_COMMON))
 LIBGNAT_SRCS_TARGET += interfac.ads
 
 #
@@ -63,10 +43,8 @@ LIBGNAT_SRCS_TARGET += interfac.ads
 # s-scaval.adb:104:07: warning: size of "IV_Ill" is 96
 # s-scaval.adb:104:07: warning: size of "IS_Ill" is 64
 #
-ifeq ($(RTS),sfp)
-$(call remove-basename,LIBGNAT_SRCS_COMMON,s-scaval.ads)
-$(call remove-basename,LIBGNAT_SRCS_COMMON,s-scaval.adb)
-endif
+LIBGNAT_SRCS_COMMON := $(filter-out %s-scaval.ads,$(LIBGNAT_SRCS_COMMON))
+LIBGNAT_SRCS_COMMON := $(filter-out %s-scaval.adb,$(LIBGNAT_SRCS_COMMON))
 
 # secondary stack size
 export RUNTIME_DEFAULT_SEC_STACK_SIZE := 128
