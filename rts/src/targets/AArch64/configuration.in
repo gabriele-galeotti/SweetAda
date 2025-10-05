@@ -3,8 +3,8 @@ LIBGNAT_SRCS_TARGET += system.ads
 
 export BACKEND_DIVIDE_CHECKS     := False
 export BACKEND_OVERFLOW_CHECKS   := True
-export COMMAND_LINE_ARGS         := False
-export CONFIGURABLE_RUN_TIME     := True
+# COMMAND_LINE_ARGS              default value from RTS
+# CONFIGURABLE_RUN_TIME          default value from RTS
 export DENORM                    := True
 export DURATION_32_BITS          := False
 export EXIT_STATUS_SUPPORTED     := False
@@ -21,8 +21,8 @@ export SUPPORT_COMPOSITE_ASSIGN  := True
 export SUPPORT_COMPOSITE_COMPARE := True
 export SUPPORT_LONG_SHIFTS       := True
 export ALWAYS_COMPATIBLE_REP     := False
-export SUPPRESS_STANDARD_LIBRARY := True
-export USE_ADA_MAIN_PROGRAM_NAME := False
+# SUPPRESS_STANDARD_LIBRARY      default value from RTS
+# USE_ADA_MAIN_PROGRAM_NAME      default value from RTS
 export ZCX_BY_DEFAULT            := False
 
 export SIZE_TYPE_ASPECTS := with Alignment => 16

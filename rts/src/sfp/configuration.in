@@ -39,6 +39,14 @@ LIBGNAT_SRCS_COMMON += s-stalib.ads s-stalib.adb
 LIBGNARL_SRCS_COMMON +=
 
 #
+# system.ads default values.
+#
+export COMMAND_LINE_ARGS         := False
+export CONFIGURABLE_RUN_TIME     := True
+export SUPPRESS_STANDARD_LIBRARY := True
+export USE_ADA_MAIN_PROGRAM_NAME := False
+
+#
 # s-parame.ads default configuration.
 #
 export SIZE_TYPE_ASPECTS              :=
