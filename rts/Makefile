@@ -293,24 +293,24 @@ endif
 
 # Ada sources generic rules
 $(ADALIB_PATH)/%.o: $(ADAINCLUDE_PATH)/%.adb
-	$(ADAC) -o $@ -c        \
-          -g -O2                \
-          -I $(ADAINCLUDE_PATH) \
-          $(ADAC_SWITCHES)      \
+	$(ADAC) -o $@ -c       \
+          -g -O2               \
+          -I$(ADAINCLUDE_PATH) \
+          $(ADAC_SWITCHES)     \
           $<
 $(ADALIB_PATH)/%.o: $(ADAINCLUDE_PATH)/%.ads
-	$(ADAC) -o $@ -c        \
-          -g -O2                \
-          -I $(ADAINCLUDE_PATH) \
-          $(ADAC_SWITCHES)      \
+	$(ADAC) -o $@ -c       \
+          -g -O2               \
+          -I$(ADAINCLUDE_PATH) \
+          $(ADAC_SWITCHES)     \
           $<
 
 # C sources generic rules
 $(ADALIB_PATH)/%.o: $(ADAINCLUDE_PATH)/%.c
-	$(CC) -o $@ -c          \
-          -g -O2                \
-          -I $(ADAINCLUDE_PATH) \
-          $(CC_SWITCHES)        \
+	$(CC) -o $@ -c         \
+          -g -O2               \
+          -I$(ADAINCLUDE_PATH) \
+          $(CC_SWITCHES)       \
           $<
 
 .PHONY: probevariable
