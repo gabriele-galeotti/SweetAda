@@ -236,30 +236,34 @@ GNATBIND += --RTS="$(RTS_PATH)"
 
 # query ADAC/CC RTS switches
 ifeq ($(OSTYPE),cmd)
-$(foreach s,                                                               \
-  $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell                       \
-    SET "VERBOSE="                                                      && \
-    SET "PATH=$(PATH)"                                                  && \
-    SET "KERNEL_PARENT_PATH=.."                                         && \
-    SET "CPU=$(CPU)"                                                    && \
-    SET "RTS=$(RTS)"                                                    && \
-    SET "TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)"                              && \
-    SET "MULTILIB=$(GCC_MULTIDIR)"                                      && \
-    "$(MAKE)" -C $(RTS_DIRECTORY)                                          \
-      PROBEVARIABLES="ADAC_SWITCHES_RTS CC_SWITCHES_RTS" probevariables    \
+$(foreach s,                                                 \
+  $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell         \
+    SET "VERBOSE="                                        && \
+    SET "PATH=$(PATH)"                                    && \
+    SET "KERNEL_PARENT_PATH=.."                           && \
+    SET "CPU=$(CPU)"                                      && \
+    SET "RTS=$(RTS)"                                      && \
+    SET "TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)"                && \
+    SET "MULTILIB=$(GCC_MULTIDIR)"                        && \
+    "$(MAKE)"                                                \
+      -C $(RTS_DIRECTORY)                                    \
+      PROBEVARIABLES="ADAC_SWITCHES_RTS CC_SWITCHES_RTS"     \
+      probevariables                                         \
     2>nul))),$(eval $(strip $(subst $(DEL),$(SPACE),$(s)))))
 else
-$(foreach s,                                                            \
-  $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell                    \
-    VERBOSE=                                                            \
-    PATH="$(PATH)"                                                      \
-    KERNEL_PARENT_PATH=..                                               \
-    CPU=$(CPU)                                                          \
-    RTS=$(RTS)                                                          \
-    TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)                                    \
-    MULTILIB=$(GCC_MULTIDIR)                                            \
-    "$(MAKE)" -C $(RTS_DIRECTORY)                                       \
-      PROBEVARIABLES="ADAC_SWITCHES_RTS CC_SWITCHES_RTS" probevariables \
+$(foreach s,                                                        \
+  $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell                \
+    VERBOSE=                                                        \
+    PATH="$(PATH)"                                                  \
+    KERNEL_PARENT_PATH=..                                           \
+    CPU=$(CPU)                                                      \
+    RTS=$(RTS)                                                      \
+    TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)                                \
+    MULTILIB=$(GCC_MULTIDIR)                                        \
+    "$(MAKE)"                                                       \
+      -C $(RTS_DIRECTORY)                                           \
+      PROBEVARIABLES="ADAC_SWITCHES_RTS CC_SWITCHES_RTS"            \
+      probevariables                                                \
     2> /dev/null))),$(eval $(strip $(subst $(DEL),$(SPACE),$(s)))))
 endif
 export ADAC_SWITCHES_RTS

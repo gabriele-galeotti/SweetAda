@@ -332,22 +332,26 @@ SHARE_DIRECTORY         := share
 ifeq ($(OSTYPE),cmd)
 PLATFORMS := $(shell $(CHDIR) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs) 2>nul)
 CPUS      := $(shell $(CHDIR) $(CPU_BASE_DIRECTORY) && $(call ls-dirs) 2>nul)
-RTSES     := $(shell                                  \
-               SET "VERBOSE="                      && \
-               SET "PATH=$(PATH)"                  && \
-               SET "KERNEL_PARENT_PATH=.."         && \
-               "$(MAKE)" -C $(RTS_DIRECTORY)          \
-                 PROBEVARIABLE=RTSES probevariable    \
+RTSES     := $(shell                          \
+               SET "VERBOSE="              && \
+               SET "PATH=$(PATH)"          && \
+               SET "KERNEL_PARENT_PATH=.." && \
+               "$(MAKE)"                      \
+                 -C $(RTS_DIRECTORY)          \
+                 PROBEVARIABLE=RTSES          \
+                 probevariable                \
                2>nul)
 else
 PLATFORMS := $(shell ($(CHDIR) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
 CPUS      := $(shell ($(CHDIR) $(CPU_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
-RTSES     := $(shell                               \
-               VERBOSE=                            \
-               PATH="$(PATH)"                      \
-               KERNEL_PARENT_PATH=..               \
-               "$(MAKE)" -C $(RTS_DIRECTORY)       \
-                 PROBEVARIABLE=RTSES probevariable \
+RTSES     := $(shell                 \
+               VERBOSE=              \
+               PATH="$(PATH)"        \
+               KERNEL_PARENT_PATH=.. \
+               "$(MAKE)"             \
+                 -C $(RTS_DIRECTORY) \
+                 PROBEVARIABLE=RTSES \
+                 probevariable       \
                2> /dev/null)
 endif
 
