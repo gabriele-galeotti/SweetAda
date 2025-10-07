@@ -118,7 +118,7 @@ if ($depfile_filename -eq "")
 
 [string[]]$textlines = Get-Content -Path $depfile_filename
 
-for ($idx = 0; $idx -lt $textlines.Length; $idx++)
+for ($idx = 0 ; $idx -lt $textlines.Length ; $idx++)
 {
   if ($target_addprefix -ne "")
   {
