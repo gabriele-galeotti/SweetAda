@@ -119,10 +119,10 @@ package body Monitor
    procedure Help
       is
    begin
-      Console.Print ("help    - this help",        NL => True);
-      Console.Print ("parms   - parameters dump",  NL => True);
-      Console.Print ("srecord - Srecord download", NL => True);
-      Console.Print ("ticks   - print Tick_Count", NL => True);
+      Console.Print ("help    - this help",         NL => True);
+      Console.Print ("parms   - parameters dump",   NL => True);
+      Console.Print ("srecord - S-record download", NL => True);
+      Console.Print ("ticks   - print Tick_Count",  NL => True);
    end Help;
 
    ----------------------------------------------------------------------------
