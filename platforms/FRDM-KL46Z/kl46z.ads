@@ -3570,9 +3570,140 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 33.3.1 Low Power Timer Control Status Register (LPTMRx_CSR)
+
+   TMS_TIME  : constant := 0; -- Time Counter mode.
+   TMS_PULSE : constant := 1; -- Pulse Counter mode.
+
+   TFC_TCFSET   : constant := 0; -- CNR is reset whenever TCF is set.
+   TFC_OVERFLOW : constant := 1; -- CNR is reset on overflow.
+
+   TPP_HIGH : constant := 0; -- Pulse Counter input source is active-high, and the CNR will increment on the rising-edge.
+   TPP_LOW  : constant := 1; -- Pulse Counter input source is active-low, and the CNR will increment on the falling-edge.
+
+   TPS_0 : constant := 2#00#; -- Pulse counter input 0 is selected.
+   TPS_1 : constant := 2#01#; -- Pulse counter input 1 is selected.
+   TPS_2 : constant := 2#10#; -- Pulse counter input 2 is selected.
+   TPS_3 : constant := 2#11#; -- Pulse counter input 3 is selected.
+
+   type LPTMRx_CSR_Type is record
+      TEN      : Boolean := False;      -- Timer Enable
+      TMS      : Bits_1  := TMS_TIME;   -- Timer Mode Select
+      TFC      : Bits_1  := TFC_TCFSET; -- Timer Free-Running Counter
+      TPP      : Bits_1  := TPP_HIGH;   -- Timer Pin Polarity
+      TPS      : Bits_2  := TPS_0;      -- Timer Pin Select
+      TIE      : Boolean := False;      -- Timer Interrupt Enable
+      TCF      : Boolean := False;      -- Timer Compare Flag
+      Reserved : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LPTMRx_CSR_Type use record
+      TEN      at 0 range 0 ..  0;
+      TMS      at 0 range 1 ..  1;
+      TFC      at 0 range 2 ..  2;
+      TPP      at 0 range 3 ..  3;
+      TPS      at 0 range 4 ..  5;
+      TIE      at 0 range 6 ..  6;
+      TCF      at 0 range 7 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   LPTMR0_CSR_ADDRESS : constant := 16#4004_0000#;
+
+   LPTMR0_CSR : aliased LPTMRx_CSR_Type
+      with Address              => System'To_Address (LPTMR0_CSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 33.3.2 Low Power Timer Prescale Register (LPTMRx_PSR)
+
+   PCS_0 : constant := 2#00#; -- Prescaler/glitch filter clock 0 selected.
+   PCS_1 : constant := 2#01#; -- Prescaler/glitch filter clock 1 selected.
+   PCS_2 : constant := 2#10#; -- Prescaler/glitch filter clock 2 selected.
+   PCS_3 : constant := 2#11#; -- Prescaler/glitch filter clock 3 selected.
+
+   PRESCALE_DIV2   : constant := 2#0000#; -- Prescaler divides the prescaler clock by 2; glitch filter does not support this configuration.
+   PRESCALE_DIV4   : constant := 2#0001#; -- Prescaler divides the prescaler clock by 4; glitch filter recognizes change on input pin after 2 rising clock edges.
+   PRESCALE_DIV8   : constant := 2#0010#; -- Prescaler divides the prescaler clock by 8; glitch filter recognizes change on input pin after 4 rising clock edges.
+   PRESCALE_DIV16  : constant := 2#0011#; -- Prescaler divides the prescaler clock by 16; glitch filter recognizes change on input pin after 8 rising clock edges.
+   PRESCALE_DIV32  : constant := 2#0100#; -- Prescaler divides the prescaler clock by 32; glitch filter recognizes change on input pin after 16 rising clock edges.
+   PRESCALE_DIV64  : constant := 2#0101#; -- Prescaler divides the prescaler clock by 64; glitch filter recognizes change on input pin after 32 rising clock edges.
+   PRESCALE_DIV128 : constant := 2#0110#; -- Prescaler divides the prescaler clock by 128; glitch filter recognizes change on input pin after 64 rising clock edges.
+   PRESCALE_DIV256 : constant := 2#0111#; -- Prescaler divides the prescaler clock by 256; glitch filter recognizes change on input pin after 128 rising clock edges.
+   PRESCALE_DIV512 : constant := 2#1000#; -- Prescaler divides the prescaler clock by 512; glitch filter recognizes change on input pin after 256 rising clock edges.
+   PRESCALE_DIV1k  : constant := 2#1001#; -- Prescaler divides the prescaler clock by 1024; glitch filter recognizes change on input pin after 512 rising clock edges.
+   PRESCALE_DIV2k  : constant := 2#1010#; -- Prescaler divides the prescaler clock by 2048; glitch filter recognizes change on input pin after 1024 rising clock edges.
+   PRESCALE_DIV4k  : constant := 2#1011#; -- Prescaler divides the prescaler clock by 4096; glitch filter recognizes change on input pin after 2048 rising clock edges.
+   PRESCALE_DIV8k  : constant := 2#1100#; -- Prescaler divides the prescaler clock by 8192; glitch filter recognizes change on input pin after 4096 rising clock edges.
+   PRESCALE_DIV16k : constant := 2#1101#; -- Prescaler divides the prescaler clock by 16,384; glitch filter recognizes change on input pin after 8192 rising clock edges.
+   PRESCALE_DIV32k : constant := 2#1110#; -- Prescaler divides the prescaler clock by 32,768; glitch filter recognizes change on input pin after 16,384 rising clock edges.
+   PRESCALE_DIV64k : constant := 2#1111#; -- Prescaler divides the prescaler clock by 65,536; glitch filter recognizes change on input pin after 32,768 rising clock edges.
+
+   type LPTMRx_PSR_Type is record
+      PCS      : Bits_2  := PCS_0;         -- Prescaler Clock Select
+      PBYP     : Boolean := False;         -- Prescaler Bypass
+      PRESCALE : Bits_4  := PRESCALE_DIV2; -- Prescale Value
+      Reserved : Bits_25 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LPTMRx_PSR_Type use record
+      PCS      at 0 range 0 ..  1;
+      PBYP     at 0 range 2 ..  2;
+      PRESCALE at 0 range 3 ..  6;
+      Reserved at 0 range 7 .. 31;
+   end record;
+
+   LPTMR0_PSR_ADDRESS : constant := 16#4004_0004#;
+
+   LPTMR0_PSR : aliased LPTMRx_PSR_Type
+      with Address              => System'To_Address (LPTMR0_PSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 33.3.3 Low Power Timer Compare Register (LPTMRx_CMR)
+
+   type LPTMRx_CMR_Type is record
+      COMPARE  : Unsigned_16 := 0; -- Compare Value
+      Reserved : Bits_16     := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LPTMRx_CMR_Type use record
+      COMPARE  at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   LPTMR0_CMR_ADDRESS : constant := 16#4004_0008#;
+
+   LPTMR0_CMR : aliased LPTMRx_CMR_Type
+      with Address              => System'To_Address (LPTMR0_CMR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 33.3.4 Low Power Timer Counter Register (LPTMRx_CNR)
+
+   type LPTMRx_CNR_Type is record
+      COUNTER  : Unsigned_16; -- Counter Value
+      Reserved : Bits_16;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LPTMRx_CNR_Type use record
+      COUNTER  at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   LPTMR0_CNR_ADDRESS : constant := 16#4004_000C#;
+
+   LPTMR0_CNR : aliased LPTMRx_CNR_Type
+      with Address              => System'To_Address (LPTMR0_CNR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 34 Real Time Clock (RTC)
