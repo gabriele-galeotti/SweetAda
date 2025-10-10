@@ -82,7 +82,7 @@ package body Timers
       CPU.Irq_Disable;
       while P /= null loop
          if P = T then
-            P := P.all.Next;
+            P := @.all.Next;
             if P /= null then
                P.all.Expire := @ + T.all.Expire;
             end if;
@@ -111,7 +111,7 @@ package body Timers
             CPU.Irq_Enable;
             Timer_List.all.Proc (Timer_List.all.Data);
             CPU.Irq_Disable;
-            Timer_List := Timer_List.all.Next;
+            Timer_List := @.all.Next;
          end if;
       end if;
    end Process;
