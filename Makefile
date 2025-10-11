@@ -872,7 +872,7 @@ endif
 .PHONY: help
 help:
 	@$(call echo-print,"make help (default)")
-	@$(call echo-print,"  Display an help about make targets.")
+	@$(call echo-print,"  Display an help about Make targets.")
 	@$(call echo-print,"make [RTS=<rts>] [CPU=<cpu>] [CPU_MODEL=<cpu_model>] \
                                  [TOOLCHAIN_NAME=<toolchain_name>] rts")
 	@$(call echo-print,"  Build RTS <rts> for CPU <cpu> [CPU model <cpu_model>] \
