@@ -43,10 +43,10 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
-   -- Interrupt Controller CPU (ICC)
+   -- B.24 Application Processing Unit (mpcore)
    ----------------------------------------------------------------------------
 
-   -- ICCICR
+   -- Register (mpcore) ICCICR
 
    type ICCICR_Type is record
       EnableS  : Boolean := False; -- Global enable for the signaling of Secure interrupts by the CPU interfaces to the connected processors.
@@ -67,7 +67,7 @@ pragma Style_Checks (Off);
       Reserved at 0 range 5 .. 31;
    end record;
 
-   -- ICCPMR
+   -- Register (mpcore) ICCPMR
 
    type ICCPMR_Type is record
       Priority : Unsigned_8 := 0; -- The priority mask level for the CPU interface.
@@ -80,7 +80,7 @@ pragma Style_Checks (Off);
       Reserved at 0 range 8 .. 31;
    end record;
 
-   -- ICCBPR
+   -- Register (mpcore) ICCBPR
 
    type ICCBPR_Type is record
       Binary_point : Bits_3  := 16#2#; -- The value of this field controls the 8-bit interrupt priority field is split into a group priority field, used to determine interrupt preemption, and a subpriority field.
@@ -93,22 +93,22 @@ pragma Style_Checks (Off);
       Reserved     at 0 range 3 .. 31;
    end record;
 
-   -- ICCAR
+   -- Register (mpcore) ICCIAR
 
-   type ICCAR_Type is record
+   type ICCIAR_Type is record
       ACKINTID : Bits_10 := 16#3FF#; -- Identifies the processor that requested the interrupt.
       CPUID    : Bits_3  := 0;       -- The interrupt ID.
       Reserved : Bits_19 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for ICCAR_Type use record
+   for ICCIAR_Type use record
       ACKINTID at 0 range  0 ..  9;
       CPUID    at 0 range 10 .. 12;
       Reserved at 0 range 13 .. 31;
    end record;
 
-   -- ICCEOIR
+   -- Register (mpcore) ICCEOIR
 
    type ICCEOIR_Type is record
       EOIINTID : Bits_10 := 0; -- The ACKINTID value from the corresponding ICCIAR access.
@@ -123,7 +123,7 @@ pragma Style_Checks (Off);
       Reserved at 0 range 13 .. 31;
    end record;
 
-   -- ICCRPR
+   -- Register (mpcore) ICCRPR
 
    type ICCRPR_Type is record
       Priority : Unsigned_8 := 16#FF#; -- The priority value of the highest priority interrupt that is active on the CPU interface.
@@ -136,7 +136,7 @@ pragma Style_Checks (Off);
       Reserved at 0 range 8 .. 31;
    end record;
 
-   -- ICCHPIR
+   -- Register (mpcore) ICCHPIR
 
    type ICCHPIR_Type is record
       PENDINTID : Bits_10 := 16#3FF#; -- The interrupt ID of the highest priority pending interrupt.
@@ -151,7 +151,7 @@ pragma Style_Checks (Off);
       Reserved  at 0 range 13 .. 31;
    end record;
 
-   -- ICCABPR
+   -- Register (mpcore) ICCABPR
 
    type ICCABPR_Type is record
       Binary_point : Bits_3  := 16#3#; -- Provides an alias of the Non-secure ICCBPR.
@@ -164,7 +164,7 @@ pragma Style_Checks (Off);
       Reserved     at 0 range 3 .. 31;
    end record;
 
-   -- ICCIDR
+   -- Register (mpcore) ICCIDR
 
    type ICCIDR_Type is record
       Implementer          : Bits_12; -- Returns the JEP106 code of the company that implemented the Cortex-A9 processor interface RTL.
@@ -181,11 +181,7 @@ pragma Style_Checks (Off);
       Part_number          at 0 range 20 .. 31;
    end record;
 
-   ----------------------------------------------------------------------------
-   -- Interrupt Controller Distributor (ICD)
-   ----------------------------------------------------------------------------
-
-   -- ICDDCR
+   -- Register (mpcore) ICDDCR
 
    type ICDDCR_Type is record
       Enable_secure     : Boolean := False; -- 0 = disables all Secure interrupt control bits in the distributor from changing state because of any external stimulus change that occurs on the corresponding SPI or PPI signals. 1 = enables the distributor to update register locations for Secure interrupts.
@@ -200,7 +196,7 @@ pragma Style_Checks (Off);
       Reserved          at 0 range 2 .. 31;
    end record;
 
-   -- ICDICTR
+   -- Register (mpcore) ICDICTR
 
    IT_Lines_Number_32_0    : constant := 2#00000#; -- the distributor provides 32 interrupts, no external interrupt lines.
    IT_Lines_Number_64_32   : constant := 2#00001#; -- the distributor provides 64 interrupts, 32 external interrupt lines.
@@ -237,7 +233,7 @@ pragma Style_Checks (Off);
       Reserved        at 0 range 16 .. 31;
    end record;
 
-   -- ICDIIDR
+   -- Register (mpcore) ICDIIDR
 
    type ICDIIDR_Type is record
       Implementer            : Bits_12; -- Implementer Number
@@ -273,7 +269,7 @@ pragma Style_Checks (Off);
       ICCICR   : ICCICR_Type            with Volatile_Full_Access => True;
       ICCPMR   : ICCPMR_Type            with Volatile_Full_Access => True;
       ICCBPR   : ICCBPR_Type            with Volatile_Full_Access => True;
-      ICCAR    : ICCAR_Type             with Volatile_Full_Access => True;
+      ICCIAR   : ICCIAR_Type            with Volatile_Full_Access => True;
       ICCEOIR  : ICCEOIR_Type           with Volatile_Full_Access => True;
       ICCRPR   : ICCRPR_Type            with Volatile_Full_Access => True;
       ICCHPIR  : ICCHPIR_Type           with Volatile_Full_Access => True;
@@ -301,7 +297,7 @@ pragma Style_Checks (Off);
       ICCICR   at 16#0100# range 0 .. 31;
       ICCPMR   at 16#0104# range 0 .. 31;
       ICCBPR   at 16#0108# range 0 .. 31;
-      ICCAR    at 16#010C# range 0 .. 31;
+      ICCIAR   at 16#010C# range 0 .. 31;
       ICCEOIR  at 16#0110# range 0 .. 31;
       ICCRPR   at 16#0114# range 0 .. 31;
       ICCHPIR  at 16#0118# range 0 .. 31;
@@ -337,7 +333,7 @@ pragma Style_Checks (Off);
    -- B.28 System Level Control Registers (slcr)
    ----------------------------------------------------------------------------
 
-   -- SCL
+   -- Register (slcr) SCL
 
    type SCL_Type is record
       LOCK     : Boolean := False; -- Secure configuration lock for these slcr registers: SCL, PSS_RST_CTRL, APU_CTRL, and WDT_CLK_SEL.
@@ -350,7 +346,7 @@ pragma Style_Checks (Off);
       Reserved at 0 range 1 .. 31;
    end record;
 
-   -- SLCR_LOCK
+   -- Register (slcr) SLCR_LOCK
 
    LOCK_KEY_VALUE : constant := 16#767B#;
 
@@ -365,7 +361,7 @@ pragma Style_Checks (Off);
       Reserved at 0 range 16 .. 31;
    end record;
 
-   -- SLCR_UNLOCK
+   -- Register (slcr) SLCR_UNLOCK
 
    UNLOCK_KEY_VALUE : constant := 16#DF0D#;
 
@@ -406,7 +402,7 @@ pragma Style_Checks (Off);
    -- B.32 Triple Timer Counter (ttc)
    ----------------------------------------------------------------------------
 
-   -- XTTCPS_CLK_CNTRL_OFFSET
+   -- Register (ttc) XTTCPS_CLK_CNTRL_OFFSET
 
    SRC_PCLK : constant := 0;
    SRC_EXT  : constant := 1;
@@ -429,7 +425,7 @@ pragma Style_Checks (Off);
       Unused   at 0 range 7 .. 31;
    end record;
 
-   -- XTTCPS_CNT_CNTRL_OFFSET
+   -- Register (ttc) XTTCPS_CNT_CNTRL_OFFSET
 
    INT_OVERFLOW : constant := 0;
    INT_INTERVAL : constant := 1;
@@ -461,7 +457,7 @@ pragma Style_Checks (Off);
       Unused   at 0 range 7 .. 31;
    end record;
 
-   -- XTTCPS_COUNT_VALUE_OFFSET
+   -- Register (ttc) XTTCPS_COUNT_VALUE_OFFSET
 
    type XTTCPS_COUNT_VALUE_Type is record
       MASK   : Unsigned_16;
@@ -475,7 +471,7 @@ pragma Style_Checks (Off);
       Unused at 0 range 16 .. 31;
    end record;
 
-   -- XTTCPS_INTERVAL_VAL_OFFSET
+   -- Register (ttc) XTTCPS_INTERVAL_VAL_OFFSET
 
    type XTTCPS_INTERVAL_VAL_Type is record
       COUNT_VALUE : Unsigned_16;
@@ -489,7 +485,7 @@ pragma Style_Checks (Off);
       Unused      at 0 range 16 .. 31;
    end record;
 
-   -- XTTCPS_MATCH_[012]_OFFSET
+   -- Register (ttc) XTTCPS_MATCH_[012]_OFFSET
 
    type XTTCPS_MATCH_Type is record
       MATCH  : Unsigned_16;
@@ -503,7 +499,7 @@ pragma Style_Checks (Off);
       Unused at 0 range 16 .. 31;
    end record;
 
-   -- XTTCPS_ISR_OFFSET
+   -- Register (ttc) XTTCPS_ISR_OFFSET
 
    type XTTCPS_ISR_Type is record
       IXR_INTERVAL : Boolean;
@@ -527,7 +523,7 @@ pragma Style_Checks (Off);
       Unused       at 0 range 6 .. 31;
    end record;
 
-   -- XTTCPS_IER_OFFSET
+   -- Register (ttc) XTTCPS_IER_OFFSET
 
    type XTTCPS_IER_Type is record
       IXR_INTERVAL_IEN : Boolean;
@@ -551,7 +547,7 @@ pragma Style_Checks (Off);
       Unused           at 0 range 6 .. 31;
    end record;
 
-   -- Event_Control_Timer_X
+   -- Register (ttc) Event_Control_Timer_[123]
 
    type Event_Control_Timer_Type is record
       E_En   : Boolean;
@@ -569,7 +565,7 @@ pragma Style_Checks (Off);
       Unused at 0 range 3 .. 31;
    end record;
 
-   -- Event_Register_X
+   -- Register (ttc) Event_Register_[123]
 
    type Event_Register_Type is record
       Event  : Unsigned_16;
@@ -645,9 +641,9 @@ pragma Style_Checks (Off);
    -- B.33 UART Controller (UART)
    ----------------------------------------------------------------------------
 
-   -- XUARTPS_CR_OFFSET
+   -- Register (UART) XUARTPS_CR_OFFSET
 
-   type XUARTPS_CR_OFFSET_Type is record
+   type XUARTPS_CR_Type is record
       RXRST    : Boolean := False; -- Software reset for Rx data path: 0: no affect 1: receiver logic is reset and all pending receiver data is discarded.
       TXRST    : Boolean := False; -- Software reset for Tx data path: 0: no affect 1: transmitter logic is reset and all pending transmitter data is discarded
       RX_EN    : Boolean := False; -- Receive enable: 0: disable 1: enable
@@ -661,7 +657,7 @@ pragma Style_Checks (Off);
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_CR_OFFSET_Type use record
+   for XUARTPS_CR_Type use record
       RXRST    at 0 range 0 ..  0;
       TXRST    at 0 range 1 ..  1;
       RX_EN    at 0 range 2 ..  2;
@@ -674,7 +670,7 @@ pragma Style_Checks (Off);
       Reserved at 0 range 9 .. 31;
    end record;
 
-   -- XUARTPS_MR_OFFSET
+   -- Register (UART) XUARTPS_MR_OFFSET
 
    CLKSEL_REFCLK     : constant := 0; -- clock source is uart_ref_clk
    CLKSEL_REFCLKDIV8 : constant := 1; -- clock source is uart_ref_clk/8
@@ -698,7 +694,7 @@ pragma Style_Checks (Off);
    CHMODE_LOOPBACK_LOCAL  : constant := 2#10#; -- local loopback
    CHMODE_LOOPBACK_REMOTE : constant := 2#11#; -- remote loopback
 
-   type XUARTPS_MR_OFFSET_Type is record
+   type XUARTPS_MR_Type is record
       CLKSEL    : Bits_1  := CLKSEL_REFCLK; -- Clock source select: This field defines whether a pre-scalar of 8 is applied to the baud rate generator input clock.
       CHRL      : Bits_2  := CHRL_8;        -- Character length select: Defines the number of bits in each character.
       PAR       : Bits_3  := PAR_EVEN;      -- Parity type select: Defines the expected parity to check on receive and the parity to generate on transmit.
@@ -710,7 +706,7 @@ pragma Style_Checks (Off);
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_MR_OFFSET_Type use record
+   for XUARTPS_MR_Type use record
       CLKSEL    at 0 range  0 ..  0;
       CHRL      at 0 range  1 ..  2;
       PAR       at 0 range  3 ..  5;
@@ -721,9 +717,9 @@ pragma Style_Checks (Off);
       Reserved3 at 0 range 12 .. 31;
    end record;
 
-   -- XUARTPS_I[EDMS]R_OFFSET
+   -- Register (UART) XUARTPS_I[EDMS]R_OFFSET
 
-   type XUARTPS_IEDMSR_OFFSET_Type is record
+   type XUARTPS_IEDMSR_Type is record
       IXR_RXOVR   : Boolean := False; -- Receiver FIFO Trigger interrupt
       IXR_RXEMPTY : Boolean := False; -- Receiver FIFO Empty interrupt
       IXR_RXFULL  : Boolean := False; -- Receiver FIFO Full interrupt
@@ -741,7 +737,7 @@ pragma Style_Checks (Off);
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_IEDMSR_OFFSET_Type use record
+   for XUARTPS_IEDMSR_Type use record
       IXR_RXOVR   at 0 range  0 ..  0;
       IXR_RXEMPTY at 0 range  1 ..  1;
       IXR_RXFULL  at 0 range  2 ..  2;
@@ -758,55 +754,55 @@ pragma Style_Checks (Off);
       Reserved    at 0 range 13 .. 31;
    end record;
 
-   -- XUARTPS_BAUDGEN_OFFSET
+   -- Register (UART) XUARTPS_BAUDGEN_OFFSET
 
    CD_DISABLE : constant := 0; -- Disables baud_sample
    CD_BYPASS  : constant := 1; -- Clock divisor bypass (baud_sample = sel_clk)
 
-   type XUARTPS_BAUDGEN_OFFSET_Type is record
+   type XUARTPS_BAUDGEN_Type is record
       CD       : Unsigned_16 := 16#28B#; -- Baud Rate Clock Divisor Value
       Reserved : Bits_16     := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_BAUDGEN_OFFSET_Type use record
+   for XUARTPS_BAUDGEN_Type use record
       CD       at 0 range  0 .. 15;
       Reserved at 0 range 16 .. 31;
    end record;
 
-   -- XUARTPS_RXTOUT_OFFSET
+   -- Register (UART) XUARTPS_RXTOUT_OFFSET
 
    RTO_DISABLE : constant := 0; -- Disables receiver timeout counter
 
-   type XUARTPS_RXTOUT_OFFSET_Type is record
+   type XUARTPS_RXTOUT_Type is record
       RTO      : Unsigned_8 := RTO_DISABLE; -- Receiver timeout value
       Reserved : Bits_24    := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_RXTOUT_OFFSET_Type use record
+   for XUARTPS_RXTOUT_Type use record
       RTO      at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
    end record;
 
-   -- XUARTPS_RXWM_OFFSET
+   -- Register (UART) XUARTPS_RXWM_OFFSET
 
    RTRIG_DISABLE : constant := 0; -- Disables receiver FIFO trigger level function
 
-   type XUARTPS_RXWM_OFFSET_Type is record
+   type XUARTPS_RXWM_Type is record
       RTRIG    : Bits_6  := 16#20#; -- Receiver FIFO trigger level value
       Reserved : Bits_26 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_RXWM_OFFSET_Type use record
+   for XUARTPS_RXWM_Type use record
       RTRIG    at 0 range 0 ..  5;
       Reserved at 0 range 6 .. 31;
    end record;
 
-   -- XUARTPS_MODEMCR_OFFSET
+   -- Register (UART) XUARTPS_MODEMCR_OFFSET
 
-   type XUARTPS_MODEMCR_OFFSET_Type is record
+   type XUARTPS_MODEMCR_Type is record
       DTR       : Boolean := False; -- Data Terminal Ready
       RTS       : Boolean := False; -- Request to send output control
       Reserved1 : Bits_3  := 0;
@@ -815,7 +811,7 @@ pragma Style_Checks (Off);
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_MODEMCR_OFFSET_Type use record
+   for XUARTPS_MODEMCR_Type use record
       DTR       at 0 range 0 ..  0;
       RTS       at 0 range 1 ..  1;
       Reserved1 at 0 range 2 ..  4;
@@ -823,9 +819,9 @@ pragma Style_Checks (Off);
       Reserved2 at 0 range 6 .. 31;
    end record;
 
-   -- XUARTPS_MODEMSR_OFFSET
+   -- Register (UART) XUARTPS_MODEMSR_OFFSET
 
-   type XUARTPS_MODEMSR_OFFSET_Type is record
+   type XUARTPS_MODEMSR_Type is record
       MEDEMSR_CTSX : Boolean := False; -- Delta Clear To Send status
       MEDEMSR_DSRX : Boolean := False; -- Delta Data Set Ready status
       MEDEMSR_RIX  : Boolean := False; -- Trailing Edge Ring Indicator status
@@ -839,7 +835,7 @@ pragma Style_Checks (Off);
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_MODEMSR_OFFSET_Type use record
+   for XUARTPS_MODEMSR_Type use record
       MEDEMSR_CTSX at 0 range 0 ..  0;
       MEDEMSR_DSRX at 0 range 1 ..  1;
       MEDEMSR_RIX  at 0 range 2 ..  2;
@@ -852,9 +848,9 @@ pragma Style_Checks (Off);
       Reserved     at 0 range 9 .. 31;
    end record;
 
-   -- XUARTPS_SR_OFFSET
+   -- Register (UART) XUARTPS_SR_OFFSET
 
-   type XUARTPS_SR_OFFSET_Type is record
+   type XUARTPS_SR_Type is record
       RXOVR     : Boolean; -- Receiver FIFO Trigger continuous status
       RXEMPTY   : Boolean; -- Receiver FIFO Full continuous status
       RXFULL    : Boolean; -- Receiver FIFO Full continuous status
@@ -874,7 +870,7 @@ pragma Style_Checks (Off);
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_SR_OFFSET_Type use record
+   for XUARTPS_SR_Type use record
       RXOVR     at 0 range  0 ..  0;
       RXEMPTY   at 0 range  1 ..  1;
       RXFULL    at 0 range  2 ..  2;
@@ -893,20 +889,20 @@ pragma Style_Checks (Off);
       Reserved6 at 0 range 15 .. 31;
    end record;
 
-   -- XUARTPS_FIFO_OFFSET
+   -- Register (UART) XUARTPS_FIFO_OFFSET
 
-   type XUARTPS_FIFO_OFFSET_Type is record
+   type XUARTPS_FIFO_Type is record
       FIFO     : Unsigned_8;
       Reserved : Bits_24    := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for XUARTPS_FIFO_OFFSET_Type use record
+   for XUARTPS_FIFO_Type use record
       FIFO     at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
    end record;
 
-   -- Baud_rate_divider_reg0
+   -- Register (UART) Baud_rate_divider_reg0
 
    BDIV_IGNORED   : constant := 0;
    BDIV_IGNORED_1 : constant := 1;
@@ -924,7 +920,7 @@ pragma Style_Checks (Off);
       Reserved at 0 range 8 .. 31;
    end record;
 
-   -- Flow_delay_reg0
+   -- Register (UART) Flow_delay_reg0
 
    FDEL_DISABLE   : constant := 0;
    FDEL_DISABLE_1 : constant := 1;
@@ -942,7 +938,7 @@ pragma Style_Checks (Off);
       Reserved at 0 range 6 .. 31;
    end record;
 
-   -- Tx_FIFO_trigger_level0
+   -- Register (UART) Tx_FIFO_trigger_level0
 
    TTRIG_DISABLE : constant := 0; -- Disables transmitter FIFO trigger level function
 
@@ -960,19 +956,19 @@ pragma Style_Checks (Off);
    -- UART layout
 
    type UART_Type is record
-      CR      : XUARTPS_CR_OFFSET_Type      with Volatile_Full_Access => True;
-      MR      : XUARTPS_MR_OFFSET_Type      with Volatile_Full_Access => True;
-      IER     : XUARTPS_IEDMSR_OFFSET_Type  with Volatile_Full_Access => True;
-      IDR     : XUARTPS_IEDMSR_OFFSET_Type  with Volatile_Full_Access => True;
-      IMR     : XUARTPS_IEDMSR_OFFSET_Type  with Volatile_Full_Access => True;
-      ISR     : XUARTPS_IEDMSR_OFFSET_Type  with Volatile_Full_Access => True;
-      BAUDGEN : XUARTPS_BAUDGEN_OFFSET_Type with Volatile_Full_Access => True;
-      RXTOUT  : XUARTPS_RXTOUT_OFFSET_Type  with Volatile_Full_Access => True;
-      RXWM    : XUARTPS_RXWM_OFFSET_Type    with Volatile_Full_Access => True;
-      MODEMCR : XUARTPS_MODEMCR_OFFSET_Type with Volatile_Full_Access => True;
-      MODEMSR : XUARTPS_MODEMSR_OFFSET_Type with Volatile_Full_Access => True;
-      SR      : XUARTPS_SR_OFFSET_Type      with Volatile_Full_Access => True;
-      FIFO    : XUARTPS_FIFO_OFFSET_Type    with Volatile_Full_Access => True;
+      CR      : XUARTPS_CR_Type             with Volatile_Full_Access => True;
+      MR      : XUARTPS_MR_Type             with Volatile_Full_Access => True;
+      IER     : XUARTPS_IEDMSR_Type         with Volatile_Full_Access => True;
+      IDR     : XUARTPS_IEDMSR_Type         with Volatile_Full_Access => True;
+      IMR     : XUARTPS_IEDMSR_Type         with Volatile_Full_Access => True;
+      ISR     : XUARTPS_IEDMSR_Type         with Volatile_Full_Access => True;
+      BAUDGEN : XUARTPS_BAUDGEN_Type        with Volatile_Full_Access => True;
+      RXTOUT  : XUARTPS_RXTOUT_Type         with Volatile_Full_Access => True;
+      RXWM    : XUARTPS_RXWM_Type           with Volatile_Full_Access => True;
+      MODEMCR : XUARTPS_MODEMCR_Type        with Volatile_Full_Access => True;
+      MODEMSR : XUARTPS_MODEMSR_Type        with Volatile_Full_Access => True;
+      SR      : XUARTPS_SR_Type             with Volatile_Full_Access => True;
+      FIFO    : XUARTPS_FIFO_Type           with Volatile_Full_Access => True;
       BRDR0   : Baud_rate_divider_reg0_Type with Volatile_Full_Access => True;
       FDR0    : Flow_delay_reg0_Type        with Volatile_Full_Access => True;
       TXFTL0  : Tx_FIFO_trigger_level0_Type with Volatile_Full_Access => True;
