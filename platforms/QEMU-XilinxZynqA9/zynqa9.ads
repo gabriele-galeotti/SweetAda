@@ -485,7 +485,9 @@ pragma Style_Checks (Off);
       Unused      at 0 range 16 .. 31;
    end record;
 
-   -- Register (ttc) XTTCPS_MATCH_[012]_OFFSET
+   -- Register (ttc) XTTCPS_MATCH_0_OFFSET
+   -- Register (ttc) XTTCPS_MATCH_1_OFFSET
+   -- Register (ttc) XTTCPS_MATCH_2_OFFSET
 
    type XTTCPS_MATCH_Type is record
       MATCH  : Unsigned_16;
@@ -547,7 +549,9 @@ pragma Style_Checks (Off);
       Unused           at 0 range 6 .. 31;
    end record;
 
-   -- Register (ttc) Event_Control_Timer_[123]
+   -- Register (ttc) Event_Control_Timer_1
+   -- Register (ttc) Event_Control_Timer_2
+   -- Register (ttc) Event_Control_Timer_3
 
    type Event_Control_Timer_Type is record
       E_En   : Boolean;
@@ -565,7 +569,9 @@ pragma Style_Checks (Off);
       Unused at 0 range 3 .. 31;
    end record;
 
-   -- Register (ttc) Event_Register_[123]
+   -- Register (ttc) Event_Register_1
+   -- Register (ttc) Event_Register_2
+   -- Register (ttc) Event_Register_3
 
    type Event_Register_Type is record
       Event  : Unsigned_16;
@@ -717,7 +723,10 @@ pragma Style_Checks (Off);
       Reserved3 at 0 range 12 .. 31;
    end record;
 
-   -- Register (UART) XUARTPS_I[EDMS]R_OFFSET
+   -- Register (UART) XUARTPS_IER_OFFSET
+   -- Register (UART) XUARTPS_IDR_OFFSET
+   -- Register (UART) XUARTPS_IMR_OFFSET
+   -- Register (UART) XUARTPS_ISR_OFFSET
 
    type XUARTPS_IEDMSR_Type is record
       IXR_RXOVR   : Boolean := False; -- Receiver FIFO Trigger interrupt
