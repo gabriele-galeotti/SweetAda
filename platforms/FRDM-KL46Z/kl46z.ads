@@ -3411,12 +3411,284 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 31.3.1 Status and Control (TPMx_SC)
+
+   PS_DIV1   : constant := 2#000#; -- Divide by 1
+   PS_DIV2   : constant := 2#001#; -- Divide by 2
+   PS_DIV4   : constant := 2#010#; -- Divide by 4
+   PS_DIV8   : constant := 2#011#; -- Divide by 8
+   PS_DIV16  : constant := 2#100#; -- Divide by 16
+   PS_DIV32  : constant := 2#101#; -- Divide by 32
+   PS_DIV64  : constant := 2#110#; -- Divide by 64
+   PS_DIV128 : constant := 2#111#; -- Divide by 128
+
+   CMOD_NONE : constant := 2#00#; -- TPM counter is disabled
+   CMOD_INCR : constant := 2#01#; -- TPM counter increments on every TPM counter clock
+   CMOD_DECR : constant := 2#10#; -- TPM counter increments on rising edge of TPM_EXTCLK synchronized to the TPM counter clock
+   CMOD_RSVD : constant := 2#11#; -- Reserved
+
+   CPWMS_UP     : constant := 0; -- TPM counter operates in up counting mode.
+   CPWMS_UPDOWN : constant := 1; -- TPM counter operates in up-down counting mode.
+
+   type TPMx_SC_Type is record
+      PS       : Bits_3  := PS_DIV1;   -- Prescale Factor Selection
+      CMOD     : Bits_2  := CMOD_NONE; -- Clock Mode Selection
+      CPWMS    : Bits_1  := CPWMS_UP;  -- Center-aligned PWM Select
+      TOIE     : Boolean := False;     -- Timer Overflow Interrupt Enable
+      TOF      : Boolean := False;     -- Timer Overflow Flag
+      DMA      : Boolean := False;     -- DMA Enable
+      Reserved : Bits_23 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TPMx_SC_Type use record
+      PS       at 0 range 0 ..  2;
+      CMOD     at 0 range 3 ..  4;
+      CPWMS    at 0 range 5 ..  5;
+      TOIE     at 0 range 6 ..  6;
+      TOF      at 0 range 7 ..  7;
+      DMA      at 0 range 8 ..  8;
+      Reserved at 0 range 9 .. 31;
+   end record;
+
    -- 31.3.2 Counter (TPMx_CNT)
+
+   type TPMx_CNT_Type is record
+      COUNT    : Unsigned_16 := 0; -- Counter Value
+      Reserved : Bits_16     := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TPMx_CNT_Type use record
+      COUNT    at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
    -- 31.3.3 Modulo (TPMx_MOD)
+
+   type TPMx_MOD_Type is record
+      MODulo   : Unsigned_16 := 16#FFFF#; -- Modulo Value
+      Reserved : Bits_16     := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TPMx_MOD_Type use record
+      MODulo   at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
    -- 31.3.4 Channel (n) Status and Control (TPMx_CnSC)
+
+   -- TPMx_SC.CPWMS = x
+   --   MSnB:MSnA = 00 (MSAB_NONE)
+   ELSAB_NONE           : constant := 2#00#; -- Channel disabled
+   --   MSnB:MSnA = 01 (MSAB_SWCMP)
+   ELSAB_SWCMP          : constant := 2#00#; -- Pin not used for TPM
+   -- TPMx_SC.CPWMS = 0 (CPWMS_UP)
+   --   MSnB:MSnA = 00 (MSAB_INPCAP)
+   ELSAB_INPCAP_RISEDG  : constant := 2#01#; -- Capture on Rising Edge Only
+   ELSAB_INPCAP_FALLEDG : constant := 2#10#; -- Capture on Falling Edge Only
+   ELSAB_INPCAP_BOTHEDG : constant := 2#11#; -- Capture on Rising or Falling Edge
+   --   MSnB:MSnA = 01 (MSAB_OUTCMP_TCS)
+   ELSAB_OUTCMP_OUTTOGL : constant := 2#01#; -- Toggle Output on match
+   ELSAB_OUTCMP_OUTCLR  : constant := 2#10#; -- Clear Output on match
+   ELSAB_OUTCMP_OUTSET  : constant := 2#11#; -- Set Output on match
+   --   MSnB:MSnA = 10 (MSAB_EAPWM)
+   ELSAB_EAPWM_HIGH     : constant := 2#10#; -- High-true pulses (clear Output on match, set Output on reload)
+   ELSAB_EAPWM_LOW      : constant := 2#01#; -- Low-true pulses (set Output on match, clear Output on reload)
+   ELSAB_EAPWM_LOW_2    : constant := 2#11#; -- ''
+   --   MSnB:MSnA = 11 (MSAB_OUTCMP_PULSE)
+   ELSAB_OUTCMP_PULSELO : constant := 2#10#; -- Pulse Output low on match
+   ELSAB_OUTCMP_PULSEHI : constant := 2#01#; -- Pulse Output high on match
+   -- TPMx_SC.CPWMS = 1 (CPWMS_UPDOWN)
+   --   MSnB:MSnA = 10 (MSAB_CAPWM)
+   ELSAB_CAPWM_PULSEHI  : constant := 2#10#; -- High-true pulses (clear Output on match-up, set Output on match-down)
+   ELSAB_CAPWM_PULSELO  : constant := 2#01#; -- Low-true pulses (set Output on match-up, clear Output on match-down)
+
+   -- ELSnB:ELSnA = 00 (ELSAB_NONE,ELSAB_SWCMP)
+   MSAB_NONE         : constant := 2#00#; -- Channel disabled
+   MSAB_SWCMP        : constant := 2#01#; -- Software compare
+   -- ELSnB:ELSnA = 01,10,11 TPMx_SC.CPWMS = 0 (CPWMS_UP)
+   MSAB_INPCAP       : constant := 2#00#; -- Input capture
+   MSAB_OUTCMP_TCS   : constant := 2#01#; -- Output compare
+   MSAB_EAPWM        : constant := 2#10#; -- Edge-aligned PWM
+   MSAB_OUTCMP_PULSE : constant := 2#11#; -- Output compare
+   -- ELSnB:ELSnA = 10,01 TPMx_SC.CPWMS = 1 (CPWMS_UPDOWN)
+   MSAB_CAPWM        : constant := 2#10#; -- Center-aligned PWM
+
+   type TPMx_CnSC_Type is record
+      DMA       : Boolean := False;      -- DMA Enable
+      Reserved1 : Bits_1  := 0;
+      ELSAB     : Bits_2  := ELSAB_NONE; -- Edge or Level Select
+      MSAB      : Bits_2  := MSAB_NONE;  -- Channel Mode Select
+      CHIE      : Boolean := False;      -- Channel Interrupt Enable
+      CHF       : Boolean := False;      -- Channel Flag
+      Reserved2 : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TPMx_CnSC_Type use record
+      DMA       at 0 range 0 ..  0;
+      Reserved1 at 0 range 1 ..  1;
+      ELSAB     at 0 range 2 ..  3;
+      MSAB      at 0 range 4 ..  5;
+      CHIE      at 0 range 6 ..  6;
+      CHF       at 0 range 7 ..  7;
+      Reserved2 at 0 range 8 .. 31;
+   end record;
+
    -- 31.3.5 Channel (n) Value (TPMx_CnV)
+
+   type TPMx_CnV_Type is record
+      VAL      : Unsigned_16 := 0; -- Channel Value
+      Reserved : Bits_16     := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TPMx_CnV_Type use record
+      VAL      at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
    -- 31.3.6 Capture and Compare Status (TPMx_STATUS)
+
+   type TPMx_STATUS_Type is record
+      CH0F      : Boolean := False; -- Channel 0 Flag
+      CH1F      : Boolean := False; -- Channel 1 Flag
+      CH2F      : Boolean := False; -- Channel 2 Flag
+      CH3F      : Boolean := False; -- Channel 3 Flag
+      CH4F      : Boolean := False; -- Channel 4 Flag
+      CH5F      : Boolean := False; -- Channel 5 Flag
+      Reserved1 : Bits_2  := 0;
+      TOF       : Boolean := False; -- Timer Overflow Flag
+      Reserved2 : Bits_23 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TPMx_STATUS_Type use record
+      CH0F      at 0 range 0 ..  0;
+      CH1F      at 0 range 1 ..  1;
+      CH2F      at 0 range 2 ..  2;
+      CH3F      at 0 range 3 ..  3;
+      CH4F      at 0 range 4 ..  4;
+      CH5F      at 0 range 5 ..  5;
+      Reserved1 at 0 range 6 ..  7;
+      TOF       at 0 range 8 ..  8;
+      Reserved2 at 0 range 9 .. 31;
+   end record;
+
    -- 31.3.7 Configuration (TPMx_CONF)
+
+   DBGMODE_PAUSED   : constant := 2#00#; -- TPM counter is paused and does not increment during debug mode. Trigger inputs and input capture events are also ignored.
+   DBGMODE_CONTINUE : constant := 2#11#; -- TPM counter continues in debug mode.
+
+   -- Table 3-38. TPM trigger options
+   TRGSEL_EXTRG_IN  : constant := 2#0000#; -- External trigger pin input (EXTRG_IN)
+   TRGSEL_CMP0_OUT  : constant := 2#0001#; -- CMP0 output
+   TRGSEL_RSVD1     : constant := 2#0010#; -- Reserved
+   TRGSEL_RSVD2     : constant := 2#0011#; -- Reserved
+   TRGSEL_PIT_TRG0  : constant := 2#0100#; -- PIT trigger 0
+   TRGSEL_PIT_TRG1  : constant := 2#0101#; -- PIT trigger 1
+   TRGSEL_RSVD3     : constant := 2#0110#; -- Reserved
+   TRGSEL_RSVD4     : constant := 2#0111#; -- Reserved
+   TRGSEL_TPM0_OVF  : constant := 2#1000#; -- TPM0 overflow
+   TRGSEL_TPM1_OVF  : constant := 2#1001#; -- TPM1 overflow
+   TRGSEL_TPM2_OVF  : constant := 2#1010#; -- TPM2 overflow
+   TRGSEL_RSVD5     : constant := 2#1011#; -- Reserved
+   TRGSEL_RTC_ALARM : constant := 2#1100#; -- RTC alarm
+   TRGSEL_RTC_SECS  : constant := 2#1101#; -- RTC seconds
+   TRGSEL_LPTMR_TRG : constant := 2#1110#; -- LPTMR trigger
+   TRGSEL_RSVD6     : constant := 2#1111#; -- Reserved
+
+   type TPMx_CONF_Type is record
+      Reserved1 : Bits_5  := 0;
+      DOZEEN    : Boolean := False;           -- Doze Enable
+      DBGMODE   : Bits_2  := DBGMODE_PAUSED;  -- Debug Mode
+      Reserved2 : Bits_1  := 0;
+      GTBEEN    : Boolean := False;           -- Global time base enable
+      Reserved3 : Bits_6  := 0;
+      CSOT      : Boolean := False;           -- Counter Start on Trigger
+      CSOO      : Boolean := False;           -- Counter Stop On Overflow
+      CROT      : Boolean := False;           -- Counter Reload On Trigger
+      Reserved4 : Bits_5  := 0;
+      TRGSEL    : Bits_4  := TRGSEL_EXTRG_IN; -- Trigger Select
+      Reserved5 : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TPMx_CONF_Type use record
+      Reserved1 at 0 range  0 ..  4;
+      DOZEEN    at 0 range  5 ..  5;
+      DBGMODE   at 0 range  6 ..  7;
+      Reserved2 at 0 range  8 ..  8;
+      GTBEEN    at 0 range  9 ..  9;
+      Reserved3 at 0 range 10 .. 15;
+      CSOT      at 0 range 16 .. 16;
+      CSOO      at 0 range 17 .. 17;
+      CROT      at 0 range 18 .. 18;
+      Reserved4 at 0 range 19 .. 23;
+      TRGSEL    at 0 range 24 .. 27;
+      Reserved5 at 0 range 28 .. 31;
+   end record;
+
+   -- 31.3 Memory Map and Register Definition
+
+   type TPM_Type is record
+      SC     : TPMx_SC_Type     with Volatile_Full_Access => True;
+      CNT    : TPMx_CNT_Type    with Volatile_Full_Access => True;
+      MODulo : TPMx_MOD_Type    with Volatile_Full_Access => True;
+      C0SC   : TPMx_CnSC_Type   with Volatile_Full_Access => True;
+      C0V    : TPMx_CnV_Type    with Volatile_Full_Access => True;
+      C1SC   : TPMx_CnSC_Type   with Volatile_Full_Access => True;
+      C1V    : TPMx_CnV_Type    with Volatile_Full_Access => True;
+      C2SC   : TPMx_CnSC_Type   with Volatile_Full_Access => True;
+      C2V    : TPMx_CnV_Type    with Volatile_Full_Access => True;
+      C3SC   : TPMx_CnSC_Type   with Volatile_Full_Access => True;
+      C3V    : TPMx_CnV_Type    with Volatile_Full_Access => True;
+      C4SC   : TPMx_CnSC_Type   with Volatile_Full_Access => True;
+      C4V    : TPMx_CnV_Type    with Volatile_Full_Access => True;
+      C5SC   : TPMx_CnSC_Type   with Volatile_Full_Access => True;
+      C5V    : TPMx_CnV_Type    with Volatile_Full_Access => True;
+      STATUS : TPMx_STATUS_Type with Volatile_Full_Access => True;
+      CONF   : TPMx_CONF_Type   with Volatile_Full_Access => True;
+   end record
+      with Size => 16#88# * 8;
+   for TPM_Type use record
+      SC     at 16#00# range 0 .. 31;
+      CNT    at 16#04# range 0 .. 31;
+      MODulo at 16#08# range 0 .. 31;
+      C0SC   at 16#0C# range 0 .. 31;
+      C0V    at 16#10# range 0 .. 31;
+      C1SC   at 16#14# range 0 .. 31;
+      C1V    at 16#18# range 0 .. 31;
+      C2SC   at 16#1C# range 0 .. 31;
+      C2V    at 16#20# range 0 .. 31;
+      C3SC   at 16#24# range 0 .. 31;
+      C3V    at 16#28# range 0 .. 31;
+      C4SC   at 16#2C# range 0 .. 31;
+      C4V    at 16#30# range 0 .. 31;
+      C5SC   at 16#34# range 0 .. 31;
+      C5V    at 16#38# range 0 .. 31;
+      STATUS at 16#50# range 0 .. 31;
+      CONF   at 16#84# range 0 .. 31;
+   end record;
+
+   TPM0 : aliased TPM_Type
+      with Address    => System'To_Address (16#4003_8000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   TPM1 : aliased TPM_Type
+      with Address    => System'To_Address (16#4003_9000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   TPM2 : aliased TPM_Type
+      with Address    => System'To_Address (16#4003_A000#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 32 Periodic Interrupt Timer (PIT)
@@ -4951,14 +5223,15 @@ pragma Style_Checks (Off);
    NSCN_31 : constant := 2#11110#; -- 31 times per electrode
    NSCN_32 : constant := 2#11111#; -- 32 times per electrode
 
-   PS_DIV1   : constant := 2#000#; -- Electrode Oscillator Frequency divided by 1
-   PS_DIV2   : constant := 2#001#; -- Electrode Oscillator Frequency divided by 2
-   PS_DIV4   : constant := 2#010#; -- Electrode Oscillator Frequency divided by 4
-   PS_DIV8   : constant := 2#011#; -- Electrode Oscillator Frequency divided by 8
-   PS_DIV16  : constant := 2#100#; -- Electrode Oscillator Frequency divided by 16
-   PS_DIV32  : constant := 2#101#; -- Electrode Oscillator Frequency divided by 32
-   PS_DIV64  : constant := 2#110#; -- Electrode Oscillator Frequency divided by 64
-   PS_DIV128 : constant := 2#111#; -- Electrode Oscillator Frequency divided by 128
+   -- PS_* already defined at 31.3.1
+   -- PS_DIV1   : constant := 2#000#; -- Electrode Oscillator Frequency divided by 1
+   -- PS_DIV2   : constant := 2#001#; -- Electrode Oscillator Frequency divided by 2
+   -- PS_DIV4   : constant := 2#010#; -- Electrode Oscillator Frequency divided by 4
+   -- PS_DIV8   : constant := 2#011#; -- Electrode Oscillator Frequency divided by 8
+   -- PS_DIV16  : constant := 2#100#; -- Electrode Oscillator Frequency divided by 16
+   -- PS_DIV32  : constant := 2#101#; -- Electrode Oscillator Frequency divided by 32
+   -- PS_DIV64  : constant := 2#110#; -- Electrode Oscillator Frequency divided by 64
+   -- PS_DIV128 : constant := 2#111#; -- Electrode Oscillator Frequency divided by 128
 
    EXTCHRG_500nA : constant := 2#000#; -- 500 nA.
    EXTCHRG_1uA   : constant := 2#001#; -- 1 μA.
