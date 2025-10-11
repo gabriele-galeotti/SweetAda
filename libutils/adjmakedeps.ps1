@@ -58,7 +58,7 @@ function Write-Stderr
   }
   else
   {
-    [String[]]$lines = @()
+    [string[]]$lines = @()
     $input | % { $lines += $_.ToString() }
     [void]$outf.Invoke($lines -Join $nl)
   }
