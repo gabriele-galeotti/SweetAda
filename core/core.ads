@@ -59,6 +59,6 @@ package Core
       return Stack_Access
       with Export        => True,
            Convention    => C,
-           External_Name => "_gnat_stack_check";
+           External_Name => "__gnat_stack_check";
 
 end Core;
