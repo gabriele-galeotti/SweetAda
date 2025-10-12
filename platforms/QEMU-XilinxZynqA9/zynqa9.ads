@@ -43,6 +43,62 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
+   -- B.3 Module Summary
+   ----------------------------------------------------------------------------
+
+   -- Module Name                   Base Address                  Module Type                       Description
+   axi_hp0_BASEADDRESS            : constant := 16#F800_8000#; -- axi_hp                            AXI_HP Interface (AFI), Interface 0
+   axi_hp1_BASEADDRESS            : constant := 16#F800_9000#; -- axi_hp                            AXI_HP Interface (AFI), Interface 1
+   axi_hp2_BASEADDRESS            : constant := 16#F800_A000#; -- axi_hp                            AXI_HP Interface (AFI), Interface 2
+   axi_hp3_BASEADDRESS            : constant := 16#F800_B000#; -- axi_hp                            AXI_HP Interface (AFI), Interface 3
+   can0_BASEADDRESS               : constant := 16#E000_8000#; -- can                               Controller Area Network
+   can1_BASEADDRESS               : constant := 16#E000_9000#; -- can                               Controller Area Network
+   ddrc_BASEADDRESS               : constant := 16#F800_6000#; -- ddrc                              DDR memory controller
+   debug_cpu_cti0_BASEADDRESS     : constant := 16#F889_8000#; -- cti                               Cross Trigger Interface, CPU 0
+   debug_cpu_cti1_BASEADDRESS     : constant := 16#F889_9000#; -- cti                               Cross Trigger Interface, CPU 1
+   debug_cpu_pmu0_BASEADDRESS     : constant := 16#F889_1000#; -- cortexa9_pmu                      Cortex A9 Performance Monitoring Unit, CPU 0
+   debug_cpu_pmu1_BASEADDRESS     : constant := 16#F889_3000#; -- cortexa9_pmu                      Cortex A9 Performance Monitoring Unit, CPU 1
+   debug_cpu_ptm0_BASEADDRESS     : constant := 16#F889_C000#; -- ptm                               CoreSight PTM-A9, CPU 0
+   debug_cpu_ptm1_BASEADDRESS     : constant := 16#F889_D000#; -- ptm                               CoreSight PTM-A9, CPU 1
+   debug_cti_etb_tpiu_BASEADDRESS : constant := 16#F880_2000#; -- cti                               Cross Trigger Interface, ETB and TPIU
+   debug_cti_ftm_BASEADDRESS      : constant := 16#F880_9000#; -- cti                               Cross Trigger Interface, FTM
+   debug_dap_rom_BASEADDRESS      : constant := 16#F880_0000#; -- dap                               Debug Access Port ROM Table
+   debug_etb_BASEADDRESS          : constant := 16#F880_1000#; -- etb                               Embedded Trace Buffer
+   debug_ftm_BASEADDRESS          : constant := 16#F880_B000#; -- ftm                               Fabric Trace Macrocell
+   debug_funnel_BASEADDRESS       : constant := 16#F880_4000#; -- funnel                            CoreSight Trace Funnel
+   debug_itm_BASEADDRESS          : constant := 16#F880_5000#; -- itm                               Instrumentation Trace Macrocell
+   debug_tpiu_BASEADDRESS         : constant := 16#F880_3000#; -- tpiu                              Trace Port Interface Unit
+   devcfg_BASEADDRESS             : constant := 16#F800_7000#; -- devcfg                            Device configuraion Interface
+   dmac0_ns_BASEADDRESS           : constant := 16#F800_4000#; -- dmac                              Direct Memory Access Controller, PL330, Non-Secure Mode
+   dmac0_s_BASEADDRESS            : constant := 16#F800_3000#; -- dmac                              Direct Memory Access Controller, PL330, Secure Mode
+   gem0_BASEADDRESS               : constant := 16#E000_B000#; -- GEM                               Gigabit Ethernet Controller
+   gem1_BASEADDRESS               : constant := 16#E000_C000#; -- GEM                               Gigabit Ethernet Controller
+   gpio_BASEADDRESS               : constant := 16#E000_A000#; -- gpio                              General Purpose Input / Output
+   gpv_qos301_cpu_BASEADDRESS     : constant := 16#F894_6000#; -- qos301                            AMBA Network Interconnect Advanced Quality of Service (QoS-301), CPU-to-DDR
+   gpv_qos301_dmac_BASEADDRESS    : constant := 16#F894_7000#; -- qos301                            AMBA Network Interconnect Advanced Quality of Service (QoS-301), DMAC
+   gpv_qos301_iou_BASEADDRESS     : constant := 16#F894_8000#; -- qos301                            AMBA Network Interconnect Advanced Quality of Service (QoS-301), IOU
+   gpv_trustzone_BASEADDRESS      : constant := 16#F890_0000#; -- nic301_addr_region_ctrl_registers AMBA NIC301 TrustZone.
+   i2c0_BASEADDRESS               : constant := 16#E000_4000#; -- IIC                               Inter Integrated Circuit (I2C)
+   i2c1_BASEADDRESS               : constant := 16#E000_5000#; -- IIC                               Inter Integrated Circuit (I2C)
+   l2cache_BASEADDRESS            : constant := 16#F8F0_2000#; -- L2Cpl310                          L2 cache PL310
+   mpcore_BASEADDRESS             : constant := 16#F8F0_0000#; -- mpcore                            Mpcore - SCU, Interrupt controller, Counters and Timers
+   ocm_BASEADDRESS                : constant := 16#F800_C000#; -- ocm                               On-Chip Memory Registers
+   qspi_BASEADDRESS               : constant := 16#E000_D000#; -- qspi                              LQSPI module Registers
+   sd0_BASEADDRESS                : constant := 16#E010_0000#; -- sdio                              SD2.0/ SDIO2.0/ MMC3.31 AHB Host ControllerRegisters
+   sd1_BASEADDRESS                : constant := 16#E010_1000#; -- sdio                              SD2.0/ SDIO2.0/ MMC3.31 AHB Host ControllerRegisters
+   slcr_BASEADDRESS               : constant := 16#F800_0000#; -- slcr                              System Level Control Registers
+   smcc_BASEADDRESS               : constant := 16#E000_E000#; -- pl353                             Shared memory controller
+   spi0_BASEADDRESS               : constant := 16#E000_6000#; -- SPI                               Serial Peripheral Interface
+   spi1_BASEADDRESS               : constant := 16#E000_7000#; -- SPI                               Serial Peripheral Interface
+   swdt_BASEADDRESS               : constant := 16#F800_5000#; -- swdt                              System Watchdog Timer Registers
+   ttc0_BASEADDRESS               : constant := 16#F800_1000#; -- ttc                               Triple Timer Counter
+   ttc1_BASEADDRESS               : constant := 16#F800_2000#; -- ttc                               Triple Timer Counter
+   uart0_BASEADDRESS              : constant := 16#E000_0000#; -- UART                              Universal Asynchronous Receiver Transmitter
+   uart1_BASEADDRESS              : constant := 16#E000_1000#; -- UART                              Universal Asynchronous Receiver Transmitter
+   usb0_BASEADDRESS               : constant := 16#E000_2000#; -- usb                               USB controller registers
+   usb1_BASEADDRESS               : constant := 16#E000_3000#; -- usb                               USB controller registers
+
+   ----------------------------------------------------------------------------
    -- B.24 Application Processing Unit (mpcore)
    ----------------------------------------------------------------------------
 
@@ -248,7 +304,30 @@ pragma Style_Checks (Off);
       Implementation_Version at 0 range 24 .. 31;
    end record;
 
-   -- Interrupt Processor Targets Register
+   -- Register (mpcore) ICDIPTR0
+   -- Register (mpcore) ICDIPTR1
+   -- Register (mpcore) ICDIPTR2
+   -- Register (mpcore) ICDIPTR3
+   -- Register (mpcore) ICDIPTR4
+   -- Register (mpcore) ICDIPTR5
+   -- Register (mpcore) ICDIPTR6
+   -- Register (mpcore) ICDIPTR7
+   -- Register (mpcore) ICDIPTR8
+   -- Register (mpcore) ICDIPTR9
+   -- Register (mpcore) ICDIPTR10
+   -- Register (mpcore) ICDIPTR11
+   -- Register (mpcore) ICDIPTR12
+   -- Register (mpcore) ICDIPTR13
+   -- Register (mpcore) ICDIPTR14
+   -- Register (mpcore) ICDIPTR15
+   -- Register (mpcore) ICDIPTR16
+   -- Register (mpcore) ICDIPTR17
+   -- Register (mpcore) ICDIPTR18
+   -- Register (mpcore) ICDIPTR19
+   -- Register (mpcore) ICDIPTR20
+   -- Register (mpcore) ICDIPTR21
+   -- Register (mpcore) ICDIPTR22
+   -- Register (mpcore) ICDIPTR23
 
    ICDIPTR_NOCPU : constant := 2#00#; -- no CPU targeted
    ICDIPTR_CPU0  : constant := 2#01#; -- CPU 0 targeted
@@ -263,9 +342,9 @@ pragma Style_Checks (Off);
    type ICDIPTR_Type is array (Natural range <>) of ICDIPTR_Array_Type
       with Pack => True;
 
-   -- APU layout
+   -- mpcore layout
 
-   type APU_Type is record
+   type mpcore_Type is record
       ICCICR   : ICCICR_Type            with Volatile_Full_Access => True;
       ICCPMR   : ICCPMR_Type            with Volatile_Full_Access => True;
       ICCBPR   : ICCBPR_Type            with Volatile_Full_Access => True;
@@ -293,7 +372,7 @@ pragma Style_Checks (Off);
       ICDIPTR  : ICDIPTR_Type (0 .. 23);
    end record
       with Size  => 16#1860# * 8;
-   for APU_Type use record
+   for mpcore_Type use record
       ICCICR   at 16#0100# range 0 .. 31;
       ICCPMR   at 16#0104# range 0 .. 31;
       ICCBPR   at 16#0108# range 0 .. 31;
@@ -321,10 +400,8 @@ pragma Style_Checks (Off);
       ICDIPTR  at 16#1800# range 0 .. 32 * 24 - 1;
    end record;
 
-   APU_BASEADDRESS : constant := 16#F8F0_0000#;
-
-   APU : aliased APU_Type
-      with Address    => System'To_Address (APU_BASEADDRESS),
+   mpcore : aliased mpcore_Type
+      with Address    => System'To_Address (mpcore_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -378,22 +455,20 @@ pragma Style_Checks (Off);
 
    -- slcr layout
 
-   type SLCR_Type is record
+   type slcr_Type is record
       SCL         : SCL_Type         with Volatile_Full_Access => True;
       SLCR_LOCK   : SLCR_LOCK_Type   with Volatile_Full_Access => True;
       SLCR_UNLOCK : SLCR_UNLOCK_Type with Volatile_Full_Access => True;
    end record
       with Size => 32 * 3;
-   for SLCR_Type use record
+   for slcr_Type use record
       SCL         at 0 range 0 .. 31;
       SLCR_LOCK   at 4 range 0 .. 31;
       SLCR_UNLOCK at 8 range 0 .. 31;
    end record;
 
-   SLCR_BASEADDRESS : constant := 16#F800_0000#;
-
-   SLCR : aliased SLCR_Type
-      with Address    => System'To_Address (SLCR_BASEADDRESS),
+   slcr : aliased slcr_Type
+      with Address    => System'To_Address (slcr_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -599,7 +674,7 @@ pragma Style_Checks (Off);
    type Event_Control_Timer_Array_Type is array (0 .. 2) of Event_Control_Timer_Type with Pack => True;
    type Event_Register_Array_Type      is array (0 .. 2) of Event_Register_Type      with Pack => True;
 
-   type TTC_Type is record
+   type ttc_Type is record
       CLK_CNTRL           : CLK_CNTRL_Array_Type;
       CNT_CNTRL           : CNT_CNTRL_Array_Type;
       COUNT_VALUE         : COUNT_VALUE_Array_Type;
@@ -613,7 +688,7 @@ pragma Style_Checks (Off);
       Event_Register      : Event_Register_Array_Type;
    end record
       with Size => 16#84# * 8;
-   for TTC_Type use record
+   for ttc_Type use record
       CLK_CNTRL           at 16#00# range 0 .. 32 * 3 - 1;
       CNT_CNTRL           at 16#0C# range 0 .. 32 * 3 - 1;
       COUNT_VALUE         at 16#18# range 0 .. 32 * 3 - 1;
@@ -627,18 +702,14 @@ pragma Style_Checks (Off);
       Event_Register      at 16#78# range 0 .. 32 * 3 - 1;
    end record;
 
-   TTC0_BASEADDRESS : constant := 16#F800_1000#;
-
-   TTC0 : aliased TTC_Type
-      with Address    => System'To_Address (TTC0_BASEADDRESS),
+   ttc0 : aliased ttc_Type
+      with Address    => System'To_Address (ttc0_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
 
-   TTC1_BASEADDRESS : constant := 16#F800_2000#;
-
-   TTC1 : aliased TTC_Type
-      with Address    => System'To_Address (TTC1_BASEADDRESS),
+   ttc1 : aliased ttc_Type
+      with Address    => System'To_Address (ttc1_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
@@ -1002,10 +1073,14 @@ pragma Style_Checks (Off);
       TXFTL0  at 16#44# range 0 .. 31;
    end record;
 
-   UART0_BASEADDRESS : constant := 16#E000_0000#;
+   uart0 : aliased UART_Type
+      with Address    => System'To_Address (uart0_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
-   UART0 : aliased UART_Type
-      with Address    => System'To_Address (UART0_BASEADDRESS),
+   uart1 : aliased UART_Type
+      with Address    => System'To_Address (uart1_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
