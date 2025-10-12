@@ -79,8 +79,8 @@ package body BSP
       -------------------------------------------------------------------------
       Secondary_Stack.Init;
       -- basic hardware initialization ----------------------------------------
-      ZynqA9.SLCR.SLCR_UNLOCK.UNLOCK_KEY := UNLOCK_KEY_VALUE;
-      ZynqA9.SLCR.SCL.LOCK := False;
+      slcr.SLCR_UNLOCK.UNLOCK_KEY := UNLOCK_KEY_VALUE;
+      slcr.SCL.LOCK := False;
       Exceptions.Init;
       UART_Init;
       -- Console --------------------------------------------------------------
@@ -96,7 +96,7 @@ package body BSP
          Console.Print ("Debug_Flag: ENABLED", NL => True);
       end if;
       -- GIC ------------------------------------------------------------------
-      ZynqA9.APU.ICCICR := (
+      mpcore.ICCICR := (
          EnableS  => False,
          EnableNS => False,
          AckCtl   => False,
@@ -104,30 +104,17 @@ package body BSP
          SBPR     => False,
          others   => <>
          );
-      ZynqA9.APU.ICDISR0 := [others => True];
-      ZynqA9.APU.ICDISR1 := [others => True];
-      ZynqA9.APU.ICDISR2 := [others => True];
-      ZynqA9.APU.ICDISER0 := [others => True];
-      ZynqA9.APU.ICDISER1 := [others => True];
-      ZynqA9.APU.ICDISER2 := [others => True];
-      ZynqA9.APU.ICDIPTR (8)  := [others => ICDIPTR_CPU0];
-      ZynqA9.APU.ICDIPTR (9)  := [others => ICDIPTR_CPU0];
-      ZynqA9.APU.ICDIPTR (10) := [others => ICDIPTR_CPU0];
-      ZynqA9.APU.ICDIPTR (11) := [others => ICDIPTR_CPU0];
-      ZynqA9.APU.ICDIPTR (12) := [others => ICDIPTR_CPU0];
-      ZynqA9.APU.ICDIPTR (13) := [others => ICDIPTR_CPU0];
-      ZynqA9.APU.ICDIPTR (14) := [others => ICDIPTR_CPU0];
-      ZynqA9.APU.ICDIPTR (15) := [others => ICDIPTR_CPU0];
-      ZynqA9.APU.ICDIPTR (16) := [others => ICDIPTR_CPU0];
-      ZynqA9.APU.ICDIPTR (17) := [others => ICDIPTR_CPU0];
-      ZynqA9.APU.ICDIPTR (18) := [others => ICDIPTR_CPU0];
-      ZynqA9.APU.ICDIPTR (19) := [others => ICDIPTR_CPU0];
-      ZynqA9.APU.ICDIPTR (20) := [others => ICDIPTR_CPU0];
-      ZynqA9.APU.ICDIPTR (21) := [others => ICDIPTR_CPU0];
-      ZynqA9.APU.ICDIPTR (22) := [others => ICDIPTR_CPU0];
-      ZynqA9.APU.ICDIPTR (23) := [others => ICDIPTR_CPU0];
-      ZynqA9.APU.ICCPMR.Priority := 16#FF#;
-      ZynqA9.APU.ICCICR := (
+      mpcore.ICDISR0 := [others => True];
+      mpcore.ICDISR1 := [others => True];
+      mpcore.ICDISR2 := [others => True];
+      mpcore.ICDISER0 := [others => True];
+      mpcore.ICDISER1 := [others => True];
+      mpcore.ICDISER2 := [others => True];
+      for Idx in 8 .. 23 loop
+         mpcore.ICDIPTR (Idx) := [others => ICDIPTR_CPU0];
+      end loop;
+      mpcore.ICCPMR.Priority := 16#FF#;
+      mpcore.ICCICR := (
          EnableS  => True,
          EnableNS => True,
          AckCtl   => True,
@@ -135,7 +122,7 @@ package body BSP
          SBPR     => False,
          others   => <>
          );
-      ZynqA9.APU.ICDDCR := (
+      mpcore.ICDDCR := (
          Enable_secure     => True,
          Enable_Non_secure => True,
          others            => <>
@@ -143,7 +130,7 @@ package body BSP
       -------------------------------------------------------------------------
       CPU.Irq_Enable;
       -- ttc timer ------------------------------------------------------------
-      TTC0.CNT_CNTRL (0) := (
+      ttc0.CNT_CNTRL (0) := (
          DIS      => False,
          INT      => INT_OVERFLOW,
          DECR     => True,
@@ -153,16 +140,16 @@ package body BSP
          POL_WAVE => POL_WAVE_L2H,
          others   => <>
          );
-      TTC0.INTERVAL_VAL (0).COUNT_VALUE :=
+      ttc0.INTERVAL_VAL (0).COUNT_VALUE :=
          Unsigned_16 (Configure.CLK_FREQUENCY / Configure.TICK_FREQUENCY);
-      TTC0.CLK_CNTRL (0) := (
+      ttc0.CLK_CNTRL (0) := (
          PS_EN    => True,
          PS_VAL   => 1,
          SRC      => SRC_PCLK,
          EXT_EDGE => False,
          others   => <>
          );
-      TTC0.IER (0).IXR_CNT_OVR_IEN := True;
+      ttc0.IER (0).IXR_CNT_OVR_IEN := True;
       -------------------------------------------------------------------------
    end Setup;
 

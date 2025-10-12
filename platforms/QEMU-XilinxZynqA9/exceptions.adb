@@ -79,7 +79,7 @@ package body Exceptions
       declare
          Unused : ZynqA9.XTTCPS_ISR_Type;
       begin
-         Unused := ZynqA9.TTC0.ISR (0);
+         Unused := ZynqA9.ttc0.ISR (0);
       end;
       BSP.Tick_Count := @ + 1;
    end Irq_Process;
