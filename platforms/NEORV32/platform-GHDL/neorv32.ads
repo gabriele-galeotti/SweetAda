@@ -648,9 +648,68 @@ pragma Style_Checks (Off);
    -- 2.8.17. Two-Wire Serial Device Controller (TWD)
    ----------------------------------------------------------------------------
 
+   TWD_CTRL_FSEL_DIV8  : constant := 0; -- The external two wire bus is sampled and synchronized into the processor’s clock domain with a sampling frequency of 1/8 of the processor’s main clock.
+   TWD_CTRL_FSEL_DIV64 : constant := 1; -- The external two wire bus is sampled and synchronized into the processor’s clock domain with a sampling frequency of 1/64 of the processor’s main clock.
+
+   type TWD_CTRL_Type is record
+      TWD_CTRL_EN           : Boolean := False;              -- TWD enable, reset if cleared
+      TWD_CTRL_CLR_RX       : Boolean := False;              -- Clear RX FIFO, flag auto-clears
+      TWD_CTRL_CLR_TX       : Boolean := False;              -- Clear TX FIFO, flag auto-clears
+      TWD_CTRL_FSEL         : Bits_1  := TWD_CTRL_FSEL_DIV8; -- Bus sample clock / filter select
+      TWD_CTRL_DEV_ADDR     : Bits_7  := 0;                  -- Device address (7-bit)
+      TWD_CTRL_IRQ_RX_AVAIL : Boolean := False;              -- IRQ if RX FIFO data available
+      TWD_CTRL_IRQ_RX_FULL  : Boolean := False;              -- IRQ if RX FIFO full
+      TWD_CTRL_IRQ_TX_EMPTY : Boolean := False;              -- IRQ if TX FIFO empty
+      Reserved1             : Bits_2  := 0;
+      TWD_CTRL_RX_FIFO      : Bits_4  := 0;                  -- FIFO depth; log2(IO_TWD_RX_FIFO)
+      TWD_CTRL_TX_FIFO      : Bits_4  := 0;                  -- FIFO depth; log2(IO_TWD_TX_FIFO)
+      Reserved2             : Bits_1  := 0;
+      TWD_CTRL_RX_AVAIL     : Boolean := False;              -- RX FIFO data available
+      TWD_CTRL_RX_FULL      : Boolean := False;              -- RX FIFO full
+      TWD_CTRL_TX_EMPTY     : Boolean := False;              -- TX FIFO empty
+      TWD_CTRL_TX_FULL      : Boolean := False;              -- TX FIFO full
+      TWD_CTRL_SENSE_SCL    : Bits_1  := 0;                  -- current state of the SCL bus line
+      TWD_CTRL_SENSE_SDA    : Bits_1  := 0;                  -- current state of the SDA bus line
+      TWD_CTRL_BUSY         : Boolean := False;              -- bus engine is busy (transaction in progress)
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TWD_CTRL_Type use record
+      TWD_CTRL_EN           at 0 range  0 ..  0;
+      TWD_CTRL_CLR_RX       at 0 range  1 ..  1;
+      TWD_CTRL_CLR_TX       at 0 range  2 ..  2;
+      TWD_CTRL_FSEL         at 0 range  3 ..  3;
+      TWD_CTRL_DEV_ADDR     at 0 range  4 .. 10;
+      TWD_CTRL_IRQ_RX_AVAIL at 0 range 11 .. 11;
+      TWD_CTRL_IRQ_RX_FULL  at 0 range 12 .. 12;
+      TWD_CTRL_IRQ_TX_EMPTY at 0 range 13 .. 13;
+      Reserved1             at 0 range 14 .. 15;
+      TWD_CTRL_RX_FIFO      at 0 range 16 .. 19;
+      TWD_CTRL_TX_FIFO      at 0 range 20 .. 23;
+      Reserved2             at 0 range 24 .. 24;
+      TWD_CTRL_RX_AVAIL     at 0 range 25 .. 25;
+      TWD_CTRL_RX_FULL      at 0 range 26 .. 26;
+      TWD_CTRL_TX_EMPTY     at 0 range 27 .. 27;
+      TWD_CTRL_TX_FULL      at 0 range 28 .. 28;
+      TWD_CTRL_SENSE_SCL    at 0 range 29 .. 29;
+      TWD_CTRL_SENSE_SDA    at 0 range 30 .. 30;
+      TWD_CTRL_BUSY         at 0 range 31 .. 31;
+   end record;
+
+   type TWD_DATA_Type is record
+      TWD_DATA : Unsigned_8;   -- RX/TX data FIFO access
+      Reserved : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TWD_DATA_Type use record
+      TWD_DATA at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
    type TWD_Type is record
-      CTRL : Unsigned_32 with Volatile_Full_Access => True;
-      DATA : Unsigned_32 with Volatile_Full_Access => True;
+      CTRL : TWD_CTRL_Type with Volatile_Full_Access => True;
+      DATA : TWD_DATA_Type with Volatile_Full_Access => True;
    end record
       with Size => 2 * 32;
    for TWD_Type use record
