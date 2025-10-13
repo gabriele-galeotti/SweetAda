@@ -615,43 +615,134 @@ pragma Style_Checks (Off);
 
    -- 0x21: PULSE_CFG register (read/write)
 
-   type PULSE_CFG_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for PULSE_CFG_Type use record DATA at 0 range 0 .. 7; end record;
+   type PULSE_CFG_Type is record
+      XSPEFE : Boolean; -- Event flag enable on single pulse event on X-axis.
+      XDPEFE : Boolean; -- Event flag enable on double pulse event on X-axis.
+      YSPEFE : Boolean; -- Event flag enable on single pulse event on Y-axis.
+      YDPEFE : Boolean; -- Event flag enable on double pulse event on Y-axis.
+      ZSPEFE : Boolean; -- Event flag enable on single pulse event on Z-axis.
+      ZDPEFE : Boolean; -- Event flag enable on double pulse event on Z-axis.
+      ELE    : Boolean; -- Pulse event flags are latched into the PULSE_SRC register.
+      DPA    : Boolean; -- Double-pulse abort.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PULSE_CFG_Type use record
+      XSPEFE at 0 range 0 .. 0;
+      XDPEFE at 0 range 1 .. 1;
+      YSPEFE at 0 range 2 .. 2;
+      YDPEFE at 0 range 3 .. 3;
+      ZSPEFE at 0 range 4 .. 4;
+      ZDPEFE at 0 range 5 .. 5;
+      ELE    at 0 range 6 .. 6;
+      DPA    at 0 range 7 .. 7;
+   end record;
 
    -- 0x22: PULSE_SRC register (read only)
 
-   type PULSE_SRC_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for PULSE_SRC_Type use record DATA at 0 range 0 .. 7; end record;
+   PolX_POSITIVE : constant := 0; -- Pulse Event that triggered interrupt was positive
+   PolX_NEGATIVE : constant := 1; -- Pulse Event that triggered interrupt was negative
+
+   PolY_POSITIVE : constant := 0; -- Pulse Event that triggered interrupt was positive
+   PolY_NEGATIVE : constant := 1; -- Pulse Event that triggered interrupt was negative
+
+   PolZ_POSITIVE : constant := 0; -- Pulse Event that triggered interrupt was positive
+   PolZ_NEGATIVE : constant := 1; -- Pulse Event that triggered interrupt was negative
+
+   type PULSE_SRC_Type is record
+      PolX : Bits_1;  -- Pulse polarity of X-axis Event.
+      PolY : Bits_1;  -- Pulse polarity of Y-axis Event.
+      PolZ : Bits_1;  -- Pulse polarity of Z-axis Event.
+      DPE  : Boolean; -- Double pulse on first event.
+      AxX  : Boolean; -- X-axis event.
+      AxY  : Boolean; -- Y-axis event.
+      AxZ  : Boolean; -- Z-axis event.
+      EA   : Boolean; -- Event active flag.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PULSE_SRC_Type use record
+      PolX at 0 range 0 .. 0;
+      PolY at 0 range 1 .. 1;
+      PolZ at 0 range 2 .. 2;
+      DPE  at 0 range 3 .. 3;
+      AxX  at 0 range 4 .. 4;
+      AxY  at 0 range 5 .. 5;
+      AxZ  at 0 range 6 .. 6;
+      EA   at 0 range 7 .. 7;
+   end record;
 
    -- 0x23: PULSE_THSX register (read/write)
 
-   type PULSE_THSX_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for PULSE_THSX_Type use record DATA at 0 range 0 .. 7; end record;
+   type PULSE_THSX_Type is record
+      THSX   : Bits_7;     -- Pulse threshold on X-axis.
+      Unused : Bits_1 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PULSE_THSX_Type use record
+      THSX   at 0 range 0 .. 6;
+      Unused at 0 range 7 .. 7;
+   end record;
 
    -- 0x24: PULSE_THSY register (read/write)
 
-   type PULSE_THSY_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for PULSE_THSY_Type use record DATA at 0 range 0 .. 7; end record;
+   type PULSE_THSY_Type is record
+      THSY   : Bits_7;     -- Pulse threshold on Y-axis.
+      Unused : Bits_1 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PULSE_THSY_Type use record
+      THSY   at 0 range 0 .. 6;
+      Unused at 0 range 7 .. 7;
+   end record;
 
    -- 0x25: PULSE_THSZ register (read/write)
 
-   type PULSE_THSZ_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for PULSE_THSZ_Type use record DATA at 0 range 0 .. 7; end record;
+   type PULSE_THSZ_Type is record
+      THSZ   : Bits_7;     -- Pulse threshold on Z-axis.
+      Unused : Bits_1 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PULSE_THSZ_Type use record
+      THSZ   at 0 range 0 .. 6;
+      Unused at 0 range 7 .. 7;
+   end record;
 
    -- 0x26: PULSE_TMLT register (read/write)
 
-   type PULSE_TMLT_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for PULSE_TMLT_Type use record DATA at 0 range 0 .. 7; end record;
+   type PULSE_TMLT_Type is record
+      TMLT : Unsigned_8; -- Pulse time limit.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PULSE_TMLT_Type use record
+      TMLT at 0 range 0 .. 7;
+   end record;
 
    -- 0x27: PULSE_LTCY register (read/write)
 
-   type PULSE_LTCY_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for PULSE_LTCY_Type use record DATA at 0 range 0 .. 7; end record;
+   type PULSE_LTCY_Type is record
+      LTCY : Unsigned_8; -- Latency time limit.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PULSE_LTCY_Type use record
+      LTCY at 0 range 0 .. 7;
+   end record;
 
    -- 0x28: PULSE_WIND register (read/write)
 
-   type PULSE_WIND_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for PULSE_WIND_Type use record DATA at 0 range 0 .. 7; end record;
+   type PULSE_WIND_Type is record
+      WIND : Unsigned_8; -- Second pulse time window.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PULSE_WIND_Type use record
+      WIND at 0 range 0 .. 7;
+   end record;
 
    ----------------------------------------------------------------------------
    -- 6.7 Auto-wake/sleep detection
@@ -659,8 +750,14 @@ pragma Style_Checks (Off);
 
    -- 0x29: ASLP_COUNT register (read/write)
 
-   type ASLP_COUNT_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for ASLP_COUNT_Type use record DATA at 0 range 0 .. 7; end record;
+   type ASLP_COUNT_Type is record
+      D : Unsigned_8; -- Duration value.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ASLP_COUNT_Type use record
+      D at 0 range 0 .. 7;
+   end record;
 
    ----------------------------------------------------------------------------
    -- 6.8 Control registers
@@ -668,13 +765,67 @@ pragma Style_Checks (Off);
 
    -- 0x2A: CTRL_REG1 register (read/write)
 
-   type CTRL_REG1_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for CTRL_REG1_Type use record DATA at 0 range 0 .. 7; end record;
+   DR_800Hz : constant := 2#000#; -- 800 Hz 1.25 ms
+   DR_400Hz : constant := 2#001#; -- 400 Hz 2.5 ms
+   DR_200Hz : constant := 2#010#; -- 200 Hz 5 ms
+   DR_100Hz : constant := 2#011#; -- 100 Hz 10 ms
+   DR_50Hz  : constant := 2#100#; -- 50 Hz 20 ms
+   DR_12Hz5 : constant := 2#101#; -- 12.5 Hz 80 ms
+   DR_6Hz25 : constant := 2#110#; -- 6.25 Hz 160 ms
+   DR_1Hz56 : constant := 2#111#; -- 1.56 Hz 640 ms
+
+   ASLP_RATE_50Hz  : constant := 2#00#; -- 50
+   ASLP_RATE_12Hz5 : constant := 2#01#; -- 12.5
+   ASLP_RATE_6Hz25 : constant := 2#10#; -- 6.25
+   ASLP_RATE_1Hz56 : constant := 2#11#; -- 1.56
+
+   type CTRL_REG1_Type is record
+      ACTIVE    : Boolean; -- Full-scale selection.
+      F_READ    : Boolean; -- Fast read mode
+      LNOISE    : Boolean; -- Reduced noise reduced maximum range mode.
+      DR        : Bits_3;  -- Data-rate selection.
+      ASLP_RATE : Bits_2;  -- Configures the auto-wake sample frequency when the device is in sleep mode.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CTRL_REG1_Type use record
+      ACTIVE    at 0 range 0 .. 0;
+      F_READ    at 0 range 1 .. 1;
+      LNOISE    at 0 range 2 .. 2;
+      DR        at 0 range 3 .. 5;
+      ASLP_RATE at 0 range 6 .. 7;
+   end record;
 
    -- 0x2B: CTRL_REG2 register (read/write)
 
-   type CTRL_REG2_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for CTRL_REG2_Type use record DATA at 0 range 0 .. 7; end record;
+   MODS_NORMAL  : constant := 2#00#; -- Normal
+   MODS_LONOISE : constant := 2#01#; -- Low Noise Low Power
+   MODS_HIRES   : constant := 2#10#; -- High Resolution
+   MODS_LOPOWER : constant := 2#11#; -- Low Power
+
+   SMODS_NORMAL  renames MODS_NORMAL;
+   SMODS_LONOISE renames MODS_LONOISE;
+   SMODS_HIRES   renames MODS_HIRES;
+   SMODS_LOPOWER renames MODS_LOPOWER;
+
+   type CTRL_REG2_Type is record
+      MODS   : Bits_2  := MODS_NORMAL;  -- Active mode power scheme selection.
+      SLPE   : Boolean := False;        -- Auto-sleep enable.
+      SMODS  : Bits_2  := SMODS_NORMAL; --Sleep mode power scheme selection.
+      Unused : Bits_1  := 0;
+      RST    : Boolean := False;        -- Software reset.
+      ST     : Boolean := False;        -- Self-test enable.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CTRL_REG2_Type use record
+      MODS   at 0 range 0 .. 1;
+      SLPE   at 0 range 2 .. 2;
+      SMODS  at 0 range 3 .. 4;
+      Unused at 0 range 5 .. 5;
+      RST    at 0 range 6 .. 6;
+      ST     at 0 range 7 .. 7;
+   end record;
 
    -- 0x2C: CTRL_REG3 register (read/write)
 
