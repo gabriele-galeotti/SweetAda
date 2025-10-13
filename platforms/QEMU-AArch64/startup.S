@@ -169,6 +169,6 @@ core_is_ap:
                 .sect   .bss
 
                 .align  4
-                .space  4096
+                .space  16*1024
 kernel_stack:
 
