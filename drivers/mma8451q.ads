@@ -347,9 +347,9 @@ pragma Style_Checks (Off);
    DBCNTM_CLRCNT : constant := 1; -- Clears counter whenever condition of interest is no longer valid.
 
    type PL_CFG_Type is record
-      Unused : Bits_6;
-      PL_EN  : Boolean; -- Portrait/landscape detection enable.
-      DBCNTM : Bits_1;  -- Debounce counter mode selection.
+      Unused : Bits_6  := 0;
+      PL_EN  : Boolean := False;         -- Portrait/landscape detection enable.
+      DBCNTM : Bits_1  := DBCNTM_CLRCNT; -- Debounce counter mode selection.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -393,9 +393,9 @@ pragma Style_Checks (Off);
    BKFR_FB115Z245 : constant := 2#11#; -- Z > 115° and Z < 245°
 
    type PL_BF_ZCOMP_Type is record
-      ZLOCK  : Bits_3; -- Z-lock angle threshold.
-      Unused : Bits_3;
-      BKFR   : Bits_2; -- Back/front trip angle threshold.
+      ZLOCK  : Bits_3 := ZLOCK_29;      -- Z-lock angle threshold.
+      Unused : Bits_3 := 0;
+      BKFR   : Bits_2 := BKFR_BF75Z285; -- Back/front trip angle threshold.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -428,8 +428,8 @@ pragma Style_Checks (Off);
    PL_THS_75 : constant := 16#19#; -- 75°
 
    type PL_THS_REG_Type is record
-      HYS    : Bits_3; -- This angle is added to the threshold angle for a smoother transition from portrait to landscape and landscape to portrait.
-      PL_THS : Bits_5; -- Portrait/landscape trip threshold angle from 15° to 75°.
+      HYS    : Bits_3 := HYS_14;    -- This angle is added to the threshold angle for a smoother transition from portrait to landscape and landscape to portrait.
+      PL_THS : Bits_5 := PL_THS_45; -- Portrait/landscape trip threshold angle from 15° to 75°.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -445,12 +445,12 @@ pragma Style_Checks (Off);
    -- 0x15: FF_MT_CFG register (read/write)
 
    type FF_MT_CFG_Type is record
-      Unused : Bits_3;
-      XEFE   : Boolean; -- Event flag enable on X event.
-      YEFE   : Boolean; -- Event flag enable on Y event.
-      ZEFE   : Boolean; -- Event flag enable on Z.
-      OAE    : Boolean; -- Motion detect/freefall detect flag selection.
-      ELE    : Boolean; -- Event latch enable: Event flags are latched into FF_MT_SRC register.
+      Unused : Bits_3  := 0;
+      XEFE   : Boolean := False; -- Event flag enable on X event.
+      YEFE   : Boolean := False; -- Event flag enable on Y event.
+      ZEFE   : Boolean := False; -- Event flag enable on Z.
+      OAE    : Boolean := False; -- Motion detect/freefall detect flag selection.
+      ELE    : Boolean := False; -- Event latch enable: Event flags are latched into FF_MT_SRC register.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -503,8 +503,8 @@ pragma Style_Checks (Off);
    DBCNTM_COUNTER  : constant := 1; -- increments or clears counter
 
    type FF_MT_THS_Type is record
-      THS    : Bits_7; -- Freefall/motion threshold
-      DBCNTM : Bits_1; -- Debounce counter mode selection.
+      THS    : Bits_7 := 0;               -- Freefall/motion threshold
+      DBCNTM : Bits_1 := DBCNTM_DEBOUNCE; -- Debounce counter mode selection.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -531,12 +531,12 @@ pragma Style_Checks (Off);
    -- 0x1D: TRANSIENT_CFG register (read/write)
 
    type TRANSIENT_CFG_Type is record
-      HPF_BYP : Boolean; -- Bypass high-pass filter.
-      XTEFE   : Boolean; -- Event flag enable on X transient acceleration greater than transient threshold event.
-      YTEFE   : Boolean; -- Event flag enable on Y transient acceleration greater than transient threshold event.
-      ZTEFE   : Boolean; -- Event flag enable on Z transient acceleration greater than transient threshold event.
-      ELE     : Boolean; -- Transient event flags are latched into the TRANSIENT_SRC register.
-      Unused  : Bits_3;
+      HPF_BYP : Boolean := False; -- Bypass high-pass filter.
+      XTEFE   : Boolean := False; -- Event flag enable on X transient acceleration greater than transient threshold event.
+      YTEFE   : Boolean := False; -- Event flag enable on Y transient acceleration greater than transient threshold event.
+      ZTEFE   : Boolean := False; -- Event flag enable on Z transient acceleration greater than transient threshold event.
+      ELE     : Boolean := False; -- Transient event flags are latched into the TRANSIENT_SRC register.
+      Unused  : Bits_3  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -588,8 +588,8 @@ pragma Style_Checks (Off);
    -- DBCNTM_* already defined at 6.4
 
    type TRANSIENT_THS_Type is record
-      THS    : Bits_7; -- Transient threshold
-      DBCNTM : Bits_1; -- Debounce counter mode selection.
+      THS    : Bits_7 := 0;               -- Transient threshold
+      DBCNTM : Bits_1 := DBCNTM_DEBOUNCE; -- Debounce counter mode selection.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -616,14 +616,14 @@ pragma Style_Checks (Off);
    -- 0x21: PULSE_CFG register (read/write)
 
    type PULSE_CFG_Type is record
-      XSPEFE : Boolean; -- Event flag enable on single pulse event on X-axis.
-      XDPEFE : Boolean; -- Event flag enable on double pulse event on X-axis.
-      YSPEFE : Boolean; -- Event flag enable on single pulse event on Y-axis.
-      YDPEFE : Boolean; -- Event flag enable on double pulse event on Y-axis.
-      ZSPEFE : Boolean; -- Event flag enable on single pulse event on Z-axis.
-      ZDPEFE : Boolean; -- Event flag enable on double pulse event on Z-axis.
-      ELE    : Boolean; -- Pulse event flags are latched into the PULSE_SRC register.
-      DPA    : Boolean; -- Double-pulse abort.
+      XSPEFE : Boolean := False; -- Event flag enable on single pulse event on X-axis.
+      XDPEFE : Boolean := False; -- Event flag enable on double pulse event on X-axis.
+      YSPEFE : Boolean := False; -- Event flag enable on single pulse event on Y-axis.
+      YDPEFE : Boolean := False; -- Event flag enable on double pulse event on Y-axis.
+      ZSPEFE : Boolean := False; -- Event flag enable on single pulse event on Z-axis.
+      ZDPEFE : Boolean := False; -- Event flag enable on double pulse event on Z-axis.
+      ELE    : Boolean := False; -- Pulse event flags are latched into the PULSE_SRC register.
+      DPA    : Boolean := False; -- Double-pulse abort.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -780,11 +780,11 @@ pragma Style_Checks (Off);
    ASLP_RATE_1Hz56 : constant := 2#11#; -- 1.56
 
    type CTRL_REG1_Type is record
-      ACTIVE    : Boolean; -- Full-scale selection.
-      F_READ    : Boolean; -- Fast read mode
-      LNOISE    : Boolean; -- Reduced noise reduced maximum range mode.
-      DR        : Bits_3;  -- Data-rate selection.
-      ASLP_RATE : Bits_2;  -- Configures the auto-wake sample frequency when the device is in sleep mode.
+      ACTIVE    : Boolean := False;          -- Full-scale selection.
+      F_READ    : Boolean := False;          -- Fast read mode
+      LNOISE    : Boolean := False;          -- Reduced noise reduced maximum range mode.
+      DR        : Bits_3  := DR_800Hz;       -- Data-rate selection.
+      ASLP_RATE : Bits_2  := ASLP_RATE_50Hz; -- Configures the auto-wake sample frequency when the device is in sleep mode.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -798,20 +798,20 @@ pragma Style_Checks (Off);
 
    -- 0x2B: CTRL_REG2 register (read/write)
 
-   MODS_NORMAL  : constant := 2#00#; -- Normal
-   MODS_LONOISE : constant := 2#01#; -- Low Noise Low Power
-   MODS_HIRES   : constant := 2#10#; -- High Resolution
-   MODS_LOPOWER : constant := 2#11#; -- Low Power
+   MODS_Normal  : constant := 2#00#; -- Normal
+   MODS_LPLN    : constant := 2#01#; -- Low Noise Low Power
+   MODS_HighRes : constant := 2#10#; -- High Resolution
+   MODS_LP      : constant := 2#11#; -- Low Power
 
-   SMODS_NORMAL  renames MODS_NORMAL;
-   SMODS_LONOISE renames MODS_LONOISE;
-   SMODS_HIRES   renames MODS_HIRES;
-   SMODS_LOPOWER renames MODS_LOPOWER;
+   SMODS_Normal  renames MODS_Normal;
+   SMODS_LPLN    renames MODS_LPLN;
+   SMODS_HighRes renames MODS_HighRes;
+   SMODS_LP      renames MODS_LP;
 
    type CTRL_REG2_Type is record
-      MODS   : Bits_2  := MODS_NORMAL;  -- Active mode power scheme selection.
+      MODS   : Bits_2  := MODS_Normal;  -- Active mode power scheme selection.
       SLPE   : Boolean := False;        -- Auto-sleep enable.
-      SMODS  : Bits_2  := SMODS_NORMAL; --Sleep mode power scheme selection.
+      SMODS  : Bits_2  := SMODS_Normal; -- Sleep mode power scheme selection.
       Unused : Bits_1  := 0;
       RST    : Boolean := False;        -- Software reset.
       ST     : Boolean := False;        -- Self-test enable.
@@ -829,18 +829,105 @@ pragma Style_Checks (Off);
 
    -- 0x2C: CTRL_REG3 register (read/write)
 
-   type CTRL_REG3_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for CTRL_REG3_Type use record DATA at 0 range 0 .. 7; end record;
+   PP_OD_PUSHPULL  : constant := 0; -- Push-pull
+   PP_OD_OPENDRAIN : constant := 1; -- Open drain
+
+   IPOL_ACTIVELOW  : constant := 0; -- Active low
+   IPOL_ACTIVEHIGH : constant := 1; -- Active high
+
+   type CTRL_REG3_Type is record
+      PP_OD       : Bits_1  := PP_OD_PUSHPULL; -- Push-pull/open drain selection on interrupt pad.
+      IPOL        : Bits_1  := IPOL_ACTIVELOW; -- Interrupt polarity active high, or active low.
+      Unused      : Bits_1  := 0;
+      WAKE_FF_MT  : Boolean := False;          -- Freefall/motion function interrupt can wake up
+      WAKE_PULSE  : Boolean := False;          -- Pulse function interrupt can wake up system
+      WAKE_LNDPRT : Boolean := False;          -- Orientation function interrupt can wake up system
+      WAKE_TRANS  : Boolean := False;          -- Transient function interrupt can wake up system
+      FIFO_GATE   : Boolean := False;          -- The FIFO input buffer is blocked when transitioning from wake to sleep mode or from sleep to wake mode until the FIFO is flushed.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CTRL_REG3_Type use record
+      PP_OD       at 0 range 0 .. 0;
+      IPOL        at 0 range 1 .. 1;
+      Unused      at 0 range 2 .. 2;
+      WAKE_FF_MT  at 0 range 3 .. 3;
+      WAKE_PULSE  at 0 range 4 .. 4;
+      WAKE_LNDPRT at 0 range 5 .. 5;
+      WAKE_TRANS  at 0 range 6 .. 6;
+      FIFO_GATE   at 0 range 7 .. 7;
+   end record;
 
    -- 0x2D: CTRL_REG4 register (read/write)
 
-   type CTRL_REG4_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for CTRL_REG4_Type use record DATA at 0 range 0 .. 7; end record;
+   type CTRL_REG4_Type is record
+      INT_EN_DRDY   : Boolean := False; -- Data-ready interrupt enabled
+      Unused        : Bits_1  := 0;
+      INT_EN_FF_MT  : Boolean := False; -- Freefall/motion interrupt enabled
+      INT_EN_PULSE  : Boolean := False; -- Pulse detection interrupt enabled
+      INT_EN_LNDPRT : Boolean := False; -- Orientation (landscape/portrait) interrupt enabled.
+      INT_EN_TRANS  : Boolean := False; -- Transient interrupt enabled.
+      INT_EN_FIFO   : Boolean := False; -- FIFO interrupt enabled.
+      INT_EN_ASLP   : Boolean := False; -- Auto-sleep/wake interrupt enabled.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CTRL_REG4_Type use record
+      INT_EN_DRDY   at 0 range 0 .. 0;
+      Unused        at 0 range 1 .. 1;
+      INT_EN_FF_MT  at 0 range 2 .. 2;
+      INT_EN_PULSE  at 0 range 3 .. 3;
+      INT_EN_LNDPRT at 0 range 4 .. 4;
+      INT_EN_TRANS  at 0 range 5 .. 5;
+      INT_EN_FIFO   at 0 range 6 .. 6;
+      INT_EN_ASLP   at 0 range 7 .. 7;
+   end record;
 
    -- 0x2E: CTRL_REG5 register (read/write)
 
-   type CTRL_REG5_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for CTRL_REG5_Type use record DATA at 0 range 0 .. 7; end record;
+   INT_CFG_DRDY_INT2 : constant := 0; -- Interrupt is routed to INT2 pin
+   INT_CFG_DRDY_INT1 : constant := 1; -- Interrupt is routed to INT1 pin
+
+   INT_CFG_FF_MT_INT2 renames INT_CFG_DRDY_INT2;
+   INT_CFG_FF_MT_INT1 renames INT_CFG_DRDY_INT1;
+
+   INT_CFG_PULSE_INT2 renames INT_CFG_DRDY_INT2;
+   INT_CFG_PULSE_INT1 renames INT_CFG_DRDY_INT1;
+
+   INT_CFG_LNDPRT_INT2 renames INT_CFG_DRDY_INT2;
+   INT_CFG_LNDPRT_INT1 renames INT_CFG_DRDY_INT1;
+
+   INT_CFG_TRANS_INT2 renames INT_CFG_DRDY_INT2;
+   INT_CFG_TRANS_INT1 renames INT_CFG_DRDY_INT1;
+
+   INT_CFG_FIFO_INT2 renames INT_CFG_DRDY_INT2;
+   INT_CFG_FIFO_INT1 renames INT_CFG_DRDY_INT1;
+
+   INT_CFG_ASLP_INT2 renames INT_CFG_DRDY_INT2;
+   INT_CFG_ASLP_INT1 renames INT_CFG_DRDY_INT1;
+
+   type CTRL_REG5_Type is record
+      INT_CFG_DRDY   : Bits_1 := INT_CFG_DRDY_INT2;   -- INT1/INT2 configuration.
+      Unused         : Bits_1 := 0;
+      INT_CFG_FF_MT  : Bits_1 := INT_CFG_FF_MT_INT2;  -- INT1/INT2 configuration.
+      INT_CFG_PULSE  : Bits_1 := INT_CFG_PULSE_INT2;  -- INT1/INT2 configuration.
+      INT_CFG_LNDPRT : Bits_1 := INT_CFG_LNDPRT_INT2; -- INT1/INT2 configuration.
+      INT_CFG_TRANS  : Bits_1 := INT_CFG_TRANS_INT2;  -- INT1/INT2 configuration.
+      INT_CFG_FIFO   : Bits_1 := INT_CFG_FIFO_INT2;   -- INT1/INT2 configuration.
+      INT_CFG_ASLP   : Bits_1 := INT_CFG_ASLP_INT2;   -- INT1/INT2 configuration.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CTRL_REG5_Type use record
+      INT_CFG_DRDY   at 0 range 0 .. 0;
+      Unused         at 0 range 1 .. 1;
+      INT_CFG_FF_MT  at 0 range 2 .. 2;
+      INT_CFG_PULSE  at 0 range 3 .. 3;
+      INT_CFG_LNDPRT at 0 range 4 .. 4;
+      INT_CFG_TRANS  at 0 range 5 .. 5;
+      INT_CFG_FIFO   at 0 range 6 .. 6;
+      INT_CFG_ASLP   at 0 range 7 .. 7;
+   end record;
 
    ----------------------------------------------------------------------------
    -- 6.9 User offset correction registers
@@ -848,18 +935,36 @@ pragma Style_Checks (Off);
 
    -- 0x2F: OFF_X register (read/write)
 
-   type OFF_X_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for OFF_X_Type use record DATA at 0 range 0 .. 7; end record;
+   type OFF_X_Type is record
+      D : Unsigned_8; -- X-axis offset value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for OFF_X_Type use record
+      D at 0 range 0 .. 7;
+   end record;
 
    -- 0x30: OFF_Y register (read/write)
 
-   type OFF_Y_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for OFF_Y_Type use record DATA at 0 range 0 .. 7; end record;
+   type OFF_Y_Type is record
+      D : Unsigned_8; -- Y-axis offset value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for OFF_Y_Type use record
+      D at 0 range 0 .. 7;
+   end record;
 
    -- 0x31: OFF_Z register (read/write)
 
-   type OFF_Z_Type is record DATA : Bits_8; end record with Bit_Order => Low_Order_First, Size => 8;
-   for OFF_Z_Type use record DATA at 0 range 0 .. 7; end record;
+   type OFF_Z_Type is record
+      D : Unsigned_8; -- Z-axis offset value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for OFF_Z_Type use record
+      D at 0 range 0 .. 7;
+   end record;
 
 pragma Style_Checks (On);
 
