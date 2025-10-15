@@ -3400,11 +3400,179 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 30.4.1 DAC Data Low Register (DACx_DATnL)
+
+   type DACx_DATnL_Type is record
+      DATA0 : Unsigned_8; -- When the DAC buffer is not enabled, DATA[11:0] controls the output voltage based on the following formula: V out = V in * (1 + DACDAT0[11:0])/4096 When the DAC buffer is enabled, DATA is mapped to the 16-word buffer.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for DACx_DATnL_Type use record
+      DATA0 at 0 range 0 .. 7;
+   end record;
+
    -- 30.4.2 DAC Data High Register (DACx_DATnH)
+
+   type DACx_DATnH_Type is record
+      DATA1    : Bits_4;      -- When the DAC Buffer is not enabled, DATA[11:0] controls the output voltage based on the following formula. V out = V in * (1 + DACDAT0[11:0])/4096 When the DAC buffer is enabled, DATA[11:0] is mapped to the 16-word buffer.
+      Reserved : Bits_4 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for DACx_DATnH_Type use record
+      DATA1    at 0 range 0 .. 3;
+      Reserved at 0 range 4 .. 7;
+   end record;
+
    -- 30.4.3 DAC Status Register (DACx_SR)
+
+   type DACx_SR_Type is record
+      DACBFRPBF : Boolean := True; -- DAC Buffer Read Pointer Bottom Position Flag
+      DACBFRPTF : Boolean := True; -- DAC Buffer Read Pointer Top Position Flag
+      Reserved  : Bits_6  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for DACx_SR_Type use record
+      DACBFRPBF at 0 range 0 .. 0;
+      DACBFRPTF at 0 range 1 .. 1;
+      Reserved  at 0 range 2 .. 7;
+   end record;
+
    -- 30.4.4 DAC Control Register (DACx_C0)
+
+   DACTRGSEL_HW : constant := 0; -- The DAC hardware trigger is selected.
+   DACTRGSEL_SW : constant := 1; -- The DAC software trigger is selected.
+
+   DACRFS_DACREF_1 : constant := 0; -- The DAC selects DACREF_1 as the reference voltage.
+   DACRFS_DACREF_2 : constant := 1; -- The DAC selects DACREF_2 as the reference voltage.
+
+   type DACx_C0_Type is record
+      DACBBIEN  : Boolean := False;           -- DAC Buffer Read Pointer Bottom Flag Interrupt Enable
+      DACBTIEN  : Boolean := False;           -- DAC Buffer Read Pointer Top Flag Interrupt Enable
+      Reserved  : Bits_1  := 0;
+      LPEN      : Boolean := False;           -- DAC Low Power Control
+      DACSWTRG  : Boolean := False;           -- DAC Software Trigger
+      DACTRGSEL : Bits_1  := DACTRGSEL_HW;    -- DAC Trigger Select
+      DACRFS    : Bits_1  := DACRFS_DACREF_1; -- DAC Reference Select
+      DACEN     : Boolean := False;           -- DAC Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for DACx_C0_Type use record
+      DACBBIEN  at 0 range 0 .. 0;
+      DACBTIEN  at 0 range 1 .. 1;
+      Reserved  at 0 range 2 .. 2;
+      LPEN      at 0 range 3 .. 3;
+      DACSWTRG  at 0 range 4 .. 4;
+      DACTRGSEL at 0 range 5 .. 5;
+      DACRFS    at 0 range 6 .. 6;
+      DACEN     at 0 range 7 .. 7;
+   end record;
+
    -- 30.4.5 DAC Control Register 1 (DACx_C1)
+
+   DACBFMD_NORMAL : constant := 0; -- Normal mode
+   DACBFMD_OTSCAN : constant := 1; -- One-Time Scan mode
+
+   type DACx_C1_Type is record
+      DACBFEN   : Boolean := False;          -- DAC Buffer Enable
+      Reserved1 : Bits_1  := 0;
+      DACBFMD   : Bits_1  := DACBFMD_NORMAL; -- DAC Buffer Work Mode Select
+      Reserved2 : Bits_4  := 0;
+      DMAEN     : Boolean := False;          -- DMA Enable Select
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for DACx_C1_Type use record
+      DACBFEN   at 0 range 0 .. 0;
+      Reserved1 at 0 range 1 .. 1;
+      DACBFMD   at 0 range 2 .. 2;
+      Reserved2 at 0 range 3 .. 6;
+      DMAEN     at 0 range 7 .. 7;
+   end record;
+
    -- 30.4.6 DAC Control Register 2 (DACx_C2)
+
+   type DACx_C2_Type is record
+      DACBFUP   : Boolean := True;  -- DAC Buffer Upper Limit
+      Reserved1 : Bits_1  := 0;
+      DACBFRP   : Boolean := False; -- DAC Buffer Read Pointer
+      Reserved2 : Bits_1  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for DACx_C2_Type use record
+      DACBFUP   at 0 range 0 .. 0;
+      Reserved1 at 0 range 1 .. 3;
+      DACBFRP   at 0 range 4 .. 4;
+      Reserved2 at 0 range 5 .. 7;
+   end record;
+
+   -- 30.4 Memory map/register definition
+
+   DAC0_DAT0L_ADDRESS : constant := 16#4003_F000#;
+
+   DAC0_DAT0L : aliased DACx_DATnL_Type
+      with Address              => System'To_Address (DAC0_DAT0L_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DAC0_DAT0H_ADDRESS : constant := 16#4003_F001#;
+
+   DAC0_DAT0H : aliased DACx_DATnH_Type
+      with Address              => System'To_Address (DAC0_DAT0H_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DAC0_DAT1L_ADDRESS : constant := 16#4003_F002#;
+
+   DAC0_DAT1L : aliased DACx_DATnL_Type
+      with Address              => System'To_Address (DAC0_DAT1L_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DAC0_DAT1H_ADDRESS : constant := 16#4003_F003#;
+
+   DAC0_DAT1H : aliased DACx_DATnH_Type
+      with Address              => System'To_Address (DAC0_DAT1H_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DAC0_SR_ADDRESS : constant := 16#4003_F020#;
+
+   DAC0_SR : aliased DACx_SR_Type
+      with Address              => System'To_Address (DAC0_SR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DAC0_C0_ADDRESS : constant := 16#4003_F021#;
+
+   DAC0_C0 : aliased DACx_C0_Type
+      with Address              => System'To_Address (DAC0_C0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DAC0_C1_ADDRESS : constant := 16#4003_F022#;
+
+   DAC0_C1 : aliased DACx_C1_Type
+      with Address              => System'To_Address (DAC0_C1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   DAC0_C2_ADDRESS : constant := 16#4003_F023#;
+
+   DAC0_C2 : aliased DACx_C2_Type
+      with Address              => System'To_Address (DAC0_C2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 31 Timer/PWM Module (TPM)
