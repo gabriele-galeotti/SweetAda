@@ -46,7 +46,7 @@ pragma Style_Checks (Off);
    -- 3 Embedded Flash memory (FLASH)
    ----------------------------------------------------------------------------
 
-   -- 3.7.1 FLASH registers Flash access control register (FLASH_ACR)
+   -- 3.7.1 Flash access control register (FLASH_ACR)
 
    type FLASH_ACR_Type is record
       LATENCY   : Bits_4  := 0;     -- Latency
@@ -2253,7 +2253,7 @@ pragma Warnings (On);
       with Size => 32,
            Pack => True;
 
-   -- 6.4. GPIO registers
+   -- 6.4.11 GPIO register map
 
    type GPIO_PORT_Type is record
       MODER   : GPIOx_MODER_Type   := [others => GPIO_IN]
@@ -3463,19 +3463,273 @@ pragma Warnings (On);
    -- 13 Flexible memory controller (FMC)
    ----------------------------------------------------------------------------
 
-   -- 13.6.6 NOR/PSRAM controller registers
-   -- SRAM/NOR-flash chip-select control register for bank x (FMC_BCRx)
+   -- 13.5.6 NOR/PSRAM controller registers
+
+   -- SRAM/NOR-flash chip-select control register for bank x (FMC_BCRx) (x = 1 to 4)
+
+   MTYP_SRAM  : constant := 2#00#; -- SRAM
+   MTYP_PSRAM : constant := 2#01#; -- PSRAM (CRAM)
+   MTYP_Flash : constant := 2#10#; -- NOR Flash/OneNAND Flash
+   MTYP_RSVD  : constant := 2#11#; -- reserved
+
+   MWID_8    : constant := 2#00#; -- 8 bits
+   MWID_16   : constant := 2#01#; -- 16 bits
+   MWID_32   : constant := 2#10#; -- 32 bits
+   MWID_RSVD : constant := 2#11#; -- reserved
+
+   WAITPOL_LOW  : constant := 0; -- NWAIT active low
+   WAITPOL_HIGH : constant := 1; -- NWAIT active high.
+
+   WAITCFG_CYCLE1 : constant := 0; -- NWAIT signal is active one data cycle before wait state
+   WAITCFG_INWAIT : constant := 1; -- NWAIT signal is active during wait state (not used for PSRAM).
+
+   CPSIZE_NONE  : constant := 2#000#; -- No burst split when crossing page boundary
+   CPSIZE_128   : constant := 2#001#; -- 128 bytes
+   CPSIZE_256   : constant := 2#010#; -- 256 bytes
+   CPSIZE_512   : constant := 2#011#; -- 512 bytes
+   CPSIZE_1024  : constant := 2#100#; -- 1024 bytes
+   CPSIZE_RSVD1 : constant := 2#101#;
+   CPSIZE_RSVD2 : constant := 2#110#;
+   CPSIZE_RSVD3 : constant := 2#111#;
+
+   type FMC_BCRx_Type is record
+      MBKEN     : Boolean;                   -- Memory bank enable bit.
+      MUXEN     : Boolean;                   -- Address/data multiplexing enable bit.
+      MTYP      : Bits_2;                    -- Memory type.
+      MWID      : Bits_2  := MWID_16;        -- Memory data bus width.
+      FACCEN    : Boolean := True;           -- Flash access enable
+      Reserved1 : Bits_1  := 1;
+      BURSTEN   : Boolean := False;          -- Burst enable bit.
+      WAITPOL   : Bits_1  := WAITPOL_LOW;    -- Wait signal polarity bit.
+      Reserved2 : Bits_1  := 0;
+      WAITCFG   : Bits_1  := WAITCFG_CYCLE1; -- Wait timing configuration.
+      WREN      : Boolean := True;           -- Write enable bit.
+      WAITEN    : Boolean := True;           -- Wait enable bit.
+      EXTMOD    : Boolean := False;          -- Extended mode enable.
+      ASYNCWAIT : Boolean := False;          -- Wait signal during asynchronous transfers
+      CPSIZE    : Bits_3  := CPSIZE_NONE;    -- CRAM page size.
+      CBURSTRW  : Boolean := False;          -- Write burst enable.
+      CCLKEN    : Boolean := False;          -- Continuous Clock Enable.
+      WFDIS     : Boolean := False;          -- Write FIFO Disable
+      Reserved3 : Bits_10 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FMC_BCRx_Type use record
+      MBKEN     at 0 range  0 ..  0;
+      MUXEN     at 0 range  1 ..  1;
+      MTYP      at 0 range  2 ..  3;
+      MWID      at 0 range  4 ..  5;
+      FACCEN    at 0 range  6 ..  6;
+      Reserved1 at 0 range  7 ..  7;
+      BURSTEN   at 0 range  8 ..  8;
+      WAITPOL   at 0 range  9 ..  9;
+      Reserved2 at 0 range 10 .. 10;
+      WAITCFG   at 0 range 11 .. 11;
+      WREN      at 0 range 12 .. 12;
+      WAITEN    at 0 range 13 .. 13;
+      EXTMOD    at 0 range 14 .. 14;
+      ASYNCWAIT at 0 range 15 .. 15;
+      CPSIZE    at 0 range 16 .. 18;
+      CBURSTRW  at 0 range 19 .. 19;
+      CCLKEN    at 0 range 20 .. 20;
+      WFDIS     at 0 range 21 .. 21;
+      Reserved3 at 0 range 22 .. 31;
+   end record;
+
+   FMC_BCR1_ADDRESS : constant := 16#A000_0000#;
+
+   FMC_BCR1 : aliased FMC_BCRx_Type
+      with Address              => System'To_Address (FMC_BCR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FMC_BCR2_ADDRESS : constant := 16#A000_0008#;
+
+   FMC_BCR2 : aliased FMC_BCRx_Type
+      with Address              => System'To_Address (FMC_BCR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FMC_BCR3_ADDRESS : constant := 16#A000_0010#;
+
+   FMC_BCR3 : aliased FMC_BCRx_Type
+      with Address              => System'To_Address (FMC_BCR3_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FMC_BCR4_ADDRESS : constant := 16#A000_0018#;
+
+   FMC_BCR4 : aliased FMC_BCRx_Type
+      with Address              => System'To_Address (FMC_BCR4_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- SRAM/NOR-flash chip-select timing register for bank x (FMC_BTRx)
+
+   ACCMOD_MODEA : constant := 2#00#; -- access mode A
+   ACCMOD_MODEB : constant := 2#01#; -- access mode B
+   ACCMOD_MODEC : constant := 2#10#; -- access mode C
+   ACCMOD_MODED : constant := 2#11#; -- access mode D
+
+   CLKDIV_RSVD   : constant := 2#0000#; -- Reserved
+   CLKDIV_HCLK2  : constant := 2#0001#; -- FMC_CLK period = 2 × HCLK periods
+   CLKDIV_HCLK3  : constant := 2#0010#; -- FMC_CLK period = 3 × HCLK periods
+   CLKDIV_HCLK4  : constant := 2#0011#; -- FMC_CLK period = 4 × HCLK periods
+   CLKDIV_HCLK5  : constant := 2#0100#; -- FMC_CLK period = 5 × HCLK periods
+   CLKDIV_HCLK6  : constant := 2#0101#; -- FMC_CLK period = 6 × HCLK periods
+   CLKDIV_HCLK7  : constant := 2#0110#; -- FMC_CLK period = 7 × HCLK periods
+   CLKDIV_HCLK8  : constant := 2#0111#; -- FMC_CLK period = 8 × HCLK periods
+   CLKDIV_HCLK9  : constant := 2#1000#; -- FMC_CLK period = 9 × HCLK periods
+   CLKDIV_HCLK10 : constant := 2#1001#; -- FMC_CLK period = 10 × HCLK periods
+   CLKDIV_HCLK11 : constant := 2#1010#; -- FMC_CLK period = 11 × HCLK periods
+   CLKDIV_HCLK12 : constant := 2#1011#; -- FMC_CLK period = 12 × HCLK periods
+   CLKDIV_HCLK13 : constant := 2#1100#; -- FMC_CLK period = 13 × HCLK periods
+   CLKDIV_HCLK14 : constant := 2#1101#; -- FMC_CLK period = 14 × HCLK periods
+   CLKDIV_HCLK15 : constant := 2#1110#; -- FMC_CLK period = 15 × HCLK periods
+   CLKDIV_HCLK16 : constant := 2#1111#; -- FMC_CLK period = 16 × HCLK periods
+
+   DATLAT_CLK2  : constant := 2#0000#; -- Data latency of 2 CLK clock cycles for first burst access
+   DATLAT_CLK3  : constant := 2#0001#; -- Data latency of 3 CLK clock cycles for first burst access
+   DATLAT_CLK4  : constant := 2#0010#; -- Data latency of 4 CLK clock cycles for first burst access
+   DATLAT_CLK5  : constant := 2#0011#; -- Data latency of 5 CLK clock cycles for first burst access
+   DATLAT_CLK6  : constant := 2#0100#; -- Data latency of 6 CLK clock cycles for first burst access
+   DATLAT_CLK7  : constant := 2#0101#; -- Data latency of 7 CLK clock cycles for first burst access
+   DATLAT_CLK8  : constant := 2#0110#; -- Data latency of 8 CLK clock cycles for first burst access
+   DATLAT_CLK9  : constant := 2#0111#; -- Data latency of 9 CLK clock cycles for first burst access
+   DATLAT_CLK10 : constant := 2#1000#; -- Data latency of 10 CLK clock cycles for first burst access
+   DATLAT_CLK11 : constant := 2#1001#; -- Data latency of 11 CLK clock cycles for first burst access
+   DATLAT_CLK12 : constant := 2#1010#; -- Data latency of 12 CLK clock cycles for first burst access
+   DATLAT_CLK13 : constant := 2#1011#; -- Data latency of 13 CLK clock cycles for first burst access
+   DATLAT_CLK14 : constant := 2#1100#; -- Data latency of 14 CLK clock cycles for first burst access
+   DATLAT_CLK15 : constant := 2#1101#; -- Data latency of 15 CLK clock cycles for first burst access
+   DATLAT_CLK16 : constant := 2#1110#; -- Data latency of 16 CLK clock cycles for first burst access
+   DATLAT_CLK17 : constant := 2#1111#; -- Data latency of 17 CLK clock cycles for first burst access
+
+   type FMC_BTRx_Type is record
+      ADDSET   : Bits_4     := 15;            -- Address setup phase duration
+      ADDHLD   : Bits_4     := 15;            -- Address-hold phase duration
+      DATAST   : Unsigned_8 := 255;           -- Data-phase duration
+      BUSTURN  : Bits_4     := 15;            -- Bus turnaround phase duration
+      CLKDIV   : Bits_4     := CLKDIV_HCLK16; -- Clock divide ratio (for FMC_CLK signal)
+      DATLAT   : Bits_4     := DATLAT_CLK17;  -- Data latency for synchronous memory
+      ACCMOD   : Bits_2     := ACCMOD_MODEA;  -- Access mode
+      Reserved : Bits_2     := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FMC_BTRx_Type use record
+      ADDSET   at 0 range  0 ..  3;
+      ADDHLD   at 0 range  4 ..  7;
+      DATAST   at 0 range  8 .. 15;
+      BUSTURN  at 0 range 16 .. 19;
+      CLKDIV   at 0 range 20 .. 23;
+      DATLAT   at 0 range 24 .. 27;
+      ACCMOD   at 0 range 28 .. 29;
+      Reserved at 0 range 30 .. 31;
+   end record;
+
+   FMC_BTR1_ADDRESS : constant := 16#A000_0004#;
+
+   FMC_BTR1 : aliased FMC_BTRx_Type
+      with Address              => System'To_Address (FMC_BTR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FMC_BTR2_ADDRESS : constant := 16#A000_000C#;
+
+   FMC_BTR2 : aliased FMC_BTRx_Type
+      with Address              => System'To_Address (FMC_BTR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FMC_BTR3_ADDRESS : constant := 16#A000_0014#;
+
+   FMC_BTR3 : aliased FMC_BTRx_Type
+      with Address              => System'To_Address (FMC_BTR3_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FMC_BTR4_ADDRESS : constant := 16#A000_001C#;
+
+   FMC_BTR4 : aliased FMC_BTRx_Type
+      with Address              => System'To_Address (FMC_BTR4_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- SRAM/NOR-flash write timing registers x (FMC_BWTRx)
 
-   -- 13.7.7 NAND flash controller registers
+   -- ACCMOD_* already defined at FMC_BTRx
+
+   type FMC_BWTRx_Type is record
+      ADDSET    : Bits_4     := 15;           -- Address setup phase duration
+      ADDHLD    : Bits_4     := 15;           -- Address-hold phase duration
+      DATAST    : Unsigned_8 := 255;          -- Data-phase duration
+      BUSTURN   : Bits_4     := 15;           -- Bus turnaround phase duration
+      Reserved1 : Bits_8     := 16#FF#;
+      ACCMOD    : Bits_2     := ACCMOD_MODEA; -- Access mode
+      Reserved2 : Bits_2     := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FMC_BWTRx_Type use record
+      ADDSET    at 0 range  0 ..  3;
+      ADDHLD    at 0 range  4 ..  7;
+      DATAST    at 0 range  8 .. 15;
+      BUSTURN   at 0 range 16 .. 19;
+      Reserved1 at 0 range 20 .. 27;
+      ACCMOD    at 0 range 28 .. 29;
+      Reserved2 at 0 range 30 .. 31;
+   end record;
+
+   FMC_BWTR1_ADDRESS : constant := 16#A000_0104#;
+
+   FMC_BWTR1 : aliased FMC_BWTRx_Type
+      with Address              => System'To_Address (FMC_BWTR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FMC_BWTR2_ADDRESS : constant := 16#A000_010C#;
+
+   FMC_BWTR2 : aliased FMC_BWTRx_Type
+      with Address              => System'To_Address (FMC_BWTR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FMC_BWTR3_ADDRESS : constant := 16#A000_0114#;
+
+   FMC_BWTR3 : aliased FMC_BWTRx_Type
+      with Address              => System'To_Address (FMC_BWTR3_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FMC_BWTR4_ADDRESS : constant := 16#A000_011C#;
+
+   FMC_BWTR4 : aliased FMC_BWTRx_Type
+      with Address              => System'To_Address (FMC_BWTR4_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 13.6.7 NAND flash controller registers
    -- NAND flash control registers (FMC_PCR)
    -- FIFO status and interrupt register (FMC_SR)
    -- Common memory space timing register (FMC_PMEM)
    -- Attribute memory space timing register (FMC_PATT)
    -- ECC result registers (FMC_ECCR)
 
-   -- 13.8.5 SDRAM controller registers
+   -- 13.7.5 SDRAM controller registers
    -- SDRAM control register x (FMC_SDCRx)
    -- SDRAM timing register x (FMC_SDTRx)
    -- SDRAM Command Mode register (FMC_SDCMR)
