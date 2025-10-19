@@ -68,9 +68,10 @@ pragma Style_Checks (Off);
 
    -- 6.3.4 COMMAND REGISTER (CMR)
 
+   -- __INF__ use "A7" instead of "AT"
    type CMR_Type is record
       TR        : Boolean := False; -- Transmission Request
-      A_T       : Boolean := False; -- Abort Transmission
+      A7        : Boolean := False; -- Abort Transmission
       RRB       : Boolean := False; -- Release Receive Buffer
       CDO       : Boolean := False; -- Clear Data Overrun
       GTS       : Boolean := False; -- Go To Sleep
@@ -82,7 +83,7 @@ pragma Style_Checks (Off);
            Size      => 8;
    for CMR_Type use record
       TR        at 0 range 0 .. 0;
-      A_T       at 0 range 1 .. 1;
+      A7        at 0 range 1 .. 1;
       RRB       at 0 range 2 .. 2;
       CDO       at 0 range 3 .. 3;
       GTS       at 0 range 4 .. 4;
