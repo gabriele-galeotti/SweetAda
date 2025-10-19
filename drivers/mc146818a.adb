@@ -284,7 +284,7 @@ package body MC146818A
          return Unsigned_8
          is
       begin
-         return (if BCD then BCD_To_U8 (V) else V);
+         return (if BCD then To_U8 (BCD_Type (V)) else V);
       end Adjust_BCD;
    begin
       CPU.Intcontext_Get (Intcontext);
@@ -335,7 +335,7 @@ package body MC146818A
          return Unsigned_8
          is
       begin
-         return (if BCD then U8_To_BCD (V) else V);
+         return (if BCD then Unsigned_8 (To_BCD (V)) else V);
       end Adjust_BCD;
    begin
       RB := To_RB (Register_Read (D, RegisterB));
