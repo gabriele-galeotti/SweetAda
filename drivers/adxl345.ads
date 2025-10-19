@@ -323,6 +323,7 @@ pragma Style_Checks (Off);
 
    -- Register 0x31—DATA_FORMAT (Read/Write)
 
+   -- __INF__ use "Rang3 instead of Range"
    Rang3_2  : constant := 2#00#; -- ±2 g
    Rang3_4  : constant := 2#01#; -- ±4 g
    Rang3_8  : constant := 2#10#; -- ±8 g
@@ -337,6 +338,7 @@ pragma Style_Checks (Off);
    SPI_4WIRE : constant := 0; -- sets the device to 4-wire SPI mode
    SPI_3WIRE : constant := 1; -- sets the device to 3-wire SPI mode
 
+   -- __INF__ use "Rang3 instead of Range"
    type DATA_FORMAT_Type is record
       Rang3      : Bits_2;  -- g range
       Justify    : Bits_1;  -- Justify
