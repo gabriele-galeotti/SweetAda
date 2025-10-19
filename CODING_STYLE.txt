@@ -1,0 +1,109 @@
+
+SweetAda code (and the build system output) tries to follow specific rules,
+both in a textually and "geometric" sense.
+
+SweetAda code is obvioulsy improvable, and there are areas where both Ada
+semantics, style and coding rules could be written better. But we try to
+first make code working, then we try to consolidate it, following laws and
+providing correctness.
+
+Some decisions could seem against mainstream rules, but the ultimate goal is
+hopefully the consinstency and ease of reading. For example, the textual
+output of the build system is structured, so that it can be easily parsed by
+an external tool agent. Record layouts have a structure (where possible) to
+automate their dissection, since there are regions which can be easily
+isolated, and does not require a tedious line-oriented parsing. This (where
+possible) holds also for normal executable code.
+
+Sometimes we use acronyms with leading and trailing double-underscore to
+highlight reference informations or placeholders, e.g.:
+__HDS__ header start
+__HDE__ header end
+__FIX__ to be solved
+__TBD__ to be defined/done
+__PTC__ patch
+__INF__ informative
+__REF__ reference
+__NOP__ no operation
+__NRC__ code not reached
+__DNO__ does not occur
+__WNG__ warning
+__TXT__ text object
+__FLN__ filename
+__DSC__ description
+__PRE__ file to be pre-processed
+__DVL__ development level
+__HSH__ hash value
+
+Comments have single space after "--".
+Comments should be exquisitely written for technical understanding, without
+irony, personal sarcasm or jokes.
+We use a long string of "-" to separate sections of sequential code. The
+length of the string could be variable and depends on the context.
+Long comments composed of multiple phrases should have a leading and trailing
+empty comment line, with precise punctuation. Short one-phrase comments could
+be in-lined, without initial capitalization and without a trailing period.
+Sometimes we pragma-override the line-length limit to make code compact, e.g.,
+in long register layout definitions or repeated subprogram specifications.
+
+One "with" per line.
+This helps the gprdeps utility, which is not yet sophisticated enough to
+parse complex Ada syntax.
+
+"use" should be placed inside package/subprogram declarative region.
+
+"with" should be indented on a line itself (except inside a record layout
+and maybe "Unreferenced" variables), with an appropriate structure.
+
+Names should resemble documentation.
+Register, fields and constant names should be exactly those written in the
+reference manual, case included, unless conflicts and/or special reasons
+exist.
+Sometimes we write "7" in place of "t", e.g., "A7" instead of "AT".
+Sometimes we write "3" in place of "e", e.g., "Rang3" instead of "Range".
+
+Register layouts and constants are often defined without specific bitfield
+typing, as they are mostly Bits_XX/Unsigned_XX. Specific typing makes code
+excessively bloated, and the provided field-prefix constants should be used.
+Furthermore, when working on a low-level detail, you are required to exactly
+understand what you are doing, and how mixing bitfields on a chance is
+dangerous, even with the help of Ada type system. Seeing a prefix that match
+the bitfield is way explanatory, but there are many cases where a specific
+type is employed, because it is useful when creating variables of that type.
+Anyway, post-typing a bitfield is implementable without too much effort since
+we already have a good starting point, and with a modern mainstream editor
+this refactorization turns out to be quite easy.
+
+There are no specific rules for variable naming, one can select "camel case"
+or underscores for literal readability, possibly capitalizing only the first
+letter. When semantics requires readability, a mixed style could be employed,
+because the word particles help understanding, but placing too many
+underscores lengthen the name. A good rule of thumb is to shorten names,
+trying to preserve their scope and/or functionality. Single-letter names
+should be used sparingly and only when their functionality is trivial, e.g.,
+in simple loops. As described above, reference manuals and technical "jargon"
+used in official documentation take precedence over Ada fine-detailed naming
+schemes. This is the only remarkable rule, because a 1-1 is absolutely
+necessary, since code should match the object that is being coded. Being said
+that, generally speaking, the rules about variable names are always a matter
+of taste and discussion, so this aspect is more relaxed. And, as always,
+common sense is the best rule.
+
+Some object prefixes/suffixes/abbreviations:
+Idx = index
+Mem = memory
+Reg = register
+
+When dealing with subprograms, the operation carried out by the code should
+come last, e.g., "CPU_SR_Read" instead of "Read_CPU_SR". This helps in
+recognizing functionality vs modules, as you can lookup them easily.
+
+Packages could be use'd or not. We use them when we heavy-reference objects
+coming from those packages (so lowering the code bloat), like in various
+platform/CPU-specific code. We try to not use them in common code like the
+core complex.
+
+(Unchecked)-type conversions have generally the form To_*, where the target
+type could be abbreviated since the conversion should be mostly localized
+inside a limited region.
+
