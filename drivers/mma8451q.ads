@@ -675,7 +675,7 @@ pragma Style_Checks (Off);
    -- 0x23: PULSE_THSX register (read/write)
 
    type PULSE_THSX_Type is record
-      THSX   : Bits_7;     -- Pulse threshold on X-axis.
+      THSX   : Bits_7;      -- Pulse threshold on X-axis.
       Unused : Bits_1 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -688,7 +688,7 @@ pragma Style_Checks (Off);
    -- 0x24: PULSE_THSY register (read/write)
 
    type PULSE_THSY_Type is record
-      THSY   : Bits_7;     -- Pulse threshold on Y-axis.
+      THSY   : Bits_7;      -- Pulse threshold on Y-axis.
       Unused : Bits_1 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -701,7 +701,7 @@ pragma Style_Checks (Off);
    -- 0x25: PULSE_THSZ register (read/write)
 
    type PULSE_THSZ_Type is record
-      THSZ   : Bits_7;     -- Pulse threshold on Z-axis.
+      THSZ   : Bits_7;      -- Pulse threshold on Z-axis.
       Unused : Bits_1 := 0;
    end record
       with Bit_Order => Low_Order_First,
