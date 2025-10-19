@@ -20,7 +20,6 @@ with Bits;
 with Bits.C;
 
 package Malloc
-   with Preelaborate => True
    is
 
    --========================================================================--

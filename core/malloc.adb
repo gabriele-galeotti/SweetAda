@@ -16,9 +16,9 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Storage_Elements;
-with Interfaces;
 with Integer_Math;
 with Memory_Functions;
+with Mutex;
 with Console;
 
 package body Malloc
@@ -34,18 +34,17 @@ package body Malloc
 
    use System;
    use System.Storage_Elements;
-   use Interfaces;
    use Bits;
    use Bits.C;
    use Integer_Math;
-
-   type Memory_Block_Type;
-   type Memory_Block_Ptr is access all Memory_Block_Type;
 
    DEFAULT_ALIGNMENT    : constant := 16;
    -- Size includes Memory_Block tag
    MEMORYBLOCKTYPE_SIZE : constant := DEFAULT_ALIGNMENT *
       ((((size_t'Size + Standard'Address_Size) / Storage_Unit) + DEFAULT_ALIGNMENT - 1) / DEFAULT_ALIGNMENT);
+
+   type Memory_Block_Type;
+   type Memory_Block_Ptr is access all Memory_Block_Type;
 
    type Memory_Block_Type is record
       Size     : size_t;
@@ -56,6 +55,8 @@ package body Malloc
            Size      => MEMORYBLOCKTYPE_SIZE * Storage_Unit;
 
    Heap_Descriptor : aliased Memory_Block_Type := (Size => 0, Next_Ptr => null);
+
+   Mtx : Mutex.Semaphore_Binary := Mutex.SEMAPHORE_UNLOCKED;
 
    Debug : Boolean := False;
 
