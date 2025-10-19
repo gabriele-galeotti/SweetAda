@@ -165,33 +165,34 @@ package body LLutils
    separate;
 
    ----------------------------------------------------------------------------
-   -- BCD_To_U8
+   -- To_U8
    ----------------------------------------------------------------------------
-   function BCD_To_U8
-      (V : Interfaces.Unsigned_8)
+   function To_U8
+      (Value : BCD_Type)
       return Interfaces.Unsigned_8
       is
+      V : constant Interfaces.Unsigned_8 := Interfaces.Unsigned_8 (Value);
    begin
       return (V and 16#0F#) + Bits.ShR (V, 4) * 10;
-   end BCD_To_U8;
+   end To_U8;
 
    ----------------------------------------------------------------------------
-   -- U8_To_BCD
+   -- To_BCD
    ----------------------------------------------------------------------------
-   function U8_To_BCD
-      (V : Interfaces.Unsigned_8)
-      return Interfaces.Unsigned_8
+   function To_BCD
+      (Value : Interfaces.Unsigned_8)
+      return BCD_Type
       is
       L : Interfaces.Unsigned_8;
       H : Interfaces.Unsigned_8;
    begin
-      L := V mod 10;
-      H := V / 10;
+      L := Value mod 10;
+      H := Value / 10;
       if L > 9 or else H > 9 then
          raise Constraint_Error;
       end if;
-      return Bits.ShL (H, 4) or L;
-   end U8_To_BCD;
+      return BCD_Type (Bits.ShL (H, 4) or L);
+   end To_BCD;
 
    ----------------------------------------------------------------------------
    -- To_Ch

@@ -136,18 +136,20 @@ package LLutils
       with Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Transform an Unsigned_8 from BCD form.
+   -- BCD numbers
    ----------------------------------------------------------------------------
-   function BCD_To_U8
-      (V : Interfaces.Unsigned_8)
+
+   type BCD_Type is new Interfaces.Unsigned_8;
+
+   -- transform an Unsigned_8 from BCD form
+   function To_U8
+      (Value : BCD_Type)
       return Interfaces.Unsigned_8;
 
-   ----------------------------------------------------------------------------
-   -- Transform an Unsigned_8 to BCD form.
-   ----------------------------------------------------------------------------
-   function U8_To_BCD
-      (V : Interfaces.Unsigned_8)
-      return Interfaces.Unsigned_8;
+   -- transform an Unsigned_8 to BCD form
+   function To_BCD
+      (Value : Interfaces.Unsigned_8)
+      return BCD_Type;
 
    ----------------------------------------------------------------------------
    -- Convert a digit to a character.
