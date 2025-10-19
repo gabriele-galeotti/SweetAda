@@ -12,7 +12,7 @@ hopefully the consinstency and ease of reading. For example, the textual
 output of the build system is structured, so that it can be easily parsed by
 an external tool agent. Record layouts have a structure (where possible) to
 automate their dissection, since there are regions which can be easily
-isolated, and does not require a tedious line-oriented parsing. This (where
+isolated, and do not require a tedious line-oriented parsing. This (where
 possible) holds also for normal executable code.
 
 Sometimes we use acronyms with leading and trailing double-underscore to
