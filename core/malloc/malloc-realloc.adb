@@ -59,6 +59,7 @@ begin
          declare
             End_Address : Address;
          begin
+            Mutex.Acquire (Mtx);
             P := Heap_Descriptor'Access;
             Q := Heap_Descriptor.Next_Ptr;
             while Q /= null and then Q.all'Address < Memory_Block_Address loop
@@ -77,7 +78,9 @@ begin
                P.all.Next_Ptr := Q.all.Next_Ptr;
                Q.all.Size     := 0;
                Q.all.Next_Ptr := null;
+               Mutex.Release (Mtx);
             else
+               Mutex.Release (Mtx);
                -- failure, move the block
                declare
                   New_Memory_Block_Address : Address;

@@ -29,6 +29,7 @@ begin
    if Memory_Address = Null_Address then
       raise Storage_Error;
    end if;
+   Mutex.Acquire (Mtx);
    -- traverse the list of free blocks, sorting by address
    P := Heap_Descriptor'Access;
    Q := Heap_Descriptor.Next_Ptr;
@@ -75,6 +76,7 @@ begin
    else
       Heap_Descriptor.Next_Ptr := Memory_Block'Unchecked_Access;
    end if;
+   Mutex.Release (Mtx);
    if Debug then
       Console.Print (
          Prefix => "Free block: ",

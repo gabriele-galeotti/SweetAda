@@ -34,6 +34,7 @@ begin
    if Debug then
       Console.Print (Prefix => "Rounded size: ", Value => RSize, NL => True);
    end if;
+   Mutex.Acquire (Mtx);
    -- traverse the list of free block
    P := Heap_Descriptor'Access;
    Q := Heap_Descriptor.Next_Ptr;
@@ -42,6 +43,7 @@ begin
       Q := Q.all.Next_Ptr;
    end loop;
    if Q = null then
+      Mutex.Release (Mtx);
       -- no block with sufficient size was found
       raise Storage_Error;
    end if;
@@ -79,5 +81,6 @@ begin
       P.all.Next_Ptr := Q.all.Next_Ptr;
    end if;
    Q.all.Next_Ptr := null;
+   Mutex.Release (Mtx);
    return Q.all'Address + MEMORYBLOCKTYPE_SIZE;
 end Malloc;
