@@ -3605,262 +3605,8 @@ pragma Warnings (On);
    ADDHLD_HCLK14   : constant := 2#1110#; -- ADDHLD phase duration = 14 × HCLK clock cycles
    ADDHLD_HCLK15   : constant := 2#1111#; -- ADDHLD phase duration = 15 × HCLK clock cycles
 
-   DATAST_RSVD    : constant := 0;   -- Reserved
-   DATAST_HCLK1   : constant := 1;   -- DATAST phase duration = 1 × HCLK clock cycle
-   DATAST_HCLK2   : constant := 2;   -- DATAST phase duration = 2 × HCLK clock cycles
-   DATAST_HCLK3   : constant := 3;   -- DATAST phase duration = 3 × HCLK clock cycles
-   DATAST_HCLK4   : constant := 4;   -- DATAST phase duration = 4 × HCLK clock cycles
-   DATAST_HCLK5   : constant := 5;   -- DATAST phase duration = 5 × HCLK clock cycles
-   DATAST_HCLK6   : constant := 6;   -- DATAST phase duration = 6 × HCLK clock cycles
-   DATAST_HCLK7   : constant := 7;   -- DATAST phase duration = 7 × HCLK clock cycles
-   DATAST_HCLK8   : constant := 8;   -- DATAST phase duration = 8 × HCLK clock cycles
-   DATAST_HCLK9   : constant := 9;   -- DATAST phase duration = 9 × HCLK clock cycles
-   DATAST_HCLK10  : constant := 10;  -- DATAST phase duration = 10 × HCLK clock cycles
-   DATAST_HCLK11  : constant := 11;  -- DATAST phase duration = 11 × HCLK clock cycles
-   DATAST_HCLK12  : constant := 12;  -- DATAST phase duration = 12 × HCLK clock cycles
-   DATAST_HCLK13  : constant := 13;  -- DATAST phase duration = 13 × HCLK clock cycles
-   DATAST_HCLK14  : constant := 14;  -- DATAST phase duration = 14 × HCLK clock cycles
-   DATAST_HCLK15  : constant := 15;  -- DATAST phase duration = 15 × HCLK clock cycles
-   DATAST_HCLK16  : constant := 16;  -- DATAST phase duration = 16 × HCLK clock cycles
-   DATAST_HCLK17  : constant := 17;  -- DATAST phase duration = 17 × HCLK clock cycles
-   DATAST_HCLK18  : constant := 18;  -- DATAST phase duration = 18 × HCLK clock cycles
-   DATAST_HCLK19  : constant := 19;  -- DATAST phase duration = 19 × HCLK clock cycles
-   DATAST_HCLK20  : constant := 20;  -- DATAST phase duration = 20 × HCLK clock cycles
-   DATAST_HCLK21  : constant := 21;  -- DATAST phase duration = 21 × HCLK clock cycles
-   DATAST_HCLK22  : constant := 22;  -- DATAST phase duration = 22 × HCLK clock cycles
-   DATAST_HCLK23  : constant := 23;  -- DATAST phase duration = 23 × HCLK clock cycles
-   DATAST_HCLK24  : constant := 24;  -- DATAST phase duration = 24 × HCLK clock cycles
-   DATAST_HCLK25  : constant := 25;  -- DATAST phase duration = 25 × HCLK clock cycles
-   DATAST_HCLK26  : constant := 26;  -- DATAST phase duration = 26 × HCLK clock cycles
-   DATAST_HCLK27  : constant := 27;  -- DATAST phase duration = 27 × HCLK clock cycles
-   DATAST_HCLK28  : constant := 28;  -- DATAST phase duration = 28 × HCLK clock cycles
-   DATAST_HCLK29  : constant := 29;  -- DATAST phase duration = 29 × HCLK clock cycles
-   DATAST_HCLK30  : constant := 30;  -- DATAST phase duration = 30 × HCLK clock cycles
-   DATAST_HCLK31  : constant := 31;  -- DATAST phase duration = 31 × HCLK clock cycles
-   DATAST_HCLK32  : constant := 32;  -- DATAST phase duration = 32 × HCLK clock cycles
-   DATAST_HCLK33  : constant := 33;  -- DATAST phase duration = 33 × HCLK clock cycles
-   DATAST_HCLK34  : constant := 34;  -- DATAST phase duration = 34 × HCLK clock cycles
-   DATAST_HCLK35  : constant := 35;  -- DATAST phase duration = 35 × HCLK clock cycles
-   DATAST_HCLK36  : constant := 36;  -- DATAST phase duration = 36 × HCLK clock cycles
-   DATAST_HCLK37  : constant := 37;  -- DATAST phase duration = 37 × HCLK clock cycles
-   DATAST_HCLK38  : constant := 38;  -- DATAST phase duration = 38 × HCLK clock cycles
-   DATAST_HCLK39  : constant := 39;  -- DATAST phase duration = 39 × HCLK clock cycles
-   DATAST_HCLK40  : constant := 40;  -- DATAST phase duration = 40 × HCLK clock cycles
-   DATAST_HCLK41  : constant := 41;  -- DATAST phase duration = 41 × HCLK clock cycles
-   DATAST_HCLK42  : constant := 42;  -- DATAST phase duration = 42 × HCLK clock cycles
-   DATAST_HCLK43  : constant := 43;  -- DATAST phase duration = 43 × HCLK clock cycles
-   DATAST_HCLK44  : constant := 44;  -- DATAST phase duration = 44 × HCLK clock cycles
-   DATAST_HCLK45  : constant := 45;  -- DATAST phase duration = 45 × HCLK clock cycles
-   DATAST_HCLK46  : constant := 46;  -- DATAST phase duration = 46 × HCLK clock cycles
-   DATAST_HCLK47  : constant := 47;  -- DATAST phase duration = 47 × HCLK clock cycles
-   DATAST_HCLK48  : constant := 48;  -- DATAST phase duration = 48 × HCLK clock cycles
-   DATAST_HCLK49  : constant := 49;  -- DATAST phase duration = 49 × HCLK clock cycles
-   DATAST_HCLK50  : constant := 50;  -- DATAST phase duration = 50 × HCLK clock cycles
-   DATAST_HCLK51  : constant := 51;  -- DATAST phase duration = 51 × HCLK clock cycles
-   DATAST_HCLK52  : constant := 52;  -- DATAST phase duration = 52 × HCLK clock cycles
-   DATAST_HCLK53  : constant := 53;  -- DATAST phase duration = 53 × HCLK clock cycles
-   DATAST_HCLK54  : constant := 54;  -- DATAST phase duration = 54 × HCLK clock cycles
-   DATAST_HCLK55  : constant := 55;  -- DATAST phase duration = 55 × HCLK clock cycles
-   DATAST_HCLK56  : constant := 56;  -- DATAST phase duration = 56 × HCLK clock cycles
-   DATAST_HCLK57  : constant := 57;  -- DATAST phase duration = 57 × HCLK clock cycles
-   DATAST_HCLK58  : constant := 58;  -- DATAST phase duration = 58 × HCLK clock cycles
-   DATAST_HCLK59  : constant := 59;  -- DATAST phase duration = 59 × HCLK clock cycles
-   DATAST_HCLK60  : constant := 60;  -- DATAST phase duration = 60 × HCLK clock cycles
-   DATAST_HCLK61  : constant := 61;  -- DATAST phase duration = 61 × HCLK clock cycles
-   DATAST_HCLK62  : constant := 62;  -- DATAST phase duration = 62 × HCLK clock cycles
-   DATAST_HCLK63  : constant := 63;  -- DATAST phase duration = 63 × HCLK clock cycles
-   DATAST_HCLK64  : constant := 64;  -- DATAST phase duration = 64 × HCLK clock cycles
-   DATAST_HCLK65  : constant := 65;  -- DATAST phase duration = 65 × HCLK clock cycles
-   DATAST_HCLK66  : constant := 66;  -- DATAST phase duration = 66 × HCLK clock cycles
-   DATAST_HCLK67  : constant := 67;  -- DATAST phase duration = 67 × HCLK clock cycles
-   DATAST_HCLK68  : constant := 68;  -- DATAST phase duration = 68 × HCLK clock cycles
-   DATAST_HCLK69  : constant := 69;  -- DATAST phase duration = 69 × HCLK clock cycles
-   DATAST_HCLK70  : constant := 70;  -- DATAST phase duration = 70 × HCLK clock cycles
-   DATAST_HCLK71  : constant := 71;  -- DATAST phase duration = 71 × HCLK clock cycles
-   DATAST_HCLK72  : constant := 72;  -- DATAST phase duration = 72 × HCLK clock cycles
-   DATAST_HCLK73  : constant := 73;  -- DATAST phase duration = 73 × HCLK clock cycles
-   DATAST_HCLK74  : constant := 74;  -- DATAST phase duration = 74 × HCLK clock cycles
-   DATAST_HCLK75  : constant := 75;  -- DATAST phase duration = 75 × HCLK clock cycles
-   DATAST_HCLK76  : constant := 76;  -- DATAST phase duration = 76 × HCLK clock cycles
-   DATAST_HCLK77  : constant := 77;  -- DATAST phase duration = 77 × HCLK clock cycles
-   DATAST_HCLK78  : constant := 78;  -- DATAST phase duration = 78 × HCLK clock cycles
-   DATAST_HCLK79  : constant := 79;  -- DATAST phase duration = 79 × HCLK clock cycles
-   DATAST_HCLK80  : constant := 80;  -- DATAST phase duration = 80 × HCLK clock cycles
-   DATAST_HCLK81  : constant := 81;  -- DATAST phase duration = 81 × HCLK clock cycles
-   DATAST_HCLK82  : constant := 82;  -- DATAST phase duration = 82 × HCLK clock cycles
-   DATAST_HCLK83  : constant := 83;  -- DATAST phase duration = 83 × HCLK clock cycles
-   DATAST_HCLK84  : constant := 84;  -- DATAST phase duration = 84 × HCLK clock cycles
-   DATAST_HCLK85  : constant := 85;  -- DATAST phase duration = 85 × HCLK clock cycles
-   DATAST_HCLK86  : constant := 86;  -- DATAST phase duration = 86 × HCLK clock cycles
-   DATAST_HCLK87  : constant := 87;  -- DATAST phase duration = 87 × HCLK clock cycles
-   DATAST_HCLK88  : constant := 88;  -- DATAST phase duration = 88 × HCLK clock cycles
-   DATAST_HCLK89  : constant := 89;  -- DATAST phase duration = 89 × HCLK clock cycles
-   DATAST_HCLK90  : constant := 90;  -- DATAST phase duration = 90 × HCLK clock cycles
-   DATAST_HCLK91  : constant := 91;  -- DATAST phase duration = 91 × HCLK clock cycles
-   DATAST_HCLK92  : constant := 92;  -- DATAST phase duration = 92 × HCLK clock cycles
-   DATAST_HCLK93  : constant := 93;  -- DATAST phase duration = 93 × HCLK clock cycles
-   DATAST_HCLK94  : constant := 94;  -- DATAST phase duration = 94 × HCLK clock cycles
-   DATAST_HCLK95  : constant := 95;  -- DATAST phase duration = 95 × HCLK clock cycles
-   DATAST_HCLK96  : constant := 96;  -- DATAST phase duration = 96 × HCLK clock cycles
-   DATAST_HCLK97  : constant := 97;  -- DATAST phase duration = 97 × HCLK clock cycles
-   DATAST_HCLK98  : constant := 98;  -- DATAST phase duration = 98 × HCLK clock cycles
-   DATAST_HCLK99  : constant := 99;  -- DATAST phase duration = 99 × HCLK clock cycles
-   DATAST_HCLK100 : constant := 100; -- DATAST phase duration = 100 × HCLK clock cycles
-   DATAST_HCLK101 : constant := 101; -- DATAST phase duration = 101 × HCLK clock cycles
-   DATAST_HCLK102 : constant := 102; -- DATAST phase duration = 102 × HCLK clock cycles
-   DATAST_HCLK103 : constant := 103; -- DATAST phase duration = 103 × HCLK clock cycles
-   DATAST_HCLK104 : constant := 104; -- DATAST phase duration = 104 × HCLK clock cycles
-   DATAST_HCLK105 : constant := 105; -- DATAST phase duration = 105 × HCLK clock cycles
-   DATAST_HCLK106 : constant := 106; -- DATAST phase duration = 106 × HCLK clock cycles
-   DATAST_HCLK107 : constant := 107; -- DATAST phase duration = 107 × HCLK clock cycles
-   DATAST_HCLK108 : constant := 108; -- DATAST phase duration = 108 × HCLK clock cycles
-   DATAST_HCLK109 : constant := 109; -- DATAST phase duration = 109 × HCLK clock cycles
-   DATAST_HCLK110 : constant := 110; -- DATAST phase duration = 110 × HCLK clock cycles
-   DATAST_HCLK111 : constant := 111; -- DATAST phase duration = 111 × HCLK clock cycles
-   DATAST_HCLK112 : constant := 112; -- DATAST phase duration = 112 × HCLK clock cycles
-   DATAST_HCLK113 : constant := 113; -- DATAST phase duration = 113 × HCLK clock cycles
-   DATAST_HCLK114 : constant := 114; -- DATAST phase duration = 114 × HCLK clock cycles
-   DATAST_HCLK115 : constant := 115; -- DATAST phase duration = 115 × HCLK clock cycles
-   DATAST_HCLK116 : constant := 116; -- DATAST phase duration = 116 × HCLK clock cycles
-   DATAST_HCLK117 : constant := 117; -- DATAST phase duration = 117 × HCLK clock cycles
-   DATAST_HCLK118 : constant := 118; -- DATAST phase duration = 118 × HCLK clock cycles
-   DATAST_HCLK119 : constant := 119; -- DATAST phase duration = 119 × HCLK clock cycles
-   DATAST_HCLK120 : constant := 120; -- DATAST phase duration = 120 × HCLK clock cycles
-   DATAST_HCLK121 : constant := 121; -- DATAST phase duration = 121 × HCLK clock cycles
-   DATAST_HCLK122 : constant := 122; -- DATAST phase duration = 122 × HCLK clock cycles
-   DATAST_HCLK123 : constant := 123; -- DATAST phase duration = 123 × HCLK clock cycles
-   DATAST_HCLK124 : constant := 124; -- DATAST phase duration = 124 × HCLK clock cycles
-   DATAST_HCLK125 : constant := 125; -- DATAST phase duration = 125 × HCLK clock cycles
-   DATAST_HCLK126 : constant := 126; -- DATAST phase duration = 126 × HCLK clock cycles
-   DATAST_HCLK127 : constant := 127; -- DATAST phase duration = 127 × HCLK clock cycles
-   DATAST_HCLK128 : constant := 128; -- DATAST phase duration = 128 × HCLK clock cycles
-   DATAST_HCLK129 : constant := 129; -- DATAST phase duration = 129 × HCLK clock cycles
-   DATAST_HCLK130 : constant := 130; -- DATAST phase duration = 130 × HCLK clock cycles
-   DATAST_HCLK131 : constant := 131; -- DATAST phase duration = 131 × HCLK clock cycles
-   DATAST_HCLK132 : constant := 132; -- DATAST phase duration = 132 × HCLK clock cycles
-   DATAST_HCLK133 : constant := 133; -- DATAST phase duration = 133 × HCLK clock cycles
-   DATAST_HCLK134 : constant := 134; -- DATAST phase duration = 134 × HCLK clock cycles
-   DATAST_HCLK135 : constant := 135; -- DATAST phase duration = 135 × HCLK clock cycles
-   DATAST_HCLK136 : constant := 136; -- DATAST phase duration = 136 × HCLK clock cycles
-   DATAST_HCLK137 : constant := 137; -- DATAST phase duration = 137 × HCLK clock cycles
-   DATAST_HCLK138 : constant := 138; -- DATAST phase duration = 138 × HCLK clock cycles
-   DATAST_HCLK139 : constant := 139; -- DATAST phase duration = 139 × HCLK clock cycles
-   DATAST_HCLK140 : constant := 140; -- DATAST phase duration = 140 × HCLK clock cycles
-   DATAST_HCLK141 : constant := 141; -- DATAST phase duration = 141 × HCLK clock cycles
-   DATAST_HCLK142 : constant := 142; -- DATAST phase duration = 142 × HCLK clock cycles
-   DATAST_HCLK143 : constant := 143; -- DATAST phase duration = 143 × HCLK clock cycles
-   DATAST_HCLK144 : constant := 144; -- DATAST phase duration = 144 × HCLK clock cycles
-   DATAST_HCLK145 : constant := 145; -- DATAST phase duration = 145 × HCLK clock cycles
-   DATAST_HCLK146 : constant := 146; -- DATAST phase duration = 146 × HCLK clock cycles
-   DATAST_HCLK147 : constant := 147; -- DATAST phase duration = 147 × HCLK clock cycles
-   DATAST_HCLK148 : constant := 148; -- DATAST phase duration = 148 × HCLK clock cycles
-   DATAST_HCLK149 : constant := 149; -- DATAST phase duration = 149 × HCLK clock cycles
-   DATAST_HCLK150 : constant := 150; -- DATAST phase duration = 150 × HCLK clock cycles
-   DATAST_HCLK151 : constant := 151; -- DATAST phase duration = 151 × HCLK clock cycles
-   DATAST_HCLK152 : constant := 152; -- DATAST phase duration = 152 × HCLK clock cycles
-   DATAST_HCLK153 : constant := 153; -- DATAST phase duration = 153 × HCLK clock cycles
-   DATAST_HCLK154 : constant := 154; -- DATAST phase duration = 154 × HCLK clock cycles
-   DATAST_HCLK155 : constant := 155; -- DATAST phase duration = 155 × HCLK clock cycles
-   DATAST_HCLK156 : constant := 156; -- DATAST phase duration = 156 × HCLK clock cycles
-   DATAST_HCLK157 : constant := 157; -- DATAST phase duration = 157 × HCLK clock cycles
-   DATAST_HCLK158 : constant := 158; -- DATAST phase duration = 158 × HCLK clock cycles
-   DATAST_HCLK159 : constant := 159; -- DATAST phase duration = 159 × HCLK clock cycles
-   DATAST_HCLK160 : constant := 160; -- DATAST phase duration = 160 × HCLK clock cycles
-   DATAST_HCLK161 : constant := 161; -- DATAST phase duration = 161 × HCLK clock cycles
-   DATAST_HCLK162 : constant := 162; -- DATAST phase duration = 162 × HCLK clock cycles
-   DATAST_HCLK163 : constant := 163; -- DATAST phase duration = 163 × HCLK clock cycles
-   DATAST_HCLK164 : constant := 164; -- DATAST phase duration = 164 × HCLK clock cycles
-   DATAST_HCLK165 : constant := 165; -- DATAST phase duration = 165 × HCLK clock cycles
-   DATAST_HCLK166 : constant := 166; -- DATAST phase duration = 166 × HCLK clock cycles
-   DATAST_HCLK167 : constant := 167; -- DATAST phase duration = 167 × HCLK clock cycles
-   DATAST_HCLK168 : constant := 168; -- DATAST phase duration = 168 × HCLK clock cycles
-   DATAST_HCLK169 : constant := 169; -- DATAST phase duration = 169 × HCLK clock cycles
-   DATAST_HCLK170 : constant := 170; -- DATAST phase duration = 170 × HCLK clock cycles
-   DATAST_HCLK171 : constant := 171; -- DATAST phase duration = 171 × HCLK clock cycles
-   DATAST_HCLK172 : constant := 172; -- DATAST phase duration = 172 × HCLK clock cycles
-   DATAST_HCLK173 : constant := 173; -- DATAST phase duration = 173 × HCLK clock cycles
-   DATAST_HCLK174 : constant := 174; -- DATAST phase duration = 174 × HCLK clock cycles
-   DATAST_HCLK175 : constant := 175; -- DATAST phase duration = 175 × HCLK clock cycles
-   DATAST_HCLK176 : constant := 176; -- DATAST phase duration = 176 × HCLK clock cycles
-   DATAST_HCLK177 : constant := 177; -- DATAST phase duration = 177 × HCLK clock cycles
-   DATAST_HCLK178 : constant := 178; -- DATAST phase duration = 178 × HCLK clock cycles
-   DATAST_HCLK179 : constant := 179; -- DATAST phase duration = 179 × HCLK clock cycles
-   DATAST_HCLK180 : constant := 180; -- DATAST phase duration = 180 × HCLK clock cycles
-   DATAST_HCLK181 : constant := 181; -- DATAST phase duration = 181 × HCLK clock cycles
-   DATAST_HCLK182 : constant := 182; -- DATAST phase duration = 182 × HCLK clock cycles
-   DATAST_HCLK183 : constant := 183; -- DATAST phase duration = 183 × HCLK clock cycles
-   DATAST_HCLK184 : constant := 184; -- DATAST phase duration = 184 × HCLK clock cycles
-   DATAST_HCLK185 : constant := 185; -- DATAST phase duration = 185 × HCLK clock cycles
-   DATAST_HCLK186 : constant := 186; -- DATAST phase duration = 186 × HCLK clock cycles
-   DATAST_HCLK187 : constant := 187; -- DATAST phase duration = 187 × HCLK clock cycles
-   DATAST_HCLK188 : constant := 188; -- DATAST phase duration = 188 × HCLK clock cycles
-   DATAST_HCLK189 : constant := 189; -- DATAST phase duration = 189 × HCLK clock cycles
-   DATAST_HCLK190 : constant := 190; -- DATAST phase duration = 190 × HCLK clock cycles
-   DATAST_HCLK191 : constant := 191; -- DATAST phase duration = 191 × HCLK clock cycles
-   DATAST_HCLK192 : constant := 192; -- DATAST phase duration = 192 × HCLK clock cycles
-   DATAST_HCLK193 : constant := 193; -- DATAST phase duration = 193 × HCLK clock cycles
-   DATAST_HCLK194 : constant := 194; -- DATAST phase duration = 194 × HCLK clock cycles
-   DATAST_HCLK195 : constant := 195; -- DATAST phase duration = 195 × HCLK clock cycles
-   DATAST_HCLK196 : constant := 196; -- DATAST phase duration = 196 × HCLK clock cycles
-   DATAST_HCLK197 : constant := 197; -- DATAST phase duration = 197 × HCLK clock cycles
-   DATAST_HCLK198 : constant := 198; -- DATAST phase duration = 198 × HCLK clock cycles
-   DATAST_HCLK199 : constant := 199; -- DATAST phase duration = 199 × HCLK clock cycles
-   DATAST_HCLK200 : constant := 200; -- DATAST phase duration = 200 × HCLK clock cycles
-   DATAST_HCLK201 : constant := 201; -- DATAST phase duration = 201 × HCLK clock cycles
-   DATAST_HCLK202 : constant := 202; -- DATAST phase duration = 202 × HCLK clock cycles
-   DATAST_HCLK203 : constant := 203; -- DATAST phase duration = 203 × HCLK clock cycles
-   DATAST_HCLK204 : constant := 204; -- DATAST phase duration = 204 × HCLK clock cycles
-   DATAST_HCLK205 : constant := 205; -- DATAST phase duration = 205 × HCLK clock cycles
-   DATAST_HCLK206 : constant := 206; -- DATAST phase duration = 206 × HCLK clock cycles
-   DATAST_HCLK207 : constant := 207; -- DATAST phase duration = 207 × HCLK clock cycles
-   DATAST_HCLK208 : constant := 208; -- DATAST phase duration = 208 × HCLK clock cycles
-   DATAST_HCLK209 : constant := 209; -- DATAST phase duration = 209 × HCLK clock cycles
-   DATAST_HCLK210 : constant := 210; -- DATAST phase duration = 210 × HCLK clock cycles
-   DATAST_HCLK211 : constant := 211; -- DATAST phase duration = 211 × HCLK clock cycles
-   DATAST_HCLK212 : constant := 212; -- DATAST phase duration = 212 × HCLK clock cycles
-   DATAST_HCLK213 : constant := 213; -- DATAST phase duration = 213 × HCLK clock cycles
-   DATAST_HCLK214 : constant := 214; -- DATAST phase duration = 214 × HCLK clock cycles
-   DATAST_HCLK215 : constant := 215; -- DATAST phase duration = 215 × HCLK clock cycles
-   DATAST_HCLK216 : constant := 216; -- DATAST phase duration = 216 × HCLK clock cycles
-   DATAST_HCLK217 : constant := 217; -- DATAST phase duration = 217 × HCLK clock cycles
-   DATAST_HCLK218 : constant := 218; -- DATAST phase duration = 218 × HCLK clock cycles
-   DATAST_HCLK219 : constant := 219; -- DATAST phase duration = 219 × HCLK clock cycles
-   DATAST_HCLK220 : constant := 220; -- DATAST phase duration = 220 × HCLK clock cycles
-   DATAST_HCLK221 : constant := 221; -- DATAST phase duration = 221 × HCLK clock cycles
-   DATAST_HCLK222 : constant := 222; -- DATAST phase duration = 222 × HCLK clock cycles
-   DATAST_HCLK223 : constant := 223; -- DATAST phase duration = 223 × HCLK clock cycles
-   DATAST_HCLK224 : constant := 224; -- DATAST phase duration = 224 × HCLK clock cycles
-   DATAST_HCLK225 : constant := 225; -- DATAST phase duration = 225 × HCLK clock cycles
-   DATAST_HCLK226 : constant := 226; -- DATAST phase duration = 226 × HCLK clock cycles
-   DATAST_HCLK227 : constant := 227; -- DATAST phase duration = 227 × HCLK clock cycles
-   DATAST_HCLK228 : constant := 228; -- DATAST phase duration = 228 × HCLK clock cycles
-   DATAST_HCLK229 : constant := 229; -- DATAST phase duration = 229 × HCLK clock cycles
-   DATAST_HCLK230 : constant := 230; -- DATAST phase duration = 230 × HCLK clock cycles
-   DATAST_HCLK231 : constant := 231; -- DATAST phase duration = 231 × HCLK clock cycles
-   DATAST_HCLK232 : constant := 232; -- DATAST phase duration = 232 × HCLK clock cycles
-   DATAST_HCLK233 : constant := 233; -- DATAST phase duration = 233 × HCLK clock cycles
-   DATAST_HCLK234 : constant := 234; -- DATAST phase duration = 234 × HCLK clock cycles
-   DATAST_HCLK235 : constant := 235; -- DATAST phase duration = 235 × HCLK clock cycles
-   DATAST_HCLK236 : constant := 236; -- DATAST phase duration = 236 × HCLK clock cycles
-   DATAST_HCLK237 : constant := 237; -- DATAST phase duration = 237 × HCLK clock cycles
-   DATAST_HCLK238 : constant := 238; -- DATAST phase duration = 238 × HCLK clock cycles
-   DATAST_HCLK239 : constant := 239; -- DATAST phase duration = 239 × HCLK clock cycles
-   DATAST_HCLK240 : constant := 240; -- DATAST phase duration = 240 × HCLK clock cycles
-   DATAST_HCLK241 : constant := 241; -- DATAST phase duration = 241 × HCLK clock cycles
-   DATAST_HCLK242 : constant := 242; -- DATAST phase duration = 242 × HCLK clock cycles
-   DATAST_HCLK243 : constant := 243; -- DATAST phase duration = 243 × HCLK clock cycles
-   DATAST_HCLK244 : constant := 244; -- DATAST phase duration = 244 × HCLK clock cycles
-   DATAST_HCLK245 : constant := 245; -- DATAST phase duration = 245 × HCLK clock cycles
-   DATAST_HCLK246 : constant := 246; -- DATAST phase duration = 246 × HCLK clock cycles
-   DATAST_HCLK247 : constant := 247; -- DATAST phase duration = 247 × HCLK clock cycles
-   DATAST_HCLK248 : constant := 248; -- DATAST phase duration = 248 × HCLK clock cycles
-   DATAST_HCLK249 : constant := 249; -- DATAST phase duration = 249 × HCLK clock cycles
-   DATAST_HCLK250 : constant := 250; -- DATAST phase duration = 250 × HCLK clock cycles
-   DATAST_HCLK251 : constant := 251; -- DATAST phase duration = 251 × HCLK clock cycles
-   DATAST_HCLK252 : constant := 252; -- DATAST phase duration = 252 × HCLK clock cycles
-   DATAST_HCLK253 : constant := 253; -- DATAST phase duration = 253 × HCLK clock cycles
-   DATAST_HCLK254 : constant := 254; -- DATAST phase duration = 254 × HCLK clock cycles
    DATAST_HCLK255 : constant := 255; -- DATAST phase duration = 255 × HCLK clock cycles
+   function DATAST_HCLK (Cycles : Bits_8) return Bits_8 with Inline => True;
 
    BUSTURN_HCLK0  : constant := 2#0000#; -- BUSTURN phase duration = 0 HCLK clock cycle added
    BUSTURN_HCLK1  : constant := 2#0001#; -- BUSTURN phase duration = 1 × HCLK clock cycle added
@@ -4037,11 +3783,178 @@ pragma Warnings (On);
    -- 13.6.7 NAND flash controller registers
 
    -- NAND flash control registers (FMC_PCR)
+
+   PTYP_RSVD : constant := 0; -- Reserved, must be kept at reset value
+   PTYP_NAND : constant := 1; -- NAND Flash
+
+   PWID_8     : constant := 2#00#; -- 8 bits
+   PWID_16    : constant := 2#01#; -- 16 bits.
+   PWID_RSVD1 : constant := 2#10#; -- reserved.
+   PWID_RSVD2 : constant := 2#11#; -- reserved.
+
+   TCLR_HCLK1  : constant := 2#0000#; -- 1 HCLK cycle
+   TCLR_HCLK2  : constant := 2#0001#; -- 2 HCLK cycles
+   TCLR_HCLK3  : constant := 2#0010#; -- 3 HCLK cycles
+   TCLR_HCLK4  : constant := 2#0011#; -- 4 HCLK cycles
+   TCLR_HCLK5  : constant := 2#0100#; -- 5 HCLK cycles
+   TCLR_HCLK6  : constant := 2#0101#; -- 6 HCLK cycles
+   TCLR_HCLK7  : constant := 2#0110#; -- 7 HCLK cycles
+   TCLR_HCLK8  : constant := 2#0111#; -- 8 HCLK cycles
+   TCLR_HCLK9  : constant := 2#1000#; -- 9 HCLK cycles
+   TCLR_HCLK10 : constant := 2#1001#; -- 10 HCLK cycles
+   TCLR_HCLK11 : constant := 2#1010#; -- 11 HCLK cycles
+   TCLR_HCLK12 : constant := 2#1011#; -- 12 HCLK cycles
+   TCLR_HCLK13 : constant := 2#1100#; -- 13 HCLK cycles
+   TCLR_HCLK14 : constant := 2#1101#; -- 14 HCLK cycles
+   TCLR_HCLK15 : constant := 2#1110#; -- 15 HCLK cycles
+   TCLR_HCLK16 : constant := 2#1111#; -- 16 HCLK cycles
+
+   TAR_HCLK1  : constant := 2#0000#; -- 1 HCLK cycle
+   TAR_HCLK2  : constant := 2#0001#; -- 2 HCLK cycles
+   TAR_HCLK3  : constant := 2#0010#; -- 3 HCLK cycles
+   TAR_HCLK4  : constant := 2#0011#; -- 4 HCLK cycles
+   TAR_HCLK5  : constant := 2#0100#; -- 5 HCLK cycles
+   TAR_HCLK6  : constant := 2#0101#; -- 6 HCLK cycles
+   TAR_HCLK7  : constant := 2#0110#; -- 7 HCLK cycles
+   TAR_HCLK8  : constant := 2#0111#; -- 8 HCLK cycles
+   TAR_HCLK9  : constant := 2#1000#; -- 9 HCLK cycles
+   TAR_HCLK10 : constant := 2#1001#; -- 10 HCLK cycles
+   TAR_HCLK11 : constant := 2#1010#; -- 11 HCLK cycles
+   TAR_HCLK12 : constant := 2#1011#; -- 12 HCLK cycles
+   TAR_HCLK13 : constant := 2#1100#; -- 13 HCLK cycles
+   TAR_HCLK14 : constant := 2#1101#; -- 14 HCLK cycles
+   TAR_HCLK15 : constant := 2#1110#; -- 15 HCLK cycles
+   TAR_HCLK16 : constant := 2#1111#; -- 16 HCLK cycles
+
+   ECCPS_256  : constant := 2#000#; -- 256 bytes
+   ECCPS_512  : constant := 2#001#; -- 512 bytes
+   ECCPS_1024 : constant := 2#010#; -- 1024 bytes
+   ECCPS_2048 : constant := 2#011#; -- 2048 bytes
+   ECCPS_4096 : constant := 2#100#; -- 4096 bytes
+   ECCPS_8192 : constant := 2#101#; -- 8192 bytes
+
+   type FMC_PCR_Type is record
+      Reserved1 : Bits_1  := 0;
+      PWAITEN   : Boolean := False;      -- Wait feature enable bit.
+      PBKEN     : Boolean := False;      -- NAND Flash memory bank enable bit.
+      PTYP      : Bits_1  := PTYP_NAND;  -- Memory type.
+      PWID      : Bits_2  := PWID_16;    -- Data bus width.
+      ECCEN     : Boolean := False;      -- ECC computation logic enable bit
+      Reserved2 : Bits_2  := 0;
+      TCLR      : Bits_4  := TCLR_HCLK1; -- CLE to RE delay.
+      TAR       : Bits_4  := TAR_HCLK1;  -- ALE to RE delay.
+      ECCPS     : Bits_3  := ECCPS_256;  -- ECC page size.
+      Reserved3 : Bits_12 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FMC_PCR_Type use record
+      Reserved1 at 0 range  0 ..  0;
+      PWAITEN   at 0 range  1 ..  1;
+      PBKEN     at 0 range  2 ..  2;
+      PTYP      at 0 range  3 ..  3;
+      PWID      at 0 range  4 ..  5;
+      ECCEN     at 0 range  6 ..  6;
+      Reserved2 at 0 range  7 ..  8;
+      TCLR      at 0 range  9 .. 12;
+      TAR       at 0 range 13 .. 16;
+      ECCPS     at 0 range 17 .. 19;
+      Reserved3 at 0 range 20 .. 31;
+   end record;
+
    -- FIFO status and interrupt register (FMC_SR)
+
+   type FMC_SR_Type is record
+      IRS      : Boolean; -- Interrupt rising edge status
+      ILS      : Boolean; -- Interrupt high-level status
+      IFS      : Boolean; -- Interrupt falling edge status
+      IREN     : Boolean; -- Interrupt rising edge detection enable bit
+      ILEN     : Boolean; -- Interrupt high-level detection enable bit
+      IFEN     : Boolean; -- Interrupt falling edge detection enable bit
+      FEMPT    : Boolean; -- FIFO empty.
+      Reserved : Bits_25;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FMC_SR_Type use record
+      IRS      at 0 range 0 ..  0;
+      ILS      at 0 range 1 ..  1;
+      IFS      at 0 range 2 ..  2;
+      IREN     at 0 range 3 ..  3;
+      ILEN     at 0 range 4 ..  4;
+      IFEN     at 0 range 5 ..  5;
+      FEMPT    at 0 range 6 ..  6;
+      Reserved at 0 range 7 .. 31;
+   end record;
+
    -- Common memory space timing register (FMC_PMEM)
+
+   MEMSET_HCLK253 : constant := 16#FC#; -- 253 HCLK cycles
+   function MEMSET_HCLK (Cycles : Bits_8) return Bits_8 with Inline => True;
+
+   MEMWAIT_HCLK253 : constant := 16#FC#; -- 253 HCLK cycles (+ wait cycle introduced by deasserting NWAIT)
+   function MEMWAIT_HCLK (Cycles : Bits_8) return Bits_8 with Inline => True;
+
+   MEMHOLD_HCLK252 : constant := 16#FC#; -- 252 HCLK cycles for write access / 254 HCLK cycles for read access
+   function MEMHOLD_HCLK (Cycles : Bits_8) return Bits_8 with Inline => True;
+
+   MEMHIZ_HCLK253 : constant := 16#FC#; -- 253 HCLK cycles
+   function MEMHIZ_HCLK (Cycles : Bits_8) return Bits_8 with Inline => True;
+
+   type FMC_PMEM_Type is record
+      MEMSET  : Bits_8 := MEMSET_HCLK253;  -- Common memory x setup time
+      MEMWAIT : Bits_8 := MEMWAIT_HCLK253; -- Common memory wait time
+      MEMHOLD : Bits_8 := MEMHOLD_HCLK252; -- Common memory hold time
+      MEMHIZ  : Bits_8 := MEMHIZ_HCLK253;  -- Common memory x data bus Hi-Z time
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FMC_PMEM_Type use record
+      MEMSET  at 0 range  0 ..  7;
+      MEMWAIT at 0 range  8 .. 15;
+      MEMHOLD at 0 range 16 .. 23;
+      MEMHIZ  at 0 range 24 .. 31;
+   end record;
+
    -- Attribute memory space timing register (FMC_PATT)
 
+   ATTSET_HCLK253 : constant := 16#FC#; -- 253 HCLK cycles
+   function ATTSET_HCLK (Cycles : Bits_8) return Bits_8 with Inline => True;
+
+   ATTWAIT_HCLK253 : constant := 16#FC#; -- 253 HCLK cycles (+ wait cycle introduced by deasserting NWAIT)
+   function ATTWAIT_HCLK (Cycles : Bits_8) return Bits_8 with Inline => True;
+
+   ATTHOLD_HCLK252 : constant := 16#FC#; -- 252 HCLK cycles for write access / 254 HCLK cycles for read access
+   function ATTHOLD_HCLK (Cycles : Bits_8) return Bits_8 with Inline => True;
+
+   ATTHIZ_HCLK253 : constant := 16#FC#; -- 253 HCLK cycles
+   function ATTHIZ_HCLK (Cycles : Bits_8) return Bits_8 with Inline => True;
+
+   type FMC_PATT_Type is record
+      ATTSET  : Bits_8 := ATTSET_HCLK253;  -- Attribute memory setup time
+      ATTWAIT : Bits_8 := ATTWAIT_HCLK253; -- Attribute memory wait time
+      ATTHOLD : Bits_8 := ATTHOLD_HCLK252; -- Attribute memory hold time
+      ATTHIZ  : Bits_8 := ATTHIZ_HCLK253;  -- Attribute memory data bus Hi-Z time
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FMC_PATT_Type use record
+      ATTSET  at 0 range  0 ..  7;
+      ATTWAIT at 0 range  8 .. 15;
+      ATTHOLD at 0 range 16 .. 23;
+      ATTHIZ  at 0 range 24 .. 31;
+   end record;
+
    -- ECC result registers (FMC_ECCR)
+
+   type FMC_ECCR_Type is record
+      ECC : Unsigned_32; -- ECC result
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FMC_ECCR_Type use record
+      ECC at 0 range 0 .. 31;
+   end record;
 
    -- 13.7.5 SDRAM controller registers
    -- SDRAM control register x (FMC_SDCRx)
