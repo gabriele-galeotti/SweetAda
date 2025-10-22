@@ -171,8 +171,9 @@ package body LLutils
       (Value : BCD_Type)
       return Interfaces.Unsigned_8
       is
-      V : constant Interfaces.Unsigned_8 := Interfaces.Unsigned_8 (Value);
+      V : Interfaces.Unsigned_8;
    begin
+      V := Interfaces.Unsigned_8 (Value);
       return (V and 16#0F#) + Bits.ShR (V, 4) * 10;
    end To_U8;
 
@@ -214,9 +215,10 @@ package body LLutils
        LCase : Boolean)
       return Character
       is
-      Digit : Interfaces.Unsigned_8 := Value;
+      Digit : Interfaces.Unsigned_8;
       C     : Character;
    begin
+      Digit := Value;
       if MSD then
          Digit := @ / 2**4;
       end if;
