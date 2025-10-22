@@ -3862,6 +3862,14 @@ pragma Warnings (On);
       Reserved3 at 0 range 20 .. 31;
    end record;
 
+   FMC_PCR_ADDRESS : constant := 16#A000_0080#;
+
+   FMC_PCR : aliased FMC_PCR_Type
+      with Address              => System'To_Address (FMC_PCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- FIFO status and interrupt register (FMC_SR)
 
    type FMC_SR_Type is record
@@ -3886,6 +3894,14 @@ pragma Warnings (On);
       FEMPT    at 0 range 6 ..  6;
       Reserved at 0 range 7 .. 31;
    end record;
+
+   FMC_SR_ADDRESS : constant := 16#A000_0084#;
+
+   FMC_SR : aliased FMC_SR_Type
+      with Address              => System'To_Address (FMC_SR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- Common memory space timing register (FMC_PMEM)
 
@@ -3916,6 +3932,14 @@ pragma Warnings (On);
       MEMHIZ  at 0 range 24 .. 31;
    end record;
 
+   FMC_PMEM_ADDRESS : constant := 16#A000_0088#;
+
+   FMC_PMEM : aliased FMC_PMEM_Type
+      with Address              => System'To_Address (FMC_PMEM_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- Attribute memory space timing register (FMC_PATT)
 
    ATTSET_HCLK253 : constant := 16#FC#; -- 253 HCLK cycles
@@ -3945,6 +3969,14 @@ pragma Warnings (On);
       ATTHIZ  at 0 range 24 .. 31;
    end record;
 
+   FMC_PATT_ADDRESS : constant := 16#A000_008C#;
+
+   FMC_PATT : aliased FMC_PATT_Type
+      with Address              => System'To_Address (FMC_PATT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- ECC result registers (FMC_ECCR)
 
    type FMC_ECCR_Type is record
@@ -3956,12 +3988,365 @@ pragma Warnings (On);
       ECC at 0 range 0 .. 31;
    end record;
 
+   FMC_ECCR_ADDRESS : constant := 16#A000_0094#;
+
+   FMC_ECCR : aliased FMC_ECCR_Type
+      with Address              => System'To_Address (FMC_ECCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 13.7.5 SDRAM controller registers
+
    -- SDRAM control register x (FMC_SDCRx)
+
+   NC_8  : constant := 2#00#; -- 8 bits
+   NC_9  : constant := 2#01#; -- 9 bits
+   NC_10 : constant := 2#10#; -- 10 bits
+   NC_11 : constant := 2#11#; -- 11 bits.
+
+   NR_11   : constant := 2#00#; -- 11 bit
+   NR_12   : constant := 2#01#; -- 12 bits
+   NR_13   : constant := 2#10#; -- 13 bits
+   NR_RSVD : constant := 2#11#; -- reserved.
+
+   -- MWID_* already defined at 13.5.6
+
+   NB_BANK2 : constant := 0; -- Two internal Banks
+   NB_BANK4 : constant := 1; -- Four internal Banks
+
+   CAS_RSVD : constant := 2#00#; -- reserved.
+   CAS_CYC1 : constant := 2#01#; -- 1 cycle
+   CAS_CYC2 : constant := 2#10#; -- 2 cycles
+   CAS_CYC3 : constant := 2#11#; -- 3 cycles
+
+   SDCLK_NONE  : constant := 2#00#; -- SDCLK clock disabled
+   SDCLK_RSVD  : constant := 2#01#; -- reserved
+   SDCLK_HCLK2 : constant := 2#10#; -- SDCLK period = 2 x HCLK periods
+   SDCLK_HCLK3 : constant := 2#11#; -- SDCLK period = 3 x HCLK periods
+
+   RPIPE_NONE  : constant := 2#00#; -- No HCLK clock cycle delay
+   RPIPE_HCLK1 : constant := 2#01#; -- One HCLK clock cycle delay
+   RPIPE_HCLK2 : constant := 2#10#; -- Two HCLK clock cycle delay
+   RPIPE_RSVD  : constant := 2#11#; -- reserved.
+
+   type FMC_SDCRx_Type is record
+      NC       : Bits_2  := NC_8;       -- Number of column address bits
+      NR       : Bits_2  := NR_11;      -- Number of row address bits
+      MWID     : Bits_2  := MWID_16;    -- Memory data bus width.
+      NB       : Bits_1  := NB_BANK4;   -- Number of internal banks
+      CAS      : Bits_2  := CAS_CYC1;   -- CAS Latency
+      WP       : Boolean := True;       -- Write protection
+      SDCLK    : Bits_2  := SDCLK_NONE; -- SDRAM clock configuration
+      RBURST   : Boolean := False;      -- Burst read
+      RPIPE    : Bits_2  := RPIPE_NONE; -- Read pipe
+      Reserved : Bits_17 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FMC_SDCRx_Type use record
+      NC       at 0 range  0 ..  1;
+      NR       at 0 range  2 ..  3;
+      MWID     at 0 range  4 ..  5;
+      NB       at 0 range  6 ..  6;
+      CAS      at 0 range  7 ..  8;
+      WP       at 0 range  9 ..  9;
+      SDCLK    at 0 range 10 .. 11;
+      RBURST   at 0 range 12 .. 12;
+      RPIPE    at 0 range 13 .. 14;
+      Reserved at 0 range 15 .. 31;
+   end record;
+
+   FMC_SDCR1_ADDRESS : constant := 16#A000_0140#;
+
+   FMC_SDCR1 : aliased FMC_SDCRx_Type
+      with Address              => System'To_Address (FMC_SDCR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FMC_SDCR2_ADDRESS : constant := 16#A000_0144#;
+
+   FMC_SDCR2 : aliased FMC_SDCRx_Type
+      with Address              => System'To_Address (FMC_SDCR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- SDRAM timing register x (FMC_SDTRx)
+
+   TMRD_CYC1  : constant := 2#0000#; -- 1 cycle
+   TMRD_CYC2  : constant := 2#0001#; -- 2 cycles
+   TMRD_CYC3  : constant := 2#0010#; -- 3 cycles
+   TMRD_CYC4  : constant := 2#0011#; -- 4 cycles
+   TMRD_CYC5  : constant := 2#0100#; -- 5 cycles
+   TMRD_CYC6  : constant := 2#0101#; -- 6 cycles
+   TMRD_CYC7  : constant := 2#0110#; -- 7 cycles
+   TMRD_CYC8  : constant := 2#0111#; -- 8 cycles
+   TMRD_CYC9  : constant := 2#1000#; -- 9 cycles
+   TMRD_CYC10 : constant := 2#1001#; -- 10 cycles
+   TMRD_CYC11 : constant := 2#1010#; -- 11 cycles
+   TMRD_CYC12 : constant := 2#1011#; -- 12 cycles
+   TMRD_CYC13 : constant := 2#1100#; -- 13 cycles
+   TMRD_CYC14 : constant := 2#1101#; -- 14 cycles
+   TMRD_CYC15 : constant := 2#1110#; -- 15 cycles
+   TMRD_CYC16 : constant := 2#1111#; -- 16 cycles
+
+   TXSR_CYC1  : constant := 2#0000#; -- 1 cycle
+   TXSR_CYC2  : constant := 2#0001#; -- 2 cycles
+   TXSR_CYC3  : constant := 2#0010#; -- 3 cycles
+   TXSR_CYC4  : constant := 2#0011#; -- 4 cycles
+   TXSR_CYC5  : constant := 2#0100#; -- 5 cycles
+   TXSR_CYC6  : constant := 2#0101#; -- 6 cycles
+   TXSR_CYC7  : constant := 2#0110#; -- 7 cycles
+   TXSR_CYC8  : constant := 2#0111#; -- 8 cycles
+   TXSR_CYC9  : constant := 2#1000#; -- 9 cycles
+   TXSR_CYC10 : constant := 2#1001#; -- 10 cycles
+   TXSR_CYC11 : constant := 2#1010#; -- 11 cycles
+   TXSR_CYC12 : constant := 2#1011#; -- 12 cycles
+   TXSR_CYC13 : constant := 2#1100#; -- 13 cycles
+   TXSR_CYC14 : constant := 2#1101#; -- 14 cycles
+   TXSR_CYC15 : constant := 2#1110#; -- 15 cycles
+   TXSR_CYC16 : constant := 2#1111#; -- 16 cycles
+
+   TRAS_CYC1  : constant := 2#0000#; -- 1 cycle
+   TRAS_CYC2  : constant := 2#0001#; -- 2 cycles
+   TRAS_CYC3  : constant := 2#0010#; -- 3 cycles
+   TRAS_CYC4  : constant := 2#0011#; -- 4 cycles
+   TRAS_CYC5  : constant := 2#0100#; -- 5 cycles
+   TRAS_CYC6  : constant := 2#0101#; -- 6 cycles
+   TRAS_CYC7  : constant := 2#0110#; -- 7 cycles
+   TRAS_CYC8  : constant := 2#0111#; -- 8 cycles
+   TRAS_CYC9  : constant := 2#1000#; -- 9 cycles
+   TRAS_CYC10 : constant := 2#1001#; -- 10 cycles
+   TRAS_CYC11 : constant := 2#1010#; -- 11 cycles
+   TRAS_CYC12 : constant := 2#1011#; -- 12 cycles
+   TRAS_CYC13 : constant := 2#1100#; -- 13 cycles
+   TRAS_CYC14 : constant := 2#1101#; -- 14 cycles
+   TRAS_CYC15 : constant := 2#1110#; -- 15 cycles
+   TRAS_CYC16 : constant := 2#1111#; -- 16 cycles
+
+   TRC_CYC1  : constant := 2#0000#; -- 1 cycle
+   TRC_CYC2  : constant := 2#0001#; -- 2 cycles
+   TRC_CYC3  : constant := 2#0010#; -- 3 cycles
+   TRC_CYC4  : constant := 2#0011#; -- 4 cycles
+   TRC_CYC5  : constant := 2#0100#; -- 5 cycles
+   TRC_CYC6  : constant := 2#0101#; -- 6 cycles
+   TRC_CYC7  : constant := 2#0110#; -- 7 cycles
+   TRC_CYC8  : constant := 2#0111#; -- 8 cycles
+   TRC_CYC9  : constant := 2#1000#; -- 9 cycles
+   TRC_CYC10 : constant := 2#1001#; -- 10 cycles
+   TRC_CYC11 : constant := 2#1010#; -- 11 cycles
+   TRC_CYC12 : constant := 2#1011#; -- 12 cycles
+   TRC_CYC13 : constant := 2#1100#; -- 13 cycles
+   TRC_CYC14 : constant := 2#1101#; -- 14 cycles
+   TRC_CYC15 : constant := 2#1110#; -- 15 cycles
+   TRC_CYC16 : constant := 2#1111#; -- 16 cycles
+
+   TWR_CYC1  : constant := 2#0000#; -- 1 cycle
+   TWR_CYC2  : constant := 2#0001#; -- 2 cycles
+   TWR_CYC3  : constant := 2#0010#; -- 3 cycles
+   TWR_CYC4  : constant := 2#0011#; -- 4 cycles
+   TWR_CYC5  : constant := 2#0100#; -- 5 cycles
+   TWR_CYC6  : constant := 2#0101#; -- 6 cycles
+   TWR_CYC7  : constant := 2#0110#; -- 7 cycles
+   TWR_CYC8  : constant := 2#0111#; -- 8 cycles
+   TWR_CYC9  : constant := 2#1000#; -- 9 cycles
+   TWR_CYC10 : constant := 2#1001#; -- 10 cycles
+   TWR_CYC11 : constant := 2#1010#; -- 11 cycles
+   TWR_CYC12 : constant := 2#1011#; -- 12 cycles
+   TWR_CYC13 : constant := 2#1100#; -- 13 cycles
+   TWR_CYC14 : constant := 2#1101#; -- 14 cycles
+   TWR_CYC15 : constant := 2#1110#; -- 15 cycles
+   TWR_CYC16 : constant := 2#1111#; -- 16 cycles
+
+   TRP_CYC1  : constant := 2#0000#; -- 1 cycle
+   TRP_CYC2  : constant := 2#0001#; -- 2 cycles
+   TRP_CYC3  : constant := 2#0010#; -- 3 cycles
+   TRP_CYC4  : constant := 2#0011#; -- 4 cycles
+   TRP_CYC5  : constant := 2#0100#; -- 5 cycles
+   TRP_CYC6  : constant := 2#0101#; -- 6 cycles
+   TRP_CYC7  : constant := 2#0110#; -- 7 cycles
+   TRP_CYC8  : constant := 2#0111#; -- 8 cycles
+   TRP_CYC9  : constant := 2#1000#; -- 9 cycles
+   TRP_CYC10 : constant := 2#1001#; -- 10 cycles
+   TRP_CYC11 : constant := 2#1010#; -- 11 cycles
+   TRP_CYC12 : constant := 2#1011#; -- 12 cycles
+   TRP_CYC13 : constant := 2#1100#; -- 13 cycles
+   TRP_CYC14 : constant := 2#1101#; -- 14 cycles
+   TRP_CYC15 : constant := 2#1110#; -- 15 cycles
+   TRP_CYC16 : constant := 2#1111#; -- 16 cycles
+
+   TRCD_CYC1  : constant := 2#0000#; -- 1 cycle.
+   TRCD_CYC2  : constant := 2#0001#; -- 2 cycles
+   TRCD_CYC3  : constant := 2#0010#; -- 3 cycles
+   TRCD_CYC4  : constant := 2#0011#; -- 4 cycles
+   TRCD_CYC5  : constant := 2#0100#; -- 5 cycles
+   TRCD_CYC6  : constant := 2#0101#; -- 6 cycles
+   TRCD_CYC7  : constant := 2#0110#; -- 7 cycles
+   TRCD_CYC8  : constant := 2#0111#; -- 8 cycles
+   TRCD_CYC9  : constant := 2#1000#; -- 9 cycles
+   TRCD_CYC10 : constant := 2#1001#; -- 10 cycles
+   TRCD_CYC11 : constant := 2#1010#; -- 11 cycles
+   TRCD_CYC12 : constant := 2#1011#; -- 12 cycles
+   TRCD_CYC13 : constant := 2#1100#; -- 13 cycles
+   TRCD_CYC14 : constant := 2#1101#; -- 14 cycles
+   TRCD_CYC15 : constant := 2#1110#; -- 15 cycles
+   TRCD_CYC16 : constant := 2#1111#; -- 16 cycles
+
+   type FMC_SDTRx_Type is record
+      TMRD     : Bits_4 := TMRD_CYC1; -- Load Mode Register to Active
+      TXSR     : Bits_4 := TXSR_CYC1; -- Exit Self-refresh delay
+      TRAS     : Bits_4 := TRAS_CYC1; -- Self refresh time
+      TRC      : Bits_4 := TRC_CYC1;  -- Row cycle delay
+      TWR      : Bits_4 := TWR_CYC1;  -- Recovery delay
+      TRP      : Bits_4 := TRP_CYC1;  -- Row precharge delay
+      TRCD     : Bits_4 := TRCD_CYC1; -- Row to column delay
+      Reserved : Bits_4 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FMC_SDTRx_Type use record
+      TMRD     at 0 range  0 ..  3;
+      TXSR     at 0 range  4 ..  7;
+      TRAS     at 0 range  8 .. 11;
+      TRC      at 0 range 12 .. 15;
+      TWR      at 0 range 16 .. 19;
+      TRP      at 0 range 20 .. 23;
+      TRCD     at 0 range 24 .. 27;
+      Reserved at 0 range 28 .. 31;
+   end record;
+
+   FMC_SDTR1_ADDRESS : constant := 16#A000_0148#;
+
+   FMC_SDTR1 : aliased FMC_SDTRx_Type
+      with Address              => System'To_Address (FMC_SDTR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FMC_SDTR2_ADDRESS : constant := 16#A000_014C#;
+
+   FMC_SDTR2 : aliased FMC_SDTRx_Type
+      with Address              => System'To_Address (FMC_SDTR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- SDRAM Command Mode register (FMC_SDCMR)
+
+   MODE_NORMAL   : constant := 2#000#; -- Normal Mode
+   MODE_CLKCFGEN : constant := 2#001#; -- Clock Configuration Enable
+   MODE_PALL     : constant := 2#010#; -- PALL (“All Bank Precharge”) command
+   MODE_AUTORFSH : constant := 2#011#; -- Auto-refresh command
+   MODE_LOADMODE : constant := 2#100#; -- Load Mode Register
+   MODE_SELFRFSH : constant := 2#101#; -- Self-refresh command
+   MODE_PWDOWN   : constant := 2#110#; -- Power-down command
+   MODE_RSVD     : constant := 2#111#; -- Reserved
+
+   NRFS_CYC1  : constant := 2#0000#; -- 1 Auto-refresh cycle
+   NRFS_CYC2  : constant := 2#0001#; -- 2 Auto-refresh cycles
+   NRFS_CYC3  : constant := 2#0010#; -- 3 Auto-refresh cycles
+   NRFS_CYC4  : constant := 2#0011#; -- 4 Auto-refresh cycles
+   NRFS_CYC5  : constant := 2#0100#; -- 5 Auto-refresh cycles
+   NRFS_CYC6  : constant := 2#0101#; -- 6 Auto-refresh cycles
+   NRFS_CYC7  : constant := 2#0110#; -- 7 Auto-refresh cycles
+   NRFS_CYC8  : constant := 2#0111#; -- 8 Auto-refresh cycles
+   NRFS_CYC9  : constant := 2#1000#; -- 9 Auto-refresh cycles
+   NRFS_CYC10 : constant := 2#1001#; -- 10 Auto-refresh cycles
+   NRFS_CYC11 : constant := 2#1010#; -- 11 Auto-refresh cycles
+   NRFS_CYC12 : constant := 2#1011#; -- 12 Auto-refresh cycles
+   NRFS_CYC13 : constant := 2#1100#; -- 13 Auto-refresh cycles
+   NRFS_CYC14 : constant := 2#1101#; -- 14 Auto-refresh cycles
+   NRFS_CYC15 : constant := 2#1110#; -- 15 Auto-refresh cycles
+   NRFS_CYC16 : constant := 2#1111#; -- 16 Auto-refresh cycles
+
+   type FMC_SDCMR_Type is record
+      MODE     : Bits_3  := MODE_NORMAL; -- Command mode
+      CTB2     : Boolean := False;       -- Command Target Bank 2
+      CTB1     : Boolean := False;       -- Command Target Bank 1
+      NRFS     : Bits_4  := NRFS_CYC1;   -- Number of Auto-refresh
+      MRD      : Bits_13 := 0;           -- Mode Register definition
+      Reserved : Bits_10 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FMC_SDCMR_Type use record
+      MODE     at 0 range  0 ..  2;
+      CTB2     at 0 range  3 ..  3;
+      CTB1     at 0 range  4 ..  4;
+      NRFS     at 0 range  5 ..  8;
+      MRD      at 0 range  9 .. 21;
+      Reserved at 0 range 22 .. 31;
+   end record;
+
+   FMC_SDCMR_ADDRESS : constant := 16#A000_0150#;
+
+   FMC_SDCMR : aliased FMC_SDCMR_Type
+      with Address              => System'To_Address (FMC_SDCMR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- SDRAM refresh timer register (FMC_SDRTR)
+
+   type FMC_SDRTR_Type is record
+      CRE      : Boolean := False; -- Clear Refresh error flag
+      COUNT    : Bits_13 := 0;     -- Refresh Timer Count
+      REIE     : Boolean := False; -- RES Interrupt Enable
+      Reserved : Bits_17 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FMC_SDRTR_Type use record
+      CRE      at 0 range  0 ..  0;
+      COUNT    at 0 range  1 .. 13;
+      REIE     at 0 range 14 .. 14;
+      Reserved at 0 range 15 .. 31;
+   end record;
+
+   FMC_SDRTR_ADDRESS : constant := 16#A000_0154#;
+
+   FMC_SDRTR : aliased FMC_SDRTR_Type
+      with Address              => System'To_Address (FMC_SDRTR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- SDRAM status register (FMC_SDSR)
+
+   MODES1_NORMAL   : constant := 2#00#; -- Normal Mode
+   MODES1_SELFRFSH : constant := 2#01#; -- Self-refresh mode
+   MODES1_PWDOWN   : constant := 2#10#; -- Power-down mode
+
+   MODES2_NORMAL   renames MODES1_NORMAL;
+   MODES2_SELFRFSH renames MODES1_SELFRFSH;
+   MODES2_PWDOWN   renames MODES1_PWDOWN;
+
+   type FMC_SDSR_Type is record
+      RE       : Boolean; -- Refresh error flag
+      MODES1   : Bits_2;  -- Status Mode for Bank 1
+      MODES2   : Bits_2;  -- Status Mode for Bank 2
+      BUSY     : Boolean; -- Busy status
+      Reserved : Bits_26;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FMC_SDSR_Type use record
+      RE       at 0 range 0 ..  0;
+      MODES1   at 0 range 1 ..  2;
+      MODES2   at 0 range 3 ..  4;
+      BUSY     at 0 range 5 ..  5;
+      Reserved at 0 range 6 .. 31;
+   end record;
+
+   FMC_SDSR_ADDRESS : constant := 16#A000_0158#;
+
+   FMC_SDSR : aliased FMC_SDSR_Type
+      with Address              => System'To_Address (FMC_SDSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 14 Quad-SPI interface (QUADSPI)
