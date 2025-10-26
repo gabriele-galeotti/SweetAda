@@ -1,8 +1,9 @@
 
 with Interfaces;
 with Bits;
-with STM32F769I;
 with CPU;
+with STM32F769I;
+with Console;
 
 package body Application
    is
@@ -32,35 +33,23 @@ package body Application
    ----------------------------------------------------------------------------
    procedure Run
       is
-      Delay_Count : constant := 50_000_000;
    begin
-      -- GPIOJ (LEDs) ---------------------------------------------------------
-      RCC_AHB1ENR.GPIOJEN := True;
-      RCC_AHB1RSTR.GPIOJRST := True;
-      RCC_AHB1RSTR.GPIOJRST := False;
-      -- blink user LEDs alternately ------------------------------------------
-      -- LD1: RED PJ13 (B9)
-      -- LD2: GRN PJ5 (M14)
-      GPIOJ.MODER  := [5 | 13 => GPIO_OUT, others => <>];
-      GPIOJ.OTYPER := [5 | 13 => GPIO_PP, others => <>];
-      GPIOJ.PUPDR  := [others => GPIO_NOPUPD];
-      while True loop
-         if False then
-            -- direct output values
-            GPIOJ.ODR := [5 => BITOFF, 13 => BITON, others => <>];
-            for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-            GPIOJ.ODR := [5 => BITON, 13 => BITOFF, others => <>];
-            for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-         else
-            -- set/reset
-            GPIOJ.BSRR.RST := [5 => True, others => <>];
-            GPIOJ.BSRR.SET := [13 => True, others => <>];
-            for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-            GPIOJ.BSRR.SET := [5 => True, others => <>];
-            GPIOJ.BSRR.RST := [13 => True, others => <>];
-            for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-         end if;
-      end loop;
+      -------------------------------------------------------------------------
+      if True then
+         -- blink user LED LD2
+         while True loop
+            -- 1) toggle by using SET/RESET registers
+            if GPIOJ.ODR (5) /= 0 then
+               GPIOJ.BSRR.RST (5) := True;
+            else
+               GPIOJ.BSRR.SET (5) := True;
+            end if;
+            -- 2) toggle by reading back
+            -- GPIOJ.ODR (5) := not @;
+            Console.Print ("hello, SweetAda", NL => True);
+            for Count in 1 .. 100_000_000 loop CPU.NOP; end loop;
+         end loop;
+      end if;
       -------------------------------------------------------------------------
       loop null; end loop;
       -------------------------------------------------------------------------

@@ -19,6 +19,7 @@ with LLutils;
 with Abort_Library;
 with ARMv7M;
 with CPU;
+with STM32F769I;
 with BSP;
 with Console;
 
@@ -32,6 +33,8 @@ package body Exceptions
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use STM32F769I;
 
    --========================================================================--
    --                                                                        --
@@ -77,7 +80,8 @@ package body Exceptions
    begin
       BSP.Tick_Count := @ + 1;
       if BSP.Tick_Count mod 1_000 = 0 then
-         Console.Print ("T", NL => False);
+         -- blink LED LD1
+         GPIOJ.ODR (13) := not @;
       end if;
    end SysTick_Process;
 

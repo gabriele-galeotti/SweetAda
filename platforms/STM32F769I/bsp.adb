@@ -106,22 +106,28 @@ package body BSP
       RCC_APB1ENR.PWREN := True;
       RCC_APB1RSTR.PWRRST := True;
       RCC_APB1RSTR.PWRRST := False;
-      -- GPIOA (USART1)
+      -- GPIOJ (LEDs) ---------------------------------------------------------
+      -- LD1: RED PJ13 (B9)
+      -- LD2: GRN PJ5 (M14)
+      RCC_AHB1ENR.GPIOJEN := True;
+      RCC_AHB1RSTR.GPIOJRST := True;
+      RCC_AHB1RSTR.GPIOJRST := False;
+      GPIOJ.MODER  := (@ with delta 5 | 13 => GPIO_OUT);
+      GPIOJ.OTYPER := (@ with delta 5 | 13 => GPIO_PP);
+      GPIOJ.PUPDR  := (@ with delta 5 | 13 => GPIO_NOPUPD);
+      -- GPIOA (USART1) -------------------------------------------------------
+      -- USART1_TX PA9 (E15) Virtual COM port
+      -- USART1_RX PA10 (D15) Virtual COM port
       RCC_AHB1ENR.GPIOAEN := True;
       RCC_AHB1RSTR.GPIOARST := True;
       RCC_AHB1RSTR.GPIOARST := False;
-      -- USART1
+      GPIOA.AFRH := (@ with delta 9 | 10 => AF7_USART1);
+      GPIOA.MODER := (@ with delta 9 | 10 => GPIO_ALT);
+      -- USART1 setup ---------------------------------------------------------
       RCC_APB2ENR.USART1EN := True;
       RCC_APB2RSTR.USART1RST := True;
       RCC_APB2RSTR.USART1RST := False;
-      -- USART1 ---------------------------------------------------------------
-      -- USART1_TX PA9 (E15) Virtual COM port
-      -- USART1_RX PA10 (D15) Virtual COM port
       RCC_DCKCFGR2.USART1SEL := USART1SEL_APB2;
-      GPIOA.AFRH (9) := AF7_USART1;
-      GPIOA.AFRH (10) := AF7_USART1;
-      GPIOA.MODER (9) := GPIO_ALT;
-      GPIOA.MODER (10) := GPIO_ALT;
       USART1.CR1.UE := False;
       USART1.BRR.BRR := Unsigned_16 (Clocks.CLK_Peripherals / 115_200);
       USART1.CR1 := (
