@@ -17,7 +17,7 @@
 # SWEETADA_PATH
 # PLATFORM_DIRECTORY
 # KERNEL_ROMFILE
-# BOOT_TYPE
+# BOOT_MODE
 #
 
 ################################################################################
@@ -43,7 +43,7 @@ GXEMUL_EXECUTABLE="/opt/GXemul/bin/gxemul"
 # print executed instructions (-i) and dump registers (-r) on stdout
 # -i -r
 #
-case ${BOOT_TYPE} in
+case ${BOOT_MODE} in
   "ROM")
     GXEMUL_BOOT="0xA0000000:${SWEETADA_PATH}/${KERNEL_ROMFILE}"
     ;;
