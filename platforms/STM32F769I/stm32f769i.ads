@@ -2229,21 +2229,123 @@ pragma Warnings (On);
    -- 6.4.10 GPIO alternate function high register (GPIOx_AFRH) (x = A..J)
 
    AF0  : constant := 2#0000#;
+   AF0_SYS renames AF0;
+
    AF1  : constant := 2#0001#;
+   AF1_I2C4  renames AF1;
+   AF1_UART5 renames AF1;
+   AF1_TIM1  renames AF1;
+   AF1_TIM2  renames AF1;
+
    AF2  : constant := 2#0010#;
+   AF2_TIM3 renames AF2;
+   AF2_TIM4 renames AF2;
+   AF2_TIM5 renames AF2;
+
    AF3  : constant := 2#0011#;
+   AF3_TIM8   renames AF3;
+   AF3_TIM9   renames AF3;
+   AF3_TIM10  renames AF3;
+   AF3_TIM11  renames AF3;
+   AF3_LPTIM1 renames AF3;
+   AF3_DFSDM1 renames AF3;
+   AF3_CEC    renames AF3;
+
    AF4  : constant := 2#0100#;
+   AF4_I2C1   renames AF4;
+   AF4_I2C2   renames AF4;
+   AF4_I2C3   renames AF4;
+   AF4_I2C4   renames AF4;
+   AF4_USART1 renames AF4;
+   AF4_CEC    renames AF4;
+
    AF5  : constant := 2#0101#;
+   AF5_SPI1 renames AF5;
+   AF5_I2S1 renames AF5;
+   AF5_SPI2 renames AF5;
+   AF5_I2S2 renames AF5;
+   AF5_SPI3 renames AF5;
+   AF5_I2S3 renames AF5;
+   AF5_SPI4 renames AF5;
+   AF5_SPI5 renames AF5;
+   AF5_SPI6 renames AF5;
+
    AF6  : constant := 2#0110#;
+   AF6_SPI2   renames AF6;
+   AF6_I2S2   renames AF6;
+   AF6_SPI3   renames AF6;
+   AF6_I2S3   renames AF6;
+   AF6_SAI1   renames AF6;
+   AF6_I2C4   renames AF6;
+   AF6_UART4  renames AF6;
+   AF6_DFSDM1 renames AF6;
+
    AF7  : constant := 2#0111#;
+   AF7_SPI2   renames AF7;
+   AF7_I2S2   renames AF7;
+   AF7_SPI3   renames AF7;
+   AF7_I2S3   renames AF7;
+   AF7_SPI6   renames AF7;
+   AF7_USART1 renames AF7;
+   AF7_USART2 renames AF7;
+   AF7_USART3 renames AF7;
+   AF7_UART5  renames AF7;
+   AF7_DFSDM1 renames AF7;
+   AF7_SPDIF  renames AF7;
+
    AF8  : constant := 2#1000#;
+   AF8_SPI6   renames AF8;
+   AF8_SAI2   renames AF8;
+   AF8_USART6 renames AF8;
+   AF8_UART4  renames AF8;
+   AF8_UART5  renames AF8;
+   AF8_UART7  renames AF8;
+   AF8_UART8  renames AF8;
+   AF8_OTG_FS renames AF8;
+   AF8_SPDIF  renames AF8;
+
    AF9  : constant := 2#1001#;
+   AF9_CAN1    renames AF9;
+   AF9_CAN2    renames AF9;
+   AF9_TIM12   renames AF9;
+   AF9_TIM13   renames AF9;
+   AF9_TIM14   renames AF9;
+   AF9_QUADSPI renames AF9;
+   AF9_FMC     renames AF9;
+   AF9_LCD     renames AF9;
+
    AF10 : constant := 2#1010#;
+   AF10_SAI2    renames AF10;
+   AF10_QUADSPI renames AF10;
+   AF10_SDMMC2  renames AF10;
+   AF10_DFSDM1  renames AF10;
+   AF10_OTG2_HS renames AF10;
+   AF10_OTG1_FS renames AF10;
+   AF10_LCD     renames AF10;
+
    AF11 : constant := 2#1011#;
+   AF11_I2C4   renames AF11;
+   AF11_CAN3   renames AF11;
+   AF11_SDMMC2 renames AF11;
+   AF11_ETH    renames AF11;
+
    AF12 : constant := 2#1100#;
+   AF12_UART7   renames AF12;
+   AF12_FMC     renames AF12;
+   AF12_SDMMC1  renames AF12;
+   AF12_MDIOS   renames AF12;
+   AF12_OTG2_FS renames AF12;
+
    AF13 : constant := 2#1101#;
+   AF13_DCMI renames AF13;
+   AF13_LCD  renames AF13;
+   AF13_DSI  renames AF13;
+
    AF14 : constant := 2#1110#;
+   AF14_LCD renames AF14;
+
    AF15 : constant := 2#1111#;
+   AF15_SYS renames AF15;
 
    type AFRL_Type is array (0 .. 7) of Bits_4
       with Size => 32,
