@@ -40,6 +40,10 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
    -- RM0410 Rev 4
    -- STM32F76xxx and STM32F77xxx advanced Arm®-based 32-bit MCUs
+   -- DocID029041 Rev 6 September 2017
+   -- STM32F765xx STM32F767xx STM32F768Ax STM32F769xx
+   -- Arm® Cortex®-M7 32b MCU+FPU, 462DMIPS, up to 2MB Flash/
+   -- 512+16+4KB RAM, USB OTG HS/FS, 28 com IF, LCD, DSI
    ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
