@@ -118,8 +118,8 @@ package body BSP
       -- USART1_TX PA9 (E15) Virtual COM port
       -- USART1_RX PA10 (D15) Virtual COM port
       RCC_DCKCFGR2.USART1SEL := USART1SEL_APB2;
-      GPIOA.AFRH (9) := AF7;
-      GPIOA.AFRH (10) := AF7;
+      GPIOA.AFRH (9) := AF7_USART1;
+      GPIOA.AFRH (10) := AF7_USART1;
       GPIOA.MODER (9) := GPIO_ALT;
       GPIOA.MODER (10) := GPIO_ALT;
       USART1.CR1.UE := False;
