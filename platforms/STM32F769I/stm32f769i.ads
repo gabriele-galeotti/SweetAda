@@ -1655,7 +1655,7 @@ pragma Style_Checks (Off);
    RTCSEL_NONE : constant := 2#00#; -- No clock
    RTCSEL_LSE  : constant := 2#01#; -- LSE oscillator clock used as the RTC clock
    RTCSEL_LSI  : constant := 2#10#; -- LSI oscillator clock used as the RTC clock
-   RTCSEL_HSE  : constant := 2#11#; -- HSE oscillator clock divided by a programmable prescaler ...
+   RTCSEL_HSE  : constant := 2#11#; -- HSE oscillator clock divided by a programmable prescaler (selection through the RTCPRE[4:0] bits in the RCC clock configuration register (RCC_CFGR)) used as the RTC clock
 
    type RCC_BDCR_Type is record
       LSEON      : Boolean := False;       -- External low-speed oscillator enable
@@ -1959,8 +1959,8 @@ pragma Style_Checks (Off);
    SAIxSEL_ALT    : constant := 2#10#; -- SAIx clock frequency = Alternate function input frequency
    SAIxSEL_HSIHSE : constant := 2#11#; -- SAIx clock frequency = HSI or HSE
 
-   TIMPRE_2xPCLKx : constant := 0; -- If the APB prescaler ... 1, TIMxCLK = PCLKx. Otherwise ... TIMxCLK = 2xPCLKx.
-   TIMPRE_4xPCLKx : constant := 1; -- If the APB prescaler ... 1, 2 or 4, TIMxCLK = HCLK. Otherwise ... TIMxCLK = 4xPCLKx.
+   TIMPRE_2xPCLKx : constant := 0; -- If the APB prescaler (PPRE1, PPRE2 in the RCC_CFGR register) is configured to a division factor of 1, TIMxCLK = PCLKx. Otherwise, the timer clock frequencies are set to twice to the frequency of the APB domain to which the timers are connected: TIMxCLK = 2xPCLKx.
+   TIMPRE_4xPCLKx : constant := 1; -- If the APB prescaler (PPRE1, PPRE2 in the RCC_CFGR register) is configured to a division factor of 1, 2 or 4, TIMxCLK = HCLK. Otherwise, the timer clock frequencies are set to four times to the frequency of the APB domain to which the timers are connected: TIMxCLK = 4xPCLKx.
 
    DFSDM1SEL_APB2   : constant := 0; -- APB2 clock (PCLK2) selected as DFSDM1 Kernel clock source
    DFSDM1SEL_SYSCLK : constant := 1; -- System clock (SYSCLK) clock selected as DFSDM1 Kernel clock source
@@ -2068,7 +2068,7 @@ pragma Style_Checks (Off);
    SDMMCxSEL_SYS : constant := 1; -- System clock is selected as SDMMC1 clock
 
    DSISEL_DSIPHY : constant := 0; -- DSI-PHY used as DSI byte lane clock source (usual case)
-   DSISEL_PLLR   : constant := 1; -- PLLR used as DSI byte lane clock source, used in case DSI PLL and DSI-PHY are off ...
+   DSISEL_PLLR   : constant := 1; -- PLLR used as DSI byte lane clock source, used in case DSI PLL and DSI-PHY are off (low power mode).
 
    type RCC_DCKCFGR2_Type is record
       USART1SEL : Bits_2 := USART1SEL_APB2; -- USART 1 clock source selection
@@ -5130,9 +5130,54 @@ pragma Warnings (On);
    -- 26 General-purpose timers (TIM2/TIM3/TIM4/TIM5)
    ----------------------------------------------------------------------------
 
+   -- 26.4.1 TIMx control register 1 (TIMx_CR1)
+   -- 26.4.2 TIMx control register 2 (TIMx_CR2)
+   -- 26.4.3 TIMx slave mode control register (TIMx_SMCR)
+   -- 26.4.4 TIMx DMA/Interrupt enable register (TIMx_DIER)
+   -- 26.4.5 TIMx status register (TIMx_SR)
+   -- 26.4.6 TIMx event generation register (TIMx_EGR)
+   -- 26.4.7 TIMx capture/compare mode register 1 (TIMx_CCMR1)
+   -- 26.4.8 TIMx capture/compare mode register 2 (TIMx_CCMR2)
+   -- 26.4.9 TIMx capture/compare enable register (TIMx_CCER)
+   -- 26.4.10 TIMx counter (TIMx_CNT)
+   -- 26.4.11 TIMx prescaler (TIMx_PSC)
+   -- 26.4.12 TIMx auto-reload register (TIMx_ARR)
+   -- 26.4.13TIMx capture/compare register 1 (TIMx_CCR1)
+   -- 26.4.14TIMx capture/compare register 2 (TIMx_CCR2)
+   -- 26.4.15TIMx capture/compare register 3 (TIMx_CCR3)
+   -- 26.4.16TIMx capture/compare register 4 (TIMx_CCR4)
+   -- 26.4.17 TIMx DMA control register (TIMx_DCR)
+   -- 26.4.18 TIMx DMA address for full transfer (TIMx_DMAR)
+   -- 26.4.19 TIM2 option register (TIM2_OR)
+   -- 26.4.20 TIM5 option register (TIM5_OR)
+
    ----------------------------------------------------------------------------
    -- 27 General-purpose timers (TIM9/TIM10/TIM11/TIM12/TIM13/TIM14)
    ----------------------------------------------------------------------------
+
+   -- 27.4.1 TIM9/TIM12 control register 1 (TIMx_CR1)
+   -- 27.4.2 TIM9/TIM12 slave mode control register (TIMx_SMCR)
+   -- 27.4.3 TIM9/TIM12 Interrupt enable register (TIMx_DIER)
+   -- 27.4.4 TIM9/TIM12 status register (TIMx_SR)
+   -- 27.4.5 TIM9/TIM12 event generation register (TIMx_EGR)
+   -- 27.4.6 TIM9/TIM12 capture/compare mode register 1 (TIMx_CCMR1)
+   -- 27.4.7 TIM9/TIM12 capture/compare enable register (TIMx_CCER)
+   -- 27.4.8 TIM9/TIM12 counter (TIMx_CNT)
+   -- 27.4.9 TIM9/TIM12 prescaler (TIMx_PSC)
+   -- 27.4.10 TIM9/TIM12 auto-reload register (TIMx_ARR)
+   -- 27.4.11 TIM9/TIM12 capture/compare register 1 (TIMx_CCR1)
+   -- 27.4.12 TIM9/TIM12 capture/compare register 2 (TIMx_CCR2)
+   -- 27.5.1 TIM10/TIM11/TIM13/TIM14 control register 1 (TIMx_CR1)
+   -- 27.5.2 TIM10/TIM11/TIM13/TIM14 Interrupt enable register (TIMx_DIER)
+   -- 27.5.3 TIM10/TIM11/TIM13/TIM14 status register (TIMx_SR)
+   -- 27.5.4 TIM10/TIM11/TIM13/TIM14 event generation register (TIMx_EGR)
+   -- 27.5.5 TIM10/TIM11/TIM13/TIM14 capture/compare mode register 1 (TIMx_CCMR1)
+   -- 27.5.6 TIM10/TIM11/TIM13/TIM14 capture/compare enable register (TIMx_CCER)
+   -- 27.5.7 TIM10/TIM11/TIM13/TIM14 counter (TIMx_CNT)
+   -- 27.5.8 TIM10/TIM11/TIM13/TIM14 prescaler (TIMx_PSC)
+   -- 27.5.9 TIM10/TIM11/TIM13/TIM14 auto-reload register (TIMx_ARR)
+   -- 27.5.10 TIM10/TIM11/TIM13/TIM14 capture/compare register 1 (TIMx_CCR1)
+   -- 27.5.11 TIM11 option register 1 (TIM11_OR)
 
    ----------------------------------------------------------------------------
    -- 28 Basic timers (TIM6/TIM7)
@@ -5140,8 +5185,8 @@ pragma Warnings (On);
 
    -- 28.4.1 TIM6/TIM7 control register 1 (TIMx_CR1)
 
-   URS_ANY          : constant := 0; -- Any of the following events generates ...
-   URS_COUNTER_OFUF : constant := 1; -- Only counter overflow/underflow generates ..
+   URS_ANY          : constant := 0; -- Any of the following events generates an update interrupt or DMA request if enabled.
+   URS_COUNTER_OFUF : constant := 1; -- Only counter overflow/underflow generates an update interrupt or DMA request if enabled.
 
    type TIMx_CR1_Type is record
       CEN       : Boolean := False;   -- Counter enable
@@ -5468,7 +5513,7 @@ pragma Warnings (On);
    -- 32.6.4 RTC initialization and status register (RTC_ISR)
 
    INIT_FREERUN  : constant := 0; -- Free running mode
-   INIT_INITMODE : constant := 1; -- Initialization mode used to program time and date register (RTC_TR and RTC_DR), and ...
+   INIT_INITMODE : constant := 1; -- Initialization mode used to program time and date register (RTC_TR and RTC_DR), and prescaler register (RTC_PRER).
 
    type RTC_ISR_Type is record
       ALRAWF   : Boolean := True;         -- Alarm A write flag
@@ -5733,7 +5778,7 @@ pragma Warnings (On);
    TAMPFREQ_DIV512 : constant := 16#6#; -- RTCCLK / 512 (64 Hz when RTCCLK = 32768 Hz)
    TAMPFREQ_DIV256 : constant := 16#7#; -- RTCCLK / 256 (128 Hz when RTCCLK = 32768 Hz)
 
-   TAMPFLT_EDGE : constant := 16#0#; -- Tamper event is activated on edge of RTC_TAMPx input transitions ...
+   TAMPFLT_EDGE : constant := 16#0#; -- Tamper event is activated on edge of RTC_TAMPx input transitions to the active level (no internal pull-up on RTC_TAMPx input).
    TAMPFLT_SMP2 : constant := 16#1#; -- Tamper event is activated after 2 consecutive samples at the active level.
    TAMPFLT_SMP4 : constant := 16#2#; -- Tamper event is activated after 4 consecutive samples at the active level.
    TAMPFLT_SMP8 : constant := 16#3#; -- Tamper event is activated after 8 consecutive samples at the active level.
@@ -6910,21 +6955,79 @@ pragma Warnings (On);
    -- 36 Serial audio interface (SAI)
    ----------------------------------------------------------------------------
 
+   -- 36.5.1 Global configuration register (SAI_GCR)
+   -- 36.5.2 Configuration register 1 (SAI_ACR1)
+   -- 36.5.3 Configuration register 1 (SAI_BCR1)
+   -- 36.5.4 Configuration register 2 (SAI_ACR2)
+   -- 36.5.5 Configuration register 2 (SAI_BCR2)
+   -- 36.5.6 Frame configuration register (SAI_AFRCR)
+   -- 36.5.7 Frame configuration register (SAI_BFRCR)
+   -- 36.5.8 Slot register (SAI_ASLOTR)
+   -- 36.5.9 Slot register (SAI_BSLOTR)
+   -- 36.5.10 Interrupt mask register 2 (SAI_AIM)
+   -- 36.5.11 Interrupt mask register 2 (SAI_BIM)
+   -- 36.5.12 Status register (SAI_ASR)
+   -- 36.5.13 Status register (SAI_BSR)
+   -- 36.5.14 Clear flag register (SAI_ACLRFR)
+   -- 36.5.15 Clear flag register (SAI_BCLRFR)
+   -- 36.5.16 Data register (SAI_ADR)
+   -- 36.5.17 Data register (SAI_BDR)
+
    ----------------------------------------------------------------------------
    -- 37 SPDIF receiver interface (SPDIFRX)
    ----------------------------------------------------------------------------
+
+   -- 37.5.1 Control register (SPDIFRX_CR)
+   -- 37.5.2 Interrupt mask register (SPDIFRX_IMR)
+   -- 37.5.3 Status register (SPDIFRX_SR)
+   -- 37.5.4 Interrupt flag clear register (SPDIFRX_IFCR)
+   -- 37.5.5 Data input register (SPDIFRX_FMT0_DR)
+   -- 37.5.6 Data input register (SPDIFRX_FMT1_DR)
+   -- 37.5.7 Data input register (SPDIFRX_FMT2_DR)
+   -- 37.5.8 Channel status register (SPDIFRX_CSR)
+   -- 37.5.9 Debug information register (SPDIFRX_DIR)
 
    ----------------------------------------------------------------------------
    -- 38 Management data input/output (MDIOS)
    ----------------------------------------------------------------------------
 
+   -- 38.4.1 MDIOS configuration register (MDIOS_CR)
+   -- 38.4.2 MDIOS write flag register (MDIOS_WRFR)
+   -- 38.4.3 MDIOS clear write flag register (MDIOS_CWRFR)
+   -- 38.4.4 MDIOS read flag register (MDIOS_RDFR)
+   -- 38.4.5 MDIOS clear read flag register (MDIOS_CRDFR)
+   -- 38.4.6 MDIOS status register (MDIOS_SR)
+   -- 38.4.7 MDIOS clear flag register (MDIOS_CLRFR)
+   -- 38.4.8 MDIOS input data register (MDIOS_DINR0-MDIOS_DINR31)
+   -- 38.4.9 MDIOS output data register (MDIOS_DOUTR0-MDIOS_DOUTR31)
+
    ----------------------------------------------------------------------------
    -- 39 SD/SDIO/MMC card host interface (SDMMC)
    ----------------------------------------------------------------------------
 
+   -- 39.8.1 SDMMC power control register (SDMMC_POWER)
+   -- 39.8.2 SDMMC clock control register (SDMMC_CLKCR)
+   -- 39.8.3 SDMMC argument register (SDMMC_ARG)
+   -- 39.8.4 SDMMC command register (SDMMC_CMD)
+   -- 39.8.5 SDMMC command response register (SDMMC_RESPCMD)
+   -- 39.8.6 SDMMC response 1..4 register (SDMMC_RESPx)
+   -- 39.8.7 SDMMC data timer register (SDMMC_DTIMER)
+   -- 39.8.8 SDMMC data length register (SDMMC_DLEN)
+   -- 39.8.9 SDMMC data control register (SDMMC_DCTRL)
+   -- 39.8.10 SDMMC data counter register (SDMMC_DCOUNT)
+   -- 39.8.11 SDMMC status register (SDMMC_STA)
+   -- 39.8.12 SDMMC interrupt clear register (SDMMC_ICR)
+   -- 39.8.13 SDMMC mask register (SDMMC_MASK)
+   -- 39.8.14 SDMMC FIFO counter register (SDMMC_FIFOCNT)
+   -- 39.8.15 SDMMC data FIFO register (SDMMC_FIFO)
+
    ----------------------------------------------------------------------------
    -- 40 Controller area network (bxCAN)
    ----------------------------------------------------------------------------
+
+   -- 40.9.2 CAN control and status registers
+   -- 40.9.3 CAN mailbox registers
+   -- 40.9.4 CAN filter registers
 
    ----------------------------------------------------------------------------
    -- 41 USB on-the-go full-speed/high-speed (OTG_FS/OTG_HS)
