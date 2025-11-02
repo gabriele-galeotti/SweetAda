@@ -1645,16 +1645,321 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 9.4.1 FLCTL_POWER_STAT Register
+
+   PSTAT_POWERDOWN        : constant := 2#000#; -- Flash IP in power-down mode
+   PSTAT_VDDINPROGRESS    : constant := 2#001#; -- Flash IP Vdd domain power-up in progress
+   PSTAT_PSSINPROGRESS    : constant := 2#010#; -- PSS LDO_GOOD, IREF_OK and VREF_OK check in progress
+   PSTAT_SAFELVINPROGRESS : constant := 2#011#; -- Flash IP SAFE_LV check in progress
+   PSTAT_ACTIVE           : constant := 2#100#; -- Flash IP Active
+   PSTAT_ACTIVELF         : constant := 2#101#; -- Flash IP Active in Low-Frequency Active and Low-Frequency LPM0 modes.
+   PSTAT_STANDBY          : constant := 2#110#; -- Flash IP in Standby mode
+   PSTAT_MIRRORBOOST      : constant := 2#111#; -- Flash IP in Current mirror boost state
+
+   type FLCTL_POWER_STAT_Type is record
+      PSTAT    : Bits_3;  -- Flash power status
+      LDOSTAT  : Boolean; -- PSS FLDO GOOD status
+      VREFSTAT : Boolean; -- PSS VREF stable status
+      IREFSTAT : Boolean; -- PSS IREF stable status
+      TRIMSTAT : Boolean; -- PSS trim done status
+      RD_2T    : Boolean; -- Indicates if Flash is being accessed in 2T mode
+      Reserved : Bits_24;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_POWER_STAT_Type use record
+      PSTAT    at 0 range 0 ..  2;
+      LDOSTAT  at 0 range 3 ..  3;
+      VREFSTAT at 0 range 4 ..  4;
+      IREFSTAT at 0 range 5 ..  5;
+      TRIMSTAT at 0 range 6 ..  6;
+      RD_2T    at 0 range 7 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
    -- 9.4.2 FLCTL_BANK0_RDCTL Register
+
+   RD_MODE_RDNORMAL    : constant := 2#0000#; -- Normal read mode
+   RD_MODE_RDMARGIN0   : constant := 2#0001#; -- Read Margin 0
+   RD_MODE_RDMARGIN1   : constant := 2#0010#; -- Read Margin 1
+   RD_MODE_VERIFY      : constant := 2#0011#; -- Program Verify
+   RD_MODE_ERASEVERIFY : constant := 2#0100#; -- Erase Verify
+
+   WAIT_0  : constant := 2#0000#; -- 0 wait states
+   WAIT_1  : constant := 2#0001#; -- 1 wait states
+   WAIT_2  : constant := 2#0010#; -- 2 wait states
+   WAIT_3  : constant := 2#0011#; -- 3 wait states
+   WAIT_4  : constant := 2#0100#; -- 4 wait states
+   WAIT_5  : constant := 2#0101#; -- 5 wait states
+   WAIT_6  : constant := 2#0110#; -- 6 wait states
+   WAIT_7  : constant := 2#0111#; -- 7 wait states
+   WAIT_8  : constant := 2#1000#; -- 8 wait states
+   WAIT_9  : constant := 2#1001#; -- 9 wait states
+   WAIT_10 : constant := 2#1010#; -- 10 wait states
+   WAIT_11 : constant := 2#1011#; -- 11 wait states
+   WAIT_12 : constant := 2#1100#; -- 12 wait states
+   WAIT_13 : constant := 2#1101#; -- 13 wait states
+   WAIT_14 : constant := 2#1110#; -- 14 wait states
+   WAIT_15 : constant := 2#1111#; -- 15 wait states
+
+   RD_MODE_STATUS_RDNORMAL    renames RD_MODE_RDNORMAL;
+   RD_MODE_STATUS_RDMARGIN0   renames RD_MODE_RDMARGIN0;
+   RD_MODE_STATUS_RDMARGIN1   renames RD_MODE_RDMARGIN1;
+   RD_MODE_STATUS_VERIFY      renames RD_MODE_VERIFY;
+   RD_MODE_STATUS_ERASEVERIFY renames RD_MODE_ERASEVERIFY;
+
+   type FLCTL_BANK0_RDCTL_Type is record
+      RD_MODE        : Bits_4  := RD_MODE_RDNORMAL;        -- Flash read mode control setting for Bank
+      BUFI           : Boolean := False;                   -- Enables read buffering feature for instruction fetches to this bank
+      BUFD           : Boolean := False;                   -- Enables read buffering feature for data reads to this bank
+      Reserved1      : Bits_2  := 0;
+      Reserved2      : Bits_4  := 0;
+      WAIT           : Bits_4  := WAIT_0;                  -- Defines the number of wait states required for a read operation to the bank
+      RD_MODE_STATUS : Bits_4  := RD_MODE_STATUS_RDNORMAL; -- Reflects the current Read Mode of the Bank
+      Reserved3      : Bits_12 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_BANK0_RDCTL_Type use record
+      RD_MODE        at 0 range  0 ..  3;
+      BUFI           at 0 range  4 ..  4;
+      BUFD           at 0 range  5 ..  5;
+      Reserved1      at 0 range  6 ..  7;
+      Reserved2      at 0 range  8 .. 11;
+      WAIT           at 0 range 12 .. 15;
+      RD_MODE_STATUS at 0 range 16 .. 19;
+      Reserved3      at 0 range 20 .. 31;
+   end record;
+
    -- 9.4.3 FLCTL_BANK1_RDCTL Register
+
+   type FLCTL_BANK1_RDCTL_Type is record
+      RD_MODE        : Bits_4  := RD_MODE_RDNORMAL;        -- Flash read mode control setting for Bank
+      BUFI           : Boolean := False;                   -- Enables read buffering feature for instruction fetches to this bank
+      BUFD           : Boolean := False;                   -- Enables read buffering feature for data reads to this bank
+      Reserved1      : Bits_2  := 0;
+      Reserved2      : Bits_4  := 0;
+      WAIT           : Bits_4  := WAIT_0;                  -- Defines the number of wait states required for a read operation to the bank
+      RD_MODE_STATUS : Bits_4  := RD_MODE_STATUS_RDNORMAL; -- Reflects the current Read Mode of the Bank
+      Reserved3      : Bits_12 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_BANK1_RDCTL_Type use record
+      RD_MODE        at 0 range  0 ..  3;
+      BUFI           at 0 range  4 ..  4;
+      BUFD           at 0 range  5 ..  5;
+      Reserved1      at 0 range  6 ..  7;
+      Reserved2      at 0 range  8 .. 11;
+      WAIT           at 0 range 12 .. 15;
+      RD_MODE_STATUS at 0 range 16 .. 19;
+      Reserved3      at 0 range 20 .. 31;
+   end record;
+
    -- 9.4.4 FLCTL_RDBRST_CTLSTAT Register
+
+   MEM_TYPE_MAIN  : constant := 2#00#; -- Main Memory
+   MEM_TYPE_INFO  : constant := 2#01#; -- Information memory
+   MEM_TYPE_RSVD1 : constant := 2#10#; -- Reserved
+   MEM_TYPE_RSVD2 : constant := 2#11#; -- Reserved
+
+   DATA_CMP_ALL0 : constant := 0; -- 0000_0000_0000_0000_0000_0000_0000_0000
+   DATA_CMP_ALL1 : constant := 1; -- FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF
+
+   BRST_STAT_IDLE       : constant := 2#00#; -- Idle
+   BRST_STAT_PENDING    : constant := 2#01#; -- Burst/Compare START bit written, but operation pending
+   BRST_STAT_INPROGRESS : constant := 2#10#; -- Burst/Compare in progress
+   BRST_STAT_COMPLETE   : constant := 2#11#; -- Burst complete (status of completed burst remains in this state unless explicitly cleared by software)
+
+   type FLCTL_RDBRST_CTLSTAT_Type is record
+      START     : Boolean := False;          -- Write 1 triggers start of burst/compare operation
+      MEM_TYPE  : Bits_2  := MEM_TYPE_MAIN;  -- Type of memory that burst is carried out on
+      STOP_FAIL : Boolean := False;          -- If set to 1, causes burst/compare operation to terminate on first compare mismatch
+      DATA_CMP  : Bits_1  := DATA_CMP_ALL0;  -- Data pattern used for comparison against memory read data
+      Reserved1 : Bits_1  := 0;
+      Reserved2 : Bits_10 := 0;
+      BRST_STAT : Bits_2  := BRST_STAT_IDLE; -- Status of Burst/Compare operation
+      CMP_ERR   : Boolean := False;          -- if 1, indicates that the Burst/Compare Operation encountered at least one data comparison error
+      ADDR_ERR  : Boolean := False;          -- If 1, indicates that Burst/Compare Operation was terminated due to access to reserved memory
+      Reserved3 : Bits_3  := 0;
+      CLR_STAT  : Boolean := False;          -- Write 1 to clear status bits 19-16 of this register
+      Reserved4 : Bits_8  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_RDBRST_CTLSTAT_Type use record
+      START     at 0 range  0 ..  0;
+      MEM_TYPE  at 0 range  1 ..  2;
+      STOP_FAIL at 0 range  3 ..  3;
+      DATA_CMP  at 0 range  4 ..  4;
+      Reserved1 at 0 range  5 ..  5;
+      Reserved2 at 0 range  6 .. 15;
+      BRST_STAT at 0 range 16 .. 17;
+      CMP_ERR   at 0 range 18 .. 18;
+      ADDR_ERR  at 0 range 19 .. 19;
+      Reserved3 at 0 range 20 .. 22;
+      CLR_STAT  at 0 range 23 .. 23;
+      Reserved4 at 0 range 24 .. 31;
+   end record;
+
    -- 9.4.5 FLCTL_RDBRST_STARTADDR Register
+
+   type FLCTL_RDBRST_STARTADDR_Type is record
+      START_ADDRESS : Bits_21 := 0; -- Start Address of Burst Operation.
+      Reserved      : Bits_11 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_RDBRST_STARTADDR_Type use record
+      START_ADDRESS at 0 range  0 .. 20;
+      Reserved      at 0 range 21 .. 31;
+   end record;
+
    -- 9.4.6 FLCTL_RDBRST_LEN Register
+
+   type FLCTL_RDBRST_LEN_Type is record
+      BURST_LENGTH : Bits_21 := 0; -- Length of Burst Operation (in bytes).
+      Reserved     : Bits_11 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_RDBRST_LEN_Type use record
+      BURST_LENGTH at 0 range  0 .. 20;
+      Reserved     at 0 range 21 .. 31;
+   end record;
+
    -- 9.4.7 FLCTL_RDBRST_FAILADDR Register
+
+   type FLCTL_RDBRST_FAILADDR_Type is record
+      FAIL_ADDRESS : Bits_21 := 0; -- Reflects address of last failed compare.
+      Reserved     : Bits_11 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_RDBRST_FAILADDR_Type use record
+      FAIL_ADDRESS at 0 range  0 .. 20;
+      Reserved     at 0 range 21 .. 31;
+   end record;
+
    -- 9.4.8 FLCTL_RDBRST_FAILCNT Register
+
+   type FLCTL_RDBRST_FAILCNT_Type is record
+      FAIL_COUNT : Bits_17 := 0; -- Reflects number of failures encountered in burst operation.
+      Reserved   : Bits_15 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_RDBRST_FAILCNT_Type use record
+      FAIL_COUNT at 0 range  0 .. 16;
+      Reserved   at 0 range 17 .. 31;
+   end record;
+
    -- 9.4.9 FLCTL_PRG_CTLSTAT Register
+
+   MODE_IMMEDIATE : constant := 0; -- Write immediate mode. Starts program operation immediately on each write to the Flash
+   MODE_FULLWORD  : constant := 1; -- Full word write mode.
+
+   STATUS_IDLE       : constant := 2#00#; -- Idle (no program operation currently active)
+   STATUS_PENDING    : constant := 2#01#; -- Single word program operation triggered, but pending
+   STATUS_INPROGRESS : constant := 2#10#; -- Single word program in progress
+   STATUS_RSVD       : constant := 2#11#; -- Reserved (Idle)
+
+   BNK_ACT_BANK0 : constant := 0;
+   BNK_ACT_BANK1 : constant := 1;
+
+   type FLCTL_PRG_CTLSTAT_Type is record
+      ENABLE    : Boolean := False;          -- Master control for all word program operations
+      MODE      : Bits_1  := MODE_IMMEDIATE; -- Controls write mode selected by application
+      VER_PRE   : Boolean := True;           -- Controls automatic pre program verify operations
+      VER_PST   : Boolean := True;           -- Controls automatic post program verify operations
+      Reserved1 : Bits_12 := 0;
+      STATUS    : Bits_2  := STATUS_IDLE;    --  Reflects the status of program operations in the Flash memory
+      BNK_ACT   : Bits_1  := BNK_ACT_BANK0;  -- Reflects which bank is currently undergoing a program operation
+      Reserved2 : Bits_13 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_PRG_CTLSTAT_Type use record
+      ENABLE    at 0 range  0 ..  0;
+      MODE      at 0 range  1 ..  1;
+      VER_PRE   at 0 range  2 ..  2;
+      VER_PST   at 0 range  3 ..  3;
+      Reserved1 at 0 range  4 .. 15;
+      STATUS    at 0 range 16 .. 17;
+      BNK_ACT   at 0 range 18 .. 18;
+      Reserved2 at 0 range 19 .. 31;
+   end record;
+
    -- 9.4.10 FLCTL_PRGBRST_CTLSTAT
+
+   TYP3_MAIN  renames MEM_TYPE_MAIN;
+   TYP3_INFO  renames MEM_TYPE_INFO;
+   TYP3_RSVD1 renames MEM_TYPE_RSVD1;
+   TYP3_RSVD2 renames MEM_TYPE_RSVD2;
+
+   LEN_NONE  : constant := 2#000#; -- No burst operation
+   LEN_128   : constant := 2#001#; -- 1 word burst of 128 bits, starting with address in the FLCTL_PRGBRST_STARTADDR Register
+   LEN_256   : constant := 2#010#; -- 2*128 bits burst write, starting with address in the FLCTL_PRGBRST_STARTADDR Register
+   LEN_384   : constant := 2#011#; -- 3*128 bits burst write, starting with address in the FLCTL_PRGBRST_STARTADDR Register
+   LEN_512   : constant := 2#100#; -- 4*128 bits burst write, starting with address in the FLCTL_PRGBRST_STARTADDR Register
+   LEN_RSVD1 : constant := 2#101#; -- Reserved. No burst operation.
+   LEN_RSVD2 : constant := 2#110#; -- Reserved. No burst operation.
+   LEN_RSVD3 : constant := 2#111#; -- Reserved. No burst operation.
+
+   BURST_STATUS_IDLE     : constant := 2#000#; -- Idle (Burst not active)
+   BURST_STATUS_PENDING  : constant := 2#001#; -- Burst program started but pending
+   BURST_STATUS_128      : constant := 2#010#; -- Burst active, with 1st 128 bit word being written into Flash
+   BURST_STATUS_256      : constant := 2#011#; -- Burst active, with 2nd 128 bit word being written into Flash
+   BURST_STATUS_384      : constant := 2#100#; -- Burst active, with 3rd 128 bit word being written into Flash
+   BURST_STATUS_512      : constant := 2#101#; -- Burst active, with 4th 128 bit word being written into Flash
+   BURST_STATUS_RSVD     : constant := 2#110#; -- Reserved (Idle)
+   BURST_STATUS_COMPLETE : constant := 2#111#; -- Burst Complete (status of completed burst remains in this state unless explicitly cleared by software)
+
+   type FLCTL_PRGBRST_CTLSTAT_Type is record
+      START        : Boolean := False;             -- Write 1 triggers start of burst program operation
+      TYP3         : Bits_2  := TYP3_MAIN;         -- Type of memory that burst program is carried out on
+      LEN          : Bits_3  := LEN_NONE;          -- Length of burst (in 128 bit granularity)
+      AUTO_PRE     : Boolean := True;              -- Controls the Auto-Verify operation before the Burst Program
+      AUTO_PST     : Boolean := True;              -- Controls the Auto-Verify operation after the Burst Program
+      Reserved1    : Bits_8  := 0;
+      BURST_STATUS : Bits_3  := BURST_STATUS_IDLE; -- At any point in time, it reflects the status of a Burst Operation
+      PRE_ERR      : Boolean := False;             -- If 1, indicates that Burst Operation encountered pre-program auto-verify errors
+      PST_ERR      : Boolean := False;             -- if 1, indicates that the Burst Operation encountered post-program auto-verify errors
+      ADDR_ERR     : Boolean := False;             -- If 1, indicates that Burst Operation was terminated due to attempted program of reserved memory
+      Reserved2    : Bits_1  := 0;
+      CLR_STAT     : Boolean := False;             -- Write 1 to clear status bits 21-16 of this register
+      Reserved3    : Bits_8  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_PRGBRST_CTLSTAT_Type use record
+      START        at 0 range  0 ..  0;
+      TYP3         at 0 range  1 ..  2;
+      LEN          at 0 range  3 ..  5;
+      AUTO_PRE     at 0 range  6 ..  6;
+      AUTO_PST     at 0 range  7 ..  7;
+      Reserved1    at 0 range  8 .. 15;
+      BURST_STATUS at 0 range 16 .. 18;
+      PRE_ERR      at 0 range 19 .. 19;
+      PST_ERR      at 0 range 20 .. 20;
+      ADDR_ERR     at 0 range 21 .. 21;
+      Reserved2    at 0 range 22 .. 22;
+      CLR_STAT     at 0 range 23 .. 23;
+      Reserved3    at 0 range 24 .. 31;
+   end record;
+
    -- 9.4.11 FLCTL_PRGBRST_STARTADDR
+
+   type FLCTL_PRGBRST_STARTADDR_Type is record
+      START_ADDRESS : Bits_22 := 0; -- Start Address of Program Burst Operation.
+      Reserved      : Bits_10 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_PRGBRST_STARTADDR_Type use record
+      START_ADDRESS at 0 range  0 .. 21;
+      Reserved      at 0 range 22 .. 31;
+   end record;
+
    -- 9.4.12 FLCTL_PRGBRST_DATA0_0 Register
    -- 9.4.13 FLCTL_PRGBRST_DATA0_1 Register
    -- 9.4.14 FLCTL_PRGBRST_DATA0_2 Register
@@ -1671,28 +1976,699 @@ pragma Style_Checks (Off);
    -- 9.4.25 FLCTL_PRGBRST_DATA3_1 Register
    -- 9.4.26 FLCTL_PRGBRST_DATA3_2 Register
    -- 9.4.27 FLCTL_PRGBRST_DATA3_3 Register
+
+   type FLCTL_PRGBRST_DATAy_x_Type is record
+      DATAIN : Unsigned_32 := 16#FFFF_FFFF#; -- Program Burst 128 bit Data Word y (bits (32 × (x + 1) – 1) down to (32 × x) for (x = 0, 1, 2, 3)
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_PRGBRST_DATAy_x_Type use record
+      DATAIN at 0 range 0 .. 31;
+   end record;
+
    -- 9.4.28 FLCTL_ERASE_CTLSTAT Register
+
+   MODE_SECTORERASE : constant := 0; -- Sector Erase (controlled by FLTCTL_ERASE_SECTADDR)
+   MODE_MASSERASE   : constant := 1; -- Mass Erase (includes all Main and Information memory sectors that don't have corresponding WE bits set)
+
+   -- TYP3_* already defined at 9.4.10
+
+   -- STATUS_* already defined at 9.4.9
+
+   type FLCTL_ERASE_CTLSTAT_Type is record
+      START     : Boolean := False;            -- Write 1 triggers start of Erase operation
+      MODE      : Bits_1  := MODE_SECTORERASE; -- Controls erase mode selected by application
+      TYP3      : Bits_2  := TYP3_MAIN;        -- Type of memory that erase operation is carried out on (don't care if mass erase is set to 1)
+      Reserved1 : Bits_12 := 0;
+      STATUS    : Bits_2  := STATUS_IDLE;      -- Reflects the status of erase operations in the Flash memory
+      ADDR_ERR  : Boolean := False;            -- If 1, indicates that Erase Operation was terminated due to attempted erase of reserved memory address
+      CLR_STAT  : Boolean := False;            -- Write 1 to clear status bits 18-16 of this register
+      Reserved2 : Bits_12 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_ERASE_CTLSTAT_Type use record
+      START     at 0 range  0 ..  0;
+      MODE      at 0 range  1 ..  1;
+      TYP3      at 0 range  2 ..  3;
+      Reserved1 at 0 range  4 .. 15;
+      STATUS    at 0 range 16 .. 17;
+      ADDR_ERR  at 0 range 18 .. 18;
+      CLR_STAT  at 0 range 19 .. 19;
+      Reserved2 at 0 range 20 .. 31;
+   end record;
+
    -- 9.4.29 FLCTL_ERASE_SECTADDR Register
+
+   type FLCTL_ERASE_SECTADDR_Type is record
+      SECT_ADDRESS : Bits_22 := 0; -- Address of Sector being Erased.
+      Reserved     : Bits_10 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_ERASE_SECTADDR_Type use record
+      SECT_ADDRESS at 0 range  0 .. 21;
+      Reserved     at 0 range 22 .. 31;
+   end record;
+
    -- 9.4.30 FLCTL_BANK0_INFO_WEPROT Register
+
+   type FLCTL_BANK0_INFO_WEPROT_Type is record
+      PROT     : Bitmap_2 := [others => True]; -- If set to 1, protects Sector ?? from program or erase operations
+      Reserved : Bits_30  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_BANK0_INFO_WEPROT_Type use record
+      PROT     at 0 range 0 ..  1;
+      Reserved at 0 range 2 .. 31;
+   end record;
+
    -- 9.4.31 FLCTL_BANK0_MAIN_WEPROT Register
+
+   type FLCTL_BANK0_MAIN_WEPROT_Type is record
+      PROT : Bitmap_32 := [others => True]; -- If set to 1, protects Sector ?? from program or erase operations
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_BANK0_MAIN_WEPROT_Type use record
+      PROT at 0 range 0 .. 31;
+   end record;
+
    -- 9.4.32 FLCTL_BANK1_INFO_WEPROT Register
+
+   type FLCTL_BANK1_INFO_WEPROT_Type is record
+      PROT     : Bitmap_2 := [others => True]; -- If set to 1, protects Sector ?? from program or erase operations
+      Reserved : Bits_30  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_BANK1_INFO_WEPROT_Type use record
+      PROT     at 0 range 0 ..  1;
+      Reserved at 0 range 2 .. 31;
+   end record;
+
    -- 9.4.33 FLCTL_BANK1_MAIN_WEPROT Register
+
+   type FLCTL_BANK1_MAIN_WEPROT_Type is record
+      PROT : Bitmap_32 := [others => True]; -- If set to 1, protects Sector ?? from program or erase operations
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_BANK1_MAIN_WEPROT_Type use record
+      PROT at 0 range 0 .. 31;
+   end record;
+
    -- 9.4.34 FLCTL_BMRK_CTLSTAT Register
+
+   CMP_SEL_I_BMRK : constant := 0; -- Compares the Instruction Benchmark Register against the threshold value
+   CMP_SEL_D_BMRK : constant := 1; -- Compares the Data Benchmark Register against the threshold value
+
+   type FLCTL_BMRK_CTLSTAT_Type is record
+      I_BMRK   : Boolean := False;          -- When 1, increments the Instruction Benchmark count register on each instruction fetch to the Flash
+      D_BMRK   : Boolean := False;          -- When 1, increments the Data Benchmark count register on each data read access to the Flash
+      CMP_EN   : Boolean := False;          -- When 1, enables comparison of the Instruction or Data Benchmark Registers against the threshold value
+      CMP_SEL  : Bits_1  := CMP_SEL_I_BMRK; -- Selects which benchmark register should be compared against the threshold
+      Reserved : Bits_28 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_BMRK_CTLSTAT_Type use record
+      I_BMRK   at 0 range 0 ..  0;
+      D_BMRK   at 0 range 1 ..  1;
+      CMP_EN   at 0 range 2 ..  2;
+      CMP_SEL  at 0 range 3 ..  3;
+      Reserved at 0 range 4 .. 31;
+   end record;
+
    -- 9.4.35 FLCTL_BMRK_IFETCH Register
+
+   type FLCTL_BMRK_IFETCH_Type is record
+      COUNT : Unsigned_32; -- Reflects the number of Instruction Fetches to the Flash (increments by one on each fetch)
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_BMRK_IFETCH_Type use record
+      COUNT at 0 range 0 .. 31;
+   end record;
+
    -- 9.4.36 FLCTL_BMRK_DREAD Register
+
+   type FLCTL_BMRK_DREAD_Type is record
+      COUNT : Unsigned_32; -- Reflects the number of Data Read operations to the Flash (increments by one on each read)
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_BMRK_DREAD_Type use record
+      COUNT at 0 range 0 .. 31;
+   end record;
+
    -- 9.4.37 FLCTL_BMRK_CMP Register
+
+   type FLCTL_BMRK_CMP_Type is record
+      COUNT : Unsigned_32 := 16#0001_0000#; -- Reflects the threshold value that is compared against either the IFETCH or DREAD Benchmark Counters
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_BMRK_CMP_Type use record
+      COUNT at 0 range 0 .. 31;
+   end record;
+
    -- 9.4.38 FLCTL_IFG Register
+
+   type FLCTL_IFG_Type is record
+      RDBRST    : Boolean; -- If set to 1, indicates that the Read Burst/Compare operation is complete
+      AVPRE     : Boolean; -- If set to 1, indicates that the pre-program verify operation has detected an error
+      AVPST     : Boolean; -- If set to 1, indicates that the post-program verify operation has failed comparison
+      PRG       : Boolean; -- If set to 1, indicates that a word Program operation is complete
+      PRGB      : Boolean; -- If set to 1, indicates that the configured Burst Program operation is complete
+      ERASE     : Boolean; -- If set to 1, indicates that the Erase operation is complete
+      Reserved1 : Bits_2;
+      BMRK      : Boolean; -- If set to 1, indicates that a Benchmark Compare match occurred
+      PRG_ERR   : Boolean; -- If set to 1, indicates a word composition error in full word write mode
+      Reserved2 : Bits_22;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_IFG_Type use record
+      RDBRST    at 0 range  0 ..  0;
+      AVPRE     at 0 range  1 ..  1;
+      AVPST     at 0 range  2 ..  2;
+      PRG       at 0 range  3 ..  3;
+      PRGB      at 0 range  4 ..  4;
+      ERASE     at 0 range  5 ..  5;
+      Reserved1 at 0 range  6 ..  7;
+      BMRK      at 0 range  8 ..  8;
+      PRG_ERR   at 0 range  9 ..  9;
+      Reserved2 at 0 range 10 .. 31;
+   end record;
+
    -- 9.4.39 FLCTL_IE Register
+
+   type FLCTL_IE_Type is record
+      RDBRST    : Boolean := False; -- If set to 1, enables the Controller to generate an interrupt based on the corresponding bit in the FLCTL_IFG
+      AVPRE     : Boolean := False; -- ''
+      AVPST     : Boolean := False; -- ''
+      PRG       : Boolean := False; -- ''
+      PRGB      : Boolean := False; -- ''
+      ERASE     : Boolean := False; -- ''
+      Reserved1 : Bits_2  := 0;
+      BMRK      : Boolean := False; -- ''
+      PRG_ERR   : Boolean := False; -- ''
+      Reserved2 : Bits_22 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_IE_Type use record
+      RDBRST    at 0 range  0 ..  0;
+      AVPRE     at 0 range  1 ..  1;
+      AVPST     at 0 range  2 ..  2;
+      PRG       at 0 range  3 ..  3;
+      PRGB      at 0 range  4 ..  4;
+      ERASE     at 0 range  5 ..  5;
+      Reserved1 at 0 range  6 ..  7;
+      BMRK      at 0 range  8 ..  8;
+      PRG_ERR   at 0 range  9 ..  9;
+      Reserved2 at 0 range 10 .. 31;
+   end record;
+
    -- 9.4.40 FLCTL_CLRIFG Register
+
+   type FLCTL_CLRIFG_Type is record
+      RDBRST    : Boolean := False; -- Write 1 clears the corresponding interrupt flag bit in the FLCTL_IFG
+      AVPRE     : Boolean := False; -- ''
+      AVPST     : Boolean := False; -- ''
+      PRG       : Boolean := False; -- ''
+      PRGB      : Boolean := False; -- ''
+      ERASE     : Boolean := False; -- ''
+      Reserved1 : Bits_2  := 0;
+      BMRK      : Boolean := False; -- ''
+      PRG_ERR   : Boolean := False; -- ''
+      Reserved2 : Bits_22 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_CLRIFG_Type use record
+      RDBRST    at 0 range  0 ..  0;
+      AVPRE     at 0 range  1 ..  1;
+      AVPST     at 0 range  2 ..  2;
+      PRG       at 0 range  3 ..  3;
+      PRGB      at 0 range  4 ..  4;
+      ERASE     at 0 range  5 ..  5;
+      Reserved1 at 0 range  6 ..  7;
+      BMRK      at 0 range  8 ..  8;
+      PRG_ERR   at 0 range  9 ..  9;
+      Reserved2 at 0 range 10 .. 31;
+   end record;
+
    -- 9.4.41 FLCTL_SETIFG Register
+
+   type FLCTL_SETIFG_Type is record
+      RDBRST    : Boolean := False; -- Write 1 sets the corresponding interrupt flag bit in the FLCTL_IFG
+      AVPRE     : Boolean := False; -- ''
+      AVPST     : Boolean := False; -- ''
+      PRG       : Boolean := False; -- ''
+      PRGB      : Boolean := False; -- ''
+      ERASE     : Boolean := False; -- ''
+      Reserved1 : Bits_2  := 0;
+      BMRK      : Boolean := False; -- ''
+      PRG_ERR   : Boolean := False; -- ''
+      Reserved2 : Bits_22 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_SETIFG_Type use record
+      RDBRST    at 0 range  0 ..  0;
+      AVPRE     at 0 range  1 ..  1;
+      AVPST     at 0 range  2 ..  2;
+      PRG       at 0 range  3 ..  3;
+      PRGB      at 0 range  4 ..  4;
+      ERASE     at 0 range  5 ..  5;
+      Reserved1 at 0 range  6 ..  7;
+      BMRK      at 0 range  8 ..  8;
+      PRG_ERR   at 0 range  9 ..  9;
+      Reserved2 at 0 range 10 .. 31;
+   end record;
+
    -- 9.4.42 FLCTL_READ_TIMCTL Register
+
+   type FLCTL_READ_TIMCTL_Type is record
+      SETUP       : Unsigned_8; -- Length of the Setup phase for this operation
+      Reserved1   : Bits_4;
+      IREF_BOOST1 : Bits_4;     -- Length of IREF_BOOST1 signal of the Flash memory
+      SETUP_LONG  : Unsigned_8; -- This field defines the length of the Setup time into read mode when the device is recovering from one of the following conditions Moving from standby to active state in low-frequency active mode Recovering from the LDO Boost operation after a Mass Erase
+      Reserved2   : Bits_8;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_READ_TIMCTL_Type use record
+      SETUP       at 0 range  0 ..  7;
+      Reserved1   at 0 range  8 .. 11;
+      IREF_BOOST1 at 0 range 12 .. 15;
+      SETUP_LONG  at 0 range 16 .. 23;
+      Reserved2   at 0 range 24 .. 31;
+   end record;
+
    -- 9.4.43 FLCTL_READMARGIN_TIMCTL Register
+
+   type FLCTL_READMARGIN_TIMCTL_Type is record
+      SETUP    : Unsigned_8; -- Length of the Setup phase for this operation
+      Reserved : Bits_24;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_READMARGIN_TIMCTL_Type use record
+      SETUP    at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
    -- 9.4.44 FLCTL_PRGVER_TIMCTL Register
+
+   type FLCTL_PRGVER_TIMCTL_Type is record
+      SETUP    : Unsigned_8; -- Length of the Setup phase for this operation
+      ACTIVE   : Bits_4;     -- Length of the Active phase for this operation
+      HOLD     : Bits_4;     -- Length of the Hold phase for this operation
+      Reserved : Bits_16;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_PRGVER_TIMCTL_Type use record
+      SETUP    at 0 range  0 ..  7;
+      ACTIVE   at 0 range  8 .. 11;
+      HOLD     at 0 range 12 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
    -- 9.4.45 FLCTL_ERSVER_TIMCTL Register
+
+   type FLCTL_ERSVER_TIMCTL_Type is record
+      SETUP    : Unsigned_8; -- Length of the Setup phase for this operation
+      Reserved : Bits_24;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_ERSVER_TIMCTL_Type use record
+      SETUP    at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
    -- 9.4.46 FLCTL_PROGRAM_TIMCTL Register
+
+   type FLCTL_PROGRAM_TIMCTL_Type is record
+      SETUP  : Unsigned_8; -- Length of the Setup phase for this operation
+      ACTIVE : Bits_20;    -- Length of the Active phase for this operation
+      HOLD   : Bits_4;     -- Length of the Hold phase for this operation
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_PROGRAM_TIMCTL_Type use record
+      SETUP  at 0 range  0 ..  7;
+      ACTIVE at 0 range  8 .. 27;
+      HOLD   at 0 range 28 .. 31;
+   end record;
+
    -- 9.4.47 FLCTL_ERASE_TIMCTL Register
+
+   type FLCTL_ERASE_TIMCTL_Type is record
+      SETUP  : Unsigned_8; -- Length of the Setup phase for this operation
+      ACTIVE : Bits_20;    -- Length of the Active phase for this operation
+      HOLD   : Bits_4;     -- Length of the Hold phase for this operation
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_ERASE_TIMCTL_Type use record
+      SETUP  at 0 range  0 ..  7;
+      ACTIVE at 0 range  8 .. 27;
+      HOLD   at 0 range 28 .. 31;
+   end record;
+
    -- 9.4.48 FLCTL_MASSERASE_TIMCTL Register
+
+   type FLCTL_MASSERASE_TIMCTL_Type is record
+      BOOST_ACTIVE : Unsigned_8; -- Length of the time for which LDO Boost Signal is kept active
+      BOOST_HOLD   : Unsigned_8; -- Length for which Flash deactivates the LDO Boost signal before processing any new commands
+      Reserved     : Bits_16;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_MASSERASE_TIMCTL_Type use record
+      BOOST_ACTIVE at 0 range  0 ..  7;
+      BOOST_HOLD   at 0 range  8 .. 15;
+      Reserved     at 0 range 16 .. 31;
+   end record;
+
    -- 9.4.49 FLCTL_BURSTPRG_TIMCTL Register
+
+   type FLCTL_BURSTPRG_TIMCTL_Type is record
+      Reserved1 : Bits_8;
+      ACTIVE    : Bits_20; -- Length of the Active phase for this operation
+      Reserved2 : Bits_4;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FLCTL_BURSTPRG_TIMCTL_Type use record
+      Reserved1 at 0 range  0 ..  7;
+      ACTIVE    at 0 range  8 .. 27;
+      Reserved2 at 0 range 28 .. 31;
+   end record;
+
+   -- Table 6-30. FLCTL Registers
+
+   FLCTL_BASEADDRESS : constant := 16#4001_1000#;
+
+   FLCTL_POWER_STAT : aliased FLCTL_POWER_STAT_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#000#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_BANK0_RDCTL : aliased FLCTL_BANK0_RDCTL_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#010#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_BANK1_RDCTL : aliased FLCTL_BANK1_RDCTL_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#014#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_RDBRST_CTLSTAT : aliased FLCTL_RDBRST_CTLSTAT_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#020#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_RDBRST_STARTADDR : aliased FLCTL_RDBRST_STARTADDR_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#024#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_RDBRST_LEN : aliased FLCTL_RDBRST_LEN_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#028#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_RDBRST_FAILADDR : aliased FLCTL_RDBRST_FAILADDR_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#03C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_RDBRST_FAILCNT : aliased FLCTL_RDBRST_FAILCNT_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#040#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRG_CTLSTAT : aliased FLCTL_PRG_CTLSTAT_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#050#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRGBRST_CTLSTAT : aliased FLCTL_PRGBRST_CTLSTAT_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#054#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRGBRST_STARTADDR : aliased FLCTL_PRGBRST_STARTADDR_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#058#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRGBRST_DATA0_0 : aliased FLCTL_PRGBRST_DATAy_x_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#060#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRGBRST_DATA0_1 : aliased FLCTL_PRGBRST_DATAy_x_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#064#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRGBRST_DATA0_2 : aliased FLCTL_PRGBRST_DATAy_x_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#068#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRGBRST_DATA0_3 : aliased FLCTL_PRGBRST_DATAy_x_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#06C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRGBRST_DATA1_0 : aliased FLCTL_PRGBRST_DATAy_x_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#070#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRGBRST_DATA1_1 : aliased FLCTL_PRGBRST_DATAy_x_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#074#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRGBRST_DATA1_2 : aliased FLCTL_PRGBRST_DATAy_x_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#078#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRGBRST_DATA1_3 : aliased FLCTL_PRGBRST_DATAy_x_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#07C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRGBRST_DATA2_0 : aliased FLCTL_PRGBRST_DATAy_x_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#080#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRGBRST_DATA2_1 : aliased FLCTL_PRGBRST_DATAy_x_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#084#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRGBRST_DATA2_2 : aliased FLCTL_PRGBRST_DATAy_x_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#088#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRGBRST_DATA2_3 : aliased FLCTL_PRGBRST_DATAy_x_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#08C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRGBRST_DATA3_0 : aliased FLCTL_PRGBRST_DATAy_x_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#090#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRGBRST_DATA3_1 : aliased FLCTL_PRGBRST_DATAy_x_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#094#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRGBRST_DATA3_2 : aliased FLCTL_PRGBRST_DATAy_x_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#098#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRGBRST_DATA3_3 : aliased FLCTL_PRGBRST_DATAy_x_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#09C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_ERASE_CTLSTAT : aliased FLCTL_ERASE_CTLSTAT_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#0A0#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_ERASE_SECTADDR : aliased FLCTL_ERASE_SECTADDR_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#0A4#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_BANK0_INFO_WEPROT : aliased FLCTL_BANK0_INFO_WEPROT_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#0B0#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_BANK0_MAIN_WEPROT : aliased FLCTL_BANK0_MAIN_WEPROT_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#0B4#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_BANK1_INFO_WEPROT : aliased FLCTL_BANK1_INFO_WEPROT_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#0C0#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_BANK1_MAIN_WEPROT : aliased FLCTL_BANK1_MAIN_WEPROT_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#0C4#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_BMRK_CTLSTAT : aliased FLCTL_BMRK_CTLSTAT_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#0D0#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_BMRK_IFETCH : aliased FLCTL_BMRK_IFETCH_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#0D4#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_BMRK_DREAD : aliased FLCTL_BMRK_DREAD_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#0D8#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_BMRK_CMP : aliased FLCTL_BMRK_CMP_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#0DC#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_IFG : aliased FLCTL_IFG_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#0F0#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_IE : aliased FLCTL_IE_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#0F4#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_CLRIFG : aliased FLCTL_CLRIFG_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#0F8#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_SETIFG : aliased FLCTL_SETIFG_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#0FC#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_READ_TIMCTL : aliased FLCTL_READ_TIMCTL_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#100#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_READMARGIN_TIMCTL : aliased FLCTL_READMARGIN_TIMCTL_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#104#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PRGVER_TIMCTL : aliased FLCTL_PRGVER_TIMCTL_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#108#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_ERSVER_TIMCTL : aliased FLCTL_ERSVER_TIMCTL_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#10C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_PROGRAM_TIMCTL : aliased FLCTL_PROGRAM_TIMCTL_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#114#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_ERASE_TIMCTL : aliased FLCTL_ERASE_TIMCTL_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#118#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_MASSERASE_TIMCTL : aliased FLCTL_MASSERASE_TIMCTL_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#11C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FLCTL_BURSTPRG_TIMCTL : aliased FLCTL_BURSTPRG_TIMCTL_Type
+      with Address              => System'To_Address (FLCTL_BASEADDRESS + 16#120#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 10 Flash Controller A (FLCTL_A)
