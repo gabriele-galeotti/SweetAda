@@ -2,7 +2,7 @@
 SweetAda code (and the build system output) tries to follow specific rules,
 both in a textually and "geometric" sense.
 
-SweetAda code is obvioulsy improvable, and there are areas where both Ada
+SweetAda code is obviously improvable, and there are areas where both Ada
 semantics, style and coding rules could be written better. But we try to
 first make code working, then we try to consolidate it, following laws and
 providing correctness.
