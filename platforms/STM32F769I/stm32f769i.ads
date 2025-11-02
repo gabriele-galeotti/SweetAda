@@ -5454,19 +5454,205 @@ pragma Warnings (On);
    -- 30 Independent watchdog (IWDG)
    ----------------------------------------------------------------------------
 
-   -- 30.4.1 IWDG key register (IWDG_KR)
-   -- 30.4.2 IWDG prescaler register (IWDG_PR)
-   -- 30.4.3 IWDG reload register (IWDG_RLR)
+   -- 30.4.1 Key register (IWDG_KR)
+
+   KEY_REFRESH   : constant := 16#AAAA#; -- otherwise the watchdog generates a reset when the counter reaches 0
+   KEY_PRRLRWINR : constant := 16#5555#; -- to enable access to the IWDG_PR, IWDG_RLR and IWDG_WINR registers
+   KEY_START     : constant := 16#CCCC#; -- starts the watchdog
+
+   type IWDG_KR_Type is record
+      KEY      : Unsigned_16;      -- Key value
+      Reserved : Bits_16     := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for IWDG_KR_Type use record
+      KEY      at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   IWDG_KR_ADDRESS : constant := 16#4000_3000#;
+
+   IWDG_KR : aliased IWDG_KR_Type
+      with Address              => System'To_Address (IWDG_KR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 30.4.2 Prescaler register (IWDG_PR)
+
+   PR_DIV4     : constant := 2#000#; -- divider /4
+   PR_DIV8     : constant := 2#001#; -- divider /8
+   PR_DIV16    : constant := 2#010#; -- divider /16
+   PR_DIV32    : constant := 2#011#; -- divider /32
+   PR_DIV64    : constant := 2#100#; -- divider /64
+   PR_DIV128   : constant := 2#101#; -- divider /128
+   PR_DIV256   : constant := 2#110#; -- divider /256
+   PR_DIV256_2 : constant := 2#111#; -- divider /256
+
+   type IWDG_PR_Type is record
+      PR       : Bits_3;       -- Prescaler divider
+      Reserved : Bits_29 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for IWDG_PR_Type use record
+      PR       at 0 range 0 ..  2;
+      Reserved at 0 range 3 .. 31;
+   end record;
+
+   IWDG_PR_ADDRESS : constant := 16#4000_3004#;
+
+   IWDG_PR : aliased IWDG_PR_Type
+      with Address              => System'To_Address (IWDG_PR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 30.4.3 Reload register (IWDG_RLR)
+
+   type IWDG_RLR_Type is record
+      RL       : Bits_12 := 16#FFF#; -- Watchdog counter reload value
+      Reserved : Bits_20 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for IWDG_RLR_Type use record
+      RL       at 0 range  0 .. 11;
+      Reserved at 0 range 12 .. 31;
+   end record;
+
+   IWDG_RLR_ADDRESS : constant := 16#4000_3008#;
+
+   IWDG_RLR : aliased IWDG_RLR_Type
+      with Address              => System'To_Address (IWDG_RLR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 30.4.4 IWDG status register (IWDG_SR)
-   -- 30.4.5 IWDG window register (IWDG_WINR)
+
+   type IWDG_SR_Type is record
+      PVU      : Boolean; -- Watchdog prescaler value update
+      RVU      : Boolean; -- Watchdog counter reload value update
+      WVU      : Boolean; -- Watchdog counter window value update
+      Reserved : Bits_29;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for IWDG_SR_Type use record
+      PVU      at 0 range 0 ..  0;
+      RVU      at 0 range 1 ..  1;
+      WVU      at 0 range 2 ..  2;
+      Reserved at 0 range 3 .. 31;
+   end record;
+
+   IWDG_SR_ADDRESS : constant := 16#4000_300C#;
+
+   IWDG_SR : aliased IWDG_SR_Type
+      with Address              => System'To_Address (IWDG_SR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 30.4.5 Window register (IWDG_WINR)
+
+   type IWDG_WINR_Type is record
+      WIN      : Bits_12 := 16#FFF#; -- Watchdog counter window value
+      Reserved : Bits_20 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for IWDG_WINR_Type use record
+      WIN      at 0 range  0 .. 11;
+      Reserved at 0 range 12 .. 31;
+   end record;
+
+   IWDG_WINR_ADDRESS : constant := 16#4000_3010#;
+
+   IWDG_WINR : aliased IWDG_WINR_Type
+      with Address              => System'To_Address (IWDG_WINR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 31 System window watchdog (WWDG)
    ----------------------------------------------------------------------------
 
-   -- 31.5.1 WWDG control register (WWDG_CR)
-   -- 31.5.2 WWDG configuration register (WWDG_CFR)
-   -- 31.5.3 WWDG status register (WWDG_SR)
+   -- 31.4.1 Control register (WWDG_CR)
+
+   type WWDG_CR_Type is record
+      T        : Bits_7  := 16#7F#; -- 7-bit counter (MSB to LSB)
+      WDGA     : Boolean := False;  -- Activation bit
+      Reserved : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for WWDG_CR_Type use record
+      T        at 0 range 0 ..  6;
+      WDGA     at 0 range 7 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   WWDG_CR_ADDRESS : constant := 16#4000_2C00#;
+
+   WWDG_CR : aliased WWDG_CR_Type
+      with Address              => System'To_Address (WWDG_CR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 31.4.2 Configuration register (WWDG_CFR)
+
+  WDGTB_DIV1 : constant := 2#00#; -- CK Counter Clock (PCLK div 4096) div 1
+  WDGTB_DIV2 : constant := 2#01#; -- CK Counter Clock (PCLK div 4096) div 2
+  WDGTB_DIV4 : constant := 2#10#; -- CK Counter Clock (PCLK div 4096) div 4
+  WDGTB_DIV8 : constant := 2#11#; -- CK Counter Clock (PCLK div 4096) div 8
+
+   type WWDG_CFR_Type is record
+     W        : Bits_7  := 16#7F#;     -- 7-bit window value
+     WDGTB    : Bits_2  := WDGTB_DIV1; -- Timer base
+     EWI      : Boolean := False;      -- Early wakeup interrupt
+     Reserved : Bits_22 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for WWDG_CFR_Type use record
+     W        at 0 range  0 ..  6;
+     WDGTB    at 0 range  7 ..  8;
+     EWI      at 0 range  9 ..  9;
+     Reserved at 0 range 10 .. 31;
+   end record;
+
+   WWDG_CFR_ADDRESS : constant := 16#4000_2C04#;
+
+   WWDG_CFR : aliased WWDG_CFR_Type
+      with Address              => System'To_Address (WWDG_CFR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 31.4.3 Status register (WWDG_SR)
+
+   type WWDG_SR_Type is record
+     EWIF     : Boolean; -- Early wakeup interrupt flag
+     Reserved : Bits_31;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for WWDG_SR_Type use record
+     EWIF     at 0 range 0 ..  0;
+     Reserved at 0 range 1 .. 31;
+   end record;
+
+   WWDG_SR_ADDRESS : constant := 16#4000_2C08#;
+
+   WWDG_SR : aliased WWDG_SR_Type
+      with Address              => System'To_Address (WWDG_SR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 32 Real-time clock (RTC)
