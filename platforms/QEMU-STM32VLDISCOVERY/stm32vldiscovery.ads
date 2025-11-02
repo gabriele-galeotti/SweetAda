@@ -278,22 +278,22 @@ pragma Style_Checks (Off);
    OVER8_8  : constant := 1; -- Oversampling by 8
 
    type USART_CR1_Type is record
-      SM        : Boolean;      -- Send break
-      RWU       : Boolean;      -- Receiver wakeup
-      RE        : Boolean;      -- Receiver enable
-      TE        : Boolean;      -- Transmitter enable
-      IDLEIE    : Boolean;      -- IDLE interrupt enable
-      RXNEIE    : Boolean;      -- RXNE interrupt enable
-      TCIE      : Boolean;      -- Transmission complete interrupt enable
-      TXEIE     : Boolean;      -- interrupt enable
-      PEIE      : Boolean;      -- PE interrupt enable
-      PS        : Bits_1;       -- Parity selection
-      PCE       : Boolean;      -- Parity control enable
-      WAKE      : Bits_1;       -- Receiver wakeup method
-      M         : Bits_1;       -- Word length
-      UE        : Boolean;      -- USART enable
+      SM        : Boolean := False;     -- Send break
+      RWU       : Boolean := False;     -- Receiver wakeup
+      RE        : Boolean := False;     -- Receiver enable
+      TE        : Boolean := False;     -- Transmitter enable
+      IDLEIE    : Boolean := False;     -- IDLE interrupt enable
+      RXNEIE    : Boolean := False;     -- RXNE interrupt enable
+      TCIE      : Boolean := False;     -- Transmission complete interrupt enable
+      TXEIE     : Boolean := False;     -- interrupt enable
+      PEIE      : Boolean := False;     -- PE interrupt enable
+      PS        : Bits_1  := PS_EVEN;   -- Parity selection
+      PCE       : Boolean := False;     -- Parity control enable
+      WAKE      : Bits_1  := WAKE_IDLE; -- Receiver wakeup method
+      M         : Bits_1  := M_8N1;     -- Word length
+      UE        : Boolean := False;     -- USART enable
       Reserved1 : Bits_1  := 0;
-      OVER8     : Bits_1;       -- Oversampling mode
+      OVER8     : Bits_1  := OVER8_16;  -- Oversampling mode
       Reserved2 : Bits_16 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -335,17 +335,17 @@ pragma Style_Checks (Off);
    STOP_15 : constant := 2#11#; -- 1.5 stop bits
 
    type USART_CR2_Type is record
-      ADD       : Bits_4;       -- Address of the USART node
+      ADD       : Bits_4  := 0;        -- Address of the USART node
       Reserved1 : Bits_1  := 0;
-      LBDL      : Bits_1;       -- lin break detection length
-      LBDIE     : Boolean;      -- LIN break detection interrupt enable
+      LBDL      : Bits_1  := LBDL_10;  -- lin break detection length
+      LBDIE     : Boolean := False;    -- LIN break detection interrupt enable
       Reserved2 : Bits_1  := 0;
-      LBCL      : Boolean;      -- Last bit clock pulse
-      CPHA      : Bits_1;       -- Clock phase
-      CPOL      : Bits_1;       -- Clock polarity
-      CLKEN     : Boolean;      -- Clock enable
-      STOP      : Bits_2;       -- STOP bits
-      LINEN     : Boolean;      -- LIN mode enable
+      LBCL      : Boolean := False;    -- Last bit clock pulse
+      CPHA      : Bits_1  := CPHA_1ST; -- Clock phase
+      CPOL      : Bits_1  := CPOL_LOW; -- Clock polarity
+      CLKEN     : Boolean := False;    -- Clock enable
+      STOP      : Bits_2  := STOP_1;   -- STOP bits
+      LINEN     : Boolean := False;    -- LIN mode enable
       Reserved3 : Bits_17 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -368,18 +368,18 @@ pragma Style_Checks (Off);
    -- 23.6.6 Control register 3 (USART_CR3)
 
    type USART_CR3_Type is record
-      EIE      : Boolean;      -- Error interrupt enable
-      IREN     : Boolean;      -- IrDA mode enable
-      IRLP     : Boolean;      -- IrDA low-power
-      HDSEL    : Boolean;      -- Half-duplex selection
-      NACK     : Boolean;      -- Smartcard NACK enable
-      SCEN     : Boolean;      -- Smartcard mode enable
-      DMAR     : Boolean;      -- DMA enable receiver
-      DMAT     : Boolean;      -- DMA enable transmitter
-      RTSE     : Boolean;      -- RTS enable
-      CTSE     : Boolean;      -- CTS enable
-      CTSIE    : Boolean;      -- CTS interrupt enable
-      ONEBIT   : Boolean;      -- One sample bit method enable
+      EIE      : Boolean := False; -- Error interrupt enable
+      IREN     : Boolean := False; -- IrDA mode enable
+      IRLP     : Boolean := False; -- IrDA low-power
+      HDSEL    : Boolean := False; -- Half-duplex selection
+      NACK     : Boolean := False; -- Smartcard NACK enable
+      SCEN     : Boolean := False; -- Smartcard mode enable
+      DMAR     : Boolean := False; -- DMA enable receiver
+      DMAT     : Boolean := False; -- DMA enable transmitter
+      RTSE     : Boolean := False; -- RTS enable
+      CTSE     : Boolean := False; -- CTS enable
+      CTSIE    : Boolean := False; -- CTS interrupt enable
+      ONEBIT   : Boolean := False; -- One sample bit method enable
       Reserved : Bits_20 := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -403,8 +403,8 @@ pragma Style_Checks (Off);
    -- 23.6.7 Guard time and prescaler register (USART_GTPR)
 
    type USART_GTPR_Type is record
-      PSC      : Unsigned_8;      -- Prescaler value
-      GT       : Unsigned_8;      -- Guard time value
+      PSC      : Unsigned_8 := 0; -- Prescaler value
+      GT       : Unsigned_8 := 0; -- Guard time value
       Reserved : Bits_16    := 0;
    end record
       with Bit_Order => Low_Order_First,
