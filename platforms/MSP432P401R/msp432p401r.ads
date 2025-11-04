@@ -1891,6 +1891,7 @@ pragma Style_Checks (Off);
 
    -- 9.4.10 FLCTL_PRGBRST_CTLSTAT
 
+   -- __INF__ use "TYP3" instead of "TYPE"
    TYP3_MAIN  renames MEM_TYPE_MAIN;
    TYP3_INFO  renames MEM_TYPE_INFO;
    TYP3_RSVD1 renames MEM_TYPE_RSVD1;
@@ -1914,6 +1915,7 @@ pragma Style_Checks (Off);
    BURST_STATUS_RSVD     : constant := 2#110#; -- Reserved (Idle)
    BURST_STATUS_COMPLETE : constant := 2#111#; -- Burst Complete (status of completed burst remains in this state unless explicitly cleared by software)
 
+   -- __INF__ use "TYP3" instead of "TYPE"
    type FLCTL_PRGBRST_CTLSTAT_Type is record
       START        : Boolean := False;             -- Write 1 triggers start of burst program operation
       TYP3         : Bits_2  := TYP3_MAIN;         -- Type of memory that burst program is carried out on
@@ -1995,6 +1997,7 @@ pragma Style_Checks (Off);
 
    -- STATUS_* already defined at 9.4.9
 
+   -- __INF__ use "TYP3" instead of "TYPE"
    type FLCTL_ERASE_CTLSTAT_Type is record
       START     : Boolean := False;            -- Write 1 triggers start of Erase operation
       MODE      : Bits_1  := MODE_SECTORERASE; -- Controls erase mode selected by application
