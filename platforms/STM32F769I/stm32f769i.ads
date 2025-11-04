@@ -5596,14 +5596,14 @@ pragma Warnings (On);
    end record;
 
    type TIMx_CCMR2_Advctrl_Type is record
-      CC3       : Bits_8 := 0; -- CC1S : Capture/Compare 3 selection
+      CC3       : Bits_8 := 0; -- CC3S : Capture/Compare 3 selection
                                -- IN > IC3F     : Input capture 3 filter
                                -- IN > IC3PSC   : Input capture 3 prescaler
                                -- OUT> OC3FE    : Output Compare 3 fast enable
                                -- OUT> OC3PE    : Output Compare 3 preload enable
                                -- OUT> OC3M[2:0]: Output Compare 3 mode
                                -- OUT> OC3CE    : Output Compare 3 clear enable
-      CC4       : Bits_8 := 0; -- CC2S : Capture/Compare 4 selection
+      CC4       : Bits_8 := 0; -- CC4S : Capture/Compare 4 selection
                                -- IN > IC4F     : Input capture 4 filter
                                -- IN > IC4PSC   : Input capture 4 prescaler
                                -- OUT> OC4FE    : Output Compare 4 fast enable
