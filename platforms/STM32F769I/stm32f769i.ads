@@ -5537,6 +5537,8 @@ pragma Warnings (On);
    OCxM_ASYMMETRICPWMMODE2 : constant := 2#1111#; -- Asymmetric PWM mode 2 - OC1REF has the same behavior as in PWM mode 2. OC1REFC outputs OC1REF when the counter is counting up, OC2REF when it is counting down.
 
    -- Input capture mode: return CCxS|ICxPSC|ICxF
+   -- this function is suitable to set the CCx field in CCMR? registers when
+   -- configuring Input capture mode
    function CCx_MODEIN
       (CCxS   : Bits_2;
        ICxPSC : Bits_2;
@@ -5545,6 +5547,9 @@ pragma Warnings (On);
       with Inline => True;
 
    -- Output compare mode: return CCxS|OCxFE|OCxPE|OCxM[2:0]|OCxCE
+   -- this function is suitable to set the CCx field in CCMR? registers when
+   -- configuring Output compare mode; it should be used in conjunction with
+   -- the CCx_MODEOUT_OCxM3 function
    function CCx_MODEOUT_BASE
       (CCxS  : Bits_2;
        OCxFE : Boolean;
@@ -5555,6 +5560,9 @@ pragma Warnings (On);
       with Inline => True;
 
    -- Output compare mode: return OCxM[3]
+   -- this function is suitable to set the OCxM3 field in CCMR? registers when
+   -- configuring Output compare mode; it should be used in conjunction with
+   -- the CCx_MODEOUT_BASE function
    function CCx_MODEOUT_OCxM3
       (CCxS  : Bits_2;
        OCxFE : Boolean;
@@ -5644,8 +5652,8 @@ pragma Warnings (On);
    CCxNP_NONINVRISING  : constant := 0; -- ''
    CCxP_INVFALLING     : constant := 1; -- inverted/falling edge.
    CCxNP_INVFALLING    : constant := 0; -- ''
-   CCxP_RSVD           : constant := 1; -- reserved, do not use this configuration.
-   CCxNP_RSVD          : constant := 0; -- ''
+   CCxP_RSVD           : constant := 0; -- reserved, do not use this configuration.
+   CCxNP_RSVD          : constant := 1; -- ''
    CCxP_BOTHEDGES      : constant := 1; -- non-inverted/both edges/
    CCxNP_BOTHEDGES     : constant := 1; -- ''
 
