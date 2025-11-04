@@ -5204,33 +5204,593 @@ pragma Warnings (On);
    -- 25 Advanced-control timers (TIM1/TIM8)
    ----------------------------------------------------------------------------
 
-   -- 25.4.1 TIMx control register 1 (TIMx_CR1)(x = 1, 8)
-   -- 25.4.2 TIMx control register 2 (TIMx_CR2)(x = 1, 8)
-   -- 25.4.3 TIMx slave mode control register (TIMx_SMCR)(x = 1, 8)
-   -- 25.4.4 TIMx DMA/interrupt enable register (TIMx_DIER)(x = 1, 8)
-   -- 25.4.5 TIMx status register (TIMx_SR)(x = 1, 8)
-   -- 25.4.6 TIMx event generation register (TIMx_EGR)(x = 1, 8)
-   -- 25.4.7 TIMx capture/compare mode register 1 (TIMx_CCMR1)(x = 1, 8)
-   -- 25.4.8 TIMx capture/compare mode register 1 [alternate] (TIMx_CCMR1)(x = 1, 8)
-   -- 25.4.9 TIMx capture/compare mode register 2 (TIMx_CCMR2)(x = 1, 8)
-   -- 25.4.10 TIMx capture/compare mode register 2 [alternate] (TIMx_CCMR2)(x = 1, 8)
-   -- 25.4.11 TIMx capture/compare enable register (TIMx_CCER)(x = 1, 8)
-   -- 25.4.12 TIMx counter (TIMx_CNT)(x = 1, 8)
-   -- 25.4.13 TIMx prescaler (TIMx_PSC)(x = 1, 8)
-   -- 25.4.14 TIMx auto-reload register (TIMx_ARR)(x = 1, 8)
-   -- 25.4.15 TIMx repetition counter register (TIMx_RCR)(x = 1, 8)
-   -- 25.4.16 TIMx capture/compare register 1 (TIMx_CCR1)(x = 1, 8)
-   -- 25.4.17 TIMx capture/compare register 2 (TIMx_CCR2)(x = 1, 8)
-   -- 25.4.18 TIMx capture/compare register 3 (TIMx_CCR3)(x = 1, 8)
-   -- 25.4.19 TIMx capture/compare register 4 (TIMx_CCR4)(x = 1, 8)
-   -- 25.4.20 TIMx break and dead-time register (TIMx_BDTR)(x = 1, 8)
-   -- 25.4.21 TIMx DMA control register (TIMx_DCR)(x = 1, 8)
-   -- 25.4.22 TIMx DMA address for full transfer (TIMx_DMAR)(x = 1, 8)
-   -- 25.4.23 TIMx capture/compare mode register 3 (TIMx_CCMR3)(x = 1, 8)
-   -- 25.4.24 TIMx capture/compare register 5 (TIMx_CCR5)(x = 1, 8)
-   -- 25.4.25 TIMx capture/compare register 6 (TIMx_CCR6)(x = 1, 8)
-   -- 25.4.26 TIMx alternate function option register 1 (TIMx_AF1)(x = 1, 8)
-   -- 25.4.27 TIMx alternate function option register 2 (TIMx_AF2)(x = 1, 8)
+   -- 25.4.1 TIM1/TIM8 control register 1 (TIMx_CR1)
+
+   URS_ANY          : constant := 0; -- Any of the following events generates an update interrupt or DMA request if enabled.
+   URS_COUNTER_OFUF : constant := 1; -- Only counter overflow/underflow generates an update interrupt or DMA request if enabled.
+
+   DIR_UPCNT   : constant := 0; -- Counter used as upcounter
+   DIR_DOWNCNT : constant := 1; -- Counter used as downcounter
+
+   CMS_EDGEALGN : constant := 2#00#; -- Edge-aligned mode.
+   CMS_CNTALGN1 : constant := 2#01#; -- Center-aligned mode 1.
+   CMS_CNTALGN2 : constant := 2#10#; -- Center-aligned mode 2.
+   CMS_CNTALGN3 : constant := 2#11#; -- Center-aligned mode 3.
+
+   CKD_1    : constant := 2#00#; -- tDTS=tCK_INT
+   CKD_2    : constant := 2#01#; -- tDTS=2*tCK_INT
+   CKD_4    : constant := 2#10#; -- tDTS=4*tCK_INT
+   CKD_RSVD : constant := 2#11#; -- Reserved, do not program this value
+
+   type TIMx_CR1_Advctrl_Type is record
+      CEN       : Boolean := False;        -- Counter enable
+      UDIS      : Boolean := False;        -- Update disable
+      URS       : Bits_1  := URS_ANY;      -- Update request source
+      OPM       : Boolean := False;        -- One-pulse mode
+      DIR       : Bits_1  := DIR_UPCNT;    -- Direction
+      CMS       : Bits_2  := CMS_EDGEALGN; -- Center-aligned mode selection
+      ARPE      : Boolean := False;        -- Auto-reload preload enable
+      CKD       : Bits_2  := CKD_1;        -- Clock division
+      Reserved1 : Bits_1  := 0;
+      UIFREMAP  : Boolean := False;        -- UIF status bit remapping
+      Reserved2 : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_CR1_Advctrl_Type use record
+      CEN       at 0 range  0 ..  0;
+      UDIS      at 0 range  1 ..  1;
+      URS       at 0 range  2 ..  2;
+      OPM       at 0 range  3 ..  3;
+      DIR       at 0 range  4 ..  4;
+      CMS       at 0 range  5 ..  6;
+      ARPE      at 0 range  7 ..  7;
+      CKD       at 0 range  8 ..  9;
+      Reserved1 at 0 range 10 .. 10;
+      UIFREMAP  at 0 range 11 .. 11;
+      Reserved2 at 0 range 12 .. 15;
+   end record;
+
+   -- 25.4.2 TIM1/TIM8 control register 2 (TIMx_CR2)
+
+   CCUS_COMG : constant := 0; -- When capture/compare control bits are preloaded (CCPC=1), they are updated by setting the COMG bit only
+   CCUS_TRGI : constant := 1; -- When capture/compare control bits are preloaded (CCPC=1), they are updated by setting the COMG bit or when an rising edge occurs on TRGI
+
+   CCDS_CCx  : constant := 0; -- CCx DMA request sent when CCx event occurs
+   CCDS_UPEV : constant := 1; -- CCx DMA requests sent when update event occurs
+
+   MMS_RESET     : constant := 2#000#; -- the UG bit from the TIMx_EGR register is used as a trigger output (TRGO).
+   MMS_ENABLE    : constant := 2#001#; -- the Counter enable signal, CNT_EN, is used as a trigger output (TRGO).
+   MMS_UPDATE    : constant := 2#010#; -- The update event is selected as a trigger output (TRGO).
+   MMS_CMPPULSE  : constant := 2#011#; -- Compare Pulse - The trigger output send a positive pulse when the CC1IF flag is to be set (even if it was already high), as soon as a capture or a compare match occurred. (TRGO).
+   MMS_CMPOC1REF : constant := 2#100#; -- Compare - OC1REF signal is used as trigger output (TRGO)
+   MMS_CMPOC2REF : constant := 2#101#; -- Compare - OC2REF signal is used as trigger output (TRGO)
+   MMS_CMPOC3REF : constant := 2#110#; -- Compare - OC3REF signal is used as trigger output (TRGO)
+   MMS_CMPOC4REF : constant := 2#111#; -- Compare - OC4REF signal is used as trigger output (TRGO)
+
+   type TIMx_CR2_Advctrl_Type is record
+      CCPC      : Boolean := False;     -- Capture/compare preloaded control
+      Reserved1 : Bits_1  := 0;
+      CCUS      : Bits_1  := CCUS_COMG; -- Capture/compare control update selection
+      CCDS      : Bits_1  := CCDS_CCx;  -- Capture/compare DMA selection
+      MMS       : Bits_3  := MMS_RESET; -- Master mode selection
+      Reserved2 : Bits_25 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_CR2_Advctrl_Type use record
+      CCPC      at 0 range 0 ..  0;
+      Reserved1 at 0 range 1 ..  1;
+      CCUS      at 0 range 2 ..  2;
+      CCDS      at 0 range 3 ..  3;
+      MMS       at 0 range 4 ..  6;
+      Reserved2 at 0 range 7 .. 31;
+   end record;
+
+   -- 25.4.3 TIM1/TIM8 slave mode control register (TIMx_SMCR)
+
+   type SMS_Type is record
+      SMS02 : Bits_3;
+      SMS3  : Bits_1;
+   end record;
+
+   SMS_SLAVEDISABLED : constant SMS_Type := (2#000#, 0); -- Slave mode disabled - if CEN = ‘1’ then the prescaler is clocked directly by the internal clock.
+   SMS_ENCODERMODE1  : constant SMS_Type := (2#001#, 0); -- Encoder mode 1 - Counter counts up/down on TI1FP1 edge depending on TI2FP2 level.
+   SMS_ENCODERMODE2  : constant SMS_Type := (2#010#, 0); -- Encoder mode 2 - Counter counts up/down on TI2FP2 edge depending on TI1FP1 level.
+   SMS_ENCODERMODE3  : constant SMS_Type := (2#011#, 0); -- Encoder mode 3 - Counter counts up/down on both TI1FP1 and TI2FP2 edges depending on the level of the other input.
+   SMS_RESET         : constant SMS_Type := (2#100#, 0); -- Reset Mode - Rising edge of the selected trigger input (TRGI) reinitializes the counter and generates an update of the registers.
+   SMS_GATED         : constant SMS_Type := (2#101#, 0); -- Gated Mode - The counter clock is enabled when the trigger input (TRGI) is high. The counter stops (but is not reset) as soon as the trigger becomes low. Both start and stop of the counter are controlled.
+   SMS_TRIGGER       : constant SMS_Type := (2#110#, 0); -- Trigger Mode - The counter starts at a rising edge of the trigger TRGI (but it is not reset). Only the start of the counter is controlled.
+   SMS_EXTCLKMODE1   : constant SMS_Type := (2#111#, 0); -- External Clock Mode 1 - Rising edges of the selected trigger (TRGI) clock the counter.
+   SMS_RESETTRIGGER  : constant SMS_Type := (2#000#, 1); -- Combined reset + trigger mode - Rising edge of the selected trigger input (TRGI) reinitializes the counter, generates an update of the registers and starts the counter.
+   SMS_RSVD1         : constant SMS_Type := (2#001#, 1);
+   SMS_RSVD2         : constant SMS_Type := (2#010#, 1);
+   SMS_RSVD3         : constant SMS_Type := (2#011#, 1);
+   SMS_RSVD4         : constant SMS_Type := (2#100#, 1);
+   SMS_RSVD5         : constant SMS_Type := (2#101#, 1);
+   SMS_RSVD6         : constant SMS_Type := (2#110#, 1);
+   SMS_RSVD7         : constant SMS_Type := (2#111#, 1);
+
+   TS_ITR0    : constant := 2#000#; -- Internal Trigger 0 (ITR0)
+   TS_ITR1    : constant := 2#001#; -- Internal Trigger 1 (ITR1)
+   TS_ITR2    : constant := 2#010#; -- Internal Trigger 2 (ITR2)
+   TS_ITR3    : constant := 2#011#; -- Internal Trigger 3 (ITR3)
+   TS_TI1F_ED : constant := 2#100#; -- TI1 Edge Detector (TI1F_ED)
+   TS_TI1FP1  : constant := 2#101#; -- Filtered Timer Input 1 (TI1FP1)
+   TS_TI2FP2  : constant := 2#110#; -- Filtered Timer Input 2 (TI2FP2)
+   TS_ETRF    : constant := 2#111#; -- External Trigger input (ETRF)
+
+   MSM_NOACTION : constant := 0; -- No action
+   MSM_DELAYED  : constant := 1; -- The effect of an event on the trigger input (TRGI) is delayed to allow a perfect synchronization between the current timer and its slaves (through TRGO).
+
+   ETF_NONE         : constant := 2#0000#; -- No filter, sampling is done at fDTS
+   ETF_FCKINT_N2    : constant := 2#0001#; -- fSAMPLING=fCK_INT, N=2
+   ETF_FCKINT_N4    : constant := 2#0010#; -- fSAMPLING=fCK_INT, N=4
+   ETF_FCKINT_N8    : constant := 2#0011#; -- fSAMPLING=fCK_INT, N=8
+   ETF_FDTSDIV2_N6  : constant := 2#0100#; -- fSAMPLING=fDTS/2, N=6
+   ETF_FDTSDIV2_N8  : constant := 2#0101#; -- fSAMPLING=fDTS/2, N=8
+   ETF_FDTSDIV4_N6  : constant := 2#0110#; -- fSAMPLING=fDTS/4, N=6
+   ETF_FDTSDIV4_N8  : constant := 2#0111#; -- fSAMPLING=fDTS/4, N=8
+   ETF_FDTSDIV8_N6  : constant := 2#1000#; -- fSAMPLING=fDTS/8, N=6
+   ETF_FDTSDIV8_N8  : constant := 2#1001#; -- fSAMPLING=fDTS/8, N=8
+   ETF_FDTSDIV16_N5 : constant := 2#1010#; -- fSAMPLING=fDTS/16, N=5
+   ETF_FDTSDIV16_N6 : constant := 2#1011#; -- fSAMPLING=fDTS/16, N=6
+   ETF_FDTSDIV16_N8 : constant := 2#1100#; -- fSAMPLING=fDTS/16, N=8
+   ETF_FDTSDIV32_N5 : constant := 2#1101#; -- fSAMPLING=fDTS/32, N=5
+   ETF_FDTSDIV32_N6 : constant := 2#1110#; -- fSAMPLING=fDTS/32, N=6
+   ETF_FDTSDIV32_N8 : constant := 2#1111#; -- fSAMPLING=fDTS/32, N=8
+
+   ETPS_OFF  : constant := 2#00#; -- Prescaler OFF
+   ETPS_DIV2 : constant := 2#01#; -- ETRP frequency divided by 2
+   ETPS_DIV4 : constant := 2#10#; -- ETRP frequency divided by 4
+   ETPS_DIV8 : constant := 2#11#; -- ETRP frequency divided by 8
+
+   ETP_ETRDIRECT   : constant := 0; -- ETR is non-inverted, active at high level or rising edge.
+   ETP_ETRINVERTED : constant := 1; -- ETR is inverted, active at low level or falling edge.
+
+   type TIMx_SMCR_Advctrl_Type is record
+      SMS02     : Bits_3  := SMS_SLAVEDISABLED.SMS02; -- Slave mode selection
+      Reserved1 : Bits_1  := 0;
+      TS        : Bits_3  := TS_ITR0;                 -- Trigger selection
+      MSM       : Bits_1  := MSM_NOACTION;            -- Master/slave mode
+      ETF       : Bits_4  := ETF_NONE;                -- External trigger filter
+      ETPS      : Bits_2  := ETPS_OFF;                -- External trigger prescaler
+      ECE       : Boolean := False;                   -- External clock enable
+      ETP       : Bits_1  := ETP_ETRDIRECT;           -- External trigger polarity
+      SMS3      : Bits_1  := SMS_SLAVEDISABLED.SMS3;  -- Slave mode selection
+      Reserved2 : Bits_15 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_SMCR_Advctrl_Type use record
+      SMS02     at 0 range  0 ..  2;
+      Reserved1 at 0 range  3 ..  3;
+      TS        at 0 range  4 ..  6;
+      MSM       at 0 range  7 ..  7;
+      ETF       at 0 range  8 .. 11;
+      ETPS      at 0 range 12 .. 13;
+      ECE       at 0 range 14 .. 14;
+      ETP       at 0 range 15 .. 15;
+      SMS3      at 0 range 16 .. 16;
+      Reserved2 at 0 range 17 .. 31;
+   end record;
+
+   -- 25.4.4 TIM1/TIM8 DMA/interrupt enable register (TIMx_DIER)
+
+   type TIMx_DIER_Advctrl_Type is record
+      UIE      : Boolean := False; -- Update interrupt enable
+      CC1IE    : Boolean := False; -- Capture/Compare 1 interrupt enable
+      CC2IE    : Boolean := False; -- Capture/Compare 2 interrupt enable
+      CC3IE    : Boolean := False; -- Capture/Compare 3 interrupt enable
+      CC4IE    : Boolean := False; -- Capture/Compare 4 interrupt enable
+      COMIE    : Boolean := False; -- COM interrupt enable
+      TIE      : Boolean := False; -- Trigger interrupt enable
+      BIE      : Boolean := False; -- Break interrupt enable
+      UDE      : Boolean := False; -- Update DMA request enable
+      CC1DE    : Boolean := False; -- Capture/Compare 1 DMA request enable
+      CC2DE    : Boolean := False; -- Capture/Compare 2 DMA request enable
+      CC3DE    : Boolean := False; -- Capture/Compare 3 DMA request enable
+      CC4DE    : Boolean := False; -- Capture/Compare 4 DMA request enable
+      COMDE    : Boolean := False; -- COM DMA request enable
+      TDE      : Boolean := False; -- Trigger DMA request enable
+      Reserved : Bits_1  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_DIER_Advctrl_Type use record
+      UIE      at 0 range  0 ..  0;
+      CC1IE    at 0 range  1 ..  1;
+      CC2IE    at 0 range  2 ..  2;
+      CC3IE    at 0 range  3 ..  3;
+      CC4IE    at 0 range  4 ..  4;
+      COMIE    at 0 range  5 ..  5;
+      TIE      at 0 range  6 ..  6;
+      BIE      at 0 range  7 ..  7;
+      UDE      at 0 range  8 ..  8;
+      CC1DE    at 0 range  9 ..  9;
+      CC2DE    at 0 range 10 .. 10;
+      CC3DE    at 0 range 11 .. 11;
+      CC4DE    at 0 range 12 .. 12;
+      COMDE    at 0 range 13 .. 13;
+      TDE      at 0 range 14 .. 14;
+      Reserved at 0 range 15 .. 15;
+   end record;
+
+   -- 25.4.5 TIM1/TIM8 status register (TIMx_SR)
+
+   type TIMx_SR_Advctrl_Type is record
+      UIF       : Boolean := True; -- Update interrupt flag
+      CC1IF     : Boolean := True; -- Capture/Compare 1 interrupt flag
+      CC2IF     : Boolean := True; -- Capture/Compare 2 interrupt flag
+      CC3IF     : Boolean := True; -- Capture/Compare 3 interrupt flag
+      CC4IF     : Boolean := True; -- Capture/Compare 4 interrupt flag
+      COMIF     : Boolean := True; -- COM interrupt flag
+      TIF       : Boolean := True; -- Trigger interrupt flag
+      BIF       : Boolean := True; -- Break interrupt flag
+      B2IF      : Boolean := True; -- Break 2 interrupt flag
+      CC1OF     : Boolean := True; -- Capture/Compare 1 overcapture flag
+      CC2OF     : Boolean := True; -- Capture/Compare 2 overcapture flag
+      CC3OF     : Boolean := True; -- Capture/Compare 3 overcapture flag
+      CC4OF     : Boolean := True; -- Capture/Compare 4 overcapture flag
+      Reserved1 : Bits_3  := 0;
+      CC5IF     : Boolean := True; -- Compare 5 interrupt flag
+      CC6IF     : Boolean := True; -- Compare 6 interrupt flag
+      Reserved2 : Bits_14 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_SR_Advctrl_Type use record
+      UIF       at 0 range  0 ..  0;
+      CC1IF     at 0 range  1 ..  1;
+      CC2IF     at 0 range  2 ..  2;
+      CC3IF     at 0 range  3 ..  3;
+      CC4IF     at 0 range  4 ..  4;
+      COMIF     at 0 range  5 ..  5;
+      TIF       at 0 range  6 ..  6;
+      BIF       at 0 range  7 ..  7;
+      B2IF      at 0 range  8 ..  8;
+      CC1OF     at 0 range  9 ..  9;
+      CC2OF     at 0 range 10 .. 10;
+      CC3OF     at 0 range 11 .. 11;
+      CC4OF     at 0 range 12 .. 12;
+      Reserved1 at 0 range 13 .. 15;
+      CC5IF     at 0 range 16 .. 16;
+      CC6IF     at 0 range 17 .. 17;
+      Reserved2 at 0 range 18 .. 31;
+   end record;
+
+   -- 25.4.6 TIM1/TIM8 event generation register (TIMx_EGR)
+
+   type TIMx_EGR_Advctrl_Type is record
+      UG       : Boolean := False; -- Update generation
+      CC1G     : Boolean := False; -- Capture/Compare 1 generation
+      CC2G     : Boolean := False; -- Capture/Compare 2 generation
+      CC3G     : Boolean := False; -- Capture/Compare 3 generation
+      CC4G     : Boolean := False; -- Capture/Compare 4 generation
+      COMG     : Boolean := False; -- Capture/Compare control update generation
+      TG       : Boolean := False; -- Trigger generation
+      BG       : Boolean := False; -- Break generation
+      B2G      : Boolean := False; -- Break 2 generation
+      Reserved : Bits_7  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_EGR_Advctrl_Type use record
+      UG       at 0 range 0 ..  0;
+      CC1G     at 0 range 1 ..  1;
+      CC2G     at 0 range 2 ..  2;
+      CC3G     at 0 range 3 ..  3;
+      CC4G     at 0 range 4 ..  4;
+      COMG     at 0 range 5 ..  5;
+      TG       at 0 range 6 ..  6;
+      BG       at 0 range 7 ..  7;
+      B2G      at 0 range 8 ..  8;
+      Reserved at 0 range 9 .. 15;
+   end record;
+
+   -- 25.4.7 TIM1/TIM8 capture/compare mode register 1 (TIMx_CCMR1)
+   -- 25.4.8 TIM1/TIM8 capture/compare mode register 2 (TIMx_CCMR2)
+
+   CCxS_OUT       : constant := 2#00#; -- CC1 channel is configured as output
+   CCxS_IN_IC1TI1 : constant := 2#01#; -- CC1 channel is configured as input, IC1 is mapped on TI1
+   CCxS_IN_IC1TI2 : constant := 2#10#; -- CC1 channel is configured as input, IC1 is mapped on TI2
+   CCxS_IN_IC1TRC : constant := 2#11#; -- CC1 channel is configured as input, IC1 is mapped on TRC.
+
+   ICxPSC_NONE : constant := 2#00#; -- no prescaler, capture is done each time an edge is detected on the capture input
+   ICxPSC_2    : constant := 2#01#; -- capture is done once every 2 events
+   ICxPSC_4    : constant := 2#10#; -- capture is done once every 4 events
+   ICxPSC_8    : constant := 2#11#; -- capture is done once every 8 events
+
+   -- possibly the same ETF_* defined at 25.4.3
+   ICxF_NONE         : constant := 2#0000#; -- No filter, sampling is done at fDTS
+   ICxF_FCKINT_N2    : constant := 2#0001#; -- fSAMPLING=fCK_INT, N=2
+   ICxF_FCKINT_N4    : constant := 2#0010#; -- fSAMPLING=fCK_INT, N=4
+   ICxF_FCKINT_N8    : constant := 2#0011#; -- fSAMPLING=fCK_INT, N=8
+   ICxF_FDTSDIV2_N6  : constant := 2#0100#; -- fSAMPLING=fDTS/2, N=6
+   ICxF_FDTSDIV2_N8  : constant := 2#0101#; -- fSAMPLING=fDTS/2, N=8
+   ICxF_FDTSDIV4_N6  : constant := 2#0110#; -- fSAMPLING=fDTS/4, N=6
+   ICxF_FDTSDIV4_N8  : constant := 2#0111#; -- f SAMPLING=fDTS/4, N=8
+   ICxF_FDTSDIV8_N6  : constant := 2#1000#; -- fSAMPLING=fDTS/8, N=6
+   ICxF_FDTSDIV8_N8  : constant := 2#1001#; -- fSAMPLING=fDTS/8, N=8
+   ICxF_FDTSDIV16_N5 : constant := 2#1010#; -- fSAMPLING=fDTS/16, N=5
+   ICxF_FDTSDIV16_N6 : constant := 2#1011#; -- fSAMPLING=fDTS/16, N=6
+   ICxF_FDTSDIV16_N8 : constant := 2#1100#; -- fSAMPLING=fDTS/16, N=8
+   ICxF_FDTSDIV32_N5 : constant := 2#1101#; -- fSAMPLING=fDTS/32, N=5
+   ICxF_FDTSDIV32_N6 : constant := 2#1110#; -- f SAMPLING=fDTS/32, N=6
+   ICxF_FDTSDIV32_N8 : constant := 2#1111#; -- fSAMPLING=fDTS/32, N=8
+
+   OCxM_FROZEN             : constant := 2#0000#; -- Frozen - The comparison between the output compare register TIMx_CCR1 and the counter TIMx_CNT has no effect on the outputs.(this mode is used to generate a timing base).
+   OCxM_CH1ACTIVEONMATCH   : constant := 2#0001#; -- Set channel 1 to active level on match. OC1REF signal is forced high when the counter TIMx_CNT matches the capture/compare register 1 (TIMx_CCR1).
+   OCxM_CH1INACTIVEONMATCH : constant := 2#0010#; -- Set channel 1 to inactive level on match. OC1REF signal is forced low when the counter TIMx_CNT matches the capture/compare register 1 (TIMx_CCR1).
+   OCxM_TOGGLE             : constant := 2#0011#; -- Toggle - OC1REF toggles when TIMx_CNT=TIMx_CCR1.
+   OCxM_FORCEINACTIVE      : constant := 2#0100#; -- Force inactive level - OC1REF is forced low.
+   OCxM_FORCEACTIVE        : constant := 2#0101#; -- Force active level - OC1REF is forced high.
+   OCxM_PWMMODE1           : constant := 2#0110#; -- PWM mode 1 - In upcounting, channel 1 is active as long as TIMx_CNT<TIMx_CCR1 else inactive. In downcounting, channel 1 is inactive (OC1REF=‘0’) as long as TIMx_CNT>TIMx_CCR1 else active (OC1REF=’1’).
+   OCxM_PWMMODE2           : constant := 2#0111#; -- PWM mode 2 - In upcounting, channel 1 is inactive as long as TIMx_CNT<TIMx_CCR1 else active. In downcounting, channel 1 is active as long as TIMx_CNT>TIMx_CCR1 else inactive.
+   OCxM_RETRIGGEROPMMODE1  : constant := 2#1000#; -- Retrigerrable OPM mode 1 - In up-counting mode, the channel is active until a trigger event is detected (on TRGI signal). Then, a comparison is performed as in PWM mode 1 and the channels becomes active again at the next update. In down-counting mode, the channel is inactive until a trigger event is detected (on TRGI signal). Then, a comparison is performed as in PWM mode 1 and the channels becomes inactive again at the next update.
+   OCxM_RETRIGGEROPMMODE2  : constant := 2#1001#; -- Retrigerrable OPM mode 2 - In up-counting mode, the channel is inactive until a trigger event is detected (on TRGI signal). Then, a comparison is performed as in PWM mode 2 and the channels becomes inactive again at the next update. In down-counting mode, the channel is active until a trigger event is detected (on TRGI signal). Then, a comparison is performed as in PWM mode 1 and the channels becomes active again at the next update.
+   OCxM_RSVD1              : constant := 2#1010#; -- Reserved,
+   OCxM_RSVD2              : constant := 2#1011#; -- Reserved,
+   OCxM_COMBINEDPWM1       : constant := 2#1100#; -- Combined PWM mode 1 - OC1REF has the same behavior as in PWM mode 1. OC1REFC is the logical OR between OC1REF and OC2REF.
+   OCxM_COMBINEDPWM2       : constant := 2#1101#; -- Combined PWM mode 2 - OC1REF has the same behavior as in PWM mode 2. OC1REFC is the logical AND between OC1REF and OC2REF.
+   OCxM_ASYMMETRICPWMMODE1 : constant := 2#1110#; -- Asymmetric PWM mode 1 - OC1REF has the same behavior as in PWM mode 1. OC1REFC outputs OC1REF when the counter is counting up, OC2REF when it is counting down.
+   OCxM_ASYMMETRICPWMMODE2 : constant := 2#1111#; -- Asymmetric PWM mode 2 - OC1REF has the same behavior as in PWM mode 2. OC1REFC outputs OC1REF when the counter is counting up, OC2REF when it is counting down.
+
+   -- Input capture mode: return CCxS|ICxPSC|ICxF
+   function CCx_MODEIN
+      (CCxS   : Bits_2;
+       ICxPSC : Bits_2;
+       ICxF   : Bits_4)
+      return Bits_8
+      with Inline => True;
+
+   -- Output compare mode: return CCxS|OCxFE|OCxPE|OCxM[2:0]|OCxCE
+   function CCx_MODEOUT_BASE
+      (CCxS  : Bits_2;
+       OCxFE : Boolean;
+       OCxPE : Boolean;
+       OCxM  : Bits_4;
+       OCxCE : Boolean)
+      return Bits_8
+      with Inline => True;
+
+   -- Output compare mode: return OCxM[3]
+   function CCx_MODEOUT_OCxM3
+      (CCxS  : Bits_2;
+       OCxFE : Boolean;
+       OCxPE : Boolean;
+       OCxM  : Bits_4;
+       OCxCE : Boolean)
+      return Bits_1
+      with Inline => True;
+
+   type TIMx_CCMR1_Advctrl_Type is record
+      CC1       : Bits_8 := 0; -- CC1S : Capture/Compare 1 selection
+                               -- IN > IC1F     : Input capture 1 filter
+                               -- IN > IC1PSC   : Input capture 1 prescaler
+                               -- OUT> OC1FE    : Output Compare 1 fast enable
+                               -- OUT> OC1PE    : Output Compare 1 preload enable
+                               -- OUT> OC1M[2:0]: Output Compare 1 mode
+                               -- OUT> OC1CE    : Output Compare 1 clear enable
+      CC2       : Bits_8 := 0; -- CC2S : Capture/Compare 2 selection
+                               -- IN > IC2F     : Input capture 2 filter
+                               -- IN > IC2PSC   : Input capture 2 prescaler
+                               -- OUT> OC2FE    : Output Compare 2 fast enable
+                               -- OUT> OC2PE    : Output Compare 2 preload enable
+                               -- OUT> OC2M[2:0]: Output Compare 2 mode
+                               -- OUT> OC2CE    : Output Compare 2 clear enable
+      OC1M3     : Bits_1 := 0; -- Output Compare 1 mode - bit 3
+      Reserved1 : Bits_7 := 0;
+      OC2M3     : Bits_1 := 0; -- Output Compare 2 mode - bit 3
+      Reserved2 : Bits_7 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_CCMR1_Advctrl_Type use record
+      CC1       at 0 range  0 ..  7;
+      CC2       at 0 range  8 .. 15;
+      OC1M3     at 0 range 16 .. 16;
+      Reserved1 at 0 range 17 .. 23;
+      OC2M3     at 0 range 24 .. 24;
+      Reserved2 at 0 range 25 .. 31;
+   end record;
+
+   type TIMx_CCMR2_Advctrl_Type is record
+      CC3       : Bits_8 := 0; -- CC1S : Capture/Compare 3 selection
+                               -- IN > IC3F     : Input capture 3 filter
+                               -- IN > IC3PSC   : Input capture 3 prescaler
+                               -- OUT> OC3FE    : Output Compare 3 fast enable
+                               -- OUT> OC3PE    : Output Compare 3 preload enable
+                               -- OUT> OC3M[2:0]: Output Compare 3 mode
+                               -- OUT> OC3CE    : Output Compare 3 clear enable
+      CC4       : Bits_8 := 0; -- CC2S : Capture/Compare 4 selection
+                               -- IN > IC4F     : Input capture 4 filter
+                               -- IN > IC4PSC   : Input capture 4 prescaler
+                               -- OUT> OC4FE    : Output Compare 4 fast enable
+                               -- OUT> OC4PE    : Output Compare 4 preload enable
+                               -- OUT> OC4M[2:0]: Output Compare 4 mode
+                               -- OUT> OC4CE    : Output Compare 4 clear enable
+      OC3M3     : Bits_1 := 0; -- Output Compare 3 mode - bit 3
+      Reserved1 : Bits_7 := 0;
+      OC4M3     : Bits_1 := 0; -- Output Compare 4 mode - bit 3
+      Reserved2 : Bits_7 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_CCMR2_Advctrl_Type use record
+      CC3       at 0 range  0 ..  7;
+      CC4       at 0 range  8 .. 15;
+      OC3M3     at 0 range 16 .. 16;
+      Reserved1 at 0 range 17 .. 23;
+      OC4M3     at 0 range 24 .. 24;
+      Reserved2 at 0 range 25 .. 31;
+   end record;
+
+   -- 25.4.9 TIM1/TIM8 capture/compare enable register (TIMx_CCER)
+
+   -- CCx channel configured as output:
+   CCxP_HIGH  : constant := 0; -- OCx active high
+   CCxP_LOW   : constant := 1; -- OCx active low
+   CCxNP_HIGH : constant := 0; -- OCxN active high.
+   CCxNP_LOW  : constant := 1; -- OCxN active low.
+
+   -- CCx channel configured as input:
+   -- type CCxPNP_Type is record P : Bits_1; NP : Bits_1; end record;
+   -- CCxPNP_NONINVRISING : constant CCxPNP_Type := (0, 0); -- non-inverted/rising edge.
+   -- CCxPNP_INVFALLING   : constant CCxPNP_Type := (1, 0); -- inverted/falling edge.
+   -- CCxPNP_RSVD         : constant CCxPNP_Type := (0, 1); -- reserved, do not use this configuration.
+   -- CCxPNP_BOTHEDGES    : constant CCxPNP_Type := (1, 1); -- non-inverted/both edges/
+   CCxP_NONINVRISING   : constant := 0; -- non-inverted/rising edge.
+   CCxNP_NONINVRISING  : constant := 0; -- ''
+   CCxP_INVFALLING     : constant := 1; -- inverted/falling edge.
+   CCxNP_INVFALLING    : constant := 0; -- ''
+   CCxP_RSVD           : constant := 1; -- reserved, do not use this configuration.
+   CCxNP_RSVD          : constant := 0; -- ''
+   CCxP_BOTHEDGES      : constant := 1; -- non-inverted/both edges/
+   CCxNP_BOTHEDGES     : constant := 1; -- ''
+
+   type TIMx_CCER_Advctrl_Type is record
+      CC1E      : Boolean := False; -- Capture/Compare 1 output enable
+      CC1P      : Bits_1  := 0;     -- Capture/Compare 1 output polarity
+      CC1NE     : Boolean := False; -- Capture/Compare 1 complementary output enable
+      CC1NP     : Bits_1  := 0;     -- Capture/Compare 1 complementary output polarity
+      CC2E      : Boolean := False; -- Capture/Compare 2 output enable
+      CC2P      : Bits_1  := 0;     -- Capture/Compare 2 output polarity
+      CC2NE     : Boolean := False; -- Capture/Compare 2 complementary output enable
+      CC2NP     : Bits_1  := 0;     -- Capture/Compare 2 complementary output polarity
+      CC3E      : Boolean := False; -- Capture/Compare 3 output enable
+      CC3P      : Bits_1  := 0;     -- Capture/Compare 3 output polarity
+      CC3NE     : Boolean := False; -- Capture/Compare 3 complementary output enable
+      CC3NP     : Bits_1  := 0;     -- Capture/Compare 3 complementary output polarity
+      CC4E      : Boolean := False; -- Capture/Compare 4 output enable
+      CC4P      : Bits_1  := 0;     -- Capture/Compare 4 output polarity
+      Reserved1 : Bits_1  := 0;
+      CC4NP     : Bits_1  := 0;     -- Capture/Compare 4 complementary output polarity
+      CC5E      : Boolean := False; -- Capture/Compare 5 output enable
+      CC5P      : Bits_1  := 0;     -- Capture/Compare 5 output polarity
+      Reserved2 : Bits_2  := 0;
+      CC6E      : Boolean := False; -- Capture/Compare 6 output enable
+      CC6P      : Bits_1  := 0;     -- Capture/Compare 6 output polarity
+      Reserved3 : Bits_10 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_CCER_Advctrl_Type use record
+      CC1E      at 0 range  0 ..  0;
+      CC1P      at 0 range  1 ..  1;
+      CC1NE     at 0 range  2 ..  2;
+      CC1NP     at 0 range  3 ..  3;
+      CC2E      at 0 range  4 ..  4;
+      CC2P      at 0 range  5 ..  5;
+      CC2NE     at 0 range  6 ..  6;
+      CC2NP     at 0 range  7 ..  7;
+      CC3E      at 0 range  8 ..  8;
+      CC3P      at 0 range  9 ..  9;
+      CC3NE     at 0 range 10 .. 10;
+      CC3NP     at 0 range 11 .. 11;
+      CC4E      at 0 range 12 .. 12;
+      CC4P      at 0 range 13 .. 13;
+      Reserved1 at 0 range 14 .. 14;
+      CC4NP     at 0 range 15 .. 15;
+      CC5E      at 0 range 16 .. 16;
+      CC5P      at 0 range 17 .. 17;
+      Reserved2 at 0 range 18 .. 19;
+      CC6E      at 0 range 20 .. 20;
+      CC6P      at 0 range 21 .. 21;
+      Reserved3 at 0 range 22 .. 31;
+   end record;
+
+   -- 25.4.10 TIM1/TIM8 counter (TIMx_CNT)
+
+   type TIMx_CNT_Advctrl_Type is record
+      CNT      : Unsigned_16;          -- Counter value
+      Reserved : Bits_15     := 0;
+      UIFCPY   : Boolean     := False; -- UIF copy
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_CNT_Advctrl_Type use record
+      CNT      at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 30;
+      UIFCPY   at 0 range 31 .. 31;
+   end record;
+
+   -- 25.4.11 TIM1/TIM8 prescaler (TIMx_PSC)
+
+   type TIMx_PSC_Advctrl_Type is record
+      PSC : Unsigned_16; -- Prescaler value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_PSC_Advctrl_Type use record
+      PSC at 0 range 0 .. 15;
+   end record;
+
+   -- 25.4.12 TIM1/TIM8 auto-reload register (TIMx_ARR)
+
+   type TIMx_ARR_Advctrl_Type is record
+      ARR : Unsigned_16; -- Auto-reload value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_ARR_Advctrl_Type use record
+      ARR at 0 range 0 .. 15;
+   end record;
+
+   -- 25.4.13 TIM1/TIM8 repetition counter register (TIMx_RCR)
+
+   type TIMx_RCR_Advctrl_Type is record
+      REP : Unsigned_16; -- Repetition counter value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_RCR_Advctrl_Type use record
+      REP at 0 range 0 .. 15;
+   end record;
+
+   -- 25.4.14 TIM1/TIM8 capture/compare register 1 (TIMx_CCR1)
+
+   type TIMx_CCR1_Advctrl_Type is record
+      CCR1 : Unsigned_16; -- Capture/Compare 1 value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_CCR1_Advctrl_Type use record
+      CCR1 at 0 range 0 .. 15;
+   end record;
+
+   -- 25.4.15 TIM1/TIM8 capture/compare register 2 (TIMx_CCR2)
+
+   type TIMx_CCR2_Advctrl_Type is record
+      CCR2 : Unsigned_16; -- Capture/Compare 2 value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_CCR2_Advctrl_Type use record
+      CCR2 at 0 range 0 .. 15;
+   end record;
+
+   -- 25.4.16 TIM1/TIM8 capture/compare register 3 (TIMx_CCR3)
+
+   type TIMx_CCR3_Advctrl_Type is record
+      CCR3 : Unsigned_16; -- Capture/Compare value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_CCR3_Advctrl_Type use record
+      CCR3 at 0 range 0 .. 15;
+   end record;
+
+   -- 25.4.17 TIM1/TIM8 capture/compare register 4 (TIMx_CCR4)
+
+   type TIMx_CCR4_Advctrl_Type is record
+      CCR4 : Unsigned_16; -- Capture/Compare value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_CCR4_Advctrl_Type use record
+      CCR4 at 0 range 0 .. 15;
+   end record;
 
    ----------------------------------------------------------------------------
    -- 26 General-purpose timers (TIM2/TIM3/TIM4/TIM5)
@@ -5248,10 +5808,10 @@ pragma Warnings (On);
    -- 26.4.10 TIMx counter (TIMx_CNT)
    -- 26.4.11 TIMx prescaler (TIMx_PSC)
    -- 26.4.12 TIMx auto-reload register (TIMx_ARR)
-   -- 26.4.13TIMx capture/compare register 1 (TIMx_CCR1)
-   -- 26.4.14TIMx capture/compare register 2 (TIMx_CCR2)
-   -- 26.4.15TIMx capture/compare register 3 (TIMx_CCR3)
-   -- 26.4.16TIMx capture/compare register 4 (TIMx_CCR4)
+   -- 26.4.13 TIMx capture/compare register 1 (TIMx_CCR1)
+   -- 26.4.14 TIMx capture/compare register 2 (TIMx_CCR2)
+   -- 26.4.15 TIMx capture/compare register 3 (TIMx_CCR3)
+   -- 26.4.16 TIMx capture/compare register 4 (TIMx_CCR4)
    -- 26.4.17 TIMx DMA control register (TIMx_DCR)
    -- 26.4.18 TIMx DMA address for full transfer (TIMx_DMAR)
    -- 26.4.19 TIM2 option register (TIM2_OR)
@@ -5291,10 +5851,9 @@ pragma Warnings (On);
 
    -- 28.4.1 TIM6/TIM7 control register 1 (TIMx_CR1)
 
-   URS_ANY          : constant := 0; -- Any of the following events generates an update interrupt or DMA request if enabled.
-   URS_COUNTER_OFUF : constant := 1; -- Only counter overflow/underflow generates an update interrupt or DMA request if enabled.
+   -- URS_* already defined at 25.4.1
 
-   type TIMx_CR1_Type is record
+   type TIMx_CR1_Basic_Type is record
       CEN       : Boolean := False;   -- Counter enable
       UDIS      : Boolean := False;   -- Update disable
       URS       : Bits_1  := URS_ANY; -- Update request source
@@ -5307,7 +5866,7 @@ pragma Warnings (On);
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
-   for TIMx_CR1_Type use record
+   for TIMx_CR1_Basic_Type use record
       CEN       at 0 range  0 ..  0;
       UDIS      at 0 range  1 ..  1;
       URS       at 0 range  2 ..  2;
@@ -5321,18 +5880,16 @@ pragma Warnings (On);
 
    -- 28.4.2 TIM6/TIM7 control register 2 (TIMx_CR2)
 
-   MMS_RESET  : constant := 2#000#; -- the UG bit from the TIMx_EGR register is used as a trigger output (TRGO).
-   MMS_ENABLE : constant := 2#001#; -- the Counter enable signal, CNT_EN, is used as a trigger output (TRGO).
-   MMS_UPDATE : constant := 2#010#; -- The update event is selected as a trigger output (TRGO).
+   -- MMS_* already defined at 25.4.2
 
-   type TIMx_CR2_Type is record
+   type TIMx_CR2_Basic_Type is record
       Reserved1 : Bits_4 := 0;
       MMS       : Bits_3 := MMS_RESET; -- Master mode selection
       Reserved2 : Bits_9 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
-   for TIMx_CR2_Type use record
+   for TIMx_CR2_Basic_Type use record
       Reserved1 at 0 range 0 ..  3;
       MMS       at 0 range 4 ..  6;
       Reserved2 at 0 range 7 .. 15;
@@ -5340,7 +5897,7 @@ pragma Warnings (On);
 
    -- 28.4.3 TIM6/TIM7 DMA/Interrupt enable register (TIMx_DIER)
 
-   type TIMx_DIER_Type is record
+   type TIMx_DIER_Basic_Type is record
       UIE       : Boolean := False; -- Update interrupt enable
       Reserved1 : Bits_7  := 0;
       UDE       : Boolean := False; -- Update DMA request enable
@@ -5348,7 +5905,7 @@ pragma Warnings (On);
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
-   for TIMx_DIER_Type use record
+   for TIMx_DIER_Basic_Type use record
       UIE       at 0 range 0 ..  0;
       Reserved1 at 0 range 1 ..  7;
       UDE       at 0 range 8 ..  8;
@@ -5357,56 +5914,78 @@ pragma Warnings (On);
 
    -- 28.4.4 TIM6/TIM7 status register (TIMx_SR)
 
-   type TIMx_SR_Type is record
+   type TIMx_SR_Basic_Type is record
       UIF      : Boolean := False; -- Update interrupt flag
       Reserved : Bits_15 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
-   for TIMx_SR_Type use record
+   for TIMx_SR_Basic_Type use record
       UIF      at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 15;
    end record;
 
    -- 28.4.5 TIM6/TIM7 event generation register (TIMx_EGR)
 
-   type TIMx_EGR_Type is record
+   type TIMx_EGR_Basic_Type is record
       UG       : Boolean := False; -- Update generation
       Reserved : Bits_15 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
-   for TIMx_EGR_Type use record
+   for TIMx_EGR_Basic_Type use record
       UG       at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 15;
    end record;
 
    -- 28.4.6 TIM6/TIM7 counter (TIMx_CNT)
 
-   type TIMx_CNT_Type is record
+   type TIMx_CNT_Basic_Type is record
       CNT      : Unsigned_16 := 0;     -- Counter value
       Reserved : Bits_15     := 0;
       UIFCPY   : Boolean     := False; -- UIF Copy
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for TIMx_CNT_Type use record
+   for TIMx_CNT_Basic_Type use record
       CNT      at 0 range  0 .. 15;
       Reserved at 0 range 16 .. 30;
       UIFCPY   at 0 range 31 .. 31;
    end record;
 
+   -- 28.4.7 TIM6/TIM7 prescaler (TIMx_PSC)
+
+   type TIMx_PSC_Basic_Type is record
+      PSC : Unsigned_16; -- Prescaler value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_PSC_Basic_Type use record
+      PSC at 0 range  0 .. 15;
+   end record;
+
+   -- 28.4.8 TIM6/TIM7 auto-reload register (TIMx_ARR)
+
+   type TIMx_ARR_Basic_Type is record
+      ARR : Unsigned_16; -- Prescaler value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_ARR_Basic_Type use record
+      ARR at 0 range  0 .. 15;
+   end record;
+
    -- 28.4 TIM6/TIM7 registers
 
    type Basic_Timers_Type is record
-      CR1  : TIMx_CR1_Type  with Volatile_Full_Access => True;
-      CR2  : TIMx_CR2_Type  with Volatile_Full_Access => True;
-      DIER : TIMx_DIER_Type with Volatile_Full_Access => True;
-      SR   : TIMx_SR_Type   with Volatile_Full_Access => True;
-      EGR  : TIMx_EGR_Type  with Volatile_Full_Access => True;
-      CNT  : TIMx_CNT_Type  with Volatile_Full_Access => True;
-      PSC  : Unsigned_16    with Volatile_Full_Access => True;
-      ARR  : Unsigned_16    with Volatile_Full_Access => True;
+      CR1  : TIMx_CR1_Basic_Type  with Volatile_Full_Access => True;
+      CR2  : TIMx_CR2_Basic_Type  with Volatile_Full_Access => True;
+      DIER : TIMx_DIER_Basic_Type with Volatile_Full_Access => True;
+      SR   : TIMx_SR_Basic_Type   with Volatile_Full_Access => True;
+      EGR  : TIMx_EGR_Basic_Type  with Volatile_Full_Access => True;
+      CNT  : TIMx_CNT_Basic_Type  with Volatile_Full_Access => True;
+      PSC  : TIMx_PSC_Basic_Type  with Volatile_Full_Access => True;
+      ARR  : TIMx_ARR_Basic_Type  with Volatile_Full_Access => True;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16#30# * 8;
@@ -5420,6 +5999,8 @@ pragma Warnings (On);
       PSC  at 16#28# range 0 .. 15;
       ARR  at 16#2C# range 0 .. 15;
    end record;
+
+   -- 28.4 TIM6/TIM7 registers
 
    TIM6_BASEADDRESS : constant := 16#4000_1000#;
 

@@ -152,4 +152,68 @@ package body STM32F769I
       return Cycles - 1;
    end ATTHIZ_HCLK;
 
+   ----------------------------------------------------------------------------
+   -- CCx_MODEIN
+   ----------------------------------------------------------------------------
+   function CCx_MODEIN
+      (CCxS   : Bits_2;
+       ICxPSC : Bits_2;
+       ICxF   : Bits_4)
+      return Bits_8
+      is
+   begin
+      if CCxS = CCxS_OUT then
+         raise Constraint_Error;
+      end if;
+      return Bits_8 (
+         Shift_Left (Unsigned_8 (CCxS),   0) or
+         Shift_Left (Unsigned_8 (ICxPSC), 2) or
+         Shift_Left (Unsigned_8 (ICxF),   4)
+         );
+   end CCx_MODEIN;
+
+   ----------------------------------------------------------------------------
+   -- CCx_MODEOUT_BASE
+   ----------------------------------------------------------------------------
+   function CCx_MODEOUT_BASE
+      (CCxS  : Bits_2;
+       OCxFE : Boolean;
+       OCxPE : Boolean;
+       OCxM  : Bits_4;
+       OCxCE : Boolean)
+      return Bits_8
+      is
+   begin
+      if CCxS /= CCxS_OUT then
+         raise Constraint_Error;
+      end if;
+      return Bits_8 (
+         Shift_Left (Unsigned_8 (To_Bits_1 (OCxFE)), 0) or
+         Shift_Left (Unsigned_8 (To_Bits_1 (OCxPE)), 1) or
+         Shift_Left (Unsigned_8 (OCxM and 2#111#),   2) or
+         Shift_Left (Unsigned_8 (To_Bits_1 (OCxCE)), 7)
+         );
+   end CCx_MODEOUT_BASE;
+
+   ----------------------------------------------------------------------------
+   -- CCx_MODEOUT_OCxM3
+   ----------------------------------------------------------------------------
+   function CCx_MODEOUT_OCxM3
+      (CCxS  : Bits_2;
+       OCxFE : Boolean;
+       OCxPE : Boolean;
+       OCxM  : Bits_4;
+       OCxCE : Boolean)
+      return Bits_1
+      is
+      pragma Unreferenced (OCxFE);
+      pragma Unreferenced (OCxPE);
+      pragma Unreferenced (OCxCE);
+   begin
+      if CCxS /= CCxS_OUT then
+         raise Constraint_Error;
+      end if;
+      return (if (OCxM and 2#1000#) /= 0 then 1 else 0);
+   end CCx_MODEOUT_OCxM3;
+
 end STM32F769I;
