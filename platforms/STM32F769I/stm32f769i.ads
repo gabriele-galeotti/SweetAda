@@ -5501,7 +5501,6 @@ pragma Warnings (On);
    ICxPSC_4    : constant := 2#10#; -- capture is done once every 4 events
    ICxPSC_8    : constant := 2#11#; -- capture is done once every 8 events
 
-   -- possibly the same ETF_* defined at 25.4.3
    ICxF_NONE         : constant := 2#0000#; -- No filter, sampling is done at fDTS
    ICxF_FCKINT_N2    : constant := 2#0001#; -- fSAMPLING=fCK_INT, N=2
    ICxF_FCKINT_N4    : constant := 2#0010#; -- fSAMPLING=fCK_INT, N=4
@@ -5800,6 +5799,346 @@ pragma Warnings (On);
       CCR4 at 0 range 0 .. 15;
    end record;
 
+   -- 25.4.18 TIM1/TIM8 break and dead-time register (TIMx_BDTR)
+
+   LOCK_OFF    : constant := 2#00#; -- No bit is write protected.
+   LOCK_Level1 : constant := 2#01#; -- DTG bits in TIMx_BDTR register, OISx and OISxN bits in TIMx_CR2 register and BKE/BKP/AOE bits in TIMx_BDTR register can no longer be written.
+   LOCK_Level2 : constant := 2#10#; -- LOCK Level 1 + CC Polarity bits (CCxP/CCxNP bits in TIMx_CCER register, as long as the related channel is configured in output through the CCxS bits) as well as OSSR and OSSI bits can no longer be written.
+   LOCK_Level3 : constant := 2#11#; -- LOCK Level 2 + CC Control bits (OCxM and OCxPE bits in TIMx_CCMRx registers, as long as the related channel is configured in output through the CCxS bits) can no longer be written.
+
+   OSSI_OCOCNDISABLED     : constant := 0; -- When inactive, OC/OCN outputs are disabled (the timer releases the output control which is taken over by the GPIO logic and which imposes a Hi-Z state).
+   OSSI_OCOCNINACTIVEIDLE : constant := 1; -- When inactive, OC/OCN outputs are first forced with their inactive level then forced to their idle level after the deadtime. The timer maintains its control over the output.
+
+   OSSR_OCOCNDISABLED : constant := 0; -- When inactive, OC/OCN outputs are disabled (the timer releases the output control which is taken over by the GPIO logic, which forces a Hi-Z state).
+   OSSR_OCOCNCCxEHIGH : constant := 1; -- When inactive, OC/OCN outputs are enabled with their inactive level as soon as CCxE=1 or CCxNE=1 (the output is still controlled by the timer).
+
+   BKP_BRKLOW  : constant := 0; -- Break input BRK is active low
+   BKP_BRKHIGH : constant := 1; -- Break input BRK is active high
+
+   AOE_MOESW           : constant := 0; -- MOE can be set only by software
+   AOE_MOESWORUPDEVENT : constant := 1; -- MOE can be set by software or automatically at the next update event (if none of the break inputs BRK and BRK2 is active)
+
+   BKF_NONE         : constant := 2#0000#; -- No filter, BRK acts asynchronously
+   BKF_FCKINT_N2    : constant := 2#0001#; -- fSAMPLING=fCK_INT, N=2
+   BKF_FCKINT_N4    : constant := 2#0010#; -- fSAMPLING=fCK_INT, N=4
+   BKF_FCKINT_N8    : constant := 2#0011#; -- fSAMPLING=fCK_INT, N=8
+   BKF_FDTSDIV2_N6  : constant := 2#0100#; -- fSAMPLING=fDTS/2, N=6
+   BKF_FDTSDIV2_N8  : constant := 2#0101#; -- fSAMPLING=fDTS/2, N=8
+   BKF_FDTSDIV4_N6  : constant := 2#0110#; -- fSAMPLING=fDTS/4, N=6
+   BKF_FDTSDIV4_N8  : constant := 2#0111#; -- f SAMPLING=fDTS/4, N=8
+   BKF_FDTSDIV8_N6  : constant := 2#1000#; -- fSAMPLING=fDTS/8, N=6
+   BKF_FDTSDIV8_N8  : constant := 2#1001#; -- fSAMPLING=fDTS/8, N=8
+   BKF_FDTSDIV16_N5 : constant := 2#1010#; -- fSAMPLING=fDTS/16, N=5
+   BKF_FDTSDIV16_N6 : constant := 2#1011#; -- fSAMPLING=fDTS/16, N=6
+   BKF_FDTSDIV16_N8 : constant := 2#1100#; -- fSAMPLING=fDTS/16, N=8
+   BKF_FDTSDIV32_N5 : constant := 2#1101#; -- fSAMPLING=fDTS/32, N=5
+   BKF_FDTSDIV32_N6 : constant := 2#1110#; -- f SAMPLING=fDTS/32, N=6
+   BKF_FDTSDIV32_N8 : constant := 2#1111#; -- fSAMPLING=fDTS/32, N=8
+
+   BK2F_NONE         renames BKF_NONE;
+   BK2F_FCKINT_N2    renames BKF_FCKINT_N2;
+   BK2F_FCKINT_N4    renames BKF_FCKINT_N4;
+   BK2F_FCKINT_N8    renames BKF_FCKINT_N8;
+   BK2F_FDTSDIV2_N6  renames BKF_FDTSDIV2_N6;
+   BK2F_FDTSDIV2_N8  renames BKF_FDTSDIV2_N8;
+   BK2F_FDTSDIV4_N6  renames BKF_FDTSDIV4_N6;
+   BK2F_FDTSDIV4_N8  renames BKF_FDTSDIV4_N8;
+   BK2F_FDTSDIV8_N6  renames BKF_FDTSDIV8_N6;
+   BK2F_FDTSDIV8_N8  renames BKF_FDTSDIV8_N8;
+   BK2F_FDTSDIV16_N5 renames BKF_FDTSDIV16_N5;
+   BK2F_FDTSDIV16_N6 renames BKF_FDTSDIV16_N6;
+   BK2F_FDTSDIV16_N8 renames BKF_FDTSDIV16_N8;
+   BK2F_FDTSDIV32_N5 renames BKF_FDTSDIV32_N5;
+   BK2F_FDTSDIV32_N6 renames BKF_FDTSDIV32_N6;
+   BK2F_FDTSDIV32_N8 renames BKF_FDTSDIV32_N8;
+
+   BK2P_BRKLOW  renames BKP_BRKLOW;
+   BK2P_BRKHIGH renames BKP_BRKHIGH;
+
+   type TIMx_BDTR_Advctrl_Type is record
+      DTG      : Unsigned_8 := 0;                  -- Dead-time generator setup
+      LOCK     : Bits_2     := LOCK_OFF;           -- Lock configuration
+      OSSI     : Bits_1     := OSSI_OCOCNDISABLED; -- Off-state selection for Idle mode
+      OSSR     : Bits_1     := OSSR_OCOCNDISABLED; -- Off-state selection for Run mode
+      BKE      : Boolean    := False;              -- Break enable
+      BKP      : Bits_1     := BKP_BRKLOW;         -- Break polarity
+      AOE      : Boolean    := False;              -- Automatic output enable
+      MOE      : Boolean    := False;              -- Main output enable
+      BKF      : Bits_4     := BKF_NONE;           -- Break filter
+      BK2F     : Bits_4     := BK2F_NONE;          -- Break 2 filter
+      BK2E     : Boolean    := False;              -- Break 2 enable
+      BK2P     : Bits_1     := BK2P_BRKLOW;        -- Break 2 polarity
+      Reserved : Bits_6     := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_BDTR_Advctrl_Type use record
+      DTG      at 0 range  0 ..  7;
+      LOCK     at 0 range  8 ..  9;
+      OSSI     at 0 range 10 .. 10;
+      OSSR     at 0 range 11 .. 11;
+      BKE      at 0 range 12 .. 12;
+      BKP      at 0 range 13 .. 13;
+      AOE      at 0 range 14 .. 14;
+      MOE      at 0 range 15 .. 15;
+      BKF      at 0 range 16 .. 19;
+      BK2F     at 0 range 20 .. 23;
+      BK2E     at 0 range 24 .. 24;
+      BK2P     at 0 range 25 .. 25;
+      Reserved at 0 range 26 .. 31;
+   end record;
+
+   -- 25.4.19 TIM1/TIM8 DMA control register (TIMx_DCR)
+
+   DBA_CR1   : constant := 2#00000#; -- TIMx_CR1,
+   DBA_CR2   : constant := 2#00001#; -- TIMx_CR2,
+   DBA_SMCR  : constant := 2#00010#; -- TIMx_SMCR
+   DBA_DIER  : constant := 2#00011#; -- TIMx_DIER
+   DBA_SR    : constant := 2#00100#; -- TIMx_SR
+   DBA_EGR   : constant := 2#00101#; -- TIMx_EGR
+   DBA_CCMR1 : constant := 2#00110#; -- TIMx_CCMR1
+   DBA_CCMR2 : constant := 2#00111#; -- TIMx_CCMR2
+   DBA_CCER  : constant := 2#01000#; -- TIMx_CCER
+   DBA_CNT   : constant := 2#01001#; -- TIMx_CNT
+   DBA_PSC   : constant := 2#01010#; -- TIMx_PSC
+   DBA_ARR   : constant := 2#01011#; -- TIMx_ARR
+   DBA_RCR   : constant := 2#01100#; -- TIMx_RCR
+   DBA_CCR1  : constant := 2#01101#; -- TIMx_CCR1
+   DBA_CCR2  : constant := 2#01110#; -- TIMx_CCR2
+   DBA_CCR3  : constant := 2#01111#; -- TIMx_CCR3
+   DBA_CCR4  : constant := 2#10000#; -- TIMx_CCR4
+   DBA_BDTR  : constant := 2#10001#; -- TIMx_BDTR
+   DBA_DCR   : constant := 2#10010#; -- TIMx_DCR
+   DBA_DMAR  : constant := 2#10011#; -- TIMx_DMAR
+   DBA_CCMR3 : constant := 2#10100#; -- TIMx_CCMR3
+   DBA_CCR5  : constant := 2#10101#; -- TIMx_CCR5
+   DBA_CCR6  : constant := 2#10110#; -- TIMx_CCR6
+   DBA_AF1   : constant := 2#10111#; -- TIMx_AF1
+   DBA_AF2   : constant := 2#11000#; -- TIMx_AF2
+
+   DBL_1  : constant := 2#00000#; -- 1 transfer
+   DBL_2  : constant := 2#00001#; -- 2 transfers
+   DBL_3  : constant := 2#00010#; -- 3 transfers
+   DBL_4  : constant := 2#00011#; -- 4 transfers
+   DBL_5  : constant := 2#00100#; -- 5 transfers
+   DBL_6  : constant := 2#00101#; -- 6 transfers
+   DBL_7  : constant := 2#00110#; -- 7 transfers
+   DBL_8  : constant := 2#00111#; -- 8 transfers
+   DBL_9  : constant := 2#01000#; -- 9 transfers
+   DBL_10 : constant := 2#01001#; -- 10 transfers
+   DBL_11 : constant := 2#01010#; -- 11 transfers
+   DBL_12 : constant := 2#01011#; -- 12 transfers
+   DBL_13 : constant := 2#01100#; -- 13 transfers
+   DBL_14 : constant := 2#01101#; -- 14 transfers
+   DBL_15 : constant := 2#01110#; -- 15 transfers
+   DBL_16 : constant := 2#01111#; -- 16 transfers
+   DBL_17 : constant := 2#10000#; -- 17 transfers
+   DBL_18 : constant := 2#10001#; -- 18 transfers
+
+   type TIMx_DCR_Advctrl_Type is record
+      DBA       : Bits_5 := 0; -- DMA base address
+      Reserved1 : Bits_3 := 0;
+      DBL       : Bits_5 := 0; -- DMA burst length
+      Reserved2 : Bits_3 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_DCR_Advctrl_Type use record
+      DBA       at 0 range  0 ..  4;
+      Reserved1 at 0 range  5 ..  7;
+      DBL       at 0 range  8 .. 12;
+      Reserved2 at 0 range 13 .. 15;
+   end record;
+
+   -- 25.4.20 TIM1/TIM8 DMA address for full transfer (TIMx_DMAR)
+
+   type TIMx_DMAR_Advctrl_Type is record
+      DMAB : Unsigned_32; -- DMA register for burst accesses
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_DMAR_Advctrl_Type use record
+      DMAB at 0 range 0 .. 31;
+   end record;
+
+   -- 25.4.21 TIM1/TIM8 capture/compare mode register 3 (TIMx_CCMR3)
+
+   type TIMx_CCMR3_Advctrl_Type is record
+      CC5       : Bits_8 := 0; -- CC5S : Output Compare
+                               -- OUT> OC5FE    : Output Compare 5 fast enable
+                               -- OUT> OC5PE    : Output Compare 5 preload enable
+                               -- OUT> OC5M[2:0]: Output Compare 5 mode
+                               -- OUT> OC5CE    : Output Compare 5 clear enable
+      CC6       : Bits_8 := 0; -- CC6S : Output Compare
+                               -- OUT> OC6FE    : Output Compare 6 fast enable
+                               -- OUT> OC6PE    : Output Compare 6 preload enable
+                               -- OUT> OC6M[2:0]: Output Compare 6 mode
+                               -- OUT> OC6CE    : Output Compare 6 clear enable
+      OC5M3     : Bits_1 := 0; -- Output Compare 5 mode - bit 3
+      Reserved1 : Bits_7 := 0;
+      OC6M3     : Bits_1 := 0; -- Output Compare 6 mode - bit 3
+      Reserved2 : Bits_7 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_CCMR3_Advctrl_Type use record
+      CC5       at 0 range  0 ..  7;
+      CC6       at 0 range  8 .. 15;
+      OC5M3     at 0 range 16 .. 16;
+      Reserved1 at 0 range 17 .. 23;
+      OC6M3     at 0 range 24 .. 24;
+      Reserved2 at 0 range 25 .. 31;
+   end record;
+
+   -- 25.4.22 TIM1/TIM8 capture/compare register 5 (TIMx_CCR5)
+
+   type TIMx_CCR5_Advctrl_Type is record
+      CCR5     : Unsigned_16 := 0;     -- Capture/Compare 5 value
+      Reserved : Bits_13     := 0;
+      GC5C1    : Boolean     := False; -- Group Channel 5 and Channel 1
+      GC5C2    : Boolean     := False; -- Group Channel 5 and Channel 2
+      GC5C3    : Boolean     := False; -- Group Channel 5 and Channel 3
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_CCR5_Advctrl_Type use record
+      CCR5     at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 28;
+      GC5C1    at 0 range 29 .. 29;
+      GC5C2    at 0 range 30 .. 30;
+      GC5C3    at 0 range 31 .. 31;
+   end record;
+
+   -- 25.4.23 TIM1/TIM8 capture/compare register 6 (TIMx_CCR6)
+
+   type TIMx_CCR6_Advctrl_Type is record
+      CCR6 : Unsigned_16; -- Capture/Compare 6 value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_CCR6_Advctrl_Type use record
+      CCR6 at 0 range 0 .. 15;
+   end record;
+
+   -- 25.4.24 TIM1/TIM8 alternate function option register 1 (TIMx_AF1)
+
+   BKINP_BKINHIGH : constant := 0; -- BKIN input is active high
+   BKINP_BKINLOW  : constant := 1; -- BKIN input is active low
+
+   type TIMx_AF1_Advctrl_Type is record
+      BKINE     : Boolean := True;          -- BRK BKIN input enable
+      Reserved1 : Bits_7  := 0;
+      BKDFBKE   : Boolean := False;         -- BRK dfsdm1_break[0] enable
+      BKINP     : Bits_1  := BKINP_BKINLOW; -- BRK BKIN input polarity
+      Reserved2 : Bits_22 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_AF1_Advctrl_Type use record
+      BKINE     at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  7;
+      BKDFBKE   at 0 range  8 ..  8;
+      BKINP     at 0 range  9 ..  9;
+      Reserved2 at 0 range 10 .. 31;
+   end record;
+
+   -- 25.4.25 TIM1/TIM8 alternate function option register 2 (TIMx_AF2)
+
+   BK2INP_BKIN2HIGH renames BKINP_BKINHIGH;
+   BK2INP_BKIN2LOW  renames BKINP_BKINLOW;
+
+   type TIMx_AF2_Advctrl_Type is record
+      BK2INE    : Boolean := True;          -- BRK2 BKIN input enable
+      Reserved1 : Bits_7  := 0;
+      BK2DFBKE  : Boolean := False;         -- BRK2 dfsdm1_break[0] enable
+      BK2INP    : Bits_1  := BKINP_BKINLOW; -- BRK2 BKIN2 input polarity
+      Reserved2 : Bits_22 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_AF2_Advctrl_Type use record
+      BK2INE    at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  7;
+      BK2DFBKE  at 0 range  8 ..  8;
+      BK2INP    at 0 range  9 ..  9;
+      Reserved2 at 0 range 10 .. 31;
+   end record;
+
+   -- 25.4 TIM1/TIM8 registers
+
+   type Advctrl_Timers_Type is record
+      CR1   : TIMx_CR1_Advctrl_Type   with Volatile_Full_Access => True;
+      CR2   : TIMx_CR2_Advctrl_Type   with Volatile_Full_Access => True;
+      SMCR  : TIMx_SMCR_Advctrl_Type  with Volatile_Full_Access => True;
+      DIER  : TIMx_DIER_Advctrl_Type  with Volatile_Full_Access => True;
+      SR    : TIMx_SR_Advctrl_Type    with Volatile_Full_Access => True;
+      EGR   : TIMx_EGR_Advctrl_Type   with Volatile_Full_Access => True;
+      CCMR1 : TIMx_CCMR1_Advctrl_Type with Volatile_Full_Access => True;
+      CCMR2 : TIMx_CCMR2_Advctrl_Type with Volatile_Full_Access => True;
+      CCER  : TIMx_CCER_Advctrl_Type  with Volatile_Full_Access => True;
+      CNT   : TIMx_CNT_Advctrl_Type   with Volatile_Full_Access => True;
+      PSC   : TIMx_PSC_Advctrl_Type   with Volatile_Full_Access => True;
+      ARR   : TIMx_ARR_Advctrl_Type   with Volatile_Full_Access => True;
+      RCR   : TIMx_RCR_Advctrl_Type   with Volatile_Full_Access => True;
+      CCR1  : TIMx_CCR1_Advctrl_Type  with Volatile_Full_Access => True;
+      CCR2  : TIMx_CCR2_Advctrl_Type  with Volatile_Full_Access => True;
+      CCR3  : TIMx_CCR3_Advctrl_Type  with Volatile_Full_Access => True;
+      CCR4  : TIMx_CCR4_Advctrl_Type  with Volatile_Full_Access => True;
+      BDTR  : TIMx_BDTR_Advctrl_Type  with Volatile_Full_Access => True;
+      DCR   : TIMx_DCR_Advctrl_Type   with Volatile_Full_Access => True;
+      DMAR  : TIMx_DMAR_Advctrl_Type  with Volatile_Full_Access => True;
+      CCMR3 : TIMx_CCMR3_Advctrl_Type with Volatile_Full_Access => True;
+      CCR5  : TIMx_CCR5_Advctrl_Type  with Volatile_Full_Access => True;
+      CCR6  : TIMx_CCR6_Advctrl_Type  with Volatile_Full_Access => True;
+      AF1   : TIMx_AF1_Advctrl_Type   with Volatile_Full_Access => True;
+      AF2   : TIMx_AF2_Advctrl_Type   with Volatile_Full_Access => True;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16#68# * 8;
+   for Advctrl_Timers_Type use record
+      CR1   at 16#00# range 0 .. 15;
+      CR2   at 16#04# range 0 .. 31;
+      SMCR  at 16#08# range 0 .. 31;
+      DIER  at 16#0C# range 0 .. 15;
+      SR    at 16#10# range 0 .. 31;
+      EGR   at 16#14# range 0 .. 15;
+      CCMR1 at 16#18# range 0 .. 31;
+      CCMR2 at 16#1C# range 0 .. 31;
+      CCER  at 16#20# range 0 .. 31;
+      CNT   at 16#24# range 0 .. 31;
+      PSC   at 16#28# range 0 .. 15;
+      ARR   at 16#2C# range 0 .. 15;
+      RCR   at 16#30# range 0 .. 15;
+      CCR1  at 16#34# range 0 .. 15;
+      CCR2  at 16#38# range 0 .. 15;
+      CCR3  at 16#3C# range 0 .. 15;
+      CCR4  at 16#40# range 0 .. 15;
+      BDTR  at 16#44# range 0 .. 31;
+      DCR   at 16#48# range 0 .. 15;
+      DMAR  at 16#4C# range 0 .. 31;
+      CCMR3 at 16#54# range 0 .. 31;
+      CCR5  at 16#58# range 0 .. 31;
+      CCR6  at 16#5C# range 0 .. 15;
+      AF1   at 16#60# range 0 .. 31;
+      AF2   at 16#64# range 0 .. 31;
+   end record;
+
+   TIM1_BASEADDRESS : constant := 16#4001_0000#;
+
+   TIM1 : aliased Advctrl_Timers_Type
+      with Address    => System'To_Address (TIM1_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   TIM8_BASEADDRESS : constant := 16#4001_0400#;
+
+   TIM8 : aliased Advctrl_Timers_Type
+      with Address    => System'To_Address (TIM8_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    ----------------------------------------------------------------------------
    -- 26 General-purpose timers (TIM2/TIM3/TIM4/TIM5)
    ----------------------------------------------------------------------------
@@ -6007,8 +6346,6 @@ pragma Warnings (On);
       PSC  at 16#28# range 0 .. 15;
       ARR  at 16#2C# range 0 .. 15;
    end record;
-
-   -- 28.4 TIM6/TIM7 registers
 
    TIM6_BASEADDRESS : constant := 16#4000_1000#;
 
