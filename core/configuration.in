@@ -28,7 +28,7 @@ INCLUDE_DIRECTORIES += $(CORE_DIRECTORY)                     \
 # bits                  with''ed by console, core, integer_math, malloc, memory_functions
 # bits-c                with''ed by console, malloc, memory_functions
 # console               with''ed by abort_library, core, malloc
-# core                  _gnat_stack_check and other parameters
+# core                  __gnat_stack_check and other parameters
 # definitions           with''ed by console
 # gnat_exceptions       called by inline checks
 # integer_math          with''ed by malloc
@@ -36,7 +36,7 @@ INCLUDE_DIRECTORIES += $(CORE_DIRECTORY)                     \
 # llutils               with''ed by console
 # malloc                called by allocator code
 # memory_functions      called by inline code, with''ed by malloc
-# mutex                 may be with''ed by malloc
+# mutex                 with''ed by malloc
 #
 IMPLICIT_CORE_UNITS += abort_library       \
                        bits                \
