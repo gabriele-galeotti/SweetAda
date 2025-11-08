@@ -60,8 +60,11 @@ Names should resemble documentation.
 Register, field and constant names should be exactly those written in the
 reference manual, case included, unless conflicts and/or special reasons
 exist.
+
+Sometimes we write "3" in place of "e", e.g., "Rang3" instead of "Range",
+"D3lay" instead of "Delay", "Typ3" instead of "Type".
+
 Sometimes we write "7" in place of "t", e.g., "A7" instead of "AT".
-Sometimes we write "3" in place of "e", e.g., "Rang3" instead of "Range".
 
 Register layouts and constants are often defined without specific bitfield
 typing, as they are already mostly typed as Bits_XX/Unsigned_XX. Further
