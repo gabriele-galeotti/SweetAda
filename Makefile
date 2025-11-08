@@ -160,7 +160,7 @@ ifneq ($(VERBOSE),Y)
 ifeq ($(filter $(MAKECMDGOALS),$(LIBUTILS_GOALS)),)
 MAKEFLAGS += s
 endif
-GNUMAKEFLAGS += --no-print-directory
+MAKEFLAGS += --no-print-directory
 endif
 
 ################################################################################
@@ -169,19 +169,20 @@ endif
 #                                                                              #
 ################################################################################
 
-# include operating system setup
-include Makefile.os.in
-CONFIGURE_DEPS += Makefile.os.in
-
 # generate SWEETADA_PATH
 MAKEFILEDIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 SWEETADA_PATH ?= $(MAKEFILEDIR)
 export SWEETADA_PATH
 
 # LIBUTILS_DIRECTORY is special because it is an integral part of the build
-# system and it needs to be treated separately
+# system, it shall be immediately visible in order to use utilities
 LIBUTILS_DIRECTORY := libutils
 export LIBUTILS_DIRECTORY
+
+# include operating system setup
+include Makefile.os.in
+CONFIGURE_DEPS += Makefile.os.in
+
 # add LIBUTILS_DIRECTORY to PATH
 ifeq      ($(OSTYPE),cmd)
 PATH := $(SWEETADA_PATH)\$(LIBUTILS_DIRECTORY);$(PATH)
@@ -199,7 +200,7 @@ CONFIGURE_DEPS += Makefile.ut.in
 include Makefile.fn.in
 CONFIGURE_DEPS += Makefile.fn.in
 
-# make these useful variables available from now on
+# make these useful variables publicly available
 ifeq ($(OSTYPE),cmd)
 PROGRAM_FILES := $(shell ECHO %ProgramFiles%)
 export PROGRAM_FILES
@@ -306,7 +307,7 @@ endif
 endif
 endif
 
-# export PATH so that we can use everything
+# re-export PATH so that we can use everything
 export PATH
 
 ################################################################################
@@ -579,7 +580,7 @@ IMPLICIT_ALI_UNITS += $(IMPLICIT_CORE_UNITS)     \
 include Makefile.tc.in
 CONFIGURE_DEPS += Makefile.tc.in
 
-# build fragment included by all library sub-makefiles
+# fragment included by all library sub-makefiles
 CONFIGURE_DEPS += Makefile.lb.in
 
 # GPRbuild configuration dependencies

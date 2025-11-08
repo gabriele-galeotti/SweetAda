@@ -47,7 +47,7 @@ endif
 ifneq ($(filter probevariable probevariables,$(MAKECMDGOALS)),)
 VERBOSE :=
 MAKEFLAGS += s
-GNUMAKEFLAGS += --no-print-directory
+MAKEFLAGS += --no-print-directory
 endif
 
 include $(KERNEL_PARENT_PATH)/Makefile.os.in
