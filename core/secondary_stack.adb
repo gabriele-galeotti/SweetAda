@@ -29,9 +29,9 @@ package body Secondary_Stack
    --                                                                        --
    --========================================================================--
 
-   SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
+   Stack : System.Secondary_Stack.SS_Stack_Ptr;
 
-   function Get_Sec_Stack
+   function Get
       return System.Secondary_Stack.SS_Stack_Ptr
       with Export        => True,
            Convention    => C,
@@ -46,14 +46,14 @@ package body Secondary_Stack
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Get_Sec_Stack
+   -- Get
    ----------------------------------------------------------------------------
-   function Get_Sec_Stack
+   function Get
       return System.Secondary_Stack.SS_Stack_Ptr
       is
    begin
-      return SS_Stack;
-   end Get_Sec_Stack;
+      return Stack;
+   end Get;
 
    ----------------------------------------------------------------------------
    -- Init
@@ -61,7 +61,7 @@ package body Secondary_Stack
    procedure Init
       is
    begin
-      System.Secondary_Stack.SS_Init (SS_Stack, System.Parameters.Unspecified_Size);
+      System.Secondary_Stack.SS_Init (Stack, System.Parameters.Unspecified_Size);
    end Init;
 
 end Secondary_Stack;
