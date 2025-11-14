@@ -4619,6 +4619,40 @@ pragma Style_Checks (Off);
    BR_DIV16k : constant := 2#1110#; -- Baud Rate Scaler Value = 16384
    BR_DIV32k : constant := 2#1111#; -- Baud Rate Scaler Value = 32768
 
+   DT_2   : constant := 2#0000#; -- Delay Scaler Value = 2
+   DT_4   : constant := 2#0001#; -- Delay Scaler Value = 4
+   DT_8   : constant := 2#0010#; -- Delay Scaler Value = 8
+   DT_16  : constant := 2#0011#; -- Delay Scaler Value = 16
+   DT_32  : constant := 2#0100#; -- Delay Scaler Value = 32
+   DT_64  : constant := 2#0101#; -- Delay Scaler Value = 64
+   DT_128 : constant := 2#0110#; -- Delay Scaler Value = 128
+   DT_256 : constant := 2#0111#; -- Delay Scaler Value = 256
+   DT_512 : constant := 2#1000#; -- Delay Scaler Value = 512
+   DT_1k  : constant := 2#1001#; -- Delay Scaler Value = 1024
+   DT_2k  : constant := 2#1010#; -- Delay Scaler Value = 2048
+   DT_4k  : constant := 2#1011#; -- Delay Scaler Value = 4096
+   DT_8k  : constant := 2#1100#; -- Delay Scaler Value = 8192
+   DT_16k : constant := 2#1101#; -- Delay Scaler Value = 16384
+   DT_32k : constant := 2#1110#; -- Delay Scaler Value = 32768
+   DT_64k : constant := 2#1111#; -- Delay Scaler Value = 65536
+
+   ASC_2   : constant := 2#0000#; -- Delay Scaler Value = 2
+   ASC_4   : constant := 2#0001#; -- Delay Scaler Value = 4
+   ASC_8   : constant := 2#0010#; -- Delay Scaler Value = 8
+   ASC_16  : constant := 2#0011#; -- Delay Scaler Value = 16
+   ASC_32  : constant := 2#0100#; -- Delay Scaler Value = 32
+   ASC_64  : constant := 2#0101#; -- Delay Scaler Value = 64
+   ASC_128 : constant := 2#0110#; -- Delay Scaler Value = 128
+   ASC_256 : constant := 2#0111#; -- Delay Scaler Value = 256
+   ASC_512 : constant := 2#1000#; -- Delay Scaler Value = 512
+   ASC_1k  : constant := 2#1001#; -- Delay Scaler Value = 1024
+   ASC_2k  : constant := 2#1010#; -- Delay Scaler Value = 2048
+   ASC_4k  : constant := 2#1011#; -- Delay Scaler Value = 4096
+   ASC_8k  : constant := 2#1100#; -- Delay Scaler Value = 8192
+   ASC_16k : constant := 2#1101#; -- Delay Scaler Value = 16384
+   ASC_32k : constant := 2#1110#; -- Delay Scaler Value = 32768
+   ASC_64k : constant := 2#1111#; -- Delay Scaler Value = 65536
+
    CSSCK_2   : constant := 2#0000#; -- Delay Scaler Value = 2
    CSSCK_4   : constant := 2#0001#; -- Delay Scaler Value = 4
    CSSCK_8   : constant := 2#0010#; -- Delay Scaler Value = 8
