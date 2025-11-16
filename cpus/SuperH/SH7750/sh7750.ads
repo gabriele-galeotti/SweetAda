@@ -254,7 +254,7 @@ pragma Style_Checks (Off);
 
    -- 12.2.5 Timer Control Registers (TCR)
 
-   type TMU_Kind is (CHANNEL_01, CHANNEL_2);
+   type TMU_Channel_Type is (CHANNEL_01, CHANNEL_2);
 
    TPSC_PDIV4    : constant := 2#000#; -- Counts on Pφ/4
    TPSC_PDIV16   : constant := 2#001#; -- Counts on Pφ/16
@@ -274,12 +274,12 @@ pragma Style_Checks (Off);
    ICPE_CAPTINTNE : constant := 2#10#; -- Input capture function is used, but interrupt due to input capture (TICPI2) is not enabled
    ICPE_CAPTINTEN : constant := 2#11#; -- Input capture function is used, and interrupt due to input capture (TICPI2) is enabled
 
-   type TCR_Type (T : TMU_Kind := CHANNEL_01) is record
+   type TCR_Type (TMU_Channel : TMU_Channel_Type := CHANNEL_01) is record
       TPSC : Bits_3;  -- Timer Prescaler 2 to 0
       CKEG : Bits_2;  -- Clock Edge 1 and 0
       UNIE : Boolean; -- Underflow Interrupt Control
       UNF  : Boolean; -- Underflow Flag
-      case T is
+      case TMU_Channel is
          when CHANNEL_01 =>
             Reserved1 : Bits_2;
             Reserved2 : Bits_7;
