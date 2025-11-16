@@ -125,14 +125,14 @@ pragma Style_Checks (Off);
 
    -- AUX_MU_IIR
 
-   type AUX_MU_IIR_Kind is (READ, WRITE);
+   type AUX_MU_IIR_Mode is (READ, WRITE);
 
-   type AUX_MU_IIR_Type (Kind : AUX_MU_IIR_Kind := READ) is record
+   type AUX_MU_IIR_Type (Mode : AUX_MU_IIR_Mode := READ) is record
       Int_Pend   : Boolean;      -- Interrupt pending
       Reserved1  : Bits_3  := 0;
       FIFO_en    : Bits_2;       -- FIFO enables RO
       Reserved2  : Bits_24 := 0;
-      case Kind is
+      case Mode is
          when READ =>
             THRE          : Boolean; -- Transmit holding register empty
             RHVB          : Boolean; -- Receiver holds valid byte
