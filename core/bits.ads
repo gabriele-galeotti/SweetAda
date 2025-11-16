@@ -648,10 +648,6 @@ package Bits
    -- null object
    type Null_Object is limited private;
 
-   -- C-style void pointer
-   type Void_Ptr is access all Null_Object
-      with Storage_Size => 0;
-
    -- low-level assembler interfacing
    type Asm_Entry_Point is limited private;
 
