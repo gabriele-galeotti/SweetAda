@@ -15,6 +15,7 @@ abstract project Gprbuild_Tc is
 
    Ostype  := External ("OSTYPE", "");
    Verbose := External ("VERBOSE", "");
+   Mode    := External ("GPR_TOOL", "");
 
    ----------------------------------------------------------------------------
    -- Naming
