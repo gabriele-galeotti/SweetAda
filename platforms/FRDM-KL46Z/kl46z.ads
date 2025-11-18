@@ -3495,9 +3495,9 @@ pragma Style_Checks (Off);
 
    type DACx_C2_Type is record
       DACBFUP   : Boolean := True;  -- DAC Buffer Upper Limit
-      Reserved1 : Bits_1  := 0;
+      Reserved1 : Bits_3  := 0;
       DACBFRP   : Boolean := False; -- DAC Buffer Read Pointer
-      Reserved2 : Bits_1  := 0;
+      Reserved2 : Bits_3  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
