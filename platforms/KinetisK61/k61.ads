@@ -4600,7 +4600,7 @@ pragma Style_Checks (Off);
    end record;
 
    -- 54.3.3 Clock and Transfer Attributes Register (In Master Mode) (SPIx_CTARn)
-   -- 54.3.4Clock and Transfer Attributes Register (In Slave Mode) (SPIx_CTARn_SLAVE)
+   -- 54.3.4 Clock and Transfer Attributes Register (In Slave Mode) (SPIx_CTARn_SLAVE)
 
    BR_DIV2   : constant := 2#0000#; -- Baud Rate Scaler Value = 2
    BR_DIV4   : constant := 2#0001#; -- Baud Rate Scaler Value = 4
@@ -4712,8 +4712,8 @@ pragma Style_Checks (Off);
 
    type SPIx_CTARn_Type is record
       BR     : Bits_4  := BR_DIV2;       -- Baud Rate Scaler
-      DT     : Bits_4  := 0;             -- Delay After Transfer Scaler
-      ASC    : Bits_4  := 0;             -- After SCK Delay Scaler
+      DT     : Bits_4  := DT_2;          -- Delay After Transfer Scaler
+      ASC    : Bits_4  := ASC_2;         -- After SCK Delay Scaler
       CSSCK  : Bits_4  := CSSCK_2;       -- PCS to SCK Delay Scaler
       PBR    : Bits_2  := PBR_2;         -- Baud Rate Prescaler
       PDT    : Bits_2  := PDT_1;         -- Delay after Transfer Prescaler
