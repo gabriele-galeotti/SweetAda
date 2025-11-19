@@ -148,7 +148,7 @@ ifneq ($(NOT_MAKEFILE_GOALS),)
 $(error Error: $(NOT_MAKEFILE_GOALS): no known Makefile target, try "make help")
 endif
 
-# when PROBEVARIABLE_GOALS are active, do not execute other targets
+# probevariable[s] must be issued as single target
 ifneq ($(filter probevariable probevariables,$(MAKECMDGOALS)),)
 ifneq ($(words $(MAKECMDGOALS)),1)
 $(error Error: no multiple targets can be specified)
