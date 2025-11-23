@@ -261,6 +261,7 @@ USE_LIBGCC         :=
 USE_LIBM           :=
 USE_CLIBRARY       :=
 USE_APPLICATION    := dummy
+ELABORATION_MODEL  :=
 OPTIMIZATION_LEVEL :=
 STACK_LIMIT        := 4096
 POSTBUILD_ROMFILE  :=
@@ -772,6 +773,7 @@ export                                \
        GPR_CORE_CPU                   \
        GCCDEFINES_CPU                 \
        BUILD_MODE                     \
+       ELABORATION_MODEL              \
        OPTIMIZATION_LEVEL             \
        RTS                            \
        PROFILE                        \
@@ -1386,6 +1388,7 @@ ifeq ($(USE_LIBM),Y)
 	@$(call echo-print,"LIBM FILENAME:           $(LIBM_FILENAME)")
 endif
 	@$(call echo-print,"USE CLIBRARY:            $(USE_CLIBRARY)")
+	@$(call echo-print,"ELABORATION_MODEL:       $(ELABORATION_MODEL)")
 	@$(call echo-print,"OPTIMIZATION LEVEL:      $(OPTIMIZATION_LEVEL)")
 ifneq ($(TOOLCHAIN_NAME),)
 	@$(call echo-print,"ADA GCC SWITCHES (RTS):  $(strip $(ADAC_SWITCHES_RTS))")

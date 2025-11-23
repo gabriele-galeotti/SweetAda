@@ -30,6 +30,7 @@
 # RTS
 # PROFILE
 # ADA_MODE
+# ELABORATION_MODEL
 # OPTIMIZATION_LEVEL
 # STACK_LIMIT
 # GNATBIND_SECSTACK
@@ -230,6 +231,7 @@ configuregpr=${configuregpr}$(print_I "Gnatbind_SecStack                 := \"${
 configuregpr=${configuregpr}$(print_I "Use_LibGCC                        := \"${USE_LIBGCC}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Use_Libm                          := \"${USE_LIBM}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Use_CLibrary                      := \"${USE_CLIBRARY}\";")${NL}
+configuregpr=${configuregpr}$(print_I "Elaboration_Model                 := \"${ELABORATION_MODEL}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Optimization_Level                := \"${OPTIMIZATION_LEVEL}\";")${NL}
 INDENTL="                                      "
 configuregpr=${configuregpr}$(print_I "ADAC_Switches_RTS                 := (")${NL}
