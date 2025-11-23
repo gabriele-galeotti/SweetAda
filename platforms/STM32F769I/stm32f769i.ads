@@ -5201,6 +5201,12 @@ pragma Warnings (On);
    -- 24.6.7 HASH context swap registers
 
    ----------------------------------------------------------------------------
+   -- Timer ids
+   ----------------------------------------------------------------------------
+
+   type TimerN_Type is range 1 .. 14;
+
+   ----------------------------------------------------------------------------
    -- 25 Advanced-control timers (TIM1/TIM8)
    ----------------------------------------------------------------------------
 
@@ -5910,11 +5916,12 @@ pragma Warnings (On);
    DBA_BDTR  : constant := 2#10001#; -- TIMx_BDTR
    DBA_DCR   : constant := 2#10010#; -- TIMx_DCR
    DBA_DMAR  : constant := 2#10011#; -- TIMx_DMAR
-   DBA_CCMR3 : constant := 2#10100#; -- TIMx_CCMR3
-   DBA_CCR5  : constant := 2#10101#; -- TIMx_CCR5
-   DBA_CCR6  : constant := 2#10110#; -- TIMx_CCR6
-   DBA_AF1   : constant := 2#10111#; -- TIMx_AF1
-   DBA_AF2   : constant := 2#11000#; -- TIMx_AF2
+   DBA_OR    : constant := 2#10100#; -- TIMx_OR
+   DBA_CCMR3 : constant := 2#10101#; -- TIMx_CCMR3
+   DBA_CCR5  : constant := 2#10110#; -- TIMx_CCR5
+   DBA_CCR6  : constant := 2#10111#; -- TIMx_CCR6
+   DBA_AF1   : constant := 2#11000#; -- TIMx_AF1
+   DBA_AF2   : constant := 2#11001#; -- TIMx_AF2
 
    DBL_1  : constant := 2#00000#; -- 1 transfer
    DBL_2  : constant := 2#00001#; -- 2 transfers
@@ -6144,25 +6151,533 @@ pragma Warnings (On);
    ----------------------------------------------------------------------------
 
    -- 26.4.1 TIMx control register 1 (TIMx_CR1)
+
+   -- TIMx_CR1_* fields already defined at 25.4.1
+
+   type TIMx_CR1_Genpurp_Type is new TIMx_CR1_Advctrl_Type;
+
    -- 26.4.2 TIMx control register 2 (TIMx_CR2)
+
+   -- CCDS_* already defined at 25.4.2
+   -- MMS_* already defined at 25.4.2
+
+   T1S_CH1         : constant := 0; -- The TIMx_CH1 pin is connected to TI1 input
+   T1S_CH1XOR2XOR3 : constant := 1; -- The TIMx_CH1, CH2 and CH3 pins are connected to the TI1 input (XOR combination)
+
+   type TIMx_CR2_Genpurp_Type is record
+      Reserved1 : Bits_3 := 0;
+      CCDS      : Bits_1 := CCDS_CCx;  -- Capture/compare DMA selection
+      MMS       : Bits_3 := MMS_RESET; -- Master mode selection
+      T1S       : Bits_1 := T1S_CH1;   -- TI1 selection
+      Reserved2 : Bits_8 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_CR2_Genpurp_Type use record
+      Reserved1 at 0 range 0 ..  2;
+      CCDS      at 0 range 3 ..  3;
+      MMS       at 0 range 4 ..  6;
+      T1S       at 0 range 7 ..  7;
+      Reserved2 at 0 range 8 .. 15;
+   end record;
+
    -- 26.4.3 TIMx slave mode control register (TIMx_SMCR)
+
+   -- types and fields except OCCS_* already defined at 25.4.3
+
+   OCCS_OCREFCLR : constant := 0; -- OCREF_CLR_INT is connected to the OCREF_CLR input
+   OCCS_ETRF     : constant := 1; -- OCREF_CLR_INT is connected to ETRF
+
+   type TIMx_SMCR_Genpurp_Type is record
+      SMS02     : Bits_3  := SMS_SLAVEDISABLED.SMS02; -- Slave mode selection
+      OCCS      : Bits_1  := OCCS_OCREFCLR;           -- OCREF clear selection
+      TS        : Bits_3  := TS_ITR0;                 -- Trigger selection
+      MSM       : Bits_1  := MSM_NOACTION;            -- Master/slave mode
+      ETF       : Bits_4  := ETF_NONE;                -- External trigger filter
+      ETPS      : Bits_2  := ETPS_OFF;                -- External trigger prescaler
+      ECE       : Boolean := False;                   -- External clock enable
+      ETP       : Bits_1  := ETP_ETRDIRECT;           -- External trigger polarity
+      SMS3      : Bits_1  := SMS_SLAVEDISABLED.SMS3;  -- Slave mode selection
+      Reserved2 : Bits_15 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_SMCR_Genpurp_Type use record
+      SMS02     at 0 range  0 ..  2;
+      OCCS      at 0 range  3 ..  3;
+      TS        at 0 range  4 ..  6;
+      MSM       at 0 range  7 ..  7;
+      ETF       at 0 range  8 .. 11;
+      ETPS      at 0 range 12 .. 13;
+      ECE       at 0 range 14 .. 14;
+      ETP       at 0 range 15 .. 15;
+      SMS3      at 0 range 16 .. 16;
+      Reserved2 at 0 range 17 .. 31;
+   end record;
+
    -- 26.4.4 TIMx DMA/Interrupt enable register (TIMx_DIER)
+
+   type TIMx_DIER_Genpurp_Type is record
+      UIE       : Boolean := False; -- Update interrupt enable
+      CC1IE     : Boolean := False; -- Capture/Compare 1 interrupt enable
+      CC2IE     : Boolean := False; -- Capture/Compare 2 interrupt enable
+      CC3IE     : Boolean := False; -- Capture/Compare 3 interrupt enable
+      CC4IE     : Boolean := False; -- Capture/Compare 4 interrupt enable
+      Reserved1 : Bits_1  := 0;
+      TIE       : Boolean := False; -- Trigger interrupt enable
+      Reserved2 : Bits_1  := 0;
+      UDE       : Boolean := False; -- Update DMA request enable
+      CC1DE     : Boolean := False; -- Capture/Compare 1 DMA request enable
+      CC2DE     : Boolean := False; -- Capture/Compare 2 DMA request enable
+      CC3DE     : Boolean := False; -- Capture/Compare 3 DMA request enable
+      CC4DE     : Boolean := False; -- Capture/Compare 4 DMA request enable
+      Reserved3 : Bits_1  := 0;
+      TDE       : Boolean := False; -- Trigger DMA request enable
+      Reserved4 : Bits_1  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_DIER_Genpurp_Type use record
+      UIE       at 0 range  0 ..  0;
+      CC1IE     at 0 range  1 ..  1;
+      CC2IE     at 0 range  2 ..  2;
+      CC3IE     at 0 range  3 ..  3;
+      CC4IE     at 0 range  4 ..  4;
+      Reserved1 at 0 range  5 ..  5;
+      TIE       at 0 range  6 ..  6;
+      Reserved2 at 0 range  7 ..  7;
+      UDE       at 0 range  8 ..  8;
+      CC1DE     at 0 range  9 ..  9;
+      CC2DE     at 0 range 10 .. 10;
+      CC3DE     at 0 range 11 .. 11;
+      CC4DE     at 0 range 12 .. 12;
+      Reserved3 at 0 range 13 .. 13;
+      TDE       at 0 range 14 .. 14;
+      Reserved4 at 0 range 15 .. 15;
+   end record;
+
    -- 26.4.5 TIMx status register (TIMx_SR)
+
+   type TIMx_SR_Genpurp_Type is record
+      UIF       : Boolean := True; -- Update interrupt flag
+      CC1IF     : Boolean := True; -- Capture/Compare 1 interrupt flag
+      CC2IF     : Boolean := True; -- Capture/Compare 2 interrupt flag
+      CC3IF     : Boolean := True; -- Capture/Compare 3 interrupt flag
+      CC4IF     : Boolean := True; -- Capture/Compare 4 interrupt flag
+      Reserved1 : Bits_1  := 0;
+      TIF       : Boolean := True; -- Trigger interrupt flag
+      Reserved2 : Bits_2  := 0;
+      CC1OF     : Boolean := True; -- Capture/Compare 1 overcapture flag
+      CC2OF     : Boolean := True; -- Capture/Compare 2 overcapture flag
+      CC3OF     : Boolean := True; -- Capture/Compare 3 overcapture flag
+      CC4OF     : Boolean := True; -- Capture/Compare 4 overcapture flag
+      Reserved3 : Bits_3  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_SR_Genpurp_Type use record
+      UIF       at 0 range  0 ..  0;
+      CC1IF     at 0 range  1 ..  1;
+      CC2IF     at 0 range  2 ..  2;
+      CC3IF     at 0 range  3 ..  3;
+      CC4IF     at 0 range  4 ..  4;
+      Reserved1 at 0 range  5 ..  5;
+      TIF       at 0 range  6 ..  6;
+      Reserved2 at 0 range  7 ..  8;
+      CC1OF     at 0 range  9 ..  9;
+      CC2OF     at 0 range 10 .. 10;
+      CC3OF     at 0 range 11 .. 11;
+      CC4OF     at 0 range 12 .. 12;
+      Reserved3 at 0 range 13 .. 15;
+   end record;
+
    -- 26.4.6 TIMx event generation register (TIMx_EGR)
+
+   type TIMx_EGR_Genpurp_Type is record
+      UG        : Boolean := False; -- Update generation
+      CC1G      : Boolean := False; -- Capture/Compare 1 generation
+      CC2G      : Boolean := False; -- Capture/Compare 2 generation
+      CC3G      : Boolean := False; -- Capture/Compare 3 generation
+      CC4G      : Boolean := False; -- Capture/Compare 4 generation
+      Reserved1 : Bits_1  := 0;
+      TG        : Boolean := False; -- Trigger generation
+      Reserved2 : Bits_9  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_EGR_Genpurp_Type use record
+      UG        at 0 range 0 ..  0;
+      CC1G      at 0 range 1 ..  1;
+      CC2G      at 0 range 2 ..  2;
+      CC3G      at 0 range 3 ..  3;
+      CC4G      at 0 range 4 ..  4;
+      Reserved1 at 0 range 5 ..  5;
+      TG        at 0 range 6 ..  6;
+      Reserved2 at 0 range 7 .. 15;
+   end record;
+
    -- 26.4.7 TIMx capture/compare mode register 1 (TIMx_CCMR1)
+
+   -- TIMx_CMMR1_* fields and functions already defined at 25.4.7
+
+   type TIMx_CCMR1_Genpurp_Type is new TIMx_CCMR1_Advctrl_Type;
+
    -- 26.4.8 TIMx capture/compare mode register 2 (TIMx_CCMR2)
+
+   -- TIMx_CMMR2_* fields and functions already defined at 25.4.8
+
+   type TIMx_CCMR2_Genpurp_Type is new TIMx_CCMR2_Advctrl_Type;
+
    -- 26.4.9 TIMx capture/compare enable register (TIMx_CCER)
+
+   -- TIMx_CCER_* fields already defined at 25.4.9
+
+   type TIMx_CCER_Genpurp_Type is record
+      CC1E      : Boolean := False; -- Capture/Compare 1 output enable
+      CC1P      : Bits_1  := 0;     -- Capture/Compare 1 output polarity
+      CC1NE     : Boolean := False; -- Capture/Compare 1 complementary output enable
+      CC1NP     : Bits_1  := 0;     -- Capture/Compare 1 complementary output polarity
+      CC2E      : Boolean := False; -- Capture/Compare 2 output enable
+      CC2P      : Bits_1  := 0;     -- Capture/Compare 2 output polarity
+      CC2NE     : Boolean := False; -- Capture/Compare 2 complementary output enable
+      CC2NP     : Bits_1  := 0;     -- Capture/Compare 2 complementary output polarity
+      CC3E      : Boolean := False; -- Capture/Compare 3 output enable
+      CC3P      : Bits_1  := 0;     -- Capture/Compare 3 output polarity
+      CC3NE     : Boolean := False; -- Capture/Compare 3 complementary output enable
+      CC3NP     : Bits_1  := 0;     -- Capture/Compare 3 complementary output polarity
+      CC4E      : Boolean := False; -- Capture/Compare 4 output enable
+      CC4P      : Bits_1  := 0;     -- Capture/Compare 4 output polarity
+      Reserved1 : Bits_1  := 0;
+      CC4NP     : Bits_1  := 0;     -- Capture/Compare 4 complementary output polarity
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_CCER_Genpurp_Type use record
+      CC1E      at 0 range  0 ..  0;
+      CC1P      at 0 range  1 ..  1;
+      CC1NE     at 0 range  2 ..  2;
+      CC1NP     at 0 range  3 ..  3;
+      CC2E      at 0 range  4 ..  4;
+      CC2P      at 0 range  5 ..  5;
+      CC2NE     at 0 range  6 ..  6;
+      CC2NP     at 0 range  7 ..  7;
+      CC3E      at 0 range  8 ..  8;
+      CC3P      at 0 range  9 ..  9;
+      CC3NE     at 0 range 10 .. 10;
+      CC3NP     at 0 range 11 .. 11;
+      CC4E      at 0 range 12 .. 12;
+      CC4P      at 0 range 13 .. 13;
+      Reserved1 at 0 range 14 .. 14;
+      CC4NP     at 0 range 15 .. 15;
+   end record;
+
    -- 26.4.10 TIMx counter (TIMx_CNT)
+
+   type TIMx_CNT_Genpurp_Type is record
+      CNT : Unsigned_32 := 0; -- counter value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_CNT_Genpurp_Type use record
+      CNT at 0 range 0 .. 31;
+   end record;
+
+   -- function suitable to read the CNT register
+   -- TimerN = 2 .. 5
+   -- return value is consistent with CR1.UIFREMAP setting
+   function TIMx_CNT_Genpurp_Read
+      (TimerN : TimerN_Type)
+      return Unsigned_32;
+
+   -- procedure suitable to write the CNT register
+   -- TimerN = 2 .. 5
+   -- Value must be consistent with CR1.UIFREMAP setting
+   procedure TIMx_CNT_Genpurp_Write
+      (TimerN : in TimerN_Type;
+       Value  : in Unsigned_32);
+
    -- 26.4.11 TIMx prescaler (TIMx_PSC)
+
+   type TIMx_PSC_Genpurp_Type is new TIMx_PSC_Advctrl_Type;
+
    -- 26.4.12 TIMx auto-reload register (TIMx_ARR)
+
+   type TIMx_ARR_Genpurp_Type is record
+      ARR : Unsigned_32; -- Auto-reload value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_ARR_Genpurp_Type use record
+      ARR at 0 range 0 .. 31;
+   end record;
+
    -- 26.4.13 TIMx capture/compare register 1 (TIMx_CCR1)
+
+   type TIMx_CCR1_Genpurp_Type is record
+      CCR1 : Unsigned_32; -- Capture/Compare 1 value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_CCR1_Genpurp_Type use record
+      CCR1 at 0 range 0 .. 31;
+   end record;
+
    -- 26.4.14 TIMx capture/compare register 2 (TIMx_CCR2)
+
+   type TIMx_CCR2_Genpurp_Type is record
+      CCR2 : Unsigned_32; -- Capture/Compare 2 value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_CCR2_Genpurp_Type use record
+      CCR2 at 0 range 0 .. 31;
+   end record;
+
    -- 26.4.15 TIMx capture/compare register 3 (TIMx_CCR3)
+
+   type TIMx_CCR3_Genpurp_Type is record
+      CCR3 : Unsigned_32; -- Capture/Compare 3 value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_CCR3_Genpurp_Type use record
+      CCR3 at 0 range 0 .. 31;
+   end record;
+
    -- 26.4.16 TIMx capture/compare register 4 (TIMx_CCR4)
+
+   type TIMx_CCR4_Genpurp_Type is record
+      CCR4 : Unsigned_32; -- Capture/Compare 4 value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for TIMx_CCR4_Genpurp_Type use record
+      CCR4 at 0 range 0 .. 31;
+   end record;
+
    -- 26.4.17 TIMx DMA control register (TIMx_DCR)
+
+   -- TIMx_DCR_* fields already defined at 25.4.19
+
+   type TIMx_DCR_Genpurp_Type is new TIMx_DCR_Advctrl_Type;
+
    -- 26.4.18 TIMx DMA address for full transfer (TIMx_DMAR)
+
+   type TIMx_DMAR_Genpurp_Type is record
+      DMAB : Unsigned_16; -- DMA register for burst accesses
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIMx_DMAR_Genpurp_Type use record
+      DMAB at 0 range 0 .. 15;
+   end record;
+
    -- 26.4.19 TIM2 option register (TIM2_OR)
+
+   ITR1_RMP_TIM8TRGOUT   : constant := 2#00#; -- TIM8_TRGOUT
+   ITR1_RMP_ITR1ETHPTP   : constant := 2#01#; -- ETH_PTP trigger output is connected to TIM2_ITR1
+   ITR1_RMP_ITR1OTGFSSOF : constant := 2#10#; -- OTG_FS_SOF is connected to the TIM2_ITR1 input
+   ITR1_RMP_ITR1OTGHSSOF : constant := 2#11#; -- OTG_HS_SOF is connected to the TIM2_ITR1 input
+
+   type TIM2_OR_Type is record
+      Reserved1 : Bits_10 := 0;
+      ITR1_RMP  : Bits_2  := ITR1_RMP_TIM8TRGOUT; -- Internal trigger 1 remap
+      Reserved2 : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIM2_OR_Type use record
+      Reserved1 at 0 range  0 ..  9;
+      ITR1_RMP  at 0 range 10 .. 11;
+      Reserved2 at 0 range 12 .. 15;
+   end record;
+
    -- 26.4.20 TIM5 option register (TIM5_OR)
+
+   TI4_RMP_TIM5GPIO   : constant := 2#00#; -- TIM5 channel4 is connected to the GPIO: Refer to the alternate function mapping table in the datasheets.
+   TI4_RMP_TIM5CH4LSI : constant := 2#01#; -- The LSI internal clock is connected to the TIM5_CH4 input for calibration purposes
+   TI4_RMP_TIM5CH4LSE : constant := 2#10#; -- The LSE internal clock is connected to the TIM5_CH4 input for calibration purposes
+   TI4_RMP_TIM5CH4RTC : constant := 2#11#; -- The RTC wakeup interrupt is connected to the TIM5_CH4 input for calibration purposes.
+
+   type TIM5_OR_Type is record
+      Reserved1 : Bits_6 := 0;
+      TI4_RMP   : Bits_2 := TI4_RMP_TIM5GPIO; -- Timer Input 4 remap
+      Reserved2 : Bits_8 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for TIM5_OR_Type use record
+      Reserved1 at 0 range 0 ..  5;
+      TI4_RMP   at 0 range 6 ..  7;
+      Reserved2 at 0 range 8 .. 15;
+   end record;
+
+   -- 26.4 TIM2/TIM3/TIM4/TIM5 registers
+
+   type Genpurp_2_Timers_Type is record
+      CR1   : TIMx_CR1_Genpurp_Type   with Volatile_Full_Access => True;
+      CR2   : TIMx_CR2_Genpurp_Type   with Volatile_Full_Access => True;
+      SMCR  : TIMx_SMCR_Genpurp_Type  with Volatile_Full_Access => True;
+      DIER  : TIMx_DIER_Genpurp_Type  with Volatile_Full_Access => True;
+      SR    : TIMx_SR_Genpurp_Type    with Volatile_Full_Access => True;
+      EGR   : TIMx_EGR_Genpurp_Type   with Volatile_Full_Access => True;
+      CCMR1 : TIMx_CCMR1_Genpurp_Type with Volatile_Full_Access => True;
+      CCMR2 : TIMx_CCMR2_Genpurp_Type with Volatile_Full_Access => True;
+      CCER  : TIMx_CCER_Genpurp_Type  with Volatile_Full_Access => True;
+      CNT   : TIMx_CNT_Genpurp_Type   with Volatile_Full_Access => True;
+      PSC   : TIMx_PSC_Genpurp_Type   with Volatile_Full_Access => True;
+      ARR   : TIMx_ARR_Genpurp_Type   with Volatile_Full_Access => True;
+      CCR1  : TIMx_CCR1_Genpurp_Type  with Volatile_Full_Access => True;
+      CCR2  : TIMx_CCR2_Genpurp_Type  with Volatile_Full_Access => True;
+      CCR3  : TIMx_CCR3_Genpurp_Type  with Volatile_Full_Access => True;
+      CCR4  : TIMx_CCR4_Genpurp_Type  with Volatile_Full_Access => True;
+      DCR   : TIMx_DCR_Genpurp_Type   with Volatile_Full_Access => True;
+      DMAR  : TIMx_DMAR_Genpurp_Type  with Volatile_Full_Access => True;
+      OR2   : TIM2_OR_Type            with Volatile_Full_Access => True;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16#54# * 8;
+   for Genpurp_2_Timers_Type use record
+      CR1   at 16#00# range 0 .. 15;
+      CR2   at 16#04# range 0 .. 15;
+      SMCR  at 16#08# range 0 .. 31;
+      DIER  at 16#0C# range 0 .. 15;
+      SR    at 16#10# range 0 .. 15;
+      EGR   at 16#14# range 0 .. 15;
+      CCMR1 at 16#18# range 0 .. 31;
+      CCMR2 at 16#1C# range 0 .. 31;
+      CCER  at 16#20# range 0 .. 15;
+      CNT   at 16#24# range 0 .. 31;
+      PSC   at 16#28# range 0 .. 15;
+      ARR   at 16#2C# range 0 .. 31;
+      CCR1  at 16#34# range 0 .. 31;
+      CCR2  at 16#38# range 0 .. 31;
+      CCR3  at 16#3C# range 0 .. 31;
+      CCR4  at 16#40# range 0 .. 31;
+      DCR   at 16#48# range 0 .. 15;
+      DMAR  at 16#4C# range 0 .. 15;
+      OR2   at 16#50# range 0 .. 15;
+   end record;
+
+   TIM2_BASEADDRESS : constant := 16#4000_0000#;
+
+   TIM2 : aliased Genpurp_2_Timers_Type
+      with Address    => System'To_Address (TIM2_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   type Genpurp_3_4_Timers_Type is record
+      CR1   : TIMx_CR1_Genpurp_Type   with Volatile_Full_Access => True;
+      CR2   : TIMx_CR2_Genpurp_Type   with Volatile_Full_Access => True;
+      SMCR  : TIMx_SMCR_Genpurp_Type  with Volatile_Full_Access => True;
+      DIER  : TIMx_DIER_Genpurp_Type  with Volatile_Full_Access => True;
+      SR    : TIMx_SR_Genpurp_Type    with Volatile_Full_Access => True;
+      EGR   : TIMx_EGR_Genpurp_Type   with Volatile_Full_Access => True;
+      CCMR1 : TIMx_CCMR1_Genpurp_Type with Volatile_Full_Access => True;
+      CCMR2 : TIMx_CCMR2_Genpurp_Type with Volatile_Full_Access => True;
+      CCER  : TIMx_CCER_Genpurp_Type  with Volatile_Full_Access => True;
+      CNT   : TIMx_CNT_Genpurp_Type   with Volatile_Full_Access => True;
+      PSC   : TIMx_PSC_Genpurp_Type   with Volatile_Full_Access => True;
+      ARR   : TIMx_ARR_Genpurp_Type   with Volatile_Full_Access => True;
+      CCR1  : TIMx_CCR1_Genpurp_Type  with Volatile_Full_Access => True;
+      CCR2  : TIMx_CCR2_Genpurp_Type  with Volatile_Full_Access => True;
+      CCR3  : TIMx_CCR3_Genpurp_Type  with Volatile_Full_Access => True;
+      CCR4  : TIMx_CCR4_Genpurp_Type  with Volatile_Full_Access => True;
+      DCR   : TIMx_DCR_Genpurp_Type   with Volatile_Full_Access => True;
+      DMAR  : TIMx_DMAR_Genpurp_Type  with Volatile_Full_Access => True;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16#50# * 8;
+   for Genpurp_3_4_Timers_Type use record
+      CR1   at 16#00# range 0 .. 15;
+      CR2   at 16#04# range 0 .. 15;
+      SMCR  at 16#08# range 0 .. 31;
+      DIER  at 16#0C# range 0 .. 15;
+      SR    at 16#10# range 0 .. 15;
+      EGR   at 16#14# range 0 .. 15;
+      CCMR1 at 16#18# range 0 .. 31;
+      CCMR2 at 16#1C# range 0 .. 31;
+      CCER  at 16#20# range 0 .. 15;
+      CNT   at 16#24# range 0 .. 31;
+      PSC   at 16#28# range 0 .. 15;
+      ARR   at 16#2C# range 0 .. 31;
+      CCR1  at 16#34# range 0 .. 31;
+      CCR2  at 16#38# range 0 .. 31;
+      CCR3  at 16#3C# range 0 .. 31;
+      CCR4  at 16#40# range 0 .. 31;
+      DCR   at 16#48# range 0 .. 15;
+      DMAR  at 16#4C# range 0 .. 15;
+   end record;
+
+   TIM3_BASEADDRESS : constant := 16#4000_0400#;
+
+   TIM3 : aliased Genpurp_3_4_Timers_Type
+      with Address    => System'To_Address (TIM3_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   TIM4_BASEADDRESS : constant := 16#4000_0800#;
+
+   TIM4 : aliased Genpurp_3_4_Timers_Type
+      with Address    => System'To_Address (TIM4_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   type Genpurp_5_Timers_Type is record
+      CR1   : TIMx_CR1_Genpurp_Type   with Volatile_Full_Access => True;
+      CR2   : TIMx_CR2_Genpurp_Type   with Volatile_Full_Access => True;
+      SMCR  : TIMx_SMCR_Genpurp_Type  with Volatile_Full_Access => True;
+      DIER  : TIMx_DIER_Genpurp_Type  with Volatile_Full_Access => True;
+      SR    : TIMx_SR_Genpurp_Type    with Volatile_Full_Access => True;
+      EGR   : TIMx_EGR_Genpurp_Type   with Volatile_Full_Access => True;
+      CCMR1 : TIMx_CCMR1_Genpurp_Type with Volatile_Full_Access => True;
+      CCMR2 : TIMx_CCMR2_Genpurp_Type with Volatile_Full_Access => True;
+      CCER  : TIMx_CCER_Genpurp_Type  with Volatile_Full_Access => True;
+      CNT   : TIMx_CNT_Genpurp_Type   with Volatile_Full_Access => True;
+      PSC   : TIMx_PSC_Genpurp_Type   with Volatile_Full_Access => True;
+      ARR   : TIMx_ARR_Genpurp_Type   with Volatile_Full_Access => True;
+      CCR1  : TIMx_CCR1_Genpurp_Type  with Volatile_Full_Access => True;
+      CCR2  : TIMx_CCR2_Genpurp_Type  with Volatile_Full_Access => True;
+      CCR3  : TIMx_CCR3_Genpurp_Type  with Volatile_Full_Access => True;
+      CCR4  : TIMx_CCR4_Genpurp_Type  with Volatile_Full_Access => True;
+      DCR   : TIMx_DCR_Genpurp_Type   with Volatile_Full_Access => True;
+      DMAR  : TIMx_DMAR_Genpurp_Type  with Volatile_Full_Access => True;
+      OR5   : TIM5_OR_Type            with Volatile_Full_Access => True;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16#54# * 8;
+   for Genpurp_5_Timers_Type use record
+      CR1   at 16#00# range 0 .. 15;
+      CR2   at 16#04# range 0 .. 15;
+      SMCR  at 16#08# range 0 .. 31;
+      DIER  at 16#0C# range 0 .. 15;
+      SR    at 16#10# range 0 .. 15;
+      EGR   at 16#14# range 0 .. 15;
+      CCMR1 at 16#18# range 0 .. 31;
+      CCMR2 at 16#1C# range 0 .. 31;
+      CCER  at 16#20# range 0 .. 15;
+      CNT   at 16#24# range 0 .. 31;
+      PSC   at 16#28# range 0 .. 15;
+      ARR   at 16#2C# range 0 .. 31;
+      CCR1  at 16#34# range 0 .. 31;
+      CCR2  at 16#38# range 0 .. 31;
+      CCR3  at 16#3C# range 0 .. 31;
+      CCR4  at 16#40# range 0 .. 31;
+      DCR   at 16#48# range 0 .. 15;
+      DMAR  at 16#4C# range 0 .. 15;
+      OR5   at 16#50# range 0 .. 15;
+   end record;
+
+   TIM5_BASEADDRESS : constant := 16#4000_0C00#;
+
+   TIM5 : aliased Genpurp_5_Timers_Type
+      with Address    => System'To_Address (TIM5_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- 27 General-purpose timers (TIM9/TIM10/TIM11/TIM12/TIM13/TIM14)

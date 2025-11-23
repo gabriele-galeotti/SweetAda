@@ -216,4 +216,68 @@ package body STM32F769I
       return (if (OCxM and 2#1000#) /= 0 then 1 else 0);
    end CCx_MODEOUT_OCxM3;
 
+   ----------------------------------------------------------------------------
+   -- TIMx_CNT_Genpurp_Read
+   ----------------------------------------------------------------------------
+   function TIMx_CNT_Genpurp_Read
+      (TimerN : TimerN_Type)
+      return Unsigned_32
+      is
+      Result : Unsigned_32;
+   begin
+      case TimerN is
+         when 2 =>
+            Result := TIM2.CNT.CNT;
+            if TIM2.CR1.UIFREMAP then
+               Result := @ and 16#7FFF_FFFF#;
+            end if;
+         when 3 =>
+            Result := TIM3.CNT.CNT and 16#0000_FFFF#;
+         when 4 =>
+            Result := TIM4.CNT.CNT and 16#0000_FFFF#;
+         when 5 =>
+            Result := TIM5.CNT.CNT;
+            if TIM5.CR1.UIFREMAP then
+               Result := @ and 16#7FFF_FFFF#;
+            end if;
+         when others =>
+            raise Constraint_Error;
+      end case;
+      return Result;
+   end TIMx_CNT_Genpurp_Read;
+
+   ----------------------------------------------------------------------------
+   -- TIMx_CNT_Genpurp_Write
+   ----------------------------------------------------------------------------
+   procedure TIMx_CNT_Genpurp_Write
+      (TimerN : in TimerN_Type;
+       Value  : in Unsigned_32)
+      is
+   begin
+      case TimerN is
+         when 2 =>
+            if TIM2.CR1.UIFREMAP and then (Value and 16#8000_0000#) /= 0 then
+               raise Constraint_Error;
+            end if;
+            TIM2.CNT.CNT := Value;
+         when 3 =>
+            if (Value and 16#FFFF_0000#) /= 0 then
+               raise Constraint_Error;
+            end if;
+            TIM3.CNT.CNT := (@ and 16#FFFF_0000#) or (Value and 16#0000_FFFF#);
+         when 4 =>
+            if (Value and 16#FFFF_0000#) /= 0 then
+               raise Constraint_Error;
+            end if;
+            TIM4.CNT.CNT := (@ and 16#FFFF_0000#) or (Value and 16#0000_FFFF#);
+         when 5 =>
+            if TIM5.CR1.UIFREMAP and then (Value and 16#8000_0000#) /= 0 then
+               raise Constraint_Error;
+            end if;
+            TIM5.CNT.CNT := Value;
+         when others =>
+            raise Constraint_Error;
+      end case;
+   end TIMx_CNT_Genpurp_Write;
+
 end STM32F769I;
