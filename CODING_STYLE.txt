@@ -93,6 +93,16 @@ speaking, the rules about variable names are always a matter of taste and
 discussion, so this aspect is more relaxed. And, as always, common sense is
 the best rule.
 
+Simple subprograms with input/output arguments generally have "Value" as input
+parameter and "Result" as function output.
+
+When passing a numbered item to a subprogram (e.g., the bit number in a
+pattern, or the peripheral number in a set of devices), we often use the name
+"ItemN" ("item number", e.g., BitN or DeviceN). When passing the number of
+items (e.g., the number of bits to check in a pattern, or the number of
+peripheral devices to configure in a system), we often use the name "NItems"
+("number of items", e.g., NBits or NDevices).
+
 Some object prefixes/suffixes/abbreviations:
 Idx = index
 Mem = memory
