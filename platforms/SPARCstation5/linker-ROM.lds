@@ -109,3 +109,8 @@ SECTIONS
         }
 }
 
+/* export to core/linker.ad[s|b] */
+/* LINKERADSB:_stext:SText */
+/* LINKERADSB:_sdata:SData */
+/* LINKERADSB:_sbss:SBss   */
+
