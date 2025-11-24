@@ -189,7 +189,7 @@ pragma Style_Checks (Off);
 
    -- Utility subprograms -----------------------------------------------------
 
-   -- ROM code use a NOP when operating with I/O ports
+   -- ROM code uses a NOP when operating with I/O ports
    function Read32_NOP
       (Memory_Address : Address)
       return Unsigned_32
