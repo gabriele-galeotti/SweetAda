@@ -54,13 +54,12 @@ include $(KERNEL_PARENT_PATH)/Makefile.os.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 include $(KERNEL_PARENT_PATH)/Makefile.fn.in
 
-RTS_SRC_NO_DIRS  := common targets
-
 ifeq ($(OSTYPE),cmd)
 RTS_SRC_ALL_DIRS := $(shell $(CHDIR) src && $(call ls-dirs) 2>nul)
 else
 RTS_SRC_ALL_DIRS := $(shell ($(CHDIR) src && $(call ls-dirs)) 2> /dev/null)
 endif
+RTS_SRC_NO_DIRS  := common targets
 RTSES            := $(filter-out $(RTS_SRC_NO_DIRS),$(RTS_SRC_ALL_DIRS))
 
 ################################################################################
@@ -122,8 +121,6 @@ RANLIB := $(TOOLCHAIN_RANLIB)
 
 ADAC_SWITCHES :=
 ADAC_SWITCHES += $(MULTILIB_SWITCHES)
-# we are building a static library, so no PIC
-#ADAC_SWITCHES += -fPIC
 ADAC_SWITCHES += -nostdinc -nostdlib
 #ADAC_SWITCHES += -gnata    # Assertions enabled.
 # -gnatg implies -gnatwae and -gnatyg
