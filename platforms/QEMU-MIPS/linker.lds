@@ -99,7 +99,6 @@ SECTIONS
         {
                 *(*)
         }
-
 }
 
 /* export to core/linker.ad[s|b] */
