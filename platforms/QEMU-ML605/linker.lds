@@ -100,8 +100,10 @@ SECTIONS
         {
                 *(*)
         }
+}
 
 /* export to core/linker.ad[s|b] */
-/* LINKERADSB:_etext:EText */
-}
+/* LINKERADSB:_stext:SText */
+/* LINKERADSB:_sdata:SData */
+/* LINKERADSB:_sbss:SBss   */
 
