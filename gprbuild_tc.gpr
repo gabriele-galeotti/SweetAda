@@ -75,6 +75,15 @@ abstract project Gprbuild_Tc is
 
    GCC_Wrapper_Switch := ("-wrapper", Configure.GCC_Wrapper);
 
+   Elaboration_Model_Switches := ();
+   case Configure.Elaboration_Model is
+      when "DYNAMIC" => Elaboration_Model_Switches := ("-gnatE");
+                        -- "-gnatel", "-gnateL"
+      when "STATIC"  => null;
+      when "SPARK"   => Elaboration_Model_Switches := ("-gnatd.v");
+      when others    => null;
+   end case;
+
    No_DOS_LT_Switch := "";
    case Ostype is
       when "cmd" | "msys" => null;
@@ -131,7 +140,6 @@ abstract project Gprbuild_Tc is
          "-gnatf",
          "-gnatU",
          "-gnatn",
-         "-gnatE",
          "-gnato1",
          -- "-gnatp"
          "-gnatVa",
@@ -140,6 +148,7 @@ abstract project Gprbuild_Tc is
          "-fdump-rtl-expand",
          No_DOS_LT_Switch
          )                                 &
+         Elaboration_Model_Switches        &
          GCC_Wrapper_Switch                &
          Configure.ADAC_Switches_RTS       &
          Configure.GCC_Switches_Platform   &

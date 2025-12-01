@@ -14,6 +14,7 @@
 # GNATBIND_*
 # GNATMAKE_*
 # ENABLE_SPLIT_DWARF
+# ELABORATION_MODEL
 # OPTIMIZATION_LEVEL
 # CONFIGURE_DEPS
 # VERBOSE
@@ -99,10 +100,22 @@ endif
 # minimum check settings: -gnato1=OFF -gnatp=ON  -fstack-check=OFF
 #
 #ADAC_SWITCHES_DEFAULT += -gnata        # pragma Assert enabled (requires s-assert.ads).
-ADAC_SWITCHES_DEFAULT += -gnatE        # Enables dynamic checks for access-before-elaboration on subprogram calls and generic instantiations.
 ADAC_SWITCHES_DEFAULT += -gnato1       # Enable "STRICT" numeric overflow checking.
 #ADAC_SWITCHES_DEFAULT += -gnatp        # pragma Suppress (All_Checks)
 #ADAC_SWITCHES_DEFAULT += -fstack-check # Activates stack overflow checking.
+
+#
+# Elaboration model.
+#
+ifeq      ($(ELABORATION_MODEL),DYNAMIC)
+ADAC_SWITCHES_DEFAULT += -gnatE         # Enables dynamic checks for access-before-elaboration on subprogram calls and generic instantiations.
+#ADAC_SWITCHES_DEFAULT += -gnatel        # This switch can be used with the static elaboration model to issue info messages showing where implicit pragma Elaborate and pragma Elaborate_All are generated.
+#ADAC_SWITCHES_DEFAULT += -gnateL        # This switch turns off the info messages about implicit elaboration pragmas.
+else ifeq ($(ELABORATION_MODEL),STATIC)
+# default elaboration model
+else ifeq ($(ELABORATION_MODEL),SPARK)
+ADAC_SWITCHES_DEFAULT += -gnatd.v       # SPARK elaboration model.
+endif
 
 #
 # Compilation information switches, stack usage and various functionalities.
