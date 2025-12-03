@@ -1271,7 +1271,7 @@ pragma Style_Checks (Off);
       dir_TX : constant := 1; -- The receive FIFO is not populated.
 
       type fmt_Type is record
-         proto     : Proto_Type := proto_SINGLE; -- SPI protocol
+         proto     : proto_Type := proto_SINGLE; -- SPI protocol
          endian    : Bits_1     := endian_MSB;   -- SPI endianness
          dir       : Bits_1     := dir_RX;       -- SPI I/O direction.
          Reserved1 : Bits_12    := 0;
