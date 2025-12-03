@@ -1383,11 +1383,172 @@ pragma Style_Checks (Off);
    -- Chapter 13 Reset Control Module (RCM)
    ----------------------------------------------------------------------------
 
+   RCM_BASEADDRESS : constant := 16#4007_F000#;
+
    -- 13.2.1 System Reset Status Register 0 (RCM_SRS0)
+
+   type RCM_SRS0_Type is record
+      WAKEUP   : Boolean; -- Low Leakage Wakeup Reset
+      LVD      : Boolean; -- Low-Voltage Detect Reset
+      LOC      : Boolean; -- Loss-of-Clock Reset
+      Reserved : Bits_2;
+      WDOG     : Boolean; -- Watchdog
+      PIN      : Boolean; -- External Reset Pin
+      POR      : Boolean; -- Power-On Reset
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RCM_SRS0_Type use record
+      WAKEUP   at 0 range 0 .. 0;
+      LVD      at 0 range 1 .. 1;
+      LOC      at 0 range 2 .. 2;
+      Reserved at 0 range 3 .. 4;
+      WDOG     at 0 range 5 .. 5;
+      PIN      at 0 range 6 .. 6;
+      POR      at 0 range 7 .. 7;
+   end record;
+
+   RCM_SRS0 : aliased RCM_SRS0_Type
+      with Address              => System'To_Address (RCM_BASEADDRESS + 16#0#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 13.2.2 System Reset Status Register 1 (RCM_SRS1)
+
+   type RCM_SRS1_Type is record
+      JTAG     : Boolean; -- JTAG Generated Reset
+      LOCKUP   : Boolean; -- Core Lockup
+      SW       : Boolean; -- Software
+      MDM_AP   : Boolean; -- MDM-AP System Reset Request
+      EZPT     : Boolean; -- EzPort Reset
+      SACKERR  : Boolean; -- Stop Mode Acknowledge Error Reset
+      Reserved : Bits_1;
+      TAMPER   : Boolean; -- Tamper detect
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RCM_SRS1_Type use record
+      JTAG     at 0 range 0 .. 0;
+      LOCKUP   at 0 range 1 .. 1;
+      SW       at 0 range 2 .. 2;
+      MDM_AP   at 0 range 3 .. 3;
+      EZPT     at 0 range 4 .. 4;
+      SACKERR  at 0 range 5 .. 5;
+      Reserved at 0 range 6 .. 6;
+      TAMPER   at 0 range 7 .. 7;
+   end record;
+
+   RCM_SRS1 : aliased RCM_SRS1_Type
+      with Address              => System'To_Address (RCM_BASEADDRESS + 16#1#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 13.2.3 Reset Pin Filter Control register (RCM_RPFC)
+
+   RSTFLTSRW_DISABLED : constant := 2#00#; -- All filtering disabled
+   RSTFLTSRW_BUSCLK   : constant := 2#01#; -- Bus clock filter enabled for normal operation
+   RSTFLTSRW_LPOCLK   : constant := 2#10#; -- LPO clock filter enabled for normal operation
+   RSTFLTSRW_RSVD     : constant := 2#11#; -- Reserved
+
+   RSTFLTSS_DISABLED : constant := 0; -- All filtering disabled
+   RSTFLTSS_LPOCLK   : constant := 1; -- LPO clock filter enabled
+
+   type RCM_RPFC_Type is record
+      RSTFLTSRW : Bits_2 := RSTFLTSRW_DISABLED; -- Reset Pin Filter Select in Run and Wait Modes
+      RSTFLTSS  : Bits_1 := RSTFLTSS_DISABLED;  -- Reset Pin Filter Select in Stop Mode
+      Reserved  : Bits_5 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RCM_RPFC_Type use record
+      RSTFLTSRW at 0 range 0 .. 1;
+      RSTFLTSS  at 0 range 2 .. 2;
+      Reserved  at 0 range 3 .. 7;
+   end record;
+
+   RCM_RPFC : aliased RCM_RPFC_Type
+      with Address              => System'To_Address (RCM_BASEADDRESS + 16#4#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 13.2.4 Reset Pin Filter Width register (RCM_RPFW)
+
+   RSTFLTSEL_1  : constant := 2#00000#; -- Bus clock filter count is 1
+   RSTFLTSEL_2  : constant := 2#00001#; -- Bus clock filter count is 2
+   RSTFLTSEL_3  : constant := 2#00010#; -- Bus clock filter count is 3
+   RSTFLTSEL_4  : constant := 2#00011#; -- Bus clock filter count is 4
+   RSTFLTSEL_5  : constant := 2#00100#; -- Bus clock filter count is 5
+   RSTFLTSEL_6  : constant := 2#00101#; -- Bus clock filter count is 6
+   RSTFLTSEL_7  : constant := 2#00110#; -- Bus clock filter count is 7
+   RSTFLTSEL_8  : constant := 2#00111#; -- Bus clock filter count is 8
+   RSTFLTSEL_9  : constant := 2#01000#; -- Bus clock filter count is 9
+   RSTFLTSEL_10 : constant := 2#01001#; -- Bus clock filter count is 10
+   RSTFLTSEL_11 : constant := 2#01010#; -- Bus clock filter count is 11
+   RSTFLTSEL_12 : constant := 2#01011#; -- Bus clock filter count is 12
+   RSTFLTSEL_13 : constant := 2#01100#; -- Bus clock filter count is 13
+   RSTFLTSEL_14 : constant := 2#01101#; -- Bus clock filter count is 14
+   RSTFLTSEL_15 : constant := 2#01110#; -- Bus clock filter count is 15
+   RSTFLTSEL_16 : constant := 2#01111#; -- Bus clock filter count is 16
+   RSTFLTSEL_17 : constant := 2#10000#; -- Bus clock filter count is 17
+   RSTFLTSEL_18 : constant := 2#10001#; -- Bus clock filter count is 18
+   RSTFLTSEL_19 : constant := 2#10010#; -- Bus clock filter count is 19
+   RSTFLTSEL_20 : constant := 2#10011#; -- Bus clock filter count is 20
+   RSTFLTSEL_21 : constant := 2#10100#; -- Bus clock filter count is 21
+   RSTFLTSEL_22 : constant := 2#10101#; -- Bus clock filter count is 22
+   RSTFLTSEL_23 : constant := 2#10110#; -- Bus clock filter count is 23
+   RSTFLTSEL_24 : constant := 2#10111#; -- Bus clock filter count is 24
+   RSTFLTSEL_25 : constant := 2#11000#; -- Bus clock filter count is 25
+   RSTFLTSEL_26 : constant := 2#11001#; -- Bus clock filter count is 26
+   RSTFLTSEL_27 : constant := 2#11010#; -- Bus clock filter count is 27
+   RSTFLTSEL_28 : constant := 2#11011#; -- Bus clock filter count is 28
+   RSTFLTSEL_29 : constant := 2#11100#; -- Bus clock filter count is 29
+   RSTFLTSEL_30 : constant := 2#11101#; -- Bus clock filter count is 30
+   RSTFLTSEL_31 : constant := 2#11110#; -- Bus clock filter count is 31
+   RSTFLTSEL_32 : constant := 2#11111#; -- Bus clock filter count is 32
+
+   type RCM_RPFW_Type is record
+      RSTFLTSEL : Bits_5 := RSTFLTSEL_1; -- Reset Pin Filter Bus Clock Select
+      Reserved  : Bits_3 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RCM_RPFW_Type use record
+      RSTFLTSEL at 0 range 0 .. 4;
+      Reserved  at 0 range 5 .. 7;
+   end record;
+
+   RCM_RPFW : aliased RCM_RPFW_Type
+      with Address              => System'To_Address (RCM_BASEADDRESS + 16#5#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 13.2.5 Mode Register (RCM_MR)
+
+   EZP_MS_DEASSERTED : constant := 0; -- Pin deasserted (logic 1)
+   EZP_MS_ASSERTED   : constant := 1; -- Pin asserted (logic 0)
+
+   type RCM_MR_Type is record
+      Reserved1 : Bits_1;
+      EZP_MS    : Bits_1; -- EZP_MS_B pin state
+      Reserved2 : Bits_6;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RCM_MR_Type use record
+      Reserved1 at 0 range 0 .. 0;
+      EZP_MS    at 0 range 1 .. 1;
+      Reserved2 at 0 range 2 .. 7;
+   end record;
+
+   RCM_MR : aliased RCM_MR_Type
+      with Address              => System'To_Address (RCM_BASEADDRESS + 16#7#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 14 System Mode Controller (SMC)
