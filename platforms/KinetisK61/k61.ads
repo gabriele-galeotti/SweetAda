@@ -1380,6 +1380,49 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- Chapter 13 Reset Control Module (RCM)
+   ----------------------------------------------------------------------------
+
+   -- 13.2.1 System Reset Status Register 0 (RCM_SRS0)
+   -- 13.2.2 System Reset Status Register 1 (RCM_SRS1)
+   -- 13.2.3 Reset Pin Filter Control register (RCM_RPFC)
+   -- 13.2.4 Reset Pin Filter Width register (RCM_RPFW)
+   -- 13.2.5 Mode Register (RCM_MR)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 14 System Mode Controller (SMC)
+   ----------------------------------------------------------------------------
+
+   -- 14.3.1 Power Mode Protection register (SMC_PMPROT)
+   -- 14.3.2 Power Mode Control register (SMC_PMCTRL)
+   -- 14.3.3 VLLS Control Register (SMC_VLLSCTRL)
+   -- 14.3.4 Power Mode Status register (SMC_PMSTAT)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 15 Power Management Controller (PMC)
+   ----------------------------------------------------------------------------
+
+   -- 15.5.1 Low Voltage Detect Status And Control 1 register (PMC_LVDSC1)
+   -- 15.5.2 Low Voltage Detect Status And Control 2 register (PMC_LVDSC2)
+   -- 15.5.3 Regulator Status And Control register (PMC_REGSC)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 16 Low-Leakage Wakeup Unit (LLWU)
+   ----------------------------------------------------------------------------
+
+   -- 16.3.1 LLWU Pin Enable 1 register (LLWU_PE1)
+   -- 16.3.2 LLWU Pin Enable 2 register (LLWU_PE2)
+   -- 16.3.3 LLWU Pin Enable 3 register (LLWU_PE3)
+   -- 16.3.4 LLWU Pin Enable 4 register (LLWU_PE4)
+   -- 16.3.5 LLWU Module Enable register (LLWU_ME)
+   -- 16.3.6 LLWU Flag 1 register (LLWU_F1)
+   -- 16.3.7 LLWU Flag 2 register (LLWU_F2)
+   -- 16.3.8 LLWU Flag 3 register (LLWU_F3)
+   -- 16.3.9 LLWU Pin Filter 1 register (LLWU_FILT1)
+   -- 16.3.10 LLWU Pin Filter 2 register (LLWU_FILT2)
+   -- 16.3.11 LLWU Reset Enable register (LLWU_RST)
+
+   ----------------------------------------------------------------------------
    -- Chapter 17 Miscellaneous Control Module (MCM)
    ----------------------------------------------------------------------------
 
@@ -1705,6 +1748,87 @@ pragma Style_Checks (Off);
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- Chapter 18 Crossbar Switch (AXBS)
+   ----------------------------------------------------------------------------
+
+   -- 18.2.1 Priority Registers Slave (AXBS_PRSn)
+   -- 18.2.2 Control Register (AXBS_CRSn)
+   -- 18.2.3 Master General Purpose Control Register (AXBS_MGPCRn)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 19 Memory Protection Unit (MPU)
+   ----------------------------------------------------------------------------
+
+   -- 19.3.1 Control/Error Status Register (MPU_CESR)
+   -- 19.3.2 Error Address Register, slave port n (MPU_EARn)
+   -- 19.3.3 Error Detail Register, slave port n (MPU_EDRn)
+   -- 19.3.4 Region Descriptor n, Word 0 (MPU_RGDn_WORD0)
+   -- 19.3.5 Region Descriptor n, Word 1 (MPU_RGDn_WORD1)
+   -- 19.3.6 Region Descriptor n, Word 2 (MPU_RGDn_WORD2)
+   -- 19.3.7 Region Descriptor n, Word 3 (MPU_RGDn_WORD3)
+   -- 19.3.8 Region Descriptor Alternate Access Control n (MPU_RGDAACn)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 20 Peripheral Bridge (AIPS-Lite)
+   ----------------------------------------------------------------------------
+
+   -- 20.2.1 Master Privilege Register A (AIPSx_MPRA)
+   -- 20.2.2 Peripheral Access Control Register (AIPSx_PACRn)
+   -- 20.2.3 Peripheral Access Control Register (AIPSx_PACRn)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 21 Direct Memory Access Multiplexer (DMAMUX)
+   ----------------------------------------------------------------------------
+
+   -- 21.3.1 Channel Configuration register (DMAMUXx_CHCFGn)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 22 Enhanced Direct Memory Access (eDMA)
+   ----------------------------------------------------------------------------
+
+   -- 22.3.1 Control Register (DMA_CR)
+   -- 22.3.2 Error Status Register (DMA_ES)
+   -- 22.3.3 Enable Request Register (DMA_ERQ)
+   -- 22.3.4 Enable Error Interrupt Register (DMA_EEI)
+   -- 22.3.5 Clear Enable Error Interrupt Register (DMA_CEEI)
+   -- 22.3.6 Set Enable Error Interrupt Register (DMA_SEEI)
+   -- 22.3.7 Clear Enable Request Register (DMA_CERQ)
+   -- 22.3.8 Set Enable Request Register (DMA_SERQ)
+   -- 22.3.9 Clear DONE Status Bit Register (DMA_CDNE)
+   -- 22.3.10 Set START Bit Register (DMA_SSRT)
+   -- 22.3.11 Clear Error Register (DMA_CERR)
+   -- 22.3.12 Clear Interrupt Request Register (DMA_CINT)
+   -- 22.3.13 Interrupt Request Register (DMA_INT)
+   -- 22.3.14 Error Register (DMA_ERR)
+   -- 22.3.15 Hardware Request Status Register (DMA_HRS)
+   -- 22.3.16 Enable Asynchronous Request in Stop Register (DMA_EARS)
+   -- 22.3.17 Channel n Priority Register (DMA_DCHPRIn)
+   -- 22.3.18 TCD Source Address (DMA_TCDn_SADDR)
+   -- 22.3.19 TCD Signed Source Address Offset (DMA_TCDn_SOFF)
+   -- 22.3.20 TCD Transfer Attributes (DMA_TCDn_ATTR)
+   -- 22.3.21 TCD Minor Byte Count (Minor Loop Disabled) (DMA_TCDn_NBYTES_MLNO)
+   -- 22.3.22 TCD Signed Minor Loop Offset (Minor Loop Enabled and Offset Disabled) (DMA_TCDn_NBYTES_MLOFFNO)
+   -- 22.3.23 TCD Signed Minor Loop Offset (Minor Loop and Offset Enabled) (DMA_TCDn_NBYTES_MLOFFYES)
+   -- 22.3.24 TCD Last Source Address Adjustment (DMA_TCDn_SLAST)
+   -- 22.3.25 TCD Destination Address (DMA_TCDn_DADDR)
+   -- 22.3.26 TCD Signed Destination Address Offset (DMA_TCDn_DOFF)
+   -- 22.3.27 TCD Current Minor Loop Link, Major Loop Count (Channel Linking Enabled) (DMA_TCDn_CITER_ELINKYES)
+   -- 22.3.28 TCD Current Minor Loop Link, Major Loop Count (Channel Linking Disabled) (DMA_TCDn_CITER_ELINKNO)
+   -- 22.3.29 TCD Last Destination Address Adjustment/Scatter Gather Address (DMA_TCDn_DLASTSGA)
+   -- 22.3.30 TCD Control and Status (DMA_TCDn_CSR)
+   -- 22.3.31 TCD Beginning Minor Loop Link, Major Loop Count (Channel Linking Enabled) (DMA_TCDn_BITER_ELINKYES)
+   -- 22.3.32 TCD Beginning Minor Loop Link, Major Loop Count (Channel Linking Disabled) (DMA_TCDn_BITER_ELINKNO)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 23 External Watchdog Monitor (EWM)
+   ----------------------------------------------------------------------------
+
+   -- 23.3.1 Control Register (EWM_CTRL)
+   -- 23.3.2 Service Register (EWM_SERV)
+   -- 23.3.3 Compare Low Register (EWM_CMPL)
+   -- 23.3.4 Compare High Register (EWM_CMPH)
 
    ----------------------------------------------------------------------------
    -- Chapter 24 Watchdog Timer (WDOG)
@@ -2343,6 +2467,91 @@ pragma Style_Checks (Off);
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- Chapter 28 Local Memory Controller
+   ----------------------------------------------------------------------------
+
+   -- 28.2.1 Cache control register (LMEM_PCCCR)
+   -- 28.2.2 Cache line control register (LMEM_PCCLCR)
+   -- 28.2.3 Cache search address register (LMEM_PCCSAR)
+   -- 28.2.4 Cache read/write value register (LMEM_PCCCVR)
+   -- 28.2.5 Cache regions mode register (LMEM_PCCRMR)
+   -- 28.2.6 Cache control register (LMEM_PSCCR)
+   -- 28.2.7 Cache line control register (LMEM_PSCLCR)
+   -- 28.2.8 Cache search address register (LMEM_PSCSAR)
+   -- 28.2.9 Cache read/write value register (LMEM_PSCCVR)
+   -- 28.2.10 Cache regions mode register (LMEM_PSCRMR)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 29 Flash Memory Controller (FMC)
+   ----------------------------------------------------------------------------
+
+   -- 29.4.1 Flash Access Protection Register (FMC_PFAPR)
+   -- 29.4.2 Flash Bank 0-1 Control Register (FMC_PFB01CR)
+   -- 29.4.3 Flash Bank 2-3 Control Register (FMC_PFB23CR)
+   -- 29.4.4 Cache Tag Storage (FMC_TAGVDW0Sn)
+   -- 29.4.5 Cache Tag Storage (FMC_TAGVDW1Sn)
+   -- 29.4.6 Cache Tag Storage (FMC_TAGVDW2Sn)
+   -- 29.4.7 Cache Tag Storage (FMC_TAGVDW3Sn)
+   -- 29.4.8 Cache Data Storage (uppermost word) (FMC_DATAW0SnUM)
+   -- 29.4.9 Cache Data Storage (mid-upper word) (FMC_DATAW0SnMU)
+   -- 29.4.10 Cache Data Storage (mid-lower word) (FMC_DATAW0SnML)
+   -- 29.4.11 Cache Data Storage (lowermost word) (FMC_DATAW0SnLM)
+   -- 29.4.12 Cache Data Storage (uppermost word) (FMC_DATAW1SnUM)
+   -- 29.4.13 Cache Data Storage (mid-upper word) (FMC_DATAW1SnMU)
+   -- 29.4.14 Cache Data Storage (mid-lower word) (FMC_DATAW1SnML)
+   -- 29.4.15 Cache Data Storage (lowermost word) (FMC_DATAW1SnLM)
+   -- 29.4.16 Cache Data Storage (uppermost word) (FMC_DATAW2SnUM)
+   -- 29.4.17 Cache Data Storage (mid-upper word) (FMC_DATAW2SnMU)
+   -- 29.4.18 Cache Data Storage (mid-lower word) (FMC_DATAW2SnML)
+   -- 29.4.19 Cache Data Storage (lowermost word) (FMC_DATAW2SnLM)
+   -- 29.4.20 Cache Data Storage (uppermost word) (FMC_DATAW3SnUM)
+   -- 29.4.21 Cache Data Storage (mid-upper word) (FMC_DATAW3SnMU)
+   -- 29.4.22 Cache Data Storage (mid-lower word) (FMC_DATAW3SnML)
+   -- 29.4.23 Cache Data Storage (lowermost word) (FMC_DATAW3SnLM)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 30 Flash Memory Module (FTFE)
+   ----------------------------------------------------------------------------
+
+   -- 30.34.1 Flash Status Register (FTFE_FSTAT)
+   -- 30.34.2 Flash Configuration Register (FTFE_FCNFG)
+   -- 30.34.3 Flash Security Register (FTFE_FSEC)
+   -- 30.34.4 Flash Option Register (FTFE_FOPT)
+   -- 30.34.5 Flash Common Command Object Registers (FTFE_FCCOBn)
+   -- 30.34.6 Program Flash Protection Registers (FTFE_FPROTn)
+   -- 30.34.7 EEPROM Protection Register (FTFE_FEPROT)
+   -- 30.34.8 Data Flash Protection Register (FTFE_FDPROT)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 32 NAND Flash Controller (NFC)
+   ----------------------------------------------------------------------------
+
+   -- 32.3.1 Flash command 1 (NFC_CMD1)
+   -- 32.3.2 Flash command 2 (NFC_CMD2)
+   -- 32.3.3 Column address (NFC_CAR)
+   -- 32.3.4 Row address (NFC_RAR)
+   -- 32.3.5 Flash command repeat (NFC_RPT)
+   -- 32.3.6 Row address increment (NFC_RAI)
+   -- 32.3.7 Flash status 1 (NFC_SR1)
+   -- 32.3.8 Flash status 2 (NFC_SR2)
+   -- 32.3.9 DMA channel 1 address (NFC_DMA_CH1)
+   -- 32.3.10 DMA configuration (NFC_DMACFG)
+   -- 32.3.11 Cach swap (NFC_SWAP)
+   -- 32.3.12 Sector size (NFC_SECSZ)
+   -- 32.3.13 Flash configuration (NFC_CFG)
+   -- 32.3.14 DMA channel 2 address (NFC_DMA_CH2)
+   -- 32.3.15 Interrupt status (NFC_ISR)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 33 External Bus Interface (FlexBus)
+   ----------------------------------------------------------------------------
+
+   -- 33.3.1 Chip Select Address Register (FB_CSARn)
+   -- 33.3.2 Chip Select Mask Register (FB_CSMRn)
+   -- 33.3.3 Chip Select Control Register (FB_CSCRn)
+   -- 33.3.4 Chip Select port Multiplexing Control Register (FB_CSPMCR)
 
    ----------------------------------------------------------------------------
    -- Chapter 34 DDR1/2/LP SDRAM Memory Controller (DDRMC)
@@ -4151,6 +4360,107 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- Chapter 35 Cyclic Redundancy Check (CRC)
+   ----------------------------------------------------------------------------
+
+   -- 35.2.1 CRC Data register (CRC_DATA)
+   -- 35.2.2 CRC Polynomial register (CRC_GPOLY)
+   -- 35.2.3 CRC Control register (CRC_CTRL)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 36 Cryptographic Acceleration Unit (CAU)
+   ----------------------------------------------------------------------------
+
+   -- 36.5.1 Status Register (CAU_CASR)
+   -- 36.5.2 Accumulator (CAU_CAA)
+   -- 36.5.3 General Purpose Register (CAU_CAn)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 37 Random Number Generator Accelerator (RNGA)
+   ----------------------------------------------------------------------------
+
+   -- 37.3.1 RNGA Control Register (RNG_CR)
+   -- 37.3.2 RNGA Status Register (RNG_SR)
+   -- 37.3.3 RNGA Entropy Register (RNG_ER)
+   -- 37.3.4 RNGA Output Register (RNG_OR)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 38 Analog-to-Digital Converter (ADC)
+   ----------------------------------------------------------------------------
+
+   -- 38.3.1 ADC Status and Control Registers 1 (ADCx_SC1n)
+   -- 38.3.2 ADC Configuration Register 1 (ADCx_CFG1)
+   -- 38.3.3 ADC Configuration Register 2 (ADCx_CFG2)
+   -- 38.3.4 ADC Data Result Register (ADCx_Rn)
+   -- 38.3.5 Compare Value Registers (ADCx_CVn)
+   -- 38.3.6 Status and Control Register 2 (ADCx_SC2)
+   -- 38.3.7 Status and Control Register 3 (ADCx_SC3)
+   -- 38.3.8 ADC Offset Correction Register (ADCx_OFS)
+   -- 38.3.9 ADC Plus-Side Gain Register (ADCx_PG)
+   -- 38.3.10 ADC Minus-Side Gain Register (ADCx_MG)
+   -- 38.3.11 ADC Plus-Side General Calibration Value Register (ADCx_CLPD)
+   -- 38.3.12 ADC Plus-Side General Calibration Value Register (ADCx_CLPS)
+   -- 38.3.13 ADC Plus-Side General Calibration Value Register (ADCx_CLP4)
+   -- 38.3.14 ADC Plus-Side General Calibration Value Register (ADCx_CLP3)
+   -- 38.3.15 ADC Plus-Side General Calibration Value Register (ADCx_CLP2)
+   -- 38.3.16 ADC Plus-Side General Calibration Value Register (ADCx_CLP1)
+   -- 38.3.17 ADC Plus-Side General Calibration Value Register (ADCx_CLP0)
+   -- 38.3.18 ADC PGA Register (ADCx_PGA)
+   -- 38.3.19 ADC Minus-Side General Calibration Value Register (ADCx_CLMD)
+   -- 38.3.20 ADC Minus-Side General Calibration Value Register (ADCx_CLMS)
+   -- 38.3.21 ADC Minus-Side General Calibration Value Register (ADCx_CLM4)
+   -- 38.3.22 ADC Minus-Side General Calibration Value Register (ADCx_CLM3)
+   -- 38.3.23 ADC Minus-Side General Calibration Value Register (ADCx_CLM2)
+   -- 38.3.24 ADC Minus-Side General Calibration Value Register (ADCx_CLM1)
+   -- 38.3.25 ADC Minus-Side General Calibration Value Register (ADCx_CLM0)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 39 Comparator(CMP)
+   ----------------------------------------------------------------------------
+
+   -- 39.2.1 CMP Control Register 0 (CMPx_CR0)
+   -- 39.2.2 CMP Control Register 1 (CMPx_CR1)
+   -- 39.2.3 CMP Filter Period Register (CMPx_FPR)
+   -- 39.2.4 CMP Status and Control Register (CMPx_SCR)
+   -- 39.2.5 DAC Control Register (CMPx_DACCR)
+   -- 39.2.6 MUX Control Register (CMPx_MUXCR)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 40 12-bit Digital-to-Analog Converter (DAC)
+   ----------------------------------------------------------------------------
+
+   -- 40.4.1 DAC Data Low Register (DACx_DATnL)
+   -- 40.4.2 DAC Data High Register (DACx_DATnH)
+   -- 40.4.3 DAC Status Register (DACx_SR)
+   -- 40.4.4 DAC Control Register (DACx_C0)
+   -- 40.4.5 DAC Control Register 1 (DACx_C1)
+   -- 40.4.6 DAC Control Register 2 (DACx_C2)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 41 Voltage Reference (VREFV1)
+   ----------------------------------------------------------------------------
+
+   -- 41.2.1 VREF Trim Register (VREF_TRM)
+   -- 41.2.2 VREF Status and Control Register (VREF_SC)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 42 Programmable Delay Block (PDB)
+   ----------------------------------------------------------------------------
+
+   -- 42.3.1 Status and Control register (PDBx_SC)
+   -- 42.3.2 Modulus register (PDBx_MOD)
+   -- 42.3.3 Counter register (PDBx_CNT)
+   -- 42.3.4 Interrupt Delay register (PDBx_IDLY)
+   -- 42.3.5 Channel n Control register 1 (PDBx_CHnC1)
+   -- 42.3.6 Channel n Status register (PDBx_CHnS)
+   -- 42.3.7 Channel n Delay 0 register (PDBx_CHnDLY0)
+   -- 42.3.8 Channel n Delay 1 register (PDBx_CHnDLY1)
+   -- 42.3.9 DAC Interval Trigger n Control register (PDBx_DACINTCn)
+   -- 42.3.10 DAC Interval n register (PDBx_DACINTn)
+   -- 42.3.11 Pulse-Out n Enable register (PDBx_POEN)
+   -- 42.3.12 Pulse-Out n Delay register (PDBx_POnDLY)
+
+   ----------------------------------------------------------------------------
    -- Chapter 43 FlexTimer Module (FTM)
    ----------------------------------------------------------------------------
 
@@ -4509,6 +4819,262 @@ pragma Style_Checks (Off);
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- Chapter 45 Low-Power Timer (LPTMR)
+   ----------------------------------------------------------------------------
+
+   -- 45.3.1 Low Power Timer Control Status Register (LPTMRx_CSR)
+   -- 45.3.2 Low Power Timer Prescale Register (LPTMRx_PSR)
+   -- 45.3.3 Low Power Timer Compare Register (LPTMRx_CMR)
+   -- 45.3.4 Low Power Timer Counter Register (LPTMRx_CNR)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 46 Carrier Modulator Transmitter (CMT)
+   ----------------------------------------------------------------------------
+
+   -- 46.6.1 CMT Carrier Generator High Data Register 1 (CMT_CGH1)
+   -- 46.6.2 CMT Carrier Generator Low Data Register 1 (CMT_CGL1)
+   -- 46.6.3 CMT Carrier Generator High Data Register 2 (CMT_CGH2)
+   -- 46.6.4 CMT Carrier Generator Low Data Register 2 (CMT_CGL2)
+   -- 46.6.5 CMT Output Control Register (CMT_OC)
+   -- 46.6.6 CMT Modulator Status and Control Register (CMT_MSC)
+   -- 46.6.7 CMT Modulator Data Register Mark High (CMT_CMD1)
+   -- 46.6.8 CMT Modulator Data Register Mark Low (CMT_CMD2)
+   -- 46.6.9 CMT Modulator Data Register Space High (CMT_CMD3)
+   -- 46.6.10 CMT Modulator Data Register Space Low (CMT_CMD4)
+   -- 46.6.11 CMT Primary Prescaler Register (CMT_PPS)
+   -- 46.6.12 CMT Direct Memory Access Register (CMT_DMA)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 47 Real Time Clock (RTC)
+   ----------------------------------------------------------------------------
+
+   -- 47.2.1 RTC Time Seconds Register (RTC_TSR)
+   -- 47.2.2 RTC Time Prescaler Register (RTC_TPR)
+   -- 47.2.3 RTC Time Alarm Register (RTC_TAR)
+   -- 47.2.4 RTC Time Compensation Register (RTC_TCR)
+   -- 47.2.5 RTC Control Register (RTC_CR)
+   -- 47.2.6 RTC Status Register (RTC_SR)
+   -- 47.2.7 RTC Lock Register (RTC_LR)
+   -- 47.2.8 RTC Interrupt Enable Register (RTC_IER)
+   -- 47.2.9 RTC Tamper Time Seconds Register (RTC_TTSR)
+   -- 47.2.10 RTC Monotonic Enable Register (RTC_MER)
+   -- 47.2.11 RTC Monotonic Counter Low Register (RTC_MCLR)
+   -- 47.2.12 RTC Monotonic Counter High Register (RTC_MCHR)
+   -- 47.2.13 RTC Write Access Register (RTC_WAR)
+   -- 47.2.14 RTC Read Access Register (RTC_RAR)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 48 10/100-Mbps Ethernet MAC (ENET)
+   ----------------------------------------------------------------------------
+
+   -- 48.4.1 Interrupt Event Register (ENET_EIR)
+   -- 48.4.2 Interrupt Mask Register (ENET_EIMR)
+   -- 48.4.3 Receive Descriptor Active Register (ENET_RDAR)
+   -- 48.4.4 Transmit Descriptor Active Register (ENET_TDAR)
+   -- 48.4.5 Ethernet Control Register (ENET_ECR)
+   -- 48.4.6 MII Management Frame Register (ENET_MMFR)
+   -- 48.4.7 MII Speed Control Register (ENET_MSCR)
+   -- 48.4.8 MIB Control Register (ENET_MIBC)
+   -- 48.4.9 Receive Control Register (ENET_RCR)
+   -- 48.4.10 Transmit Control Register (ENET_TCR)
+   -- 48.4.11 Physical Address Lower Register (ENET_PALR)
+   -- 48.4.12 Physical Address Upper Register (ENET_PAUR)
+   -- 48.4.13 Opcode/Pause Duration Register (ENET_OPD)
+   -- 48.4.14 Descriptor Individual Upper Address Register (ENET_IAUR)
+   -- 48.4.15 Descriptor Individual Lower Address Register (ENET_IALR)
+   -- 48.4.16 Descriptor Group Upper Address Register (ENET_GAUR)
+   -- 48.4.17 Descriptor Group Lower Address Register (ENET_GALR)
+   -- 48.4.18 Transmit FIFO Watermark Register (ENET_TFWR)
+   -- 48.4.19 Receive Descriptor Ring Start Register (ENET_RDSR)
+   -- 48.4.20 Transmit Buffer Descriptor Ring Start Register (ENET_TDSR)
+   -- 48.4.21 Maximum Receive Buffer Size Register (ENET_MRBR)
+   -- 48.4.22 Receive FIFO Section Full Threshold (ENET_RSFL)
+   -- 48.4.23 Receive FIFO Section Empty Threshold (ENET_RSEM)
+   -- 48.4.24 Receive FIFO Almost Empty Threshold (ENET_RAEM)
+   -- 48.4.25 Receive FIFO Almost Full Threshold (ENET_RAFL)
+   -- 48.4.26 Transmit FIFO Section Empty Threshold (ENET_TSEM)
+   -- 48.4.27 Transmit FIFO Almost Empty Threshold (ENET_TAEM)
+   -- 48.4.28 Transmit FIFO Almost Full Threshold (ENET_TAFL)
+   -- 48.4.29 Transmit Inter-Packet Gap (ENET_TIPG)
+   -- 48.4.30 Frame Truncation Length (ENET_FTRL)
+   -- 48.4.31 Transmit Accelerator Function Configuration (ENET_TACC)
+   -- 48.4.32 Receive Accelerator Function Configuration (ENET_RACC)
+   -- 48.4.33 Reserved Statistic Register (ENET_RMON_T_DROP)
+   -- 48.4.34 Tx Packet Count Statistic Register (ENET_RMON_T_PACKETS)
+   -- 48.4.35 Tx Broadcast Packets Statistic Register (ENET_RMON_T_BC_PKT)
+   -- 48.4.36 Tx Multicast Packets Statistic Register (ENET_RMON_T_MC_PKT)
+   -- 48.4.37 Tx Packets with CRC/Align Error Statistic Register (ENET_RMON_T_CRC_ALIGN)
+   -- 48.4.38 Tx Packets Less Than Bytes and Good CRC Statistic Register (ENET_RMON_T_UNDERSIZE)
+   -- 48.4.39 Tx Packets GT MAX_FL bytes and Good CRC Statistic Register (ENET_RMON_T_OVERSIZE)
+   -- 48.4.40 Tx Packets Less Than 64 Bytes and Bad CRC Statistic Register (ENET_RMON_T_FRAG)
+   -- 48.4.41 Tx Packets Greater Than MAX_FL bytes and Bad CRC Statistic Register (ENET_RMON_T_JAB)
+   -- 48.4.42 Tx Collision Count Statistic Register (ENET_RMON_T_COL)
+   -- 48.4.43 Tx 64-Byte Packets Statistic Register (ENET_RMON_T_P64)
+   -- 48.4.44 Tx 65- to 127-byte Packets Statistic Register (ENET_RMON_T_P65TO127)
+   -- 48.4.45 Tx 128- to 255-byte Packets Statistic Register (ENET_RMON_T_P128TO255)
+   -- 48.4.46 Tx 256- to 511-byte Packets Statistic Register (ENET_RMON_T_P256TO511)
+   -- 48.4.47 Tx 512- to 1023-byte Packets Statistic Register (ENET_RMON_T_P512TO1023)
+   -- 48.4.48 Tx 1024- to 2047-byte Packets Statistic Register (ENET_RMON_T_P1024TO2047)
+   -- 48.4.49 Tx Packets Greater Than 2048 Bytes Statistic Register (ENET_RMON_T_P_GTE2048)
+   -- 48.4.50 Tx Octets Statistic Register (ENET_RMON_T_OCTETS)
+   -- 48.4.51 IEEE_T_DROP Reserved Statistic Register (ENET_IEEE_T_DROP)
+   -- 48.4.52 Frames Transmitted OK Statistic Register (ENET_IEEE_T_FRAME_OK)
+   -- 48.4.53 Frames Transmitted with Single Collision Statistic Register (ENET_IEEE_T_1COL)
+   -- 48.4.54 Frames Transmitted with Multiple Collisions Statistic Register (ENET_IEEE_T_MCOL)
+   -- 48.4.55 Frames Transmitted after Deferral Delay Statistic Register (ENET_IEEE_T_DEF)
+   -- 48.4.56 Frames Transmitted with Late Collision Statistic Register (ENET_IEEE_T_LCOL)
+   -- 48.4.57 Frames Transmitted with Excessive Collisions Statistic Register (ENET_IEEE_T_EXCOL)
+   -- 48.4.58 Frames Transmitted with Tx FIFO Underrun Statistic Register (ENET_IEEE_T_MACERR)
+   -- 48.4.59 Frames Transmitted with Carrier Sense Error Statistic Register (ENET_IEEE_T_CSERR)
+   -- 48.4.60 ENET_IEEE_T_SQE
+   -- 48.4.61 Flow Control Pause Frames Transmitted Statistic Register (ENET_IEEE_T_FDXFC)
+   -- 48.4.62 Octet Count for Frames Transmitted w/o Error Statistic Register (ENET_IEEE_T_OCTETS_OK)
+   -- 48.4.63 Rx Packet Count Statistic Register (ENET_RMON_R_PACKETS)
+   -- 48.4.64 Rx Broadcast Packets Statistic Register (ENET_RMON_R_BC_PKT)
+   -- 48.4.65 Rx Multicast Packets Statistic Register (ENET_RMON_R_MC_PKT)
+   -- 48.4.66 Rx Packets with CRC/Align Error Statistic Register (ENET_RMON_R_CRC_ALIGN)
+   -- 48.4.67 Rx Packets with Less Than 64 Bytes and Good CRC Statistic Register (ENET_RMON_R_UNDERSIZE)
+   -- 48.4.68 Rx Packets Greater Than MAX_FL and Good CRC Statistic Register (ENET_RMON_R_OVERSIZE)
+   -- 48.4.69 Rx Packets Less Than 64 Bytes and Bad CRC Statistic Register (ENET_RMON_R_FRAG)
+   -- 48.4.70 Rx Packets Greater Than MAX_FL Bytes and Bad CRC Statistic Register (ENET_RMON_R_JAB)
+   -- 48.4.71 Reserved Statistic Register (ENET_RMON_R_RESVD_0)
+   -- 48.4.72 Rx 64-Byte Packets Statistic Register (ENET_RMON_R_P64)
+   -- 48.4.73 Rx 65- to 127-Byte Packets Statistic Register (ENET_RMON_R_P65TO127)
+   -- 48.4.74 Rx 128- to 255-Byte Packets Statistic Register (ENET_RMON_R_P128TO255)
+   -- 48.4.75 Rx 256- to 511-Byte Packets Statistic Register (ENET_RMON_R_P256TO511)
+   -- 48.4.76 Rx 512- to 1023-Byte Packets Statistic Register (ENET_RMON_R_P512TO1023)
+   -- 48.4.77 Rx 1024- to 2047-Byte Packets Statistic Register (ENET_RMON_R_P1024TO2047)
+   -- 48.4.78 Rx Packets Greater than 2048 Bytes Statistic Register (ENET_RMON_R_P_GTE2048)
+   -- 48.4.79 Rx Octets Statistic Register (ENET_RMON_R_OCTETS)
+   -- 48.4.80 Frames not Counted Correctly Statistic Register (ENET_IEEE_R_DROP)
+   -- 48.4.81 Frames Received OK Statistic Register (ENET_IEEE_R_FRAME_OK)
+   -- 48.4.82 Frames Received with CRC Error Statistic Register (ENET_IEEE_R_CRC)
+   -- 48.4.83 Frames Received with Alignment Error Statistic Register (ENET_IEEE_R_ALIGN)
+   -- 48.4.84 Receive FIFO Overflow Count Statistic Register (ENET_IEEE_R_MACERR)
+   -- 48.4.85 Flow Control Pause Frames Received Statistic Register (ENET_IEEE_R_FDXFC)
+   -- 48.4.86 Octet Count for Frames Received without Error Statistic Register (ENET_IEEE_R_OCTETS_OK)
+   -- 48.4.87 Adjustable Timer Control Register (ENET_ATCR)
+   -- 48.4.88 Timer Value Register (ENET_ATVR)
+   -- 48.4.89 Timer Offset Register (ENET_ATOFF)
+   -- 48.4.90 Timer Period Register (ENET_ATPER)
+   -- 48.4.91 Timer Correction Register (ENET_ATCOR)
+   -- 48.4.92 Time-Stamping Clock Period Register (ENET_ATINC)
+   -- 48.4.93 Timestamp of Last Transmitted Frame (ENET_ATSTMP)
+   -- 48.4.94 Timer Global Status Register (ENET_TGSR)
+   -- 48.4.95 Timer Control Status Register (ENET_TCSRn)
+   -- 48.4.96 Timer Compare Capture Register (ENET_TCCRn)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 49 Universal Serial Bus Full Speed OTG Controller (USBFSOTG)
+   ----------------------------------------------------------------------------
+
+   -- 49.4.1 Peripheral ID register (USBx_PERID)
+   -- 49.4.2 Peripheral ID Complement register (USBx_IDCOMP)
+   -- 49.4.3 Peripheral Revision register (USBx_REV)
+   -- 49.4.4 Peripheral Additional Info register (USBx_ADDINFO)
+   -- 49.4.5 OTG Interrupt Status register (USBx_OTGISTAT)
+   -- 49.4.6 OTG Interrupt Control register (USBx_OTGICR)
+   -- 49.4.7 OTG Status register (USBx_OTGSTAT)
+   -- 49.4.8 OTG Control register (USBx_OTGCTL)
+   -- 49.4.9 Interrupt Status register (USBx_ISTAT)
+   -- 49.4.10 Interrupt Enable register (USBx_INTEN)
+   -- 49.4.11 Error Interrupt Status register (USBx_ERRSTAT)
+   -- 49.4.12 Error Interrupt Enable register (USBx_ERREN)
+   -- 49.4.13 Status register (USBx_STAT)
+   -- 49.4.14 Control register (USBx_CTL)
+   -- 49.4.15 Address register (USBx_ADDR)
+   -- 49.4.16 BDT Page register 1 (USBx_BDTPAGE1)
+   -- 49.4.17 Frame Number register Low (USBx_FRMNUML)
+   -- 49.4.18 Frame Number register High (USBx_FRMNUMH)
+   -- 49.4.19 Token register (USBx_TOKEN)
+   -- 49.4.20 SOF Threshold register (USBx_SOFTHLD)
+   -- 49.4.21 BDT Page Register 2 (USBx_BDTPAGE2)
+   -- 49.4.22 BDT Page Register 3 (USBx_BDTPAGE3)
+   -- 49.4.23 Endpoint Control register (USBx_ENDPTn)
+   -- 49.4.24 USB Control register (USBx_USBCTRL)
+   -- 49.4.25 USB OTG Observe register (USBx_OBSERVE)
+   -- 49.4.26 USB OTG Control register (USBx_CONTROL)
+   -- 49.4.27 USB Transceiver Control register 0 (USBx_USBTRC0)
+   -- 49.4.28 Frame Adjust Register (USBx_USBFRMADJUST)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 50 USB Device Charger Detection Module (USBDCD)
+   ----------------------------------------------------------------------------
+
+   -- 50.4.1 Control register (USBDCD_CONTROL)
+   -- 50.4.2 Clock register (USBDCD_CLOCK)
+   -- 50.4.3 Status register (USBDCD_STATUS)
+   -- 50.4.4 TIMER0 register (USBDCD_TIMER0)
+   -- 50.4.5 TIMER1 register (USBDCD_TIMER1)
+   -- 50.4.6 TIMER2 register (USBDCD_TIMER2)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 52 USB High Speed OTG Controller (USBHS)
+   ----------------------------------------------------------------------------
+
+   -- 52.3.1 Identification Register (USBHS_ID)
+   -- 52.3.2 General Hardware Parameters Register (USBHS_HWGENERAL)
+   -- 52.3.3 Host Hardware Parameters Register (USBHS_HWHOST)
+   -- 52.3.4 Device Hardware Parameters Register (USBHS_HWDEVICE)
+   -- 52.3.5 Transmit Buffer Hardware Parameters Register (USBHS_HWTXBUF)
+   -- 52.3.6 Receive Buffer Hardware Parameters Register (USBHS_HWRXBUF)
+   -- 52.3.7 General Purpose Timer n Load Register (USBHS_GPTIMERnLD)
+   -- 52.3.8 General Purpose Timer n Control Register (USBHS_GPTIMERnCTL)
+   -- 52.3.9 System Bus Interface Configuration Register (USBHS_USB_SBUSCFG)
+   -- 52.3.10 Host Controller Interface Version and Capability Registers Length Register (USBHS_HCIVERSION)
+   -- 52.3.11 Host Controller Structural Parameters Register (USBHS_HCSPARAMS)
+   -- 52.3.12 Host Controller Capability Parameters Register (USBHS_HCCPARAMS)
+   -- 52.3.13 Device Controller Interface Version (USBHS_DCIVERSION)
+   -- 52.3.14 Device Controller Capability Parameters (USBHS_DCCPARAMS)
+   -- 52.3.15 USB Command Register (USBHS_USBCMD)
+   -- 52.3.16 USB Status Register (USBHS_USBSTS)
+   -- 52.3.17 USB Interrupt Enable Register (USBHS_USBINTR)
+   -- 52.3.18 Frame Index Register (USBHS_FRINDEX)
+   -- 52.3.19 Periodic Frame List Base Address Register (USBHS_PERIODICLISTBASE)
+   -- 52.3.20 Device Address Register (USBHS_DEVICEADDR)
+   -- 52.3.21 Current Asynchronous List Address Register (USBHS_ASYNCLISTADDR)
+   -- 52.3.22 Endpoint List Address Register (USBHS_EPLISTADDR)
+   -- 52.3.23 Host TT Asynchronous Buffer Control (USBHS_TTCTRL)
+   -- 52.3.24 Master Interface Data Burst Size Register (USBHS_BURSTSIZE)
+   -- 52.3.25 Transmit FIFO Tuning Control Register (USBHS_TXFILLTUNING)
+   -- 52.3.26 ULPI Register Access (USBHS_ULPI_VIEWPORT)
+   -- 52.3.27 Endpoint NAK Register (USBHS_ENDPTNAK)
+   -- 52.3.28 Endpoint NAK Enable Register (USBHS_ENDPTNAKEN)
+   -- 52.3.29 Configure Flag Register (USBHS_CONFIGFLAG)
+   -- 52.3.30 Port Status and Control Registers (USBHS_PORTSC1)
+   -- 52.3.31 On-the-Go Status and Control Register (USBHS_OTGSC)
+   -- 52.3.32 USB Mode Register (USBHS_USBMODE)
+   -- 52.3.33 Endpoint Setup Status Register (USBHS_EPSETUPSR)
+   -- 52.3.34 Endpoint Initialization Register (USBHS_EPPRIME)
+   -- 52.3.35 Endpoint Flush Register (USBHS_EPFLUSH)
+   -- 52.3.36 Endpoint Status Register (USBHS_EPSR)
+   -- 52.3.37 Endpoint Complete Register (USBHS_EPCOMPLETE)
+   -- 52.3.38 Endpoint Control Register 0 (USBHS_EPCR0)
+   -- 52.3.39 Endpoint Control Register n (USBHS_EPCRn)
+   -- 52.3.40 USB General Control Register (USBHS_USBGENCTRL)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 53 CAN (FlexCAN)
+   ----------------------------------------------------------------------------
+
+   -- 53.3.2 Module Configuration Register (CANx_MCR)
+   -- 53.3.3 Control 1 register (CANx_CTRL1)
+   -- 53.3.4 Free Running Timer (CANx_TIMER)
+   -- 53.3.5 Rx Mailboxes Global Mask Register (CANx_RXMGMASK)
+   -- 53.3.6 Rx 14 Mask register (CANx_RX14MASK)
+   -- 53.3.7 Rx 15 Mask register (CANx_RX15MASK)
+   -- 53.3.8 Error Counter (CANx_ECR)
+   -- 53.3.9 Error and Status 1 register (CANx_ESR1)
+   -- 53.3.10 Interrupt Masks 1 register (CANx_IMASK1)
+   -- 53.3.11 Interrupt Flags 1 register (CANx_IFLAG1)
+   -- 53.3.12 Control 2 register (CANx_CTRL2)
+   -- 53.3.13 Error and Status 2 register (CANx_ESR2)
+   -- 53.3.14 CRC Register (CANx_CRCR)
+   -- 53.3.15 Rx FIFO Global Mask register (CANx_RXFGMASK)
+   -- 53.3.16 Rx FIFO Information Register (CANx_RXFIR)
+   -- 53.3.17 Rx Individual Mask Registers (CANx_RXIMRn)
 
    ----------------------------------------------------------------------------
    -- Chapter 54 Serial Peripheral Interface (SPI)
@@ -5745,6 +6311,60 @@ pragma Style_Checks (Off);
            Convention => Ada;
 
    ----------------------------------------------------------------------------
+   -- Chapter 57 Secured digital host controller (SDHC)
+   ----------------------------------------------------------------------------
+
+   -- 57.4.1 DMA System Address register (SDHC_DSADDR)
+   -- 57.4.2 Block Attributes register (SDHC_BLKATTR)
+   -- 57.4.3 Command Argument register (SDHC_CMDARG)
+   -- 57.4.4 Transfer Type register (SDHC_XFERTYP)
+   -- 57.4.5 Command Response 0 (SDHC_CMDRSP0)
+   -- 57.4.6 Command Response 1 (SDHC_CMDRSP1)
+   -- 57.4.7 Command Response 2 (SDHC_CMDRSP2)
+   -- 57.4.8 Command Response 3 (SDHC_CMDRSP3)
+   -- 57.4.9 Buffer Data Port register (SDHC_DATPORT)
+   -- 57.4.10 Present State register (SDHC_PRSSTAT)
+   -- 57.4.11 Protocol Control register (SDHC_PROCTL)
+   -- 57.4.12 System Control register (SDHC_SYSCTL)
+   -- 57.4.13 Interrupt Status register (SDHC_IRQSTAT)
+   -- 57.4.14 Interrupt Status Enable register (SDHC_IRQSTATEN)
+   -- 57.4.15 Interrupt Signal Enable register (SDHC_IRQSIGEN)
+   -- 57.4.16 Auto CMD12 Error Status Register (SDHC_AC12ERR)
+   -- 57.4.17 Host Controller Capabilities (SDHC_HTCAPBLT)
+   -- 57.4.18 Watermark Level Register (SDHC_WML)
+   -- 57.4.19 Force Event register (SDHC_FEVT)
+   -- 57.4.20 ADMA Error Status register (SDHC_ADMAES)
+   -- 57.4.21 ADMA System Addressregister (SDHC_ADSADDR)
+   -- 57.4.22 Vendor Specific register (SDHC_VENDOR)
+   -- 57.4.23 MMC Boot register (SDHC_MMCBOOT)
+   -- 57.4.24 Host Controller Version (SDHC_HOSTVER)
+
+   ----------------------------------------------------------------------------
+   -- Chapter 58 Integrated Interchip Sound (I2S) / Synchronous Audio Interface (SAI)
+   ----------------------------------------------------------------------------
+
+   -- 58.3.1 SAI Transmit Control Register (I2Sx_TCSR)
+   -- 58.3.2 SAI Transmit Configuration 1 Register (I2Sx_TCR1)
+   -- 58.3.3 SAI Transmit Configuration 2 Register (I2Sx_TCR2)
+   -- 58.3.4 SAI Transmit Configuration 3 Register (I2Sx_TCR3)
+   -- 58.3.5 SAI Transmit Configuration 4 Register (I2Sx_TCR4)
+   -- 58.3.6 SAI Transmit Configuration 5 Register (I2Sx_TCR5)
+   -- 58.3.7 SAI Transmit Data Register (I2Sx_TDRn)
+   -- 58.3.8 SAI Transmit FIFO Register (I2Sx_TFRn)
+   -- 58.3.9 SAI Transmit Mask Register (I2Sx_TMR)
+   -- 58.3.10 SAI Receive Control Register (I2Sx_RCSR)
+   -- 58.3.11 SAI Receive Configuration 1 Register (I2Sx_RCR1)
+   -- 58.3.12 SAI Receive Configuration 2 Register (I2Sx_RCR2)
+   -- 58.3.13 SAI Receive Configuration 3 Register (I2Sx_RCR3)
+   -- 58.3.14 SAI Receive Configuration 4 Register (I2Sx_RCR4)
+   -- 58.3.15 SAI Receive Configuration 5 Register (I2Sx_RCR5)
+   -- 58.3.16 SAI Receive Data Register (I2Sx_RDRn)
+   -- 58.3.17 SAI Receive FIFO Register (I2Sx_RFRn)
+   -- 58.3.18 SAI Receive Mask Register (I2Sx_RMR)
+   -- 58.3.19 SAI MCLK Control Register (I2Sx_MCR)
+   -- 58.3.20 SAI MCLK Divide Register (I2Sx_MDR)
+
+   ----------------------------------------------------------------------------
    -- Chapter 59 General-Purpose Input/Output (GPIO)
    ----------------------------------------------------------------------------
 
@@ -5807,6 +6427,17 @@ pragma Style_Checks (Off);
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- Chapter 60 Touch sense input (TSI)
+   ----------------------------------------------------------------------------
+
+   -- 60.6.1 General Control and Status register (TSIx_GENCS)
+   -- 60.6.2 SCAN Control register (TSIx_SCANC)
+   -- 60.6.3 Pin Enable register (TSIx_PEN)
+   -- 60.6.4 Wake-Up Channel Counter Register (TSIx_WUCNTR)
+   -- 60.6.5 Counter Register (TSIx_CNTRn)
+   -- 60.6.6 Low-Power Channel Threshold register (TSIx_THRESHOLD)
 
 pragma Style_Checks (On);
 
