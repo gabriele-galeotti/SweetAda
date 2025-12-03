@@ -1165,9 +1165,10 @@ pragma Style_Checks (Off);
       -- fmt.proto
       -- ffmt.[cmd_proto|addr_proto|data_proto]
 
-      proto_SINGLE : constant := 2#00#; -- DQ0 (MOSI), DQ1 (MISO)
-      proto_DUAL   : constant := 2#01#; -- DQ0, DQ1
-      proto_QUAD   : constant := 2#10#; -- DQ0, DQ1, DQ2, DQ3
+      type proto_Type is new Bits_2 range 0 .. 2#10#;
+      proto_SINGLE : constant proto_Type := 2#00#; -- DQ0 (MOSI), DQ1 (MISO)
+      proto_DUAL   : constant proto_Type := 2#01#; -- DQ0, DQ1
+      proto_QUAD   : constant proto_Type := 2#10#; -- DQ0, DQ1, DQ2, DQ3
 
       -- 19.4 Serial Clock Divisor Register (sckdiv)
 
@@ -1270,12 +1271,12 @@ pragma Style_Checks (Off);
       dir_TX : constant := 1; -- The receive FIFO is not populated.
 
       type fmt_Type is record
-         proto     : Bits_2  := 0; -- SPI protocol
-         endian    : Bits_1  := 0; -- SPI endianness
-         dir       : Bits_1  := 0; -- SPI I/O direction.
-         Reserved1 : Bits_12 := 0;
-         len       : Bits_4  := 8; -- Number of bits per frame
-         Reserved2 : Bits_12 := 0;
+         proto     : Proto_Type := proto_SINGLE; -- SPI protocol
+         endian    : Bits_1     := endian_MSB;   -- SPI endianness
+         dir       : Bits_1     := dir_RX;       -- SPI I/O direction.
+         Reserved1 : Bits_12    := 0;
+         len       : Bits_4     := 8;            -- Number of bits per frame
+         Reserved2 : Bits_12    := 0;
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
@@ -1321,7 +1322,7 @@ pragma Style_Checks (Off);
       -- 19.13 Transmit Watermark Register (txmark)
 
       type txmark_Type is record
-         txmark   : Bits_3;       -- Transmit watermark.
+         txmark   : Bits_3  := 0; -- Transmit watermark.
          Reserved : Bits_29 := 0;
       end record
          with Bit_Order => Low_Order_First,
@@ -1334,7 +1335,7 @@ pragma Style_Checks (Off);
       -- 19.14 Receive Watermark Register (rxmark)
 
       type rxmark_Type is record
-         rxmark   : Bits_3;       -- Receive watermark
+         rxmark   : Bits_3  := 0; -- Receive watermark
          Reserved : Bits_29 := 0;
       end record
          with Bit_Order => Low_Order_First,
@@ -1347,8 +1348,8 @@ pragma Style_Checks (Off);
       -- 19.15 SPI Interrupt Registers (ie and ip)
 
       type ie_Type is record
-         txwm     : Boolean;      -- Transmit watermark enable
-         rxwm     : Boolean;      -- Receive watermark enable
+         txwm     : Boolean := False; -- Transmit watermark enable
+         rxwm     : Boolean := False; -- Receive watermark enable
          Reserved : Bits_30 := 0;
       end record
          with Bit_Order => Low_Order_First,
@@ -1360,8 +1361,8 @@ pragma Style_Checks (Off);
       end record;
 
       type ip_Type is record
-         txwm     : Boolean;      -- Transmit watermark pending
-         rxwm     : Boolean;      -- Receive watermark pending
+         txwm     : Boolean := False; -- Transmit watermark pending
+         rxwm     : Boolean := False; -- Receive watermark pending
          Reserved : Bits_30 := 0;
       end record
          with Bit_Order => Low_Order_First,
@@ -1375,7 +1376,7 @@ pragma Style_Checks (Off);
       -- 19.16 SPI Flash Interface Control Register (fctrl)
 
       type fctrl_Type is record
-         en       : Boolean;      -- SPI Flash Mode Select
+         en       : Boolean := True; -- SPI Flash Mode Select
          Reserved : Bits_31 := 0;
       end record
          with Bit_Order => Low_Order_First,
@@ -1388,15 +1389,15 @@ pragma Style_Checks (Off);
       -- 19.17 SPI Flash Instruction Format Register (ffmt)
 
       type ffmt_Type is record
-         cmd_en     : Boolean;         -- Enable sending of command
-         addr_len   : Bits_3;          -- Number of address bytes (0 to 4)
-         pad_cnt    : Bits_4;          -- Number of dummy cycles
-         cmd_proto  : Bits_2;          -- Protocol for transmitting command
-         addr_proto : Bits_2;          -- Protocol for transmitting address and padding
-         data_proto : Bits_2;          -- Protocol for receiving data bytes
+         cmd_en     : Boolean    := True;         -- Enable sending of command
+         addr_len   : Bits_3     := 3;            -- Number of address bytes (0 to 4)
+         pad_cnt    : Bits_4     := 0;            -- Number of dummy cycles
+         cmd_proto  : proto_Type := proto_SINGLE; -- Protocol for transmitting command
+         addr_proto : proto_Type := proto_SINGLE; -- Protocol for transmitting address and padding
+         data_proto : proto_Type := proto_SINGLE; -- Protocol for receiving data bytes
          Reserved   : Bits_2     := 0;
-         cmd_code   : Unsigned_8;      -- Value of command byte
-         pad_code   : Unsigned_8;      -- First 8 bits to transmit during dummy cycles
+         cmd_code   : Unsigned_8 := 3;            -- Value of command byte
+         pad_code   : Unsigned_8 := 0;            -- First 8 bits to transmit during dummy cycles
       end record
          with Bit_Order => Low_Order_First,
               Size      => 32;
