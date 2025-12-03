@@ -498,11 +498,20 @@ pragma Style_Checks (Off);
 
       -- 12.4 Read sequencer control register (otp_rsctrl)
 
+      scale_1   : constant := 2#000#; -- The number of clock cycles in each phase = 1
+      scale_2   : constant := 2#001#; -- The number of clock cycles in each phase = 2
+      scale_4   : constant := 2#010#; -- The number of clock cycles in each phase = 4
+      scale_8   : constant := 2#011#; -- The number of clock cycles in each phase = 8
+      scale_16  : constant := 2#100#; -- The number of clock cycles in each phase = 16
+      scale_32  : constant := 2#101#; -- The number of clock cycles in each phase = 32
+      scale_64  : constant := 2#110#; -- The number of clock cycles in each phase = 64
+      scale_128 : constant := 2#111#; -- The number of clock cycles in each phase = 128
+
       type rsctrl_Type is record
-         scale    : Bits_3;       -- OTP timescale
-         tas      : Boolean;      -- Address setup time
-         trp      : Boolean;      -- Read pulse time
-         tacc     : Boolean;      -- Read access time
+         scale    : Bits_3  := scale_2; -- OTP timescale
+         tas      : Boolean := False;   -- Address setup time
+         trp      : Boolean := False;   -- Read pulse time
+         tacc     : Boolean := False;   -- Read access time
          Reserved : Bits_26 := 0;
       end record
          with Bit_Order => Low_Order_First,
@@ -582,16 +591,33 @@ pragma Style_Checks (Off);
 
       -- 14.3 Watchdog Configuration Register (wdogcfg)
 
+      wdogscale_NOSCALING : constant := 0;  -- scales the watchdog counter value by 2^0
+      wdogscale_SCALE2    : constant := 1;  -- scales the watchdog counter value by 2^1
+      wdogscale_SCALE4    : constant := 2;  -- scales the watchdog counter value by 2^2
+      wdogscale_SCALE8    : constant := 3;  -- scales the watchdog counter value by 2^3
+      wdogscale_SCALE16   : constant := 4;  -- scales the watchdog counter value by 2^4
+      wdogscale_SCALE32   : constant := 5;  -- scales the watchdog counter value by 2^5
+      wdogscale_SCALE64   : constant := 6;  -- scales the watchdog counter value by 2^6
+      wdogscale_SCALE128  : constant := 7;  -- scales the watchdog counter value by 2^7
+      wdogscale_SCALE256  : constant := 8;  -- scales the watchdog counter value by 2^8
+      wdogscale_SCALE512  : constant := 9;  -- scales the watchdog counter value by 2^9
+      wdogscale_SCALE1k   : constant := 10; -- scales the watchdog counter value by 2^10
+      wdogscale_SCALE2k   : constant := 11; -- scales the watchdog counter value by 2^11
+      wdogscale_SCALE4k   : constant := 12; -- scales the watchdog counter value by 2^12
+      wdogscale_SCALE8k   : constant := 13; -- scales the watchdog counter value by 2^13
+      wdogscale_SCALE16k  : constant := 14; -- scales the watchdog counter value by 2^14
+      wdogscale_SCALE32k  : constant := 15; -- scales the watchdog counter value by 2^15
+
       type wdogcfg_Type is record
-         wdogscale     : Bits_4;       -- Counter scale value.
+         wdogscale     : Bits_4;           -- Counter scale value.
          Reserved1     : Bits_4  := 0;
-         wdogrsten     : Boolean;      -- Controls whether the comp output can set the wdogrst bit and hence cause a full reset.
+         wdogrsten     : Boolean := False; -- Controls whether the comp output can set the wdogrst bit and hence cause a full reset.
          wdogzerocmp   : Boolean;
          Reserved2     : Bits_2  := 0;
-         wdogenalways  : Boolean;      -- Enable Always - run continuously
-         wdogcoreawake : Boolean;      -- Increment the watchdog counter if the processor is not asleep
+         wdogenalways  : Boolean := False; -- Enable Always - run continuously
+         wdogcoreawake : Boolean := False; -- Increment the watchdog counter if the processor is not asleep
          Reserved3     : Bits_14 := 0;
-         wdogip0       : Boolean;      -- Interrupt 0 Pending
+         wdogip0       : Boolean;          -- Interrupt 0 Pending
          Reserved4     : Bits_3  := 0;
       end record
          with Bit_Order => Low_Order_First,
