@@ -1388,7 +1388,7 @@ ifeq ($(USE_LIBM),Y)
 	@$(call echo-print,"LIBM FILENAME:           $(LIBM_FILENAME)")
 endif
 	@$(call echo-print,"USE CLIBRARY:            $(USE_CLIBRARY)")
-	@$(call echo-print,"ELABORATION_MODEL:       $(ELABORATION_MODEL)")
+	@$(call echo-print,"ELABORATION MODEL:       $(ELABORATION_MODEL)")
 	@$(call echo-print,"OPTIMIZATION LEVEL:      $(OPTIMIZATION_LEVEL)")
 ifneq ($(TOOLCHAIN_NAME),)
 	@$(call echo-print,"ADA GCC SWITCHES (RTS):  $(strip $(ADAC_SWITCHES_RTS))")
