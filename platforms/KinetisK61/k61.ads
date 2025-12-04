@@ -2633,16 +2633,379 @@ pragma Style_Checks (Off);
    -- Chapter 28 Local Memory Controller
    ----------------------------------------------------------------------------
 
+   LMEM_BASEADDRESS : constant := 16#E008_2000#;
+
+   type Cache_Mode_Type is new Bits_2;
+
+   CACHE_MODE_NOCACHE   : constant Cache_Mode_Type := 2#00#; -- Non-cacheable
+   CACHE_MODE_NOCACHE_2 : constant Cache_Mode_Type := 2#01#; -- Non-cacheable
+   CACHE_MODE_WTHROUGH  : constant Cache_Mode_Type := 2#10#; -- Write-through
+   CACHE_MODE_WBACK     : constant Cache_Mode_Type := 2#11#; -- Write-back
+
    -- 28.2.1 Cache control register (LMEM_PCCCR)
+
+   type LMEM_PCCCR_Type is record
+      ENCACHE   : Boolean := False; -- Cache enable
+      ENWRBUF   : Boolean := False; -- Enable Write Buffer
+      Reserved1 : Bits_1  := 0;
+      Reserved2 : Bits_1  := 0;
+      Reserved3 : Bits_20 := 0;
+      INVW0     : Boolean := False; -- Invalidate Way 0
+      PUSHW0    : Boolean := False; -- Push Way 0
+      INVW1     : Boolean := False; -- Invalidate Way 1
+      PUSHW1    : Boolean := False; -- Push Way 1
+      Reserved4 : Bits_3  := 0;
+      GO        : Boolean := False; -- Initiate Cache Command
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LMEM_PCCCR_Type use record
+      ENCACHE   at 0 range  0 ..  0;
+      ENWRBUF   at 0 range  1 ..  1;
+      Reserved1 at 0 range  2 ..  2;
+      Reserved2 at 0 range  3 ..  3;
+      Reserved3 at 0 range  4 .. 23;
+      INVW0     at 0 range 24 .. 24;
+      PUSHW0    at 0 range 25 .. 25;
+      INVW1     at 0 range 26 .. 26;
+      PUSHW1    at 0 range 27 .. 27;
+      Reserved4 at 0 range 28 .. 30;
+      GO        at 0 range 31 .. 31;
+   end record;
+
+   LMEM_PCCCR : aliased LMEM_PCCCR_Type
+      with Address              => System'To_Address (LMEM_BASEADDRESS + 16#000#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 28.2.2 Cache line control register (LMEM_PCCLCR)
+
+   WSEL_WAY0 : constant := 0; -- Way 0
+   WSEL_WAY1 : constant := 1; -- Way 1
+
+   TDSEL_DATA : constant := 0; -- Data
+   TDSEL_TAG  : constant := 1; -- Tag
+
+   LCWAY_WAY0 renames WSEL_WAY0;
+   LCWAY_WAY1 renames WSEL_WAY1;
+
+   LCMD_SEARCHRW   : constant := 2#00#; -- Search and read or write
+   LCMD_INVALIDATE : constant := 2#01#; -- Invalidate
+   LCMD_PUSH       : constant := 2#10#; -- Push
+   LCMD_CLEAR      : constant := 2#11#; -- Clear
+
+   LADSEL_CACHADDR : constant := 0; -- Cache address
+   LADSEL_PHYSADDR : constant := 1; -- Physical address
+
+   LACC_READ  : constant := 0; -- Read
+   LACC_WRITE : constant := 1; -- Write
+
+   type LMEM_PCCLCR_Type is record
+      LGO       : Boolean := False;           -- Initiate Cache Line Command
+      Reserved1 : Bits_1  := 0;
+      CACHEADDR : Bits_10 := 0;               -- Cache address
+      Reserved2 : Bits_2  := 0;
+      WSEL      : Bits_1  := WSEL_WAY0;       -- Way select
+      Reserved3 : Bits_1  := 0;
+      TDSEL     : Bits_1  := TDSEL_DATA;      -- Tag/Data Select
+      Reserved4 : Bits_3  := 0;
+      LCIVB     : Boolean := False;           -- Line Command Initial Valid Bit
+      LCIMB     : Boolean := False;           -- Line Command Initial Modified Bit
+      LCWAY     : Bits_1  := LCWAY_WAY0;      -- Line Command Way
+      Reserved5 : Bits_1  := 0;
+      LCMD      : Bits_2  := LCMD_SEARCHRW;   -- Line Command
+      LADSEL    : Bits_1  := LADSEL_CACHADDR; -- Line Address Select
+      LACC      : Bits_1  := LACC_READ;       -- Line access type
+      Reserved6 : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LMEM_PCCLCR_Type use record
+      LGO       at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  1;
+      CACHEADDR at 0 range  2 .. 11;
+      Reserved2 at 0 range 12 .. 13;
+      WSEL      at 0 range 14 .. 14;
+      Reserved3 at 0 range 15 .. 15;
+      TDSEL     at 0 range 16 .. 16;
+      Reserved4 at 0 range 17 .. 19;
+      LCIVB     at 0 range 20 .. 20;
+      LCIMB     at 0 range 21 .. 21;
+      LCWAY     at 0 range 22 .. 22;
+      Reserved5 at 0 range 23 .. 23;
+      LCMD      at 0 range 24 .. 25;
+      LADSEL    at 0 range 26 .. 26;
+      LACC      at 0 range 27 .. 27;
+      Reserved6 at 0 range 28 .. 31;
+   end record;
+
+   LMEM_PCCLCR : aliased LMEM_PCCLCR_Type
+      with Address              => System'To_Address (LMEM_BASEADDRESS + 16#004#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 28.2.3 Cache search address register (LMEM_PCCSAR)
+
+   type LMEM_PCCSAR_Type is record
+      LGO      : Boolean := False; -- Initiate Cache Line Command
+      Reserved : Bits_1  := 0;
+      PHYADDR  : Bits_30 := 0;     -- Physical Address
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LMEM_PCCSAR_Type use record
+      LGO      at 0 range 0 ..  0;
+      Reserved at 0 range 1 ..  1;
+      PHYADDR  at 0 range 2 .. 31;
+   end record;
+
+   LMEM_PCCSAR : aliased LMEM_PCCSAR_Type
+      with Address              => System'To_Address (LMEM_BASEADDRESS + 16#008#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 28.2.4 Cache read/write value register (LMEM_PCCCVR)
+
+   type LMEM_PCCCVR_Type is record
+      DATA : Unsigned_32; -- Cache read/write Data
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LMEM_PCCCVR_Type use record
+      DATA at 0 range 0 .. 31;
+   end record;
+
+   LMEM_PCCCVR : aliased LMEM_PCCCVR_Type
+      with Address              => System'To_Address (LMEM_BASEADDRESS + 16#00C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 28.2.5 Cache regions mode register (LMEM_PCCRMR)
+
+   type LMEM_PCCRMR_Type is record
+      R15 : Cache_Mode_Type := CACHE_MODE_NOCACHE;  -- Region 15 mode
+      R14 : Cache_Mode_Type := CACHE_MODE_NOCACHE;  -- Region 14 mode
+      R13 : Cache_Mode_Type := CACHE_MODE_NOCACHE;  -- Region 13 mode
+      R12 : Cache_Mode_Type := CACHE_MODE_NOCACHE;  -- Region 12 mode
+      R11 : Cache_Mode_Type := CACHE_MODE_NOCACHE;  -- Region 11 mode
+      R10 : Cache_Mode_Type := CACHE_MODE_NOCACHE;  -- Region 10 mode
+      R9  : Cache_Mode_Type := CACHE_MODE_WTHROUGH; -- Region 9 mode
+      R8  : Cache_Mode_Type := CACHE_MODE_WTHROUGH; -- Region 8 mode
+      R7  : Cache_Mode_Type := CACHE_MODE_WBACK;    -- Region 7 mode
+      R6  : Cache_Mode_Type := CACHE_MODE_WBACK;    -- Region 6 mode
+      R5  : Cache_Mode_Type := CACHE_MODE_NOCACHE;  -- Region 5 mode
+      R4  : Cache_Mode_Type := CACHE_MODE_NOCACHE;  -- Region 4 mode
+      R3  : Cache_Mode_Type := CACHE_MODE_WTHROUGH; -- Region 3 mode
+      R2  : Cache_Mode_Type := CACHE_MODE_WTHROUGH; -- Region 2 mode
+      R1  : Cache_Mode_Type := CACHE_MODE_WTHROUGH; -- Region 1 mode
+      R0  : Cache_Mode_Type := CACHE_MODE_WTHROUGH; -- Region 0 mode
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LMEM_PCCRMR_Type use record
+      R15 at 0 range  0 ..  1;
+      R14 at 0 range  2 ..  3;
+      R13 at 0 range  4 ..  5;
+      R12 at 0 range  6 ..  7;
+      R11 at 0 range  8 ..  9;
+      R10 at 0 range 10 .. 11;
+      R9  at 0 range 12 .. 13;
+      R8  at 0 range 14 .. 15;
+      R7  at 0 range 16 .. 17;
+      R6  at 0 range 18 .. 19;
+      R5  at 0 range 20 .. 21;
+      R4  at 0 range 22 .. 23;
+      R3  at 0 range 24 .. 25;
+      R2  at 0 range 26 .. 27;
+      R1  at 0 range 28 .. 29;
+      R0  at 0 range 30 .. 31;
+   end record;
+
+   LMEM_PCCRMR : aliased LMEM_PCCRMR_Type
+      with Address              => System'To_Address (LMEM_BASEADDRESS + 16#020#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 28.2.6 Cache control register (LMEM_PSCCR)
+
+   type LMEM_PSCCR_Type is record
+      ENCACHE   : Boolean := False; -- Cache enable
+      ENWRBUF   : Boolean := False; -- Enable Write Buffer
+      Reserved1 : Bits_1  := 0;
+      Reserved2 : Bits_1  := 0;
+      Reserved3 : Bits_20 := 0;
+      INVW0     : Boolean := False; -- Invalidate Way 0
+      PUSHW0    : Boolean := False; -- Push Way 0
+      INVW1     : Boolean := False; -- Invalidate Way 1
+      PUSHW1    : Boolean := False; -- Push Way 1
+      Reserved4 : Bits_3  := 0;
+      GO        : Boolean := False; -- Initiate Cache Command
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LMEM_PSCCR_Type use record
+      ENCACHE   at 0 range  0 ..  0;
+      ENWRBUF   at 0 range  1 ..  1;
+      Reserved1 at 0 range  2 ..  2;
+      Reserved2 at 0 range  3 ..  3;
+      Reserved3 at 0 range  4 .. 23;
+      INVW0     at 0 range 24 .. 24;
+      PUSHW0    at 0 range 25 .. 25;
+      INVW1     at 0 range 26 .. 26;
+      PUSHW1    at 0 range 27 .. 27;
+      Reserved4 at 0 range 28 .. 30;
+      GO        at 0 range 31 .. 31;
+   end record;
+
+   LMEM_PSCCR : aliased LMEM_PSCCR_Type
+      with Address              => System'To_Address (LMEM_BASEADDRESS + 16#800#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 28.2.7 Cache line control register (LMEM_PSCLCR)
+
+   -- WSEL_* constants already defined at 28.2.2
+   -- TDSEL_* constants already defined at 28.2.2
+   -- LCWAY_* constants already defined at 28.2.2
+   -- LCMD_* constants already defined at 28.2.2
+   -- LADSEL_* constants already defined at 28.2.2
+   -- LACC_* constants already defined at 28.2.2
+
+   type LMEM_PSCLCR_Type is record
+      LGO       : Boolean := False;           -- Initiate Cache Line Command
+      Reserved1 : Bits_1  := 0;
+      CACHEADDR : Bits_10 := 0;               -- Cache address
+      Reserved2 : Bits_2  := 0;
+      WSEL      : Bits_1  := WSEL_WAY0;       -- Way select
+      Reserved3 : Bits_1  := 0;
+      TDSEL     : Bits_1  := TDSEL_DATA;      -- Tag/Data Select
+      Reserved4 : Bits_3  := 0;
+      LCIVB     : Boolean := False;           -- Line Command Initial Valid Bit
+      LCIMB     : Boolean := False;           -- Line Command Initial Modified Bit
+      LCWAY     : Bits_1  := LCWAY_WAY0;      -- Line Command Way
+      Reserved5 : Bits_1  := 0;
+      LCMD      : Bits_2  := LCMD_SEARCHRW;   -- Line Command
+      LADSEL    : Bits_1  := LADSEL_CACHADDR; -- Line Address Select
+      LACC      : Bits_1  := LACC_READ;       -- Line access type
+      Reserved6 : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LMEM_PSCLCR_Type use record
+      LGO       at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  1;
+      CACHEADDR at 0 range  2 .. 11;
+      Reserved2 at 0 range 12 .. 13;
+      WSEL      at 0 range 14 .. 14;
+      Reserved3 at 0 range 15 .. 15;
+      TDSEL     at 0 range 16 .. 16;
+      Reserved4 at 0 range 17 .. 19;
+      LCIVB     at 0 range 20 .. 20;
+      LCIMB     at 0 range 21 .. 21;
+      LCWAY     at 0 range 22 .. 22;
+      Reserved5 at 0 range 23 .. 23;
+      LCMD      at 0 range 24 .. 25;
+      LADSEL    at 0 range 26 .. 26;
+      LACC      at 0 range 27 .. 27;
+      Reserved6 at 0 range 28 .. 31;
+   end record;
+
+   LMEM_PSCLCR : aliased LMEM_PSCLCR_Type
+      with Address              => System'To_Address (LMEM_BASEADDRESS + 16#804#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 28.2.8 Cache search address register (LMEM_PSCSAR)
+
+   type LMEM_PSCSAR_Type is record
+      LGO      : Boolean := False; -- Initiate Cache Line Command
+      Reserved : Bits_1  := 0;
+      PHYADDR  : Bits_30 := 0;     -- Physical Address
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LMEM_PSCSAR_Type use record
+      LGO      at 0 range 0 ..  0;
+      Reserved at 0 range 1 ..  1;
+      PHYADDR  at 0 range 2 .. 31;
+   end record;
+
+   LMEM_PSCSAR : aliased LMEM_PSCSAR_Type
+      with Address              => System'To_Address (LMEM_BASEADDRESS + 16#808#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 28.2.9 Cache read/write value register (LMEM_PSCCVR)
+
+   type LMEM_PSCCVR_Type is record
+      DATA : Unsigned_32; -- Cache read/write Data
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LMEM_PSCCVR_Type use record
+      DATA at 0 range 0 .. 31;
+   end record;
+
+   LMEM_PSCCVR : aliased LMEM_PSCCVR_Type
+      with Address              => System'To_Address (LMEM_BASEADDRESS + 16#80C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 28.2.10 Cache regions mode register (LMEM_PSCRMR)
+
+   type LMEM_PSCRMR_Type is record
+      R15 : Cache_Mode_Type := CACHE_MODE_NOCACHE;  -- Region 15 mode
+      R14 : Cache_Mode_Type := CACHE_MODE_NOCACHE;  -- Region 14 mode
+      R13 : Cache_Mode_Type := CACHE_MODE_NOCACHE;  -- Region 13 mode
+      R12 : Cache_Mode_Type := CACHE_MODE_NOCACHE;  -- Region 12 mode
+      R11 : Cache_Mode_Type := CACHE_MODE_NOCACHE;  -- Region 11 mode
+      R10 : Cache_Mode_Type := CACHE_MODE_NOCACHE;  -- Region 10 mode
+      R9  : Cache_Mode_Type := CACHE_MODE_WTHROUGH; -- Region 9 mode
+      R8  : Cache_Mode_Type := CACHE_MODE_WTHROUGH; -- Region 8 mode
+      R7  : Cache_Mode_Type := CACHE_MODE_WBACK;    -- Region 7 mode
+      R6  : Cache_Mode_Type := CACHE_MODE_WBACK;    -- Region 6 mode
+      R5  : Cache_Mode_Type := CACHE_MODE_NOCACHE;  -- Region 5 mode
+      R4  : Cache_Mode_Type := CACHE_MODE_NOCACHE;  -- Region 4 mode
+      R3  : Cache_Mode_Type := CACHE_MODE_WTHROUGH; -- Region 3 mode
+      R2  : Cache_Mode_Type := CACHE_MODE_WTHROUGH; -- Region 2 mode
+      R1  : Cache_Mode_Type := CACHE_MODE_WTHROUGH; -- Region 1 mode
+      R0  : Cache_Mode_Type := CACHE_MODE_WTHROUGH; -- Region 0 mode
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LMEM_PSCRMR_Type use record
+      R15 at 0 range  0 ..  1;
+      R14 at 0 range  2 ..  3;
+      R13 at 0 range  4 ..  5;
+      R12 at 0 range  6 ..  7;
+      R11 at 0 range  8 ..  9;
+      R10 at 0 range 10 .. 11;
+      R9  at 0 range 12 .. 13;
+      R8  at 0 range 14 .. 15;
+      R7  at 0 range 16 .. 17;
+      R6  at 0 range 18 .. 19;
+      R5  at 0 range 20 .. 21;
+      R4  at 0 range 22 .. 23;
+      R3  at 0 range 24 .. 25;
+      R2  at 0 range 26 .. 27;
+      R1  at 0 range 28 .. 29;
+      R0  at 0 range 30 .. 31;
+   end record;
+
+   LMEM_PSCRMR : aliased LMEM_PSCRMR_Type
+      with Address              => System'To_Address (LMEM_BASEADDRESS + 16#820#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 29 Flash Memory Controller (FMC)
