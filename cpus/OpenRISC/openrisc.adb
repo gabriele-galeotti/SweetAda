@@ -109,6 +109,12 @@ pragma Style_Checks (Off);
    function VR_Read return VR_Type
       is function SPR_Read is new MFSPR (VR_REGNO, VR_Type); begin return SPR_Read; end VR_Read;
 
+   function VR2_Read return VR2_Type
+      is function SPR_Read is new MFSPR (VR2_REGNO, VR2_Type); begin return SPR_Read; end VR2_Read;
+
+   function AVR_Read return AVR_Type
+      is function SPR_Read is new MFSPR (AVR_REGNO, AVR_Type); begin return SPR_Read; end AVR_Read;
+
 pragma Style_Checks (On);
 
    ----------------------------------------------------------------------------
@@ -128,6 +134,9 @@ pragma Style_Checks (On);
           );
    end NOP;
 
+   ----------------------------------------------------------------------------
+   -- TEE_Enable
+   ----------------------------------------------------------------------------
    procedure TEE_Enable
       (Enable : in Boolean)
       is

@@ -53,6 +53,8 @@ pragma Style_Checks (Off);
    type SPR_Type is mod 2**16;
 
    VR_REGNO   : constant SPR_Type := 0  * 2**11 + 0;
+   VR2_REGNO  : constant SPR_Type := 0  * 2**11 + 9;
+   AVR_REGNO  : constant SPR_Type := 0  * 2**11 + 10;
    SR_REGNO   : constant SPR_Type := 0  * 2**11 + 17;
    TTMR_REGNO : constant SPR_Type := 10 * 2**11 + 0;
    TTCR_REGNO : constant SPR_Type := 10 * 2**11 + 1;
@@ -127,10 +129,10 @@ pragma Style_Checks (Off);
    M_NONSTOP  : constant := 2#11#; -- Timer does not stop when TTMR[TP] matches TTCR[27:0]
 
    type TTMR_Type is record
-      TP : Bits_28; -- Time Period
-      IP : Boolean; -- Interrupt Pending
-      IE : Boolean; -- Interrupt Enable
-      M  : Bits_2;  -- Mode
+      TP : Bits_28 := 0;          -- Time Period
+      IP : Boolean := False;      -- Interrupt Pending
+      IE : Boolean := False;      -- Interrupt Enable
+      M  : Bits_2  := M_DISABLED; -- Mode
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
@@ -157,6 +159,10 @@ pragma Style_Checks (Off);
       (Value : in Unsigned_32)
       with Inline => True;
 
+   ----------------------------------------------------------------------------
+   -- 16 OpenRISC 1000 Implementations
+   ----------------------------------------------------------------------------
+
    -- 16.2 Version Register (VR)
 
    type VR_Type is record
@@ -178,6 +184,44 @@ pragma Style_Checks (Off);
 
    function VR_Read
       return VR_Type
+      with Inline => True;
+
+   -- 16.11 Version Register 2 (VR2)
+
+   type VR2_Type is record
+      VER   : Bits_24; -- Version
+      CPUID : Bits_8;  -- CPU Identification Number
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for VR2_Type use record
+      VER   at 0 range  0 .. 23;
+      CPUID at 0 range 24 .. 31;
+   end record;
+
+   function VR2_Read
+      return VR2_Type
+      with Inline => True;
+
+   -- 16.12 Architecture Version Register (AVR)
+
+   type AVR_Type is record
+      Reserved : Bits_8;
+      REV      : Bits_8; -- Architecture Revision Number
+      MIN      : Bits_8; -- Minor Architecture Version Number
+      MAJ      : Bits_8; -- Major Architecture Version Number
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for AVR_Type use record
+      Reserved at 0 range  0 ..  7;
+      REV      at 0 range  8 .. 15;
+      MIN      at 0 range 16 .. 23;
+      MAJ      at 0 range 24 .. 31;
+   end record;
+
+   function AVR_Read
+      return AVR_Type
       with Inline => True;
 
    ----------------------------------------------------------------------------
