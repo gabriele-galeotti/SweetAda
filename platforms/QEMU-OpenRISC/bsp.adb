@@ -118,8 +118,12 @@ package body BSP
       Console.Print ("OpenRISC " & Configure.CPU_MODEL & " (QEMU emulator)", NL => True);
       declare
          function To_U32 is new Ada.Unchecked_Conversion (OpenRISC.VR_Type, Unsigned_32);
+         function To_U32 is new Ada.Unchecked_Conversion (OpenRISC.VR2_Type, Unsigned_32);
+         function To_U32 is new Ada.Unchecked_Conversion (OpenRISC.AVR_Type, Unsigned_32);
       begin
-         Console.Print (Prefix => "VR: ", Value => To_U32 (OpenRISC.VR_Read), NL => True);
+         Console.Print (Prefix => "VR:  ", Value => To_U32 (OpenRISC.VR_Read), NL => True);
+         Console.Print (Prefix => "VR2: ", Value => To_U32 (OpenRISC.VR2_Read), NL => True);
+         Console.Print (Prefix => "AVR: ", Value => To_U32 (OpenRISC.AVR_Read), NL => True);
       end;
       -------------------------------------------------------------------------
       OpenRISC.TEE_Enable (True);

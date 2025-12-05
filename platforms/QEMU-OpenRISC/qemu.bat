@@ -49,7 +49,7 @@ SET TILTIMEOUT=3
 
 REM QEMU machine
 START "QEMU" %QEMU_EXECUTABLE% ^
-  -M virt ^
+  -M virt -cpu any ^
   -kernel %KERNEL_OUTFILE% ^
   -monitor telnet:localhost:%MONITORPORT%,server,nowait ^
   -chardev socket,id=SERIALPORT0,port=%SERIALPORT0%,host=localhost,ipv4=on,server=on,telnet=on,wait=on ^
