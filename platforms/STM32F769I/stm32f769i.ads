@@ -6883,13 +6883,312 @@ pragma Warnings (On);
    ----------------------------------------------------------------------------
 
    -- 29.7.1 LPTIM interrupt and status register (LPTIM_ISR)
+
+   type LPTIM_ISR_Type is record
+      CMPM      : Boolean; -- Compare match
+      ARRM      : Boolean; -- Autoreload match
+      EXTTRIG   : Boolean; -- External trigger edge event
+      CMPOK     : Boolean; -- Compare register update OK
+      ARROK     : Boolean; -- Autoreload register update OK
+      UP        : Boolean; -- Counter direction change down to up
+      DOWN      : Boolean; -- Counter direction change up to down
+      Reserved1 : Bits_2;
+      Reserved2 : Bits_23;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LPTIM_ISR_Type use record
+      CMPM      at 0 range 0 ..  0;
+      ARRM      at 0 range 1 ..  1;
+      EXTTRIG   at 0 range 2 ..  2;
+      CMPOK     at 0 range 3 ..  3;
+      ARROK     at 0 range 4 ..  4;
+      UP        at 0 range 5 ..  5;
+      DOWN      at 0 range 6 ..  6;
+      Reserved1 at 0 range 7 ..  8;
+      Reserved2 at 0 range 9 .. 31;
+   end record;
+
+   LPTIM_ISR_ADDRESS : constant := 16#4000_2400#;
+
+   LPTIM_ISR : aliased LPTIM_ISR_Type
+      with Address              => System'To_Address (LPTIM_ISR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 29.7.2 LPTIM interrupt clear register (LPTIM_ICR)
+
+   type LPTIM_ICR_Type is record
+      CMPMCF    : Boolean := False; -- compare match Clear Flag
+      ARRMCF    : Boolean := False; -- Autoreload match Clear Flag
+      EXTTRIGCF : Boolean := False; -- External trigger valid edge Clear Flag
+      CMPOKCF   : Boolean := False; -- Compare register update OK Clear Flag
+      ARROKCF   : Boolean := False; -- Autoreload register update OK Clear Flag
+      UPCF      : Boolean := False; -- Direction change to UP Clear Flag
+      DOWNCF    : Boolean := False; -- Direction change to down Clear Flag
+      Reserved1 : Bits_2  := 0;
+      Reserved2 : Bits_23 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LPTIM_ICR_Type use record
+      CMPMCF    at 0 range 0 ..  0;
+      ARRMCF    at 0 range 1 ..  1;
+      EXTTRIGCF at 0 range 2 ..  2;
+      CMPOKCF   at 0 range 3 ..  3;
+      ARROKCF   at 0 range 4 ..  4;
+      UPCF      at 0 range 5 ..  5;
+      DOWNCF    at 0 range 6 ..  6;
+      Reserved1 at 0 range 7 ..  8;
+      Reserved2 at 0 range 9 .. 31;
+   end record;
+
+   LPTIM_ICR_ADDRESS : constant := 16#4000_2404#;
+
+   LPTIM_ICR : aliased LPTIM_ICR_Type
+      with Address              => System'To_Address (LPTIM_ICR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 29.7.3 LPTIM interrupt enable register (LPTIM_IER)
+
+   type LPTIM_IER_Type is record
+      CMPMIE    : Boolean := False; -- Compare match Interrupt Enable
+      ARRMIE    : Boolean := False; -- Autoreload match Interrupt Enable
+      EXTTRIGIE : Boolean := False; -- External trigger valid edge Interrupt Enable
+      CMPOKIE   : Boolean := False; -- Compare register update OK Interrupt Enable
+      ARROKIE   : Boolean := False; -- Autoreload register update OK Interrupt Enable
+      UPIE      : Boolean := False; -- Direction change to UP Interrupt Enable
+      DOWNIE    : Boolean := False; -- Direction change to down Interrupt Enable
+      Reserved1 : Bits_2  := 0;
+      Reserved2 : Bits_23 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LPTIM_IER_Type use record
+      CMPMIE    at 0 range 0 ..  0;
+      ARRMIE    at 0 range 1 ..  1;
+      EXTTRIGIE at 0 range 2 ..  2;
+      CMPOKIE   at 0 range 3 ..  3;
+      ARROKIE   at 0 range 4 ..  4;
+      UPIE      at 0 range 5 ..  5;
+      DOWNIE    at 0 range 6 ..  6;
+      Reserved1 at 0 range 7 ..  8;
+      Reserved2 at 0 range 9 .. 31;
+   end record;
+
+   LPTIM_IER_ADDRESS : constant := 16#4000_2408#;
+
+   LPTIM_IER : aliased LPTIM_IER_Type
+      with Address              => System'To_Address (LPTIM_IER_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 29.7.4 LPTIM configuration register (LPTIM_CFGR)
+
+   CKSEL_INT : constant := 0; -- LPTIM is clocked by internal clock source (APB clock or any of the embedded oscillators)
+   CKSEL_EXT : constant := 1; -- LPTIM is clocked by an external clock source through the LPTIM external Input1
+
+   -- LPTIM is clocked by an external clock source
+   CKPOL_RISEDGE   : constant := 2#00#; -- the rising edge is the active edge used for counting
+   CKPOL_FALEDGE   : constant := 2#01#; -- the falling edge is the active edge used for counting
+   CKPOL_BOTHEDGES : constant := 2#10#; -- both edges are active edges.
+   CKPOL_RSVD      : constant := 2#11#; -- not allowed
+   -- LPTIM is configured in Encoder mode (ENC bit is set)
+   CKPOL_SUBMODE1 : constant := 2#00#; -- the encoder sub-mode 1 is active
+   CKPOL_SUBMODE2 : constant := 2#01#; -- the encoder sub-mode 2 is active
+   CKPOL_SUBMODE3 : constant := 2#10#; -- the encoder sub-mode 3 is active
+
+   CKFLT_ANY  : constant := 2#00#; -- any external clock signal level change is considered as a valid transition
+   CKFLT_CLK2 : constant := 2#01#; -- external clock signal level change must be stable for at least 2 clock periods before it is considered as valid transition.
+   CKFLT_CLK4 : constant := 2#10#; -- external clock signal level change must be stable for at least 4 clock periods before it is considered as valid transition.
+   CKFLT_CLK8 : constant := 2#11#; -- external clock signal level change must be stable for at least 8 clock periods before it is considered as valid transition.
+
+   TRGFLT_ANY  : constant := 2#00#; -- any trigger active level change is considered as a valid trigger
+   TRGFLT_CLK2 : constant := 2#01#; -- trigger active level change must be stable for at least 2 clock periods before it is considered as valid trigger.
+   TRGFLT_CLK4 : constant := 2#10#; -- trigger active level change must be stable for at least 4 clock periods before it is considered as valid trigger.
+   TRGFLT_CLK8 : constant := 2#11#; -- trigger active level change must be stable for at least 8 clock periods before it is considered as valid trigger.
+
+   PRESC_DIV1   : constant := 2#000#; -- /1
+   PRESC_DIV2   : constant := 2#001#; -- /2
+   PRESC_DIV4   : constant := 2#010#; -- /4
+   PRESC_DIV8   : constant := 2#011#; -- /8
+   PRESC_DIV16  : constant := 2#100#; -- /16
+   PRESC_DIV32  : constant := 2#101#; -- /32
+   PRESC_DIV64  : constant := 2#110#; -- /64
+   PRESC_DIV128 : constant := 2#111#; -- /128
+
+   TRIGSEL_EXTTRIG0 : constant := 2#000#; -- lptim_ext_trig0
+   TRIGSEL_EXTTRIG1 : constant := 2#001#; -- lptim_ext_trig1
+   TRIGSEL_EXTTRIG2 : constant := 2#010#; -- lptim_ext_trig2
+   TRIGSEL_EXTTRIG3 : constant := 2#011#; -- lptim_ext_trig3
+   TRIGSEL_EXTTRIG4 : constant := 2#100#; -- lptim_ext_trig4
+   TRIGSEL_EXTTRIG5 : constant := 2#101#; -- lptim_ext_trig5
+   TRIGSEL_EXTTRIG6 : constant := 2#110#; -- lptim_ext_trig6
+   TRIGSEL_EXTTRIG7 : constant := 2#111#; -- lptim_ext_trig7
+
+   TRIGEN_SOFTTRIG  : constant := 2#00#; -- software trigger (counting start is initiated by software)
+   TRIGEN_RISEDGE   : constant := 2#01#; -- rising edge is the active edge
+   TRIGEN_FALEDGE   : constant := 2#10#; -- falling edge is the active edge
+   TRIGEN_BOTHEDGES : constant := 2#11#; -- both edges are active edges
+
+   WAVE_PWMONEPULSE : constant := 0; -- Deactivate Set-once mode, PWM / One Pulse waveform (depending on OPMODE bit)
+   WAVE_SETONCE     : constant := 1; -- Activate the Set-once mode
+
+   WAVPOL_ARRCMP    : constant := 0; -- The LPTIM output reflects the compare results between LPTIM_ARR and LPTIM_CMP registers
+   WAVPOL_INVARRCMP : constant := 1; -- The LPTIM output reflects the inverse of the compare results between LPTIM_ARR and LPTIM_CMP registers
+
+   PRELOAD_APB   : constant := 0; -- Registers are updated after each APB bus write access
+   PRELOAD_LPTIM : constant := 1; -- Registers are updated at the end of the current LPTIM period
+
+   COUNTMODE_INTCLK : constant := 0; -- the counter is incremented following each internal clock pulse
+   COUNTMODE_EXTCLK : constant := 1; -- the counter is incremented following each valid clock pulse on the LPTIM external Input1
+
+   type LPTIM_CFGR_Type is record
+      CKSEL     : Bits_1  := CKSEL_INT;        -- Clock selector
+      CKPOL     : Bits_2  := CKPOL_RISEDGE;    -- Clock Polarity
+      CKFLT     : Bits_2  := CKFLT_ANY;        -- Configurable digital filter for external clock
+      Reserved1 : Bits_1  := 0;
+      TRGFLT    : Bits_2  := TRGFLT_ANY;       -- Configurable digital filter for trigger
+      Reserved2 : Bits_1  := 0;
+      PRESC     : Bits_3  := PRESC_DIV1;       -- Clock prescaler
+      Reserved3 : Bits_1  := 0;
+      TRIGSEL   : Bits_3  := TRIGSEL_EXTTRIG0; -- Trigger selector
+      Reserved4 : Bits_1  := 0;
+      TRIGEN    : Bits_2  := TRIGEN_SOFTTRIG;  -- Trigger enable and polarity
+      TIMOUT    : Boolean := False;            -- Timeout enable
+      WAVE      : Bits_1  := WAVE_PWMONEPULSE; -- Waveform shape
+      WAVPOL    : Bits_1  := WAVPOL_ARRCMP;    -- Waveform shape polarity
+      PRELOAD   : Bits_1  := PRELOAD_APB;      -- Registers update mode
+      COUNTMODE : Bits_1  := COUNTMODE_INTCLK; -- counter mode enabled
+      ENC       : Boolean := False;            -- Encoder mode enable
+      Reserved5 : Bits_4  := 0;
+      Reserved6 : Bits_1  := 0;
+      Reserved7 : Bits_2  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LPTIM_CFGR_Type use record
+      CKSEL     at 0 range  0 ..  0;
+      CKPOL     at 0 range  1 ..  2;
+      CKFLT     at 0 range  3 ..  4;
+      Reserved1 at 0 range  5 ..  5;
+      TRGFLT    at 0 range  6 ..  7;
+      Reserved2 at 0 range  8 ..  8;
+      PRESC     at 0 range  9 .. 11;
+      Reserved3 at 0 range 12 .. 12;
+      TRIGSEL   at 0 range 13 .. 15;
+      Reserved4 at 0 range 16 .. 16;
+      TRIGEN    at 0 range 17 .. 18;
+      TIMOUT    at 0 range 19 .. 19;
+      WAVE      at 0 range 20 .. 20;
+      WAVPOL    at 0 range 21 .. 21;
+      PRELOAD   at 0 range 22 .. 22;
+      COUNTMODE at 0 range 23 .. 23;
+      ENC       at 0 range 24 .. 24;
+      Reserved5 at 0 range 25 .. 28;
+      Reserved6 at 0 range 29 .. 29;
+      Reserved7 at 0 range 30 .. 31;
+   end record;
+
+   LPTIM_CFGR_ADDRESS : constant := 16#4000_240C#;
+
+   LPTIM_CFGR : aliased LPTIM_CFGR_Type
+      with Address              => System'To_Address (LPTIM_CFGR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 29.7.5 LPTIM control register (LPTIM_CR)
+
+   type LPTIM_CR_Type is record
+      ENABLE   : Boolean := False; -- LPTIM enable
+      SNGSTRT  : Boolean := False; -- LPTIM start in Single mode
+      CNTSTRT  : Boolean := False; -- Timer start in Continuous mode
+      Reserved : Bits_29 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LPTIM_CR_Type use record
+      ENABLE   at 0 range 0 ..  0;
+      SNGSTRT  at 0 range 1 ..  1;
+      CNTSTRT  at 0 range 2 ..  2;
+      Reserved at 0 range 3 .. 31;
+   end record;
+
+   LPTIM_CR_ADDRESS : constant := 16#4000_2410#;
+
+   LPTIM_CR : aliased LPTIM_CR_Type
+      with Address              => System'To_Address (LPTIM_CR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 29.7.6 LPTIM compare register (LPTIM_CMP)
+
+   type LPTIM_CMP_Type is record
+      CMP      : Unsigned_16 := 0; -- Compare value
+      Reserved : Bits_16     := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LPTIM_CMP_Type use record
+      CMP      at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   LPTIM_CMP_ADDRESS : constant := 16#4000_2414#;
+
+   LPTIM_CMP : aliased LPTIM_CMP_Type
+      with Address              => System'To_Address (LPTIM_CMP_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 29.7.7 LPTIM autoreload register (LPTIM_ARR)
+
+   type LPTIM_ARR_Type is record
+      ARR      : Unsigned_16 := 0; -- Auto reload value
+      Reserved : Bits_16     := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LPTIM_ARR_Type use record
+      ARR      at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   LPTIM_ARR_ADDRESS : constant := 16#4000_2418#;
+
+   LPTIM_ARR : aliased LPTIM_ARR_Type
+      with Address              => System'To_Address (LPTIM_ARR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 29.7.8 LPTIM counter register (LPTIM_CNT)
+
+   type LPTIM_CNT_Type is record
+      CNT      : Unsigned_16; -- Counter value
+      Reserved : Bits_16;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for LPTIM_CNT_Type use record
+      CNT      at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   LPTIM_CNT_ADDRESS : constant := 16#4000_241C#;
+
+   LPTIM_CNT : aliased LPTIM_CNT_Type
+      with Address              => System'To_Address (LPTIM_CNT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 30 Independent watchdog (IWDG)
