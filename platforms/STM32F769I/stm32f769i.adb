@@ -188,10 +188,10 @@ package body STM32F769I
          raise Constraint_Error;
       end if;
       return Bits_8 (
-         Shift_Left (Unsigned_8 (To_Bits_1 (OCxFE)), 0) or
-         Shift_Left (Unsigned_8 (To_Bits_1 (OCxPE)), 1) or
-         Shift_Left (Unsigned_8 (OCxM and 2#111#),   2) or
-         Shift_Left (Unsigned_8 (To_Bits_1 (OCxCE)), 7)
+         Shift_Left (Unsigned_8 (To_B1 (OCxFE)), 0)   or
+         Shift_Left (Unsigned_8 (To_B1 (OCxPE)), 1)   or
+         Shift_Left (Unsigned_8 (OCxM and 2#111#), 2) or
+         Shift_Left (Unsigned_8 (To_B1 (OCxCE)), 7)
          );
    end CCx_MODEOUT_BASE;
 
