@@ -17,7 +17,7 @@
 
 separate (Bits)
 function Byte_Swap_16
-   (Value : in Interfaces.Unsigned_16)
+   (Value : Interfaces.Unsigned_16)
    return Interfaces.Unsigned_16
    is
    function BS16

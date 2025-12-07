@@ -17,7 +17,7 @@
 
 separate (Bits)
 function Byte_Swap_32
-   (Value : in Interfaces.Unsigned_32)
+   (Value : Interfaces.Unsigned_32)
    return Interfaces.Unsigned_32
    is
    function BS32

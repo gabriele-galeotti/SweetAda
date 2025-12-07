@@ -45,43 +45,43 @@ package body Bits
    -- P/NBooleans
    ----------------------------------------------------------------------------
 
-   function Inactive
-      (Value : in PBoolean)
-      return Boolean
-      is
-   begin
-      return Value = PFalse;
-   end Inactive;
-
-   function Active
-      (Value : in PBoolean)
+   function To_B
+      (Value : PBoolean)
       return Boolean
       is
    begin
       return Value = PTrue;
-   end Active;
+   end To_B;
 
-   function Inactive
-      (Value : in NBoolean)
-      return Boolean
+   function To_P
+      (Value : Boolean)
+      return PBoolean
       is
    begin
-      return Value = NFalse;
-   end Inactive;
+      return (if Value then PTrue else PFalse);
+   end To_P;
 
-   function Active
-      (Value : in NBoolean)
+   function To_B
+      (Value : NBoolean)
       return Boolean
       is
    begin
       return Value = NTrue;
-   end Active;
+   end To_B;
+
+   function To_N
+      (Value : Boolean)
+      return NBoolean
+      is
+   begin
+      return (if Value then NTrue else NFalse);
+   end To_N;
 
    ----------------------------------------------------------------------------
    -- Map_Bitsize
    ----------------------------------------------------------------------------
    function Map_Bitsize
-      (Size : in Positive)
+      (Size : Positive)
       return Bitsize
       is
       Result : Bitsize;
@@ -100,16 +100,16 @@ package body Bits
    -- Bits_1 <=> Boolean conversions
    ----------------------------------------------------------------------------
 
-   function To_Boolean
-      (Value : in Bits_1)
+   function To_B
+      (Value : Bits_1)
       return Boolean
       is
    begin
       return Value /= 0;
-   end To_Boolean;
+   end To_B;
 
-   function To_Bits_1
-      (Value : in Boolean)
+   function To_B1
+      (Value : Boolean)
       return Bits_1
       is
       Result : Bits_1;
@@ -120,14 +120,14 @@ package body Bits
          Result := 0;
       end if;
       return Result;
-   end To_Bits_1;
+   end To_B1;
 
    ----------------------------------------------------------------------------
    -- Bits_XX <=> Bitmap_XX conversions
    ----------------------------------------------------------------------------
 
    function To_B8
-      (Value : in Bitmap_8)
+      (Value : Bitmap_8)
       return Bits_8
       is
       function Convert is new Ada.Unchecked_Conversion (Bitmap_8, Bits_8);
@@ -136,7 +136,7 @@ package body Bits
    end To_B8;
 
    function To_BM8
-      (Value : in Bits_8)
+      (Value : Bits_8)
       return Bitmap_8
       is
       function Convert is new Ada.Unchecked_Conversion (Bits_8, Bitmap_8);
@@ -145,7 +145,7 @@ package body Bits
    end To_BM8;
 
    function To_B16
-      (Value : in Bitmap_16)
+      (Value : Bitmap_16)
       return Bits_16
       is
       function Convert is new Ada.Unchecked_Conversion (Bitmap_16, Bits_16);
@@ -154,7 +154,7 @@ package body Bits
    end To_B16;
 
    function To_BM16
-      (Value : in Bits_16)
+      (Value : Bits_16)
       return Bitmap_16
       is
       function Convert is new Ada.Unchecked_Conversion (Bits_16, Bitmap_16);
@@ -163,7 +163,7 @@ package body Bits
    end To_BM16;
 
    function To_B32
-      (Value : in Bitmap_32)
+      (Value : Bitmap_32)
       return Bits_32
       is
       function Convert is new Ada.Unchecked_Conversion (Bitmap_32, Bits_32);
@@ -172,7 +172,7 @@ package body Bits
    end To_B32;
 
    function To_BM32
-      (Value : in Bits_32)
+      (Value : Bits_32)
       return Bitmap_32
       is
       function Convert is new Ada.Unchecked_Conversion (Bits_32, Bitmap_32);
@@ -181,7 +181,7 @@ package body Bits
    end To_BM32;
 
    function To_B64
-      (Value : in Bitmap_64)
+      (Value : Bitmap_64)
       return Bits_64
       is
       function Convert is new Ada.Unchecked_Conversion (Bitmap_64, Bits_64);
@@ -190,7 +190,7 @@ package body Bits
    end To_B64;
 
    function To_BM64
-      (Value : in Bits_64)
+      (Value : Bits_64)
       return Bitmap_64
       is
       function Convert is new Ada.Unchecked_Conversion (Bits_64, Bitmap_64);
@@ -203,7 +203,7 @@ package body Bits
    ----------------------------------------------------------------------------
 
    function To_U8
-      (Value : in SSE.Storage_Element)
+      (Value : SSE.Storage_Element)
       return Interfaces.Unsigned_8
       is
       function Convert is new Ada.Unchecked_Conversion (SSE.Storage_Element, Interfaces.Unsigned_8);
@@ -212,7 +212,7 @@ package body Bits
    end To_U8;
 
    function To_SE
-      (Value : in Interfaces.Unsigned_8)
+      (Value : Interfaces.Unsigned_8)
       return SSE.Storage_Element
       is
       function Convert is new Ada.Unchecked_Conversion (Interfaces.Unsigned_8, SSE.Storage_Element);
@@ -225,7 +225,7 @@ package body Bits
    ----------------------------------------------------------------------------
 
    function To_U8
-      (C : in Character)
+      (C : Character)
       return Interfaces.Unsigned_8
       is
    begin
@@ -233,7 +233,7 @@ package body Bits
    end To_U8;
 
    function To_Ch
-      (Value : in Interfaces.Unsigned_8)
+      (Value : Interfaces.Unsigned_8)
       return Character
       is
    begin
@@ -245,7 +245,7 @@ package body Bits
    ----------------------------------------------------------------------------
 
    function To_Mod
-      (Value : in Integer)
+      (Value : Integer)
       return Mod_Integer
       is
       function Convert is new Ada.Unchecked_Conversion (Integer, Mod_Integer);
@@ -254,7 +254,7 @@ package body Bits
    end To_Mod;
 
    function To_Integer
-      (Value : in Mod_Integer)
+      (Value : Mod_Integer)
       return Integer
       is
       function Convert is new Ada.Unchecked_Conversion (Mod_Integer, Integer);
@@ -268,11 +268,11 @@ package body Bits
    generic
       type Modular_Type is mod <>;
    function g_LSBitOn
-      (V : in Modular_Type)
+      (V : Modular_Type)
       return Boolean
       with Inline => True;
    function g_LSBitOn
-      (V : in Modular_Type)
+      (V : Modular_Type)
       return Boolean
       is
    begin
@@ -285,11 +285,11 @@ package body Bits
    generic
       type Modular_Type is mod <>;
    function g_MSBitOn
-      (V : in Modular_Type)
+      (V : Modular_Type)
       return Boolean
       with Inline => True;
    function g_MSBitOn
-      (V : in Modular_Type)
+      (V : Modular_Type)
       return Boolean
       is
    begin
@@ -301,7 +301,7 @@ package body Bits
    ----------------------------------------------------------------------------
 
    function LSBitOn
-      (Value : in Interfaces.Unsigned_8)
+      (Value : Interfaces.Unsigned_8)
       return Boolean
       is
       function U8_LSBitOn is new g_LSBitOn (Interfaces.Unsigned_8);
@@ -310,7 +310,7 @@ package body Bits
    end LSBitOn;
 
    function LSBitOn
-      (Value : in Interfaces.Unsigned_16)
+      (Value : Interfaces.Unsigned_16)
       return Boolean
       is
       function U16_LSBitOn is new g_LSBitOn (Interfaces.Unsigned_16);
@@ -319,7 +319,7 @@ package body Bits
    end LSBitOn;
 
    function LSBitOn
-      (Value : in Interfaces.Unsigned_32)
+      (Value : Interfaces.Unsigned_32)
       return Boolean
       is
       function U32_LSBitOn is new g_LSBitOn (Interfaces.Unsigned_32);
@@ -328,7 +328,7 @@ package body Bits
    end LSBitOn;
 
    function LSBitOn
-      (Value : in Interfaces.Unsigned_64)
+      (Value : Interfaces.Unsigned_64)
       return Boolean
       is
       function U64_LSBitOn is new g_LSBitOn (Interfaces.Unsigned_64);
@@ -337,7 +337,7 @@ package body Bits
    end LSBitOn;
 
    function MSBitOn
-      (Value : in Interfaces.Unsigned_8)
+      (Value : Interfaces.Unsigned_8)
       return Boolean
       is
       function U8_MSBitOn is new g_MSBitOn (Interfaces.Unsigned_8);
@@ -346,7 +346,7 @@ package body Bits
    end MSBitOn;
 
    function MSBitOn
-      (Value : in Interfaces.Unsigned_16)
+      (Value : Interfaces.Unsigned_16)
       return Boolean
       is
       function U16_MSBitOn is new g_MSBitOn (Interfaces.Unsigned_16);
@@ -355,7 +355,7 @@ package body Bits
    end MSBitOn;
 
    function MSBitOn
-      (Value : in Interfaces.Unsigned_32)
+      (Value : Interfaces.Unsigned_32)
       return Boolean
       is
       function U32_MSBitOn is new g_MSBitOn (Interfaces.Unsigned_32);
@@ -364,7 +364,7 @@ package body Bits
    end MSBitOn;
 
    function MSBitOn
-      (Value : in Interfaces.Unsigned_64)
+      (Value : Interfaces.Unsigned_64)
       return Boolean
       is
       function U64_MSBitOn is new g_MSBitOn (Interfaces.Unsigned_64);
@@ -1062,7 +1062,7 @@ package body Bits
    -- Byte_Reverse
    ----------------------------------------------------------------------------
    function Byte_Reverse
-      (Value : in Interfaces.Unsigned_8)
+      (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8
       is
    separate;

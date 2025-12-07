@@ -655,24 +655,24 @@ package Bits
    -- P/NBooleans
    ----------------------------------------------------------------------------
 
-   function Inactive
+   function To_B
       (Value : PBoolean)
       return Boolean
       with Inline => True;
 
-   function Active
-      (Value : PBoolean)
-      return Boolean
+   function To_P
+      (Value : Boolean)
+      return PBoolean
       with Inline => True;
 
-   function Inactive
+   function To_B
       (Value : NBoolean)
       return Boolean
       with Inline => True;
 
-   function Active
-      (Value : NBoolean)
-      return Boolean
+   function To_N
+      (Value : Boolean)
+      return NBoolean
       with Inline => True;
 
    ----------------------------------------------------------------------------
@@ -687,12 +687,12 @@ package Bits
    -- Bits_1 <=> Boolean conversions
    ----------------------------------------------------------------------------
 
-   function To_Boolean
+   function To_B
       (Value : Bits_1)
       return Boolean
       with Inline => True;
 
-   function To_Bits_1
+   function To_B1
       (Value : Boolean)
       return Bits_1
       with Inline => True;
