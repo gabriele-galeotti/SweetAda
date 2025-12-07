@@ -3389,11 +3389,207 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 29.7.1 CMP Control Register 0 (CMPx_CR0)
+
+   HYSTCTR_LEVEL0 : constant := 2#00#; -- Level0
+   HYSTCTR_LEVEL1 : constant := 2#01#; -- Level1
+   HYSTCTR_LEVEL2 : constant := 2#10#; -- Level2
+   HYSTCTR_LEVEL3 : constant := 2#11#; -- Level3
+
+   FILTER_CNT_DISABLED : constant := 2#000#; -- Filter is disabled.
+   FILTER_CNT_SAMPLE1  : constant := 2#001#; -- One sample must agree.
+   FILTER_CNT_SAMPLE2  : constant := 2#010#; -- 2 consecutive samples must agree.
+   FILTER_CNT_SAMPLE3  : constant := 2#011#; -- 3 consecutive samples must agree.
+   FILTER_CNT_SAMPLE4  : constant := 2#100#; -- 4 consecutive samples must agree.
+   FILTER_CNT_SAMPLE5  : constant := 2#101#; -- 5 consecutive samples must agree.
+   FILTER_CNT_SAMPLE6  : constant := 2#110#; -- 6 consecutive samples must agree.
+   FILTER_CNT_SAMPLE7  : constant := 2#111#; -- 7 consecutive samples must agree.
+
+   type CMPx_CR0_Type is record
+      HYSTCTR    : Bits_2 := HYSTCTR_LEVEL0;      -- Comparator hard block hysteresis control
+      Reserved1  : Bits_1 := 0;
+      Reserved2  : Bits_1 := 0;
+      FILTER_CNT : Bits_3 := FILTER_CNT_DISABLED; -- Filter Sample Count
+      Reserved3  : Bits_1 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CMPx_CR0_Type use record
+      HYSTCTR    at 0 range 0 .. 1;
+      Reserved1  at 0 range 2 .. 2;
+      Reserved2  at 0 range 3 .. 3;
+      FILTER_CNT at 0 range 4 .. 6;
+      Reserved3  at 0 range 7 .. 7;
+   end record;
+
    -- 29.7.2 CMP Control Register 1 (CMPx_CR1)
+
+   COS_COUT  : constant := 0; -- Set the filtered comparator output (CMPO) to equal COUT.
+   COS_COUTA : constant := 1; -- Set the unfiltered comparator output (CMPO) to equal COUTA.
+
+   PMODE_LS : constant := 0; -- Low-Speed (LS) Comparison mode selected.
+   PMODE_HS : constant := 1; -- High-Speed (HS) Comparison mode selected.
+
+   type CMPx_CR1_Type is record
+      EN    : Boolean := False;    -- Comparator Module Enable
+      OPE   : Boolean := False;    -- Comparator Output Pin Enable
+      COS   : Bits_1  := COS_COUT; -- Comparator Output Select
+      INV   : Boolean := False;    -- Comparator INVERT
+      PMODE : Bits_1  := PMODE_LS; -- Power Mode Select
+      TRIGM : Boolean := False;    -- Trigger Mode Enable
+      WE    : Boolean := False;    -- Windowing Enable
+      SE    : Boolean := False;    -- Sample Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CMPx_CR1_Type use record
+      EN    at 0 range 0 .. 0;
+      OPE   at 0 range 1 .. 1;
+      COS   at 0 range 2 .. 2;
+      INV   at 0 range 3 .. 3;
+      PMODE at 0 range 4 .. 4;
+      TRIGM at 0 range 5 .. 5;
+      WE    at 0 range 6 .. 6;
+      SE    at 0 range 7 .. 7;
+   end record;
+
    -- 29.7.3 CMP Filter Period Register (CMPx_FPR)
+
+   type CMPx_FPR_Type is record
+      FILT_PER : Unsigned_8 := 0; -- Filter Sample Period
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CMPx_FPR_Type use record
+      FILT_PER at 0 range 0 .. 7;
+   end record;
+
    -- 29.7.4 CMP Status and Control Register (CMPx_SCR)
+
+   type CMPx_SCR_Type is record
+      COUT      : Bits_1  := 0;     -- Analog Comparator Output
+      CFF       : Boolean := False; -- Analog Comparator Flag Falling
+      CFR       : Boolean := False; -- Analog Comparator Flag Rising
+      IEF       : Boolean := False; -- Comparator Interrupt Enable Falling
+      IER       : Boolean := False; -- Comparator Interrupt Enable Rising
+      Reserved1 : Bits_1  := 0;
+      DMAEN     : Boolean := False; -- DMA Enable Control
+      Reserved2 : Bits_1  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CMPx_SCR_Type use record
+      COUT      at 0 range 0 .. 0;
+      CFF       at 0 range 1 .. 1;
+      CFR       at 0 range 2 .. 2;
+      IEF       at 0 range 3 .. 3;
+      IER       at 0 range 4 .. 4;
+      Reserved1 at 0 range 5 .. 5;
+      DMAEN     at 0 range 6 .. 6;
+      Reserved2 at 0 range 7 .. 7;
+   end record;
+
    -- 29.7.5 DAC Control Register (CMPx_DACCR)
+
+   VRSEL_VIN1 : constant := 0; -- V is selected as resistor ladder network supply reference V. in1in
+   VRSEL_VIN2 : constant := 1; -- V is selected as resistor ladder network supply reference V. in2in
+
+   type CMPx_DACCR_Type is record
+      VOSEL : Bits_6  := 0;          -- DAC Output Voltage Select
+      VRSEL : Bits_1  := VRSEL_VIN1; -- Supply Voltage Reference Source Select
+      DACEN : Boolean := False;      -- DAC Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CMPx_DACCR_Type use record
+      VOSEL at 0 range 0 .. 5;
+      VRSEL at 0 range 6 .. 6;
+      DACEN at 0 range 7 .. 7;
+   end record;
+
    -- 29.7.6 MUX Control Register (CMPx_MUXCR)
+
+   MSEL_IN0 : constant := 2#000#; -- IN0
+   MSEL_IN1 : constant := 2#001#; -- IN1
+   MSEL_IN2 : constant := 2#010#; -- IN2
+   MSEL_IN3 : constant := 2#011#; -- IN3
+   MSEL_IN4 : constant := 2#100#; -- IN4
+   MSEL_IN5 : constant := 2#101#; -- IN5
+   MSEL_IN6 : constant := 2#110#; -- IN6
+   MSEL_IN7 : constant := 2#111#; -- IN7
+
+   PSEL_IN0 renames MSEL_IN0;
+   PSEL_IN1 renames MSEL_IN1;
+   PSEL_IN2 renames MSEL_IN2;
+   PSEL_IN3 renames MSEL_IN3;
+   PSEL_IN4 renames MSEL_IN4;
+   PSEL_IN5 renames MSEL_IN5;
+   PSEL_IN6 renames MSEL_IN6;
+   PSEL_IN7 renames MSEL_IN7;
+
+   type CMPx_MUXCR_Type is record
+      MSEL     : Bits_3  := MSEL_IN0; -- Minus Input Mux Control
+      PSEL     : Bits_3  := PSEL_IN0; -- Plus Input Mux Control
+      Reserved : Bits_1  := 0;
+      PSTM     : Boolean := False;    -- Pass Through Mode Enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for CMPx_MUXCR_Type use record
+      MSEL     at 0 range 0 .. 2;
+      PSEL     at 0 range 3 .. 5;
+      Reserved at 0 range 6 .. 6;
+      PSTM     at 0 range 7 .. 7;
+   end record;
+
+   -- 29.7 Memory map/register definitions
+
+   CMPx_CR0_ADDRESS : constant := 16#4007_3000#;
+
+   CMPx_CR0 : aliased CMPx_CR0_Type
+      with Address              => System'To_Address (CMPx_CR0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CMPx_CR1_ADDRESS : constant := 16#4007_3001#;
+
+   CMPx_CR1 : aliased CMPx_CR1_Type
+      with Address              => System'To_Address (CMPx_CR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CMPx_FPR_ADDRESS : constant := 16#4007_3002#;
+
+   CMPx_FPR : aliased CMPx_FPR_Type
+      with Address              => System'To_Address (CMPx_FPR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CMPx_SCR_ADDRESS : constant := 16#4007_3003#;
+
+   CMPx_SCR : aliased CMPx_SCR_Type
+      with Address              => System'To_Address (CMPx_SCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CMPx_DACCR_ADDRESS : constant := 16#4007_3004#;
+
+   CMPx_DACCR : aliased CMPx_DACCR_Type
+      with Address              => System'To_Address (CMPx_DACCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CMPx_MUXCR_ADDRESS : constant := 16#4007_3005#;
+
+   CMPx_MUXCR : aliased CMPx_MUXCR_Type
+      with Address              => System'To_Address (CMPx_MUXCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 30 12-bit Digital-to-Analog Converter (DAC)
