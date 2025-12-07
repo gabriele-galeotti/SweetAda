@@ -21,19 +21,14 @@ function GCD
     Value2 : Integer)
    return Natural
    is
-   V1 : Natural := abs (Value1);
-   V2 : Natural := abs (Value2);
-   T  : Natural;
+   V1 : Integer := Value1;
+   V2 : Integer := Value2;
+   T  : Integer;
 begin
-   if V2 > V1 then
-      T := V1;
-      V1 := V2;
-      V2 := T;
-   end if;
    while V2 /= 0 loop
       T := V2;
       V2 := V1 mod @;
       V1 := T;
    end loop;
-   return V1;
+   return abs (V1);
 end GCD;
