@@ -4655,6 +4655,59 @@ pragma Style_Checks (Off);
 
    -- 21.3.1 REFCTL0 Register
 
+   REFVSEL_1V2  : constant := 2#00#; -- 1.2 V available when reference requested or REFON = 1
+   REFVSEL_1V45 : constant := 2#01#; -- 1.45 V available when reference requested or REFON = 1
+   REFVSEL_RSVD : constant := 2#10#; -- Reserved
+   REFVSEL_2V5  : constant := 2#11#; -- 2.5 V available when reference requested or REFON = 1
+
+   BGMODE_STATIC  : constant := 0; -- Static mode
+   BGMODE_SAMPLED : constant := 1; -- Sampled mode
+
+   type REFCTL0_Type is record
+      REFON      : Boolean := False;         -- Reference enable.
+      REFOUT     : Boolean := False;         -- Reference output buffer.
+      Reserved1  : Bits_1  := 0;
+      REFTCOFF   : Boolean := True;          -- Temperature sensor disabled.
+      REFVSEL    : Bits_2  := REFVSEL_1V2;   -- Reference voltage level select.
+      REFGENOT   : Boolean := False;         -- Reference generator one-time trigger.
+      REFBGOT    : Boolean := False;         -- Bandgap and bandgap buffer one-time trigger.
+      REFGENACT  : Boolean := False;         -- Reference generator active.
+      REFBGACT   : Boolean := False;         -- Reference bandgap active.
+      REFGENBUSY : Boolean := False;         -- Reference generator busy.
+      BGMODE     : Bits_1  := BGMODE_STATIC; -- Bandgap mode.
+      REFGENRDY  : Boolean := False;         -- Variable reference voltage ready status.
+      REFBGRDY   : Boolean := False;         -- Buffered bandgap voltage ready status.
+      Reserved2  : Bits_2  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for REFCTL0_Type use record
+      REFON      at 0 range  0 ..  0;
+      REFOUT     at 0 range  1 ..  1;
+      Reserved1  at 0 range  2 ..  2;
+      REFTCOFF   at 0 range  3 ..  3;
+      REFVSEL    at 0 range  4 ..  5;
+      REFGENOT   at 0 range  6 ..  6;
+      REFBGOT    at 0 range  7 ..  7;
+      REFGENACT  at 0 range  8 ..  8;
+      REFBGACT   at 0 range  9 ..  9;
+      REFGENBUSY at 0 range 10 .. 10;
+      BGMODE     at 0 range 11 .. 11;
+      REFGENRDY  at 0 range 12 .. 12;
+      REFBGRDY   at 0 range 13 .. 13;
+      Reserved2  at 0 range 14 .. 15;
+   end record;
+
+   -- 21.3 REF_A Registers
+
+   REFCTL0_ADDRESS : constant := 16#4000_3000#;
+
+   REFCTL0 : aliased REFCTL0_Type
+      with Address              => System'To_Address (REFCTL0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    ----------------------------------------------------------------------------
    -- Chapter 22 Precision ADC
    ----------------------------------------------------------------------------
