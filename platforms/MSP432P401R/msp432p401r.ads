@@ -3696,28 +3696,31 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 18.5.1 T32LOAD1 Register
+   -- 18.5.8 T32LOAD2 Register
 
-   type T32LOAD1_Type is record
-      LOAD : Unsigned_32 := 0; -- The value from which the Timer 1 counter decrements
+   type T32LOADx_Type is record
+      LOAD : Unsigned_32 := 0; -- The value from which the Timer x counter decrements
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for T32LOAD1_Type use record
+   for T32LOADx_Type use record
       LOAD at 0 range 0 .. 31;
    end record;
 
    -- 18.5.2 T32VALUE1 Register
+   -- 18.5.9 T32VALUE2 Register
 
-   type T32VALUE1_Type is record
+   type T32VALUEx_Type is record
       VALUE : Unsigned_32; -- Reports the current value of the decrementing counter
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for T32VALUE1_Type use record
+   for T32VALUEx_Type use record
       VALUE at 0 range 0 .. 31;
    end record;
 
    -- 18.5.3 T32CONTROL1 Register
+   -- 18.5.10 T32CONTROL2 Register
 
    SIZE_16 : constant := 0; -- 16-bit counter
    SIZE_32 : constant := 1; -- 32-bit counter
@@ -3730,7 +3733,7 @@ pragma Style_Checks (Off);
    MODE_FREERUN  : constant := 0; -- Timer is in free-running mode
    MODE_PERIODIC : constant := 1; -- Timer is in periodic mode
 
-   type T32CONTROL1_Type is record
+   type T32CONTROLx_Type is record
       ONESHOT   : Boolean := False;         -- Selects one-shot or wrapping counter mode
       SIZE      : Bits_1  := SIZE_16;       -- Selects 16 or 32 bit counter operation
       PRESCALE  : Bits_2  := PRESCALE_DIV1; -- Prescale bits
@@ -3742,7 +3745,7 @@ pragma Style_Checks (Off);
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for T32CONTROL1_Type use record
+   for T32CONTROLx_Type use record
       ONESHOT   at 0 range 0 ..  0;
       SIZE      at 0 range 1 ..  1;
       PRESCALE  at 0 range 2 ..  3;
@@ -3754,103 +3757,141 @@ pragma Style_Checks (Off);
    end record;
 
    -- 18.5.4 T32INTCLR1 Register
+   -- 18.5.11 T32INTCLR2 Register
 
-   type T32INTCLR1_Type is record
-      INTCLR : Bits_32; -- Any write to the T32INTCLR1 register clears the interrupt output from the counter.
+   type T32INTCLRx_Type is record
+      INTCLR : Bits_32; -- Any write to the T32INTCLRx register clears the interrupt output from the counter.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for T32INTCLR1_Type use record
+   for T32INTCLRx_Type use record
       INTCLR at 0 range 0 .. 31;
    end record;
 
    -- 18.5.5 T32RIS1 Register
+   -- 18.5.12 T32RIS2 Register
 
-   type T32RIS1_Type is record
+   type T32RISx_Type is record
       RAW_IFG  : Boolean; -- Raw interrupt status from the counter
       Reserved : Bits_31;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for T32RIS1_Type use record
+   for T32RISx_Type use record
       RAW_IFG  at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 31;
    end record;
 
    -- 18.5.6 T32MIS1 Register
+   -- 18.5.13 T32MIS2 Register
 
-   type T32MIS1_Type is record
+   type T32MISx_Type is record
       IFG      : Boolean; -- Enabled interrupt status from the counter
       Reserved : Bits_31;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for T32MIS1_Type use record
+   for T32MISx_Type use record
       IFG      at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 31;
    end record;
 
    -- 18.5.7 T32BGLOAD1 Register
+   -- 18.5.14 T32BGLOAD2 Register
 
-   type T32BGLOAD1_Type is record
+   type T32BGLOADx_Type is record
       BGLOAD : Unsigned_32 := 0; -- Contains the value from which the counter decrements
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
-   for T32BGLOAD1_Type use record
+   for T32BGLOADx_Type use record
       BGLOAD at 0 range 0 .. 31;
    end record;
-
-   -- 18.5.8 T32LOAD2 Register
-   -- 18.5.9 T32VALUE2 Register
-   -- 18.5.10 T32CONTROL2 Register
-   -- 18.5.11 T32INTCLR2 Register
-   -- 18.5.12 T32RIS2 Register
-   -- 18.5.13 T32MIS2 Register
-   -- 18.5.14 T32BGLOAD2 Register
 
    -- Table 18-1. Timer32 Registers
 
    Timer32_BASEADDRESS : constant := 16#4000_C000#;
 
-   T32LOAD1 : aliased T32LOAD1_Type
+   T32LOAD1 : aliased T32LOADx_Type
       with Address              => System'To_Address (Timer32_BASEADDRESS + 16#00#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
-   T32VALUE1 : aliased T32VALUE1_Type
+   T32VALUE1 : aliased T32VALUEx_Type
       with Address              => System'To_Address (Timer32_BASEADDRESS + 16#04#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
-   T32CONTROL1 : aliased T32CONTROL1_Type
+   T32CONTROL1 : aliased T32CONTROLx_Type
       with Address              => System'To_Address (Timer32_BASEADDRESS + 16#08#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
-   T32INTCLR1 : aliased T32INTCLR1_Type
+   T32INTCLR1 : aliased T32INTCLRx_Type
       with Address              => System'To_Address (Timer32_BASEADDRESS + 16#0C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
-   T32RIS1 : aliased T32RIS1_Type
+   T32RIS1 : aliased T32RISx_Type
       with Address              => System'To_Address (Timer32_BASEADDRESS + 16#10#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
-   T32MIS1 : aliased T32MIS1_Type
+   T32MIS1 : aliased T32MISx_Type
       with Address              => System'To_Address (Timer32_BASEADDRESS + 16#14#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
-   T32BGLOAD1 : aliased T32BGLOAD1_Type
+   T32BGLOAD1 : aliased T32BGLOADx_Type
       with Address              => System'To_Address (Timer32_BASEADDRESS + 16#18#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   T32LOAD2 : aliased T32LOADx_Type
+      with Address              => System'To_Address (Timer32_BASEADDRESS + 16#20#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   T32VALUE2 : aliased T32VALUEx_Type
+      with Address              => System'To_Address (Timer32_BASEADDRESS + 16#24#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   T32CONTROL2 : aliased T32CONTROLx_Type
+      with Address              => System'To_Address (Timer32_BASEADDRESS + 16#28#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   T32INTCLR2 : aliased T32INTCLRx_Type
+      with Address              => System'To_Address (Timer32_BASEADDRESS + 16#2C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   T32RIS2 : aliased T32RISx_Type
+      with Address              => System'To_Address (Timer32_BASEADDRESS + 16#30#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   T32MIS2 : aliased T32MISx_Type
+      with Address              => System'To_Address (Timer32_BASEADDRESS + 16#34#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   T32BGLOAD2 : aliased T32BGLOADx_Type
+      with Address              => System'To_Address (Timer32_BASEADDRESS + 16#38#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
