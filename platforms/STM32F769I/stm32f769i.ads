@@ -3560,10 +3560,121 @@ pragma Warnings (On);
    ----------------------------------------------------------------------------
 
    -- 12.4.1 CRC data register (CRC_DR)
+
+   type CRC_DR_Type is record
+      DR : Unsigned_32 := 16#FFFF_FFFF#; -- Data register bits
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CRC_DR_Type use record
+      DR at 0 range 0 .. 31;
+   end record;
+
+   CRC_DR_ADDRESS : constant := 16#4002_3000#;
+
+   CRC_DR : aliased CRC_DR_Type
+      with Address              => System'To_Address (CRC_DR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 12.4.2 CRC independent data register (CRC_IDR)
+
+   type CRC_IDR_Type is record
+      IDR      : Unsigned_8 := 0; -- General-purpose 8-bit data register bits
+      Reserved : Bits_24    := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CRC_IDR_Type use record
+      IDR      at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
+   CRC_IDR_ADDRESS : constant := 16#4002_3004#;
+
+   CRC_IDR : aliased CRC_IDR_Type
+      with Address              => System'To_Address (CRC_IDR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 12.4.3 CRC control register (CRC_CR)
+
+   POLYSIZE_32 : constant := 2#00#; -- 32 bit polynomial
+   POLYSIZE_16 : constant := 2#01#; -- 16 bit polynomial
+   POLYSIZE_8  : constant := 2#10#; -- 8 bit polynomial
+   POLYSIZE_7  : constant := 2#11#; -- 7 bit polynomial
+
+   REV_IN_NONE  : constant := 2#00#; -- Bit order not affected
+   REV_IN_BYTE  : constant := 2#01#; -- Bit reversal done by byte
+   REV_IN_HWORD : constant := 2#10#; -- Bit reversal done by half-word
+   REV_IN_WORD  : constant := 2#11#; -- Bit reversal done by word
+
+   type CRC_CR_Type is record
+      RESET     : Boolean := False;       -- RESET bit
+      Reserved1 : Bits_2  := 0;
+      POLYSIZE  : Bits_2  := POLYSIZE_32; -- Polynomial size
+      REV_IN    : Bits_2  := REV_IN_NONE; -- Reverse input data
+      REV_OUT   : Boolean := False;       -- Reverse output data
+      Reserved2 : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CRC_CR_Type use record
+      RESET     at 0 range 0 ..  0;
+      Reserved1 at 0 range 1 ..  2;
+      POLYSIZE  at 0 range 3 ..  4;
+      REV_IN    at 0 range 5 ..  6;
+      REV_OUT   at 0 range 7 ..  7;
+      Reserved2 at 0 range 8 .. 31;
+   end record;
+
+   CRC_CR_ADDRESS : constant := 16#4002_3008#;
+
+   CRC_CR : aliased CRC_CR_Type
+      with Address              => System'To_Address (CRC_CR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 12.4.4 CRC initial value (CRC_INIT)
+
+   type CRC_INIT_Type is record
+      CRC_INIT : Unsigned_32 := 16#FFFF_FFFF#; -- Programmable initial CRC value
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CRC_INIT_Type use record
+      CRC_INIT at 0 range 0 .. 31;
+   end record;
+
+   CRC_INIT_ADDRESS : constant := 16#4002_3010#;
+
+   CRC_INIT : aliased CRC_INIT_Type
+      with Address              => System'To_Address (CRC_INIT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 12.4.5 CRC polynomial (CRC_POL)
+
+   type CRC_POL_Type is record
+      POL : Unsigned_32 := 16#04C1_1DB7#; -- Programmable polynomial
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CRC_POL_Type use record
+      POL at 0 range 0 .. 31;
+   end record;
+
+   CRC_POL_ADDRESS : constant := 16#4002_3014#;
+
+   CRC_POL : aliased CRC_POL_Type
+      with Address              => System'To_Address (CRC_POL_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 13 Flexible memory controller (FMC)
