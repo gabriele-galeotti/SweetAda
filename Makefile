@@ -1055,18 +1055,18 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
 	@FOR /F %%U IN (gnatbind_objs.lst) DO                                     \
           (                                                                       \
            ECHO $(foreach u,$(IMPLICIT_ALI_UNITS),$(OBJECT_DIRECTORY)/$(u).o)|    \
-           %SystemRoot%\System32\findstr.exe >nul "%%U"                        || \
+           %SystemRoot%\System32\findstr.exe>nul /C:"%%U"                      || \
            (CALL REM & ECHO %%U>>gnatbind_objs.lst.tmp)                           \
           )
 else ifeq ($(BUILD_MODE),GPRbuild)
-	@SETLOCAL ENABLEDELAYEDEXPANSION                                             && \
-        SET "PWD=$(shell ECHO %CD%)" && SET "PWD=%PWD:\=/%" && SET "PWD=%PWD: =\ /%" && \
-        FOR /F %%U IN (gnatbind_objs.lst) DO                                            \
-          (                                                                             \
-           SET "U1=%%U" && SET "U2=!U1:\=/!" && SET "U3=!U2: =\ !"                   && \
-           ECHO $(foreach u,$(IMPLICIT_ALI_UNITS),%PWD%/$(OBJECT_DIRECTORY)/$(u).o)|    \
-           %SystemRoot%\System32\findstr.exe >nul "!U3!"                             || \
-           (CALL REM & ECHO !U3!>>gnatbind_objs.lst.tmp)                                \
+	@SETLOCAL ENABLEDELAYEDEXPANSION                                               && \
+        SET "PWD=$(shell ECHO %CD%)"                                                   && \
+        FOR /F "delims=?" %%U IN (gnatbind_objs.lst) DO                                   \
+          (                                                                               \
+           SET "U1=%%U" && SET "U2=!U1:\=/!" && SET "U3=!U2: =\ !"                     && \
+           ECHO $(foreach u,$(IMPLICIT_ALI_UNITS),"!PWD!\$(OBJECT_DIRECTORY)\$(u).o")|    \
+           %SystemRoot%\System32\findstr.exe>nul /C:"%%U"                              || \
+           (CALL REM & ECHO !U3!>>gnatbind_objs.lst.tmp)                                  \
           )
 endif
 	-@$(MV) .\gnatbind_objs.lst.tmp .\gnatbind_objs.lst
