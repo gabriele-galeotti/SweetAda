@@ -178,7 +178,8 @@ pragma Style_Checks (Off);
       GPCHR : PORTx_GPCHR_Type;
       ISFR  : PORTx_ISFR_Type;
    end record
-      with Size => 16#A4# * 8;
+      with Size     => 16#A4# * 8,
+           Volatile => True;
    for PORT_MUXCTRL_Type use record
       PCR   at 16#00# range 0 .. 32 * 32 - 1;
       GPCLR at 16#80# range 0 .. 31;
@@ -188,27 +189,22 @@ pragma Style_Checks (Off);
 
    PORTA_MUXCTRL : aliased PORT_MUXCTRL_Type
       with Address    => System'To_Address (PORT_MUXCTRL_BASEADDRESS + 16#0000#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
    PORTB_MUXCTRL : aliased PORT_MUXCTRL_Type
       with Address    => System'To_Address (PORT_MUXCTRL_BASEADDRESS + 16#1000#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
    PORTC_MUXCTRL : aliased PORT_MUXCTRL_Type
       with Address    => System'To_Address (PORT_MUXCTRL_BASEADDRESS + 16#2000#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
    PORTD_MUXCTRL : aliased PORT_MUXCTRL_Type
       with Address    => System'To_Address (PORT_MUXCTRL_BASEADDRESS + 16#3000#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
    PORTE_MUXCTRL : aliased PORT_MUXCTRL_Type
       with Address    => System'To_Address (PORT_MUXCTRL_BASEADDRESS + 16#4000#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
@@ -4015,7 +4011,8 @@ pragma Style_Checks (Off);
       STATUS : TPMx_STATUS_Type with Volatile_Full_Access => True;
       CONF   : TPMx_CONF_Type   with Volatile_Full_Access => True;
    end record
-      with Size => 16#88# * 8;
+      with Size     => 16#88# * 8,
+           Volatile => True;
    for TPM_Type use record
       SC     at 16#00# range 0 .. 31;
       CNT    at 16#04# range 0 .. 31;
@@ -4038,19 +4035,16 @@ pragma Style_Checks (Off);
 
    TPM0 : aliased TPM_Type
       with Address    => System'To_Address (16#4003_8000#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    TPM1 : aliased TPM_Type
       with Address    => System'To_Address (16#4003_9000#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    TPM2 : aliased TPM_Type
       with Address    => System'To_Address (16#4003_A000#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
@@ -4835,7 +4829,8 @@ pragma Style_Checks (Off);
       CI : SPIx_CI_Type with Volatile_Full_Access => True;
       C3 : SPIx_C3_Type with Volatile_Full_Access => True;
    end record
-      with Size => 16#C# * 8;
+      with Size     => 16#C# * 8,
+           Volatile => True;
    for SPI_Type use record
       S  at 16#0# range 0 .. 7;
       BR at 16#1# range 0 .. 7;
@@ -4851,13 +4846,11 @@ pragma Style_Checks (Off);
 
    SPI0 : aliased SPI_Type
       with Address    => System'To_Address (16#4007_6000#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    SPI1 : aliased SPI_Type
       with Address    => System'To_Address (16#4007_7000#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
@@ -5082,7 +5075,8 @@ pragma Style_Checks (Off);
       SLTH : Unsigned_8    with Volatile_Full_Access => True;
       SLTL : Unsigned_8    with Volatile_Full_Access => True;
    end record
-      with Size => 16#C# * 8;
+      with Size     => 16#C# * 8,
+           Volatile => True;
    for I2C_Type use record
       A1   at 16#0# range 0 .. 7;
       F    at 16#1# range 0 .. 7;
@@ -5100,13 +5094,11 @@ pragma Style_Checks (Off);
 
    I2C0 : aliased I2C_Type
       with Address    => System'To_Address (16#4006_6000#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    I2C1 : aliased I2C_Type
       with Address    => System'To_Address (16#4006_7000#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
@@ -5380,7 +5372,8 @@ pragma Style_Checks (Off);
       C4  : UART0_C4_Type  with Volatile_Full_Access => True;
       C5  : UART0_C5_Type  with Volatile_Full_Access => True;
    end record
-      with Size => 16#C# * 8;
+      with Size     => 16#C# * 8,
+           Volatile => True;
    for UART_0_Type use record
       BDH at 16#0# range 0 .. 7;
       BDL at 16#1# range 0 .. 7;
@@ -5440,7 +5433,8 @@ pragma Style_Checks (Off);
       D   : UARTx_D_Type   with Volatile_Full_Access => True;
       C4  : UART12_C4_Type with Volatile_Full_Access => True;
    end record
-      with Size => 9 * 8;
+      with Size     => 9 * 8,
+           Volatile => True;
    for UART_12_Type use record
       BDH at 0 range 0 .. 7;
       BDL at 1 range 0 .. 7;
@@ -5455,13 +5449,11 @@ pragma Style_Checks (Off);
 
    UART1 : aliased UART_12_Type
       with Address    => System'To_Address (16#4006_B000#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    UART2 : aliased UART_12_Type
       with Address    => System'To_Address (16#4006_C000#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
@@ -5507,7 +5499,8 @@ pragma Style_Checks (Off);
       PDIR : Bitmap_32 with Volatile_Full_Access => True;
       PDDR : Bitmap_32 with Volatile_Full_Access => True;
    end record
-      with Size => 16#18# * 8;
+      with Size     => 16#18# * 8,
+           Volatile => True;
    for GPIO_PORT_Type use record
       PDOR at 16#00# range 0 .. 31;
       PSOR at 16#04# range 0 .. 31;
@@ -5521,27 +5514,22 @@ pragma Style_Checks (Off);
 
    GPIOA : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIO_BASEADDRESS + 16#000#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOB : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIO_BASEADDRESS + 16#040#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOC : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIO_BASEADDRESS + 16#080#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOD : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIO_BASEADDRESS + 16#0C0#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
    GPIOE : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIO_BASEADDRESS + 16#100#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
