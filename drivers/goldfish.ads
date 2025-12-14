@@ -36,6 +36,11 @@ package Goldfish
    use Interfaces;
    use Bits;
 
+   ----------------------------------------------------------------------------
+   -- Android Goldfish RTC
+   -- Android Goldfish RTC device used by Android emulator.
+   ----------------------------------------------------------------------------
+
    type Port_Read_32_Ptr is access function (Port : Address) return Unsigned_32;
    type Port_Write_32_Ptr is access procedure (Port : in Address; Value : in Unsigned_32);
 

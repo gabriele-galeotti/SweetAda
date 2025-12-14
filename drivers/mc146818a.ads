@@ -36,6 +36,12 @@ package MC146818A
    use Interfaces;
    use Bits;
 
+   ----------------------------------------------------------------------------
+   -- MC146818A REAL-TIME CLOCK PLUS RAM (RTC)
+   -- © MOTOROLA INC., 1984
+   -- ADI-1026
+   ----------------------------------------------------------------------------
+
    type Flags_Type is null record;
 
    type Port_Read_8_Ptr is access function (Port : Address) return Unsigned_8;

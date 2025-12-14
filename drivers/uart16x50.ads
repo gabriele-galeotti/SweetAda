@@ -36,6 +36,11 @@ package UART16x50
    use Interfaces;
    use Bits;
 
+   ----------------------------------------------------------------------------
+   -- NS16C450 Universal Asynchronous Receiver/Transmitter
+   -- Microcommunication Elements Databook 400066 Rev. 1
+   ----------------------------------------------------------------------------
+
    type Model_Type is (UARTNONE, UART16450, UART16550, UART16650, UART16750);
 
    type Flags_Type is record

@@ -37,6 +37,12 @@ package uPD4991A
    use Bits;
    use Time;
 
+   ----------------------------------------------------------------------------
+   -- μPD4991A 4-BIT PARALLEL I/O CALENDAR CLOCK
+   -- Document No. IC-3309 (1st edition) (O.D. No. IC-7892A)
+   -- Date Published March 1997 P © NEC Corporation 1993
+   ----------------------------------------------------------------------------
+
    type Port_Read_8_Ptr is access function (Port : Address) return Unsigned_8;
    type Port_Write_8_Ptr is access procedure (Port : in Address; Value : in Unsigned_8);
 

@@ -35,6 +35,11 @@ package Z8530
    use Interfaces;
    use Bits;
 
+   ----------------------------------------------------------------------------
+   -- ZiLOG SCC/ESCC User's Manual
+   -- UM10901-0601
+   ----------------------------------------------------------------------------
+
    type Channel_Type is (CHANNELA, CHANNELB);
 
    type Flags_Type is record
