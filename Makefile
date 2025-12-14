@@ -227,6 +227,9 @@ KERNEL_ROMFILE := $(KERNEL_BASENAME).rom
 # GNAT .adc filename
 GNATADC_FILENAME := gnat.adc
 
+# GNAT target dependent information
+GNATTDI_FILENAME := gnat.tdi
+
 # GPRbuild project
 KERNEL_GPRFILE := sweetada.gpr
 
@@ -240,6 +243,7 @@ GPRBUILD_DEPS :=
 CLEAN_OBJECTS_COMMON     := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst \
                             *.map *.o *.out* *.srec *.td *.tmp
 DISTCLEAN_OBJECTS_COMMON := $(GNATADC_FILENAME)      \
+                            $(GNATTDI_FILENAME)      \
                             $(CONFIGUREGPR_FILENAME)
 
 # check for RTS build
@@ -779,6 +783,7 @@ export                                \
        PROFILE                        \
        ADA_MODE                       \
        SUPPRESS_STANDARD_LIBRARY      \
+       GNATTDI_FILENAME               \
        USE_LIBGCC                     \
        USE_LIBM                       \
        USE_CLIBRARY                   \
@@ -1055,7 +1060,7 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
 	@FOR /F %%U IN (gnatbind_objs.lst) DO                                     \
           (                                                                       \
            ECHO $(foreach u,$(IMPLICIT_ALI_UNITS),$(OBJECT_DIRECTORY)/$(u).o)|    \
-           %SystemRoot%\System32\findstr.exe>nul /C:"%%U"                      || \
+           %SystemRoot%\System32\findstr.exe >nul /C:"%%U"                     || \
            (CALL REM & ECHO %%U>>gnatbind_objs.lst.tmp)                           \
           )
 else ifeq ($(BUILD_MODE),GPRbuild)
@@ -1063,10 +1068,13 @@ else ifeq ($(BUILD_MODE),GPRbuild)
         SET "PWD=$(shell ECHO %CD%)"                                                   && \
         FOR /F "delims=?" %%U IN (gnatbind_objs.lst) DO                                   \
           (                                                                               \
-           SET "U1=%%U" && SET "U2=!U1:\=/!" && SET "U3=!U2: =\ !"                     && \
            ECHO $(foreach u,$(IMPLICIT_ALI_UNITS),"!PWD!\$(OBJECT_DIRECTORY)\$(u).o")|    \
-           %SystemRoot%\System32\findstr.exe>nul /C:"%%U"                              || \
-           (CALL REM & ECHO !U3!>>gnatbind_objs.lst.tmp)                                  \
+           %SystemRoot%\System32\findstr.exe >nul /C:"%%U"                             || \
+           (                                                                              \
+            CALL REM                                                                    & \
+            SET "U1=%%U" && SET "U2=!U1:\=/!" && SET "U3=!U2: =\ !"                    && \
+            ECHO !U3!>>gnatbind_objs.lst.tmp                                              \
+           )                                                                              \
           )
 endif
 	-@$(MV) .\gnatbind_objs.lst.tmp .\gnatbind_objs.lst
@@ -1308,8 +1316,16 @@ ifneq ($(RTS_INSTALLED),Y)
 endif
 	$(CREATEGNATADC) "$(PROFILE)" $(GNATADC_FILENAME)
 
-.PHONY: configure-gpr
-configure-gpr: $(CONFIGUREGPR_FILENAME)
+.PHONY: configure-gnattdi
+configure-gnattdi:
+ifeq ($(OSTYPE),cmd)
+	-$(ADAC) -c system.ads -gnatet=$(GNATTDI_FILENAME) 2>nul
+else
+	-$(ADAC) -c system.ads -gnatet=$(GNATTDI_FILENAME) 2> /dev/null
+endif
+
+.PHONY: configure-configuregpr
+configure-configuregpr: $(CONFIGUREGPR_FILENAME)
 $(CONFIGUREGPR_FILENAME): $(CONFIGURE_DEPS)
 ifneq ($(RTS_INSTALLED),Y)
 	$(error Error: no RTS available)
@@ -1336,7 +1352,8 @@ configure-end:
 CONFIGURE_AUX_DEPS :=
 CONFIGURE_AUX_DEPS += configure-start
 CONFIGURE_AUX_DEPS += configure-gnatadc
-CONFIGURE_AUX_DEPS += configure-gpr
+CONFIGURE_AUX_DEPS += configure-gnattdi
+CONFIGURE_AUX_DEPS += configure-configuregpr
 CONFIGURE_AUX_DEPS += configure-subdirs
 CONFIGURE_AUX_DEPS += configure-end
 configure-aux: $(CONFIGURE_AUX_DEPS)
