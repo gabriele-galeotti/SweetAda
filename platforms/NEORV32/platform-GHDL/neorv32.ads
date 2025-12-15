@@ -729,9 +729,63 @@ pragma Style_Checks (Off);
    -- 2.8.18. One-Wire Serial Interface Controller (ONEWIRE)
    ----------------------------------------------------------------------------
 
+   ONEWIRE_CTRL_PRSC_DIV2  : constant := 2#00#; -- Resulting clock_prescaler = 2
+   ONEWIRE_CTRL_PRSC_DIV4  : constant := 2#01#; -- Resulting clock_prescaler = 4
+   ONEWIRE_CTRL_PRSC_DIV8  : constant := 2#10#; -- Resulting clock_prescaler = 8
+   ONEWIRE_CTRL_PRSC_DIV64 : constant := 2#11#; -- Resulting clock_prescaler = 64
+
+   type ONEWIRE_CTRL_Type is record
+      ONEWIRE_CTRL_EN       : Boolean    := False;                  -- ONEWIRE enable, reset if cleared
+      ONEWIRE_CTRL_CLEAR    : Boolean    := False;                  -- clear RXT FIFO, auto-clears
+      ONEWIRE_CTRL_PRSC     : Bits_2     := ONEWIRE_CTRL_PRSC_DIV2; -- 2-bit clock prescaler select
+      ONEWIRE_CTRL_CLKDIV   : Unsigned_8 := 0;                      -- 8-bit clock divider value
+      Reserved1             : Bits_3     := 0;
+      ONEWIRE_CTRL_FIFO     : Bits_4     := 0;                      -- FIFO depth; log2(IO_ONEWIRE_FIFO)
+      Reserved2             : Bits_9     := 0;
+      ONEWIRE_CTRL_TX_FULL  : Boolean    := False;                  -- TX FIFO full
+      ONEWIRE_CTRL_RX_AVAIL : Boolean    := False;                  -- RX FIFO data available
+      ONEWIRE_CTRL_SENSE    : Bits_1     := 0;                      -- current state of the bus line
+      ONEWIRE_CTRL_BUSY     : Boolean    := False;                  -- operation in progress when set or TX FIFO not empty
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ONEWIRE_CTRL_Type use record
+      ONEWIRE_CTRL_EN       at 0 range  0 ..  0;
+      ONEWIRE_CTRL_CLEAR    at 0 range  1 ..  1;
+      ONEWIRE_CTRL_PRSC     at 0 range  2 ..  3;
+      ONEWIRE_CTRL_CLKDIV   at 0 range  4 .. 11;
+      Reserved1             at 0 range 12 .. 14;
+      ONEWIRE_CTRL_FIFO     at 0 range 15 .. 18;
+      Reserved2             at 0 range 19 .. 27;
+      ONEWIRE_CTRL_TX_FULL  at 0 range 28 .. 28;
+      ONEWIRE_CTRL_RX_AVAIL at 0 range 29 .. 29;
+      ONEWIRE_CTRL_SENSE    at 0 range 30 .. 30;
+      ONEWIRE_CTRL_BUSY     at 0 range 31 .. 31;
+   end record;
+
+   ONEWIRE_DCMD_CMD_NOP   : constant := 2#00#; -- (ONEWIRE_CMD_NOP) - no operation (dummy)
+   ONEWIRE_DCMD_CMD_BIT   : constant := 2#01#; -- (ONEWIRE_CMD_BIT) - transfer a single-bit (read-while-write)
+   ONEWIRE_DCMD_CMD_BYTE  : constant := 2#10#; -- (ONEWIRE_CMD_BYTE) - transfer a full-byte (read-while-write)
+   ONEWIRE_DCMD_CMD_RESET : constant := 2#11#; -- (ONEWIRE_CMD_RESET) - generate reset pulse and check for device presence
+
+   type ONEWIRE_DCMD_Type is record
+      ONEWIRE_DCMD_DATA     : Unsigned_8 := 0;                    -- receive/transmit data
+      ONEWIRE_DCMD_CMD      : Bits_2     := ONEWIRE_DCMD_CMD_NOP; -- operation command LSBs
+      ONEWIRE_DCMD_PRESENCE : Boolean    := False;                -- bus presence detected
+      Reserved              : Bits_21    := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ONEWIRE_DCMD_Type use record
+      ONEWIRE_DCMD_DATA     at 0 range  0 ..  7;
+      ONEWIRE_DCMD_CMD      at 0 range  8 ..  9;
+      ONEWIRE_DCMD_PRESENCE at 0 range 10 .. 10;
+      Reserved              at 0 range 11 .. 31;
+   end record;
+
    type ONEWIRE_Type is record
-      CTRL : Unsigned_32 with Volatile_Full_Access => True;
-      DCMD : Unsigned_32 with Volatile_Full_Access => True;
+      CTRL : ONEWIRE_CTRL_Type with Volatile_Full_Access => True;
+      DCMD : ONEWIRE_DCMD_Type with Volatile_Full_Access => True;
    end record
       with Size => 2 * 32;
    for ONEWIRE_Type use record
