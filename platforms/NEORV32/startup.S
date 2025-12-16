@@ -27,6 +27,17 @@ _start:
                 csrw    mie,zero
 
                 //
+                // Set mstatus[MPP] = M.
+                //
+#define MPP_M (0x3<<11)
+                li      t0,MPP_M
+                csrw    mstatus,t0
+                la      t0,1f
+                csrw    mepc,t0
+                mret
+1:
+
+                //
                 // Boot hart #0.
                 //
                 csrr    x1,mhartid
