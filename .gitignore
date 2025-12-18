@@ -33,6 +33,7 @@ gprbuild_wr.gpr
 # build artifacts
 configure.gpr
 gnat.adc
+gnat.tdi
 kernel.*
 *.a
 *.aout
