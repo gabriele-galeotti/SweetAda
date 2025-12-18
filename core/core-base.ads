@@ -20,6 +20,7 @@ pragma Restrictions (No_Elaboration_Code);
 with System;
 
 package Core.Base
+
    with Preelaborate => True,
         SPARK_Mode   => On
    is
