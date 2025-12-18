@@ -28,7 +28,9 @@ INCLUDE_DIRECTORIES += $(CORE_DIRECTORY)                     \
 # bits                  with''ed by console, core, integer_math, malloc, memory_functions
 # bits-c                with''ed by console, malloc, memory_functions
 # console               with''ed by abort_library, core, malloc
-# core                  __gnat_stack_check and other parameters
+# core                  basic core unit
+# core-base             secondary stack allocation and stack checking
+# core-expanded         objects claimed by the binder
 # definitions           with''ed by console
 # gnat_exceptions       called by inline checks
 # integer_math          with''ed by malloc
@@ -43,6 +45,7 @@ IMPLICIT_CORE_UNITS += abort_library       \
                        bits-c              \
                        console             \
                        core                \
+                       core-base           \
                        definitions         \
                        gnat_exceptions     \
                        integer_math        \
@@ -51,4 +54,7 @@ IMPLICIT_CORE_UNITS += abort_library       \
                        malloc              \
                        memory_functions    \
                        mutex
+ifneq ($(SUPPRESS_STANDARD_LIBRARY),True)
+IMPLICIT_CORE_UNITS += core-expanded
+endif
 

@@ -19,6 +19,7 @@ library project Core is
 
    Kernel_Parent_Path := External ("KERNEL_PARENT_PATH", ".");
    Include_Directories := Split (External ("GPR_INCLUDES", ""), " ");
+   Suppress_Standard_Library := External ("SUPPRESS_STANDARD_LIBRARY", "True");
    CPU_Files := Split (External ("GPR_CORE_CPU", ""), " ");
 
    -- shorthands
@@ -75,8 +76,17 @@ library project Core is
       );
 
    Core_Files := (
-      "core.adb", "core.ads"
+      "core.ads",
+      "core-base.adb", "core-base.ads"
       );
+
+   case Suppress_Standard_Library is
+      when "False" =>
+         Core_Files := Core_Files                      &
+            ("core-expanded.adb", "core-expanded.ads");
+      when others =>
+         null;
+   end case;
 
    Definitions_Files := (
       "definitions.ads"

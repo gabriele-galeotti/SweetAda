@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ core.ads                                                                                                  --
+-- __FLN__ core-base.ads                                                                                             --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -17,7 +17,9 @@
 
 pragma Restrictions (No_Elaboration_Code);
 
-package Core
+with System;
+
+package Core.Base
    with Preelaborate => True,
         SPARK_Mode   => On
    is
@@ -30,14 +32,18 @@ package Core
    --                                                                        --
    --========================================================================--
 
-   KERNEL_NAME      : constant String := "Archaea";
-   KERNEL_VERSION   : constant String := "0.0";
-   KERNEL_THREAD_ID : constant := 1;
+   Default_Stack_Size_Value : constant Integer := -1
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__gl_default_stack_size";
 
-   Debug_Flag : aliased constant Boolean
-      with Size          => 8,
-           Import        => True,
-           Convention    => Asm,
-           External_Name => "_debug_flag";
+   type Stack_Access is access all Integer;
 
-end Core;
+   function Stack_Check
+      (Stack_Address : System.Address)
+      return Stack_Access
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__gnat_stack_check";
+
+end Core.Base;

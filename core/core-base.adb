@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ core.adb                                                                                                  --
+-- __FLN__ core-base.adb                                                                                             --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package body Core
+package body Core.Base
    is
 
    --========================================================================--
@@ -38,4 +38,4 @@ package body Core
       return null;
    end Stack_Check;
 
-end Core;
+end Core.Base;
