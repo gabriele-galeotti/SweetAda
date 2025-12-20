@@ -4712,21 +4712,729 @@ pragma Style_Checks (Off);
    -- Chapter 22 Precision ADC
    ----------------------------------------------------------------------------
 
+   -- named constants to index ADC14MCTL and ADC14MEM arrays
+   ADC14CH0  : constant := 0;
+   ADC14CH1  : constant := 1;
+   ADC14CH2  : constant := 2;
+   ADC14CH3  : constant := 3;
+   ADC14CH4  : constant := 4;
+   ADC14CH5  : constant := 5;
+   ADC14CH6  : constant := 6;
+   ADC14CH7  : constant := 7;
+   ADC14CH8  : constant := 8;
+   ADC14CH9  : constant := 9;
+   ADC14CH10 : constant := 10;
+   ADC14CH11 : constant := 11;
+   ADC14CH12 : constant := 12;
+   ADC14CH13 : constant := 13;
+   ADC14CH14 : constant := 14;
+   ADC14CH15 : constant := 15;
+   ADC14CH16 : constant := 16;
+   ADC14CH17 : constant := 17;
+   ADC14CH18 : constant := 18;
+   ADC14CH19 : constant := 19;
+   ADC14CH20 : constant := 20;
+   ADC14CH21 : constant := 21;
+   ADC14CH22 : constant := 22;
+   ADC14CH23 : constant := 23;
+   ADC14CH24 : constant := 24;
+   ADC14CH25 : constant := 25;
+   ADC14CH26 : constant := 26;
+   ADC14CH27 : constant := 27;
+   ADC14CH28 : constant := 28;
+   ADC14CH29 : constant := 29;
+   ADC14CH30 : constant := 30;
+   ADC14CH31 : constant := 31;
+
    -- 22.3.1 ADC14CTL0 Register
+
+   ADC14MSC_SHINOAUTO  : constant := 0; -- The sampling timer requires a rising edge of the SHI signal to trigger each sample-and-convert.
+   ADC14MSC_SHI1STAUTO : constant := 1; -- The first rising edge of the SHI signal triggers the sampling timer, but further sample-and-conversions are performed automatically as soon as the prior conversion is completed.
+
+   ADC14SHT0x_4     : constant :=2#0000#; -- 4
+   ADC14SHT0x_8     : constant :=2#0001#; -- 8
+   ADC14SHT0x_16    : constant :=2#0010#; -- 16
+   ADC14SHT0x_32    : constant :=2#0011#; -- 32
+   ADC14SHT0x_64    : constant :=2#0100#; -- 64
+   ADC14SHT0x_96    : constant :=2#0101#; -- 96
+   ADC14SHT0x_128   : constant :=2#0110#; -- 128
+   ADC14SHT0x_192   : constant :=2#0111#; -- 192
+   ADC14SHT0x_RSVD1 : constant :=2#1000#; -- Reserved
+   ADC14SHT0x_RSVD2 : constant :=2#1001#; -- Reserved
+   ADC14SHT0x_RSVD3 : constant :=2#1010#; -- Reserved
+   ADC14SHT0x_RSVD4 : constant :=2#1011#; -- Reserved
+   ADC14SHT0x_RSVD5 : constant :=2#1100#; -- Reserved
+   ADC14SHT0x_RSVD6 : constant :=2#1101#; -- Reserved
+   ADC14SHT0x_RSVD7 : constant :=2#1110#; -- Reserved
+   ADC14SHT0x_RSVD8 : constant :=2#1111#; -- Reserved
+
+   ADC14SHT1x_4     renames ADC14SHT0x_4;
+   ADC14SHT1x_8     renames ADC14SHT0x_8;
+   ADC14SHT1x_16    renames ADC14SHT0x_16;
+   ADC14SHT1x_32    renames ADC14SHT0x_32;
+   ADC14SHT1x_64    renames ADC14SHT0x_64;
+   ADC14SHT1x_96    renames ADC14SHT0x_96;
+   ADC14SHT1x_128   renames ADC14SHT0x_128;
+   ADC14SHT1x_192   renames ADC14SHT0x_192;
+   ADC14SHT1x_RSVD1 renames ADC14SHT0x_RSVD1;
+   ADC14SHT1x_RSVD2 renames ADC14SHT0x_RSVD2;
+   ADC14SHT1x_RSVD3 renames ADC14SHT0x_RSVD3;
+   ADC14SHT1x_RSVD4 renames ADC14SHT0x_RSVD4;
+   ADC14SHT1x_RSVD5 renames ADC14SHT0x_RSVD5;
+   ADC14SHT1x_RSVD6 renames ADC14SHT0x_RSVD6;
+   ADC14SHT1x_RSVD7 renames ADC14SHT0x_RSVD7;
+   ADC14SHT1x_RSVD8 renames ADC14SHT0x_RSVD8;
+
+   ADC14CONSEQx_SC       : constant := 2#00#; -- Single-channel, single-conversion
+   ADC14CONSEQx_SEQCH    : constant := 2#01#; -- Sequence-of-channels
+   ADC14CONSEQx_REPSC    : constant := 2#10#; -- Repeat-single-channel
+   ADC14CONSEQx_REPSEQSC : constant := 2#11#; -- Repeat-sequence-of-channels
+
+   ADC14SSELx_MODCLK : constant := 2#000#; -- MODCLK
+   ADC14SSELx_SYSCLK : constant := 2#001#; -- SYSCLK
+   ADC14SSELx_ACLK   : constant := 2#010#; -- ACLK
+   ADC14SSELx_MCLK   : constant := 2#011#; -- MCLK
+   ADC14SSELx_SMCLK  : constant := 2#100#; -- SMCLK
+   ADC14SSELx_HSMCLK : constant := 2#101#; -- HSMCLK
+   ADC14SSELx_RSVD1  : constant := 2#110#; -- Reserved
+   ADC14SSELx_RSVD2  : constant := 2#111#; -- Reserved
+
+   ADC14DIVx_DIV1 : constant := 2#000#; -- /1
+   ADC14DIVx_DIV2 : constant := 2#001#; -- /2
+   ADC14DIVx_DIV3 : constant := 2#010#; -- /3
+   ADC14DIVx_DIV4 : constant := 2#011#; -- /4
+   ADC14DIVx_DIV5 : constant := 2#100#; -- /5
+   ADC14DIVx_DIV6 : constant := 2#101#; -- /6
+   ADC14DIVx_DIV7 : constant := 2#110#; -- /7
+   ADC14DIVx_DIV8 : constant := 2#111#; -- /8
+
+   ADC14SHP_INPUT : constant := 0; -- SAMPCON signal is sourced from the sample-input signal.
+   ADC14SHP_TIMER : constant := 1; -- SAMPCON signal is sourced from the sampling timer.
+
+   ADC14SHSx_ADC14SC : constant := 2#000#; -- ADC14SC bit
+   ADC14SHSx_TA0_C1  : constant := 2#001#; -- TA0_C1
+   ADC14SHSx_TA0_C2  : constant := 2#010#; -- TA0_C2
+   ADC14SHSx_TA1_C1  : constant := 2#011#; -- TA1_C1
+   ADC14SHSx_TA1_C2  : constant := 2#100#; -- TA1_C2
+   ADC14SHSx_TA2_C1  : constant := 2#101#; -- TA2_C1
+   ADC14SHSx_TA2_C2  : constant := 2#110#; -- TA2_C2
+   ADC14SHSx_TA3_C1  : constant := 2#111#; -- TA3_C1
+
+   ADC14PDIV_DIV1  : constant := 2#00#; -- Predivide by 1
+   ADC14PDIV_DIV4  : constant := 2#01#; -- Predivide by 4
+   ADC14PDIV_DIV32 : constant := 2#10#; -- Predivide by 32
+   ADC14PDIV_DIV64 : constant := 2#11#; -- Predivide by 64
+
+   type ADC14CTL0_Type is record
+      ADC14SC      : Boolean := False;              -- ADC14 start conversion.
+      ADC14ENC     : Boolean := False;              -- ADC14 enable conversion
+      Reserved1    : Bits_2  := 0;
+      ADC14ON      : Boolean := False;              -- ADC14 on
+      Reserved2    : Bits_2  := 0;
+      ADC14MSC     : Bits_1  := ADC14MSC_SHINOAUTO; -- ADC14 multiple sample and conversion.
+      ADC14SHT0x   : Bits_4  := ADC14SHT0x_4;       -- ADC14 sample-and-hold time for Pulse Sample Mode (ADC14SHP=1).
+      ADC14SHT1x   : Bits_4  := ADC14SHT1x_4;       -- ADC14 sample-and-hold time for Pulse Sample Mode (ADC14SHP =1).
+      ADC14BUSY    : Boolean := False;              -- ADC14 busy.
+      ADC14CONSEQx : Bits_2  := ADC14CONSEQx_SC;    -- ADC14 conversion sequence mode select
+      ADC14SSELx   : Bits_3  := ADC14SSELx_MODCLK;  -- ADC14 clock source select.
+      ADC14DIVx    : Bits_3  := ADC14DIVx_DIV1;     -- ADC14 clock divider.
+      ADC14ISSH    : Boolean := False;              -- ADC14 invert signal sample-and-hold.
+      ADC14SHP     : Bits_1  := ADC14SHP_INPUT;     -- ADC14 sample-and-hold pulse-mode select.
+      ADC14SHSx    : Bits_3  := ADC14SHSx_ADC14SC;  -- ADC14 sample-and-hold source select.
+      ADC14PDIV    : Bits_2  := ADC14PDIV_DIV1;     -- ADC14 predivider.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADC14CTL0_Type use record
+      ADC14SC      at 0 range  0 ..  0;
+      ADC14ENC     at 0 range  1 ..  1;
+      Reserved1    at 0 range  2 ..  3;
+      ADC14ON      at 0 range  4 ..  4;
+      Reserved2    at 0 range  5 ..  6;
+      ADC14MSC     at 0 range  7 ..  7;
+      ADC14SHT0x   at 0 range  8 .. 11;
+      ADC14SHT1x   at 0 range 12 .. 15;
+      ADC14BUSY    at 0 range 16 .. 16;
+      ADC14CONSEQx at 0 range 17 .. 18;
+      ADC14SSELx   at 0 range 19 .. 21;
+      ADC14DIVx    at 0 range 22 .. 24;
+      ADC14ISSH    at 0 range 25 .. 25;
+      ADC14SHP     at 0 range 26 .. 26;
+      ADC14SHSx    at 0 range 27 .. 29;
+      ADC14PDIV    at 0 range 30 .. 31;
+   end record;
+
    -- 22.3.2 ADC14CTL1 Register
+
+   ADC14PWRMD_REGULAR : constant := 2#00#; -- Regular-power mode for use with any resolution setting.
+   ADC14PWRMD_RSVD1   : constant := 2#01#; -- Reserved
+   ADC14PWRMD_LOPOWER : constant := 2#10#; -- Low-power mode for 12-bit, 10-bit, and 8-bit resolution settings.
+   ADC14PWRMD_RSVD2   : constant := 2#11#; -- Reserved
+
+   ADC14REFBURST_CONTINUOUS : constant := 0; -- ADC reference buffer on continuously
+   ADC14REFBURST_SAMPLECONV : constant := 1; -- ADC reference buffer on only during sample-and-conversion
+
+   ADC14DF_UNSIGNED : constant := 0; -- Binary unsigned.
+   ADC14DF_SIGNED2C : constant := 1; -- Signed binary (2s complement), left aligned.
+
+   ADC14RES_8  : constant := 2#00#; -- 8 bit (9 clock cycle conversion time)
+   ADC14RES_10 : constant := 2#01#; -- 10 bit (11 clock cycle conversion time)
+   ADC14RES_12 : constant := 2#10#; -- 12 bit (14 clock cycle conversion time)
+   ADC14RES_14 : constant := 2#11#; -- 14 bit (16 clock cycle conversion time)
+
+   ADC14CSTARTADDx_ADC14MEM0  : constant := 2#00000#; -- ADC14MEM0
+   ADC14CSTARTADDx_ADC14MEM1  : constant := 2#00001#; -- ADC14MEM1
+   ADC14CSTARTADDx_ADC14MEM2  : constant := 2#00010#; -- ADC14MEM2
+   ADC14CSTARTADDx_ADC14MEM3  : constant := 2#00011#; -- ADC14MEM3
+   ADC14CSTARTADDx_ADC14MEM4  : constant := 2#00100#; -- ADC14MEM4
+   ADC14CSTARTADDx_ADC14MEM5  : constant := 2#00101#; -- ADC14MEM5
+   ADC14CSTARTADDx_ADC14MEM6  : constant := 2#00110#; -- ADC14MEM6
+   ADC14CSTARTADDx_ADC14MEM7  : constant := 2#00111#; -- ADC14MEM7
+   ADC14CSTARTADDx_ADC14MEM8  : constant := 2#01000#; -- ADC14MEM8
+   ADC14CSTARTADDx_ADC14MEM9  : constant := 2#01001#; -- ADC14MEM9
+   ADC14CSTARTADDx_ADC14MEM10 : constant := 2#01010#; -- ADC14MEM10
+   ADC14CSTARTADDx_ADC14MEM11 : constant := 2#01011#; -- ADC14MEM11
+   ADC14CSTARTADDx_ADC14MEM12 : constant := 2#01100#; -- ADC14MEM12
+   ADC14CSTARTADDx_ADC14MEM13 : constant := 2#01101#; -- ADC14MEM13
+   ADC14CSTARTADDx_ADC14MEM14 : constant := 2#01110#; -- ADC14MEM14
+   ADC14CSTARTADDx_ADC14MEM15 : constant := 2#01111#; -- ADC14MEM15
+   ADC14CSTARTADDx_ADC14MEM16 : constant := 2#10000#; -- ADC14MEM16
+   ADC14CSTARTADDx_ADC14MEM17 : constant := 2#10001#; -- ADC14MEM17
+   ADC14CSTARTADDx_ADC14MEM18 : constant := 2#10010#; -- ADC14MEM18
+   ADC14CSTARTADDx_ADC14MEM19 : constant := 2#10011#; -- ADC14MEM19
+   ADC14CSTARTADDx_ADC14MEM20 : constant := 2#10100#; -- ADC14MEM20
+   ADC14CSTARTADDx_ADC14MEM21 : constant := 2#10101#; -- ADC14MEM21
+   ADC14CSTARTADDx_ADC14MEM22 : constant := 2#10110#; -- ADC14MEM22
+   ADC14CSTARTADDx_ADC14MEM23 : constant := 2#10111#; -- ADC14MEM23
+   ADC14CSTARTADDx_ADC14MEM24 : constant := 2#11000#; -- ADC14MEM24
+   ADC14CSTARTADDx_ADC14MEM25 : constant := 2#11001#; -- ADC14MEM25
+   ADC14CSTARTADDx_ADC14MEM26 : constant := 2#11010#; -- ADC14MEM26
+   ADC14CSTARTADDx_ADC14MEM27 : constant := 2#11011#; -- ADC14MEM27
+   ADC14CSTARTADDx_ADC14MEM28 : constant := 2#11100#; -- ADC14MEM28
+   ADC14CSTARTADDx_ADC14MEM29 : constant := 2#11101#; -- ADC14MEM29
+   ADC14CSTARTADDx_ADC14MEM30 : constant := 2#11110#; -- ADC14MEM30
+   ADC14CSTARTADDx_ADC14MEM31 : constant := 2#11111#; -- ADC14MEM31
+
+   ADC14BATMAP_NOBAT : constant := 0; -- ADC internal 1/2 x AVCC channel is not selected for ADC
+   ADC14BATMAP_BAT   : constant := 1; -- ADC internal 1/2 x AVCC channel is selected for ADC input channel MAX
+
+   ADC14TCMAP_NOTC : constant := 0; -- ADC internal temperature sensor channel is not selected for ADC
+   ADC14TCMAP_TC   : constant := 1; -- ADC internal temperature sensor channel is selected for ADC input channel MAX – 1
+
+   ADC14CH0MAP_NOCH0 : constant := 0; -- ADC input channel internal 0 is not selected
+   ADC14CH0MAP_CH0   : constant := 1; -- ADC input channel internal 0 is selected for ADC input channel MAX – 2
+
+   ADC14CH1MAP_NOCH1 : constant := 0; -- ADC input channel internal 1 is not selected
+   ADC14CH1MAP_CH1   : constant := 1; -- ADC input channel internal 1 is selected for ADC input channel MAX – 3
+
+   ADC14CH2MAP_NOCH2 : constant := 0; -- ADC input channel internal 2 is not selected
+   ADC14CH2MAP_CH2   : constant := 1; -- ADC input channel internal 2 is selected for ADC input channel MAX – 4
+
+   ADC14CH3MAP_NOCH3 : constant := 0; -- ADC input channel internal 3 is not selected
+   ADC14CH3MAP_CH3   : constant := 1; -- ADC input channel internal 3 is selected for ADC input channel MAX – 5
+
+    type ADC14CTL1_Type is record
+      ADC14PWRMD      : Bits_2  := ADC14PWRMD_REGULAR;        -- ADC power modes.
+      ADC14REFBURST   : Bits_1  := ADC14REFBURST_CONTINUOUS;  -- ADC reference buffer burst.
+      ADC14DF         : Bits_1  := ADC14DF_UNSIGNED;          -- ADC14 data read-back format.
+      ADC14RES        : Bits_2  := ADC14RES_14;               -- ADC14 resolution.
+      Reserved1       : Bits_10 := 0;
+      ADC14CSTARTADDx : Bits_5  := ADC14CSTARTADDx_ADC14MEM0; -- ADC14 conversion start address.
+      Reserved2       : Bits_1  := 0;
+      ADC14BATMAP     : Bits_1  := ADC14BATMAP_NOBAT;         -- Controls 1/2 AVCC ADC input channel selection
+      ADC14TCMAP      : Bits_1  := ADC14TCMAP_NOTC;           -- Controls temperature sensor ADC input channel selection
+      ADC14CH0MAP     : Bits_1  := ADC14CH0MAP_NOCH0;         -- Controls internal channel 0 selection to ADC input channel MAX – 2
+      ADC14CH1MAP     : Bits_1  := ADC14CH1MAP_NOCH1;         -- Controls internal channel 1 selection to ADC input channel MAX – 3
+      ADC14CH2MAP     : Bits_1  := ADC14CH2MAP_NOCH2;         -- Controls internal channel 2 selection to ADC input channel MAX – 4
+      ADC14CH3MAP     : Bits_1  := ADC14CH3MAP_NOCH3;         -- Controls internal channel 3 selection to ADC input channel MAX – 5
+      Reserved3       : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADC14CTL1_Type use record
+      ADC14PWRMD      at 0 range  0 ..  1;
+      ADC14REFBURST   at 0 range  2 ..  2;
+      ADC14DF         at 0 range  3 ..  3;
+      ADC14RES        at 0 range  4 ..  5;
+      Reserved1       at 0 range  6 .. 15;
+      ADC14CSTARTADDx at 0 range 16 .. 20;
+      Reserved2       at 0 range 21 .. 21;
+      ADC14BATMAP     at 0 range 22 .. 22;
+      ADC14TCMAP      at 0 range 23 .. 23;
+      ADC14CH0MAP     at 0 range 24 .. 24;
+      ADC14CH1MAP     at 0 range 25 .. 25;
+      ADC14CH2MAP     at 0 range 26 .. 26;
+      ADC14CH3MAP     at 0 range 27 .. 27;
+      Reserved3       at 0 range 28 .. 31;
+   end record;
+
    -- 22.3.3 ADC14LO0 Register
+
+   type ADC14LO0_Type is record
+      ADC14LO0 : Bits_16 := 0; -- Low threshold 0.
+      Reserved : Bits_16 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADC14LO0_Type use record
+      ADC14LO0 at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
    -- 22.3.4 ADC14HI0 Register
+
+   type ADC14HI0_Type is record
+      ADC14HI0 : Bits_16 := 16#3FFF#; -- High threshold 0.
+      Reserved : Bits_16 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADC14HI0_Type use record
+      ADC14HI0 at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
    -- 22.3.5 ADC14LO1 Register
+
+   type ADC14LO1_Type is record
+      ADC14LO1 : Bits_16 := 0; -- Low threshold 1.
+      Reserved : Bits_16 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADC14LO1_Type use record
+      ADC14LO1 at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
    -- 22.3.6 ADC14HI1 Register
+
+   type ADC14HI1_Type is record
+      ADC14HI1 : Bits_16 := 16#3FFF#; -- High threshold 1.
+      Reserved : Bits_16 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADC14HI1_Type use record
+      ADC14HI1 at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
    -- 22.3.7 ADC14MCTL0 to ADC14MCTL31 Register
+
+   -- ADC14DIF = 0
+   ADC14INCHx_A0  : constant := 2#00000#; -- If ADC14DIF = 0: A0
+   ADC14INCHx_A1  : constant := 2#00001#; -- If ADC14DIF = 0: A1
+   ADC14INCHx_A2  : constant := 2#00010#; -- If ADC14DIF = 0: A2
+   ADC14INCHx_A3  : constant := 2#00011#; -- If ADC14DIF = 0: A3
+   ADC14INCHx_A4  : constant := 2#00100#; -- If ADC14DIF = 0: A4
+   ADC14INCHx_A5  : constant := 2#00101#; -- If ADC14DIF = 0: A5
+   ADC14INCHx_A6  : constant := 2#00110#; -- If ADC14DIF = 0: A6
+   ADC14INCHx_A7  : constant := 2#00111#; -- If ADC14DIF = 0: A7
+   ADC14INCHx_A8  : constant := 2#01000#; -- If ADC14DIF = 0: A8
+   ADC14INCHx_A9  : constant := 2#01001#; -- If ADC14DIF = 0: A9
+   ADC14INCHx_A10 : constant := 2#01010#; -- If ADC14DIF = 0: A10
+   ADC14INCHx_A11 : constant := 2#01011#; -- If ADC14DIF = 0: A11
+   ADC14INCHx_A12 : constant := 2#01100#; -- If ADC14DIF = 0: A12
+   ADC14INCHx_A13 : constant := 2#01101#; -- If ADC14DIF = 0: A13
+   ADC14INCHx_A14 : constant := 2#01110#; -- If ADC14DIF = 0: A14
+   ADC14INCHx_A15 : constant := 2#01111#; -- If ADC14DIF = 0: A15
+   ADC14INCHx_A16 : constant := 2#10000#; -- If ADC14DIF = 0: A16
+   ADC14INCHx_A17 : constant := 2#10001#; -- If ADC14DIF = 0: A17
+   ADC14INCHx_A18 : constant := 2#10010#; -- If ADC14DIF = 0: A18
+   ADC14INCHx_A19 : constant := 2#10011#; -- If ADC14DIF = 0: A19
+   ADC14INCHx_A20 : constant := 2#10100#; -- If ADC14DIF = 0: A20
+   ADC14INCHx_A21 : constant := 2#10101#; -- If ADC14DIF = 0: A21
+   ADC14INCHx_A22 : constant := 2#10110#; -- If ADC14DIF = 0: A22
+   ADC14INCHx_A23 : constant := 2#10111#; -- If ADC14DIF = 0: A23
+   ADC14INCHx_A24 : constant := 2#11000#; -- If ADC14DIF = 0: A24
+   ADC14INCHx_A25 : constant := 2#11001#; -- If ADC14DIF = 0: A25
+   ADC14INCHx_A26 : constant := 2#11010#; -- If ADC14DIF = 0: A26
+   ADC14INCHx_A27 : constant := 2#11011#; -- If ADC14DIF = 0: A27
+   ADC14INCHx_A28 : constant := 2#11100#; -- If ADC14DIF = 0: A28
+   ADC14INCHx_A29 : constant := 2#11101#; -- If ADC14DIF = 0: A29
+   ADC14INCHx_A30 : constant := 2#11110#; -- If ADC14DIF = 0: A30
+   ADC14INCHx_A31 : constant := 2#11111#; -- If ADC14DIF = 0: A31
+   -- ADC14DIF = 1
+   ADC14INCHx_A0PA1   : constant := 2#00000#; -- If ADC14DIF = 1: Ain+ = A0, Ain- = A1
+   ADC14INCHx_A0NA1   : constant := 2#00001#; -- If ADC14DIF = 1: Ain+ = A0, Ain- = A1
+   ADC14INCHx_A2PA3   : constant := 2#00010#; -- If ADC14DIF = 1: Ain+ = A2, Ain- = A3
+   ADC14INCHx_A2NA3   : constant := 2#00011#; -- If ADC14DIF = 1: Ain+ = A2, Ain- = A3
+   ADC14INCHx_A4PA5   : constant := 2#00100#; -- If ADC14DIF = 1: Ain+ = A4, Ain- = A5
+   ADC14INCHx_A4NA5   : constant := 2#00101#; -- If ADC14DIF = 1: Ain+ = A4, Ain- = A5
+   ADC14INCHx_A6PA7   : constant := 2#00110#; -- If ADC14DIF = 1: Ain+ = A6, Ain- = A7
+   ADC14INCHx_A6NA7   : constant := 2#00111#; -- If ADC14DIF = 1: Ain+ = A6, Ain- = A7
+   ADC14INCHx_A8PA9   : constant := 2#01000#; -- If ADC14DIF = 1: Ain+ = A8, Ain- = A9
+   ADC14INCHx_A8NA9   : constant := 2#01001#; -- If ADC14DIF = 1: Ain+ = A8, Ain- = A9
+   ADC14INCHx_A10PA11 : constant := 2#01010#; -- If ADC14DIF = 1: Ain+ = A10, Ain- = A11
+   ADC14INCHx_A10NA11 : constant := 2#01011#; -- If ADC14DIF = 1: Ain+ = A10, Ain- = A11
+   ADC14INCHx_A12PA13 : constant := 2#01100#; -- If ADC14DIF = 1: Ain+ = A12, Ain- = A13
+   ADC14INCHx_A12NA13 : constant := 2#01101#; -- If ADC14DIF = 1: Ain+ = A12, Ain- = A13
+   ADC14INCHx_A14PA15 : constant := 2#01110#; -- If ADC14DIF = 1: Ain+ = A14, Ain- = A15
+   ADC14INCHx_A14NA15 : constant := 2#01111#; -- If ADC14DIF = 1: Ain+ = A14, Ain- = A15
+   ADC14INCHx_A16PA17 : constant := 2#10000#; -- If ADC14DIF = 1: Ain+ = A16, Ain- = A17
+   ADC14INCHx_A16NA17 : constant := 2#10001#; -- If ADC14DIF = 1: Ain+ = A16, Ain- = A17
+   ADC14INCHx_A18PA19 : constant := 2#10010#; -- If ADC14DIF = 1: Ain+ = A18, Ain- = A19
+   ADC14INCHx_A18NA19 : constant := 2#10011#; -- If ADC14DIF = 1: Ain+ = A18, Ain- = A19
+   ADC14INCHx_A20PA21 : constant := 2#10100#; -- If ADC14DIF = 1: Ain+ = A20, Ain- = A21
+   ADC14INCHx_A20NA21 : constant := 2#10101#; -- If ADC14DIF = 1: Ain+ = A20, Ain- = A21
+   ADC14INCHx_A22PA23 : constant := 2#10110#; -- If ADC14DIF = 1: Ain+ = A22, Ain- = A23
+   ADC14INCHx_A22NA23 : constant := 2#10111#; -- If ADC14DIF = 1: Ain+ = A22, Ain- = A23
+   ADC14INCHx_A24PA25 : constant := 2#11000#; -- If ADC14DIF = 1: Ain+ = A24, Ain- = A25
+   ADC14INCHx_A24NA25 : constant := 2#11001#; -- If ADC14DIF = 1: Ain+ = A24, Ain- = A25
+   ADC14INCHx_A26PA27 : constant := 2#11010#; -- If ADC14DIF = 1: Ain+ = A26, Ain- = A27
+   ADC14INCHx_A26NA27 : constant := 2#11011#; -- If ADC14DIF = 1: Ain+ = A26, Ain- = A27
+   ADC14INCHx_A28PA29 : constant := 2#11100#; -- If ADC14DIF = 1: Ain+ = A28, Ain- = A29
+   ADC14INCHx_A28NA29 : constant := 2#11101#; -- If ADC14DIF = 1: Ain+ = A28, Ain- = A29
+   ADC14INCHx_A30PA31 : constant := 2#11110#; -- If ADC14DIF = 1: Ain+ = A30, Ain- = A31
+   ADC14INCHx_A30NA31 : constant := 2#11111#; -- If ADC14DIF = 1: Ain+ = A30, Ain- = A31
+
+   ADC14VRSEL_AVCCAVSS     : constant := 2#0000#; -- V(R+) = AVCC, V(R-) = AVSS
+   ADC14VRSEL_VREFBUFDAVSS : constant := 2#0001#; -- V(R+) = VREF buffered, V(R-) = AVSS
+   ADC14VRSEL_RSVD1        : constant := 2#0010#; -- Reserved
+   ADC14VRSEL_RSVD2        : constant := 2#0011#; -- Reserved
+   ADC14VRSEL_RSVD3        : constant := 2#0100#; -- Reserved
+   ADC14VRSEL_RSVD4        : constant := 2#0101#; -- Reserved
+   ADC14VRSEL_RSVD5        : constant := 2#0110#; -- Reserved
+   ADC14VRSEL_RSVD6        : constant := 2#0111#; -- Reserved
+   ADC14VRSEL_RSVD7        : constant := 2#1000#; -- Reserved
+   ADC14VRSEL_RSVD8        : constant := 2#1001#; -- Reserved
+   ADC14VRSEL_RSVD9        : constant := 2#1010#; -- Reserved
+   ADC14VRSEL_RSVD10       : constant := 2#1011#; -- Reserved
+   ADC14VRSEL_RSVD11       : constant := 2#1100#; -- Reserved
+   ADC14VRSEL_RSVD12       : constant := 2#1101#; -- Reserved
+   ADC14VRSEL_VeREF        : constant := 2#1110#; -- V(R+) = VeREF+, V(R-) = VeREF-
+   ADC14VRSEL_VeREFBUFD    : constant := 2#1111#; -- V(R+) = VeREF+ buffered, V(R-) = VeREF-
+
+   ADC14WINCTH_WINCMPTHR0 : constant := 0; -- Use window comparator thresholds 0, ADC14LO0 and ADC14HI0
+   ADC14WINCTH_WINCMPTHR1 : constant := 1; -- Use window comparator thresholds 1, ADC14LO1 and ADC14HI1
+
+   type ADC14MCTLx_Type is record
+      ADC14INCHx  : Bits_5  := ADC14INCHx_A0;          -- Input channel select.
+      Reserved1   : Bits_2  := 0;
+      ADC14EOS    : Boolean := False;                  -- End of sequence.
+      ADC14VRSEL  : Bits_4  := ADC14VRSEL_AVCCAVSS;    -- Selects combinations of V(R+) and V(R-) sources as well as the buffer selection and buffer on or off.
+      Reserved2   : Bits_1  := 0;
+      ADC14DIF    : Boolean := False;                  -- Differential mode.
+      ADC14WINC   : Boolean := False;                  -- Comparator window enable
+      ADC14WINCTH : Bits_1  := ADC14WINCTH_WINCMPTHR0; -- Window comparator threshold register selection
+      Reserved3   : Bits_16 := 0;
+   end record
+      with Bit_Order            => Low_Order_First,
+           Size                 => 32,
+           Volatile_Full_Access => True;
+   for ADC14MCTLx_Type use record
+      ADC14INCHx  at 0 range  0 ..  4;
+      Reserved1   at 0 range  5 ..  6;
+      ADC14EOS    at 0 range  7 ..  7;
+      ADC14VRSEL  at 0 range  8 .. 11;
+      Reserved2   at 0 range 12 .. 12;
+      ADC14DIF    at 0 range 13 .. 13;
+      ADC14WINC   at 0 range 14 .. 14;
+      ADC14WINCTH at 0 range 15 .. 15;
+      Reserved3   at 0 range 16 .. 31;
+   end record;
+
+   type ADC14MCTL_Type is array (ADC14CH0 .. ADC14CH31) of ADC14MCTLx_Type
+      with Pack => True;
+
    -- 22.3.8 ADC14MEM0 to ADC14MEM31 Register
+
+   type ADC14MEMx_Type is record
+      ConversionResults : Bits_16 := 0; -- If ADC14DF = 0, unsigned binary If ADC14DF = 1, 2s-complement format
+      Reserved          : Bits_16 := 0;
+   end record
+      with Bit_Order            => Low_Order_First,
+           Size                 => 32,
+           Volatile_Full_Access => True;
+   for ADC14MEMx_Type use record
+      ConversionResults at 0 range  0 .. 15;
+      Reserved          at 0 range 16 .. 31;
+   end record;
+
+   type ADC14MEM_Type is array (ADC14CH0 .. ADC14CH31) of ADC14MEMx_Type
+      with Pack => True;
+
    -- 22.3.9 ADC14IER0 Register
+
+   type ADC14IER0_Type is record
+      ADC14IE : Bitmap_32 := [others => False]; -- Interrupt enable.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADC14IER0_Type use record
+      ADC14IE at 0 range 0 .. 31;
+   end record;
+
    -- 22.3.10 ADC14IER1 Register
+
+   type ADC14IER1_Type is record
+      Reserved1  : Bits_1  := 0;
+      ADC14INIE  : Boolean := False; -- Interrupt enable for the ADC14MEMx result register being greater than the ADC14LO threshold and below the ADC14HI threshold.
+      ADC14LOIE  : Boolean := False; -- Interrupt enable for the falling short of the lower limit interrupt of the window comparator for the ADC14MEMx result register.
+      ADC14HIIE  : Boolean := False; -- Interrupt enable for the exceeding the upper limit interrupt of the window comparator for ADC14MEMx result register.
+      ADC14OVIE  : Boolean := False; -- ADC14MEMx overflow-interrupt enable.
+      ADC14TOVIE : Boolean := False; -- ADC14 conversion-time-overflow interrupt enable.
+      ADC14RDYIE : Boolean := False; -- ADC14 local buffered reference ready interrupt enable.
+      Reserved2  : Bits_25 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADC14IER1_Type use record
+      Reserved1  at 0 range 0 ..  0;
+      ADC14INIE  at 0 range 1 ..  1;
+      ADC14LOIE  at 0 range 2 ..  2;
+      ADC14HIIE  at 0 range 3 ..  3;
+      ADC14OVIE  at 0 range 4 ..  4;
+      ADC14TOVIE at 0 range 5 ..  5;
+      ADC14RDYIE at 0 range 6 ..  6;
+      Reserved2  at 0 range 7 .. 31;
+   end record;
+
    -- 22.3.11 ADC14IFGR0 Register
+
+   type ADC14IFGR0_Type is record
+      ADC14IFG : Bitmap_32; -- ADC14MEMx interrupt flag.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADC14IFGR0_Type use record
+      ADC14IFG at 0 range 0 .. 31;
+   end record;
+
    -- 22.3.12 ADC14IFGR1 Register
+
+   type ADC14IFGR1_Type is record
+      Reserved1   : Bits_1  := 0;
+      ADC14INIFG  : Boolean := False; -- Interrupt flag for the ADC14MEMx result register being greater than the ADC14LO threshold and below the ADC14HI threshold interrupt.
+      ADC14LOIFG  : Boolean := False; -- Interrupt flag for falling short of the lower limit interrupt of the window comparator for the ADC14MEMx result register.
+      ADC14HIIFG  : Boolean := False; -- Interrupt flag for exceeding the upper limit interrupt of the window comparator for ADC14MEMx result register.
+      ADC14OVIFG  : Boolean := False; -- ADC14MEMx overflow interrupt flag.
+      ADC14TOVIFG : Boolean := False; -- ADC14 conversion time overflow interrupt flag.
+      ADC14RDYIFG : Boolean := False; -- ADC14 local buffered reference ready interrupt flag.
+      Reserved2   : Bits_25 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADC14IFGR1_Type use record
+      Reserved1   at 0 range 0 ..  0;
+      ADC14INIFG  at 0 range 1 ..  1;
+      ADC14LOIFG  at 0 range 2 ..  2;
+      ADC14HIIFG  at 0 range 3 ..  3;
+      ADC14OVIFG  at 0 range 4 ..  4;
+      ADC14TOVIFG at 0 range 5 ..  5;
+      ADC14RDYIFG at 0 range 6 ..  6;
+      Reserved2   at 0 range 7 .. 31;
+   end record;
+
    -- 22.3.13 ADC14CLRIFGR0 Register
+
+   type ADC14CLRIFGR0_Type is record
+      CLRADC14IFG : Bitmap_32 := [others => False]; -- clear ADC14IFGx
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADC14CLRIFGR0_Type use record
+      CLRADC14IFG at 0 range 0 .. 31;
+   end record;
+
    -- 22.3.14 ADC14CLRIFGR1 Register
+
+   type ADC14CLRIFGR1_Type is record
+      Reserved1      : Bits_1  := 0;
+      CLRADC14INIFG  : Boolean := False; -- clear ADC14INIFG
+      CLRADC14LOIFG  : Boolean := False; -- clear ADC14LOIFG
+      CLRADC14HIIFG  : Boolean := False; -- clear ADC14HIIFG
+      CLRADC14OVIFG  : Boolean := False; -- clear ADC14OVIFG
+      CLRADC14TOVIFG : Boolean := False; -- clear ADC14TOVIFG
+      CLRADC14RDYIFG : Boolean := False; -- clear ADC14RDYIFG
+      Reserved2      : Bits_25 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADC14CLRIFGR1_Type use record
+      Reserved1      at 0 range 0 ..  0;
+      CLRADC14INIFG  at 0 range 1 ..  1;
+      CLRADC14LOIFG  at 0 range 2 ..  2;
+      CLRADC14HIIFG  at 0 range 3 ..  3;
+      CLRADC14OVIFG  at 0 range 4 ..  4;
+      CLRADC14TOVIFG at 0 range 5 ..  5;
+      CLRADC14RDYIFG at 0 range 6 ..  6;
+      Reserved2      at 0 range 7 .. 31;
+   end record;
+
    -- 22.3.15 ADC14IV Register
+
+   ADC14IVx_NONE        : constant := 16#00#; -- No interrupt pending
+   ADC14IVx_ADC14OVIFG  : constant := 16#02#; -- Interrupt Source: ADC14MEMx overflow; Interrupt Flag: ADC14OVIFG; Interrupt Priority: Highest
+   ADC14IVx_ADC14TOVIFG : constant := 16#04#; -- Interrupt Source: Conversion time overflow; Interrupt Flag: ADC14TOVIFG
+   ADC14IVx_ADC14HIIFG  : constant := 16#06#; -- Interrupt Source: ADC14 window high interrupt flag; Interrupt Flag: ADC14HIIFG
+   ADC14IVx_ADC14LOIFG  : constant := 16#08#; -- Interrupt Source: ADC14 window low interrupt flag; Interrupt Flag: ADC14LOIFG
+   ADC14IVx_ADC14INIFG  : constant := 16#0A#; -- Interrupt Source: ADC14 in-window interrupt flag; Interrupt Flag: ADC14INIFG
+   ADC14IVx_ADC14IFG0   : constant := 16#0C#; -- Interrupt Source: ADC14MEM0 interrupt flag; Interrupt Flag: ADC14IFG0
+   ADC14IVx_ADC14IFG1   : constant := 16#0E#; -- Interrupt Source: ADC14MEM1 interrupt flag; Interrupt Flag: ADC14IFG1
+   ADC14IVx_ADC14IFG2   : constant := 16#10#; -- Interrupt Source: ADC14MEM2 interrupt flag; Interrupt Flag: ADC14IFG2
+   ADC14IVx_ADC14IFG3   : constant := 16#12#; -- Interrupt Source: ADC14MEM3 interrupt flag; Interrupt Flag: ADC14IFG3
+   ADC14IVx_ADC14IFG4   : constant := 16#14#; -- Interrupt Source: ADC14MEM4 interrupt flag; Interrupt Flag: ADC14IFG4
+   ADC14IVx_ADC14IFG5   : constant := 16#16#; -- Interrupt Source: ADC14MEM5 interrupt flag; Interrupt Flag: ADC14IFG5
+   ADC14IVx_ADC14IFG6   : constant := 16#18#; -- Interrupt Source: ADC14MEM6 interrupt flag; Interrupt Flag: ADC14IFG6
+   ADC14IVx_ADC14IFG7   : constant := 16#1A#; -- Interrupt Source: ADC14MEM7 interrupt flag; Interrupt Flag: ADC14IFG7
+   ADC14IVx_ADC14IFG8   : constant := 16#1C#; -- Interrupt Source: ADC14MEM8 interrupt flag; Interrupt Flag: ADC14IFG8
+   ADC14IVx_ADC14IFG9   : constant := 16#1E#; -- Interrupt Source: ADC14MEM9 interrupt flag; Interrupt Flag: ADC14IFG9
+   ADC14IVx_ADC14IFG10  : constant := 16#20#; -- Interrupt Source: ADC14MEM10 interrupt flag; Interrupt Flag: ADC14IFG10
+   ADC14IVx_ADC14IFG11  : constant := 16#22#; -- Interrupt Source: ADC14MEM11 interrupt flag; Interrupt Flag: ADC14IFG11
+   ADC14IVx_ADC14IFG12  : constant := 16#24#; -- Interrupt Source: ADC14MEM12 interrupt flag; Interrupt Flag: ADC14IFG12
+   ADC14IVx_ADC14IFG13  : constant := 16#26#; -- Interrupt Source: ADC14MEM13 interrupt flag; Interrupt Flag: ADC14IFG13
+   ADC14IVx_ADC14IFG14  : constant := 16#28#; -- Interrupt Source: ADC14MEM14 interrupt flag; Interrupt Flag: ADC14IFG14
+   ADC14IVx_ADC14IFG15  : constant := 16#2A#; -- Interrupt Source: ADC14MEM15 interrupt flag; Interrupt Flag: ADC14IFG15
+   ADC14IVx_ADC14IFG16  : constant := 16#2C#; -- Interrupt Source: ADC14MEM16 interrupt flag; Interrupt Flag: ADC14IFG16
+   ADC14IVx_ADC14IFG17  : constant := 16#2E#; -- Interrupt Source: ADC14MEM17 interrupt flag; Interrupt Flag: ADC14IFG17
+   ADC14IVx_ADC14IFG18  : constant := 16#30#; -- Interrupt Source: ADC14MEM18 interrupt flag; Interrupt Flag: ADC14IFG18
+   ADC14IVx_ADC14IFG19  : constant := 16#32#; -- Interrupt Source: ADC14MEM19 interrupt flag; Interrupt Flag: ADC14IFG19
+   ADC14IVx_ADC14IFG20  : constant := 16#34#; -- Interrupt Source: ADC14MEM20 interrupt flag; Interrupt Flag: ADC14IFG20
+   ADC14IVx_ADC14IFG21  : constant := 16#36#; -- Interrupt Source: ADC14MEM21 interrupt flag; Interrupt Flag: ADC14IFG21
+   ADC14IVx_ADC14IFG22  : constant := 16#38#; -- Interrupt Source: ADC14MEM22 interrupt flag; Interrupt Flag: ADC14IFG22
+   ADC14IVx_ADC14IFG23  : constant := 16#3A#; -- Interrupt Source: ADC14MEM23 interrupt flag; Interrupt Flag: ADC14IFG23
+   ADC14IVx_ADC14IFG24  : constant := 16#3C#; -- Interrupt Source: ADC14MEM24 interrupt flag; Interrupt Flag: ADC14IFG24
+   ADC14IVx_ADC14IFG25  : constant := 16#3E#; -- Interrupt Source: ADC14MEM25 interrupt flag; Interrupt Flag: ADC14IFG25
+   ADC14IVx_ADC14IFG26  : constant := 16#40#; -- Interrupt Source: ADC14MEM26 interrupt flag; Interrupt Flag: ADC14IFG26
+   ADC14IVx_ADC14IFG27  : constant := 16#42#; -- Interrupt Source: ADC14MEM27 interrupt flag; Interrupt Flag: ADC14IFG27
+   ADC14IVx_ADC14IFG28  : constant := 16#44#; -- Interrupt Source: ADC14MEM28 interrupt flag; Interrupt Flag: ADC14IFG28
+   ADC14IVx_ADC14IFG29  : constant := 16#46#; -- Interrupt Source: ADC14MEM29 interrupt flag; Interrupt Flag: ADC14IFG29
+   ADC14IVx_ADC14IFG30  : constant := 16#48#; -- Interrupt Source: ADC14MEM30 interrupt flag; Interrupt Flag: ADC14IFG30
+   ADC14IVx_ADC14IFG31  : constant := 16#4A#; -- Interrupt Source: ADC14MEM31 interrupt flag; Interrupt Flag: ADC14IFG31
+   ADC14IVx_ADC14RDYIFG : constant := 16#4C#; -- Interrupt Source: ADC14RDYIFG interrupt flag; Interrupt Flag: ADC14RDYIFG; Priority: Lowest
+
+   type ADC14IV_Type is record
+      ADC14IVx : Unsigned_32 := 0; -- ADC14 interrupt vector value.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ADC14IV_Type use record
+      ADC14IVx at 0 range 0 .. 31;
+   end record;
+
+   -- Table 22-4. ADC14 Registers
+
+   ADC14CTL0_ADDRESS : constant := 16#4001_2000#;
+
+   ADC14CTL0 : aliased ADC14CTL0_Type
+      with Address              => System'To_Address (ADC14CTL0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADC14CTL1_ADDRESS : constant := 16#4001_2004#;
+
+   ADC14CTL1 : aliased ADC14CTL1_Type
+      with Address              => System'To_Address (ADC14CTL1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADC14LO0_ADDRESS : constant := 16#4001_2008#;
+
+   ADC14LO0 : aliased ADC14LO0_Type
+      with Address              => System'To_Address (ADC14LO0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADC14HI0_ADDRESS : constant := 16#4001_200C#;
+
+   ADC14HI0 : aliased ADC14HI0_Type
+      with Address              => System'To_Address (ADC14HI0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADC14LO1_ADDRESS : constant := 16#4001_2010#;
+
+   ADC14LO1 : aliased ADC14LO1_Type
+      with Address              => System'To_Address (ADC14LO1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADC14HI1_ADDRESS : constant := 16#4001_2014#;
+
+   ADC14HI1 : aliased ADC14HI1_Type
+      with Address              => System'To_Address (ADC14HI1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADC14MCTL_ADDRESS : constant := 16#4001_2018#;
+
+   ADC14MCTL : aliased array (ADC14CH0 .. ADC14CH31) of ADC14MCTL_Type
+      with Address    => System'To_Address (ADC14MCTL_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ADC14MEM_ADDRESS : constant := 16#4001_2098#;
+
+   ADC14MEM : aliased array (ADC14CH0 .. ADC14CH31) of ADC14MEM_Type
+      with Address    => System'To_Address (ADC14MEM_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ADC14IER0_ADDRESS : constant := 16#4001_213C#;
+
+   ADC14IER0 : aliased ADC14IER0_Type
+      with Address              => System'To_Address (ADC14IER0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADC14IER1_ADDRESS : constant := 16#4001_2140#;
+
+   ADC14IER1 : aliased ADC14IER1_Type
+      with Address              => System'To_Address (ADC14IER1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADC14IFGR0_ADDRESS : constant := 16#4001_2144#;
+
+   ADC14IFGR0 : aliased ADC14IFGR0_Type
+      with Address              => System'To_Address (ADC14IFGR0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADC14IFGR1_ADDRESS : constant := 16#4001_2148#;
+
+   ADC14IFGR1 : aliased ADC14IFGR1_Type
+      with Address              => System'To_Address (ADC14IFGR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADC14CLRIFGR0_ADDRESS : constant := 16#4001_214C#;
+
+   ADC14CLRIFGR0 : aliased ADC14CLRIFGR0_Type
+      with Address              => System'To_Address (ADC14CLRIFGR0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADC14CLRIFGR1_ADDRESS : constant := 16#4001_2150#;
+
+   ADC14CLRIFGR1 : aliased ADC14CLRIFGR1_Type
+      with Address              => System'To_Address (ADC14CLRIFGR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADC14IV_ADDRESS : constant := 16#4001_2154#;
+
+   ADC14IV : aliased ADC14IV_Type
+      with Address              => System'To_Address (ADC14IV_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 23 Comparator E Module (COMP_E)
