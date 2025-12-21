@@ -16,9 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
-with Definitions;
 with Bits;
 
 package LPC2148
@@ -34,9 +32,7 @@ package LPC2148
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
-   use Definitions;
    use Bits;
 
 pragma Style_Checks (Off);
@@ -51,7 +47,7 @@ pragma Style_Checks (Off);
    -- Chapter 4: LPC214x System control
    ----------------------------------------------------------------------------
 
-   -- 4.8.2 PLL Control register
+   -- 4.8.2 PLL Control register (PLL0CON - 0xE01F C080, PLL1CON - 0xE01F C0A0)
 
    type PLLxCON_Type is record
       PLLE     : Boolean := False; -- PLL Enable.
@@ -82,7 +78,7 @@ pragma Style_Checks (Off);
            Import               => True,
            Convention           => Ada;
 
-   -- 4.8.3 PLL Configuration register
+   -- 4.8.3 PLL Configuration register (PLL0CFG - 0xE01F C084, PLL1CFG - 0xE01F C0A4)
 
    MSEL_M1  : constant := 2#00000#; -- Value of M = 1
    MSEL_M2  : constant := 2#00001#; -- Value of M = 2
@@ -151,7 +147,7 @@ pragma Style_Checks (Off);
            Import               => True,
            Convention           => Ada;
 
-   -- 4.8.4 PLL Status register
+   -- 4.8.4 PLL Status register (PLL0STAT - 0xE01F C088, PLL1STAT - 0xE01F C0A8)
 
    -- MSEL_* already defined at 4.8.3
 
@@ -194,7 +190,7 @@ pragma Style_Checks (Off);
            Import               => True,
            Convention           => Ada;
 
-   -- 4.8.7 PLL Feed register
+   -- 4.8.7 PLL Feed register (PLL0FEED - 0xE01F C08C, PLL1FEED - 0xE01F C0AC)
 
    PLL0FEED_ADDRESS : constant := 16#E01F_C08C#;
 
@@ -212,11 +208,146 @@ pragma Style_Checks (Off);
            Import               => True,
            Convention           => Ada;
 
+   -- 4.9.2 Power Control register (PCON - 0xE01F C0C0)
+
+   type PCON_Type is record
+      IDL      : Boolean := False; -- Idle mode control.
+      PD       : Boolean := False; -- Power-down mode control.
+      BODPDM   : Boolean := False; -- Brown Out Power-down Mode.
+      BOGD     : Boolean := False; -- Brown Out Global Disable.
+      BORD     : Boolean := False; -- Brown Out Reset Disable.
+      Reserved : Bits_3  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PCON_Type use record
+      IDL      at 0 range 0 .. 0;
+      PD       at 0 range 1 .. 1;
+      BODPDM   at 0 range 2 .. 2;
+      BOGD     at 0 range 3 .. 3;
+      BORD     at 0 range 4 .. 4;
+      Reserved at 0 range 5 .. 7;
+   end record;
+
+   PCON_ADDRESS : constant := 16#E01F_C0C0#;
+
+   PCON : aliased PCON_Type
+      with Address              => System'To_Address (PCON_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 4.9.3 Power Control for Peripherals register (PCONP - 0xE01F C0C4)
+
+   type PCONP_Type is record
+      Reserved1 : Bits_1  := 0;
+      PCTIM0    : Boolean := True;  -- Timer/Counter 0 power/clock control bit.
+      PCTIM1    : Boolean := True;  -- Timer/Counter 1 power/clock control bit.
+      PCUART0   : Boolean := True;  -- UART0 power/clock control bit.
+      PCUART1   : Boolean := True;  -- UART1 power/clock control bit.
+      PCPWM0    : Boolean := True;  -- PWM0 power/clock control bit.
+      Reserved2 : Bits_1  := 0;
+      PCI2C0    : Boolean := True;  -- The I2C0 interface power/clock control bit.
+      PCSPI0    : Boolean := True;  -- The SPI0 interface power/clock control bit.
+      PCRTC     : Boolean := True;  -- The RTC power/clock control bit.
+      PCSPI1    : Boolean := True;  -- The SSP interface power/clock control bit.
+      Reserved3 : Bits_1  := 0;
+      PCAD0     : Boolean := True;  -- A/D converter 0 (ADC0) power/clock control bit.
+      Reserved4 : Bits_6  := 0;
+      PCI2C1    : Boolean := True;  -- The I2C1 interface power/clock control bit.
+      PCAD1     : Boolean := True;  -- A/D converter 1 (ADC1) power/clock control bit.
+      Reserved5 : Bits_10 := 0;
+      PUSB      : Boolean := False; -- USB power/clock control bit.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PCONP_Type use record
+      Reserved1 at 0 range  0 ..  0;
+      PCTIM0    at 0 range  1 ..  1;
+      PCTIM1    at 0 range  2 ..  2;
+      PCUART0   at 0 range  3 ..  3;
+      PCUART1   at 0 range  4 ..  4;
+      PCPWM0    at 0 range  5 ..  5;
+      Reserved2 at 0 range  6 ..  6;
+      PCI2C0    at 0 range  7 ..  7;
+      PCSPI0    at 0 range  8 ..  8;
+      PCRTC     at 0 range  9 ..  9;
+      PCSPI1    at 0 range 10 .. 10;
+      Reserved3 at 0 range 11 .. 11;
+      PCAD0     at 0 range 12 .. 12;
+      Reserved4 at 0 range 13 .. 18;
+      PCI2C1    at 0 range 19 .. 19;
+      PCAD1     at 0 range 20 .. 20;
+      Reserved5 at 0 range 21 .. 30;
+      PUSB      at 0 range 31 .. 31;
+   end record;
+
+   PCONP_ADDRESS : constant := 16#E01F_C0C4#;
+
+   PCONP : aliased PCONP_Type
+      with Address              => System'To_Address (PCONP_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 4.10.1 Reset Source Identification Register (RSIR - 0xE01F C180)
+
+   type RSIR_Type is record
+      POR      : Boolean; -- Power-On Reset (POR) event sets this bit, and clears all of the other bits in this register.
+      EXTR     : Boolean; -- Assertion of the /RESET signal sets this bit.
+      WDTR     : Boolean; -- This bit is set when the Watchdog Timer times out and the WDTRESET bit in the Watchdog Mode Register is 1.
+      BODR     : Boolean; -- This bit is set when the 3.3 V power reaches a level below 2.6 V.
+      Reserved : Bits_4;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RSIR_Type use record
+      POR      at 0 range 0 .. 0;
+      EXTR     at 0 range 1 .. 1;
+      WDTR     at 0 range 2 .. 2;
+      BODR     at 0 range 3 .. 3;
+      Reserved at 0 range 4 .. 7;
+   end record;
+
+   RSIR_ADDRESS : constant := 16#E01F_C180#;
+
+   RSIR : aliased RSIR_Type
+      with Address              => System'To_Address (RSIR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 4.11.2 APBDIV register (APBDIV - 0xE01F C100)
+
+   APBDIV_DIV4 : constant := 2#00#; -- APB bus clock is one fourth of the processor clock.
+   APBDIV_NONE : constant := 2#01#; -- APB bus clock is the same as the processor clock.
+   APBDIV_DIV2 : constant := 2#10#; -- APB bus clock is one half of the processor clock.
+   APBDIV_RSVD : constant := 2#11#; -- Reserved.
+
+   type APBDIV_Type is record
+      APBDIV   : Bits_2 := APBDIV_DIV4; -- APB bus clock
+      Reserved : Bits_6 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for APBDIV_Type use record
+      APBDIV   at 0 range 0 .. 1;
+      Reserved at 0 range 2 .. 7;
+   end record;
+
+   APBDIV_ADDRESS : constant := 16#E01F_C180#;
+
+   APBDIV : aliased APBDIV_Type
+      with Address              => System'To_Address (APBDIV_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    ----------------------------------------------------------------------------
    -- Chapter 8: LPC214x GPIO
    ----------------------------------------------------------------------------
 
-   -- 8.4.1 GPIO port Direction register
+   -- 8.4.1 GPIO port Direction register (IODIR, Port 0: IO0DIR - 0xE002 8008 and Port 1: IO1DIR - 0xE002 8018; FIODIR, Port 0: FIO0DIR - 0x3FFF C000 and Port 1:FIO1DIR - 0x3FFF C020)
 
    IO0DIR_ADDRESS : constant := 16#E002_8008#;
 
@@ -226,7 +357,25 @@ pragma Style_Checks (Off);
            Import               => True,
            Convention           => Ada;
 
-   -- 8.4.3 GPIO port Pin value register
+   -- 8.4.2 Fast GPIO port Mask register (FIOMASK, Port 0: FIO0MASK - 0x3FFF C010 and Port 1:FIO1MASK - 0x3FFF C030)
+
+   FIO0MASK_ADDRESS : constant := 16#3FFF_C010#;
+
+   FIO0MASK : aliased Bitmap_32
+      with Address              => System'To_Address (FIO0MASK_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FIO1MASK_ADDRESS : constant := 16#3FFF_C030#;
+
+   FIO1MASK : aliased Bitmap_32
+      with Address              => System'To_Address (FIO1MASK_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 8.4.3 GPIO port Pin value register (IOPIN, Port 0: IO0PIN - 0xE002 8000 and Port 1: IO1PIN - 0xE002 8010; FIOPIN, Port 0: FIO0PIN - 0x3FFF C014 and Port 1: FIO1PIN - 0x3FFF C034)
 
    IO0PIN_ADDRESS : constant := 16#E002_8000#;
 
@@ -236,7 +385,7 @@ pragma Style_Checks (Off);
            Import               => True,
            Convention           => Ada;
 
-   -- 8.4.4 GPIO port output Set register
+   -- 8.4.4 GPIO port output Set register (IOSET, Port 0: IO0SET - 0xE002 8004 and Port 1: IO1SET - 0xE002 8014; FIOSET, Port 0: FIO0SET - 0x3FFF C018 and Port 1: FIO1SET - 0x3FFF C038)
 
    IO0SET_ADDRESS : constant := 16#E002_8004#;
 
@@ -246,7 +395,7 @@ pragma Style_Checks (Off);
            Import               => True,
            Convention           => Ada;
 
-   -- 8.4.5 GPIO port output Clear register
+   -- 8.4.5 GPIO port output Clear register (IOCLR, Port 0: IO0CLR - 0xE002 800C and Port 1: IO1CLR - 0xE002 801C; FIOCLR, Port 0: FIO0CLR - 0x3FFF C01C and Port 1: FIO1CLR - 0x3FFF C03C)
 
    IO0CLR_ADDRESS : constant := 16#E002_800C#;
 
