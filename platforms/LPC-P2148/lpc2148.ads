@@ -335,7 +335,7 @@ pragma Style_Checks (Off);
       Reserved at 0 range 2 .. 7;
    end record;
 
-   APBDIV_ADDRESS : constant := 16#E01F_C180#;
+   APBDIV_ADDRESS : constant := 16#E01F_C100#;
 
    APBDIV : aliased APBDIV_Type
       with Address              => System'To_Address (APBDIV_ADDRESS),
@@ -353,6 +353,30 @@ pragma Style_Checks (Off);
 
    IO0DIR : aliased Bitmap_32
       with Address              => System'To_Address (IO0DIR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   IO1DIR_ADDRESS : constant := 16#E002_8018#;
+
+   IO1DIR : aliased Bitmap_32
+      with Address              => System'To_Address (IO1DIR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FIO0DIR_ADDRESS : constant := 16#3FFF_C000#;
+
+   FIO0DIR : aliased Bitmap_32
+      with Address              => System'To_Address (FIO0DIR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FIO1DIR_ADDRESS : constant := 16#3FFF_C020#;
+
+   FIO1DIR : aliased Bitmap_32
+      with Address              => System'To_Address (FIO1DIR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -385,6 +409,30 @@ pragma Style_Checks (Off);
            Import               => True,
            Convention           => Ada;
 
+   IO1PIN_ADDRESS : constant := 16#E002_8010#;
+
+   IO1PIN : aliased Bitmap_32
+      with Address              => System'To_Address (IO1PIN_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FIO0PIN_ADDRESS : constant := 16#3FFF_C014#;
+
+   FIO0PIN : aliased Bitmap_32
+      with Address              => System'To_Address (FIO0PIN_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FIO1PIN_ADDRESS : constant := 16#3FFF_C034#;
+
+   FIO1PIN : aliased Bitmap_32
+      with Address              => System'To_Address (FIO1PIN_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 8.4.4 GPIO port output Set register (IOSET, Port 0: IO0SET - 0xE002 8004 and Port 1: IO1SET - 0xE002 8014; FIOSET, Port 0: FIO0SET - 0x3FFF C018 and Port 1: FIO1SET - 0x3FFF C038)
 
    IO0SET_ADDRESS : constant := 16#E002_8004#;
@@ -395,12 +443,60 @@ pragma Style_Checks (Off);
            Import               => True,
            Convention           => Ada;
 
+   IO1SET_ADDRESS : constant := 16#E002_8014#;
+
+   IO1SET : aliased Bitmap_32
+      with Address              => System'To_Address (IO1SET_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FIO0SET_ADDRESS : constant := 16#3FFF_C018#;
+
+   FIO0SET : aliased Bitmap_32
+      with Address              => System'To_Address (FIO0SET_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FIO1SET_ADDRESS : constant := 16#3FFF_C038#;
+
+   FIO1SET : aliased Bitmap_32
+      with Address              => System'To_Address (FIO1SET_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 8.4.5 GPIO port output Clear register (IOCLR, Port 0: IO0CLR - 0xE002 800C and Port 1: IO1CLR - 0xE002 801C; FIOCLR, Port 0: FIO0CLR - 0x3FFF C01C and Port 1: FIO1CLR - 0x3FFF C03C)
 
    IO0CLR_ADDRESS : constant := 16#E002_800C#;
 
    IO0CLR : aliased Bitmap_32
       with Address              => System'To_Address (IO0CLR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   IO1CLR_ADDRESS : constant := 16#E002_801C#;
+
+   IO1CLR : aliased Bitmap_32
+      with Address              => System'To_Address (IO1CLR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FIO0CLR_ADDRESS : constant := 16#3FFF_C01C#;
+
+   FIO0CLR : aliased Bitmap_32
+      with Address              => System'To_Address (FIO0CLR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   FIO1CLR_ADDRESS : constant := 16#3FFF_C03C#;
+
+   FIO1CLR : aliased Bitmap_32
+      with Address              => System'To_Address (FIO1CLR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
