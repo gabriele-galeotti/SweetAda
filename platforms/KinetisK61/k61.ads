@@ -3011,9 +3011,205 @@ pragma Style_Checks (Off);
    -- Chapter 29 Flash Memory Controller (FMC)
    ----------------------------------------------------------------------------
 
+   FMC_BASEADDRESS : constant := 16#4001_F000#;
+
    -- 29.4.1 Flash Access Protection Register (FMC_PFAPR)
+
+   MxAP_NONE  : constant := 2#00#; -- No access may be performed by this master
+   MxAP_READ  : constant := 2#01#; -- Only read accesses may be performed by this master
+   MxAP_WRITE : constant := 2#10#; -- Only write accesses may be performed by this master
+   MxAP_RDWR  : constant := 2#11#; -- Both read and write accesses may be performed by this master
+
+   type FMC_PFAPR_Type is record
+      M0AP     : Bits_2  := MxAP_RDWR; -- Master 0 Access Protection
+      M1AP     : Bits_2  := MxAP_RDWR; -- Master 1 Access Protection
+      M2AP     : Bits_2  := MxAP_RDWR; -- Master 2 Access Protection
+      M3AP     : Bits_2  := MxAP_NONE; -- Master 3 Access Protection
+      M4AP     : Bits_2  := MxAP_NONE; -- Master 4 Access Protection
+      M5AP     : Bits_2  := MxAP_NONE; -- Master 5 Access Protection
+      M6AP     : Bits_2  := MxAP_NONE; -- Master 6 Access Protection
+      M7AP     : Bits_2  := MxAP_NONE; -- Master 7 Access Protection
+      M0PFD    : Boolean := False;     -- Master 0 Prefetch Disable
+      M1PFD    : Boolean := False;     -- Master 0 Prefetch Disable
+      M2PFD    : Boolean := False;     -- Master 0 Prefetch Disable
+      M3PFD    : Boolean := True;      -- Master 0 Prefetch Disable
+      M4PFD    : Boolean := True;      -- Master 0 Prefetch Disable
+      M5PFD    : Boolean := True;      -- Master 0 Prefetch Disable
+      M6PFD    : Boolean := True;      -- Master 0 Prefetch Disable
+      M7PFD    : Boolean := True;      -- Master 0 Prefetch Disable
+      Reserved : Bits_8  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FMC_PFAPR_Type use record
+      M0AP     at 0 range  0 ..  1;
+      M1AP     at 0 range  2 ..  3;
+      M2AP     at 0 range  4 ..  5;
+      M3AP     at 0 range  6 ..  7;
+      M4AP     at 0 range  8 ..  9;
+      M5AP     at 0 range 10 .. 11;
+      M6AP     at 0 range 12 .. 13;
+      M7AP     at 0 range 14 .. 15;
+      M0PFD    at 0 range 16 .. 16;
+      M1PFD    at 0 range 17 .. 17;
+      M2PFD    at 0 range 18 .. 18;
+      M3PFD    at 0 range 19 .. 19;
+      M4PFD    at 0 range 20 .. 20;
+      M5PFD    at 0 range 21 .. 21;
+      M6PFD    at 0 range 22 .. 22;
+      M7PFD    at 0 range 23 .. 23;
+      Reserved at 0 range 24 .. 31;
+   end record;
+
+   FMC_PFAPR : aliased FMC_PFAPR_Type
+      with Address              => System'To_Address (FMC_BASEADDRESS + 16#00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 29.4.2 Flash Bank 0-1 Control Register (FMC_PFB01CR)
+
+   CRC_LRU        : constant := 2#000#; -- LRU replacement algorithm per set across all four ways
+   CRC_RSVD1      : constant := 2#001#; -- Reserved
+   CRC_ILRUI01D23 : constant := 2#010#; -- Independent LRU with ways [0-1] for ifetches, [2-3] for data
+   CRC_ILRUI02D3  : constant := 2#011#; -- Independent LRU with ways [0-2] for ifetches, [3] for data
+   CRC_RSVD2      : constant := 2#100#; -- Reserved
+   CRC_RSVD3      : constant := 2#101#; -- Reserved
+   CRC_RSVD4      : constant := 2#110#; -- Reserved
+   CRC_RSVD5      : constant := 2#111#; -- Reserved
+
+   B01MW_32   : constant := 2#00#; -- 32 bits
+   B01MW_64   : constant := 2#01#; -- 64 bits
+   B01MW_128  : constant := 2#10#; -- 128 bits
+   B01MW_RSVD : constant := 2#11#; -- Reserved
+
+   B01RWSC_1  : constant := 0;  -- Access time of flash array [system clocks] = 1
+   B01RWSC_2  : constant := 1;  -- Access time of flash array [system clocks] = 2
+   B01RWSC_3  : constant := 2;  -- Access time of flash array [system clocks] = 3
+   B01RWSC_4  : constant := 3;  -- Access time of flash array [system clocks] = 4
+   B01RWSC_5  : constant := 4;  -- Access time of flash array [system clocks] = 5
+   B01RWSC_6  : constant := 5;  -- Access time of flash array [system clocks] = 6
+   B01RWSC_7  : constant := 6;  -- Access time of flash array [system clocks] = 7
+   B01RWSC_8  : constant := 7;  -- Access time of flash array [system clocks] = 8
+   B01RWSC_9  : constant := 8;  -- Access time of flash array [system clocks] = 9
+   B01RWSC_10 : constant := 9;  -- Access time of flash array [system clocks] = 10
+   B01RWSC_11 : constant := 10; -- Access time of flash array [system clocks] = 11
+   B01RWSC_12 : constant := 11; -- Access time of flash array [system clocks] = 12
+   B01RWSC_13 : constant := 12; -- Access time of flash array [system clocks] = 13
+   B01RWSC_14 : constant := 13; -- Access time of flash array [system clocks] = 14
+   B01RWSC_15 : constant := 14; -- Access time of flash array [system clocks] = 15
+   B01RWSC_16 : constant := 15; -- Access time of flash array [system clocks] = 16
+
+   type FMC_PFB01CR_Type is record
+      B01SEBE    : Boolean := True;      -- Bank 0-1 Single Entry Buffer Enable
+      B01IPE     : Boolean := True;      -- Bank 0-1 Instruction Prefetch Enable
+      B01DPE     : Boolean := True;      -- Bank 0-1 Data Prefetch Enable
+      B01ICE     : Boolean := True;      -- Bank 0-1 Instruction Cache Enable
+      B01DCE     : Boolean := True;      -- Bank 0-1 Data Cache Enable
+      CRC        : Bits_3  := CRC_LRU;   -- Cache Replacement Control
+      Reserved1  : Bits_8  := 0;
+      Reserved2  : Bits_1  := 0;
+      B01MW      : Bits_2  := B01MW_128; -- Bank 0-1 Memory Width
+      S_B_INV    : Boolean := False;     -- Invalidate Prefetch Speculation Buffer
+      CINV_WAY_0 : Boolean := False;     -- Cache Invalidate Way 0
+      CINV_WAY_1 : Boolean := False;     -- Cache Invalidate Way 1
+      CINV_WAY_2 : Boolean := False;     -- Cache Invalidate Way 2
+      CINV_WAY_3 : Boolean := False;     -- Cache Invalidate Way 3
+      CLCK_WAY_0 : Boolean := False;     -- Cache Lock Way 0
+      CLCK_WAY_1 : Boolean := False;     -- Cache Lock Way 1
+      CLCK_WAY_2 : Boolean := False;     -- Cache Lock Way 2
+      CLCK_WAY_3 : Boolean := False;     -- Cache Lock Way 3
+      B01RWSC    : Bits_4  := B01RWSC_4; -- Bank 0-1 Read Wait State Control
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FMC_PFB01CR_Type use record
+      B01SEBE    at 0 range  0 ..  0;
+      B01IPE     at 0 range  1 ..  1;
+      B01DPE     at 0 range  2 ..  2;
+      B01ICE     at 0 range  3 ..  3;
+      B01DCE     at 0 range  4 ..  4;
+      CRC        at 0 range  5 ..  7;
+      Reserved1  at 0 range  8 .. 15;
+      Reserved2  at 0 range 16 .. 16;
+      B01MW      at 0 range 17 .. 18;
+      S_B_INV    at 0 range 19 .. 19;
+      CINV_WAY_0 at 0 range 20 .. 20;
+      CINV_WAY_1 at 0 range 21 .. 21;
+      CINV_WAY_2 at 0 range 22 .. 22;
+      CINV_WAY_3 at 0 range 23 .. 23;
+      CLCK_WAY_0 at 0 range 24 .. 24;
+      CLCK_WAY_1 at 0 range 25 .. 25;
+      CLCK_WAY_2 at 0 range 26 .. 26;
+      CLCK_WAY_3 at 0 range 27 .. 27;
+      B01RWSC    at 0 range 28 .. 31;
+   end record;
+
+   FMC_PFB01CR : aliased FMC_PFB01CR_Type
+      with Address              => System'To_Address (FMC_BASEADDRESS + 16#04#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 29.4.3 Flash Bank 2-3 Control Register (FMC_PFB23CR)
+
+   B23MW_32   renames B01MW_32;
+   B23MW_64   renames B01MW_64;
+   B23MW_128  renames B01MW_128;
+   B23MW_RSVD renames B01MW_RSVD;
+
+   B23RWSC_1  renames B01RWSC_1;
+   B23RWSC_2  renames B01RWSC_2;
+   B23RWSC_3  renames B01RWSC_3;
+   B23RWSC_4  renames B01RWSC_4;
+   B23RWSC_5  renames B01RWSC_5;
+   B23RWSC_6  renames B01RWSC_6;
+   B23RWSC_7  renames B01RWSC_7;
+   B23RWSC_8  renames B01RWSC_8;
+   B23RWSC_9  renames B01RWSC_9;
+   B23RWSC_10 renames B01RWSC_10;
+   B23RWSC_11 renames B01RWSC_11;
+   B23RWSC_12 renames B01RWSC_12;
+   B23RWSC_13 renames B01RWSC_13;
+   B23RWSC_14 renames B01RWSC_14;
+   B23RWSC_15 renames B01RWSC_15;
+   B23RWSC_16 renames B01RWSC_16;
+
+   type FMC_PFB23CR_Type is record
+      B23SEBE   : Boolean := True;      -- Bank 2-3 Single Entry Buffer Enable
+      B23IPE    : Boolean := True;      -- Bank 2-3 Instruction Prefetch Enable
+      B23DPE    : Boolean := True;      -- Bank 2-3 Data Prefetch Enable
+      B23ICE    : Boolean := True;      -- Bank 2-3 Instruction Cache Enable
+      B23DCE    : Boolean := True;      -- Bank 2-3 Data Cache Enable
+      Reserved1 : Bits_3  := 0;
+      Reserved2 : Bits_8  := 0;
+      Reserved3 : Bits_1  := 0;
+      B23MW     : Bits_2  := B23MW_128; -- Bank 2-3 Memory Width
+      Reserved4 : Bits_9  := 0;
+      B23RWSC   : Bits_4  := B23RWSC_4; -- Bank 2-3 Read Wait State Control
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for FMC_PFB23CR_Type use record
+      B23SEBE   at 0 range  0 ..  0;
+      B23IPE    at 0 range  1 ..  1;
+      B23DPE    at 0 range  2 ..  2;
+      B23ICE    at 0 range  3 ..  3;
+      B23DCE    at 0 range  4 ..  4;
+      Reserved1 at 0 range  5 ..  7;
+      Reserved2 at 0 range  8 .. 15;
+      Reserved3 at 0 range 16 .. 16;
+      B23MW     at 0 range 17 .. 18;
+      Reserved4 at 0 range 19 .. 27;
+      B23RWSC   at 0 range 28 .. 31;
+   end record;
+
+   FMC_PFB23CR : aliased FMC_PFB23CR_Type
+      with Address              => System'To_Address (FMC_BASEADDRESS + 16#08#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 29.4.4 Cache Tag Storage (FMC_TAGVDW0Sn)
    -- 29.4.5 Cache Tag Storage (FMC_TAGVDW1Sn)
    -- 29.4.6 Cache Tag Storage (FMC_TAGVDW2Sn)
