@@ -1,0 +1,79 @@
+
+#
+# LPC-P2148
+#
+# LPC2148 16/32 bit ARM7TDMI-S LE
+#
+
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+RTS     := zfp
+PROFILE := zfp
+
+USE_APPLICATION := test-lpc-p2148
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
+CPU       := ARM
+CPU_MODEL := ARM7TDMI
+
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+GCC_SWITCHES_PLATFORM     := -mcpu=arm7tdmi -mabi=aapcs
+LD_SWITCHES_PLATFORM      := --undefined=reset --no-warn-rwx-segments
+OBJDUMP_SWITCHES_PLATFORM :=
+OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
+POSTBUILD_ROMFILE         := Y
+
+CONFIGURE_FILES_PLATFORM := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
+
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
+
+ifeq      ($(OSTYPE),cmd)
+OPENOCD_PREFIX := C:\Program Files\OpenOCD-20231002-0.12.0
+else ifeq ($(OSTYPE),msys)
+OPENOCD_PREFIX := C:/Program Files/OpenOCD-20231002-0.12.0
+else
+OPENOCD_PREFIX := /opt/OpenOCD
+endif
+
+# Tcl:
+# $(TCLSH) instead of $(PYTHON)
+# openocd.tcl instead of openocd.py
+
+SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
+                           -p "$(OPENOCD_PREFIX)"                                     \
+                           -c "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cfg    \
+                           -server
+SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py \
+                           -shutdown
+RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py        \
+                           -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                           \
+                           -e $(ELFTOOL)                                                     \
+                           -s _start                                                         \
+                           -noload -noexec                                                   \
+                           -commandfile "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cmd
+ifeq ($(OSTYPE),cmd)
+DEBUG_COMMAND         := $(RUN_COMMAND) -debug && "$(SWEETADA_PATH)"\$(PLATFORM_DIRECTORY_CMD)\openocd-gdb.bat
+else
+DEBUG_COMMAND         := $(RUN_COMMAND) -debug && "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd-gdb.sh
+endif
+
