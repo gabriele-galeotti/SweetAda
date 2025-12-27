@@ -6038,7 +6038,8 @@ pragma Style_Checks (Off);
       RXFR2 : SPIx_RXFRn_Type with Volatile_Full_Access => True;
       RXFR3 : SPIx_RXFRn_Type with Volatile_Full_Access => True;
    end record
-      with Size => 16#8C# * 8;
+      with Size     => 16#8C# * 8,
+           Volatile => True;
    for SPI_Type use record
       MCR   at 16#00# range 0 .. 31;
       TCR   at 16#08# range 0 .. 31;
@@ -6060,12 +6061,10 @@ pragma Style_Checks (Off);
 
    SPI0 : aliased SPI_Type
       with Address    => System'To_Address (16#4002_C000#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
    SPI1 : aliased SPI_Type
       with Address    => System'To_Address (16#4002_D000#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
    SPI2 : aliased SPI_Type
@@ -6293,7 +6292,8 @@ pragma Style_Checks (Off);
       SLTH : Unsigned_8    with Volatile_Full_Access => True;
       SLTL : Unsigned_8    with Volatile_Full_Access => True;
    end record
-      with Size => 16#C# * 8;
+      with Size     => 16#C# * 8,
+           Volatile => True;
    for I2C_Type use record
       A1   at 16#0# range 0 .. 7;
       F    at 16#1# range 0 .. 7;
@@ -6311,13 +6311,11 @@ pragma Style_Checks (Off);
 
    I2C0 : aliased I2C_Type
       with Address    => System'To_Address (16#4006_6000#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
    I2C1 : aliased I2C_Type
       with Address    => System'To_Address (16#4006_7000#),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
