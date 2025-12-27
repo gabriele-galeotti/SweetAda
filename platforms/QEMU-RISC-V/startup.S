@@ -24,11 +24,10 @@
 _start:
 
                 //
-                // Set Previous Privilege Mode.
-                // S: 1 << 11
-                // M: 3 << 11
+                // Set mstatus[MPP] = M.
                 //
-                li      t0,0x3<<11                      // "M" mode
+#define MPP_M (0x3<<11)
+                li      t0,MPP_M
                 csrw    mstatus,t0
                 la      t0,1f
                 csrw    mepc,t0
