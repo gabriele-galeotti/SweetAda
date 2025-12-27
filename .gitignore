@@ -83,6 +83,7 @@ libutils/src/GNAT-wrapper/gnat-wrapper.exe
 ################################################################################
 
 rts/*.log
+rts/mfp/
 rts/sfp/
 rts/zfp/
 
