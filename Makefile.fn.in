@@ -56,9 +56,9 @@ substring = $(strip \
 #
 # Remove double-quotes from a text string.
 #
-unquote =  $(subst $(DEL),$(SPACE),$(subst $(SPACE),",$(strip \
-             $(subst ",$(SPACE),$(subst $(SPACE),$(DEL),$1))\
-             )))
+unquote = $(subst $(DEL),$(SPACE),$(subst $(SPACE),",$(strip \
+            $(subst ",$(SPACE),$(subst $(SPACE),$(DEL),$1))\
+            )))
 
 #
 # echo-print
