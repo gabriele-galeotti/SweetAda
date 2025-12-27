@@ -39,17 +39,8 @@ OBJECTS_XFORM_2 := $(OBJECTS_XFORM_1:.S=.o)
 OBJECTS_XFORM_3 := $(OBJECTS_XFORM_2:.c=.o)
 OBJECTS := $(foreach f,$(OBJECTS_XFORM_3),$(OBJ_DIRECTORY)/$(f))
 
--include Makefile.if.in
-
 .PHONY: all
 all: $(CONFIGURE_FILES_PLATFORM) $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
-
-.PHONY: installfiles
-installfiles:
-	@$(call echo-print,"Installing files for subplatform $(SUBPLATFORM):")
-	@$(SYMLINK) -v -c -m Makefile.if.in platform-$(SUBPLATFORM) .
-	@$(call echo-print,"installfiles: done")
-	@$(call echo-print,"")
 
 .PHONY: configure
 configure: clean-configure-files $(CONFIGURE_FILES_PLATFORM) $(LD_SCRIPT)
@@ -73,15 +64,6 @@ ifneq ($(POSTBUILD_COMMAND),)
 	$(POSTBUILD_COMMAND)
 endif
 
-.PHONY: clean-installed-files
-clean-installed-files:
-ifneq ($(filter cmd msys,$(OSTYPE)),)
-	$(RMSYMLINK) $(INSTALLED_FILENAMES) -o $(ORIGIN_FILENAMES)
-else
-	$(RM) $(INSTALLED_FILENAMES)
-endif
-	$(RM) Makefile.if.in
-
 .PHONY: clean-configure-files
 clean-configure-files:
 ifneq ($(CONFIGURE_FILES_PLATFORM),)
@@ -101,7 +83,7 @@ clean:
 	$(RM) $(CLEAN_OBJECTS_COMMON)
 
 .PHONY: distclean
-distclean: clean-installed-files clean-configure-files clean
+distclean: clean-configure-files clean
 	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
