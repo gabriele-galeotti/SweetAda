@@ -1,0 +1,59 @@
+
+#
+# Basic units.
+#
+
+LIBGNAT_SRCS_COMMON += ../common/a-charac.ads
+LIBGNAT_SRCS_COMMON += ../common/a-chlat1.ads
+LIBGNAT_SRCS_COMMON += ../common/a-unccon.ads
+LIBGNAT_SRCS_COMMON += ../common/a-uncdea.ads
+LIBGNAT_SRCS_COMMON += ../common/ada.ads
+LIBGNAT_SRCS_COMMON += ../common/i-cexten.ads
+LIBGNAT_SRCS_COMMON += ../common/interfac.ads
+LIBGNAT_SRCS_COMMON += ../common/s-atacco.ads ../common/s-atacco.adb
+LIBGNAT_SRCS_COMMON += ../common/s-maccod.ads
+LIBGNAT_SRCS_COMMON += ../common/s-stoele.ads ../common/s-stoele.adb
+LIBGNAT_SRCS_COMMON += ../common/s-unstyp.ads
+
+LIBGNAT_SRCS_COMMON += ../sfp/a-assert.ads ../sfp/a-assert.adb
+LIBGNAT_SRCS_COMMON += ../sfp/a-except.ads ../sfp/a-except.adb
+LIBGNAT_SRCS_COMMON += ../sfp/a-tags.ads   ../sfp/a-tags.adb
+LIBGNAT_SRCS_COMMON += ../sfp/i-c.ads      ../sfp/i-c.adb
+LIBGNAT_SRCS_COMMON += ../sfp/s-assert.ads ../sfp/s-assert.adb
+LIBGNAT_SRCS_COMMON += ../sfp/s-exctab.ads ../sfp/s-exctab.adb
+LIBGNAT_SRCS_COMMON += ../sfp/s-fatflt.ads
+LIBGNAT_SRCS_COMMON += ../sfp/s-fatgen.ads ../sfp/s-fatgen.adb
+LIBGNAT_SRCS_COMMON += ../sfp/s-fatlfl.ads
+LIBGNAT_SRCS_COMMON += ../sfp/s-fatllf.ads
+LIBGNAT_SRCS_COMMON += ../sfp/s-imagei.ads ../sfp/s-imagei.adb
+LIBGNAT_SRCS_COMMON += ../sfp/s-imgboo.ads ../sfp/s-imgboo.adb
+LIBGNAT_SRCS_COMMON += ../sfp/s-imgint.ads
+LIBGNAT_SRCS_COMMON += ../sfp/s-imglli.ads
+LIBGNAT_SRCS_COMMON += ../sfp/s-imguns.ads ../sfp/s-imguns.adb
+LIBGNAT_SRCS_COMMON += ../sfp/s-multip.ads ../sfp/s-multip.adb
+LIBGNAT_SRCS_COMMON += ../sfp/s-parame.ads
+LIBGNAT_SRCS_COMMON += ../sfp/s-scaval.ads ../sfp/s-scaval.adb
+LIBGNAT_SRCS_COMMON += ../sfp/s-secsta.ads ../sfp/s-secsta.adb
+LIBGNAT_SRCS_COMMON += ../sfp/s-stalib.ads ../sfp/s-stalib.adb
+
+LIBGNAT_SRCS_COMMON += a-finali.ads a-finali.adb
+LIBGNAT_SRCS_COMMON += s-finroo.ads s-finroo.adb
+
+LIBGNARL_SRCS_COMMON +=
+
+#
+# system.ads default values.
+#
+export COMMAND_LINE_ARGS         := False
+export CONFIGURABLE_RUN_TIME     := True
+export SUPPRESS_STANDARD_LIBRARY := False
+export USE_ADA_MAIN_PROGRAM_NAME := False
+
+
+#
+# s-parame.ads default configuration.
+#
+export SIZE_TYPE_ASPECTS              :=
+export RUNTIME_DEFAULT_SEC_STACK_SIZE := 4 * 1024
+export SEC_STACK_DYNAMIC              := False
+
