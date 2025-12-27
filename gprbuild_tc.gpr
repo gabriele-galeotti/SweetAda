@@ -43,6 +43,17 @@ abstract project Gprbuild_Tc is
 
    package Builder is
       for Global_Configuration_Pragmas use Configure.GnatAdc_Filename;
+      case Mode is
+         when "gnatprove" =>
+            for Global_Compilation_Switches ("Ada") use (
+               "-gnateT="                 &
+               Configure.SweetAda_Path    &
+               "/"                        &
+               Configure.GnatTDI_Filename
+               );
+         when others      =>
+            null;
+      end case;
       for Switches ("Asm_Cpp") use Builder_Switches;
       for Switches ("C") use Builder_Switches;
       for Switches ("Ada") use (
@@ -73,8 +84,6 @@ abstract project Gprbuild_Tc is
       when others  => null;
    end case;
 
-   GCC_Wrapper_Switch := ("-wrapper", Configure.GCC_Wrapper);
-
    Elaboration_Model_Switches := ();
    case Configure.Elaboration_Model is
       when "DYNAMIC" => Elaboration_Model_Switches := ("-gnatE");
@@ -82,6 +91,16 @@ abstract project Gprbuild_Tc is
       when "STATIC"  => null;
       when "SPARK"   => Elaboration_Model_Switches := ("-gnatd.v");
       when others    => null;
+   end case;
+
+   GCC_Wrapper_Switch := ();
+
+   case Mode is
+      when "gnatprove" =>
+         null;
+      when others      =>
+         GCC_Wrapper_Switch :=
+            GCC_Wrapper_Switch & ("-wrapper", Configure.GCC_Wrapper);
    end case;
 
    No_DOS_LT_Switch := "";
