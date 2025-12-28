@@ -625,6 +625,7 @@ $(foreach s,                                                         \
     SET "TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)"                        && \
     SET "MULTILIB=$(GCC_MULTIDIR)"                                && \
     "$(MAKE)"                                                        \
+      --no-print-directory                                           \
       -C $(RTS_DIRECTORY)                                            \
       PROBEVARIABLES="SUPPRESS_STANDARD_LIBRARY LIBGNAT LIBGNARL"    \
       probevariables                                                 \
@@ -639,6 +640,7 @@ $(foreach s,                                                        \
     TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)                                \
     MULTILIB=$(GCC_MULTIDIR)                                        \
     "$(MAKE)"                                                       \
+      --no-print-directory                                          \
       -C $(RTS_DIRECTORY)                                           \
       PROBEVARIABLES="SUPPRESS_STANDARD_LIBRARY LIBGNAT LIBGNARL"   \
       probevariables                                                \
