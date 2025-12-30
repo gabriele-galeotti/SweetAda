@@ -1321,10 +1321,15 @@ endif
 .PHONY: configure-gnattdi
 configure-gnattdi:
 ifeq ($(OSTYPE),cmd)
-	-$(ADAC) -c system.ads -gnatet=$(GNATTDI_FILENAME) 2>nul
+	-$(ADAC)                                     \
+          -c __tdi__.ads -gnatet=$(GNATTDI_FILENAME) \
+          1>nul 2>nul
 else
-	-$(ADAC) -c system.ads -gnatet=$(GNATTDI_FILENAME) 2> /dev/null
+	-$(ADAC)                                     \
+          -c __tdi__.ads -gnatet=$(GNATTDI_FILENAME) \
+          1> /dev/null 2> /dev/null
 endif
+	-$(RM) __tdi__.*
 
 .PHONY: configure-configuregpr
 configure-configuregpr: $(CONFIGUREGPR_FILENAME)
