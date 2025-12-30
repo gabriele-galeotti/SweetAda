@@ -106,7 +106,7 @@ $(OBJ_DIRECTORY)/%.o: %.adb $(DEP_DIRECTORY)/%.d
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
 	@$(ADJMAKEDEPS)                            \
-                        -tap +                     \
+                        -obj +                     \
                         -kpp $(KERNEL_PARENT_PATH) \
                         $(DEP_DIRECTORY_CMD)\$*.d
 	@$(UPDATETM) $(DEP_DIRECTORY_CMD)\$*.ali
@@ -137,7 +137,7 @@ $(OBJ_DIRECTORY)/%.o: %.ads $(DEP_DIRECTORY)/%.d
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
 	@$(ADJMAKEDEPS)                            \
-                        -tap +                     \
+                        -obj +                     \
                         -kpp $(KERNEL_PARENT_PATH) \
                         $(DEP_DIRECTORY_CMD)\$*.d
 	@$(UPDATETM) $(DEP_DIRECTORY_CMD)\$*.ali
@@ -178,7 +178,7 @@ $(OBJ_DIRECTORY)/%.o: %.S $(DEP_DIRECTORY)/%.d
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
 	@$(ADJMAKEDEPS)                            \
-                        -tap $(OBJ_DIRECTORY)      \
+                        -obj $(OBJ_DIRECTORY)      \
                         -kpp $(KERNEL_PARENT_PATH) \
                         $(DEP_DIRECTORY_CMD)\$*.d
 	@$(UPDATETM) $(OBJ_DIRECTORY_CMD)\$*.o
@@ -208,7 +208,7 @@ $(OBJ_DIRECTORY)/%.o: %.c $(DEP_DIRECTORY)/%.d
 ifeq ($(OSTYPE),cmd)
 	@$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
 	@$(ADJMAKEDEPS)                            \
-                        -tap $(OBJ_DIRECTORY)      \
+                        -obj $(OBJ_DIRECTORY)      \
                         -kpp $(KERNEL_PARENT_PATH) \
                         $(DEP_DIRECTORY_CMD)\$*.d
 	@$(UPDATETM) $(OBJ_DIRECTORY_CMD)\$*.o

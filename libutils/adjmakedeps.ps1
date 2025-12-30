@@ -11,7 +11,8 @@
 #
 # Arguments:
 # -kpp <path> = reverse-substitute a relative path for KERNEL_PARENT_PATH
-# -tap <path> = prefix a rule target with a path ("+" forces OBJ_DIRECTORY)
+# -obj <path> = reverse-substitute a target path for OBJ_DIRECTORY
+#               ("+" force head-insertion)
 # <filename>  = dependency file to adjust
 #
 # Environment variables:
@@ -71,7 +72,7 @@ function Write-Stderr
 
 # parse command line arguments
 $kernel_parent_path = ""
-$target_addprefix = ""
+$target_obj_path = ""
 $depfile_filename = ""
 $argsindex = 0
 while ($argsindex -lt $args.Length)
@@ -84,10 +85,10 @@ while ($argsindex -lt $args.Length)
       $argsindex++
       $kernel_parent_path = $args[$argsindex]
     }
-    elseif ($option -eq "tap")
+    elseif ($option -eq "obj")
     {
       $argsindex++
-      $target_addprefix = $args[$argsindex]
+      $target_obj_path = $args[$argsindex]
     }
     else
     {
@@ -120,20 +121,20 @@ if ($depfile_filename -eq "")
 
 for ($idx = 0 ; $idx -lt $textlines.Length ; $idx++)
 {
-  if ($target_addprefix -ne "")
+  if ($target_obj_path -ne "")
   {
     if ($textlines[$idx].Contains(":"))
     {
       # Makefile rule
       $t_splitted = $textlines[$idx].Split(":")
-      if ($target_addprefix.StartsWith("+"))
+      if ($target_obj_path.StartsWith("+"))
       {
         $textlines[$idx] = "`$(OBJ_DIRECTORY)/$($t_splitted[0]):$($t_splitted[1])"
       }
-      elseif ($t_splitted[0].Contains($target_addprefix))
+      elseif ($t_splitted[0].Contains($target_obj_path))
       {
-        $t_splitted[0] = $t_splitted[0].Replace($target_addprefix,"")
-        $textlines[$idx] = "`$(OBJ_DIRECTORY)$($t_splitted[0]):$($t_splitted[1])"
+        $t_splitted[0] = $t_splitted[0].Replace($target_obj_path,"`$(OBJ_DIRECTORY)")
+        $textlines[$idx] = "$($t_splitted[0]):$($t_splitted[1])"
       }
     }
   }
