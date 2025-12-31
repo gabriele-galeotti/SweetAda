@@ -160,7 +160,7 @@ conident:
                 st      %r6,UCBPSW+4(%r2)
                 lpsw    L(waitio)(%r13)                                 // wait for I/O
 conitype:       xc      L(conibuf)(8,%r13),L(conibuf)(%r13)
-                la      %r0,L(conibufl)(%r13)                           // R0: length of buffer
+                l       %r0,L(conibufl)(%r13)                           // R0: length of buffer
                 la      %r1,L(conibuf)(%r13)                            // R1 -> buffer
                 la      %r3,L(ccwsid)(%r13)                             // R3 -> CCW SENSE-ID
                 svc     1                                               // ask for device type
@@ -180,8 +180,8 @@ conitype1:      lm      %r0,%r1,L(conir0)(%r13)                         // resto
 conir0:         .long   0
 conir1:         .long   0
 conir14:        .long   0
-                .equ    conibufl,8
 conibuf:        .space  8,0
+conibufl:       .long   .-conibuf
 
 ////////////////////////////////////////////////////////////////////////////////
 // routine for external interrupts                                            //

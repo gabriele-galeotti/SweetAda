@@ -20,6 +20,7 @@ with System.Machine_Code;
 with System.Storage_Elements;
 with Definitions;
 with Bits;
+with Secondary_Stack;
 with Malloc;
 
 package body BSP
@@ -41,7 +42,7 @@ package body BSP
    use Bits;
 
    -- Malloc memory area
-   Heap : aliased Storage_Array (0 .. kB64 - 1)
+   Heap : aliased Storage_Array (0 .. KiB64 - 1)
       with Alignment               => 16#1000#,
            Suppress_Initialization => True; -- pragma Initialize_Scalars
 
@@ -84,6 +85,8 @@ package body BSP
    procedure Setup
       is
    begin
+      -------------------------------------------------------------------------
+      Secondary_Stack.Init;
       -------------------------------------------------------------------------
       Tclk_Init;
       -------------------------------------------------------------------------
