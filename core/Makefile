@@ -79,7 +79,7 @@ clean:
 .PHONY: distclean
 distclean: clean
 	$(RM) $(DISTCLEAN_OBJECTS_COMMON) \
-              gcc_defines.ads
+              gcc-defines.ads
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 
