@@ -33,6 +33,14 @@ package S390
    use System;
    use Bits;
 
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
+   -- Enterprise Systems Architecture/390 (TM)
+   -- Principles of Operation
+   -- SA22-7201-08
+   ----------------------------------------------------------------------------
+
    type PSWT is record
       Reserved1   : Bits_32;
       Reserved2   : Bits_1;
@@ -63,24 +71,6 @@ package S390
    procedure Irq_Enable;
    procedure Irq_Disable;
 
-   ----------------------------------------------------------------------------
-   -- Locking
-   ----------------------------------------------------------------------------
-
-   LOCK_UNLOCK : constant CPU_Unsigned := 0;
-   LOCK_LOCK   : constant CPU_Unsigned := 1;
-
-   type Lock_Type is record
-      Lock : aliased CPU_Unsigned := LOCK_UNLOCK with Atomic => True;
-   end record
-      with Size => CPU_Unsigned'Size;
-
-   procedure Lock_Try
-      (Lock_Object : in out Lock_Type;
-       Success     :    out Boolean);
-   procedure Lock
-      (Lock_Object : in out Lock_Type);
-   procedure Unlock
-      (Lock_Object : out Lock_Type);
+pragma Style_Checks (On);
 
 end S390;
