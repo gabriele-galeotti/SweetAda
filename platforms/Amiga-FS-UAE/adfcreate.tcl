@@ -87,7 +87,7 @@ if {$asmboot_filename eq "" || \
     $entry_point == 0       || \
     $adf_filename eq ""} {
     puts "Usage:"
-    puts "adfcreate <asmboot_filename> <kernel_filename> <load_address> <entry_point> <adf_filename>"
+    puts "$SCRIPT_FILENAME <asmboot_filename> <kernel_filename> <load_address> <entry_point> <adf_filename>"
     exit 1
     }
 

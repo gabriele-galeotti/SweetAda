@@ -93,7 +93,7 @@ if asmboot_filename == None or \
    entry_point == None      or \
    adf_filename == None:
     printf('Usage:\n')
-    printf('adfcreate <asmboot_filename> <kernel_filename> <load_address> <entry_point> <adf_filename>\n')
+    printf('%s <asmboot_filename> <kernel_filename> <load_address> <entry_point> <adf_filename>\n', SCRIPT_FILENAME)
     exit(1)
 
 kernel_sectors = (os.stat(kernel_filename).st_size + (512 - 1)) // 512
