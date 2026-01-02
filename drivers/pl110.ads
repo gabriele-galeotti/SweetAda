@@ -40,10 +40,13 @@ package PL110
 pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
-   -- PL110 Registers
+   -- PrimeCellTM Color LCD Controller (PL110)
+   -- Revision: r1p2
+   -- Technical Reference Manual
+   -- ARM DDI 0161E
    ----------------------------------------------------------------------------
 
-   -- Horizontal Axis Panel Control Register, LCDTiming0
+   -- 3.2.1 Horizontal Axis Panel Control Register, LCDTiming0
 
    type LCDTiming0_Type is record
       Reserved : Bits_2                      := 0;
@@ -62,7 +65,7 @@ pragma Style_Checks (Off);
       HBP      at 0 range 24 .. 31;
    end record;
 
-   -- Vertical Axis Panel Control Register, LCDTiming1
+   -- 3.2.2 Vertical Axis Panel Control Register, LCDTiming1
 
    type LCDTiming1_Type is record
       LPP : Natural range 0 .. 2**10 - 1; -- Lines per panel is the number of active lines per screen.
@@ -79,7 +82,7 @@ pragma Style_Checks (Off);
       VBP at 0 range 24 .. 31;
    end record;
 
-   -- Control Register, LCDControl
+   -- 3.2.7 Control Register, LCDControl
 
    subtype LcdBpp_Type is Bits_3;
    BPP1  : constant LcdBpp_Type := 2#000#;

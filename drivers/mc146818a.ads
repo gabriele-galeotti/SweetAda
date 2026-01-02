@@ -36,6 +36,8 @@ package MC146818A
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
    -- MC146818A REAL-TIME CLOCK PLUS RAM (RTC)
    -- © MOTOROLA INC., 1984
@@ -77,5 +79,7 @@ package MC146818A
 
    procedure Init
       (D : in Descriptor_Type);
+
+pragma Style_Checks (On);
 
 end MC146818A;

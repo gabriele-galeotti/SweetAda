@@ -31,6 +31,15 @@ package PL031
 
    use System;
 
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
+   -- ARM PrimeCellTM
+   -- Real Time Clock (PL031)
+   -- Technical Reference Manual
+   -- ARM DDI 0224B
+   ----------------------------------------------------------------------------
+
    type Descriptor_Type is record
       Base_Address : Address;
    end record;
@@ -46,5 +55,7 @@ package PL031
 
    procedure Init
       (D : in Descriptor_Type);
+
+pragma Style_Checks (On);
 
 end PL031;

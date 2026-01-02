@@ -36,6 +36,8 @@ package UART16x50
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
    -- NS16C450 Universal Asynchronous Receiver/Transmitter
    -- Microcommunication Elements Databook 400066 Rev. 1
@@ -91,5 +93,7 @@ package UART16x50
 
    procedure Init
       (D : in out Descriptor_Type);
+
+pragma Style_Checks (On);
 
 end UART16x50;

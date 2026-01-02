@@ -37,6 +37,8 @@ package Am7990
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
    -- Am7990 Local Area Network Controller for Ethernet (LANCE)
    -- Publication# 05698 Rev. C Amendment/0 Issue Date: June 1990
@@ -414,5 +416,7 @@ package Am7990
        Register   : in Register_Type;
        Value      : in Unsigned_16)
       with Inline => True;
+
+pragma Style_Checks (On);
 
 end Am7990;

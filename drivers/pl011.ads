@@ -32,6 +32,15 @@ package PL011
    use System;
    use Interfaces;
 
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
+   -- PrimeCell® UART (PL011)
+   -- Revision: r1p4
+   -- Technical Reference Manual
+   -- ARM DDI 0183F
+   ----------------------------------------------------------------------------
+
    type Port_Read_8_Ptr is access function (Port : Address) return Unsigned_8;
    type Port_Write_8_Ptr is access procedure (Port : in Address; Value : in Unsigned_8);
    type Port_Read_16_Ptr is access function (Port : Address) return Unsigned_16;
@@ -64,5 +73,7 @@ package PL011
    procedure RX
       (Descriptor : in     Descriptor_Type;
        Data       :    out Unsigned_8);
+
+pragma Style_Checks (On);
 
 end PL011;
