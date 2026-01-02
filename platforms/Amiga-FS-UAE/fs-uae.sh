@@ -43,8 +43,8 @@ SERIALPORT=1235
 # FS-UAE caches .adf disks
 rm -f ~/"Documents/FS-UAE/Save States/fs-uae/boot.adf"
 
-# make the platform directory the CWD so that log files do not end up in the
-# top-level directory
+# change the working directory to platform so that log files do not end up in
+# the top-level directory
 cd ${PLATFORM_DIRECTORY}
 
 # console for serial port
