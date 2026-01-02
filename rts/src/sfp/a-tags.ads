@@ -6,7 +6,7 @@
 --                                                                          --
 --                                 S p e c                                  --
 --                                                                          --
---          Copyright (C) 1992-2020, Free Software Foundation, Inc.         --
+--          Copyright (C) 1992-2023, Free Software Foundation, Inc.         --
 --                                                                          --
 -- This specification is derived from the Ada Reference Manual for use with --
 -- GNAT. The copyright notice above, and the license provisions that follow --
@@ -70,6 +70,7 @@
 
 with System;
 with System.Storage_Elements;
+with Ada.Unchecked_Conversion;
 
 package Ada.Tags is
    pragma Preelaborate;
@@ -155,6 +156,8 @@ private
    type Offset_To_Top_Ptr is access all SSE.Storage_Offset;
    pragma No_Strict_Aliasing (Offset_To_Top_Ptr);
 
+   pragma Annotate (Gnatcheck, Exempt_On, "Discriminated_Records",
+                    "only variant records are disallowed");
    type Type_Specific_Data (Idepth : Natural) is record
       --  Inheritance Depth Level: Used to implement the membership test
       --  associated with single inheritance of tagged types in constant-time.
@@ -215,6 +218,7 @@ private
       --  to which it applies. For each tagged type, the expander computes the
       --  actual array size, allocates the Dispatch_Table record accordingly.
    end record;
+   pragma Annotate (Gnatcheck, Exempt_Off, "Discriminated_Records");
 
    --  The following type declaration is used by the compiler when the program
    --  is compiled with restriction No_Dispatching_Calls
@@ -254,10 +258,6 @@ private
                                 + DT_Predef_Prims_Size;
    --  Offset from Prims_Ptr to Predef_Prims component
 
-   function CW_Membership (Obj_Tag : Tag; Typ_Tag : Tag) return Boolean;
-   --  Given the tag of an object and the tag associated to a type, return
-   --  true if Obj is in Typ'Class.
-
    Max_Predef_Prims : constant Positive := 10;
    --  Number of reserved slots for predefined ada primitives: Size, Read,
    --  Write, Input, Output, "=", assignment, deep adjust, deep finalize,
@@ -270,5 +270,50 @@ private
 
    type Addr_Ptr is access System.Address;
    pragma No_Strict_Aliasing (Addr_Ptr);
+
+   -------------------
+   -- CW_Membership --
+   -------------------
+
+   function To_Address is
+     new Ada.Unchecked_Conversion (Tag, System.Address);
+
+   function To_Addr_Ptr is
+      new Ada.Unchecked_Conversion (System.Address, Addr_Ptr);
+
+   function To_Type_Specific_Data_Ptr is
+     new Ada.Unchecked_Conversion (System.Address, Type_Specific_Data_Ptr);
+
+   --  Canonical implementation of Classwide Membership corresponding to:
+
+   --     Obj in Typ'Class
+
+   --  Each dispatch table contains a reference to a table of ancestors (stored
+   --  in the first part of the Tags_Table) and a count of the level of
+   --  inheritance "Idepth".
+
+   --  Obj is in Typ'Class if Typ'Tag is in the table of ancestors that are
+   --  contained in the dispatch table referenced by Obj'Tag . Knowing the
+   --  level of inheritance of both types, this can be computed in constant
+   --  time by the formula:
+
+   --   TSD (Obj'tag).Tags_Table (TSD (Obj'tag).Idepth - TSD (Typ'tag).Idepth)
+   --     = Typ'tag
+
+   function CW_Membership (Obj_Tag : Tag; Typ_Tag : Tag) return Boolean is
+     (declare
+         Obj_TSD_Ptr : constant Addr_Ptr :=
+           To_Addr_Ptr (To_Address (Obj_Tag) - DT_Typeinfo_Ptr_Size);
+         Typ_TSD_Ptr : constant Addr_Ptr :=
+           To_Addr_Ptr (To_Address (Typ_Tag) - DT_Typeinfo_Ptr_Size);
+         Obj_TSD     : constant Type_Specific_Data_Ptr :=
+           To_Type_Specific_Data_Ptr (Obj_TSD_Ptr.all);
+         Typ_TSD     : constant Type_Specific_Data_Ptr :=
+           To_Type_Specific_Data_Ptr (Typ_TSD_Ptr.all);
+         Pos         : constant Integer := Obj_TSD.Idepth - Typ_TSD.Idepth;
+      begin
+         Pos >= 0 and then Obj_TSD.Tags_Table (Pos) = Typ_Tag);
+   --  Given the tag of an object and the tag associated to a type, return
+   --  true if Obj is in Typ'Class.
 
 end Ada.Tags;

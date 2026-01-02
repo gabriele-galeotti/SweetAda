@@ -6,7 +6,7 @@
 --                                                                          --
 --                                 B o d y                                  --
 --                                                                          --
---          Copyright (C) 1992-2020, Free Software Foundation, Inc.         --
+--          Copyright (C) 1992-2023, Free Software Foundation, Inc.         --
 --                                                                          --
 -- GNAT is free software;  you can  redistribute it  and/or modify it under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -32,7 +32,6 @@
 --  This is the HI-E version of this file. Some functionality has been
 --  removed in order to simplify this run-time unit.
 
-with Ada.Unchecked_Conversion;
 with System.Storage_Elements; use System.Storage_Elements;
 
 package body Ada.Tags is
@@ -44,51 +43,6 @@ package body Ada.Tags is
    function Length (Str : Cstring_Ptr) return Natural;
    --  Length of string represented by the given pointer (treating the string
    --  as a C-style string, which is Nul terminated).
-
-   --  Unchecked Conversions
-
-   function To_Addr_Ptr is
-      new Ada.Unchecked_Conversion (System.Address, Addr_Ptr);
-
-   function To_Address is
-     new Ada.Unchecked_Conversion (Tag, System.Address);
-
-   function To_Type_Specific_Data_Ptr is
-     new Ada.Unchecked_Conversion (System.Address, Type_Specific_Data_Ptr);
-
-   -------------------
-   -- CW_Membership --
-   -------------------
-
-   --  Canonical implementation of Classwide Membership corresponding to:
-
-   --     Obj in Typ'Class
-
-   --  Each dispatch table contains a reference to a table of ancestors (stored
-   --  in the first part of the Tags_Table) and a count of the level of
-   --  inheritance "Idepth".
-
-   --  Obj is in Typ'Class if Typ'Tag is in the table of ancestors that are
-   --  contained in the dispatch table referenced by Obj'Tag . Knowing the
-   --  level of inheritance of both types, this can be computed in constant
-   --  time by the formula:
-
-   --   TSD (Obj'tag).Tags_Table (TSD (Obj'tag).Idepth - TSD (Typ'tag).Idepth)
-   --     = Typ'tag
-
-   function CW_Membership (Obj_Tag : Tag; Typ_Tag : Tag) return Boolean is
-      Obj_TSD_Ptr : constant Addr_Ptr :=
-        To_Addr_Ptr (To_Address (Obj_Tag) - DT_Typeinfo_Ptr_Size);
-      Typ_TSD_Ptr : constant Addr_Ptr :=
-        To_Addr_Ptr (To_Address (Typ_Tag) - DT_Typeinfo_Ptr_Size);
-      Obj_TSD     : constant Type_Specific_Data_Ptr :=
-        To_Type_Specific_Data_Ptr (Obj_TSD_Ptr.all);
-      Typ_TSD     : constant Type_Specific_Data_Ptr :=
-        To_Type_Specific_Data_Ptr (Typ_TSD_Ptr.all);
-      Pos         : constant Integer := Obj_TSD.Idepth - Typ_TSD.Idepth;
-   begin
-      return Pos >= 0 and then Obj_TSD.Tags_Table (Pos) = Typ_Tag;
-   end CW_Membership;
 
    -------------------
    -- Expanded_Name --
@@ -167,11 +121,10 @@ package body Ada.Tags is
       --  a type, but it's better to be explicit about returning No_Tag in
       --  this case.
 
-      if TSD.Idepth = 0 then
-         return No_Tag;
-      else
-         return TSD.Tags_Table (1);
-      end if;
+      return
+         (if TSD.Idepth = 0 then No_Tag
+                            else TSD.Tags_Table (1)
+         );
    end Parent_Tag;
 
 end Ada.Tags;
