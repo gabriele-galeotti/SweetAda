@@ -18,7 +18,6 @@
 # $5 = output ADF filename
 #
 # Environment variables:
-# SWEETADA_PATH
 # TOOLCHAIN_CC
 # TOOLCHAIN_LD
 # TOOLCHAIN_OBJDUMP
@@ -71,7 +70,7 @@ adf_filename = None
 argc = len(sys.argv)
 argv_idx = 1
 while argv_idx < argc:
-    if   asmboot_filename == None:
+    if asmboot_filename == None:
         asmboot_filename = sys.argv[argv_idx]
     elif kernel_filename == None:
         kernel_filename = sys.argv[argv_idx]

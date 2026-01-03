@@ -18,7 +18,6 @@
 # $5 = output ADF filename
 #
 # Environment variables:
-# SWEETADA_PATH
 # TOOLCHAIN_CC
 # TOOLCHAIN_LD
 # TOOLCHAIN_OBJDUMP
@@ -63,7 +62,7 @@ set argv_last_idx [llength $argv]
 set argv_idx 0
 while {$argv_idx < $argv_last_idx} {
     set token [lindex $argv $argv_idx]
-    if       {$asmboot_filename eq ""} {
+    if {$asmboot_filename eq ""} {
         set asmboot_filename $token
     } elseif {$kernel_filename eq ""} {
         set kernel_filename $token
