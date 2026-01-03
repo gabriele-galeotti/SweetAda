@@ -29,6 +29,7 @@ LIBGNAT_SRCS_COMMON += ../sfp/s-imagei.ads ../sfp/s-imagei.adb
 LIBGNAT_SRCS_COMMON += ../sfp/s-imgboo.ads ../sfp/s-imgboo.adb
 LIBGNAT_SRCS_COMMON += ../sfp/s-imgint.ads
 LIBGNAT_SRCS_COMMON += ../sfp/s-imglli.ads
+LIBGNAT_SRCS_COMMON += ../sfp/s-imgllu.ads ../sfp/s-imgllu.adb
 LIBGNAT_SRCS_COMMON += ../sfp/s-imguns.ads ../sfp/s-imguns.adb
 LIBGNAT_SRCS_COMMON += ../sfp/s-multip.ads ../sfp/s-multip.adb
 LIBGNAT_SRCS_COMMON += ../sfp/s-parame.ads
