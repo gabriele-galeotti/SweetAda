@@ -33,7 +33,7 @@ package Veecom
    use Interfaces;
 
    PA0 : aliased Unsigned_8
-      with Address              => System'To_Address (16#FFF8#),
+      with Address              => System'To_Address (16#0000_FFF8#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
