@@ -36,6 +36,7 @@ POSTBUILD_ROMFILE         := Y
 
 CONFIGURE_FILES_PLATFORM := configure.ads configure.h
 LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+GCC_SWITCHES_LOWLEVEL_PLATFORM := -DFPU_ENABLE
 
 ################################################################################
 # User parameters.                                                             #

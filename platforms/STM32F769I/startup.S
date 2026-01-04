@@ -40,6 +40,18 @@ _start:
 2:              cmp     r1,r2
                 bne     1b
 
+#if defined(FPU_ENABLE)
+#define CPACR           0xE000ED88
+#define CP10_FULLACCESS (3<<20)
+#define CP11_FULLACCESS (3<<22)
+                ldr     r0,=CPACR
+                ldr     r1,[r0]
+                orr     r1,r1,#(CP10_FULLACCESS|CP11_FULLACCESS)
+                str     r1,[r0]
+                dsb
+                isb
+#endif
+
                 //
                 // Jump to high-level code.
                 //
