@@ -27,11 +27,9 @@ _start:
 
                 // setup the literal pool
                 bras    %r13,1f
+                .extern _ada_main
 .Lstart:
 .Lkernel_stack: .long   kernel_stack
-                .extern adainit
-.Ladainit:      .long   adainit
-                .extern _ada_main
 .L_ada_main:    .long   _ada_main
 1:
 
