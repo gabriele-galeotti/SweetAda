@@ -52,14 +52,16 @@ GPR_CORE_CPU += cpu.ads                   \
                 cpu-mmio.adb cpu-mmio.ads
 
 GCCDEFINES_CPU += __APCS_32__:APCS_32:Boolean:H                     \
-                  __ARM_EABI__:ARM_EABI:Boolean:H                   \
                   __ARM_ARCH:ARM_ARCH:Integer:P                     \
-                  __ARM_ARCH_ISA_ARM:ARM_ARCH_ISA_ARM:Boolean:H     \
-                  __ARM_ARCH_ISA_THUMB:ARM_ARCH_ISA_THUMB:Integer:P \
-                  __ARM_ARCH_PROFILE:ARM_ARCH_PROFILE:Integer:P     \
                   __ARM_ARCH_4T__:ARM_ARCH_4T:Boolean:H             \
                   __ARM_ARCH_5TE__:ARM_ARCH_5TE:Boolean:H           \
                   __ARM_ARCH_6T2__:ARM_ARCH_6T2:Boolean:H           \
+                  __ARM_ARCH_ISA_ARM:ARM_ARCH_ISA_ARM:Boolean:H     \
+                  __ARM_ARCH_ISA_THUMB:ARM_ARCH_ISA_THUMB:Integer:P \
+                  __ARM_ARCH_PROFILE:ARM_ARCH_PROFILE:Integer:P     \
+                  __ARM_EABI__:ARM_EABI:Boolean:H                   \
+                  __SOFTFP__:SOFTFP:Boolean:H                       \
                   __thumb__:THUMB:Boolean:H                         \
-                  __thumb2__:THUMB2:Boolean:H
+                  __thumb2__:THUMB2:Boolean:H                       \
+                  __VFP_FP__:VFP_FP:Boolean:H
 

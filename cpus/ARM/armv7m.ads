@@ -596,47 +596,50 @@ pragma Style_Checks (Off);
 
    -- B3.2.20 Coprocessor Access Control Register, CPACR
 
-   CP_ACCESS_DENIED : constant := 2#00#;
-   CP_PRIVONLY      : constant := 2#01#;
-   CP_FULLACCESS    : constant := 2#11#;
+   type CP_Access_Privilege_Type is new Bits_2;
+
+   CP_ACCESSDENIED : constant CP_Access_Privilege_Type := 2#00#; -- Access denied.
+   CP_PRIVONLY     : constant CP_Access_Privilege_Type := 2#01#; -- Privileged access only.
+   CP_RESERVED     : constant CP_Access_Privilege_Type := 2#10#; -- Reserved.
+   CP_FULLACCESS   : constant CP_Access_Privilege_Type := 2#11#; -- Full access.
 
    type CPACR_Type is record
-      CP0        : Bits_2;      -- access privileges for coprocessor
-      CP1        : Bits_2;      -- access privileges for coprocessor
-      CP2        : Bits_2;      -- access privileges for coprocessor
-      CP3        : Bits_2;      -- access privileges for coprocessor
-      CP4        : Bits_2;      -- access privileges for coprocessor
-      CP5        : Bits_2;      -- access privileges for coprocessor
-      CP6        : Bits_2;      -- access privileges for coprocessor
-      CP7        : Bits_2;      -- access privileges for coprocessor
-      Reserved8  : Bits_2 := 0;
-      Reserved9  : Bits_2 := 0;
-      CP10       : Bits_2;      -- access privileges for coprocessor
-      CP11       : Bits_2;      -- access privileges for coprocessor
-      Reserved12 : Bits_2 := 0;
-      Reserved13 : Bits_2 := 0;
-      Reserved14 : Bits_2 := 0;
-      Reserved15 : Bits_2 := 0;
+      CP0       : CP_Access_Privilege_Type := CP_ACCESSDENIED; -- Access privileges for coprocessor 0
+      CP1       : CP_Access_Privilege_Type := CP_ACCESSDENIED; -- Access privileges for coprocessor 1
+      CP2       : CP_Access_Privilege_Type := CP_ACCESSDENIED; -- Access privileges for coprocessor 2
+      CP3       : CP_Access_Privilege_Type := CP_ACCESSDENIED; -- Access privileges for coprocessor 3
+      CP4       : CP_Access_Privilege_Type := CP_ACCESSDENIED; -- Access privileges for coprocessor 4
+      CP5       : CP_Access_Privilege_Type := CP_ACCESSDENIED; -- Access privileges for coprocessor 5
+      CP6       : CP_Access_Privilege_Type := CP_ACCESSDENIED; -- Access privileges for coprocessor 6
+      CP7       : CP_Access_Privilege_Type := CP_ACCESSDENIED; -- Access privileges for coprocessor 7
+      Reserved1 : Bits_2                   := 0;
+      Reserved2 : Bits_2                   := 0;
+      CP10      : CP_Access_Privilege_Type := CP_ACCESSDENIED; -- Access privileges for coprocessor 10
+      CP11      : CP_Access_Privilege_Type := CP_ACCESSDENIED; -- Access privileges for coprocessor 11
+      Reserved3 : Bits_2                   := 0;
+      Reserved4 : Bits_2                   := 0;
+      Reserved5 : Bits_2                   := 0;
+      Reserved6 : Bits_2                   := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for CPACR_Type use record
-      CP0        at 0 range  0 ..  1;
-      CP1        at 0 range  2 ..  3;
-      CP2        at 0 range  4 ..  5;
-      CP3        at 0 range  6 ..  7;
-      CP4        at 0 range  8 ..  9;
-      CP5        at 0 range 10 .. 11;
-      CP6        at 0 range 12 .. 13;
-      CP7        at 0 range 14 .. 15;
-      Reserved8  at 0 range 16 .. 17;
-      Reserved9  at 0 range 18 .. 19;
-      CP10       at 0 range 20 .. 21;
-      CP11       at 0 range 22 .. 23;
-      Reserved12 at 0 range 24 .. 25;
-      Reserved13 at 0 range 26 .. 27;
-      Reserved14 at 0 range 28 .. 29;
-      Reserved15 at 0 range 30 .. 31;
+      CP0       at 0 range  0 ..  1;
+      CP1       at 0 range  2 ..  3;
+      CP2       at 0 range  4 ..  5;
+      CP3       at 0 range  6 ..  7;
+      CP4       at 0 range  8 ..  9;
+      CP5       at 0 range 10 .. 11;
+      CP6       at 0 range 12 .. 13;
+      CP7       at 0 range 14 .. 15;
+      Reserved1 at 0 range 16 .. 17;
+      Reserved2 at 0 range 18 .. 19;
+      CP10      at 0 range 20 .. 21;
+      CP11      at 0 range 22 .. 23;
+      Reserved3 at 0 range 24 .. 25;
+      Reserved4 at 0 range 26 .. 27;
+      Reserved5 at 0 range 28 .. 29;
+      Reserved6 at 0 range 30 .. 31;
    end record;
 
    CPACR : aliased CPACR_Type
