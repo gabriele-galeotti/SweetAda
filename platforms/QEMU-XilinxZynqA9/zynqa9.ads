@@ -112,8 +112,8 @@ pragma Style_Checks (Off);
       SBPR     : Boolean := False; -- Controls whether the CPU interface uses the Secure or Non-secure Binary Point Register for preemption.
       Reserved : Bits_27 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for ICCICR_Type use record
       EnableS  at 0 range 0 ..  0;
       EnableNS at 0 range 1 ..  1;
@@ -129,8 +129,8 @@ pragma Style_Checks (Off);
       Priority : Unsigned_8 := 0; -- The priority mask level for the CPU interface.
       Reserved : Bits_24    := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for ICCPMR_Type use record
       Priority at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
@@ -142,8 +142,8 @@ pragma Style_Checks (Off);
       Binary_point : Bits_3  := 16#2#; -- The value of this field controls the 8-bit interrupt priority field is split into a group priority field, used to determine interrupt preemption, and a subpriority field.
       Reserved     : Bits_29 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for ICCBPR_Type use record
       Binary_point at 0 range 0 ..  2;
       Reserved     at 0 range 3 .. 31;
@@ -156,8 +156,8 @@ pragma Style_Checks (Off);
       CPUID    : Bits_3  := 0;       -- The interrupt ID.
       Reserved : Bits_19 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for ICCIAR_Type use record
       ACKINTID at 0 range  0 ..  9;
       CPUID    at 0 range 10 .. 12;
@@ -171,8 +171,8 @@ pragma Style_Checks (Off);
       CPUID    : Bits_3  := 0; -- On completion of the processing of an SGI, this field contains the CPUID value from the corresponding ICCIAR access.
       Reserved : Bits_19 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for ICCEOIR_Type use record
       EOIINTID at 0 range  0 ..  9;
       CPUID    at 0 range 10 .. 12;
@@ -185,8 +185,8 @@ pragma Style_Checks (Off);
       Priority : Unsigned_8 := 16#FF#; -- The priority value of the highest priority interrupt that is active on the CPU interface.
       Reserved : Bits_24    := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for ICCRPR_Type use record
       Priority at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
@@ -199,8 +199,8 @@ pragma Style_Checks (Off);
       CPUID     : Bits_3  := 0;       -- If the PENDINTID field returns the ID of an SGI, this field contains the CPUID value for that interrupt.
       Reserved  : Bits_19 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for ICCHPIR_Type use record
       PENDINTID at 0 range  0 ..  9;
       CPUID     at 0 range 10 .. 12;
@@ -213,8 +213,8 @@ pragma Style_Checks (Off);
       Binary_point : Bits_3  := 16#3#; -- Provides an alias of the Non-secure ICCBPR.
       Reserved     : Bits_29 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for ICCABPR_Type use record
       Binary_point at 0 range 0 ..  2;
       Reserved     at 0 range 3 .. 31;
@@ -228,8 +228,8 @@ pragma Style_Checks (Off);
       Architecture_version : Bits_4;  -- Identifies the architecture version
       Part_number          : Bits_12; -- Identifies the peripheral
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for ICCIDR_Type use record
       Implementer          at 0 range  0 .. 11;
       Revision_number      at 0 range 12 .. 15;
@@ -244,8 +244,8 @@ pragma Style_Checks (Off);
       Enable_Non_secure : Boolean := False; -- 0 = disables all Non-secure interrupts control bits in the distributor from changing state because of any external stimulus change that occurs on the corresponding SPI or PPI signals 1 = enables the distributor to update register locations for Non-secure interrupts
       Reserved          : Bits_30 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for ICDDCR_Type use record
       Enable_secure     at 0 range 0 ..  0;
       Enable_Non_secure at 0 range 1 ..  1;
@@ -278,8 +278,8 @@ pragma Style_Checks (Off);
       LSPI            : Bits_5;  -- Returns the number of Lockable Shared Peripheral Interrupts (LSPIs) that the controller contains.
       Reserved        : Bits_16;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for ICDICTR_Type use record
       IT_Lines_Number at 0 range  0 ..  4;
       CPU_Number      at 0 range  5 ..  7;
@@ -296,8 +296,8 @@ pragma Style_Checks (Off);
       Revision_Number        : Bits_12; -- Return the revision number of the controller
       Implementation_Version : Bits_8;  -- Gives implementation version number
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for ICDIIDR_Type use record
       Implementer            at 0 range  0 .. 11;
       Revision_Number        at 0 range 12 .. 23;
@@ -335,7 +335,7 @@ pragma Style_Checks (Off);
    ICDIPTR_CPU01 : constant := 2#11#; -- CPU 0 and CPU 1 are both targeted
 
    type ICDIPTR_Array_Type is array (0 .. 3) of Bits_8
-      with Size                 => 32,
+      with Object_Size          => 32,
            Volatile_Full_Access => True,
            Pack                 => True;
 
@@ -371,7 +371,7 @@ pragma Style_Checks (Off);
       ICDISPR2 : Bitmap_32              with Volatile_Full_Access => True;
       ICDIPTR  : ICDIPTR_Type (0 .. 23);
    end record
-      with Size  => 16#1860# * 8;
+      with Object_Size => 16#1860# * 8;
    for mpcore_Type use record
       ICCICR   at 16#0100# range 0 .. 31;
       ICCPMR   at 16#0104# range 0 .. 31;
@@ -416,8 +416,8 @@ pragma Style_Checks (Off);
       LOCK     : Boolean := False; -- Secure configuration lock for these slcr registers: SCL, PSS_RST_CTRL, APU_CTRL, and WDT_CLK_SEL.
       Reserved : Bits_31 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SCL_Type use record
       LOCK     at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 31;
@@ -431,8 +431,8 @@ pragma Style_Checks (Off);
       LOCK_KEY : Unsigned_16 := 0; -- Write the lock key, 0x767B, to write protect the slcr registers
       Reserved : Bits_16     := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SLCR_LOCK_Type use record
       LOCK_KEY at 0 range  0 .. 15;
       Reserved at 0 range 16 .. 31;
@@ -446,8 +446,8 @@ pragma Style_Checks (Off);
       UNLOCK_KEY : Unsigned_16 := 0; -- Write the unlock key, 0xDF0D, to enable writes to the slcr registers.
       Reserved   : Bits_16     := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SLCR_UNLOCK_Type use record
       UNLOCK_KEY at 0 range  0 .. 15;
       Reserved   at 0 range 16 .. 31;
@@ -460,7 +460,7 @@ pragma Style_Checks (Off);
       SLCR_LOCK   : SLCR_LOCK_Type   with Volatile_Full_Access => True;
       SLCR_UNLOCK : SLCR_UNLOCK_Type with Volatile_Full_Access => True;
    end record
-      with Size => 32 * 3;
+      with Object_Size => 32 * 3;
    for slcr_Type use record
       SCL         at 0 range 0 .. 31;
       SLCR_LOCK   at 4 range 0 .. 31;
@@ -490,7 +490,7 @@ pragma Style_Checks (Off);
       Unused   : Bits_25 := 0;
    end record
       with Bit_Order            => Low_Order_First,
-           Size                 => 32,
+           Object_Size          => 32,
            Volatile_Full_Access => True;
    for XTTCPS_CLK_CNTRL_Type use record
       PS_EN    at 0 range 0 ..  0;
@@ -519,7 +519,7 @@ pragma Style_Checks (Off);
       Unused   : Bits_25 := 0;
    end record
       with Bit_Order            => Low_Order_First,
-           Size                 => 32,
+           Object_Size          => 32,
            Volatile_Full_Access => True;
    for XTTCPS_CNT_CNTRL_Type use record
       DIS      at 0 range 0 ..  0;
@@ -539,7 +539,7 @@ pragma Style_Checks (Off);
       Unused : Bits_16;
    end record
       with Bit_Order            => Low_Order_First,
-           Size                 => 32,
+           Object_Size          => 32,
            Volatile_Full_Access => True;
    for XTTCPS_COUNT_VALUE_Type use record
       MASK   at 0 range  0 .. 15;
@@ -553,7 +553,7 @@ pragma Style_Checks (Off);
       Unused      : Bits_16     := 0;
    end record
       with Bit_Order            => Low_Order_First,
-           Size                 => 32,
+           Object_Size          => 32,
            Volatile_Full_Access => True;
    for XTTCPS_INTERVAL_VAL_Type use record
       COUNT_VALUE at 0 range  0 .. 15;
@@ -569,7 +569,7 @@ pragma Style_Checks (Off);
       Unused : Bits_16     := 0;
    end record
       with Bit_Order            => Low_Order_First,
-           Size                 => 32,
+           Object_Size          => 32,
            Volatile_Full_Access => True;
    for XTTCPS_MATCH_Type use record
       MATCH  at 0 range  0 .. 15;
@@ -588,7 +588,7 @@ pragma Style_Checks (Off);
       Unused       : Bits_26;
    end record
       with Bit_Order            => Low_Order_First,
-           Size                 => 32,
+           Object_Size          => 32,
            Volatile_Full_Access => True;
    for XTTCPS_ISR_Type use record
       IXR_INTERVAL at 0 range 0 ..  0;
@@ -612,7 +612,7 @@ pragma Style_Checks (Off);
       Unused           : Bits_26 := 0;
    end record
       with Bit_Order            => Low_Order_First,
-           Size                 => 32,
+           Object_Size          => 32,
            Volatile_Full_Access => True;
    for XTTCPS_IER_Type use record
       IXR_INTERVAL_IEN at 0 range 0 ..  0;
@@ -635,7 +635,7 @@ pragma Style_Checks (Off);
       Unused : Bits_29 := 0;
    end record
       with Bit_Order            => Low_Order_First,
-           Size                 => 32,
+           Object_Size          => 32,
            Volatile_Full_Access => True;
    for Event_Control_Timer_Type use record
       E_En   at 0 range 0 ..  0;
@@ -653,7 +653,7 @@ pragma Style_Checks (Off);
       Unused : Bits_16;
    end record
       with Bit_Order            => Low_Order_First,
-           Size                 => 32,
+           Object_Size          => 32,
            Volatile_Full_Access => True;
    for Event_Register_Type use record
       Event  at 0 range  0 .. 15;
@@ -662,17 +662,17 @@ pragma Style_Checks (Off);
 
    -- ttc layout
 
-   type CLK_CNTRL_Array_Type           is array (0 .. 2) of XTTCPS_CLK_CNTRL_Type    with Pack => True;
-   type CNT_CNTRL_Array_Type           is array (0 .. 2) of XTTCPS_CNT_CNTRL_Type    with Pack => True;
-   type COUNT_VALUE_Array_Type         is array (0 .. 2) of XTTCPS_COUNT_VALUE_Type  with Pack => True;
-   type INTERVAL_VAL_Array_Type        is array (0 .. 2) of XTTCPS_INTERVAL_VAL_Type with Pack => True;
-   type MATCH_1_Array_Type             is array (0 .. 2) of XTTCPS_MATCH_Type        with Pack => True;
-   type MATCH_2_Array_Type             is array (0 .. 2) of XTTCPS_MATCH_Type        with Pack => True;
-   type MATCH_3_Array_Type             is array (0 .. 2) of XTTCPS_MATCH_Type        with Pack => True;
-   type ISR_Array_Type                 is array (0 .. 2) of XTTCPS_ISR_Type          with Pack => True;
-   type IER_Array_Type                 is array (0 .. 2) of XTTCPS_IER_Type          with Pack => True;
-   type Event_Control_Timer_Array_Type is array (0 .. 2) of Event_Control_Timer_Type with Pack => True;
-   type Event_Register_Array_Type      is array (0 .. 2) of Event_Register_Type      with Pack => True;
+   type CLK_CNTRL_Array_Type           is array (0 .. 2) of XTTCPS_CLK_CNTRL_Type;
+   type CNT_CNTRL_Array_Type           is array (0 .. 2) of XTTCPS_CNT_CNTRL_Type;
+   type COUNT_VALUE_Array_Type         is array (0 .. 2) of XTTCPS_COUNT_VALUE_Type;
+   type INTERVAL_VAL_Array_Type        is array (0 .. 2) of XTTCPS_INTERVAL_VAL_Type;
+   type MATCH_1_Array_Type             is array (0 .. 2) of XTTCPS_MATCH_Type;
+   type MATCH_2_Array_Type             is array (0 .. 2) of XTTCPS_MATCH_Type;
+   type MATCH_3_Array_Type             is array (0 .. 2) of XTTCPS_MATCH_Type;
+   type ISR_Array_Type                 is array (0 .. 2) of XTTCPS_ISR_Type;
+   type IER_Array_Type                 is array (0 .. 2) of XTTCPS_IER_Type;
+   type Event_Control_Timer_Array_Type is array (0 .. 2) of Event_Control_Timer_Type;
+   type Event_Register_Array_Type      is array (0 .. 2) of Event_Register_Type;
 
    type ttc_Type is record
       CLK_CNTRL           : CLK_CNTRL_Array_Type;
@@ -687,7 +687,7 @@ pragma Style_Checks (Off);
       Event_Control_Timer : Event_Control_Timer_Array_Type;
       Event_Register      : Event_Register_Array_Type;
    end record
-      with Size => 16#84# * 8;
+      with Object_Size => 16#84# * 8;
    for ttc_Type use record
       CLK_CNTRL           at 16#00# range 0 .. 32 * 3 - 1;
       CNT_CNTRL           at 16#0C# range 0 .. 32 * 3 - 1;
@@ -732,8 +732,8 @@ pragma Style_Checks (Off);
       STOPBRK  : Boolean := True;  -- Stop transmitter break: 0: no affect 1: stop transmission of the break after a minimum of one character length and transmit a high level during 12 bit periods.
       Reserved : Bits_23 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for XUARTPS_CR_Type use record
       RXRST    at 0 range 0 ..  0;
       TXRST    at 0 range 1 ..  1;
@@ -781,8 +781,8 @@ pragma Style_Checks (Off);
       Reserved2 : Bits_1  := 0;
       Reserved3 : Bits_20 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for XUARTPS_MR_Type use record
       CLKSEL    at 0 range  0 ..  0;
       CHRL      at 0 range  1 ..  2;
@@ -815,8 +815,8 @@ pragma Style_Checks (Off);
       TOVR        : Boolean := False; -- Transmitter FIFO Overflow interrupt
       Reserved    : Bits_19 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for XUARTPS_IEDMSR_Type use record
       IXR_RXOVR   at 0 range  0 ..  0;
       IXR_RXEMPTY at 0 range  1 ..  1;
@@ -843,8 +843,8 @@ pragma Style_Checks (Off);
       CD       : Unsigned_16 := 16#28B#; -- Baud Rate Clock Divisor Value
       Reserved : Bits_16     := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for XUARTPS_BAUDGEN_Type use record
       CD       at 0 range  0 .. 15;
       Reserved at 0 range 16 .. 31;
@@ -858,8 +858,8 @@ pragma Style_Checks (Off);
       RTO      : Unsigned_8 := RTO_DISABLE; -- Receiver timeout value
       Reserved : Bits_24    := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for XUARTPS_RXTOUT_Type use record
       RTO      at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
@@ -873,8 +873,8 @@ pragma Style_Checks (Off);
       RTRIG    : Bits_6  := 16#20#; -- Receiver FIFO trigger level value
       Reserved : Bits_26 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for XUARTPS_RXWM_Type use record
       RTRIG    at 0 range 0 ..  5;
       Reserved at 0 range 6 .. 31;
@@ -889,8 +889,8 @@ pragma Style_Checks (Off);
       FCM       : Boolean := False; -- Automatic flow control mode
       Reserved2 : Bits_26 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for XUARTPS_MODEMCR_Type use record
       DTR       at 0 range 0 ..  0;
       RTS       at 0 range 1 ..  1;
@@ -913,8 +913,8 @@ pragma Style_Checks (Off);
       FCMS         : Boolean := False; -- Flow Control Mode
       Reserved     : Bits_23 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for XUARTPS_MODEMSR_Type use record
       MEDEMSR_CTSX at 0 range 0 ..  0;
       MEDEMSR_DSRX at 0 range 1 ..  1;
@@ -948,8 +948,8 @@ pragma Style_Checks (Off);
       TNFUL     : Boolean; -- Transmitter FIFO Nearly Full continuous status
       Reserved6 : Bits_17;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for XUARTPS_SR_Type use record
       RXOVR     at 0 range  0 ..  0;
       RXEMPTY   at 0 range  1 ..  1;
@@ -975,8 +975,8 @@ pragma Style_Checks (Off);
       FIFO     : Unsigned_8;
       Reserved : Bits_24    := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for XUARTPS_FIFO_Type use record
       FIFO     at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
@@ -993,8 +993,8 @@ pragma Style_Checks (Off);
       BDIV     : Unsigned_8 := 16#F#; -- Baud rate divider value
       Reserved : Bits_24    := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for Baud_rate_divider_reg0_Type use record
       BDIV     at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
@@ -1011,8 +1011,8 @@ pragma Style_Checks (Off);
       FDEL     : Bits_6  := 0; -- RxFIFO trigger level for Ready To Send (RTS) output signal (EMIOUARTxRTSN) de-assertion
       Reserved : Bits_26 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for Flow_delay_reg0_Type use record
       FDEL     at 0 range 0 ..  5;
       Reserved at 0 range 6 .. 31;
@@ -1026,8 +1026,8 @@ pragma Style_Checks (Off);
       TTRIG    : Bits_6  := 16#20#; -- Transmitter FIFO trigger level
       Reserved : Bits_26 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for Tx_FIFO_trigger_level0_Type use record
       TTRIG    at 0 range 0 ..  5;
       Reserved at 0 range 6 .. 31;
