@@ -36,6 +36,10 @@ LIBRARY_NAME := cpu
 
 OBJECTS :=
 
+ifneq ($(USE_LIBGCC),Y)
+OBJECTS += $(OBJ_DIRECTORY)/libgcc.o
+endif
+
 .PHONY: all
 all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
