@@ -54,8 +54,8 @@ pragma Style_Checks (Off);
       OWIE     : Boolean := False; -- Overflow interrupt enable
       Reserved : Bits_13 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for RTC_CRH_Type use record
       SECIE    at 0 range 0 ..  0;
       ALRIE    at 0 range 1 ..  1;
@@ -74,8 +74,8 @@ pragma Style_Checks (Off);
       RTOFF    : Boolean := True;  -- RTC operation OFF
       Reserved : Bits_10 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for RTC_CRL_Type use record
       SECF     at 0 range 0 ..  0;
       ALRF     at 0 range 1 ..  1;
@@ -92,8 +92,8 @@ pragma Style_Checks (Off);
       PRL      : Bits_4  := 0; -- RTC prescaler reload value high
       Reserved : Bits_12 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for RTC_PRLH_Type use record
       PRL      at 0 range 0 ..  3;
       Reserved at 0 range 4 .. 15;
@@ -102,8 +102,8 @@ pragma Style_Checks (Off);
    type RTC_PRLL_Type is record
       PRL : Bits_16 := 0; -- RTC prescaler reload value low
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for RTC_PRLL_Type use record
       PRL at 0 range 0 .. 15;
    end record;
@@ -114,8 +114,8 @@ pragma Style_Checks (Off);
       RTC_DIV  : Bits_4  := 0; -- RTC clock divider high
       Reserved : Bits_12 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for RTC_DIVH_Type use record
       RTC_DIV  at 0 range 0 ..  3;
       Reserved at 0 range 4 .. 15;
@@ -124,8 +124,8 @@ pragma Style_Checks (Off);
    type RTC_DIVL_Type is record
       RTC_DIV : Bits_16 := 0; -- RTC clock divider low
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for RTC_DIVL_Type use record
       RTC_DIV at 0 range 0 .. 15;
    end record;
@@ -217,8 +217,8 @@ pragma Style_Checks (Off);
       CTS      : Boolean := True;        -- CTS flag
       Reserved : Bits_22 := 16#00_3000#;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for USART_SR_Type use record
       PE       at 0 range  0 ..  0;
       FE       at 0 range  1 ..  1;
@@ -240,8 +240,8 @@ pragma Style_Checks (Off);
       DR8      : Bits_1     := 0; -- 9th bit
       Reserved : Bits_23    := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for USART_DR_Type use record
       DR       at 0 range 0 ..  7;
       DR8      at 0 range 8 ..  8;
@@ -255,8 +255,8 @@ pragma Style_Checks (Off);
       DIV_Mantissa : Bits_12;      -- mantissa of USARTDIV
       Reserved     : Bits_16 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for USART_BRR_Type use record
       DIV_Fraction at 0 range  0 ..  3;
       DIV_Mantissa at 0 range  4 .. 15;
@@ -296,8 +296,8 @@ pragma Style_Checks (Off);
       OVER8     : Bits_1  := OVER8_16;  -- Oversampling mode
       Reserved2 : Bits_16 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for USART_CR1_Type use record
       SM        at 0 range  0 ..  0;
       RWU       at 0 range  1 ..  1;
@@ -348,8 +348,8 @@ pragma Style_Checks (Off);
       LINEN     : Boolean := False;    -- LIN mode enable
       Reserved3 : Bits_17 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for USART_CR2_Type use record
       ADD       at 0 range  0 ..  3;
       Reserved1 at 0 range  4 ..  4;
@@ -382,8 +382,8 @@ pragma Style_Checks (Off);
       ONEBIT   : Boolean := False; -- One sample bit method enable
       Reserved : Bits_20 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for USART_CR3_Type use record
       EIE      at 0 range  0 ..  0;
       IREN     at 0 range  1 ..  1;
@@ -407,8 +407,8 @@ pragma Style_Checks (Off);
       GT       : Unsigned_8 := 0; -- Guard time value
       Reserved : Bits_16    := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for USART_GTPR_Type use record
       PSC      at 0 range  0 ..  7;
       GT       at 0 range  8 .. 15;
@@ -426,7 +426,7 @@ pragma Style_Checks (Off);
       USART_CR3  : USART_CR3_Type  with Volatile_Full_Access => True;
       USART_GTPR : USART_GTPR_Type with Volatile_Full_Access => True;
    end record
-      with Size                    => 16#1C# * 8,
+      with Object_Size             => 16#1C# * 8,
            Suppress_Initialization => True;
    for USART_Type use record
       USART_SR   at 16#00# range 0 .. 31;
