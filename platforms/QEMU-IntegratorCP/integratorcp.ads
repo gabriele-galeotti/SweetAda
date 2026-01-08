@@ -67,8 +67,8 @@ package IntegratorCP
       TSPENINT  : Boolean;
       Reserved2 : Bits_3;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for PIC_IRQ_ITEMS_Type use record
       SOFTINT   at 0 range  0 ..  0;
       UARTINT0  at 0 range  1 ..  1;
@@ -150,8 +150,8 @@ package IntegratorCP
       ENABLE     : Boolean;      -- Timer enable
       Reserved2  : Bits_24 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for TimerXControl_Type use record
       ONESHOT    at 0 range 0 ..  0;
       TIMER_SIZE at 0 range 1 ..  1;
@@ -167,8 +167,8 @@ package IntegratorCP
       RTI      : Boolean; -- Raw interrupt status from the counter
       Reserved : Bits_31;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for TimerXRIS_Type use record
       RTI      at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 31;
@@ -178,8 +178,8 @@ package IntegratorCP
       TI       : Boolean; -- Enabled interrupt status from the counter
       Reserved : Bits_31;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for TimerXMIS_Type use record
       TI       at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 31;
