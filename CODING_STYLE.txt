@@ -103,6 +103,8 @@ items (e.g., the number of bits to check in a pattern, or the number of
 peripheral devices to configure in a system), we often use the name "NItems"
 ("number of items", e.g., NBits or NDevices).
 
+Hexadecimal literals all uppercase, C-style "0x" prefix preferred in comments.
+
 Some object prefixes/suffixes/abbreviations:
 Idx = index
 Mem = memory
