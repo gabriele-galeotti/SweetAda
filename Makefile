@@ -343,6 +343,7 @@ RTSES     := $(shell                          \
                SET "PATH=$(PATH)"          && \
                SET "KERNEL_PARENT_PATH=.." && \
                "$(MAKE)"                      \
+                 --no-print-directory         \
                  -C $(RTS_DIRECTORY)          \
                  PROBEVARIABLE=RTSES          \
                  probevariable                \
@@ -350,14 +351,15 @@ RTSES     := $(shell                          \
 else
 PLATFORMS := $(shell ($(CHDIR) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
 CPUS      := $(shell ($(CHDIR) $(CPU_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
-RTSES     := $(shell                 \
-               VERBOSE=              \
-               PATH="$(PATH)"        \
-               KERNEL_PARENT_PATH=.. \
-               "$(MAKE)"             \
-                 -C $(RTS_DIRECTORY) \
-                 PROBEVARIABLE=RTSES \
-                 probevariable       \
+RTSES     := $(shell                  \
+               VERBOSE=               \
+               PATH="$(PATH)"         \
+               KERNEL_PARENT_PATH=..  \
+               "$(MAKE)"              \
+                 --no-print-directory \
+                 -C $(RTS_DIRECTORY)  \
+                 PROBEVARIABLE=RTSES  \
+                 probevariable        \
                2> /dev/null)
 endif
 
@@ -1020,8 +1022,21 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
                     > gnatbind_elab.lst            \
         ,[GNATBIND],b__main.adb)
 ifeq ($(OSTYPE),cmd)
+	$(call create-emptyfile,gnatbind_alis.lst.tmp)
+	@SETLOCAL ENABLEDELAYEDEXPANSION                    && \
+        FOR /F "delims=?" %%A IN (gnatbind_alis.lst) DO        \
+          (                                                    \
+           SET "A1=%%A" && SET "A2=!A1:$(SWEETADA_PATH)/=!" && \
+           (ECHO !A2!>>gnatbind_alis.lst.tmp)                  \
+          )
+	-@$(MV) .\gnatbind_alis.lst.tmp .\gnatbind_alis.lst
 	@$(MV) b__main.ad* $(OBJECT_DIRECTORY)\ $(NULL)
 else
+ifeq ($(OSTYPE),darwin)
+	sed -i '' -e "s|$(SWEETADA_PATH)/||g" gnatbind_alis.lst
+else
+	sed -i -e "s|$(SWEETADA_PATH)/||g" gnatbind_alis.lst
+endif
 	@$(MV) b__main.ad* $(OBJECT_DIRECTORY)/
 endif
 else ifeq ($(BUILD_MODE),GPRbuild)
@@ -1037,7 +1052,7 @@ ifeq ($(OSTYPE),cmd)
          $(GPRBUILD)                         \
                      -b                      \
                      -P $(KERNEL_GPRFILE)    \
-         || ECHO __exitstatus__=1            \
+         || (ECHO __exitstatus__=1)          \
         ) | $(GPRBINDFILT) gnatbind_elab.lst \
         ,[GPRBUILD-B],$(KERNEL_GPRFILE))
 else
@@ -1059,7 +1074,8 @@ endif
 ifeq      ($(OSTYPE),cmd)
 	$(call create-emptyfile,gnatbind_objs.lst.tmp)
 ifeq      ($(BUILD_MODE),GNATMAKE)
-	@FOR /F %%U IN (gnatbind_objs.lst) DO                                     \
+	@SETLOCAL ENABLEDELAYEDEXPANSION                                       && \
+        FOR /F "delims=?" %%U IN (gnatbind_objs.lst) DO                           \
           (                                                                       \
            ECHO $(foreach u,$(IMPLICIT_ALI_UNITS),$(OBJECT_DIRECTORY)/$(u).o)|    \
            %SystemRoot%\System32\findstr.exe >nul /C:"%%U"                     || \
@@ -1075,7 +1091,7 @@ else ifeq ($(BUILD_MODE),GPRbuild)
            (                                                                              \
             CALL REM                                                                    & \
             SET "U1=%%U" && SET "U2=!U1:\=/!" && SET "U3=!U2: =\ !"                    && \
-            ECHO !U3!>>gnatbind_objs.lst.tmp                                              \
+            (ECHO !U3!>>gnatbind_objs.lst.tmp)                                            \
            )                                                                              \
           )
 endif
@@ -1513,7 +1529,8 @@ endif
 .PHONY: rts
 rts: clean clean-configure
 ifeq ($(OSTYPE),cmd)
-	FOR %%M IN ($(foreach m,$(GCC_MULTILIBS),"$(m)")) DO                 \
+	@SETLOCAL ENABLEDELAYEDEXPANSION                                  && \
+        FOR %%M IN ($(foreach m,$(GCC_MULTILIBS),"$(m)")) DO                 \
           (                                                                  \
            ECHO.&& ECHO $(CPU): RTS = $(RTS_BUILD), multilib = %%M&& ECHO.&& \
            SET "MAKEFLAGS=" && SET "RTS=$(RTS_BUILD)"                     && \
