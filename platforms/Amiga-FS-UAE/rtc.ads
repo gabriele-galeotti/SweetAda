@@ -40,8 +40,8 @@ package RTC
       DATA   : Bits_4;
       Unused : Bits_4 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for DATA4_Type use record
       DATA   at 0 range 0 .. 3;
       Unused at 0 range 4 .. 7;
@@ -52,8 +52,8 @@ package RTC
       DATA   : Bits_3;
       Unused : Bits_5 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for DATA3_Type use record
       DATA   at 0 range 0 .. 2;
       Unused at 0 range 3 .. 7;
@@ -65,8 +65,8 @@ package RTC
       PM_AM  : Bits_1;
       Unused : Bits_5 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for H10_Type use record
       H      at 0 range 0 .. 1;
       PM_AM  at 0 range 2 .. 2;
@@ -78,8 +78,8 @@ package RTC
       D      : Bits_2;
       Unused : Bits_6 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for D10_Type use record
       D      at 0 range 0 .. 1;
       Unused at 0 range 2 .. 7;
@@ -90,8 +90,8 @@ package RTC
       M      : Bits_1;
       Unused : Bits_7 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for MO10_Type use record
       M      at 0 range 0 .. 0;
       Unused at 0 range 1 .. 7;
@@ -105,8 +105,8 @@ package RTC
       ADJ30    : Boolean;      -- 30-second adjustment
       Unused   : Bits_4  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for CD_Type use record
       HOLD     at 0 range 0 .. 0;
       BUSY     at 0 range 1 .. 1;
@@ -130,8 +130,8 @@ package RTC
       T          : Bits_2;       -- determine the period of the STD.P output in both interrupt and Fixed timing ...
       Unused     : Bits_4  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for CE_Type use record
       MASK       at 0 range 0 .. 0;
       ITRPT_STND at 0 range 1 .. 1;
@@ -151,8 +151,8 @@ package RTC
       TEST      : Boolean;      -- the input to the SECONDS counter comes from the counter/divider stage instead of ...
       Unused    : Bits_4  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for CF_Type use record
       REST      at 0 range 0 .. 0;
       STOP      at 0 range 1 .. 1;
@@ -179,7 +179,7 @@ package RTC
       CE   : CE_Type    with Volatile_Full_Access => True; -- Control Register E
       CF   : CF_Type    with Volatile_Full_Access => True; -- Control Register F
    end record
-      with Size => 16#3D# * 8;
+      with Object_Size => 16#3D# * 8;
    for MSM6242B_Type use record
       S1   at 16#00# range 0 .. 7;
       S10  at 16#04# range 0 .. 7;
