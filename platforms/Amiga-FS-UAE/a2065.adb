@@ -143,8 +143,16 @@ package body A2065
       -- configure A2065 address
       ZorroII.Setup (A2065_BASEADDRESS);
       -- log informations
-      Console.Print (Prefix => "A2065: Ethernet card @ ", Value => Unsigned_32'(A2065_BASEADDRESS), NL => True);
-      Console.Print (Prefix => "A2065: MAC address ", ByteArray => Byte_Array (A2065_MAC), Separator => ':', NL => True);
+      Console.Print (
+         Prefix => "A2065: Ethernet card @ ",
+         Value  => Unsigned_32'(A2065_BASEADDRESS),
+         NL     => True);
+      Console.Print (
+         Prefix    => "A2065: MAC address ",
+         ByteArray => Byte_Array (A2065_MAC),
+         Separator => ':',
+         NL        => True
+         );
       Success := True;
    end Probe;
 

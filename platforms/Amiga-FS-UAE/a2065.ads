@@ -38,11 +38,6 @@ package A2065
    use Interfaces;
    use Bits;
 
-   A2065_MAC : Ethernet.MAC_Address_Type;
-
-   Am7990_Descriptor             : aliased Am7990.Descriptor_Type := Am7990.DESCRIPTOR_INVALID;
-   Am7990_Descriptor_Initialized : Boolean := False;
-
    ----------------------------------------------------------------------------
    -- A2065 Zorro II Ethernet Card
    ----------------------------------------------------------------------------
@@ -52,6 +47,11 @@ package A2065
    A2065_CHIP_OFFSET : constant := 16#0000_4000#;
    A2065_RAM_OFFSET  : constant := 16#0000_8000#;
    A2065_RAM_SIZE    : constant := 16#0000_8000#;
+
+   A2065_MAC : Ethernet.MAC_Address_Type;
+
+   Am7990_Descriptor             : aliased Am7990.Descriptor_Type := Am7990.DESCRIPTOR_INVALID;
+   Am7990_Descriptor_Initialized : Boolean := False;
 
    ----------------------------------------------------------------------------
    -- subprograms
