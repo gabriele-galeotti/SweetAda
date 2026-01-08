@@ -258,6 +258,7 @@ _longmode:
                 movq    $kernel_stack,%rsp
                 movq    %rsp,%rbp
 
+#if defined(SSE_ENABLE)
                 //
                 // Enable SSE.
                 //
@@ -268,6 +269,7 @@ _longmode:
                 movq    %cr4,%rax
                 orw     $(3<<9),%ax             // set CR4.OSFXSR and CR4.OSXMMEXCPT
                 movq    %rax,%cr4
+#endif
 
 smpboot:
                 //
