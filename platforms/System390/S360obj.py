@@ -267,87 +267,89 @@ def write_end_record(fd, sequence):
     return
 
 ################################################################################
-# main()                                                                       #
-#                                                                              #
-################################################################################
-def main():
-    input_filename = None
-    output_filename = None
-    address = 0x18 # default
-    loader_filename = None
-    write_psw = False
-    # process arguments
-    argc = len(sys.argv)
-    argv_idx = 1
-    while argv_idx < argc:
-        if sys.argv[argv_idx] == '-a':
-            argv_idx += 1
-            address = int(sys.argv[argv_idx], 16)
-        elif sys.argv[argv_idx] == '-l':
-            argv_idx += 1
-            loader_filename = sys.argv[argv_idx]
-        elif sys.argv[argv_idx] == '-p':
-            write_psw = True
-        elif input_filename == None:
-            input_filename = sys.argv[argv_idx]
-        else:
-            output_filename = sys.argv[argv_idx]
-        argv_idx += 1
-    # open files
-    fd_input = open(input_filename, 'rb')
-    fd_output = open(output_filename, 'wb')
-    # prepend the loader
-    if loader_filename != None:
-        fd_loader = open(loader_filename, 'rb')
-        while True:
-            data = fd_loader.read(1)
-            if len(data) < 1:
-                break
-            file_write_byte(fd_output, data[0])
-        fd_loader.close()
-    # initialize sequence
-    sequence = 1
-    # create ESD record
-    filesize = os.stat(input_filename).st_size
-    write_esd_record(fd_output, sequence, address, filesize)
-    sequence += 1
-    # create TXT PSW record
-    if write_psw:
-        # create TXT record which contains PSW @ 0
-        # create S/390 31-bit PSW
-        address_bytes = library.u32_to_bebytes(address or 0x80000000)
-        psw = [0x00, PSW_FLAG, 0x00, 0x00]
-        psw.append(address_bytes[0])
-        psw.append(address_bytes[1])
-        psw.append(address_bytes[2])
-        psw.append(address_bytes[3])
-        write_txt_record(fd_output, sequence, 0, psw)
-        sequence += 1
-    # create TXT data records
-    while True:
-        data = fd_input.read(56)
-        data_length = len(data)
-        if data_length > 0:
-            write_txt_record(fd_output, sequence, address, data)
-            address += data_length
-            sequence += 1
-        if data_length < 56:
-            break
-    # create END record
-    write_end_record(fd_output, sequence)
-    # write out number of records written
-    print('{0:s}: number of records written: {1:d}'.format(SCRIPT_FILENAME, sequence))
-    fd_input.close()
-    fd_output.close()
-    return
-
-################################################################################
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
 
 PSW_FLAG = 0x0C
 
-if __name__ == '__main__':
-    main()
+input_filename = None
+output_filename = None
+address = 0x18 # default
+loader_filename = None
+write_psw = False
+
+# process arguments
+argc = len(sys.argv)
+argv_idx = 1
+while argv_idx < argc:
+    if sys.argv[argv_idx] == '-a':
+        argv_idx += 1
+        address = int(sys.argv[argv_idx], 16)
+    elif sys.argv[argv_idx] == '-l':
+        argv_idx += 1
+        loader_filename = sys.argv[argv_idx]
+    elif sys.argv[argv_idx] == '-p':
+        write_psw = True
+    elif input_filename == None:
+        input_filename = sys.argv[argv_idx]
+    else:
+        output_filename = sys.argv[argv_idx]
+    argv_idx += 1
+
+# open files
+fd_input = open(input_filename, 'rb')
+fd_output = open(output_filename, 'wb')
+
+# prepend the loader
+if loader_filename != None:
+    fd_loader = open(loader_filename, 'rb')
+    while True:
+        data = fd_loader.read(1)
+        if len(data) < 1:
+            break
+        file_write_byte(fd_output, data[0])
+    fd_loader.close()
+
+# initialize sequence
+sequence = 1
+
+# create ESD record
+filesize = os.stat(input_filename).st_size
+write_esd_record(fd_output, sequence, address, filesize)
+sequence += 1
+
+# create TXT PSW record
+if write_psw:
+    # create TXT record which contains PSW @ 0
+    # create S/390 31-bit PSW
+    address_bytes = library.u32_to_bebytes(address or 0x80000000)
+    psw = [0x00, PSW_FLAG, 0x00, 0x00]
+    psw.append(address_bytes[0])
+    psw.append(address_bytes[1])
+    psw.append(address_bytes[2])
+    psw.append(address_bytes[3])
+    write_txt_record(fd_output, sequence, 0, psw)
+    sequence += 1
+
+# create TXT data records
+while True:
+    data = fd_input.read(56)
+    data_length = len(data)
+    if data_length > 0:
+        write_txt_record(fd_output, sequence, address, data)
+        address += data_length
+        sequence += 1
+    if data_length < 56:
+        break
+
+# create END record
+write_end_record(fd_output, sequence)
+
+# write out number of records written
+print('{0:s}: number of records written: {1:d}'.format(SCRIPT_FILENAME, sequence))
+fd_input.close()
+fd_output.close()
+
+exit(0)
 
