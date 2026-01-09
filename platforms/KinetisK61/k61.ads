@@ -220,7 +220,7 @@ pragma Style_Checks (Off);
       Reserved5 : Bits_7  := 0;
    end record
       with Bit_Order            => Low_Order_First,
-           Size                 => 32,
+           Object_Size          => 32,
            Volatile_Full_Access => True;
    for PORTx_PCRn_Type use record
       PS        at 0 range  0 ..  0;
@@ -241,20 +241,20 @@ pragma Style_Checks (Off);
    end record;
 
    type PORTx_PCR_Type is array (0 .. 31) of PORTx_PCRn_Type
-      with Pack => True;
+      with Object_Size => 32 * 32;
 
    -- 11.5.2 Global Pin Control Low Register (PORTx_GPCLR)
 
    type Bitmap_16L is array (0 .. 15) of Boolean
       with Component_Size => 1,
-           Size           => 16;
+           Object_Size    => 16;
 
    type PORTx_GPCLR_Type is record
       GPWD : Bits_16    := 0;                 -- Global Pin Write Data
       GPWE : Bitmap_16L := [others => False]; -- Global Pin Write Enable
    end record
       with Bit_Order            => Low_Order_First,
-           Size                 => 32,
+           Object_Size          => 32,
            Volatile_Full_Access => True;
    for PORTx_GPCLR_Type use record
       GPWD at 0 range  0 .. 15;
@@ -265,14 +265,14 @@ pragma Style_Checks (Off);
 
    type Bitmap_16H is array (16 .. 31) of Boolean
       with Component_Size => 1,
-           Size           => 16;
+           Object_Size    => 16;
 
    type PORTx_GPCHR_Type is record
       GPWD : Bits_16    := 0;                 -- Global Pin Write Data
       GPWE : Bitmap_16H := [others => False]; -- Global Pin Write Enable
    end record
       with Bit_Order            => Low_Order_First,
-           Size                 => 32,
+           Object_Size          => 32,
            Volatile_Full_Access => True;
    for PORTx_GPCHR_Type use record
       GPWD at 0 range  0 .. 15;
@@ -285,7 +285,7 @@ pragma Style_Checks (Off);
       ISF : Bitmap_32; -- Interrupt Status Flag
    end record
       with Bit_Order            => Low_Order_First,
-           Size                 => 32,
+           Object_Size          => 32,
            Volatile_Full_Access => True;
    for PORTx_ISFR_Type use record
       ISF at 0 range 0 .. 31;
@@ -299,7 +299,7 @@ pragma Style_Checks (Off);
       GPCHR : PORTx_GPCHR_Type;
       ISFR  : PORTx_ISFR_Type;
    end record
-      with Size => 16#A4# * 8;
+      with Object_Size => 16#A4# * 8;
    for PORT_MUXCTRL_Type use record
       PCR   at 16#00# range 0 .. 32 * 32 - 1;
       GPCLR at 16#80# range 0 .. 31;
@@ -364,8 +364,8 @@ pragma Style_Checks (Off);
       USBSSTBY  : Boolean := False;         -- USB voltage regulator in standby mode during Stop, VLPS, LLS or VLLS
       USBREGEN  : Boolean := True;          -- USB voltage regulator enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_SOPT1_Type use record
       Reserved1 at 0 range  0 ..  5;
       Reserved2 at 0 range  6 ..  7;
@@ -395,8 +395,8 @@ pragma Style_Checks (Off);
       USSWE     : Boolean := False; -- USB voltage regulator stop standby write enable
       Reserved2 : Bits_5  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_SOPT1CFG_Type use record
       Reserved1 at 0 range  0 .. 23;
       URWE      at 0 range 24 .. 24;
@@ -493,8 +493,8 @@ pragma Style_Checks (Off);
       ESDHCSRC     : Bits_2 := ESDHCSRC_SYS;        -- ESDHC perclk source select
       NFCSRC       : Bits_2 := NFCSRC_MCGPLL0CLK;   -- NFC Flash clock source select
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_SOPT2_Type use record
       Reserved1    at 0 range  0 ..  1;
       USBHSRC      at 0 range  2 ..  3;
@@ -563,8 +563,8 @@ pragma Style_Checks (Off);
       FTM3TRG0SRC : Bits_1 := FTMxTRGySRC_CMPPDB; -- FlexTimer 3 hardware trigger 0 source select
       FTM3TRG1SRC : Bits_1 := FTMxTRGySRC_CMPPDB; -- FlexTimer 3 hardware trigger 1 source select
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_SOPT4_Type use record
       FTM0FLT0    at 0 range  0 ..  0;
       FTM0FLT1    at 0 range  1 ..  1;
@@ -614,8 +614,8 @@ pragma Style_Checks (Off);
       UART1RXSRC : Bits_2  := UARTxRXSRC_RXPIN; -- UART1 receive data source select
       Reserved   : Bits_24 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_SOPT5_Type use record
       UART0TXSRC at 0 range 0 ..  1;
       UART0RXSRC at 0 range 2 ..  3;
@@ -637,8 +637,8 @@ pragma Style_Checks (Off);
       PCR      : Bits_4  := 0; -- PCR
       Reserved : Bits_12 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_SOPT6_Type use record
       MCC      at 0 range  0 .. 15;
       PCR      at 0 range 16 .. 19;
@@ -694,8 +694,8 @@ pragma Style_Checks (Off);
       Reserved4     : Bits_2 := 0;
       ADC3ALTTRGEN  : Bits_1 := ADCxALTTRGEN_PDB;      -- ADC3 alternate trigger enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_SOPT7_Type use record
       ADC0TRGSEL    at 0 range  0 ..  3;
       ADC0PRETRGSEL at 0 range  4 ..  4;
@@ -743,8 +743,8 @@ pragma Style_Checks (Off);
       REVID     : Bits_4;  -- Device revision number
       Reserved5 : Bits_16;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_SDID_Type use record
       PINID     at 0 range  0 ..  3;
       FAMID     at 0 range  4 ..  6;
@@ -772,8 +772,8 @@ pragma Style_Checks (Off);
       UART5     : Boolean := False; -- UART5 clock gate control
       Reserved3 : Bits_20 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_SCGC1_Type use record
       Reserved1 at 0 range  0 ..  4;
       OSC1      at 0 range  5 ..  5;
@@ -798,8 +798,8 @@ pragma Style_Checks (Off);
       DAC1      : Boolean := False; -- 12BDAC1 clock gate control
       Reserved2 : Bits_18 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_SCGC2_Type use record
       ENET      at 0 range  0 ..  0;
       Reserved1 at 0 range  1 .. 11;
@@ -839,8 +839,8 @@ pragma Style_Checks (Off);
       ADC3       : Boolean := False; -- ADC3 clock gate control
       Reserved10 : Bits_3  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_SCGC3_Type use record
       RNGA       at 0 range  0 ..  0;
       Reserved1  at 0 range  1 ..  3;
@@ -897,8 +897,8 @@ pragma Style_Checks (Off);
       Reserved9  : Bits_1  := 0;
       Reserved10 : Bits_1  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_SCGC4_Type use record
       Reserved1  at 0 range  0 ..  0;
       EWM        at 0 range  1 ..  1;
@@ -952,8 +952,8 @@ pragma Style_Checks (Off);
       Reserved7    : Bits_1  := 1;
       Reserved8    : Bits_13 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_SCGC5_Type use record
       LPTIMER      at 0 range  0 ..  0;
       Reserved1    at 0 range  1 ..  1;
@@ -1010,8 +1010,8 @@ pragma Style_Checks (Off);
       Reserved8 : Bits_1  := 1;
       Reserved9 : Bits_1  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_SCGC6_Type use record
       Reserved1 at 0 range  0 ..  0;
       DMAMUX0   at 0 range  1 ..  1;
@@ -1055,8 +1055,8 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_1  := 0;
       Reserved2 : Bits_28 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_SCGC7_Type use record
       FLEXBUS   at 0 range  0 ..  0;
       DMA       at 0 range  1 ..  1;
@@ -1097,8 +1097,8 @@ pragma Style_Checks (Off);
       OUTDIV2  : Bits_4  := OUTDIVx_DIV1; -- Clock 2 Output Divider value
       OUTDIV1  : Bits_4  := OUTDIVx_DIV1; -- Clock 1 Output Divider value
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_CLKDIV1_Type use record
       Reserved at 0 range  0 .. 15;
       OUTDIV4  at 0 range 16 .. 19;
@@ -1123,8 +1123,8 @@ pragma Style_Checks (Off);
       USBHSDIV  : Bits_3  := 0; -- USB HS clock divider divisor
       Reserved2 : Bits_20 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_CLKDIV2_Type use record
       USBFSFRAC at 0 range  0 ..  0;
       USBFSDIV  at 0 range  1 ..  3;
@@ -1222,8 +1222,8 @@ pragma Style_Checks (Off);
       PFSIZE    : Bits_4  := PFSIZE_512k16p; -- Program flash size
       NVMSIZE   : Bits_4  := NVMSIZE_0k;     -- FlexNVM size
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_FCFG1_Type use record
       FTFDIS    at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  7;
@@ -1252,8 +1252,8 @@ pragma Style_Checks (Off);
       Reserved3 : Bits_1  := 0;
       SWAPPFLSH : Boolean := False; -- Swap program flash
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_FCFG2_Type use record
       Reserved1 at 0 range  0 .. 15;
       MAXADDR23 at 0 range 16 .. 21;
@@ -1311,8 +1311,8 @@ pragma Style_Checks (Off);
       NFCFRAC   : Bits_3  := 0;      -- NFC clock divider fraction
       NFCDIV    : Bits_5  := 0;      -- NFC clock divider divisor
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_CLKDIV4_Type use record
       TRACEFRAC at 0 range  0 ..  0;
       TRACEDIV  at 0 range  1 ..  3;
@@ -1354,8 +1354,8 @@ pragma Style_Checks (Off);
       Reserved5   : Bits_1  := 0;
       TRACECLKDIS : Boolean := False;          -- Trace clock disable.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SIM_MCR_Type use record
       DDRSREN     at 0 range  0 ..  0;
       DDRS        at 0 range  1 ..  1;
@@ -1396,8 +1396,8 @@ pragma Style_Checks (Off);
       PIN      : Boolean; -- External Reset Pin
       POR      : Boolean; -- Power-On Reset
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for RCM_SRS0_Type use record
       WAKEUP   at 0 range 0 .. 0;
       LVD      at 0 range 1 .. 1;
@@ -1426,8 +1426,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_1;
       TAMPER   : Boolean; -- Tamper detect
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for RCM_SRS1_Type use record
       JTAG     at 0 range 0 .. 0;
       LOCKUP   at 0 range 1 .. 1;
@@ -1460,8 +1460,8 @@ pragma Style_Checks (Off);
       RSTFLTSS  : Bits_1 := RSTFLTSS_DISABLED;  -- Reset Pin Filter Select in Stop Mode
       Reserved  : Bits_5 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for RCM_RPFC_Type use record
       RSTFLTSRW at 0 range 0 .. 1;
       RSTFLTSS  at 0 range 2 .. 2;
@@ -1513,8 +1513,8 @@ pragma Style_Checks (Off);
       RSTFLTSEL : Bits_5 := RSTFLTSEL_1; -- Reset Pin Filter Bus Clock Select
       Reserved  : Bits_3 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for RCM_RPFW_Type use record
       RSTFLTSEL at 0 range 0 .. 4;
       Reserved  at 0 range 5 .. 7;
@@ -1536,8 +1536,8 @@ pragma Style_Checks (Off);
       EZP_MS    : Bits_1; -- EZP_MS_B pin state
       Reserved2 : Bits_6;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for RCM_MR_Type use record
       Reserved1 at 0 range 0 .. 0;
       EZP_MS    at 0 range 1 .. 1;
@@ -1595,8 +1595,8 @@ pragma Style_Checks (Off);
       ASC      : Bitmap_8; -- Each bit in the ASC field indicates whether there is a corresponding connection to the crossbar switch's slave input port.
       Reserved : Bits_8;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for MCM_PLASC_Type use record
       ASC      at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 15;
@@ -1614,8 +1614,8 @@ pragma Style_Checks (Off);
       AMC      : Bitmap_8; -- Each bit in the AMC field indicates whether there is a corresponding connection to the AXBS master input port.
       Reserved : Bits_8;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for MCM_PLAMC_Type use record
       AMC      at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 15;
@@ -1657,8 +1657,8 @@ pragma Style_Checks (Off);
       SRAMLWP   : Boolean := False;        -- SRAM_L write protect
       Reserved6 : Bits_1  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for MCM_CR_Type use record
       Reserved1 at 0 range  0 ..  8;
       Reserved2 at 0 range  9 ..  9;
@@ -1706,8 +1706,8 @@ pragma Style_Checks (Off);
       Reserved6 : Bits_2  := 0;
       FIDCE     : Boolean := False; -- FPU input denormal interrupt enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for MCM_ISCR_Type use record
       Reserved1 at 0 range  0 ..  0;
       IRQ       at 0 range  1 ..  1;
@@ -1755,8 +1755,8 @@ pragma Style_Checks (Off);
       ITDIS    : Boolean := False;     -- ITM-To-TPIU Disable
       Reserved : Bits_26 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for MCM_ETBCC_Type use record
       CNTEN    at 0 range 0 ..  0;
       RSPT     at 0 range 1 ..  2;
@@ -1778,8 +1778,8 @@ pragma Style_Checks (Off);
       RELOAD   : Bits_11 := 0; -- Byte Count Reload Value
       Reserved : Bits_21 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for MCM_ETBRL_Type use record
       RELOAD   at 0 range  0 .. 10;
       Reserved at 0 range 11 .. 31;
@@ -1797,8 +1797,8 @@ pragma Style_Checks (Off);
       COUNTER  : Bits_11; -- Byte Count Counter Value
       Reserved : Bits_21;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for MCM_ETBCNT_Type use record
       COUNTER  at 0 range  0 .. 10;
       Reserved at 0 range 11 .. 31;
@@ -1815,8 +1815,8 @@ pragma Style_Checks (Off);
    type MCM_FADR_Type is record
       ADDRESS : Unsigned_32; -- Fault address
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for MCM_FADR_Type use record
       ADDRESS at 0 range 0 .. 31;
    end record;
@@ -1854,8 +1854,8 @@ pragma Style_Checks (Off);
       Reserved3 : Bits_19;
       BEOVR     : Boolean; -- Bus error overrun
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for MCM_FATR_Type use record
       BEDA      at 0 range  0 ..  0;
       BEMD      at 0 range  1 ..  1;
@@ -1879,8 +1879,8 @@ pragma Style_Checks (Off);
    type MCM_FDR_Type is record
       DATA : Unsigned_32; -- Fault data
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for MCM_FDR_Type use record
       DATA at 0 range 0 .. 31;
    end record;
@@ -1897,8 +1897,8 @@ pragma Style_Checks (Off);
       PID      : Bits_8  := 0; -- M0_PID And M1_PID For MPU
       Reserved : Bits_24 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for MCM_PID_Type use record
       PID      at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
@@ -2003,8 +2003,8 @@ pragma Style_Checks (Off);
       WDOGEN   : Boolean;      -- Enables or disables the WDOG’s operation.
       Reserved : Bits_15 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for WDOG_STCTRLH_Type use record
       WDOGEN   at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 15;
@@ -2059,8 +2059,8 @@ pragma Style_Checks (Off);
       FRDIV    : Bits_3  := FRDIV_1_32;    -- FLL External Reference Divider
       CLKS     : Bits_2  := CLKS_FLLPLLCS; -- Clock Source Select
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for MCG_C1_Type use record
       IREFSTEN at 0 range 0 .. 0;
       IRCLKEN  at 0 range 1 .. 1;
@@ -2100,8 +2100,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_1  := 0;
       LOCRE0   : Bits_1  := LOCRE0_RES; -- Loss of Clock Reset Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for MCG_C2_Type use record
       IRCS     at 0 range 0 .. 0;
       LP       at 0 range 1 .. 1;
@@ -2123,8 +2123,8 @@ pragma Style_Checks (Off);
    type MCG_C3_Type is record
       SCTRIM : Bits_8; -- Slow Internal Reference Clock Trim Setting
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for MCG_C3_Type use record
       SCTRIM at 0 range 0 .. 7;
    end record;
@@ -2153,8 +2153,8 @@ pragma Style_Checks (Off);
       DRST_DRS : Bits_2  := DRST_DRS_1; -- DCO Range Select
       DMX32    : Boolean := False;      -- DCO Maximum Frequency with 32.768 kHz Reference
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for MCG_C4_Type use record
       SCFTRIM  at 0 range 0 .. 0;
       FCTRIM   at 0 range 1 .. 4;
@@ -2189,8 +2189,8 @@ pragma Style_Checks (Off);
       PLLCLKEN0  : Boolean := False;           -- PLL Clock Enable
       PLLREFSEL0 : Bits_1  := PLLREFSEL0_OSC0; -- PLL0 External Reference Select
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for MCG_C5_Type use record
       PRDIV0     at 0 range 0 .. 2;
       Reserved   at 0 range 3 .. 4;
@@ -2249,8 +2249,8 @@ pragma Style_Checks (Off);
       PLLS   : Bits_1  := PLLS_FLL;  -- PLL Select
       LOLIE0 : Boolean := False;     -- Loss of Lock Interrrupt Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for MCG_C6_Type use record
       VDIV0  at 0 range 0 .. 4;
       CME0   at 0 range 5 .. 5;
@@ -2289,8 +2289,8 @@ pragma Style_Checks (Off);
       LOCK0    : Boolean; -- Lock Status
       LOLS0    : Boolean; -- Loss of Lock Status
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for MCG_S_Type use record
       IRCST    at 0 range 0 .. 0;
       OSCINIT0 at 0 range 1 .. 1;
@@ -2329,8 +2329,8 @@ pragma Style_Checks (Off);
       ATMS     : Bits_1  := ATMS_32k;    -- Automatic Trim Machine Select
       ATME     : Boolean := False;       -- Automatic Trim Machine Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for MCG_SC_Type use record
       LOCS0    at 0 range 0 .. 0;
       FCRDIV   at 0 range 1 .. 3;
@@ -2373,8 +2373,8 @@ pragma Style_Checks (Off);
       Reserved2 : Bits_4 := 0;
       Reserved3 : Bits_2 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for MCG_C7_Type use record
       OSCSEL    at 0 range 0 .. 0;
       Reserved1 at 0 range 1 .. 1;
@@ -2400,8 +2400,8 @@ pragma Style_Checks (Off);
       Reserved2 : Bits_1  := 0;
       LOCRE1    : Bits_1  := LOCRE1_RES; -- Loss of Clock Reset Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for MCG_C8_Type use record
       LOCS1     at 0 range 0 .. 0;
       Reserved1 at 0 range 1 .. 4;
@@ -2437,8 +2437,8 @@ pragma Style_Checks (Off);
       Reserved2 : Bits_1  := 0;
       LOCRE2    : Bits_1  := LOCRE2_RES; -- OSC1 Loss of Clock Reset Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for MCG_C10_Type use record
       Reserved1 at 0 range 0 .. 1;
       EREFS1    at 0 range 2 .. 2;
@@ -2479,8 +2479,8 @@ pragma Style_Checks (Off);
       PLLCLKEN1  : Boolean := False;           -- PLL1 Clock Enable
       PLLREFSEL1 : Bits_1  := PLLREFSEL1_OSC0; -- PLL1 External Reference Select
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for MCG_C11_Type use record
       PRDIV1     at 0 range 0 .. 2;
       Reserved   at 0 range 3 .. 3;
@@ -2537,8 +2537,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_1  := 0;
       LOLIE1   : Boolean := False;     -- PLL1 Loss of Lock Interrupt Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for MCG_C12_Type use record
       VDIV1    at 0 range 0 .. 4;
       CME2     at 0 range 5 .. 5;
@@ -2566,8 +2566,8 @@ pragma Style_Checks (Off);
       LOCK1     : Boolean; -- Lock1 Status
       LOLS1     : Boolean; -- Loss of Lock2 Status
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for MCG_S2_Type use record
       LOCS2     at 0 range 0 .. 0;
       OSCINIT1  at 0 range 1 .. 1;
@@ -2600,8 +2600,8 @@ pragma Style_Checks (Off);
       Reserved2 : Bits_1  := 0;
       ERCLKEN   : Boolean := False; -- External Reference Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for OSCx_CR_Type use record
       SC16P     at 0 range 0 .. 0;
       SC8P      at 0 range 1 .. 1;
@@ -2657,8 +2657,8 @@ pragma Style_Checks (Off);
       Reserved4 : Bits_3  := 0;
       GO        : Boolean := False; -- Initiate Cache Command
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for LMEM_PCCCR_Type use record
       ENCACHE   at 0 range  0 ..  0;
       ENWRBUF   at 0 range  1 ..  1;
@@ -2719,8 +2719,8 @@ pragma Style_Checks (Off);
       LACC      : Bits_1  := LACC_READ;       -- Line access type
       Reserved6 : Bits_4  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for LMEM_PCCLCR_Type use record
       LGO       at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  1;
@@ -2753,8 +2753,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_1  := 0;
       PHYADDR  : Bits_30 := 0;     -- Physical Address
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for LMEM_PCCSAR_Type use record
       LGO      at 0 range 0 ..  0;
       Reserved at 0 range 1 ..  1;
@@ -2772,8 +2772,8 @@ pragma Style_Checks (Off);
    type LMEM_PCCCVR_Type is record
       DATA : Unsigned_32; -- Cache read/write Data
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for LMEM_PCCCVR_Type use record
       DATA at 0 range 0 .. 31;
    end record;
@@ -2804,8 +2804,8 @@ pragma Style_Checks (Off);
       R1  : Cache_Mode_Type := CACHE_MODE_WTHROUGH; -- Region 1 mode
       R0  : Cache_Mode_Type := CACHE_MODE_WTHROUGH; -- Region 0 mode
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for LMEM_PCCRMR_Type use record
       R15 at 0 range  0 ..  1;
       R14 at 0 range  2 ..  3;
@@ -2846,8 +2846,8 @@ pragma Style_Checks (Off);
       Reserved4 : Bits_3  := 0;
       GO        : Boolean := False; -- Initiate Cache Command
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for LMEM_PSCCR_Type use record
       ENCACHE   at 0 range  0 ..  0;
       ENWRBUF   at 0 range  1 ..  1;
@@ -2895,8 +2895,8 @@ pragma Style_Checks (Off);
       LACC      : Bits_1  := LACC_READ;       -- Line access type
       Reserved6 : Bits_4  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for LMEM_PSCLCR_Type use record
       LGO       at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  1;
@@ -2929,8 +2929,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_1  := 0;
       PHYADDR  : Bits_30 := 0;     -- Physical Address
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for LMEM_PSCSAR_Type use record
       LGO      at 0 range 0 ..  0;
       Reserved at 0 range 1 ..  1;
@@ -2948,8 +2948,8 @@ pragma Style_Checks (Off);
    type LMEM_PSCCVR_Type is record
       DATA : Unsigned_32; -- Cache read/write Data
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for LMEM_PSCCVR_Type use record
       DATA at 0 range 0 .. 31;
    end record;
@@ -2980,8 +2980,8 @@ pragma Style_Checks (Off);
       R1  : Cache_Mode_Type := CACHE_MODE_WTHROUGH; -- Region 1 mode
       R0  : Cache_Mode_Type := CACHE_MODE_WTHROUGH; -- Region 0 mode
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for LMEM_PSCRMR_Type use record
       R15 at 0 range  0 ..  1;
       R14 at 0 range  2 ..  3;
@@ -3039,8 +3039,8 @@ pragma Style_Checks (Off);
       M7PFD    : Boolean := True;      -- Master 0 Prefetch Disable
       Reserved : Bits_8  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for FMC_PFAPR_Type use record
       M0AP     at 0 range  0 ..  1;
       M1AP     at 0 range  2 ..  3;
@@ -3121,8 +3121,8 @@ pragma Style_Checks (Off);
       CLCK_WAY_3 : Boolean := False;     -- Cache Lock Way 3
       B01RWSC    : Bits_4  := B01RWSC_4; -- Bank 0-1 Read Wait State Control
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for FMC_PFB01CR_Type use record
       B01SEBE    at 0 range  0 ..  0;
       B01IPE     at 0 range  1 ..  1;
@@ -3188,8 +3188,8 @@ pragma Style_Checks (Off);
       Reserved4 : Bits_9  := 0;
       B23RWSC   : Bits_4  := B23RWSC_4; -- Bank 2-3 Read Wait State Control
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for FMC_PFB23CR_Type use record
       B23SEBE   at 0 range  0 ..  0;
       B23IPE    at 0 range  1 ..  1;
@@ -3299,8 +3299,8 @@ pragma Style_Checks (Off);
       Reserved2 : Bits_4  := 0;
       VERSION   : Bits_16 := VERSION_VERSION; -- Version
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR00_Type use record
       START     at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  7;
@@ -3325,8 +3325,8 @@ pragma Style_Checks (Off);
       CSMAX     : Bits_2  := 2#10#;    -- Chip Select Maximum
       Reserved3 : Bits_14 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR01_Type use record
       MAXROW    at 0 range  0 ..  4;
       Reserved1 at 0 range  5 ..  7;
@@ -3349,8 +3349,8 @@ pragma Style_Checks (Off);
       INITAREF : Bits_4  := 0; -- Initialization Auto-Refresh
       Reserved : Bits_4  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR02_Type use record
       TINIT    at 0 range  0 .. 23;
       INITAREF at 0 range 24 .. 27;
@@ -3375,8 +3375,8 @@ pragma Style_Checks (Off);
       TCCD      : Bits_5 := 0; -- Time CAS-to-CAS Delay
       Reserved4 : Bits_3 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR03_Type use record
       LATLIN    at 0 range  0 ..  3;
       Reserved1 at 0 range  4 ..  7;
@@ -3405,8 +3405,8 @@ pragma Style_Checks (Off);
       Reserved3 : Bits_2 := 0;
       TRASMIN   : Bits_8 := 0; -- Time RAS Minimum
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR04_Type use record
       TBINT     at 0 range  0 ..  2;
       Reserved1 at 0 range  3 ..  7;
@@ -3435,8 +3435,8 @@ pragma Style_Checks (Off);
       TMRD      : Bits_5 := 0; -- DRAM TMRD parameter in cycles.
       Reserved4 : Bits_3 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR05_Type use record
       TWTR      at 0 range  0 ..  3;
       Reserved1 at 0 range  4 ..  7;
@@ -3462,8 +3462,8 @@ pragma Style_Checks (Off);
       INTWBR   : Boolean := False; -- Interrupt Write Burst
       Reserved : Bits_7  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR06_Type use record
       TMOD     at 0 range  0 ..  7;
       TRASMAX  at 0 range  8 .. 23;
@@ -3489,8 +3489,8 @@ pragma Style_Checks (Off);
       CCAPEN    : Boolean := False; -- Concurrent Auto-Precharge Enable
       Reserved4 : Bits_7  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR07_Type use record
       CLKPW     at 0 range  0 ..  2;
       Reserved1 at 0 range  3 ..  7;
@@ -3519,8 +3519,8 @@ pragma Style_Checks (Off);
       TDAL      : Bits_5  := 0;     -- Defines the auto-precharge write recovery time when auto-precharge is enabled (CR01[AP] is set), in cycles.
       Reserved3 : Bits_3  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR08_Type use record
       TRAS      at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  7;
@@ -3546,8 +3546,8 @@ pragma Style_Checks (Off);
       BSTLEN    : Bits_3  := 0;     -- Burst Length
       Reserved2 : Bits_5  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR09_Type use record
       TDLL      at 0 range  0 .. 15;
       NOCMD     at 0 range 16 .. 16;
@@ -3571,8 +3571,8 @@ pragma Style_Checks (Off);
       TRPAB     : Bits_4  := 0; -- TRP All Bank
       Reserved2 : Bits_4  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR10_Type use record
       TFAW      at 0 range  0 ..  5;
       Reserved1 at 0 range  6 ..  7;
@@ -3602,8 +3602,8 @@ pragma Style_Checks (Off);
       TREFEN    : Boolean := False;                  -- Enables refresh commands.
       Reserved4 : Bits_7  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR11_Type use record
       REGDIMM   at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  7;
@@ -3629,8 +3629,8 @@ pragma Style_Checks (Off);
       TREF      : Bits_14 := 0; -- Time Refresh
       Reserved2 : Bits_2  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR12_Type use record
       TRFC      at 0 range  0 ..  9;
       Reserved1 at 0 range 10 .. 15;
@@ -3652,8 +3652,8 @@ pragma Style_Checks (Off);
       PD        : Boolean := False; -- Power Down
       Reserved3 : Bits_15 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR13_Type use record
       Reserved1 at 0 range  0 .. 13;
       Reserved2 at 0 range 14 .. 15;
@@ -3673,8 +3673,8 @@ pragma Style_Checks (Off);
       TPDEX : Bits_16 := 0; -- Time Power Down Exit
       TXSR  : Bits_16 := 0; -- Time Exit Self Refresh
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR14_Type use record
       TPDEX at 0 range  0 .. 15;
       TXSR  at 0 range 16 .. 31;
@@ -3695,8 +3695,8 @@ pragma Style_Checks (Off);
       PUREF     : Boolean := False; -- Power Up Refresh
       Reserved2 : Bits_7  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR15_Type use record
       TXSNR     at 0 range  0 .. 15;
       SREF      at 0 range 16 .. 16;
@@ -3725,8 +3725,8 @@ pragma Style_Checks (Off);
       LPCTRL_MODE1 : Boolean := False; -- Memory power-down mode (mode 1)
       Reserved3    : Bits_11 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR16_Type use record
       QKREF        at 0 range  0 ..  0;
       Reserved1    at 0 range  1 ..  7;
@@ -3752,8 +3752,8 @@ pragma Style_Checks (Off);
       LPPDCNT : Bits_16 := 0; -- Low Power Power Down Count
       LPRFCNT : Bits_16 := 0; -- Low Power Refresh Count
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR17_Type use record
       LPPDCNT at 0 range  0 .. 15;
       LPRFCNT at 0 range 16 .. 31;
@@ -3772,8 +3772,8 @@ pragma Style_Checks (Off);
       LPAUTO   : Bits_5  := 0; -- Low Power Auto
       Reserved : Bits_11 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR18_Type use record
       LPEXTCNT at 0 range  0 .. 15;
       LPAUTO   at 0 range 16 .. 20;
@@ -3792,8 +3792,8 @@ pragma Style_Checks (Off);
       LPINTCNT : Bits_16 := 0; -- Low Power Interval Count
       LPRFHOLD : Bits_16 := 0; -- Low Power Refresh Hold
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR19_Type use record
       LPINTCNT at 0 range  0 .. 15;
       LPRFHOLD at 0 range 16 .. 31;
@@ -3822,8 +3822,8 @@ pragma Style_Checks (Off);
       WRMD      : Boolean := False;    -- Write Mode Register
       Reserved4 : Bits_7  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR20_Type use record
       LPRE      at 0 range  0 ..  1;
       Reserved1 at 0 range  2 ..  7;
@@ -3847,8 +3847,8 @@ pragma Style_Checks (Off);
       MR0DAT0 : Bits_16 := 0; -- Data to program into memory mode register 0 for chip select .
       MR1DAT0 : Bits_16 := 0; -- Data to program into memory mode register 1 for chip select .
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR21_Type use record
       MR0DAT0 at 0 range  0 .. 15;
       MR1DAT0 at 0 range 16 .. 31;
@@ -3866,8 +3866,8 @@ pragma Style_Checks (Off);
       MR2DAT0 : Bits_16 := 0; -- Data to program into memory mode register 2 for chip select .
       MR3DAT0 : Bits_16 := 0; -- Data to program into memory mode register 3 for chip select .
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR22_Type use record
       MR2DAT0 at 0 range  0 .. 15;
       MR3DAT0 at 0 range 16 .. 31;
@@ -3885,8 +3885,8 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_16 := 0;
       Reserved2 : Bits_16 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR23_Type use record
       Reserved1 at 0 range  0 .. 15;
       Reserved2 at 0 range 16 .. 31;
@@ -3904,8 +3904,8 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_16 := 0;
       Reserved2 : Bits_16 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR24_Type use record
       Reserved1 at 0 range  0 .. 15;
       Reserved2 at 0 range 16 .. 31;
@@ -3932,8 +3932,8 @@ pragma Style_Checks (Off);
       APREBIT   : Bits_4 := 0;      -- Auto Precharge Bit
       Reserved4 : Bits_4 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR25_Type use record
       BNK8      at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  7;
@@ -3961,8 +3961,8 @@ pragma Style_Checks (Off);
       BNKSPT    : Boolean := False; -- Bank Split enable
       Reserved2 : Bits_7  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR26_Type use record
       AGECNT    at 0 range  0 ..  7;
       CMDAGE    at 0 range  8 .. 15;
@@ -3990,8 +3990,8 @@ pragma Style_Checks (Off);
       SWPEN     : Boolean := False; -- Swap Enable
       Reserved4 : Bits_7  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR27_Type use record
       PLEN      at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  7;
@@ -4027,8 +4027,8 @@ pragma Style_Checks (Off);
       CMDLATR   : Boolean := False;         -- Command Latency Reduction Enable
       Reserved4 : Bits_7  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR28_Type use record
       CSMAP     at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  7;
@@ -4061,8 +4061,8 @@ pragma Style_Checks (Off);
       RESYNC    : Boolean := False;       -- Resyncronize
       Reserved4 : Bits_7  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR29_Type use record
       WRLATR    at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  7;
@@ -4104,8 +4104,8 @@ pragma Style_Checks (Off);
       INTACK_DC  : Boolean := False; -- ACK for INTSTAT_DC
       INTACK_UD  : Boolean := False; -- ACK for INTSTAT_UD
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR30_Type use record
       RSYNCRF    at 0 range  0 ..  0;
       Reserved1  at 0 range  1 ..  7;
@@ -4149,8 +4149,8 @@ pragma Style_Checks (Off);
       INTMASK    : Boolean := False; -- MASK for INTSTAT
       Reserved   : Bits_23 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR31_Type use record
       INTMASK_SA at 0 range 0 ..  0;
       INTMASK_MA at 0 range 1 ..  1;
@@ -4175,8 +4175,8 @@ pragma Style_Checks (Off);
    type DDR_CR32_Type is record
       OORAD : Unsigned_32 := 0; -- Out Of Range Address
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR32_Type use record
       OORAD at 0 range 0 .. 31;
    end record;
@@ -4197,8 +4197,8 @@ pragma Style_Checks (Off);
       OORID     : Bits_2  := 0; -- Out Of Range source ID
       Reserved3 : Bits_6  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR33_Type use record
       OORLEN    at 0 range  0 ..  9;
       Reserved1 at 0 range 10 .. 15;
@@ -4232,8 +4232,8 @@ pragma Style_Checks (Off);
       Reserved5 : Bits_2 := 0;
       Reserved6 : Bits_6 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR34_Type use record
       ODTRDC    at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  7;
@@ -4259,8 +4259,8 @@ pragma Style_Checks (Off);
       W2RSMCS   : Bits_4  := 0; -- Write To Read Same Chip Select
       Reserved2 : Bits_20 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR35_Type use record
       R2WSMCS   at 0 range  0 ..  3;
       Reserved1 at 0 range  4 ..  7;
@@ -4280,8 +4280,8 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_16 := 0;
       Reserved2 : Bits_16 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR36_Type use record
       Reserved1 at 0 range  0 .. 15;
       Reserved2 at 0 range 16 .. 31;
@@ -4305,8 +4305,8 @@ pragma Style_Checks (Off);
       W2WSAME   : Bits_3 := 0; -- W2W Same chip select delay
       Reserved4 : Bits_5 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR37_Type use record
       R2RSAME   at 0 range  0 ..  2;
       Reserved1 at 0 range  3 ..  7;
@@ -4342,8 +4342,8 @@ pragma Style_Checks (Off);
       P0WRCNT    : Bits_11 := 0;              -- Port 0 Write Count
       Reserved3  : Bits_5  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR38_Type use record
       PDNCS_NADJ at 0 range  0 ..  3;
       PDNCS_MODE at 0 range  4 ..  4;
@@ -4371,8 +4371,8 @@ pragma Style_Checks (Off);
       WP0        : Bits_2  := 0; -- Port 0 Write command Priority
       Reserved3  : Bits_6  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR39_Type use record
       P0RDCNT   at 0 range  0 .. 10;
       Reserved1 at 0 range 11 .. 15;
@@ -4401,8 +4401,8 @@ pragma Style_Checks (Off);
       P1WRCNT   : Bits_11 := 0;           -- Port 1 Write command Count
       Reserved2 : Bits_13 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR40_Type use record
       P0TYP     at 0 range  0 ..  1;
       Reserved1 at 0 range  2 ..  7;
@@ -4426,8 +4426,8 @@ pragma Style_Checks (Off);
       WP1        : Bits_2  := 0; -- Port 1 Write command Priority
       Reserved3  : Bits_6  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR41_Type use record
       P1RDCNT   at 0 range  0 .. 10;
       Reserved1 at 0 range 11 .. 15;
@@ -4456,8 +4456,8 @@ pragma Style_Checks (Off);
       P2WRCNT   : Bits_11 := 0;           -- Port 2 Write command Count
       Reserved2 : Bits_13 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR42_Type use record
       P1TYP     at 0 range  0 ..  1;
       Reserved1 at 0 range  2 ..  7;
@@ -4481,8 +4481,8 @@ pragma Style_Checks (Off);
       WP2        : Bits_2  := 0; -- Port 2 Write command Priority
       Reserved3  : Bits_6  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR43_Type use record
       P2RDCNT   at 0 range  0 .. 10;
       Reserved1 at 0 range 11 .. 15;
@@ -4524,8 +4524,8 @@ pragma Style_Checks (Off);
       WRRERR_PORDNSEQ : Boolean := False;             -- The port ordering parameter values for paired ports is not sequential.
       Reserved4       : Bits_4  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR44_Type use record
       P2TYP           at 0 range  0 ..  1;
       Reserved1       at 0 range  2 ..  7;
@@ -4558,8 +4558,8 @@ pragma Style_Checks (Off);
       P0PRI3    : Bits_4 := 0; -- Port 0 Priority 3 commands
       Reserved4 : Bits_4 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR45_Type use record
       P0PRI0    at 0 range  0 ..  3;
       Reserved1 at 0 range  4 ..  7;
@@ -4587,8 +4587,8 @@ pragma Style_Checks (Off);
       P1PRI0    : Bits_4  := 0; -- Port 1 Priority 0 commands
       Reserved3 : Bits_4  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR46_Type use record
       P0ORD     at 0 range  0 ..  1;
       Reserved1 at 0 range  2 ..  7;
@@ -4616,8 +4616,8 @@ pragma Style_Checks (Off);
       P1ORD     : Bits_2 := 0; -- Port 1 Order
       Reserved4 : Bits_6 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR47_Type use record
       P1PRI1    at 0 range  0 ..  3;
       Reserved1 at 0 range  4 ..  7;
@@ -4645,8 +4645,8 @@ pragma Style_Checks (Off);
       P2PRI1    : Bits_4  := 0; -- Port 2 Priority 1 commands
       Reserved3 : Bits_4  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR48_Type use record
       P1PRIRLX  at 0 range  0 ..  9;
       Reserved1 at 0 range 10 .. 15;
@@ -4672,8 +4672,8 @@ pragma Style_Checks (Off);
       P2ORD     : Bits_2  := 0; -- Port 2 Order
       Reserved3 : Bits_14 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR49_Type use record
       P2PRI2    at 0 range  0 ..  3;
       Reserved1 at 0 range  4 ..  7;
@@ -4697,8 +4697,8 @@ pragma Style_Checks (Off);
       CLKSTATUS : Boolean := False; -- Clock Status
       Reserved2 : Bits_15 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR50_Type use record
       P2PRIRLX  at 0 range  0 ..  9;
       Reserved1 at 0 range 10 .. 15;
@@ -4720,8 +4720,8 @@ pragma Style_Checks (Off);
       PHYWRLAT  : Bits_4  := 0; -- PHY Write Latency
       Reserved  : Bits_4  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR51_Type use record
       DLLRSTDLY at 0 range  0 .. 15;
       DLLRADLY  at 0 range 16 .. 23;
@@ -4747,8 +4747,8 @@ pragma Style_Checks (Off);
       RDDTENBAS : Bits_4 := 0; -- Read Data Enable Base
       Reserved4 : Bits_4 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR52_Type use record
       PYWRLTBS  at 0 range  0 ..  3;
       Reserved1 at 0 range  4 ..  7;
@@ -4777,8 +4777,8 @@ pragma Style_Checks (Off);
       Reserved5 : Bits_14 := 0;
       Reserved6 : Bits_2  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR53_Type use record
       CLKDISCS  at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  1;
@@ -4803,8 +4803,8 @@ pragma Style_Checks (Off);
       Reserved3 : Bits_14 := 0;
       Reserved4 : Bits_2  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR54_Type use record
       Reserved1 at 0 range  0 .. 13;
       Reserved2 at 0 range 14 .. 15;
@@ -4826,8 +4826,8 @@ pragma Style_Checks (Off);
       Reserved3 : Bits_14 := 0;
       Reserved4 : Bits_2  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR55_Type use record
       Reserved1 at 0 range  0 .. 13;
       Reserved2 at 0 range 14 .. 15;
@@ -4851,8 +4851,8 @@ pragma Style_Checks (Off);
       WRLATADJ  : Bits_4  := 0; -- Write Latency Adjust
       Reserved4 : Bits_4  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR56_Type use record
       Reserved1 at 0 range  0 .. 13;
       Reserved2 at 0 range 14 .. 15;
@@ -4880,8 +4880,8 @@ pragma Style_Checks (Off);
       ODTALTEN  : Boolean := False; -- ODT Alternate Enable
       Reserved7 : Bits_7  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR57_Type use record
       Reserved1 at 0 range  0 ..  3;
       Reserved2 at 0 range  4 ..  7;
@@ -4905,8 +4905,8 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_16 := 0;
       Reserved2 : Bits_16 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR58_Type use record
       Reserved1 at 0 range  0 .. 15;
       Reserved2 at 0 range 16 .. 31;
@@ -4924,8 +4924,8 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_16 := 0;
       Reserved2 : Bits_16 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR59_Type use record
       Reserved1 at 0 range  0 .. 15;
       Reserved2 at 0 range 16 .. 31;
@@ -4943,8 +4943,8 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_16 := 0;
       Reserved2 : Bits_16 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR60_Type use record
       Reserved1 at 0 range  0 .. 15;
       Reserved2 at 0 range 16 .. 31;
@@ -4962,8 +4962,8 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_16 := 0;
       Reserved2 : Bits_16 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR61_Type use record
       Reserved1 at 0 range  0 .. 15;
       Reserved2 at 0 range 16 .. 31;
@@ -4981,8 +4981,8 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_16 := 0;
       Reserved2 : Bits_16 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR62_Type use record
       Reserved1 at 0 range  0 .. 15;
       Reserved2 at 0 range 16 .. 31;
@@ -5000,8 +5000,8 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_16 := 0;
       Reserved2 : Bits_16 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_CR63_Type use record
       Reserved1 at 0 range  0 .. 15;
       Reserved2 at 0 range 16 .. 31;
@@ -5020,8 +5020,8 @@ pragma Style_Checks (Off);
       RST       : Boolean := False; -- Reset
       Reserved2 : Bits_1  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_RCR_Type use record
       Reserved1 at 0 range  0 .. 29;
       RST       at 0 range 30 .. 30;
@@ -5058,8 +5058,8 @@ pragma Style_Checks (Off);
       Reserved7      : Bits_2 := 0;
       Reserved8      : Bits_4 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DDR_PAD_CTRL_Type use record
       SPARE_DLY_CTRL at 0 range  0 ..  3;
       Reserved1      at 0 range  4 ..  7;
@@ -5211,8 +5211,8 @@ pragma Style_Checks (Off);
       TOF      : Boolean := False;     -- Timer Overflow Flag
       Reserved : Bits_24 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for FTMx_SC_Type use record
       PS       at 0 range 0 ..  2;
       CLKS     at 0 range 3 ..  4;
@@ -5228,8 +5228,8 @@ pragma Style_Checks (Off);
       COUNT    : Unsigned_16 := 0; -- Counter Value
       Reserved : Bits_16     := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for FTMx_CNT_Type use record
       COUNT    at 0 range  0 .. 15;
       Reserved at 0 range 16 .. 31;
@@ -5241,8 +5241,8 @@ pragma Style_Checks (Off);
       MODulo   : Unsigned_16 := 0; -- Modulo Value
       Reserved : Bits_16     := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for FTMx_MOD_Type use record
       MODulo   at 0 range  0 .. 15;
       Reserved at 0 range 16 .. 31;
@@ -5254,8 +5254,8 @@ pragma Style_Checks (Off);
       INIT     : Unsigned_16 := 0; -- Initial Value Of The FTM Counter
       Reserved : Bits_16     := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for FTMx_CNTIN_Type use record
       INIT     at 0 range  0 .. 15;
       Reserved at 0 range 16 .. 31;
@@ -5278,8 +5278,8 @@ pragma Style_Checks (Off);
       FAULTIE  : Boolean := False;          -- Fault Interrupt Enable
       Reserved : Bits_24 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for FTMx_MODE_Type use record
       FTMEN    at 0 range 0 ..  0;
       INIT     at 0 range 1 ..  1;
@@ -5327,8 +5327,8 @@ pragma Style_Checks (Off);
       FAULTEN3  : Boolean := False; -- Fault Control Enable For n = 6
       Reserved4 : Bits_1  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for FTMx_COMBINE_Type use record
       COMBINE0  at 0 range  0 ..  0;
       COMP0     at 0 range  1 ..  1;
@@ -5377,8 +5377,8 @@ pragma Style_Checks (Off);
       FAULTF    : Boolean; -- Fault Detection Flag
       Reserved2 : Bits_24;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for FTMx_FMS_Type use record
       FAULTF0   at 0 range 0 ..  0;
       FAULTF1   at 0 range 1 ..  1;
@@ -5402,7 +5402,7 @@ pragma Style_Checks (Off);
       COMBINE : FTMx_COMBINE_Type with Volatile_Full_Access => True;
       FMS     : FTMx_FMS_Type     with Volatile_Full_Access => True;
    end record
-      with Size => 16#78# * 8;
+      with Object_Size => 16#78# * 8;
    for FTM_Type use record
       SC      at 16#00# range 0 .. 31;
       CNT     at 16#04# range 0 .. 31;
@@ -5449,8 +5449,8 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_1  := 0;
       Reserved2 : Bits_29 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for PIT_MCR_Type use record
       FRZ       at 0 range 0 ..  0;
       MDIS      at 0 range 1 ..  1;
@@ -5463,8 +5463,8 @@ pragma Style_Checks (Off);
    type PIT_LDVALn_Type is record
       TSV : Unsigned_32 := 0; -- Timer Start Value
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for PIT_LDVALn_Type use record
       TSV at 0 range 0 .. 31;
    end record;
@@ -5474,8 +5474,8 @@ pragma Style_Checks (Off);
    type PIT_CVALn_Type is record
       TVL : Unsigned_32; -- Current Timer Value
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for PIT_CVALn_Type use record
       TVL at 0 range 0 .. 31;
    end record;
@@ -5488,8 +5488,8 @@ pragma Style_Checks (Off);
       CHN      : Boolean := False; -- Chain Mode
       Reserved : Bits_29 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for PIT_TCTRLn_Type use record
       TEN      at 0 range 0 ..  0;
       TIE      at 0 range 1 ..  1;
@@ -5503,8 +5503,8 @@ pragma Style_Checks (Off);
       TIF      : Boolean := False; -- Timer Interrupt Flag
       Reserved : Bits_31 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for PIT_TFLGn_Type use record
       TIF      at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 31;
@@ -5518,7 +5518,7 @@ pragma Style_Checks (Off);
       TCTRL : PIT_TCTRLn_Type with Volatile_Full_Access => True;
       TFLG  : PIT_TFLGn_Type  with Volatile_Full_Access => True;
    end record
-      with Size => 4 * 32;
+      with Object_Size => 4 * 32;
 
    type PITn_Array_Type is array (0 .. 3) of PITn_Type
       with Pack     => True,
@@ -5842,8 +5842,8 @@ pragma Style_Checks (Off);
       CONT_SCKE : Boolean := False;     -- Continuous SCK Enable
       MSTR      : Boolean := False;     -- Master/Slave Mode Select
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SPIx_MCR_Type use record
       HALT      at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  1;
@@ -5878,8 +5878,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_16     := 0;
       SPI_TCNT : Unsigned_16 := 0; -- SPI Transfer Counter
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SPIx_TCR_Type use record
       Reserved at 0 range  0 .. 15;
       SPI_TCNT at 0 range 16 .. 31;
@@ -6011,8 +6011,8 @@ pragma Style_Checks (Off);
       FMSZ   : Bits_4  := FMSZ_16;       -- Frame Size
       DBR    : Boolean := False;         -- Double Baud Rate
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SPIx_CTARn_Type use record
       BR     at 0 range  0 ..  3;
       DT     at 0 range  4 ..  7;
@@ -6053,8 +6053,8 @@ pragma Style_Checks (Off);
       TXRXS     : Boolean := False; -- TX and RX Status
       TCF       : Boolean := False; -- Transfer Complete Flag
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SPIx_SR_Type use record
       POPNXTPTR at 0 range  0 ..  3;
       RXCTR     at 0 range  4 ..  7;
@@ -6107,8 +6107,8 @@ pragma Style_Checks (Off);
       Reserved11 : Bits_1  := 0;
       TCF_RE     : Boolean := False;         -- Transmission Complete Request Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SPIx_RSER_Type use record
       Reserved1  at 0 range  0 .. 13;
       Reserved2  at 0 range 14 .. 14;
@@ -6161,8 +6161,8 @@ pragma Style_Checks (Off);
       CTAS      : Bits_3  := CTAS_CTAR0; -- Clock and Transfer Attributes Select
       CONT      : Boolean := False;      -- Continuous Peripheral Chip Select Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SPIx_PUSHR_Type use record
       TXDATA    at 0 range  0 .. 15;
       PCS0      at 0 range 16 .. 16;
@@ -6184,8 +6184,8 @@ pragma Style_Checks (Off);
    type SPIx_POPR_Type is record
       RXDATA : Bits_32 := 0; -- Received Data
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SPIx_POPR_Type use record
       RXDATA at 0 range 0 .. 31;
    end record;
@@ -6196,8 +6196,8 @@ pragma Style_Checks (Off);
       TXDATA       : Bits_16; -- Transmit Data
       TXCMD_TXDATA : Bits_16; -- Transmit Command or Transmit Data
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SPIx_TXFRn_Type use record
       TXDATA       at 0 range  0 .. 15;
       TXCMD_TXDATA at 0 range 16 .. 31;
@@ -6208,8 +6208,8 @@ pragma Style_Checks (Off);
    type SPIx_RXFRn_Type is record
       RXDATA : Bits_32; -- Receive Data
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SPIx_RXFRn_Type use record
       RXDATA at 0 range 0 .. 31;
    end record;
@@ -6234,8 +6234,8 @@ pragma Style_Checks (Off);
       RXFR2 : SPIx_RXFRn_Type with Volatile_Full_Access => True;
       RXFR3 : SPIx_RXFRn_Type with Volatile_Full_Access => True;
    end record
-      with Size     => 16#8C# * 8,
-           Volatile => True;
+      with Object_Size => 16#8C# * 8,
+           Volatile    => True;
    for SPI_Type use record
       MCR   at 16#00# range 0 .. 31;
       TCR   at 16#08# range 0 .. 31;
@@ -6279,8 +6279,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_1 := 0;
       AD       : Bits_7 := 0; -- Address
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for I2Cx_A1_Type use record
       Reserved at 0 range 0 .. 0;
       AD       at 0 range 1 .. 7;
@@ -6297,8 +6297,8 @@ pragma Style_Checks (Off);
       ICR  : Bits_6 := 0;      -- ClockRate
       MULT : Bits_2 := MULT_1; -- Multiplier Factor
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for I2Cx_F_Type use record
       ICR  at 0 range 0 .. 5;
       MULT at 0 range 6 .. 7;
@@ -6325,8 +6325,8 @@ pragma Style_Checks (Off);
       IICIE : Boolean := False;     -- I2C Interrupt Enable
       IICEN : Boolean := False;     -- I2C Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for I2Cx_C1_Type use record
       DMAEN at 0 range 0 .. 0;
       WUEN  at 0 range 1 .. 1;
@@ -6356,8 +6356,8 @@ pragma Style_Checks (Off);
       IAAS  : Boolean := False;           -- Addressed As A Slave
       TCF   : Boolean := True;            -- Transfer Complete Flag
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for I2Cx_S_Type use record
       RXAK  at 0 range 0 .. 0;
       IICIF at 0 range 1 .. 1;
@@ -6387,8 +6387,8 @@ pragma Style_Checks (Off);
       ADEXT : Bits_1  := ADEXT_7;     -- Address Extension
       GCAEN : Boolean := False;       -- General Call Address Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for I2Cx_C2_Type use record
       AD    at 0 range 0 .. 2;
       RMEN  at 0 range 3 .. 3;
@@ -6407,8 +6407,8 @@ pragma Style_Checks (Off);
       Reserved1 : Bits_2 := 0;
       Reserved2 : Bits_1 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for I2Cx_FLT_Type use record
       FLT       at 0 range 0 .. 4;
       Reserved1 at 0 range 5 .. 6;
@@ -6421,8 +6421,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_1 := 0;
       RAD      : Bits_7 := 0; -- Range Slave Address
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for I2Cx_RA_Type use record
       Reserved at 0 range 0 .. 0;
       RAD      at 0 range 1 .. 7;
@@ -6443,8 +6443,8 @@ pragma Style_Checks (Off);
       ALERTEN : Boolean := False;        -- SMBus Alert Response Address Enable
       FACK    : Boolean := False;        -- Fast NACK/ACK Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for I2Cx_SMB_Type use record
       SHTF2IE at 0 range 0 .. 0;
       SHTF2   at 0 range 1 .. 1;
@@ -6462,8 +6462,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_1 := 0;
       SAD      : Bits_7 := 2#1100001#; -- SMBus Address
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for I2Cx_A2_Type use record
       Reserved at 0 range 0 .. 0;
       SAD      at 0 range 1 .. 7;
@@ -6488,8 +6488,8 @@ pragma Style_Checks (Off);
       SLTH : Unsigned_8    with Volatile_Full_Access => True;
       SLTL : Unsigned_8    with Volatile_Full_Access => True;
    end record
-      with Size     => 16#C# * 8,
-           Volatile => True;
+      with Object_Size => 16#C# * 8,
+           Volatile    => True;
    for I2C_Type use record
       A1   at 16#0# range 0 .. 7;
       F    at 16#1# range 0 .. 7;
@@ -6527,8 +6527,8 @@ pragma Style_Checks (Off);
       RXEDGIE  : Boolean := False; -- RxD Input Active Edge Interrupt Enable
       LBKDIE   : Boolean := False; -- LIN Break Detect Interrupt Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_BDH_Type use record
       SBR      at 0 range 0 .. 4;
       Reserved at 0 range 5 .. 5;
@@ -6541,8 +6541,8 @@ pragma Style_Checks (Off);
    type UARTx_BDL_Type is record
       SBR : Bits_8 := 4; -- UART Baud Rate Bits
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_BDL_Type use record
       SBR at 0 range 0 .. 7;
    end record;
@@ -6577,8 +6577,8 @@ pragma Style_Checks (Off);
       UARTSWAI : Bits_1  := UARTSWAI_CONT;    -- UART Stops in Wait Mode
       LOOPS    : Boolean := False;            -- Loop Mode Select
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_C1_Type use record
       PT       at 0 range 0 .. 0;
       PE       at 0 range 1 .. 1;
@@ -6602,8 +6602,8 @@ pragma Style_Checks (Off);
       TCIE : Boolean := False; -- Transmission Complete Interrupt Enable
       TIE  : Boolean := False; -- Transmitter Interrupt or DMA Transfer Enable.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_C2_Type use record
       SBK  at 0 range 0 .. 0;
       RWU  at 0 range 1 .. 1;
@@ -6627,8 +6627,8 @@ pragma Style_Checks (Off);
       TC   : Boolean; -- Transmit Complete Flag
       TDRE : Boolean; -- Transmit Data Register Empty Flag
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_S1_Type use record
       PF   at 0 range 0 .. 0;
       FE   at 0 range 1 .. 1;
@@ -6652,8 +6652,8 @@ pragma Style_Checks (Off);
       RXEDGIF : Boolean := False; -- RxD Pin Active Edge Interrupt Flag
       LBKDIF  : Boolean := False; -- LIN Break Detect Interrupt Flag
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_S2_Type use record
       RAF     at 0 range 0 .. 0;
       LBKDE   at 0 range 1 .. 1;
@@ -6680,8 +6680,8 @@ pragma Style_Checks (Off);
       T8    : Bits_1  := 0;          -- Transmit Bit 8
       R8    : Bits_1  := 0;          -- Received Bit 8
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_C3_Type use record
       PEIE  at 0 range 0 .. 0;
       FEIE  at 0 range 1 .. 1;
@@ -6698,8 +6698,8 @@ pragma Style_Checks (Off);
    type UARTx_D_Type is record
       RT : Unsigned_8; -- Reads return the contents of the read-only receive data register and writes go to the write-only transmit data register.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_D_Type use record
       RT at 0 range 0 .. 7;
    end record;
@@ -6709,8 +6709,8 @@ pragma Style_Checks (Off);
    type UARTx_MA1_Type is record
       MA : Unsigned_8 := 0; -- Match Address
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_MA1_Type use record
       MA at 0 range 0 .. 7;
    end record;
@@ -6720,8 +6720,8 @@ pragma Style_Checks (Off);
    type UARTx_MA2_Type is record
       MA : Unsigned_8 := 0; -- Match Address
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_MA2_Type use record
       MA at 0 range 0 .. 7;
    end record;
@@ -6739,8 +6739,8 @@ pragma Style_Checks (Off);
       MAEN2 : Boolean := False;   -- Match Address Mode Enable 2
       MAEN1 : Boolean := False;   -- Match Address Mode Enable 1
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_C4_Type use record
       BRFA  at 0 range 0 .. 4;
       M10   at 0 range 5 .. 5;
@@ -6757,8 +6757,8 @@ pragma Style_Checks (Off);
       Reserved3 : Bits_1  := 0;
       TDMAS     : Boolean := False; -- Transmitter DMA Select
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_C5_Type use record
       Reserved1 at 0 range 0 .. 3;
       Reserved2 at 0 range 4 .. 4;
@@ -6774,8 +6774,8 @@ pragma Style_Checks (Off);
       PARITYE  : Boolean; -- The current received dataword contained in D and C3[R8] was received with a parity error.
       NOISY    : Boolean; -- The current received dataword contained in D and C3[R8] was received with noise.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_ED_Type use record
       Reserved at 0 range 0 .. 5;
       PARITYE  at 0 range 6 .. 6;
@@ -6794,8 +6794,8 @@ pragma Style_Checks (Off);
       RXRTSE   : Boolean := False;       -- Receiver request-to-send enable
       Reserved : Bits_4  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_MODEM_Type use record
       TXCTSE   at 0 range 0 .. 0;
       TXRTSE   at 0 range 1 .. 1;
@@ -6816,8 +6816,8 @@ pragma Style_Checks (Off);
       IREN     : Boolean := False;      -- Infrared enable
       Reserved : Bits_5  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_IR_Type use record
       TNP      at 0 range 0 .. 1;
       IREN     at 0 range 2 .. 2;
@@ -6850,8 +6850,8 @@ pragma Style_Checks (Off);
       TXFIFOSIZE : Bits_3  := TXFIFOSIZE_1; -- Transmit FIFO. Buffer Depth
       TXFE       : Boolean := False;        -- Transmit FIFO Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_PFIFO_Type use record
       RXFIFOSIZE at 0 range 0 .. 2;
       RXFE       at 0 range 3 .. 3;
@@ -6869,8 +6869,8 @@ pragma Style_Checks (Off);
       RXFLUSH  : Boolean := False; -- Receive FIFO/Buffer Flush
       TXFLUSH  : Boolean := False; -- Transmit FIFO/Buffer Flush
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_CFIFO_Type use record
       RXUFE    at 0 range 0 .. 0;
       TXOFE    at 0 range 1 .. 1;
@@ -6890,8 +6890,8 @@ pragma Style_Checks (Off);
       RXEMPT   : Boolean := True;  -- Receive Buffer/FIFO Empty
       TXEMPT   : Boolean := True;  -- Transmit Buffer/FIFO Empty
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_SFIFO_Type use record
       RXUF     at 0 range 0 .. 0;
       TXOF     at 0 range 1 .. 1;
@@ -6906,8 +6906,8 @@ pragma Style_Checks (Off);
    type UARTx_TWFIFO_Type is record
       TXWATER : Unsigned_8 := 0; -- Transmit Watermark
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_TWFIFO_Type use record
       TXWATER at 0 range 0 .. 7;
    end record;
@@ -6917,8 +6917,8 @@ pragma Style_Checks (Off);
    type UARTx_TCFIFO_Type is record
       TXCOUNT : Unsigned_8; -- Transmit Counter
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_TCFIFO_Type use record
       TXCOUNT at 0 range 0 .. 7;
    end record;
@@ -6928,8 +6928,8 @@ pragma Style_Checks (Off);
    type UARTx_RWFIFO_Type is record
       RXWATER : Unsigned_8 := 1; -- Receive Watermark
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_RWFIFO_Type use record
       RXWATER at 0 range 0 .. 7;
    end record;
@@ -6939,8 +6939,8 @@ pragma Style_Checks (Off);
    type UARTx_RCFIFO_Type is record
       RXCOUNT : Unsigned_8; -- Receive Counter
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UARTx_RCFIFO_Type use record
       RXCOUNT at 0 range 0 .. 7;
    end record;
@@ -6971,7 +6971,7 @@ pragma Style_Checks (Off);
       RWFIFO : UARTx_RWFIFO_Type with Volatile_Full_Access => True;
       RCFIFO : UARTx_RCFIFO_Type with Volatile_Full_Access => True;
    end record
-      with Size => 16#17# * 8;
+      with Object_Size => 16#17# * 8;
    for UART_Type use record
       BDH    at 16#00# range 0 .. 7;
       BDL    at 16#01# range 0 .. 7;
@@ -7103,7 +7103,7 @@ pragma Style_Checks (Off);
       PDIR : Bitmap_32 with Volatile_Full_Access => True;
       PDDR : Bitmap_32 with Volatile_Full_Access => True;
    end record
-      with Size => 16#18# * 8;
+      with Object_Size => 16#18# * 8;
    for GPIO_PORT_Type use record
       PDOR at 16#00# range 0 .. 31;
       PSOR at 16#04# range 0 .. 31;
