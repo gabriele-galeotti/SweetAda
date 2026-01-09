@@ -54,8 +54,8 @@ pragma Style_Checks (Off);
       PLLC     : Boolean := False; -- PLL Connect.
       Reserved : Bits_6  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for PLLxCON_Type use record
       PLLE     at 0 range 0 .. 0;
       PLLC     at 0 range 1 .. 1;
@@ -123,8 +123,8 @@ pragma Style_Checks (Off);
       PSEL     : Bits_2 := PSEL_P1; -- PLL Divider value.
       Reserved : Bits_1 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for PLLxCFG_Type use record
       MSEL     at 0 range 0 .. 4;
       PSEL     at 0 range 5 .. 6;
@@ -162,8 +162,8 @@ pragma Style_Checks (Off);
       PLOCK     : Boolean; -- Reflects the PLL Lock status.
       Reserved2 : Bits_5;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for PLLxSTAT_Type use record
       MSEL      at 0 range  0 ..  4;
       PSEL      at 0 range  5 ..  6;
@@ -218,8 +218,8 @@ pragma Style_Checks (Off);
       BORD     : Boolean := False; -- Brown Out Reset Disable.
       Reserved : Bits_3  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for PCON_Type use record
       IDL      at 0 range 0 .. 0;
       PD       at 0 range 1 .. 1;
@@ -259,8 +259,8 @@ pragma Style_Checks (Off);
       Reserved5 : Bits_10 := 0;
       PUSB      : Boolean := False; -- USB power/clock control bit.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for PCONP_Type use record
       Reserved1 at 0 range  0 ..  0;
       PCTIM0    at 0 range  1 ..  1;
@@ -299,8 +299,8 @@ pragma Style_Checks (Off);
       BODR     : Boolean; -- This bit is set when the 3.3 V power reaches a level below 2.6 V.
       Reserved : Bits_4;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for RSIR_Type use record
       POR      at 0 range 0 .. 0;
       EXTR     at 0 range 1 .. 1;
@@ -328,8 +328,8 @@ pragma Style_Checks (Off);
       APBDIV   : Bits_2 := APBDIV_DIV4; -- APB bus clock
       Reserved : Bits_6 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for APBDIV_Type use record
       APBDIV   at 0 range 0 .. 1;
       Reserved at 0 range 2 .. 7;
@@ -475,8 +475,8 @@ pragma Style_Checks (Off);
       P14 : P0_14_Type := P0_14_GPIO; -- ''
       P15 : P0_15_Type := P0_15_GPIO; -- ''
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for PINSEL0_Type use record
       P0  at 0 range  0 ..  1;
       P1  at 0 range  2 ..  3;
@@ -623,8 +623,8 @@ pragma Style_Checks (Off);
       P30 : P0_30_Type := P0_30_GPIO;        -- ''
       P31 : P0_31_Type := P0_31_GPOPortonly; -- ''
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for PINSEL1_Type use record
       P16 at 0 range  0 ..  1;
       P17 at 0 range  2 ..  3;
@@ -668,8 +668,8 @@ pragma Style_Checks (Off);
       GPIOTRACE : GPIOTRACE_Type := GPIOTRACE_GPIO; -- ''
       Reserved2 : Bits_28        := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for PINSEL2_Type use record
       Reserved1 at 0 range 0 ..  1;
       GPIODEBUG at 0 range 2 ..  2;
