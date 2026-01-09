@@ -19,15 +19,15 @@ endif
 GPR_CORE_CPU += cpu.ads         \
                 x86.adb x86.ads
 
-GCCDEFINES_CPU += __SEG_FS:SEG_FS:Boolean:H                     \
-                  __SEG_GS:SEG_GS:Boolean:H                     \
-                  __code_model_32__:CODE_MODEL_32:Boolean:H     \
+GCCDEFINES_CPU += __code_model_32__:CODE_MODEL_32:Boolean:H     \
                   __i386__:i386:Boolean:H                       \
                   __i486__:i486:Boolean:H                       \
                   __i586__:i586:Boolean:H                       \
                   __i686__:i686:Boolean:H                       \
                   __pentium__:PENTIUM:Boolean:H                 \
                   __pentiumpro__:PENTIUMPRO:Boolean:H           \
+                  __SEG_FS:SEG_FS:Boolean:H                     \
+                  __SEG_GS:SEG_GS:Boolean:H                     \
                   __tune_i486__:TUNE_i486:Boolean:H             \
                   __tune_i586__:TUNE_i586:Boolean:H             \
                   __tune_i686__:TUNE_i686:Boolean:H             \
