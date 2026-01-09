@@ -1173,7 +1173,7 @@ endif
               $(OBJECT_DIRECTORY)/libplatform.a     \
               $(LIBGCC_OBJECT)                      \
               --end-group                           \
-        ,[LD],$@)
+        ,[LD],$@ @ $(LD_SCRIPT))
 ifneq ($(OSTYPE),cmd)
 	@chmod a-x $@
 endif
