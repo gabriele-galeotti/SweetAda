@@ -32,7 +32,11 @@ package ARMv7M
    --                                                                        --
    --========================================================================--
 
-   use System;
+   -- NVIC Priority clashes with System.Priority, so we use a renaming on
+   -- System.Low_Order_First, which is the only object imported from the unit,
+   -- avoiding a use clause
+   -- use System;
+   Low_Order_First : System.Bit_Order renames System.Low_Order_First;
    use Interfaces;
    use Bits;
 
@@ -790,6 +794,39 @@ pragma Style_Checks (Off);
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+   --  NVIC CMSIS-like subprograms
+
+   procedure NVIC_EnableIRQ
+      (IRQ : in Natural)
+      with Inline => True;
+   procedure NVIC_DisableIRQ
+      (IRQ : in Natural)
+      with Inline => True;
+   function NVIC_GetEnableIRQ
+      (IRQ : Natural)
+      return Boolean
+      with Inline => True;
+
+   function NVIC_GetPriority
+      (IRQ : Natural)
+      return Unsigned_8
+      with Inline => True;
+   procedure NVIC_SetPriority
+      (IRQ      : in Natural;
+       Priority : in Unsigned_8)
+      with Inline => True;
+
+   function NVIC_GetPendingIRQ
+      (IRQ : Natural)
+      return Boolean
+      with Inline => True;
+   procedure NVIC_SetPendingIRQ
+      (IRQ : in Natural)
+      with Inline => True;
+   procedure NVIC_ClearPendingIRQ
+      (IRQ : in Natural)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- C1.6 Debug system registers
