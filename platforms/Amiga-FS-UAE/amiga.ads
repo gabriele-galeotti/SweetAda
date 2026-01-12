@@ -40,32 +40,35 @@ package Amiga
    use Definitions;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
+   -- AMIGA(R) Hardware Reference Manual
+   -- COMMODORE-AMIGA, INC.
+   -- THIRD EDITION
+   ----------------------------------------------------------------------------
+
    -- chipset clocks are 1/4 XTAL base frequency
    -- NTSC 28.63636 MHz --> CHIPSET_CLOCK = 28.63636 MHz / 4 = 7.15909 MHz
    -- PAL  28.37516 MHz --> CHIPSET_CLOCK = 28.37516 MHz / 4 = 7.09379 MHz
-   ----------------------------------------------------------------------------
-
    CHIPSET_CLOCK_NTSC : constant := CLK_NTSCx2;
    CHIPSET_CLOCK_PAL  : constant := CLK_PALAmiga;
 
-   ----------------------------------------------------------------------------
-   -- CUSTOM
-   ----------------------------------------------------------------------------
+   -- Serial I/O Interface
 
    type SERDATR_Type is record
-      DB      : Unsigned_8;      -- Data bits
-      STP_DB8 : Bits_1;          -- Stop bit if LONG, data bit if not
-      STP     : Bits_1;          -- Stop bit
-      Unused  : Bits_1     := 0;
-      RXD     : Bits_1;          -- RXD pin receives UART serial data for direct bit test by the micro.
-      TSRE    : Boolean;         -- Serial port transmit shift reg. empty
-      TBE     : Boolean;         -- Serial port transmit buffer empty (mirror)
-      RBF     : Boolean;         -- Serial port receive buffer full (mirror)
-      OVRUN   : Boolean;         -- Serial port receiver overun
+      DB      : Unsigned_8; -- Data bits
+      STP_DB8 : Bits_1;     -- Stop bit if LONG, data bit if not
+      STP     : Bits_1;     -- Stop bit
+      Unused  : Bits_1;
+      RXD     : Bits_1;     -- RXD pin receives UART serial data for direct bit test by the micro.
+      TSRE    : Boolean;    -- Serial port transmit shift reg. empty
+      TBE     : Boolean;    -- Serial port transmit buffer empty (mirror)
+      RBF     : Boolean;    -- Serial port receive buffer full (mirror)
+      OVRUN   : Boolean;    -- Serial port receiver overun
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for SERDATR_Type use record
       DB      at 0 range  0 ..  7;
       STP_DB8 at 0 range  8 ..  8;
@@ -80,25 +83,27 @@ package Amiga
 
    type SERDAT_Type is record
       D : Unsigned_8; -- Data bits
-      S : Unsigned_8; -- Stop bit
+      S : Bits_8;     -- Stop bit
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for SERDAT_Type use record
       D at 0 range 0 ..  7;
       S at 0 range 8 .. 15;
    end record;
 
    type SERPER_Type is record
-      RATE : Bits_15; -- Defines baud rate=1/((N+1)*.2794 microseconds)
-      LONG : Boolean; -- Defines serial receive as 9 bit word
+      RATE : Bits_15 := 0;     -- Defines baud rate=1/((N+1)*.2794 microseconds)
+      LONG : Boolean := False; -- Defines serial receive as 9 bit word
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for SERPER_Type use record
       RATE at 0 range  0 .. 14;
       LONG at 0 range 15 .. 15;
    end record;
+
+   -- CUSTOM
 
    type CUSTOM_Type is record
       SERDATR : SERDATR_Type with Volatile_Full_Access => True;
@@ -123,7 +128,7 @@ package Amiga
       COLOR01 : Unsigned_16  with Volatile_Full_Access => True;
       COLOR02 : Unsigned_16  with Volatile_Full_Access => True;
    end record
-      with Size => 16#0186# * 8;
+      with Object_Size => 16#0186# * 8;
    for CUSTOM_Type use record
       SERDATR at 16#0018# range 0 .. 15;
       INTENAR at 16#001C# range 0 .. 15;
@@ -219,14 +224,11 @@ package Amiga
       (Value : in Unsigned_16)
       with Inline => True;
 
-   ----------------------------------------------------------------------------
    -- OCS video
-   ----------------------------------------------------------------------------
 
    VIDEO_WIDTH  : constant := 640;
    VIDEO_HEIGHT : constant := 256;
 
-   -- keep in-sync with linker.lds address definition
    FRAMEBUFFER_BASEADDRESS : constant := 16#0003_0000#;
 
    Framebuffer : aliased Byte_Array (0 .. VIDEO_WIDTH * VIDEO_HEIGHT - 1)
@@ -239,8 +241,10 @@ package Amiga
       with Alignment               => 16#0000_1000#,
            Suppress_Initialization => True;
 
-   subtype Video_X_Coordinate_Type is Natural range 0 .. VIDEO_WIDTH / Videofont8x8.Font_Width - 1;
-   subtype Video_Y_Coordinate_Type is Natural range 0 .. VIDEO_HEIGHT / Videofont8x8.Font_Height - 1;
+   subtype Video_X_Coordinate_Type is Natural
+      range 0 .. VIDEO_WIDTH / Videofont8x8.Font_Width - 1;
+   subtype Video_Y_Coordinate_Type is Natural
+      range 0 .. VIDEO_HEIGHT / Videofont8x8.Font_Height - 1;
 
    type Cursor_Type is record
       X : Video_X_Coordinate_Type;
@@ -256,9 +260,7 @@ package Amiga
       (S : in String);
    procedure OCS_Setup;
 
-   ----------------------------------------------------------------------------
    -- CIAs
-   ----------------------------------------------------------------------------
 
    type CIA_PRA_Type is record
                      -- CIA A                           CIA B
@@ -271,8 +273,8 @@ package Amiga
       PA6 : Boolean; -- FIR0  - joystick 0 FIRE         RTS  - RS232 request to send (pin 4)
       PA7 : Boolean; -- FIR1  - joystick 1 FIRE         DTR  - RS232 data terminal ready (pin 20)
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for CIA_PRA_Type use record
       PA0 at 0 range 0 .. 0;
       PA1 at 0 range 1 .. 1;
@@ -295,8 +297,8 @@ package Amiga
       PB6 : Boolean; -- D6 - Centronics DATA6   SEL3 - 0 = select DF3:
       PB7 : Boolean; -- D7 - Centronics DATA7   MTR  - motor on/off status: 1 = off
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for CIA_PRB_Type use record
       PB0 at 0 range 0 .. 0;
       PB1 at 0 range 1 .. 1;
@@ -318,8 +320,8 @@ package Amiga
       DPA6 : Boolean;
       DPA7 : Boolean;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for CIA_DDRA_Type use record
       DPA0 at 0 range 0 .. 0;
       DPA1 at 0 range 1 .. 1;
@@ -341,8 +343,8 @@ package Amiga
       DPB6 : Boolean;
       DPB7 : Boolean;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for CIA_DDRB_Type use record
       DPB0 at 0 range 0 .. 0;
       DPB1 at 0 range 1 .. 1;
@@ -360,8 +362,8 @@ package Amiga
    RUNMODE_RUN     : constant := 0; -- continuous mode
    RUNMODE_ONESHOT : constant := 1; -- one-shot mode
 
-   INMODE_02  : constant := 0; -- Timer A counts 02 pulses
-   INMODE_CNT : constant := 1; -- Timer A counts positive CNT transitions
+   INMODE_PULSE2 : constant := 0; -- Timer A counts 02 pulses
+   INMODE_CNT    : constant := 1; -- Timer A counts positive CNT transitions
 
    SPMODE_IN  : constant := 0; -- Serial port=input  (external shift clock is required)
    SPMODE_OUT : constant := 1; -- Serial port=output (CNT is the source of the shift clock)
@@ -376,8 +378,8 @@ package Amiga
       SPMODE  : Bits_1;       -- SPMODE
       Unused  : Bits_1  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for CIA_CRA_Type use record
       START   at 0 range 0 .. 0;
       PBON    at 0 range 1 .. 1;
@@ -407,7 +409,7 @@ package Amiga
       CRA      : CIA_CRA_Type  with Volatile_Full_Access => True;
       CRB      : Unsigned_8    with Volatile_Full_Access => True;
    end record
-      with Size => 16#0F01# * 8;
+      with Object_Size => 16#0F01# * 8;
    for CIA_Type use record
       PRA      at 16#0000# range 0 .. 7;
       PRB      at 16#0100# range 0 .. 7;
@@ -456,20 +458,16 @@ package Amiga
       (Value : in Unsigned_8)
       with Inline => True;
 
-   ----------------------------------------------------------------------------
-   -- Serial port
-   ----------------------------------------------------------------------------
+   -- Subprograms
 
+   procedure Tclk_Init;
    procedure Serialport_Init;
    procedure Serialport_RX
       (C : out Character);
    procedure Serialport_TX
       (C : in Character);
 
-   ----------------------------------------------------------------------------
-   -- Timer clock
-   ----------------------------------------------------------------------------
 
-   procedure Tclk_Init;
+pragma Style_Checks (On);
 
 end Amiga;

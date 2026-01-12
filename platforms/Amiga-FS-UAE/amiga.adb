@@ -288,14 +288,8 @@ package body Amiga
    end CIAA_ICR_SetBitMask;
 
    ----------------------------------------------------------------------------
-   -- Serialport
+   -- Serialport_RX
    ----------------------------------------------------------------------------
-   -- SERPER
-   -- bit#   description
-   -- 15     serial receive as 9 bit word
-   -- 14..00 baud rate
-   ----------------------------------------------------------------------------
-
    procedure Serialport_RX
       (C : out Character)
       is
@@ -311,6 +305,9 @@ package body Amiga
       end loop;
    end Serialport_RX;
 
+   ----------------------------------------------------------------------------
+   -- Serialport_TX
+   ----------------------------------------------------------------------------
    procedure Serialport_TX
       (C : in Character)
       is
@@ -319,6 +316,9 @@ package body Amiga
       CUSTOM.SERDAT := (D => To_U8 (C), S => 16#01#);
    end Serialport_TX;
 
+   ----------------------------------------------------------------------------
+   -- Serialport_Init
+   ----------------------------------------------------------------------------
    procedure Serialport_Init
       is
    begin
@@ -334,7 +334,7 @@ package body Amiga
    procedure Tclk_Init
       is
       Tclk_Value : constant :=
-         (Configure.TIMER_SYSCLK + (Configure.TICK_FREQUENCY * 10) / 2) /
+         (Configure.SYSCLK + (Configure.TICK_FREQUENCY * 10) / 2) /
          (Configure.TICK_FREQUENCY * 10);
    begin
       --
@@ -355,7 +355,7 @@ package body Amiga
          OUTMODE => OUTMODE_PULSE,
          RUNMODE => RUNMODE_RUN,
          LOAD    => False,
-         INMODE  => INMODE_02,
+         INMODE  => INMODE_PULSE2,
          SPMODE  => SPMODE_IN,
          others  => <>
          );

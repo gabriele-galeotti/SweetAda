@@ -13,7 +13,7 @@ package Configure
    CPU_MODEL : constant String := "@CPU_MODEL@";
 
    -- basic configuration parameters
-   TIMER_SYSCLK   : constant := CLK_PALAmiga;
+   SYSCLK         : constant := CLK_PALAmiga;
    TICK_FREQUENCY : constant := 1 * kHz1;
 
 end Configure;
