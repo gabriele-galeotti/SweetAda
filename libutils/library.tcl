@@ -66,8 +66,8 @@ proc msleep {ms} {
 ################################################################################
 proc u16_to_bebytes {n} {
     set belist {}
-    lappend belist [expr ($n / 0x100) % 0x100]
-    lappend belist [expr $n % 0x100]
+    lappend belist [expr {($n / 0x100) % 0x100}]
+    lappend belist [expr {$n % 0x100}]
     return $belist
 }
 
@@ -78,10 +78,10 @@ proc u16_to_bebytes {n} {
 ################################################################################
 proc u32_to_bebytes {n} {
     set belist {}
-    lappend belist [expr ($n / 0x1000000) % 0x100]
-    lappend belist [expr ($n / 0x10000) % 0x100]
-    lappend belist [expr ($n / 0x100) % 0x100]
-    lappend belist [expr $n % 0x100]
+    lappend belist [expr {($n / 0x1000000) % 0x100}]
+    lappend belist [expr {($n / 0x10000) % 0x100}]
+    lappend belist [expr {($n / 0x100) % 0x100}]
+    lappend belist [expr {$n % 0x100}]
     return $belist
 }
 
