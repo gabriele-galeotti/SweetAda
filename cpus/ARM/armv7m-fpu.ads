@@ -45,8 +45,8 @@ pragma Style_Checks (Off);
       LSPEN     : Boolean;      -- Enables lazy context save of FP state
       ASPEN     : Boolean;      -- When this bit is set to 1, execution of a floating-point instr sets the CONTROL.FPCA bit to 1
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for FPCCR_Type use record
       LSPACT    at 0 range  0 ..  0;
       USER      at 0 range  1 ..  1;
@@ -74,8 +74,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_3  := 0;
       ADDRESS  : Bits_29;      -- The location of the unpopulated floating-point reg space allocated on an exception stack frame.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for FPCAR_Type use record
       Reserved at 0 range 0 ..  2;
       ADDRESS  at 0 range 3 .. 31;
@@ -150,8 +150,8 @@ pragma Style_Checks (Off);
       AHP       : Boolean;      -- Default value for FPSCR.AHP.
       Reserved2 : Bits_5  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for FPDSCR_Type use record
       Reserved1 at 0 range  0 .. 21;
       RMode     at 0 range 22 .. 23;

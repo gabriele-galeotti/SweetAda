@@ -317,8 +317,8 @@ pragma Style_Checks (Off);
       BP             : Boolean; -- Branch prediction enable bit.
       Reserved4      : Bits_13;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for CCR_Type use record
       NONBASETHRDENA at 0 range  0 ..  0;
       USERSETMPEND   at 0 range  1 ..  1;
@@ -349,8 +349,8 @@ pragma Style_Checks (Off);
       PRI_6 : Bits_8; -- Priority of system handler 6, UsageFault.
       PRI_7 : Bits_8; -- Reserved for priority of system handler 7.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SHPR1_Type use record
       PRI_4 at 0 range  0 ..  7;
       PRI_5 at 0 range  8 .. 15;
@@ -372,8 +372,8 @@ pragma Style_Checks (Off);
       PRI_10 : Bits_8; -- Reserved for priority of system handler 10.
       PRI_11 : Bits_8; -- Priority of system handler 11, SVCall.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SHPR2_Type use record
       PRI_8  at 0 range  0 ..  7;
       PRI_9  at 0 range  8 .. 15;
@@ -395,8 +395,8 @@ pragma Style_Checks (Off);
       PRI_14 : Bits_8; -- Priority of system handler 14, PendSV.
       PRI_15 : Bits_8; -- Priority of system handler 15, SysTick.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SHPR3_Type use record
       PRI_12 at 0 range  0 ..  7;
       PRI_13 at 0 range  8 .. 15;
@@ -432,8 +432,8 @@ pragma Style_Checks (Off);
       USGFAULTENA    : Boolean;      -- Enable UsageFault.
       Reserved4      : Bits_13 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SHCSR_Type use record
       MEMFAULTACT    at 0 range  0 ..  0;
       BUSFAULTACT    at 0 range  1 ..  1;
@@ -540,8 +540,8 @@ pragma Style_Checks (Off);
       BusFault   : BFSR_Type;  -- Provides information on BusFault exceptions.
       UsageFault : UFSR_Type;  -- Provides information on UsageFault exceptions.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for CFSR_Type use record
       MemManage  at 0 range  0 ..  7;
       BusFault   at 0 range  8 .. 15;
@@ -563,8 +563,8 @@ pragma Style_Checks (Off);
       FORCED    : Boolean;      -- Processor has escalated a configurable-priority exception to HardFault.
       DEBUGEVT  : Boolean;      -- Debug event has occurred.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for HFSR_Type use record
       Reserved1 at 0 range  0 ..  0;
       VECTTBL   at 0 range  1 ..  1;
@@ -625,8 +625,8 @@ pragma Style_Checks (Off);
       Reserved5 : Bits_2                   := 0;
       Reserved6 : Bits_2                   := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for CPACR_Type use record
       CP0       at 0 range  0 ..  1;
       CP1       at 0 range  2 ..  3;
@@ -658,8 +658,8 @@ pragma Style_Checks (Off);
       INTLINESNUM : Bits_4;  -- The total number of interrupt lines supported by an implementation
       Reserved    : Bits_28;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for ICTR_Type use record
       INTLINESNUM at 0 range 0 ..  3;
       Reserved    at 0 range 4 .. 31;
@@ -683,8 +683,8 @@ pragma Style_Checks (Off);
       INTID    : Bits_9  := Reset; -- Indicates the interrupt to be triggered.
       Reserved : Bits_23 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for STIR_Type use record
       INTID    at 0 range 0 ..  8;
       Reserved at 0 range 9 .. 31;
@@ -725,8 +725,8 @@ pragma Style_Checks (Off);
    type SYST_CVR_Type is record
       CURRENT : Bits_32; -- Current counter value.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SYST_CVR_Type use record
       CURRENT at 0 range 0 .. 31;
    end record;

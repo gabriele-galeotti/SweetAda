@@ -222,8 +222,8 @@ pragma Style_Checks (Off);
       Variant     : Bits_4;
       Implementer : Bits_8;  -- 0x41 = ARM
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for CPUID_Type use record
       Revision    at 0 range  0 ..  3;
       PartNo      at 0 range  4 .. 15;
@@ -256,8 +256,8 @@ pragma Style_Checks (Off);
       Reserved4   : Bits_2  := 0;
       NMIPENDSET  : Boolean := False; -- W: makes the NMI exception active R: indicates the state of the exception.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for ICSR_Type use record
       VECTACTIVE  at 0 range  0 ..  8;
       Reserved1   at 0 range  9 .. 10;
@@ -290,8 +290,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_7  := 0;
       TBLOFF   : Bits_25 := 0; -- Bits[31:7] of the vector table address.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for VTOR_Type use record
       Reserved at 0 range 0 ..  6;
       TBLOFF   at 0 range 7 .. 31;
@@ -318,8 +318,8 @@ pragma Style_Checks (Off);
       ENDIANNESS    : Bits_1;  -- Indicates the memory system data endianness.
       VECTKEY_STAT  : Bits_16; -- Vector Key.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for AIRCR_Type use record
       Reserved1     at 0 range  0 ..  0;
       VECTCLRACTIVE at 0 range  1 ..  1;
@@ -345,8 +345,8 @@ pragma Style_Checks (Off);
       SEVONPEND   : Boolean := False; -- Whether an interrupt transition from inactive state to pending state is a wakeup event.
       Reserved3   : Bits_27;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SCR_Type use record
       Reserved1   at 0 range 0 ..  0;
       SLEEPONEXIT at 0 range 1 ..  1;
@@ -371,8 +371,8 @@ pragma Style_Checks (Off);
       STKALIGN    : Boolean; -- On exception entry, the SP used prior to the exception is adjusted to be 8-byte aligned and the context to restore it is saved.
       Reserved3   : Bits_22;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for CCR_Type use record
       Reserved1   at 0 range  0 ..  2;
       UNALIGN_TRP at 0 range  3 ..  3;
@@ -393,8 +393,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_30;
       PRI_11   : Bits_2;  -- Priority of system handler 11, SVCall
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SHPR2_Type use record
       Reserved at 0 range  0 .. 29;
       PRI_11   at 0 range 30 .. 31;
@@ -414,8 +414,8 @@ pragma Style_Checks (Off);
       Reserved2 : Bits_6;
       PRI_15    : Bits_2;  -- Priority of system handler 15, SysTick
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SHPR3_Type use record
       Reserved1 at 0 range  0 .. 21;
       PRI_14    at 0 range 22 .. 23;
@@ -435,8 +435,8 @@ pragma Style_Checks (Off);
    type ACTLR_Type is record
       Reserved : Bits_32;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for ACTLR_Type use record
       Reserved at 0 range 0 .. 31;
    end record;
@@ -471,8 +471,8 @@ pragma Style_Checks (Off);
       COUNTFLAG : Boolean;      -- Indicates whether the counter has counted to 0 since the last read of this register.
       Reserved2 : Bits_15 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SYST_CSR_Type use record
       ENABLE    at 0 range  0 ..  0;
       TICKINT   at 0 range  1 ..  1;
@@ -494,8 +494,8 @@ pragma Style_Checks (Off);
       RELOAD   : Bits_24;      -- The value to load into the SYST_CVR register when the counter reaches 0.
       Reserved : Bits_8  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SYST_RVR_Type use record
       RELOAD   at 0 range  0 .. 23;
       Reserved at 0 range 24 .. 31;
@@ -513,8 +513,8 @@ pragma Style_Checks (Off);
       CURRENT  : Bits_24;      -- Current counter value.
       Reserved : Bits_8  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SYST_CVR_Type use record
       CURRENT  at 0 range  0 .. 23;
       Reserved at 0 range 24 .. 31;
@@ -534,8 +534,8 @@ pragma Style_Checks (Off);
       SKEW     : Boolean; -- Indicates whether the 10ms calibration value is exact.
       NOREF    : Boolean; -- Indicates whether the IMPLEMENTATION DEFINED reference clock is provided.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SYST_CALIB_Type use record
       TENMS    at 0 range  0 .. 23;
       Reserved at 0 range 24 .. 29;
@@ -620,8 +620,8 @@ pragma Style_Checks (Off);
       IREGION   : Unsigned_8; -- Instruction region.
       Reserved2 : Bits_8;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for MPU_TYPE_Type use record
       SEPARATEF at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  7;
@@ -644,8 +644,8 @@ pragma Style_Checks (Off);
       PRIVDEFENA : Boolean := False; -- When the ENABLE bit is set to 1, the meaning of this bit is: 0 Disables the default memory map. 1 Enables the default memory map as a background region for privileged access.
       Reserved   : Bits_29 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for MPU_CTRL_Type use record
       ENABLE     at 0 range 0 ..  0;
       HFNMIENA   at 0 range 1 ..  1;
@@ -665,8 +665,8 @@ pragma Style_Checks (Off);
       REGION   : Unsigned_8 := 0; -- Indicates the memory region accessed by MPU_RBAR and MPU_RSAR
       Reserved : Bits_24    := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for MPU_RNR_Type use record
       REGION   at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
@@ -689,8 +689,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_3  := 0;
       ADDR     : Bits_24 := 0;              -- Base address of the region.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for MPU_RBAR_Type use record
       REGION   at 0 range 0 ..  3;
       VALID    at 0 range 4 ..  4;
@@ -752,8 +752,8 @@ pragma Style_Checks (Off);
       SRD      : Bitmap_8;   -- Subregion Disable.
       ATTRS    : ATTRS_Type; -- The MPU Region Attribute field,
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for MPU_RASR_Type use record
       ENABLE   at 0 range  0 ..  0;
       SIZE     at 0 range  1 ..  5;
@@ -779,8 +779,8 @@ pragma Style_Checks (Off);
       SVCALLPENDED : Boolean := False; -- This bit reflects the pending state on a read, and updates the pending state, to the value written, on a write.
       Reserved2    : Bits_16 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SHCSR_Type use record
       Reserved1    at 0 range  0 .. 14;
       SVCALLPENDED at 0 range 15 .. 15;
@@ -803,8 +803,8 @@ pragma Style_Checks (Off);
       EXTERNAL : Boolean := False; -- Indicates an asynchronous debug event generated because of EDBGRQ being asserted.
       Reserved : Bits_27 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DFSR_Type use record
       HALTED   at 0 range 0 ..  0;
       BKPT     at 0 range 1 ..  1;
