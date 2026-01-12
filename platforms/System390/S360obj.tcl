@@ -108,7 +108,7 @@ proc write_esd_record {fd sequence address length} {
     global EBCDIC_SPACE
     set address_bytes [u32_to_bebytes $address]
     set nmodules 1
-    set size_bytes [u16_to_bebytes [expr $nmodules * 16]]
+    set size_bytes [u16_to_bebytes [expr {$nmodules * 16}]]
     puts -nonewline $fd [binary format c1 0x02]                         ;# 01 constant
     puts -nonewline $fd [binary format c1 [a2e "E"]]                    ;# 02 EBCDIC "E"
     puts -nonewline $fd [binary format c1 [a2e "S"]]                    ;# 03 EBCDIC "S"
@@ -356,7 +356,7 @@ incr sequence
 # create TXT record which contains PSW @ 0
 # create S/390 31-bit PSW
 if {$write_psw} {
-    set address_bytes [u32_to_bebytes [expr $address | 0x80000000]]
+    set address_bytes [u32_to_bebytes [expr {$address | 0x80000000}]]
     set psw {}
     lappend psw 0x00 0x0C 0x00 0x00
     lappend psw [lindex $address_bytes 0] \
@@ -380,7 +380,7 @@ while {true} {
             lappend hexdata [scan $byte %c]
         }
         write_txt_record $fd_output $sequence $address $hexdata
-        set address [expr $address + $data_length]
+        set address [expr {$address + $data_length}]
         incr sequence
     }
     if {$data_length < 56} {
