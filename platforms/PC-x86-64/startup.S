@@ -262,12 +262,16 @@ _longmode:
                 //
                 // Enable SSE.
                 //
+#define CR0_MP         (1<<1)
+#define CR0_EM         (1<<2)
+#define CR4_OSFXSR     (1<<9)
+#define CR4_OSXMMEXCPT (1<<10)
                 movq    %cr0,%rax
-                andw    $~(1<<2),%ax            // clear CR0.EM
-                orw     $(1<<1),%ax             // set CR0.MP
+                andw    $~CR0_EM,%ax                            // clear CR0.EM
+                orw     $CR0_MP,%ax                             // set CR0.MP
                 movq    %rax,%cr0
                 movq    %cr4,%rax
-                orw     $(3<<9),%ax             // set CR4.OSFXSR and CR4.OSXMMEXCPT
+                orw     $(CR4_OSFXSR|CR4_OSXMMEXCPT),%ax        // set CR4.OSFXSR and CR4.OSXMMEXCPT
                 movq    %rax,%cr4
 #endif
 
