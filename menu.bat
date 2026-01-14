@@ -51,12 +51,12 @@ IF "%1"=="configure"       SET "ACTION_VALID=Y" && %MAKE% configure
 IF "%1"=="infodump"        SET "ACTION_VALID=Y" && %MAKE% infodump
 IF "%1"=="all" (
   SET "ACTION_VALID=Y"
-  %MAKE% all 2>make.errors.log| menu.bat -p make.log
+  %MAKE% all 2>make.log.err| menu.bat -p make.log.run
   CALL :SHOWERRORLOG
   )
 IF "%1"=="postbuild" (
   SET "ACTION_VALID=Y"
-  %MAKE% postbuild 2>make.errors.log| menu.bat -p make.log
+  %MAKE% postbuild 2>make.log.err| menu.bat -p make.log.run
   CALL :SHOWERRORLOG
   )
 IF "%1"=="session-start"   SET "ACTION_VALID=Y" && %MAKE% session-start
@@ -111,12 +111,12 @@ REM # SHOWERRORLOG                                                             #
 REM #                                                                          #
 REM ############################################################################
 :SHOWERRORLOG
-FOR /F %%I IN ("make.errors.log") DO SET ERRORLOGSIZE=%%~zI
+FOR /F %%I IN ("make.log.err") DO SET ERRORLOGSIZE=%%~zI
 IF %ERRORLOGSIZE% GTR 0 (
   ECHO.
   ECHO Detected errors and/or warnings:
   ECHO --------------------------------
-  TYPE make.errors.log
+  TYPE make.log.err
   ECHO.
   )
 GOTO :EOF

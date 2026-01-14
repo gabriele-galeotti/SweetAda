@@ -87,8 +87,8 @@ return 0
 # make_tee()                                                                   #
 #                                                                              #
 # $1 make target                                                               #
-# $2 make errors file                                                          #
-# $3 tee logfile                                                               #
+# $2 tee logfile                                                               #
+# $3 tee error logfile                                                         #
 ################################################################################
 make_tee()
 {
@@ -96,9 +96,9 @@ exec 4>&1
 _exit_status=$(                                \
                {                               \
                  {                             \
-                   ${MAKE} "$1" 2> "$2" 3>&- ; \
+                   ${MAKE} "$1" 2> "$3" 3>&- ; \
                    printf "%s" "$?" 1>&3     ; \
-                 } 4>&- | tee "$3" 1>&4      ; \
+                 } 4>&- | tee "$2" 1>&4      ; \
                } 3>&1                          \
               )
 exec 4>&-
@@ -111,11 +111,11 @@ return ${_exit_status}
 ################################################################################
 log_build_errors()
 {
-if [ -s make.errors.log ] ; then
+if [ -s make.log.err ] ; then
   printf "%s\n" ""
   printf "%s\n" "Detected errors and/or warnings:"
   printf "%s\n" "--------------------------------"
-  cat make.errors.log
+  cat make.log.err
 fi
 return 0
 }
@@ -171,7 +171,7 @@ case $1 in
     "${MAKE}" help
     ;;
   "createkernelcfg")
-    rm -f make.log make.errors.log
+    rm -f make.log.run make.log.err
     if [ "x${PLATFORM}" = "x" ] ; then
       setplatform
     fi
@@ -182,7 +182,7 @@ case $1 in
     fi
     ;;
   "configure")
-    rm -f make.log make.errors.log
+    rm -f make.log.run make.log.err
     "${MAKE}" configure
     exit_status=$?
     log_build_errors
@@ -192,20 +192,20 @@ case $1 in
     exit_status=$?
     ;;
   "all")
-    rm -f make.log make.errors.log
-    make_tee all make.errors.log make.log
+    rm -f make.log.run make.log.err
+    make_tee all make.log.run make.log.err
     exit_status=$?
     log_build_errors
     ;;
   "kernel")
-    rm -f make.log make.errors.log
-    make_tee kernel make.errors.log make.log
+    rm -f make.log.run make.log.err
+    make_tee kernel make.log.run make.log.err
     exit_status=$?
     log_build_errors
     ;;
   "postbuild")
-    rm -f make.log make.errors.log
-    make_tee postbuild make.errors.log make.log
+    rm -f make.log.run make.log.err
+    make_tee postbuild make.log.run make.log.err
     exit_status=$?
     log_build_errors
     ;;
@@ -234,8 +234,8 @@ case $1 in
     exit_status=$?
     ;;
   "rts")
-    rm -f make.log make.errors.log
-    make_tee rts make.errors.log make.log
+    rm -f make.log.run make.log.err
+    make_tee rts make.log.run make.log.err
     exit_status=$?
     log_build_errors
     ;;
