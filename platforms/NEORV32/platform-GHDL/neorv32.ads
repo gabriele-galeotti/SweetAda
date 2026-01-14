@@ -59,8 +59,8 @@ pragma Style_Checks (Off);
       DMA_CTRL_DONE   : Boolean; -- All transfers executed
       DMA_CTRL_BUSY   : Boolean; -- DMA transfer(s) in progress
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for DMA_CTRL_Type use record
       DMA_CTRL_EN     at 0 range  0 ..  0;
       DMA_CTRL_START  at 0 range  1 ..  1;
@@ -79,7 +79,7 @@ pragma Style_Checks (Off);
       CTRL : DMA_CTRL_Type with Volatile_Full_Access => True;
       DESC : Unsigned_32   with Volatile_Full_Access => True;
    end record
-      with Size => 2 * 32;
+      with Object_Size => 2 * 32;
    for DMA_Type use record
       CTRL at 0 range 0 .. 31;
       DESC at 4 range 0 .. 31;
@@ -118,8 +118,8 @@ pragma Style_Checks (Off);
       SLINK_CTRL_RX_FIFO       : Bits_4  := 0;     -- log2(RX FIFO size)
       SLINK_CTRL_TX_FIFO       : Bits_4  := 0;     -- log2(TX FIFO size)
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SLINK_CTRL_Type use record
       SLINK_CTRL_EN            at 0 range  0 ..  0;
       Reserved1                at 0 range  1 ..  7;
@@ -142,8 +142,8 @@ pragma Style_Checks (Off);
       ROUTE    : Bits_4  := 0; -- TX destination routing information (slink_tx_dst_o) RX source routing information (slink_rx_src_i)
       Reserved : Bits_28 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SLINK_ROUTE_Type use record
       ROUTE    at 0 range 0 ..  3;
       Reserved at 0 range 4 .. 31;
@@ -155,7 +155,7 @@ pragma Style_Checks (Off);
       DATA      : Unsigned_32      with Volatile_Full_Access => True;
       DATA_LAST : Unsigned_32      with Volatile_Full_Access => True;
    end record
-      with Size => 4 * 32;
+      with Object_Size => 4 * 32;
    for SLINK_Type use record
       CTRL      at 16#0# range 0 .. 31;
       ROUTE     at 16#4# range 0 .. 31;
@@ -183,7 +183,7 @@ pragma Style_Checks (Off);
 
    type IRQ_TYPE_Bitmap_32 is array (0 .. 31) of IRQ_TYPE_Type
       with Component_Size => 1,
-           Size           => 32;
+           Object_Size    => 32;
 
    type IRQ_POLARITY_Type is range 0 .. 1
       with Size => 1;
@@ -193,7 +193,7 @@ pragma Style_Checks (Off);
 
    type IRQ_POLARITY_Bitmap_32 is array (0 .. 31) of IRQ_POLARITY_Type
       with Component_Size => 1,
-           Size           => 32;
+           Object_Size    => 32;
 
    type GPIO_Type is record
       PORT_IN      : Bitmap_32              with Volatile_Full_Access => True;
@@ -205,7 +205,7 @@ pragma Style_Checks (Off);
       IRQ_ENABLE   : Bitmap_32              with Volatile_Full_Access => True;
       IRQ_PENDING  : Bitmap_32              with Volatile_Full_Access => True;
    end record
-      with Size => 8 * 32;
+      with Object_Size => 8 * 32;
    for GPIO_Type use record
       PORT_IN      at 16#00# range 0 .. 31;
       PORT_OUT     at 16#04# range 0 .. 31;
@@ -243,8 +243,8 @@ pragma Style_Checks (Off);
       Reserved         : Bits_4               := 0;
       WDT_CTRL_TIMEOUT : Bits_24              := 0;              -- Timeout value (24-bit)
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for WDT_CTRL_Type use record
       WDT_CTRL_EN      at 0 range 0 ..  0;
       WDT_CTRL_LOCK    at 0 range 1 ..  1;
@@ -259,7 +259,7 @@ pragma Style_Checks (Off);
       CTRL  : WDT_CTRL_Type with Volatile_Full_Access => True;
       RESET : Unsigned_32   with Volatile_Full_Access => True;
    end record
-      with Size => 2 * 32;
+      with Object_Size => 2 * 32;
    for WDT_Type use record
       CTRL  at 0 range 0 .. 31;
       RESET at 4 range 0 .. 31;
@@ -314,8 +314,8 @@ pragma Style_Checks (Off);
       UART_CTRL_RX_OVER       : Boolean; -- RX FIFO overflow; cleared by disabling the module
       UART_CTRL_TX_BUSY       : Boolean; -- TX busy or TX FIFO not empty
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for UART_CTRL_Type use record
       UART_CTRL_EN            at 0 range  0 ..  0;
       UART_CTRL_SIM_MODE      at 0 range  1 ..  1;
@@ -346,8 +346,8 @@ pragma Style_Checks (Off);
       UART_DATA_TX_FIFO_SIZE : Bits_4     := 0; -- log2(TX FIFO size)
       Reserved               : Bits_16    := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for UART_DATA_Type use record
       UART_DATA_RTX          at 0 range  0 ..  7;
       UART_DATA_RX_FIFO_SIZE at 0 range  8 .. 11;
@@ -359,7 +359,7 @@ pragma Style_Checks (Off);
       CTRL : UART_CTRL_Type with Volatile_Full_Access => True;
       DATA : UART_DATA_Type with Volatile_Full_Access => True;
    end record
-      with Size => 2 * 32;
+      with Object_Size => 2 * 32;
    for UART_Type use record
       CTRL at 0 range 0 .. 31;
       DATA at 4 range 0 .. 31;
@@ -416,8 +416,8 @@ pragma Style_Checks (Off);
       SPI_CS_ACTIVE     : Boolean := False;              -- Set if any chip-select line is active
       SPI_CTRL_BUSY     : Boolean := False;              -- SPI module busy when set (serial engine operation in progress and TX FIFO not empty yet)
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SPI_CTRL_Type use record
       SPI_CTRL_EN       at 0 range  0 ..  0;
       SPI_CTRL_CPHA     at 0 range  1 ..  1;
@@ -440,8 +440,8 @@ pragma Style_Checks (Off);
       Reserved     : Bits_23    := 0;
       SPI_DATA_CMD : Boolean    := False; -- 0 = data, 1 = chip-select-command
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SPI_DATA_Type use record
       SPI_DATA     at 0 range  0 ..  7;
       Reserved     at 0 range  8 .. 30;
@@ -452,7 +452,7 @@ pragma Style_Checks (Off);
       CTRL : SPI_CTRL_Type with Volatile_Full_Access => True;
       DATA : SPI_DATA_Type with Volatile_Full_Access => True;
    end record
-      with Size => 2 * 32;
+      with Object_Size => 2 * 32;
    for SPI_Type use record
       CTRL at 0 range 0 .. 31;
       DATA at 4 range 0 .. 31;
@@ -508,8 +508,8 @@ pragma Style_Checks (Off);
       Reserved4              : Bits_3  := 0;
       SDI_CTRL_CS_ACTIVE     : Boolean := False; -- Chip-select is active when set
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SDI_CTRL_Type use record
       SDI_CTRL_EN            at 0 range  0 ..  0;
       SDI_CTRL_CLR_RX        at 0 range  1 ..  1;
@@ -534,8 +534,8 @@ pragma Style_Checks (Off);
       SDI_DATA : Unsigned_8;      -- receive/transmit data (FIFO)
       Reserved : Bits_24    := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SDI_DATA_Type use record
       SDI_DATA at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
@@ -545,7 +545,7 @@ pragma Style_Checks (Off);
       CTRL : SDI_CTRL_Type with Volatile_Full_Access => True;
       DATA : SDI_DATA_Type with Volatile_Full_Access => True;
    end record
-      with Size => 2 * 32;
+      with Object_Size => 2 * 32;
    for SDI_Type use record
       CTRL at 0 range 0 .. 31;
       DATA at 4 range 0 .. 31;
@@ -586,8 +586,8 @@ pragma Style_Checks (Off);
       TWI_CTRL_RX_AVAIL  : Boolean := False;           -- RX FIFO data available
       TWI_CTRL_BUSY      : Boolean := False;           -- TWI bus engine busy or TX FIFO not empty
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for TWI_CTRL_Type use record
       TWI_CTRL_EN        at 0 range  0 ..  0;
       TWI_CTRL_PRSC      at 0 range  1 ..  3;
@@ -617,8 +617,8 @@ pragma Style_Checks (Off);
       TWI_DCMD_CMD : Bits_2     := TWI_DCMD_CMD_NOP; -- TWI operation (00 = NOP, 01 = START conditions, 10 = STOP condition, 11 = data transmission)
       Reserved     : Bits_21    := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for TWI_DCMD_Type use record
       TWI_DCMD     at 0 range  0 ..  7;
       TWI_DCMD_ACK at 0 range  8 ..  8;
@@ -630,7 +630,7 @@ pragma Style_Checks (Off);
       CTRL : TWI_CTRL_Type with Volatile_Full_Access => True;
       DCMD : TWI_DCMD_Type with Volatile_Full_Access => True;
    end record
-      with Size => 2 * 32;
+      with Object_Size => 2 * 32;
    for TWI_Type use record
       CTRL at 0 range 0 .. 31;
       DCMD at 4 range 0 .. 31;
@@ -672,8 +672,8 @@ pragma Style_Checks (Off);
       TWD_CTRL_SENSE_SDA    : Bits_1  := 0;                  -- current state of the SDA bus line
       TWD_CTRL_BUSY         : Boolean := False;              -- bus engine is busy (transaction in progress)
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for TWD_CTRL_Type use record
       TWD_CTRL_EN           at 0 range  0 ..  0;
       TWD_CTRL_CLR_RX       at 0 range  1 ..  1;
@@ -700,8 +700,8 @@ pragma Style_Checks (Off);
       TWD_DATA : Unsigned_8;   -- RX/TX data FIFO access
       Reserved : Bits_24 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for TWD_DATA_Type use record
       TWD_DATA at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
@@ -711,7 +711,7 @@ pragma Style_Checks (Off);
       CTRL : TWD_CTRL_Type with Volatile_Full_Access => True;
       DATA : TWD_DATA_Type with Volatile_Full_Access => True;
    end record
-      with Size => 2 * 32;
+      with Object_Size => 2 * 32;
    for TWD_Type use record
       CTRL at 0 range 0 .. 31;
       DATA at 4 range 0 .. 31;
@@ -747,8 +747,8 @@ pragma Style_Checks (Off);
       ONEWIRE_CTRL_SENSE    : Bits_1     := 0;                      -- current state of the bus line
       ONEWIRE_CTRL_BUSY     : Boolean    := False;                  -- operation in progress when set or TX FIFO not empty
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for ONEWIRE_CTRL_Type use record
       ONEWIRE_CTRL_EN       at 0 range  0 ..  0;
       ONEWIRE_CTRL_CLEAR    at 0 range  1 ..  1;
@@ -774,8 +774,8 @@ pragma Style_Checks (Off);
       ONEWIRE_DCMD_PRESENCE : Boolean    := False;                -- bus presence detected
       Reserved              : Bits_21    := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for ONEWIRE_DCMD_Type use record
       ONEWIRE_DCMD_DATA     at 0 range  0 ..  7;
       ONEWIRE_DCMD_CMD      at 0 range  8 ..  9;
@@ -787,7 +787,7 @@ pragma Style_Checks (Off);
       CTRL : ONEWIRE_CTRL_Type with Volatile_Full_Access => True;
       DCMD : ONEWIRE_DCMD_Type with Volatile_Full_Access => True;
    end record
-      with Size => 2 * 32;
+      with Object_Size => 2 * 32;
    for ONEWIRE_Type use record
       CTRL at 0 range 0 .. 31;
       DCMD at 4 range 0 .. 31;
@@ -806,7 +806,7 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    type PWM_Channel_Type is new Unsigned_32
-      with Size                 => 32,
+      with Object_Size          => 32,
            Volatile_Full_Access => True;
 
    type PWM_Type is array (0 .. 15) of PWM_Channel_Type
@@ -832,8 +832,8 @@ pragma Style_Checks (Off);
       TRNG_CTRL_AVAIL    : Boolean := False; -- random data available when set
       Reserved           : Bits_24 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for TRNG_CTRL_Type use record
       TRNG_CTRL_EN       at 0 range 0 ..  0;
       TRNG_CTRL_FIFO_CLR at 0 range 1 ..  1;
@@ -847,8 +847,8 @@ pragma Style_Checks (Off);
       TRNG_DATA : Unsigned_8;      -- random data byte
       Reserved  : Bits_24    := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for TRNG_DATA_Type use record
       TRNG_DATA at 0 range 0 ..  7;
       Reserved  at 0 range 8 .. 31;
@@ -858,7 +858,7 @@ pragma Style_Checks (Off);
       CTRL : TRNG_CTRL_Type with Volatile_Full_Access => True;
       DATA : TRNG_DATA_Type with Volatile_Full_Access => True;
    end record
-      with Size => 2 * 32;
+      with Object_Size => 2 * 32;
    for TRNG_Type use record
       CTRL at 0 range 0 .. 31;
       DATA at 4 range 0 .. 31;
@@ -884,7 +884,7 @@ pragma Style_Checks (Off);
       CTRL : Unsigned_32 with Volatile_Full_Access => True;
       DATA : Unsigned_32 with Volatile_Full_Access => True;
    end record
-      with Size => 2 * 32;
+      with Object_Size => 2 * 32;
    for NEOLED_Type use record
       CTRL at 0 range 0 .. 31;
       DATA at 4 range 0 .. 31;
@@ -907,7 +907,7 @@ pragma Style_Checks (Off);
       THRES : Unsigned_32 with Volatile_Full_Access => True;
       COUNT : Unsigned_32 with Volatile_Full_Access => True;
    end record
-      with Size => 3 * 32;
+      with Object_Size => 3 * 32;
    for GPTMR_Type use record
       CTRL  at 0 range 0 .. 31;
       THRES at 4 range 0 .. 31;
@@ -932,7 +932,7 @@ pragma Style_Checks (Off);
       DELTA_SRC : Unsigned_32 with Volatile_Full_Access => True;
       DELTA_DST : Unsigned_32 with Volatile_Full_Access => True;
    end record
-      with Size => 4 * 32;
+      with Object_Size => 4 * 32;
    for TRACER_Type use record
       CTRL      at 16#0# range 0 .. 31;
       STOP_ADDR at 16#4# range 0 .. 31;
@@ -965,8 +965,8 @@ pragma Style_Checks (Off);
       SYSINFO_MISC_BOOT : Bits_4;     -- boot mode configuration, via top’s BOOT_MODE_SELECT generic (see Boot Configuration))
       SYSINFO_MISC_BTMO : Unsigned_8; -- log2(bus timeout cycles), see Bus Monitor and Timeout
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for MEM_Type use record
       SYSINFO_MISC_IMEM at 0 range  0 ..  7;
       SYSINFO_MISC_DMEM at 0 range  8 .. 15;
@@ -1011,8 +1011,8 @@ pragma Style_Checks (Off);
       SYSINFO_SOC_IO_ONEWIRE : Boolean; -- set if ONEWIRE interface is implemented (via top’s IO_ONEWIRE_EN generic)
       Reserved5              : Bits_1;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SOC_Type use record
       SYSINFO_SOC_BOOTLOADER at 0 range  0 ..  0;
       SYSINFO_SOC_XBUS       at 0 range  1 ..  1;
@@ -1060,8 +1060,8 @@ pragma Style_Checks (Off);
       SYSINFO_CACHE_DATA_BURSTS_EN  : Boolean; -- d-cache burst transfers enabled, via top’s CACHE_BURSTS_EN generic
       Reserved2                     : Bits_7;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for CACHE_Type use record
       SYSINFO_CACHE_INST_BLOCK_SIZE at 0 range  0 ..  3;
       SYSINFO_CACHE_INST_NUM_BLOCKS at 0 range  4 ..  7;
@@ -1079,7 +1079,7 @@ pragma Style_Checks (Off);
       SOC   : SOC_Type    with Volatile_Full_Access => True;
       CACHE : CACHE_Type  with Volatile_Full_Access => True;
    end record
-      with Size => 4 * 32;
+      with Object_Size => 4 * 32;
    for SYSINFO_Type use record
       CLK   at 16#0# range 0 .. 31;
       MEM   at 16#4# range 0 .. 31;
