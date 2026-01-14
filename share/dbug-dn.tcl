@@ -64,8 +64,8 @@ proc read_response {fd} {
             set data_length [string length $data_buffer]
             if {$data_length > 5} {
                 set string_check [string range $data_buffer \
-                    [expr $data_length - 6] \
-                    [expr $data_length - 1] \
+                    [expr {$data_length - 6}] \
+                    [expr {$data_length - 1}] \
                     ]
                 if {$string_check eq "dBUG> "} {
                     return "dBUG> "
@@ -115,7 +115,7 @@ if {$SWEETADA_ELF eq ""} {
 
 if {$ELFTOOL ne ""} {
     if {[catch {exec "$ELFTOOL" -c findsymbol=$START_SYMBOL "$SWEETADA_ELF"} result] eq 0} {
-        set START_ADDRESS [format "0x%X" [expr $result]]
+        set START_ADDRESS [format "0x%X" [expr {$result}]]
     } else {
         puts stderr "$SCRIPT_FILENAME: *** Error: system failure or ELFTOOL executable not found."
         exit 1

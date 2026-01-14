@@ -52,11 +52,11 @@ source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
 ################################################################################
 proc ls2chs {sectorn cyl hpc spt} {
     set chs {}
-    lappend chs [expr ($sectorn / $spt) % $hpc]
-    set c [expr ($sectorn / ($spt * $hpc)) % $cyl]
-    set cl [expr $c % 2**8]
-    set ch [expr $c / 2**8]
-    lappend chs [expr (($sectorn % $spt) + 1) + ($ch * 2**6)]
+    lappend chs [expr {($sectorn / $spt) % $hpc}]
+    set c [expr {($sectorn / ($spt * $hpc)) % $cyl}]
+    set cl [expr {$c % 2**8}]
+    set ch [expr {$c / 2**8}]
+    lappend chs [expr {(($sectorn % $spt) + 1) + ($ch * 2**6)}]
     lappend chs $cl
     return $chs
 }
@@ -88,7 +88,7 @@ proc write_partition {f sector_start sector_size} {
     # partition type (FAT32 CHS mode)
     puts -nonewline $fd [binary format c1 0x0B]
     # CHS end; ending sector, not the following one
-    puts -nonewline $fd [binary format c3 [ls2chs [expr $sector_start + $sector_size - 1] $CYL $HPC $SPT]]
+    puts -nonewline $fd [binary format c3 [ls2chs [expr {$sector_start + $sector_size - 1}] $CYL $HPC $SPT]]
     # LBA sector start
     puts -nonewline $fd [binary format c4 [u32_to_lebytes $sector_start]]
     # LBA size in sectors
@@ -126,25 +126,25 @@ set SPT 63
 #set SPT 63
 
 # compute sectors per cylinder
-set SECTORS_PER_CYLINDER [expr $HPC * $SPT]
+set SECTORS_PER_CYLINDER [expr {$HPC * $SPT}]
 # MBR # of sectors, 1 full cylinder
 set MBR_SECTORS $SECTORS_PER_CYLINDER
 # compute # of sectors sufficient to contain the kernel
-set KERNEL_SECTORS [expr ($kernel_size + $BPS - 1) / $BPS]
+set KERNEL_SECTORS [expr {($kernel_size + $BPS - 1) / $BPS}]
 puts [format "%s: kernel sector count: %d (0x%X)" $SCRIPT_FILENAME $KERNEL_SECTORS $KERNEL_SECTORS]
 # compute # of cylinders sufficient to contain the kernel
-set CYL_PARTITION [expr ($KERNEL_SECTORS + $SECTORS_PER_CYLINDER - 1) / $SECTORS_PER_CYLINDER]
+set CYL_PARTITION [expr {($KERNEL_SECTORS + $SECTORS_PER_CYLINDER - 1) / $SECTORS_PER_CYLINDER}]
 # total device # of cylinders, +1 for full cylinder MBR
-set CYL [expr $CYL_PARTITION + 1]
+set CYL [expr {$CYL_PARTITION + 1}]
 # sector count of device
-set DEVICE_SECTORS [expr $CYL * $SECTORS_PER_CYLINDER]
+set DEVICE_SECTORS [expr {$CYL * $SECTORS_PER_CYLINDER}]
 
 if {[string index $device_filename 0] eq "+"} {
     set device_type FILE
     set device_filename [string trimleft $device_filename "+"]
     set fd [open $device_filename "w"]
     fconfigure $fd -translation binary
-    seek $fd [expr $DEVICE_SECTORS * $BPS - 1] start
+    seek $fd [expr {$DEVICE_SECTORS * $BPS - 1}] start
     puts -nonewline $fd [binary format c1 0]
     close $fd
 } else {
@@ -159,7 +159,7 @@ if {[string index $device_filename 0] eq "+"} {
 
 # partiton starts on cylinder boundary (1st full cylinder reserved for MBR)
 set PARTITION_SECTOR_START $SECTORS_PER_CYLINDER
-set PARTITION_SECTORS_SIZE [expr $CYL_PARTITION * $SECTORS_PER_CYLINDER]
+set PARTITION_SECTORS_SIZE [expr {$CYL_PARTITION * $SECTORS_PER_CYLINDER}]
 puts "$SCRIPT_FILENAME: partition sector start: $PARTITION_SECTOR_START"
 puts "$SCRIPT_FILENAME: partition sector size:  $PARTITION_SECTORS_SIZE"
 
@@ -226,7 +226,7 @@ set bootsector [read $fd]
 close $fd
 set fd [open $device_filename "a+"]
 fconfigure $fd -translation binary
-seek $fd [expr $MBR_SECTORS * $BPS] start
+seek $fd [expr {$MBR_SECTORS * $BPS}] start
 puts -nonewline $fd $bootsector
 close $fd
 
@@ -238,7 +238,7 @@ set kernel [read $fd]
 close $fd
 set fd [open $device_filename "a+"]
 fconfigure $fd -translation binary
-seek $fd [expr ($MBR_SECTORS + 1) * $BPS] start
+seek $fd [expr {($MBR_SECTORS + 1) * $BPS}] start
 puts -nonewline $fd $kernel
 close $fd
 

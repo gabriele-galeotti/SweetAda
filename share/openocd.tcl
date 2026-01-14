@@ -205,10 +205,10 @@ if {$START_SYMBOL eq ""} {
 
 if {$ELFTOOL ne ""} {
     if {[catch {exec "$ELFTOOL" -c findsymbol=$START_SYMBOL "$SWEETADA_ELF"} result] eq 0} {
-        set START_ADDRESS [format "0x%X" [expr $result]]
+        set START_ADDRESS [format "0x%X" [expr {$result}]]
         if {$ARM_THUMB ne 0} {
             # ARM Thumb functions have LSb = 1
-            set START_ADDRESS [format "0x%X" [expr $START_ADDRESS & 0xFFFFFFFE]]
+            set START_ADDRESS [format "0x%X" [expr {$START_ADDRESS & 0xFFFFFFFE}]]
         }
     } else {
         puts stderr "$SCRIPT_FILENAME: *** Error: system failure or ELFTOOL executable not found."

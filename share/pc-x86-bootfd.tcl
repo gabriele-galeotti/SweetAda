@@ -64,15 +64,15 @@ set HPC 2
 set SPT 18
 
 # compute sectors per cylinder
-set SECTORS_PER_CYLINDER [expr $HPC * $SPT]
+set SECTORS_PER_CYLINDER [expr {$HPC * $SPT}]
 # sector count of device
-set DEVICE_SECTORS [expr $CYL * $SECTORS_PER_CYLINDER]
+set DEVICE_SECTORS [expr {$CYL * $SECTORS_PER_CYLINDER}]
 
 if {[string index $device_filename 0] eq "+"} {
     set device_type FILE
     set device_filename [string trimleft $device_filename "+"]
     set fd [open $device_filename "w"]
-    seek $fd [expr $DEVICE_SECTORS * $BPS - 1]
+    seek $fd [expr {$DEVICE_SECTORS * $BPS - 1}]
     puts -nonewline $fd [binary format c1 0]
     close $fd
 } else {
@@ -86,7 +86,7 @@ if {[string index $device_filename 0] eq "+"} {
 }
 
 # build bootsector
-set KERNEL_SECTORS [expr ($kernel_size + $BPS - 1) / $BPS]
+set KERNEL_SECTORS [expr {($kernel_size + $BPS - 1) / $BPS}]
 puts [format "%s: kernel sector count: %d (0x%X)" $SCRIPT_FILENAME $KERNEL_SECTORS $KERNEL_SECTORS]
 exec {*}$::env(TOOLCHAIN_CC)    \
     -o bootsector.o             \
@@ -110,7 +110,7 @@ set bootsector [read $fd]
 close $fd
 set fd [open $device_filename "a+"]
 fconfigure $fd -translation binary
-seek $fd [expr 0 * $BPS]
+seek $fd [expr {0 * $BPS}]
 puts -nonewline $fd $bootsector
 close $fd
 
@@ -122,7 +122,7 @@ set kernel [read $fd]
 close $fd
 set fd [open $device_filename "a+"]
 fconfigure $fd -translation binary
-seek $fd [expr 1 * $BPS]
+seek $fd [expr {1 * $BPS}]
 puts -nonewline $fd $kernel
 close $fd
 
