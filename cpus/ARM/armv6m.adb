@@ -476,4 +476,23 @@ package body ARMv6M
           );
    end Fault_Irq_Disable;
 
+   ----------------------------------------------------------------------------
+   -- NVIC CMSIS-like subprograms
+   ----------------------------------------------------------------------------
+
+pragma Style_Checks (Off);
+
+   procedure NVIC_EnableIRQ (IRQ : in Natural) is begin NVIC_ISER (IRQ) := True; end NVIC_EnableIRQ;
+   procedure NVIC_DisableIRQ (IRQ : in Natural) is begin NVIC_ICER (IRQ) := True; end NVIC_DisableIRQ;
+   function NVIC_GetEnableIRQ (IRQ : Natural) return Boolean is begin return NVIC_ISER (IRQ); end NVIC_GetEnableIRQ;
+
+   function NVIC_GetPriority (IRQ : Natural) return Unsigned_8 is begin return NVIC_IPR (IRQ / 4)(IRQ mod 4); end NVIC_GetPriority;
+   procedure NVIC_SetPriority (IRQ : in Natural; Priority : in Unsigned_8) is begin NVIC_IPR (IRQ / 4)(IRQ mod 4) := Priority; end NVIC_SetPriority;
+
+   function NVIC_GetPendingIRQ (IRQ : Natural) return Boolean is begin return NVIC_ISPR (IRQ); end NVIC_GetPendingIRQ;
+   procedure NVIC_SetPendingIRQ (IRQ : in Natural) is begin NVIC_ISPR (IRQ) := True; end NVIC_SetPendingIRQ;
+   procedure NVIC_ClearPendingIRQ (IRQ : in Natural) is begin NVIC_ICPR (IRQ) := True; end NVIC_ClearPendingIRQ;
+
+pragma Style_Checks (On);
+
 end ARMv6M;
