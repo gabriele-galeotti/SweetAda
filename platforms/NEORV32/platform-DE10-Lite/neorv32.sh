@@ -33,20 +33,23 @@ SCRIPT_FILENAME=$(basename "$0")
 ################################################################################
 
 # paths and filenames extracted from "<NEORV32_HOME>/sw/common/common.mk"
+NEORV32_RTL_PATH="${NEORV32_HOME}"/rtl/core
+NEORV32_SIM_PATH="${NEORV32_HOME}"/sim
 IMAGE_GEN="${NEORV32_HOME}"/sw/image_gen/image_gen
-APP_BIN=neorv32_exe.bin
-SERIALPORT_DEVICE=/dev/ttyUSB-PL2303
+APP_IMG=neorv32_application_image.vhd
 
-# generate a pure binary image out of .text/.rodata/.data sections
+# generate a pure binary image out of .text/.data sections
 ${OBJCOPY} \
-  -j .text -j .rodata -j .data \
+  -j .text -j .data \
   -I elf32-little ${KERNEL_OUTFILE} \
   -O binary ${PLATFORM_DIRECTORY}/sweetada.bin
-# elaborate a SweetAda executable
+# elaborate a SweetAda VHDL source
 cd ${PLATFORM_DIRECTORY}
-"${IMAGE_GEN}" -app_bin sweetada.bin ${APP_BIN}
+"${IMAGE_GEN}" -i sweetada.bin -o "${NEORV32_RTL_PATH}"/${APP_IMG} -t app_bin
+
 # send executable to bootloader (which is waiting in "u" mode)
-cat ${APP_BIN} > ${SERIALPORT_DEVICE}
+SERIALPORT_DEVICE=/dev/ttyUSB-PL2303
+cat "${NEORV32_RTL_PATH}"/${APP_IMG} > ${SERIALPORT_DEVICE}
 
 exit 0
 

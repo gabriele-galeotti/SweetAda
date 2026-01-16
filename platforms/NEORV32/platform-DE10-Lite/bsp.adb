@@ -58,7 +58,7 @@ package body BSP
       is
    begin
       -- wait for transmitter available
-      loop exit when not UART0.CTRL.UART_CTRL_TX_FULL; end loop;
+      loop exit when UART0.CTRL.UART_CTRL_TX_EMPTY; end loop;
       UART0.DATA.UART_DATA_RTX := To_U8 (C);
    end Console_Putchar;
 
@@ -97,7 +97,7 @@ package body BSP
          UART_CTRL_RX_FULL       => False,
          UART_CTRL_TX_EMPTY      => False,
          UART_CTRL_TX_NHALF      => False,
-         UART_CTRL_TX_FULL       => False,
+         UART_CTRL_TX_NFULL      => False,
          UART_CTRL_IRQ_RX_NEMPTY => False,
          UART_CTRL_IRQ_RX_HALF   => False,
          UART_CTRL_IRQ_RX_FULL   => False,

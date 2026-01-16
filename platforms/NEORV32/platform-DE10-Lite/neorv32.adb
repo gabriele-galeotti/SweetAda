@@ -26,55 +26,13 @@ package body NEORV32
    --                                                                        --
    --========================================================================--
 
-   -- XIRQ module
-
-   procedure EIE_Read
-      (XIRQ_CH : out Bits_32)
+   function SPI_CS
+      (Enable : Boolean;
+       CS     : SPI_CS_Type := SPI_CS0)
+      return Unsigned_8
       is
    begin
-      XIRQ_CH := EIE;
-   end EIE_Read;
-
-   procedure EIE_Enable
-      (XIRQ_CH : in Bits_32)
-      is
-   begin
-      EIE := @ or XIRQ_CH;
-   end EIE_Enable;
-
-   procedure EIE_Disable
-      (XIRQ_CH : in Bits_32)
-      is
-   begin
-      EIE := @ and not XIRQ_CH;
-   end EIE_Disable;
-
-   procedure EIP_Read
-      (XIRQ_CH : out Bits_32)
-      is
-   begin
-      XIRQ_CH := EIP;
-   end EIP_Read;
-
-   procedure EIP_Clear
-      (XIRQ_CH : in Bits_32)
-      is
-   begin
-      EIP := not XIRQ_CH;
-   end EIP_Clear;
-
-   procedure ESC_Read
-      (XIRQ_CH : out Bits_32)
-      is
-   begin
-      XIRQ_CH := ESC;
-   end ESC_Read;
-
-   procedure ESC_Ack
-      (XIRQ_CH : in Bits_32)
-      is
-   begin
-      ESC := XIRQ_CH;
-   end ESC_Ack;
+      return CS or (if Enable then 2#1000# else 0);
+   end SPI_CS;
 
 end NEORV32;
