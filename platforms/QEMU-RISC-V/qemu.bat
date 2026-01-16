@@ -182,8 +182,8 @@ REM # SLEEP                                                                    #
 REM #                                                                          #
 REM ############################################################################
 :SLEEP
-SET /A SLEEPTIME=%1+1
-%SystemRoot%\System32\PING.EXE -n %SLEEPTIME% 127.0.0.1 >nul 2>&1
+%SystemRoot%\System32\waitfor.exe QEMUPAUSE /T %1 2>nul
+CALL :ERRORLEVEL_RESET
 GOTO :EOF
 
 REM ############################################################################
