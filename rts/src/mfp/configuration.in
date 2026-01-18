@@ -17,9 +17,12 @@ LIBGNAT_SRCS_COMMON += ../common/s-unstyp.ads
 
 LIBGNAT_SRCS_COMMON += ../sfp/a-assert.ads ../sfp/a-assert.adb
 LIBGNAT_SRCS_COMMON += ../sfp/a-except.ads ../sfp/a-except.adb
+LIBGNAT_SRCS_COMMON += ../sfp/a-string.ads
+LIBGNAT_SRCS_COMMON += ../sfp/a-strmap.ads ../sfp/a-strmap.adb
 LIBGNAT_SRCS_COMMON += ../sfp/a-tags.ads   ../sfp/a-tags.adb
 LIBGNAT_SRCS_COMMON += ../sfp/i-c.ads      ../sfp/i-c.adb
 LIBGNAT_SRCS_COMMON += ../sfp/s-assert.ads ../sfp/s-assert.adb
+LIBGNAT_SRCS_COMMON += ../sfp/s-bitops.ads ../sfp/s-bitops.adb
 LIBGNAT_SRCS_COMMON += ../sfp/s-exctab.ads ../sfp/s-exctab.adb
 LIBGNAT_SRCS_COMMON += ../sfp/s-fatflt.ads
 LIBGNAT_SRCS_COMMON += ../sfp/s-fatgen.ads ../sfp/s-fatgen.adb
