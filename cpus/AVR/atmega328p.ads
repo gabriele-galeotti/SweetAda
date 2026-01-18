@@ -58,8 +58,8 @@ pragma Style_Checks (Off);
       T : Boolean := False; -- Bit Copy Storage
       I : Boolean := False; -- Global Interrupt Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for SREG_Type use record
       C at 0 range 0 .. 0;
       Z at 0 range 1 .. 1;
@@ -93,8 +93,8 @@ pragma Style_Checks (Off);
       EEPM01   : Boolean := False; -- EEPROM Programming Mode Bits
       Reserved : Bits_2  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for EECR_Type use record
       EERE     at 0 range 0 .. 0;
       EEPE     at 0 range 1 .. 1;
@@ -201,8 +201,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_3  := 0;
       CLKPCE   : Boolean := False;                   -- Clock Prescaler Change Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for CLKPR_Type use record
       CLKPS    at 0 range 0 .. 3;
       Reserved at 0 range 4 .. 6;
@@ -235,8 +235,8 @@ pragma Style_Checks (Off);
       SM       : Bits_3  := SM_Idle; -- Sleep Mode Select
       Reserved : Bits_4  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for SMCR_Type use record
       SE       at 0 range 0 .. 0;
       SM       at 0 range 1 .. 3;
@@ -263,8 +263,8 @@ pragma Style_Checks (Off);
       BODS      : Boolean := False; -- BOD Sleep
       Reserved2 : Bits_1  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for MCUCR_Type use record
       IVCE      at 0 range 0 .. 0;
       IVSEL     at 0 range 1 .. 1;
@@ -295,8 +295,8 @@ pragma Style_Checks (Off);
       PRTIM2   : Boolean := False; -- Power Reduction Timer/Counter2
       PRTWI    : Boolean := False; -- Power Reduction TWI
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for PRR_Type use record
       PRADC    at 0 range 0 .. 0;
       PRUSART0 at 0 range 1 .. 1;
@@ -329,8 +329,8 @@ pragma Style_Checks (Off);
       WDRF     : Boolean := False; -- Watchdog Reset flag
       Reserved : Bits_4  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for MCUSR_Type use record
       PORF     at 0 range 0 .. 0;
       EXTRF    at 0 range 1 .. 1;
@@ -373,8 +373,8 @@ pragma Style_Checks (Off);
       WDIE   : Boolean := False;         -- Watchdog Timeout Interrupt Enable
       WDIF   : Boolean := False;         -- Watchdog Timeout Interrupt flag
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for WDTCSR_Type use record
       WDP012 at 0 range 0 .. 2;
       WDE    at 0 range 3 .. 3;
@@ -512,8 +512,8 @@ pragma Style_Checks (Off);
       COM0A0   : Boolean := False;                -- Compare Match Output A Mode bit 0
       COM0A1   : Boolean := False;                -- Compare Match Output A Mode bit 1
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for TCCR0A_Type use record
       WGM01    at 0 range 0 .. 1;
       Reserved at 0 range 2 .. 3;
@@ -549,8 +549,8 @@ pragma Style_Checks (Off);
       FOC0B    : Boolean := False;                  -- Force Output Compare B
       FOC0A    : Boolean := False;                  -- Force Output Compare A
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for TCCR0B_Type use record
       CS0      at 0 range 0 .. 2;
       WGM2     at 0 range 3 .. 3;
@@ -605,8 +605,8 @@ pragma Style_Checks (Off);
       OCIE0B   : Boolean := False; -- Timer/Counter0 Output Compare Match B Interrupt Enable
       Reserved : Bits_5  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for TIMSK0_Type use record
       TOIE0    at 0 range 0 .. 0;
       OCIE0A   at 0 range 1 .. 1;
@@ -630,8 +630,8 @@ pragma Style_Checks (Off);
       OCF0B    : Boolean := False; -- Timer/Counter0 Output Compare B Match Flag
       Reserved : Bits_5  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for TIFR0_Type use record
       TOV0     at 0 range 0 .. 0;
       OCF0A    at 0 range 1 .. 1;
@@ -682,8 +682,8 @@ pragma Style_Checks (Off);
       COM1A0   : Boolean := False;                -- Compare Match Output A Mode bit 0
       COM1A1   : Boolean := False;                -- Compare Match Output A Mode bit 1
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for TCCR1A_Type use record
       WGM01    at 0 range 0 .. 1;
       Reserved at 0 range 2 .. 3;
@@ -719,8 +719,8 @@ pragma Style_Checks (Off);
       ICES1    : Boolean := False;                  -- Force Output Compare B
       ICNC1    : Boolean := False;                  -- Force Output Compare A
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for TCCR1B_Type use record
       CS1      at 0 range 0 .. 2;
       WGM23    at 0 range 3 .. 4;
@@ -744,8 +744,8 @@ pragma Style_Checks (Off);
       FOC1B    : Boolean := False; -- Force Output Compare B
       FOC1A    : Boolean := False; -- Force Output Compare A
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for TCCR1C_Type use record
       Reserved at 0 range 0 .. 5;
       FOC1B    at 0 range 6 .. 6;
@@ -842,8 +842,8 @@ pragma Style_Checks (Off);
       ICIE1     : Boolean := False; -- Timer/Counter1 Input Capture Interrupt Enable
       Reserved2 : Bits_2  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for TIMSK1_Type use record
       TOIE1     at 0 range 0 .. 0;
       OCIE1A    at 0 range 1 .. 1;
@@ -871,8 +871,8 @@ pragma Style_Checks (Off);
       ICF1      : Boolean := False; -- Timer/Counter1 Input Capture Flag
       Reserved2 : Bits_2  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for TIFR1_Type use record
       TOV1      at 0 range 0 .. 0;
       OCF1A     at 0 range 1 .. 1;
@@ -916,8 +916,8 @@ pragma Style_Checks (Off);
       COM2A0   : Boolean := False;                 -- Compare Match Output A Mode bit 0
       COM2A1   : Boolean := False;                 -- Compare Match Output A Mode bit 1
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for TCCR2A_Type use record
       WGM01    at 0 range 0 .. 1;
       Reserved at 0 range 2 .. 3;
@@ -953,8 +953,8 @@ pragma Style_Checks (Off);
       FOC2B    : Boolean := False;                  -- Force Output Compare B
       FOC2A    : Boolean := False;                  -- Force Output Compare A
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for TCCR2B_Type use record
       CS2      at 0 range 0 .. 2;
       WGM2     at 0 range 3 .. 3;
@@ -1009,8 +1009,8 @@ pragma Style_Checks (Off);
       OCIE2B   : Boolean := False; -- Timer/Counter2 Output Compare Match B Interrupt Enable
       Reserved : Bits_5  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for TIMSK2_Type use record
       TOIE2    at 0 range 0 .. 0;
       OCIE2A   at 0 range 1 .. 1;
@@ -1034,8 +1034,8 @@ pragma Style_Checks (Off);
       OCF2B    : Boolean := False; -- Timer/Counter2 Output Compare B Match Flag
       Reserved : Bits_5  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for TIFR2_Type use record
       TOV2     at 0 range 0 .. 0;
       OCF2A    at 0 range 1 .. 1;
@@ -1063,8 +1063,8 @@ pragma Style_Checks (Off);
       EXCLK    : Boolean := False; -- Enable External Clock Input
       Reserved : Bits_1  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for ASSR_Type use record
       TCR2BUB  at 0 range 0 .. 0;
       TCR2AUB  at 0 range 1 .. 1;
@@ -1092,8 +1092,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_5  := 0;
       TSM      : Boolean := False; -- Timer/Counter Synchronization Mode
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for GTCCR_Type use record
       PSRSYNC  at 0 range 0 .. 0;
       PSRASY   at 0 range 1 .. 1;
@@ -1141,8 +1141,8 @@ pragma Style_Checks (Off);
       SPE  : Boolean := False;                  -- SPI Enable
       SPIE : Boolean := False;                  -- SPI Interrupt Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for SPCR_Type use record
       SPR  at 0 range 0 .. 1;
       CPHA at 0 range 2 .. 2;
@@ -1169,8 +1169,8 @@ pragma Style_Checks (Off);
       WCOL     : Boolean := False; -- Write COLlision Flag
       SPIF     : Boolean := False; -- SPI Interrupt Flag
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for SPSR_Type use record
       SPI2X    at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 5;
@@ -1239,8 +1239,8 @@ pragma Style_Checks (Off);
       TXC0  : Boolean := False; -- USART Transmit Complete
       RXC0  : Boolean := False; -- USART Receive Complete
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UCSR0A_Type use record
       MPCM0 at 0 range 0 .. 0;
       U2X0  at 0 range 1 .. 1;
@@ -1272,8 +1272,8 @@ pragma Style_Checks (Off);
       TXCIE0  : Boolean := False;          -- TX Complete Interrupt Enable
       RXCIE0  : Boolean := False;          -- RX Complete Interrupt Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UCSR0B_Type use record
       TXB80   at 0 range 0 .. 0;
       RXB80   at 0 range 1 .. 1;
@@ -1302,8 +1302,8 @@ pragma Style_Checks (Off);
       UPM0     : Bits_2 := UPM_Even;           -- Parity Mode
       UMSEL0   : Bits_2 := UMSEL_Asynchronous; -- USART Mode Select
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for UCSR0C_Type use record
       UCPOL0   at 0 range 0 .. 0;
       UCSZ0_01 at 0 range 1 .. 2;

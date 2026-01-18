@@ -122,8 +122,8 @@ pragma Style_Checks (Off);
       T : Boolean := False; -- Bit Copy Storage
       I : Boolean := False; -- Global Interrupt Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for SREG_Type use record
       C at 0 range 0 .. 0;
       Z at 0 range 1 .. 1;
@@ -161,8 +161,8 @@ pragma Style_Checks (Off);
       SRW10 : Bits_1  := SRW_NONE.SRWn0; -- Wait-state Select Bit
       SRE   : Boolean := False;          -- External SRAM/XMEM Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for MCUCR_Type use record
       IVCE  at 0 range 0 .. 0;
       IVSEL at 0 range 1 .. 1;
@@ -225,8 +225,8 @@ pragma Style_Checks (Off);
       EERIE    : Boolean := False; -- EEPROM Ready Interrupt Enable
       Reserved : Bits_4  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for EECR_Type use record
       EERE     at 0 range 0 .. 0;
       EEWE     at 0 range 1 .. 1;
@@ -253,8 +253,8 @@ pragma Style_Checks (Off);
       SRL       : Bits_3 := SRL_Lxxxxxxxx_U1100FFFF; -- Wait-state Sector Limit [n = 2:0]
       Reserved2 : Bits_1 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for XMCRA_Type use record
       Reserved1 at 0 range 0 .. 0;
       SRW11     at 0 range 1 .. 1;
@@ -279,8 +279,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_4  := 0;
       XMBK     : Boolean := False;    -- External Memory Bus-keeper Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for XMCRB_Type use record
       XMM      at 0 range 0 .. 2;
       Reserved at 0 range 3 .. 6;
@@ -305,8 +305,8 @@ pragma Style_Checks (Off);
       XDIV   : Bits_7  := 0;     -- XTAL Divide Select Bits [n = 6:0]
       XDIVEN : Boolean := False; -- XTAL Divide Enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for XDIV_Type use record
       XDIV   at 0 range 0 .. 6;
       XDIVEN at 0 range 7 .. 7;
@@ -344,8 +344,8 @@ pragma Style_Checks (Off);
       JTRF     : Boolean := True; -- JTAG Reset Flag
       Reserved : Bits_3  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for MCUCSR_Type use record
       PORF     at 0 range 0 .. 0;
       EXTRF    at 0 range 1 .. 1;
@@ -380,8 +380,8 @@ pragma Style_Checks (Off);
       WDCE     : Boolean := False;   -- Watchdog Change Enable
       Reserved : Bits_3  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for WDTCR_Type use record
       WDP012   at 0 range 0 .. 2;
       WDE      at 0 range 3 .. 3;
