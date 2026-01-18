@@ -3214,6 +3214,42 @@ pragma Style_Checks (Off);
    -- 29.4.5 Cache Tag Storage (FMC_TAGVDW1Sn)
    -- 29.4.6 Cache Tag Storage (FMC_TAGVDW2Sn)
    -- 29.4.7 Cache Tag Storage (FMC_TAGVDW3Sn)
+
+   FMC_CACHE_SET0 : constant := 0;
+   FMC_CACHE_SET1 : constant := 1;
+   FMC_CACHE_SET2 : constant := 2;
+   FMC_CACHE_SET3 : constant := 3;
+
+   FMC_CACHE_WAY0 : constant := 0;
+   FMC_CACHE_WAY1 : constant := 1;
+   FMC_CACHE_WAY2 : constant := 2;
+   FMC_CACHE_WAY3 : constant := 3;
+
+   type FMC_TAGVDWxSy_Type is record
+      valid     : Boolean := False; -- 1-bit valid for cache entry
+      Reserved1 : Bits_5  := 0;
+      tag       : Bits_14 := 0;     -- 14-bit tag for cache entry
+      Reserved2 : Bits_12 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for FMC_TAGVDWxSy_Type use record
+      valid     at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  5;
+      tag       at 0 range  6 .. 19;
+      Reserved2 at 0 range 20 .. 31;
+   end record;
+
+   type FMC_TAGVDWS_Type is array (FMC_CACHE_SET0 .. FMC_CACHE_SET3) of FMC_TAGVDWxSy_Type;
+
+   type FMC_TAGVDW_Type is array (FMC_CACHE_WAY0 .. FMC_CACHE_WAY3) of FMC_TAGVDWS_Type;
+
+   FMC_TAGVD : aliased FMC_TAGVDW_Type
+      with Address    => System'To_Address (FMC_BASEADDRESS + 16#100#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    -- 29.4.8 Cache Data Storage (uppermost word) (FMC_DATAW0SnUM)
    -- 29.4.9 Cache Data Storage (mid-upper word) (FMC_DATAW0SnMU)
    -- 29.4.10 Cache Data Storage (mid-lower word) (FMC_DATAW0SnML)
@@ -3230,6 +3266,49 @@ pragma Style_Checks (Off);
    -- 29.4.21 Cache Data Storage (mid-upper word) (FMC_DATAW3SnMU)
    -- 29.4.22 Cache Data Storage (mid-lower word) (FMC_DATAW3SnML)
    -- 29.4.23 Cache Data Storage (lowermost word) (FMC_DATAW3SnLM)
+
+   type FMC_DATAWxSyUM_Type is record
+      data : Unsigned_32; -- Bits [127:96] of data entry
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for FMC_DATAWxSyUM_Type use record
+      data at 0 range 0 .. 31;
+   end record;
+
+   type FMC_DATAWxSyMU_Type is record
+      data : Unsigned_32; -- Bits [95:64] of data entry
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for FMC_DATAWxSyMU_Type use record
+      data at 0 range 0 .. 31;
+   end record;
+
+   type FMC_DATAWxSyML_Type is record
+      data : Unsigned_32; -- Bits [63:32] of data entry
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for FMC_DATAWxSyML_Type use record
+      data at 0 range 0 .. 31;
+   end record;
+
+   type FMC_DATAWxSyLM_Type is record
+      data : Unsigned_32; -- Bits [31:0] of data entry
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for FMC_DATAWxSyLM_Type use record
+      data at 0 range 0 .. 31;
+   end record;
+
+   FMC_DATA_UM : constant := 0;
+   FMC_DATA_MU : constant := 1;
+   FMC_DATA_ML : constant := 2;
+   FMC_DATA_LM : constant := 3;
+
+   type FMC_DATAWS_Type is array (FMC_DATA_UM .. FMC_DATA_LM) of Unsigned_32;
 
    ----------------------------------------------------------------------------
    -- Chapter 30 Flash Memory Module (FTFE)
