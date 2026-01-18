@@ -35,6 +35,15 @@ package IntegratorCP
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
+   -- Integrator®/CP Compact Platform Baseboard
+   -- HBI-0086
+   -- User Guide
+   -- ARM DUI 0159B
+   ----------------------------------------------------------------------------
+
    COUNTERTIMER_BASEADDRESS : constant := 16#1300_0000#;
    PIC_PRIMARY_BASEADDRESS  : constant := 16#1400_0000#;
    PL031_RTC_BASEADDRESS    : constant := 16#1500_0000#;
@@ -141,13 +150,13 @@ package IntegratorCP
    MODE_PERIODIC    : constant := 1; -- periodic, reloads from load register at the end of each count.
 
    type TimerXControl_Type is record
-      ONESHOT    : Boolean;      -- Selects one-shot or wrapping counter mode
-      TIMER_SIZE : Bits_1;       -- Selects 16/32 bit counter operation
-      PRESCALE   : Bits_2;       -- Prescale divisor
+      ONESHOT    : Boolean := False;            -- Selects one-shot or wrapping counter mode
+      TIMER_SIZE : Bits_1  := TIMER_SIZE_16;    -- Selects 16/32 bit counter operation
+      PRESCALE   : Bits_2  := PRESCALE_NONE;    -- Prescale divisor
       Reserved1  : Bits_1  := 0;
-      IE         : Boolean;      -- Interrupt enable
-      MODE       : Bits_1;       -- Timer mode
-      ENABLE     : Boolean;      -- Timer enable
+      IE         : Boolean := True;             -- Interrupt enable
+      MODE       : Bits_1  := MODE_FREERUNNING; -- Timer mode
+      ENABLE     : Boolean := False;            -- Timer enable
       Reserved2  : Bits_24 := 0;
    end record
       with Bit_Order   => Low_Order_First,
@@ -210,5 +219,7 @@ package IntegratorCP
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+pragma Style_Checks (On);
 
 end IntegratorCP;
