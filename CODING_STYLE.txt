@@ -3,14 +3,14 @@ SweetAda code (and the build system output) tries to follow specific rules,
 both in a textually and "geometric" sense.
 
 SweetAda code is obviously improvable, and there are areas where both Ada
-semantics, style and coding rules could be written better. But we try to
-first make code working, then we try to consolidate it, following laws and
-providing correctness.
+semantics, style and coding rules could be obeyed better. But we try to first
+make code working, then we try to consolidate it, following laws and providing
+correctness.
 
-Some decisions could seem against mainstream rules, but the ultimate goal is
-hopefully the consistency and ease of reading. For example, the textual output
-of the build system is structured, so that it can be easily parsed by an
-external tool agent. Record layouts have a structure (where possible) to
+Some decisions could seem against mainstream rules, anyway the ultimate goal
+is hopefully the consistency and ease of reading. For example, the textual
+output of the build system is structured, so that it can be easily parsed by
+an external tool agent. Record layouts have a structure (where possible) to
 automate their dissection, since there are regions which can be easily
 isolated, and do not require a tedious line-oriented parsing. This (where
 possible) holds also for normal executable code.
@@ -36,8 +36,10 @@ __DVL__ development level
 __HSH__ hash value
 
 Comments have single space after "--".
+
 Comments should be exquisitely written for technical understanding, without
 irony, personal sarcasm or jokes.
+
 We use a long string of "-" to separate sections of sequential code. The
 length of the string could be variable and depends on the context.
 Long comments composed of multiple phrases should have a leading and trailing
@@ -56,6 +58,16 @@ with'ing of aspects should be indented on a line itself (except inside a
 record layout and maybe "Unreferenced" variables), with an appropriate
 structure. See existing code.
 
+When we are in a declarative region, we try to follow a (loose) sequence like:
+- pragmas
+- use clauses
+- untyped constants
+- types
+- typed constants
+- variable objects
+- subprograms
+(of course forward declarations can break this sequence).
+
 Names should resemble documentation.
 Register, field and constant names should be exactly those written in the
 reference manual, case included, unless conflicts and/or special reasons
@@ -64,7 +76,8 @@ exist.
 Sometimes we write "3" in place of "e", e.g., "Rang3" instead of "Range",
 "D3lay" instead of "Delay", "Typ3" instead of "Type".
 
-Sometimes we write "7" in place of "t", e.g., "A7" instead of "AT".
+Sometimes we write "7" in place of "t", e.g., "A7" instead of "AT", "ou7"
+instead of "out".
 
 Register layouts and constants are often defined without specific bitfield
 typing, as they are already mostly typed as Bits_XX/Unsigned_XX. Further
