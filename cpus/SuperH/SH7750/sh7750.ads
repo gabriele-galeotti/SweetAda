@@ -128,8 +128,8 @@ pragma Style_Checks (Off);
       MD        : Bits_1;       -- Processor mode
       Reserved4 : Bits_1  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SR_Type use record
       T         at 0 range  0 ..  0;
       S         at 0 range  1 ..  1;
@@ -196,8 +196,8 @@ pragma Style_Checks (Off);
       FR           : Bits_1;  -- Floating-point register bank
       Reserved     : Bits_10;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for FPSCR_Type use record
       RM           at 0 range  0 ..  1;
       FL_Inexact   at 0 range  2 ..  2;
@@ -236,8 +236,8 @@ pragma Style_Checks (Off);
       TCOE     : Bits_1; -- Timer Clock Pin Control
       Reserved : Bits_7;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for TOCR_Type use record
       TCOE     at 0 range 0 .. 0;
       Reserved at 0 range 1 .. 7;
@@ -251,8 +251,8 @@ pragma Style_Checks (Off);
       STR2     : Boolean; -- Counter Start 2
       Reserved : Bits_5;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for TSTR_Type use record
       STR0     at 0 range 0 .. 0;
       STR1     at 0 range 1 .. 1;
@@ -298,7 +298,7 @@ pragma Style_Checks (Off);
       end case;
    end record
       with Bit_Order       => Low_Order_First,
-           Size            => 16,
+           Object_Size     => 16,
            Unchecked_Union => True;
    for TCR_Type use record
       TPSC      at 0 range  0 ..  2;
@@ -329,8 +329,8 @@ pragma Warnings (Off, "* bits of ""TMU_Type"" unused");
       TCR2  : TCR_Type    with Volatile_Full_Access => True;
       TCPR2 : Unsigned_32 with Volatile_Full_Access => True;
    end record
-      with Alignment => 4,
-           Size      => 16#30# * 8;
+      with Alignment   => 4,
+           Object_Size => 16#30# * 8;
    for TMU_Type use record
       TOCR  at 16#00# range 0 ..  7;
       TSTR  at 16#04# range 0 ..  7;
@@ -384,8 +384,8 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
       CHR       : Bits_1;  -- Character Length
       Reserved2 : Bits_1;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for SCSMR2_Type use record
       CKS       at 0 range 0 .. 1;
       Reserved1 at 0 range 2 .. 2;
@@ -412,8 +412,8 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
       TIE       : Boolean;      -- Transmit Interrupt Enable
       Reserved3 : Bits_8  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for SCSCR2_Type use record
       Reserved1 at 0 range 0 ..  0;
       CKE1      at 0 range 1 ..  1;
@@ -440,8 +440,8 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
       FER03 : Bits_4;  -- Number of Framing Errors
       PER03 : Bits_4;  -- Number of Parity Errors
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for SCFSR2_Type use record
       DR    at 0 range  0 ..  0;
       RDF   at 0 range  1 ..  1;
@@ -486,8 +486,8 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
       RSTRG    : Bits_3;  -- nRTS2 Output Active Trigger
       Reserved : Bits_5;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for SCFCR2_Type use record
       LOOPBACK at 0 range  0 ..  0;
       RFRST    at 0 range  1 ..  1;
@@ -507,8 +507,8 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
       T         : Bits_5; -- number of transmit data bytes in SCFTDR2
       Reserved2 : Bits_3;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for SCFDR2_Type use record
       R         at 0 range  0 ..  4;
       Reserved1 at 0 range  5 ..  7;
@@ -537,8 +537,8 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
       RTSIO     : Bits_1; -- Serial Port RTS Port I/O
       Reserved2 : Bits_8;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for SCSPTR2_Type use record
       SPB2DT    at 0 range 0 ..  0;
       SPB2IO    at 0 range 1 ..  1;
@@ -556,8 +556,8 @@ pragma Warnings (On, "* bits of ""TMU_Type"" unused");
       ORER     : Boolean; -- Overrun Error
       Reserved : Bits_15;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for SCLSR2_Type use record
       ORER     at 0 range 0 ..  0;
       Reserved at 0 range 1 .. 15;
@@ -578,8 +578,8 @@ pragma Warnings (Off, "* bits of ""SCIF_Type"" unused");
       SCSPTR2 : SCSPTR2_Type with Volatile_Full_Access => True;
       SCLSR2  : SCLSR2_Type  with Volatile_Full_Access => True;
    end record
-      with Alignment => 4,
-           Size      => 16#28# * 8;
+      with Alignment   => 4,
+           Object_Size => 16#28# * 8;
    for SCIF_Type use record
       SCSMR2  at 16#00# range 0 ..  7;
       SCBRR2  at 16#04# range 0 ..  7;
