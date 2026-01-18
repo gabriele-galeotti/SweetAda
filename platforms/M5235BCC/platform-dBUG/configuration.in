@@ -2,6 +2,8 @@
 #
 # M5235BCC board
 #
+# Motorola® ColdFire MCF5235
+#
 
 ################################################################################
 # Basic system parameters.                                                     #

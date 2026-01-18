@@ -2,6 +2,8 @@
 #
 # REF405EP PPC405EP board (QEMU emulator)
 #
+# PowerPC® PPC405
+#
 
 ################################################################################
 # Basic system parameters.                                                     #

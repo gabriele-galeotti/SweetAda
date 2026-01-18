@@ -2,6 +2,8 @@
 #
 # S/390 (Hercules emulator)
 #
+# IBM® ESA/390
+#
 
 ifneq ($(filter configure,$(MAKECMDGOALS)),)
 ifneq ($(BUILD_MODE),GNATMAKE)
