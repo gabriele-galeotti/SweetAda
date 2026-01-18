@@ -2,12 +2,12 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ neorv32.adb                                                                                               --
+-- __FLN__ bsp.ads                                                                                                   --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2024 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -15,15 +15,32 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package body NEORV32
+with Interfaces;
+
+package BSP
    is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                           Package subprograms                          --
+   --                               Public part                              --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-end NEORV32;
+   Tick_Count : aliased Interfaces.Unsigned_32 := 0
+      with Atomic        => True,
+           Export        => True,
+           Convention    => Asm,
+           External_Name => "tick_count";
+
+   Timer_Constant : constant := 16#0200_0000#;
+   Timer_Value    : Interfaces.Unsigned_64;
+
+   procedure Console_Putchar
+      (C : in Character);
+   procedure Console_Getchar
+      (C : out Character);
+   procedure Setup;
+
+end BSP;

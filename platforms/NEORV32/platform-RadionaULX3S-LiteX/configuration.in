@@ -2,7 +2,28 @@
 #
 # NEORV32
 #
-# RISC-V RV32IMC
+# RISC-V RV32I
+#
+
+#
+# LiteX NEORV32/ULX3S generation
+#
+# $ radiona_ulx3s.py \
+#     --device LFE5U-85F
+#     --sys-clk-freq 50000000.0
+#     --cpu-type neorv32
+#     --cpu-reset-address 0
+#     --integrated-sram-size 131072
+#     --bus-standard axi
+#     --sdram-module MT48LC16M16
+#     --sdram-rate 1:1
+#     --yosys-abc9
+#     --build
+#     --output-dir ./build
+#     --soc-svd ./build/neorv32.svd
+#     --log-filename ./neorv32_ulx3s_litex.log
+#     --log-level debug
+#     --doc
 #
 
 ################################################################################
@@ -10,10 +31,10 @@
 #                                                                              #
 ################################################################################
 
-RTS     := sfp
-PROFILE := sfp
+RTS     := zfp
+PROFILE := zfp
 
-USE_APPLICATION := test-neorv32
+USE_APPLICATION := test-neorv32-radionaulx3s-litex
 
 ################################################################################
 # CPU.                                                                         #
@@ -28,14 +49,15 @@ CPU_MODEL := RV32IM
 #                                                                              #
 ################################################################################
 
-GCC_SWITCHES_PLATFORM     := -march=rv32i2p0_mc -mabi=ilp32
+GCC_SWITCHES_PLATFORM     := -march=rv32i -mabi=ilp32
 GCC_SWITCHES_PLATFORM     += -mno-fdiv -mstrict-align -mbranch-cost=10 -ffp-contract=off
-LD_SWITCHES_PLATFORM      += -m elf32lriscv
-LD_SWITCHES_PLATFORM      += --defsym _riscv_mtime_mmap=0xFFFFF400
-LD_SWITCHES_PLATFORM      += --defsym _riscv_mtimecmp_mmap=0xFFFFF408
+LD_SWITCHES_PLATFORM      := -m elf32lriscv --no-warn-rwx-segments
+LD_SWITCHES_PLATFORM      += --defsym _riscv_mtime_mmap=0xFFF4BFF8
+LD_SWITCHES_PLATFORM      += --defsym _riscv_mtimecmp_mmap=0xFFF44000
 OBJDUMP_SWITCHES_PLATFORM :=
 OBJCOPY_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         :=
+POSTBUILD_COMMAND         :=
 
 OPTIMIZATION_LEVEL        := 2
 
@@ -51,16 +73,6 @@ LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 # Run/debug interface.                                                         #
 #                                                                              #
 ################################################################################
-
-#
-# NEORV32_HOME is the top-level directory created when NEORV32 is checked out
-# from the repository. This implementation refers to:
-# https://github.com/emb4fun/neorv32-examples
-#
-# As a prerequisite, go into the "<NEORV32_HOME>/sw/example/hello_world"
-# directory an do a "make ../../../sw/image_gen/image_gen" to create the
-# executable that will be used in translating the SweetAda binary image.
-#
 
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=

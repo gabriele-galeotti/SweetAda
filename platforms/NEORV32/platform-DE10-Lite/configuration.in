@@ -13,7 +13,7 @@
 RTS     := zfp
 PROFILE := zfp
 
-USE_APPLICATION := test-neorv32
+USE_APPLICATION := test-neorv32-de10-lite
 
 ################################################################################
 # CPU.                                                                         #

@@ -1,7 +1,9 @@
 
+with Bits;
 with CPU;
 with MTIME;
 with NEORV32;
+with ULX3S;
 with Console;
 
 package body Application
@@ -15,6 +17,7 @@ package body Application
    --                                                                        --
    --========================================================================--
 
+   use Bits;
    use NEORV32;
 
    --========================================================================--
@@ -34,19 +37,14 @@ package body Application
       -------------------------------------------------------------------------
       if True then
          declare
-            Delay_Count : constant := 500; -- GHDL
-            -- Delay_Count : constant := 5_000_000; -- hardware board
-            LED_n       : Natural := 0;
+            Delay_Count : constant := 1_000_000;
+            LED_n       : Bits_8 := 0;
          begin
             loop
                Console.Print (Value => MTIME.mtime_Read, NL => True);
-               GPIO.PORT_OUT (LED_n) := True;
-               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-               GPIO.PORT_OUT (LED_n) := False;
+               ULX3S.LEDS_OUT.ou7 := To_BM8 (LED_n);
                LED_n := @ + 1;
-               if LED_n > 7 then
-                  LED_n := 0;
-               end if;
+               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;
       end if;

@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2024 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -20,6 +20,7 @@ with Bits;
 with RISCV;
 with MTIME;
 with NEORV32;
+with ULX3S;
 with Exceptions;
 with Console;
 
@@ -58,11 +59,9 @@ package body BSP
       is
    begin
       -- wait for transmitter available
-      loop
-         exit when not UART.TXFULL;
-      end loop;
-      UART.RXTX := To_U8 (C);
-      UART.EV_PENDING.RX := True;
+      loop exit when not ULX3S.UART.TXFULL.txfull; end loop;
+      ULX3S.UART.RXTX.rxtx := To_U8 (C);
+      ULX3S.UART.EV_PENDING.rx := True;
    end Console_Putchar;
 
    procedure Console_Getchar
@@ -71,12 +70,10 @@ package body BSP
       Data : Unsigned_8;
    begin
       -- wait for receiver available
-      loop
-         exit when not UART.RXEMPTY;
-      end loop;
-      Data := UART.RXTX;
+      loop exit when not ULX3S.UART.RXEMPTY.rxempty; end loop;
+      Data := ULX3S.UART.RXTX.rxtx;
       C := To_Ch (Data);
-      UART.EV_PENDING.TX := True;
+      ULX3S.UART.EV_PENDING.tx := True;
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
@@ -86,16 +83,22 @@ package body BSP
       is
    begin
       -- UART -----------------------------------------------------------------
-      -- Copied from uart.c, function uart_init()
-      UART.EV_PENDING := UART.EV_PENDING; -- uart_ev_pending_write(uart_ev_pending_read());
-      UART.EV_ENABLE := (TX => True, RX => True); -- uart_ev_enable_write(UART_EV_TX | UART_EV_RX);
-
+      pragma Warnings (Off);
+      ULX3S.UART.EV_PENDING := ULX3S.UART.EV_PENDING;
+      pragma Warnings (On);
+      ULX3S.UART.EV_ENABLE := (
+         tx     => True,
+         rx     => True,
+         others => <>
+         );
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor.Write := Console_Putchar'Access;
-      Console.Console_Descriptor.Read  := Console_Getchar'Access;
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
-      Console.Print ("NEORV32 (ULX3S)", NL => True);
+      Console.Print ("NEORV32 (Radiona ULX3S/LiteX)", NL => True);
       -------------------------------------------------------------------------
       Exceptions.Init;
       -------------------------------------------------------------------------
