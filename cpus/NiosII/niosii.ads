@@ -35,11 +35,21 @@ package NiosII
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
-   -- Processor core
+   -- Nios II Classic Processor Reference Guide
+   -- NII5V1 2016.10.28
    ----------------------------------------------------------------------------
 
-   -- status/estatus/bstatus
+   ----------------------------------------------------------------------------
+   -- 3 Programming Model
+   ----------------------------------------------------------------------------
+
+   -- Control Registers
+   -- Table 3-7: status Control Register Fields
+   -- Table 3-9: estatus Control Register Fields
+   -- Table 3-10: bstatus Control Register Fields
 
    type status_Type is record
       PIE      : Boolean;      -- PIE is the processor interrupt-enable bit.
@@ -53,8 +63,8 @@ package NiosII
       RSIE     : Boolean;      -- RSIE is the register set interrupt-enable bit.
       Reserved : Bits_8  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for status_Type use record
       PIE      at 0 range  0 ..  0;
       U        at 0 range  1 ..  1;
@@ -124,7 +134,7 @@ package NiosII
    IRQ30 : constant := 30;
    IRQ31 : constant := 31;
 
-   -- ienable
+   -- The ienable Register
 
    function ienable_Read
       return Bitmap_32
@@ -133,35 +143,38 @@ package NiosII
       (Value : in Bitmap_32)
       with Inline => True;
 
-   -- ipending
+   -- The ipending Register
 
    function ipending_Read
       return Bitmap_32
       with Inline => True;
 
-   -- cpuid
+   -- The exception Register
+   -- Table 3-11: exception Control Register Fields
+
+   type exception_Control_Type is record
+      Reserved1 : Bits_2;
+      Cause     : Bits_5;  -- CAUSE is written by the Nios II processor when certain exceptions occur.
+      Reserved2 : Bits_24;
+      ECCFTL    : Boolean; -- The Nios II processor writes to ECCFTL when it detects a potentially fatal ECC error.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for exception_Control_Type use record
+      Reserved1 at 0 range  0 ..  1;
+      Cause     at 0 range  2 ..  6;
+      Reserved2 at 0 range  7 .. 30;
+      ECCFTL    at 0 range 31 .. 31;
+   end record;
+
+   function exception_Control_Read
+      return exception_Control_Type
+      with Inline => True;
+
+   -- The cpuid Register
 
    function cpuid_Read
       return Unsigned_32
-      with Inline => True;
-
-   -- exception control
-
-   type exception_control_Type is record
-      Reserved1 : Bits_2  := 0;
-      Cause     : Bits_5;       -- CAUSE is written by the Nios II processor when certain exceptions occur.
-      Reserved2 : Bits_25 := 0;
-   end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
-   for exception_control_Type use record
-      Reserved1 at 0 range 0 ..  1;
-      Cause     at 0 range 2 ..  6;
-      Reserved2 at 0 range 7 .. 31;
-   end record;
-
-   function exception_control_Read
-      return exception_control_Type
       with Inline => True;
 
    ----------------------------------------------------------------------------
@@ -175,7 +188,7 @@ package NiosII
       with Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Irq handling
+   -- IRQ handling
    ----------------------------------------------------------------------------
 
    subtype Intcontext_Type is Boolean;
@@ -195,5 +208,7 @@ package NiosII
       with Inline => True;
    procedure Irq_Disable
       with Inline => True;
+
+pragma Style_Checks (On);
 
 end NiosII;

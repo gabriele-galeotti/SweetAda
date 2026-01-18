@@ -206,6 +206,26 @@ package body NiosII
    end ipending_Read;
 
    ----------------------------------------------------------------------------
+   -- exception_Control_Read
+   ----------------------------------------------------------------------------
+   function exception_Control_Read
+      return exception_Control_Type
+      is
+      Value : exception_Control_Type;
+   begin
+      Asm (
+           Template => ""                             & CRLF &
+                       "        rdctl   %0,exception" & CRLF &
+                       "",
+           Outputs  => exception_Control_Type'Asm_Output ("=r", Value),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Value;
+   end exception_Control_Read;
+
+   ----------------------------------------------------------------------------
    -- cpuid_Read
    ----------------------------------------------------------------------------
    function cpuid_Read
@@ -224,26 +244,6 @@ package body NiosII
           );
       return Value;
    end cpuid_Read;
-
-   ----------------------------------------------------------------------------
-   -- exception_control_Read
-   ----------------------------------------------------------------------------
-   function exception_control_Read
-      return exception_control_Type
-      is
-      Value : exception_control_Type;
-   begin
-      Asm (
-           Template => ""                             & CRLF &
-                       "        rdctl   %0,exception" & CRLF &
-                       "",
-           Outputs  => exception_control_Type'Asm_Output ("=r", Value),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Value;
-   end exception_control_Read;
 
    ----------------------------------------------------------------------------
    -- NOP
