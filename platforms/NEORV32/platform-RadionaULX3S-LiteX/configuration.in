@@ -42,7 +42,7 @@ USE_APPLICATION := test-neorv32-radionaulx3s-litex
 ################################################################################
 
 CPU       := RISC-V
-CPU_MODEL := RV32IM
+CPU_MODEL := RV32I
 
 ################################################################################
 # Build system parameters.                                                     #

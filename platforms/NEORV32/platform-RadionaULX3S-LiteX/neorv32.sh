@@ -44,17 +44,19 @@ KERNEL_ENTRY_POINT=$(${ELFSYMBOL} ${KERNEL_ENTRY_POINT} ${KERNEL_OUTFILE})
 # upload SweetAda kernel through litex_term
 
 LITEX_PREFIX=/opt/LiteX
+USB_DEVICE=/dev/ttyUSB0
 CWD=$(pwd)
 cd "${LITEX_PREFIX}"/litex/litex/tools
 
+printf "%s\n" "Press the 'F1' button to restart BIOS and upload the executable."
+
 export PYTHONPATH="${LITEX_PREFIX}/litex:${PYTHONPATH}"
-LITEX_ARGS=()
-LITEX_ARGS+=("--speed" "115200")
-LITEX_ARGS+=("--serial-boot")
-LITEX_ARGS+=("--kernel" "${CWD}/${PLATFORM_DIRECTORY}/sweetada.bin")
-LITEX_ARGS+=("--kernel-adr" "${KERNEL_ENTRY_POINT}")
-LITEX_ARGS+=("/dev/ttyUSB0")
-./litex_term.py "${LITEX_ARGS[@]}"
+./litex_term.py \
+  --speed 115200 \
+  --serial-boot \
+  --kernel "${CWD}"/${PLATFORM_DIRECTORY}/sweetada.bin \
+  --kernel-adr ${KERNEL_ENTRY_POINT} \
+  ${USB_DEVICE}
 
 exit 0
 
