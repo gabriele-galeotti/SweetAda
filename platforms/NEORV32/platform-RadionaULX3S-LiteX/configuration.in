@@ -31,8 +31,8 @@
 #                                                                              #
 ################################################################################
 
-RTS     := zfp
-PROFILE := zfp
+RTS     := sfp
+PROFILE := sfp
 
 USE_APPLICATION := test-neorv32-radionaulx3s-litex
 
@@ -58,8 +58,6 @@ OBJDUMP_SWITCHES_PLATFORM :=
 OBJCOPY_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         :=
 POSTBUILD_COMMAND         :=
-
-OPTIMIZATION_LEVEL        := 2
 
 CONFIGURE_FILES_PLATFORM := configure.ads configure.h
 LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S

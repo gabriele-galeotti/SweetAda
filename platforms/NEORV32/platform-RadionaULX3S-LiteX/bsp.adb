@@ -72,8 +72,8 @@ package body BSP
       -- wait for receiver available
       loop exit when not ULX3S.UART.RXEMPTY.rxempty; end loop;
       Data := ULX3S.UART.RXTX.rxtx;
-      C := To_Ch (Data);
       ULX3S.UART.EV_PENDING.tx := True;
+      C := To_Ch (Data);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------

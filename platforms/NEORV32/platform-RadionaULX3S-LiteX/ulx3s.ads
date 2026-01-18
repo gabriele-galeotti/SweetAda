@@ -35,6 +35,8 @@ package ULX3S
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
    -- LiteX SoC Project
    ----------------------------------------------------------------------------
@@ -43,13 +45,13 @@ package ULX3S
 
    -- __INF__ use "ou7" instead of "out"
    type LEDS_OUT_Type is record
-      ou7      : Bitmap_8;       -- Led Output(s) Control.
-      Reserved : Bits_24   := 0;
+      ou7      : Bitmap_8;      -- Led Output(s) Control.
+      Reserved : Bits_24  := 0;
    end record
       with Bit_Order   => Low_Order_First,
            Object_Size => 32;
    for LEDS_OUT_Type use record
-      ou7      at 0 range 0 .. 7;
+      ou7      at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
    end record;
 
@@ -186,5 +188,7 @@ package ULX3S
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+pragma Style_Checks (On);
 
 end ULX3S;
