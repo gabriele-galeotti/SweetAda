@@ -15,6 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
+with Bits;
+
 package INA233
    is
 
@@ -26,6 +29,9 @@ package INA233
    --                                                                        --
    --========================================================================--
 
+   use System;
+   use Bits;
+
 pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
@@ -34,7 +40,13 @@ pragma Style_Checks (Off);
    -- SBOS790A – APRIL 2017 – REVISED MARCH 2025
    ----------------------------------------------------------------------------
 
-   MFR_ID : constant := 16#99#;
+   IOUT_OC_WARN_LIMIT : constant := 16#4A#;
+   VIN_OV_WARN_LIMIT  : constant := 16#57#;
+   VIN_UV_WARN_LIMIT  : constant := 16#58#;
+   PIN_OP_WARN_LIMIT  : constant := 16#6B#;
+   STATUS_BYTE        : constant := 16#78#;
+   MFR_ID             : constant := 16#99#;
+   MFR_CALIBRATION    : constant := 16#D4#;
 
    -- 6.6.2.4 IOUT_OC_WARN_LIMIT (4Ah)
 
@@ -43,8 +55,8 @@ pragma Style_Checks (Off);
       IO        : Bits_12 := 16#FFF#; -- These bits control the IOUT_OC_WARN_LIMIT.
       Reserved2 : Bits_1  := 0;
    end record
-   with Bit_Order => Low_Order_First,
-        Size      => 16;
+   with Bit_Order   => Low_Order_First,
+        Object_Size => 16;
    for IOUT_OC_WARN_LIMIT_Type use record
       Reserved1 at 0 range  0 ..  2;
       IO        at 0 range  3 .. 14;
@@ -58,8 +70,8 @@ pragma Style_Checks (Off);
       V         : Bits_12 := 16#FFF#; -- These bits control the VIN_OV_WARN_LIMIT.
       Reserved2 : Bits_1  := 0;
    end record
-   with Bit_Order => Low_Order_First,
-        Size      => 16;
+   with Bit_Order   => Low_Order_First,
+        Object_Size => 16;
    for VIN_OV_WARN_LIMIT_Type use record
       Reserved1 at 0 range  0 ..  2;
       V         at 0 range  3 .. 14;
@@ -73,8 +85,8 @@ pragma Style_Checks (Off);
       V         : Bits_12 := 0; -- These bits control the VIN_UV_WARN_LIMIT.
       Reserved2 : Bits_1  := 0;
    end record
-   with Bit_Order => Low_Order_First,
-        Size      => 16;
+   with Bit_Order   => Low_Order_First,
+        Object_Size => 16;
    for VIN_UV_WARN_LIMIT_Type use record
       Reserved1 at 0 range  0 ..  2;
       V         at 0 range  3 .. 14;
@@ -87,8 +99,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_4  := 0;
       D        : Bits_12 := 16#FFF#; -- These bits control the VIN_UV_WARN_LIMIT.
    end record
-   with Bit_Order => Low_Order_First,
-        Size      => 16;
+   with Bit_Order   => Low_Order_First,
+        Object_Size => 16;
    for PIN_OP_WARN_LIMIT_Type use record
       Reserved at 0 range 0 ..  3;
       D        at 0 range 4 .. 15;
@@ -106,8 +118,8 @@ pragma Style_Checks (Off);
       OFF         : Boolean; -- Not supported
       BUSY        : Boolean; -- Not supported
    end record
-   with Bit_Order => Low_Order_First,
-        Size      => 8;
+   with Bit_Order   => Low_Order_First,
+        Object_Size => 8;
    for STATUS_BYTE_Type use record
       NONE        at 0 range 0 .. 0;
       CML         at 0 range 1 .. 1;
