@@ -35,12 +35,12 @@ set SCRIPT_FILENAME [file tail $argv0]
 ################################################################################
 
 proc bebytes_to_u32 {block offset} {
-    return [expr \
+    return [expr {\
                [scan [string index $block [expr $offset + 0]] %c] * 0x1000000 + \
                [scan [string index $block [expr $offset + 1]] %c] * 0x10000   + \
                [scan [string index $block [expr $offset + 2]] %c] * 0x100     + \
                [scan [string index $block [expr $offset + 3]] %c]               \
-               ]
+               }]
 }
 
 ################################################################################
@@ -49,7 +49,7 @@ proc bebytes_to_u32 {block offset} {
 ################################################################################
 
 # 80 cylinders × 2 heads × 11 sectors × 512 bytes/sector = 901120 bytes
-set ADF_DISKSIZE [expr 80 * 2 * 11 * 512]
+set ADF_DISKSIZE [expr {80 * 2 * 11 * 512}]
 
 set asmboot_filename ""
 set kernel_filename ""
@@ -90,7 +90,7 @@ if {$asmboot_filename eq "" || \
     exit 1
     }
 
-set kernel_sectors [expr ([file size $kernel_filename] + (512 - 1)) / 512]
+set kernel_sectors [expr {([file size $kernel_filename] + (512 - 1)) / 512}]
 set kernel_start_sector 2
 
 # create a boot binary object
@@ -128,15 +128,15 @@ set prechecksum 0
 set i 0
 while {$i < $bootdatalength} {
     if {$i != 4} {
-        set u32bytes [string range $bootdata $i [expr $i + 3]]
-        set prechecksum [expr $prechecksum + [bebytes_to_u32 $u32bytes 0]]
+        set u32bytes [string range $bootdata $i [expr {$i + 3}]]
+        set prechecksum [expr {$prechecksum + [bebytes_to_u32 $u32bytes 0]}]
     }
     incr i 4
 }
 while {$prechecksum > 0xFFFFFFFF} {
-    set prechecksum [expr ($prechecksum & 0xFFFFFFFF) + ($prechecksum >> 32)]
+    set prechecksum [expr {($prechecksum & 0xFFFFFFFF) + ($prechecksum >> 32)}]
 }
-set checksum [expr 0xFFFFFFFF - $prechecksum]
+set checksum [expr {0xFFFFFFFF - $prechecksum}]
 
 # create the floppy disk image
 puts "$SCRIPT_FILENAME: creating floppy disk ..."
@@ -156,7 +156,7 @@ set fd_data [open $kernel_filename "rb"]
 set data [read $fd_data]
 close $fd_data
 set fd_adf [open $adf_filename "r+b"]
-seek $fd_adf [expr $kernel_start_sector * 512] start
+seek $fd_adf [expr {$kernel_start_sector * 512}] start
 puts -nonewline $fd_adf $data
 close $fd_adf
 
