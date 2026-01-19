@@ -64,7 +64,7 @@ package CortexM4
    end record;
 
    ACTLR : aliased ACTLR_Type
-      with Address              => To_Address (ACTLR_ADDRESS),
+      with Address              => System'To_Address (ACTLR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
