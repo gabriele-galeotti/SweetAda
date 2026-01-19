@@ -57,8 +57,8 @@ pragma Style_Checks (Off);
       IL        : I_Bitmap_15; -- Interrupt Level n (IL[n]): Interrupt level for interrupt n.
       Reserved2 : Bits_16;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for INTC_LEVEL_Type use record
       Reserved1 at 0 range  0 ..  0;
       IL        at 0 range  1 .. 15;
@@ -80,8 +80,8 @@ pragma Style_Checks (Off);
       IP       : I_Bitmap_15; -- Interrupt Pending n (IP[n]): Interrupt pending for interrupt n.
       EIP      : Bitmap_16;   -- Extended Interrupt Pending n (EIP[n]).
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for INTC_PENDING_Type use record
       Reserved at 0 range  0 ..  0;
       IP       at 0 range  1 .. 15;
@@ -103,8 +103,8 @@ pragma Style_Checks (Off);
       IForce    : I_Bitmap_15 := [others => False]; -- Interrupt Force n (IF[n]): Force interrupt no. n.
       Reserved2 : Bits_16     := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for INTC_P0FORCE_Type use record
       Reserved1 at 0 range  0 ..  0;
       IForce    at 0 range  1 .. 15;
@@ -126,8 +126,8 @@ pragma Style_Checks (Off);
       IC        : I_Bitmap_15 := [others => False]; -- Interrupt Clear n (IC[n])
       Reserved2 : Bits_16     := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for INTC_CLEAR_Type use record
       Reserved1 at 0 range  0 ..  0;
       IC        at 0 range  1 .. 15;
@@ -151,8 +151,8 @@ pragma Style_Checks (Off);
       BA        : Boolean               := True;              -- Broadcast Available (BA).
       NCPU      : Natural range 0 .. 15 := 1;                 -- NCPU. Number of CPU’s in the system -1.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for MULTIPROC_STATUS_Type use record
       PowerDown at 0 range  0 .. 15;
       EIRQ      at 0 range 16 .. 19;
@@ -176,8 +176,8 @@ pragma Style_Checks (Off);
       IM       : I_Bitmap_15 := [others => False]; -- Interrupt Mask n (IM[n])
       EIM      : Bitmap_16   := [others => False]; -- Interrupt mask for extended interrupts
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for INTC_PROCMASK_Type use record
       Reserved at 0 range  0 ..  0;
       IM       at 0 range  1 .. 15;
@@ -207,8 +207,8 @@ pragma Style_Checks (Off);
       IM        : I_Bitmap_15 := [others => False]; -- Broadcast Mask n (BM[n])
       Reserved2 : Bits_16     := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for INTC_BROADCAST_Type use record
       Reserved1 at 0 range  0 ..  0;
       IM        at 0 range  1 .. 15;
@@ -231,8 +231,8 @@ pragma Style_Checks (Off);
       Reserved2   : Bits_1      := 0;
       IForceClear : I_Bitmap_15 := [others => False]; -- Interrupt Force Clear n (IFC[n])
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for INTC_FORCE_Type use record
       Reserved1   at 0 range  0 ..  0;
       IForce      at 0 range  1 .. 15;
@@ -262,8 +262,8 @@ pragma Style_Checks (Off);
       EID      : Natural range 16 .. 31; -- ID (16 - 31) of the acknowledged extended interrupt.
       Reserved : Bits_27;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for INTC_EXTINTID_Type use record
       EID      at 0 range 0 ..  4;
       Reserved at 0 range 5 .. 31;
@@ -298,8 +298,8 @@ pragma Style_Checks (Off);
       DF       : Boolean;               -- Disable timer freeze
       Reserved : Bits_22;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GPTimer_Configuration_Type use record
       Timers   at 0 range  0 ..  2;
       IRQ      at 0 range  3 ..  7;
@@ -318,8 +318,8 @@ pragma Style_Checks (Off);
       DH       : Boolean; -- Debug Halt
       Reserved : Bits_25;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GPTimer_Control_Register_Type use record
       EN       at 0 range 0 ..  0;
       RS       at 0 range 1 ..  1;
@@ -352,8 +352,8 @@ pragma Style_Checks (Off);
       Reload_4            : Unsigned_32                      with Volatile_Full_Access => True;
       Control_Register_4  : GPTimer_Control_Register_Type    with Volatile_Full_Access => True;
    end record
-      with Alignment => 4,
-           Size      => 19 * 32;
+      with Alignment   => 4,
+           Object_Size => 19 * 32;
    for GPTimer_Type use record
       Scaler_Value        at 16#00# range 0 .. 31;
       Scaler_Reload_Value at 16#04# range 0 .. 31;
@@ -410,8 +410,8 @@ pragma Style_Checks (Off);
       TCNT     : Bits_6;  -- Transmitter FIFO count
       RCNT     : Bits_6;  -- Receiver FIFO count
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for UART_Status_Register_Type use record
       DR       at 0 range  0 ..  0;
       TS       at 0 range  1 ..  1;
@@ -451,8 +451,8 @@ pragma Style_Checks (Off);
       Reserved : Bits_18;
       FA       : Boolean; -- FIFOs available
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for UART_Control_Register_Type use record
       RE       at 0 range  0 ..  0;
       TE       at 0 range  1 ..  1;
@@ -478,8 +478,8 @@ pragma Style_Checks (Off);
       Scaler_Register     : Unsigned_32                with Volatile_Full_Access => True;
       FIFO_Debug_Register : Unsigned_32                with Volatile_Full_Access => True;
    end record
-      with Alignment => 4,
-           Size      => 5 * 32;
+      with Alignment   => 4,
+           Object_Size => 5 * 32;
    for APB_UART_Type use record
       Data_Register       at 16#00# range 0 .. 31;
       Status_Register     at 16#04# range 0 .. 31;

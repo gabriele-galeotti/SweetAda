@@ -89,9 +89,7 @@ package body LEON3
       is
    begin
       -- wait for transmitter available
-      loop
-         exit when UART1.Status_Register.TS;
-      end loop;
+      loop exit when UART1.Status_Register.TS; end loop;
       UART1.Data_Register := Unsigned_32 (Data);
    end UART1_TX;
 
@@ -103,9 +101,7 @@ package body LEON3
       is
    begin
       -- wait for receiver available
-      loop
-         exit when UART1.Status_Register.DR;
-      end loop;
+      loop exit when UART1.Status_Register.DR; end loop;
       Data := Unsigned_8 (UART1.Data_Register);
    end UART1_RX;
 
