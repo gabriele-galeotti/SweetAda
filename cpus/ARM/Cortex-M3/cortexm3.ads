@@ -64,7 +64,7 @@ package CortexM3
    ACTLR_ADDRESS renames ARMv7M.ACTLR_ADDRESS;
 
    ACTLR : aliased ACTLR_Type
-      with Address              => To_Address (ARMv7M.ACTLR_ADDRESS),
+      with Address              => System'To_Address (ARMv7M.ACTLR_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
