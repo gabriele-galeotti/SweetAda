@@ -5,6 +5,7 @@ with CPU;
 with S5D9;
 with LCD;
 with BSP;
+with Console;
 
 package body Application
    is
@@ -36,20 +37,14 @@ package body Application
    begin
       declare
          Delay_Count : constant := 5_000_000;
-         C           : Unsigned_8;
       begin
-         C := 16#20#;
          while True loop
             -- blink LED3 (yellow)
             PORT (6).PODR (2) := False;
             for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             PORT (6).PODR (2) := True;
             for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-            BSP.Console_Putchar (Bits.To_Ch (C));
-            C := @ + 1;
-            if C > 16#7F# then
-               C := 16#20#;
-            end if;
+            Console.Print ("hello, SweetAda", NL => True);
             for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
          end loop;
       end;
