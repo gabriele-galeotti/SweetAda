@@ -44,7 +44,6 @@ package body BSP
    use Bits;
    use S5D9;
 
-   function To_U32 is new Ada.Unchecked_Conversion (ARMv7M.CPUID_Type, Unsigned_32);
    procedure SysTick_Init;
    procedure LED_Init;
    procedure Serial_Console_Init;
@@ -197,6 +196,7 @@ package body BSP
    ----------------------------------------------------------------------------
    procedure Setup
       is
+      function To_U32 is new Ada.Unchecked_Conversion (ARMv7M.CPUID_Type, Unsigned_32);
    begin
       -- unlock registers -----------------------------------------------------
       PRCR := (
