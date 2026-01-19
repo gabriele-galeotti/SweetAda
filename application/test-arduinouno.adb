@@ -24,11 +24,6 @@ package body Application
    use Interfaces;
    use ATmega328P;
 
-   procedure Delay_Simple
-      (NLoops : in Natural);
-
-   NBlinks : Integer := 6;
-
    type USART_Buffer is array (Integer range <>) of Character;
    -- type USART_Buffer_Ptr is access USART_Buffer;
    -- function To_USART_Buffer_Ptr is new Ada.Unchecked_Conversion (System.Address, USART_Buffer_Ptr);
@@ -38,6 +33,11 @@ package body Application
       'S', 'w', 'e', 'e', 't', 'A', 'd', 'a',
       CR, LF
       ];
+
+   NBlinks : Integer := 6;
+
+   procedure Delay_Simple
+      (NLoops : in Natural);
 
    --========================================================================--
    --                                                                        --
