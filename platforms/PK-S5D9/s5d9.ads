@@ -49,7 +49,56 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 5.2.1 MemMirror Special Function Register (MMSFR)
+
+   KEY_MEMIRADDRKEYCODE : constant := 16#DB#; -- MEMIRADDR is accessed in 32-bit words and DBh is written to the KEY[7:0] bits
+
+   type MMSFR_Type is record
+      Reserved1  : Bits_7  := 0;
+      MEMMIRADDR : Bits_16 := 0; -- Memory Mirror Address
+      Reserved2  : Bits_1  := 0;
+      KEY        : Bits_8  := 0; -- MMSFR Key Code
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for MMSFR_Type use record
+      Reserved1  at 0 range  0 ..  6;
+      MEMMIRADDR at 0 range  7 .. 22;
+      Reserved2  at 0 range 23 .. 23;
+      KEY        at 0 range 24 .. 31;
+   end record;
+
+   MMSFR_ADDRESS : constant := 16#4000_1000#;
+
+   MMSFR : aliased MMSFR_Type
+      with Address              => System'To_Address (MMSFR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 5.2.2 MemMirror Enable Register (MMEN)
+
+   KEY_MMENKEYCODE : constant := 16#DB#; -- MemMirror Enable Register is accessed in 32-bit words and DBh is written to the KEY[7:0] bits.
+
+   type MMEN_Type is record
+      EN        : Boolean := False; -- Memory Mirror Function Enable
+      Reserved  : Bits_23 := 0;
+      KEY       : Bits_8  := 0;     -- These bits enable or disable rewriting of the EN bit
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for MMEN_Type use record
+      EN        at 0 range  0 ..   0;
+      Reserved  at 0 range  1 ..  23;
+      KEY       at 0 range 24 ..  31;
+   end record;
+
+   MMEN_ADDRESS : constant := 16#4000_1004#;
+
+   MMEN : aliased MMEN_Type
+      with Address              => System'To_Address (MMEN_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 6. Resets
@@ -6047,13 +6096,127 @@ pragma Warnings (On);
    -- 56. 2D Drawing Engine (DRW)
    ----------------------------------------------------------------------------
 
+   -- 56.2.1 Geometry Control Register (CONTROL)
+   -- 56.2.2 Surface Control Register (CONTROL2)
+   -- 56.2.3 Interrupt Control Register (IRQCTL)
+   -- 56.2.4 Cache Control Register (CACHECTL)
+   -- 56.2.5 Status Control Register (STATUS)
+   -- 56.2.6 Hardware Version and Feature Set ID Register (HWREVISION)
+   -- 56.2.7 Base Color Register (COLOR1)
+   -- 56.2.8 Secondary Color Register (COLOR2)
+   -- 56.2.9 Pattern Register (PATTERN)
+   -- 56.2.10 Limiter N Start Value Register (LnSTART)
+   -- 56.2.11 Limiter N X-Axis Increment Register (LnXADD)
+   -- 56.2.12 Limiter N Y-Axis Increment Register (LnYADD)
+   -- 56.2.13 Limiter M Band Width Parameter Register (LmBAND)
+   -- 56.2.14 Texture Base Address Register (TEXORIGIN)
+   -- 56.2.15 Texels Per Texture Line Register (TEXPITCH)
+   -- 56.2.16 Texture Size or Texture Address Mask Register (TEXMASK)
+   -- 56.2.17 U Limiter Start Value Register (LUSTART)
+   -- 56.2.18 U Limiter X-Axis Increment Register (LUXADD)
+   -- 56.2.19 U Limiter Y-Axis Increment Register (LUYADD)
+   -- 56.2.20 V Limiter Start Value Integer Part Register (LVSTARTI)
+   -- 56.2.21 V Limiter Start Value Fractional Part Register (LVSTARTF)
+   -- 56.2.22 V Limiter X-Axis Increment Integer Part Register (LVXADDI)
+   -- 56.2.23 V Limiter Y-Axis Increment Integer Part Register (LVYADDI)
+   -- 56.2.24 V Limiter Increment Fractional Parts Register (LVYXADDF)
+   -- 56.2.25 CLUT Start Address Register (TEXCLADDR)
+   -- 56.2.26 CLUT Data Register (TEXCLDATA)
+   -- 56.2.27 CLUT Offset Register (TEXCLOFFSET)
+   -- 56.2.28 Color Key Register (COLKEY)
+   -- 56.2.29 Bounding Box Dimension Register (SIZE)
+   -- 56.2.30 Framebuffer Pitch And Spanstore Delay Register (PITCH)
+   -- 56.2.31 Framebuffer Base Address Register (ORIGIN)
+   -- 56.2.32 Display List Start Address Register (DLISTSTART)
+   -- 56.2.33 Performance Counters Control Register (PERFTRIGGER)
+   -- 56.2.34 Performance Counter k (PERFCOUNTk) (k = 1, 2)
+
    ----------------------------------------------------------------------------
    -- 57. JPEG Codec (JPEG)
    ----------------------------------------------------------------------------
 
+   -- 57.2.1 JPEG Code Mode Register (JCMOD)
+   -- 57.2.2 JPEG Code Command Register (JCCMD)
+   -- 57.2.3 JPEG Code Quantization Table Number Register (JCQTN)
+   -- 57.2.4 JPEG Code Huffman Table Number Register (JCHTN)
+   -- 57.2.5 JPEG Code DRI Upper Register (JCDRIU)
+   -- 57.2.6 JPEG Code DRI Lower Register (JCDRID)
+   -- 57.2.7 JPEG Code Vertical Size Upper Register (JCVSZU)
+   -- 57.2.8 JPEG Code Vertical Size Lower Register (JCVSZD)
+   -- 57.2.9 JPEG Code Horizontal Size Upper Register (JCHSZU)
+   -- 57.2.10 JPEG Coded Horizontal Size Lower Register (JCHSZD)
+   -- 57.2.11 JPEG Code Data Count Upper Register (JCDTCU)
+   -- 57.2.12 JPEG Code Data Count Middle Register (JCDTCM)
+   -- 57.2.13 JPEG Code Data Count Lower Register (JCDTCD)
+   -- 57.2.14 JPEG Interrupt Enable Register 0 (JINTE0)
+   -- 57.2.15 JPEG Interrupt Status Register 0 (JINTS0)
+   -- 57.2.16 JPEG Code Decode Error Register (JCDERR)
+   -- 57.2.17 JPEG Code Reset Register (JCRST)
+   -- 57.2.18 JPEG Interface Compression Control Register (JIFECNT)
+   -- 57.2.19 JPEG Interface Compression Source Address Register (JIFESA)
+   -- 57.2.20 JPEG Interface Compression Line Offset Register (JIFESOFST)
+   -- 57.2.21 JPEG Interface Compression Destination Address Register (JIFEDA)
+   -- 57.2.22 JPEG Interface Compression Source Line Count Register (JIFESLC)
+   -- 57.2.23 JPEG Interface Decompression Control Register (JIFDCNT)
+   -- 57.2.24 JPEG Interface Decompression Source Address Register (JIFDSA)
+   -- 57.2.25 JPEG Interface Decompression Line Offset Register (JIFDDOFST)
+   -- 57.2.26 JPEG Interface Decompression Destination Address Register (JIFDDA)
+   -- 57.2.27 JPEG Interface Decompression Source Data Count Register (JIFDSDC)
+   -- 57.2.28 JPEG Interface Decompression Destination Line Count Register (JIFDDLC)
+   -- 57.2.29 JPEG Interface Decompression alpha Set Register (JIFDADT)
+   -- 57.2.30 JPEG Interrupt Enable Register 1 (JINTE1)
+   -- 57.2.31 JPEG Interrupt Status Register 1 (JINTS1)
+
    ----------------------------------------------------------------------------
    -- 58. Graphics LCD Controller (GLCDC)
    ----------------------------------------------------------------------------
+
+   -- 58.2.1 Color Palette (CLUT)
+   -- 58.2.2 Background Plane Setting Operation Control Register (BG_EN)
+   -- 58.2.3 Background Plane Setting Free-Running Period Register (BG_PERI)
+   -- 58.2.4 Background Plane Setting Synchronization Position Register (BG_SYNC)
+   -- 58.2.5 Background Plane Setting Full Image Vertical Size Register (BG_VSIZE)
+   -- 58.2.6 Background Plane Setting Full Image Horizontal Size Register (BG_HSIZE)
+   -- 58.2.7 Background Plane Setting Background Color Register (BG_BGC)
+   -- 58.2.8 Background Plane Setting Status Monitor Register (BG_MON)
+   -- 58.2.9 Graphics 1 Register Update Control Register (GR1_VEN) Graphics 2 Register Update Control Register (GR2_VEN)
+   -- 58.2.10 Graphics 1 Frame Buffer Read Control Register (GR1_FLMRD) Graphics 2 Frame Buffer Read Control Register (GR2_FLMRD)
+   -- 58.2.11 Graphics 1 Frame Buffer Control Register 1 (GR1_FLM1) Graphics 2 Frame Buffer Control Register 1 (GR2_FLM1)
+   -- 58.2.12 Graphics 1 Frame Buffer Control Register 2 (GR1_FLM2) Graphics 2 Frame Buffer Control Register 2 (GR2_FLM2)
+   -- 58.2.13 Graphics 1 Frame Buffer Control Register 3 (GR1_FLM3) Graphics 2 Frame Buffer Control Register 3 (GR2_FLM3)
+   -- 58.2.14 Graphics 1 Frame Buffer Control Register 5 (GR1_FLM5) Graphics 2 Frame Buffer Control Register 5 (GR2_FLM5)
+   -- 58.2.15 Graphics 1 Frame Buffer Control Register 6 (GR1_FLM6) Graphics 2 Frame Buffer Control Register 6 (GR2_FLM6)
+   -- 58.2.16 Graphics 1 Alpha Blending Control Register 1 (GR1_AB1) Graphics 2 Alpha Blending Control Register 1 (GR2_AB1)
+   -- 58.2.17 Graphics 1 Alpha Blending Control Register 2 (GR1_AB2) Graphics 2 Alpha Blending Control Register 2 (GR2_AB2)
+   -- 58.2.18 Graphics 1 Alpha Blending Control Register 3 (GR1_AB3) Graphics 2 Alpha Blending Control Register 3 (GR2_AB3)
+   -- 58.2.19 Graphics 1 Alpha Blending Control Register 4 (GR1_AB4) Graphics 2 Alpha Blending Control Register 4 (GR2_AB4)
+   -- 58.2.20 Graphics 1 Alpha Blending Control Register 5 (GR1_AB5) Graphics 2 Alpha Blending Control Register 5 (GR2_AB5)
+   -- 58.2.21 Graphics 1 Alpha Blending Control Register 6 (GR1_AB6) Graphics 2 Alpha Blending Control Register 6 (GR2_AB6)
+   -- 58.2.22 Graphics 1 Alpha Blending Control Register 7 (GR1_AB7) Graphics 2 Alpha Blending Control Register 7 (GR2_AB7)
+   -- 58.2.23 Graphics 1 Alpha Blending Control Register 8 (GR1_AB8) Graphics 2 Alpha Blending Control Register 8 (GR2_AB8)
+   -- 58.2.24 Graphics 1 Alpha Blending Control Register 9 (GR1_AB9) Graphics 2 Alpha Blending Control Register 9 (GR2_AB9)
+   -- 58.2.25 Graphics 1 Background Color Control Register (GR1_BASE) Graphics 2 Background Color Control Register (GR2_BASE)
+   -- 58.2.26 Graphics 1 CLUT Table Interrupt Control Register (GR1_CLUTINT) Graphics 2 CLUT Table Interrupt Control Register (GR2_CLUTINT)
+   -- 58.2.27 Graphics 1 Status Monitor Register (GR1_MON) Graphics 2 Status Monitor Register (GR2_MON)
+   -- 58.2.28 Gamma G Register Update Control Register (GAMG_LATCH) Gamma B Register Update Control Register (GAMB_LATCH) Gamma R Register Update Control Register (GAMR_LATCH)
+   -- 58.2.29 Gamma Correction Block Function Switch Register (GAM_SW)
+   -- 58.2.30 Gamma G Correction Block Table Setting Register 1 (GAMG_LUT1) Gamma B Correction Block Table Setting Register 1 (GAMB_LUT1) Gamma R Correction Block Table Setting Register 1 (GAMR_LUT1)
+   -- 58.2.31 Gamma G Correction Block Table Setting Register 2 (GAMG_LUT2) Gamma B Correction Block Table Setting Register 2 (GAMB_LUT2) Gamma R Correction Block Table Setting Register 2 (GAMR_LUT2)
+   -- 58.2.32 Gamma G Correction Block Table Setting Register 3 (GAMG_LUT3) Gamma B Correction Block Table Setting Register 3 (GAMB_LUT3) Gamma R Correction Block Table Setting Register 3 (GAMR_LUT3)
+   -- 58.2.33 Gamma G Correction Block Table Setting Register 4 (GAMG_LUT4) Gamma B Correction Block Table Setting Register 4 (GAMB_LUT4) Gamma R Correction Block Table Setting Register 4 (GAMR_LUT4)
+   -- 58.2.34 Gamma G Correction Block Table Setting Register 5 (GAMG_LUT5) Gamma B Correction Block Table Setting Register 5 (GAMB_LUT5) Gamma R Correction Block Table Setting Register 5 (GAMR_LUT5)
+   -- 58.2.35 Gamma G Correction Block Table Setting Register 6 (GAMG_LUT6) Gamma B Correction Block Table Setting Register 6 (GAMB_LUT6) Gamma R Correction Block Table Setting Register 6 (GAMR_LUT6)
+   -- 58.2.36 Gamma G Correction Block Table Setting Register 7 (GAMG_LUT7) Gamma B Correction Block Table Setting Register 7 (GAMB_LUT7) Gamma R Correction Block Table Setting Register 7 (GAMR_LUT7)
+   -- 58.2.37 Gamma G Correction Block Table Setting Register 8 (GAMG_LUT8) Gamma B Correction Block Table Setting Register 8 (GAMB_LUT8) Gamma R Correction Block Table Setting Register 8 (GAMR_LUT8)
+   -- 58.2.38 Gamma G Correction Block Area Setting Register 1 (GAMG_AREA1) Gamma B Correction Block Area Setting Register 1 (GAMB_AREA1) Gamma R Correction Block Area Setting Register 1 (GAMR_AREA1)
+   -- 58.2.39 Gamma G Correction Block Area Setting Register 2 (GAMG_AREA2) Gamma B Correction Block Area Setting Register 2 (GAMB_AREA2) Gamma R Correction Block Area Setting Register 2 (GAMR_AREA2)
+   -- 58.2.40 Gamma G Correction Block Area Setting Register 3 (GAMG_AREA3) Gamma B Correction Block Area Setting Register 3 (GAMB_AREA3) Gamma R Correction Block Area Setting Register 3 (GAMR_AREA3)
+   -- 58.2.41 Gamma G Correction Block Area Setting Register 4 (GAMG_AREA4) Gamma B Correction Block Area Setting Register 4 (GAMB_AREA4) Gamma R Correction Block Area Setting Register 4 (GAMR_AREA4)
+   -- 58.2.42 Gamma G Correction Block Area Setting Register 5 (GAMG_AREA5) Gamma B Correction Block Area Setting Register 5 (GAMB_AREA5) Gamma R Correction Block Area Setting Register 5 (GAMR_AREA5)
+   -- 58.2.43 Output Control Block Register Update Control Register (OUT_VLATCH)
+   -- 58.2.44 Output Control Block Output Interface Register (OUT_SET)
+   -- 58.2.45 Output Control Block Brightness Correction Register 1 (OUT_BRIGHT1)
+   -- 58.2.46 Output Control Block Brightness Correction Register 2 (OUT_BRIGHT2)
 
 pragma Style_Checks (On);
 
