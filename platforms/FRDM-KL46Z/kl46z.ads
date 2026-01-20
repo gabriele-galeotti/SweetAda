@@ -43,6 +43,46 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
+   -- Chapter 3 Chip Configuration
+   ----------------------------------------------------------------------------
+
+   -- 3.3.2.3 Interrupt channel assignments
+
+   --                                   Address     Vector IRQ NVIC IPR Source module       Source description
+   IRQ_DMA0        : constant := 0;  -- 0x0000_0040 16     0   0        DMA                 DMA channel 0 transfer complete and error
+   IRQ_DMA1        : constant := 1;  -- 0x0000_0044 17     1   0        DMA                 DMA channel 1 transfer complete and error
+   IRQ_DMA2        : constant := 2;  -- 0x0000_0048 18     2   0        DMA                 DMA channel 2 transfer complete and error
+   IRQ_DMA3        : constant := 3;  -- 0x0000_004C 19     3   0        DMA                 DMA channel 3 transfer complete and error
+   IRQ_UNASSIGNED  : constant := 4;  -- 0x0000_0050 20     4   1        —                   —
+   IRQ_FTFA        : constant := 5;  -- 0x0000_0054 21     5   1        FTFA                Command complete and read collision
+   IRQ_PMC         : constant := 6;  -- 0x0000_0058 22     6   1        PMC                 Low-voltage detect, low-voltage warning
+   IRQ_LLWU        : constant := 7;  -- 0x0000_005C 23     7   1        LLWU                Low Leakage Wakeup
+   IRQ_I2C0        : constant := 8;  -- 0x0000_0060 24     8   2        I2C0                —
+   IRQ_I2C1        : constant := 9;  -- 0x0000_0064 25     9   2        I2C1                —
+   IRQ_SPI0        : constant := 10; -- 0x0000_0068 26     10  2        SPI0                Single interrupt vector for all sources
+   IRQ_SPI1        : constant := 11; -- 0x0000_006C 27     11  2        SPI1                Single interrupt vector for all sources
+   IRQ_UART0       : constant := 12; -- 0x0000_0070 28     12  3        UART0               Status and error
+   IRQ_UART1       : constant := 13; -- 0x0000_0074 29     13  3        UART1               Status and error
+   IRQ_UART2       : constant := 14; -- 0x0000_0078 30     14  3        UART2               Status and error
+   IRQ_ADC0        : constant := 15; -- 0x0000_007C 31     15  3        ADC0                —
+   IRQ_CMP0        : constant := 16; -- 0x0000_0080 32     16  4        CMP0                —
+   IRQ_TPM0        : constant := 17; -- 0x0000_0084 33     17  4        TPM0                —
+   IRQ_TPM1        : constant := 18; -- 0x0000_0088 34     18  4        TPM1                —
+   IRQ_TPM2        : constant := 19; -- 0x0000_008C 35     19  4        TPM2                —
+   IRQ_RTC_ALARM   : constant := 20; -- 0x0000_0090 36     20  5        RTC                 Alarm interrupt
+   IRQ_RTC_SECONDS : constant := 21; -- 0x0000_0094 37     21  5        RTC                 Seconds interrupt
+   IRQ_PIT         : constant := 22; -- 0x0000_0098 38     22  5        PIT                 Single interrupt vector for all channels
+   IRQ_I2S0        : constant := 23; -- 0x0000_009C 39     23  5        I2S0                Single interrupt vector for all sources
+   IRQ_USB_OTG     : constant := 24; -- 0x0000_00A0 40     24  6        USB OTG             —
+   IRQ_DAC0        : constant := 25; -- 0x0000_00A4 41     25  6        DAC0                —
+   IRQ_TSI0        : constant := 26; -- 0x0000_00A8 42     26  6        TSI0                —
+   IRQ_MCG         : constant := 27; -- 0x0000_00AC 43     27  6        MCG                 —
+   IRQ_LPTMR0      : constant := 28; -- 0x0000_00B0 44     28  7        LPTMR0              —
+   IRQ_SLCD        : constant := 29; -- 0x0000_00B4 45     29  7        SLCD                —
+   IRQ_PORTA       : constant := 30; -- 0x0000_00B8 46     30  7        Port control module Pin detect (Port A)
+   IRQ_PORTCD      : constant := 31; -- 0x0000_00BC 47     31  7        Port control module Pin detect (Single interrupt vector for Port C and Port D)
+
+   ----------------------------------------------------------------------------
    -- Chapter 11 Port Control and Interrupts (PORT)
    ----------------------------------------------------------------------------
 
@@ -4548,9 +4588,89 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 35.4.1 Peripheral ID register (USBx_PERID)
+
+   type USBx_PERID_Type is record
+      ID       : Bits_6; -- Peripheral Identification
+      Reserved : Bits_2;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_PERID_Type use record
+      ID       at 0 range 0 .. 5;
+      Reserved at 0 range 6 .. 7;
+   end record;
+
+   USBx_PERID_ADDRESS : constant := 16#4007_2000#;
+
+   USBx_PERID : aliased USBx_PERID_Type
+      with Address              => System'To_Address (USBx_PERID_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.2 Peripheral ID Complement register (USBx_IDCOMP)
+
+   type USBx_IDCOMP_Type is record
+      NID      : Bits_6; -- Ones complement of peripheral identification bits.
+      Reserved : Bits_2;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_IDCOMP_Type use record
+      NID      at 0 range 0 .. 5;
+      Reserved at 0 range 6 .. 7;
+   end record;
+
+   USBx_IDCOMP_ADDRESS : constant := 16#4007_2004#;
+
+   USBx_IDCOMP : aliased USBx_IDCOMP_Type
+      with Address              => System'To_Address (USBx_IDCOMP_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.3 Peripheral Revision register (USBx_REV)
+
+   type USBx_REV_Type is record
+      REV : Bits_8; -- Revision
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_REV_Type use record
+      REV at 0 range 0 .. 7;
+   end record;
+
+   USBx_REV_ADDRESS : constant := 16#4007_2008#;
+
+   USBx_REV : aliased USBx_REV_Type
+      with Address              => System'To_Address (USBx_REV_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.4 Peripheral Additional Info register (USBx_ADDINFO)
+
+   type USBx_ADDINFO_Type is record
+      IEHOST   : Boolean; -- When this bit is set, the USB peripheral is operating in host mode.
+      Reserved : Bits_2;
+      IRQNUM   : Bits_5;  -- Assigned Interrupt Request Number
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_ADDINFO_Type use record
+      IEHOST   at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 2;
+      IRQNUM   at 0 range 3 .. 7;
+   end record;
+
+   USBx_ADDINFO_ADDRESS : constant := 16#4007_200C#;
+
+   USBx_ADDINFO : aliased USBx_ADDINFO_Type
+      with Address              => System'To_Address (USBx_ADDINFO_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.5 OTG Interrupt Status register (USBx_OTGISTAT)
    -- 35.4.6 OTG Interrupt Control register (USBx_OTGICR)
    -- 35.4.7 OTG Status register (USBx_OTGSTAT)
