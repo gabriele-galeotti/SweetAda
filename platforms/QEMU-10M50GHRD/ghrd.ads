@@ -54,8 +54,8 @@ package GHRD
       RUN      : Boolean := False;
       Reserved : Bits_30 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for Timer_Status_Type use record
       TO       at 0 range 0 ..  0;
       RUN      at 0 range 1 ..  1;
@@ -69,8 +69,8 @@ package GHRD
       STOP     : Boolean := False;
       Reserved : Bits_28 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for Timer_Control_Type use record
       ITO      at 0 range 0 ..  0;
       CONT     at 0 range 1 ..  1;
@@ -87,7 +87,7 @@ package GHRD
       SnapL   : Unsigned_32        with Volatile_Full_Access => True; -- 16-bit
       SnapH   : Unsigned_32        with Volatile_Full_Access => True; -- 16-bit
    end record
-      with Size => 6 * 32;
+      with Object_Size => 6 * 32;
    for Timer_Type use record
       Status  at 16#00# range 0 .. 31;
       Control at 16#04# range 0 .. 31;
