@@ -111,7 +111,7 @@ function GetEnvVar
     }
     else
     {
-      return [string][Environment]::GetEnvironmentVariable(${varname})
+      return [string][Environment]::GetEnvironmentVariable($varname)
     }
   }
 }

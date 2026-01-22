@@ -88,6 +88,11 @@ if [ "x$2" = "x" ] ; then
 fi
 
 SYMBOL_NMLINE=$(${TOOLCHAIN_NM} --format=posix $2 2> /dev/null | grep -m 1 -e $1)
+if [ "x${SYMBOL_NMLINE}" = "x" ] ; then
+  log_print_error "${SCRIPT_FILENAME}: *** Error: no symbol \"$1\" found."
+  exit 1
+fi
+
 SYMBOL_VALUE=$(printf "%s\n" "${SYMBOL_NMLINE}" | \
                sed -e "s|^\([A-za-z_]\+\) *. *\([0-9A-Fa-f]\+\) *.*\$|\2|")
 

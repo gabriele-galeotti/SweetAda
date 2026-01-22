@@ -159,25 +159,33 @@ try
   $p.WaitForExit()
   if ($p.ExitCode -ne 0)
   {
-    Write-Host "${scriptname}: *** Error: executing ${nm}."
+    Write-Stderr "$($scriptname): *** Error: executing $($nm)."
     ExitWithCode $p.ExitCode
   }
 }
 catch
 {
-  Write-Host "${scriptname}: *** Error: executing ${nm}."
+  Write-Stderr "$($scriptname): *** Error: executing $($nm)."
   ExitWithCode 1
 }
 
 $lines = $stdout.Split($nl, [StringSplitOptions]::RemoveEmptyEntries)
+
+$found = $false
 foreach ($line in $lines)
 {
   $symbolspec = $line.Split(" ", 4)
   if ($symbolspec[0] -eq $symbol)
   {
-    Write-Host "$(${prefix_string})0x$($symbolspec[2])"
+    $found = $true
+    Write-Host "$($prefix_string)0x$($symbolspec[2])"
     break
   }
+}
+if (-not $found)
+{
+  Write-Stderr "$($scriptname): *** Error: no symbol `"$($symbol)`" found."
+  ExitWithCode 1
 }
 
 ExitWithCode 0

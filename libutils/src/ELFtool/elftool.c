@@ -834,6 +834,10 @@ command_findsymbol(void)
                 }
                 print_value();
         }
+        else
+        {
+                log_printf(LOG_STDERR | LOG_FILE, "*** Error: no symbol \"%s\" found.", application.symbol_name);
+        }
 
         return efs_status;
 }
