@@ -28,7 +28,7 @@ package body PCI
    --                                                                        --
    --========================================================================--
 
-   function To_U32 is new Ada.Unchecked_Conversion (Confadd_Type, Unsigned_32);
+   function To_U32 is new Ada.Unchecked_Conversion (Confaddr_Type, Unsigned_32);
 
    --========================================================================--
    --                                                                        --
@@ -146,16 +146,16 @@ package body PCI
        Register_Number : Register_Number_Type)
       return Unsigned_32
       is
-      Confadd_Value : Confadd_Type;
+      Confaddr_Value : Confaddr_Type;
    begin
-      Confadd_Value := (
+      Confaddr_Value := (
          REGNUM  => Register_Number and 16#FC#,
          FUNCNUM => Function_Number,
          DEVNUM  => Device_Number,
          BUSNUM  => Bus_Number,
          others  => <>
          );
-      Descriptor.Write_32 (CONFADD, To_U32 (Confadd_Value));
+      Descriptor.Write_32 (CONFADDR, To_U32 (Confaddr_Value));
       return Descriptor.Read_32 (CONFDATA);
    end Cfg_Read;
 
@@ -167,16 +167,16 @@ package body PCI
        Register_Number : in Register_Number_Type;
        Value           : in Unsigned_32)
       is
-      Confadd_Value : Confadd_Type;
+      Confaddr_Value : Confaddr_Type;
    begin
-      Confadd_Value := (
+      Confaddr_Value := (
          REGNUM  => Register_Number and 16#FC#,
          FUNCNUM => Function_Number,
          DEVNUM  => Device_Number,
          BUSNUM  => Bus_Number,
          others  => <>
          );
-      Descriptor.Write_32 (CONFADD, To_U32 (Confadd_Value));
+      Descriptor.Write_32 (CONFADDR, To_U32 (Confaddr_Value));
       Descriptor.Write_32 (CONFDATA, Value);
    end Cfg_Write;
 

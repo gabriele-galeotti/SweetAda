@@ -127,7 +127,7 @@ package PCI
    type Function_Number_Type is new Bits_3;
    type Register_Number_Type is new Bits_8;
 
-   type Confadd_Type is record
+   type Confaddr_Type is record
       REGNUM   : Register_Number_Type := 0;
       FUNCNUM  : Function_Number_Type := 0;
       DEVNUM   : Device_Number_Type   := 0;
@@ -135,9 +135,9 @@ package PCI
       Reserved : Bits_7               := 0;
       CONE     : Boolean              := True;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
-   for Confadd_Type use record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for Confaddr_Type use record
       REGNUM   at 0 range 0 .. 7;
       FUNCNUM  at 1 range 0 .. 2;
       DEVNUM   at 1 range 3 .. 7;
@@ -146,7 +146,7 @@ package PCI
       CONE     at 3 range 7 .. 7;
    end record;
 
-   CONFADD  : constant Unsigned_16 := 16#0CF8#;
+   CONFADDR : constant Unsigned_16 := 16#0CF8#;
    CONFDATA : constant Unsigned_16 := 16#0CFC#;
 
    BUS0 : constant Bus_Number_Type := 0;
@@ -193,8 +193,8 @@ package PCI
       IRQEN    : Boolean := False; -- interrupt enable
       Reserved : Bits_5  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for Command_Type use record
       IOEN     at 0 range  0 ..  0;
       MEMEN    at 0 range  1 ..  1;
