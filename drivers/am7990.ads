@@ -76,8 +76,8 @@ pragma Style_Checks (Off);
       BABL : Boolean;
       ERR  : Boolean;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for CSR0_Type use record
       INIT at 0 range  0 ..  0;
       STRT at 0 range  1 ..  1;
@@ -103,8 +103,8 @@ pragma Style_Checks (Off);
       BSWP     : Bits_1;
       Reserved : Bits_13;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for CSR3_Type use record
       BCON     at 0 range 0 ..  0;
       ACON     at 0 range 1 ..  1;
@@ -119,8 +119,8 @@ pragma Style_Checks (Off);
    type RMD0_Type is record
       LADR : Bits_16;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for RMD0_Type use record
       LADR at 0 range 0 .. 15;
    end record;
@@ -136,8 +136,8 @@ pragma Style_Checks (Off);
       ERR  : Boolean;
       OWN  : Boolean;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for RMD1_Type use record
       HADR at 0 range  0 ..  7;
       ENP  at 0 range  8 ..  8;
@@ -154,8 +154,8 @@ pragma Style_Checks (Off);
       BCNT : Bits_12;
       ONES : Bits_4 := 2#1111#;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for RMD2_Type use record
       BCNT at 0 range  0 .. 11;
       ONES at 0 range 12 .. 15;
@@ -165,8 +165,8 @@ pragma Style_Checks (Off);
       MCNT     : Bits_12;
       Reserved : Bits_4;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for RMD3_Type use record
       MCNT     at 0 range  0 .. 11;
       Reserved at 0 range 12 .. 15;
@@ -180,8 +180,8 @@ pragma Style_Checks (Off);
       RMD2 : RMD2_Type;
       RMD3 : RMD3_Type;
    end record
-      with Alignment => 2**3,
-           Size      => 16 * 4;
+      with Alignment   => 2**3,
+           Object_Size => 16 * 4;
    for Receive_Message_Descriptor_Type use record
       RMD0 at 0 range 0 .. 15;
       RMD1 at 2 range 0 .. 15;
@@ -200,8 +200,8 @@ pragma Style_Checks (Off);
    type TMD0_Type is record
       LADR : Bits_16;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for TMD0_Type use record
       LADR at 0 range 0 .. 15;
    end record;
@@ -217,8 +217,8 @@ pragma Style_Checks (Off);
       ERR     : Boolean;
       OWN     : Boolean;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for TMD1_Type use record
       HADR    at 0 range  0 ..  7;
       ENP     at 0 range  8 ..  8;
@@ -235,8 +235,8 @@ pragma Style_Checks (Off);
       BCNT : Bits_12;
       ONES : Bits_4  := 2#1111#;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for TMD2_Type use record
       BCNT at 0 range  0 .. 11;
       ONES at 0 range 12 .. 15;
@@ -251,8 +251,8 @@ pragma Style_Checks (Off);
       UFLO : Boolean;
       BUFF : Boolean;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for TMD3_Type use record
       TDR  at 0 range  0 ..  9;
       RTRY at 0 range 10 .. 10;
@@ -271,8 +271,8 @@ pragma Style_Checks (Off);
       TMD2 : TMD2_Type;
       TMD3 : TMD3_Type;
    end record
-      with Alignment => 2**3,
-           Size      => 16 * 4;
+      with Alignment   => 2**3,
+           Object_Size => 16 * 4;
    for Transmit_Message_Descriptor_Type use record
       TMD0 at 0 range 0 .. 15;
       TMD1 at 2 range 0 .. 15;
@@ -299,9 +299,9 @@ pragma Style_Checks (Off);
       Reserved : Bits_8;
       PROM     : Boolean;
    end record
-      with Alignment => 2,
-           Bit_Order => Low_Order_First,
-           Size      => 16;
+      with Alignment   => 2,
+           Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for Mode_Register_Type use record
       DRX      at 0 range  0 ..  0;
       DTX      at 0 range  1 ..  1;
@@ -320,8 +320,8 @@ pragma Style_Checks (Off);
       Reserved2    : Bits_5;
       Length       : Bits_3;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for Ring_Descriptor_Pointer_Type use record
       Reserved1    at 0 range  0 ..  2;
       Ring_Pointer at 0 range  3 .. 23;
@@ -348,8 +348,8 @@ pragma Style_Checks (Off);
       RDRA   : Ring_Descriptor_Pointer_Type;
       TDRA   : Ring_Descriptor_Pointer_Type;
    end record
-      with Alignment => 2,
-           Size      => 24 * 8;
+      with Alignment   => 2,
+           Object_Size => 24 * 8;
    for Initialization_Block_Type use record
       MODE   at  0 range 0 .. 15;
       -- offset 2,3: seen as the U16 value MAC[0..1]
