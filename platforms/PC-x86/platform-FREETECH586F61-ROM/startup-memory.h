@@ -1,5 +1,5 @@
 
-#define CONFADD          0x0CF8
+#define CONFADDR         0x0CF8
 #define CONFDATA         0x0CFC
 #define PCICFG(BN,DN,FN) (1<<31|BN<<16|DN<<11|FN<<8)
 
@@ -50,7 +50,7 @@ pci_configure:
                 andb    $0x03,%cl               // from register offset to amount of bit shift
                 shlb    $0x03,%cl               // 0 --> 0 bits , 1 --> 8 bits, ...
                 andb    $0xFC,%al               // mask bits 0:1 for 32-bit PCI access
-                movw    $CONFADD,%dx            // write to CONFADD
+                movw    $CONFADDR,%dx           // write to CONFADDR
                 outl    %eax,%dx
                 movw    $CONFDATA,%dx
                 inl     %dx,%eax                // read from configuration space
