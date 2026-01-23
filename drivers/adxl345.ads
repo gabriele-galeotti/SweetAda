@@ -114,8 +114,8 @@ pragma Style_Checks (Off);
       ACT_X   : Boolean; -- enable
       ACT     : Bits_1;  -- ac/dc
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for ACT_INACT_CTL_Type use record
       INACT_Z at 0 range 0 .. 0;
       INACT_Y at 0 range 1 .. 1;
@@ -140,8 +140,8 @@ pragma Style_Checks (Off);
       Suppress : Boolean; -- Suppress
       Unused   : Bits_4;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for TAP_AXES_Type use record
       TAP_Z    at 0 range 0 .. 0;
       TAP_Y    at 0 range 1 .. 1;
@@ -162,8 +162,8 @@ pragma Style_Checks (Off);
       ACT_X  : Boolean; -- source
       Unused : Bits_1;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for ACT_TAP_STATUS_Type use record
       TAP_Z  at 0 range 0 .. 0;
       TAP_Y  at 0 range 1 .. 1;
@@ -207,8 +207,8 @@ pragma Style_Checks (Off);
       LOW_POWER : Boolean; -- reduced power operation
       Unused    : Bits_3;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for BW_RATE_Type use record
       Rate      at 0 range 0 .. 3;
       LOW_POWER at 0 range 4 .. 4;
@@ -230,8 +230,8 @@ pragma Style_Checks (Off);
       Link       : Boolean; -- enabled delays the start of the activity function until inactivity is detected
       Unused     : Bits_2;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for POWER_CTL_Type use record
       Wakeup     at 0 range 0 .. 1;
       Sleep      at 0 range 2 .. 2;
@@ -253,8 +253,8 @@ pragma Style_Checks (Off);
       SINGLE_TAP : Boolean; -- ''
       DATA_READY : Boolean; -- ''
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for INT_ENABLE_Type use record
       Overrun    at 0 range 0 .. 0;
       Watermark  at 0 range 1 .. 1;
@@ -283,8 +283,8 @@ pragma Style_Checks (Off);
       SINGLE_TAP : INTPIN_Type; -- ''
       DATA_READY : INTPIN_Type; -- ''
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for INT_MAP_Type use record
       Overrun    at 0 range 0 .. 0;
       Watermark  at 0 range 1 .. 1;
@@ -308,8 +308,8 @@ pragma Style_Checks (Off);
       SINGLE_TAP : Boolean; -- ''
       DATA_READY : Boolean; -- ''
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for INT_SOURCE_Type use record
       Overrun    at 0 range 0 .. 0;
       Watermark  at 0 range 1 .. 1;
@@ -348,8 +348,8 @@ pragma Style_Checks (Off);
       SPI        : Bits_1;  -- SPI
       SELF_TEST  : Boolean; -- applies a self-test force to the sensor
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for DATA_FORMAT_Type use record
       Rang3      at 0 range 0 .. 1;
       Justify    at 0 range 2 .. 2;
@@ -377,8 +377,8 @@ pragma Style_Checks (Off);
       Trigger   : Bits_1; -- Trigger
       FIFO_MODE : Bits_2; -- FIFO_MODE
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for FIFO_CTL_Type use record
       Samples   at 0 range 0 .. 4;
       Trigger   at 0 range 5 .. 5;
@@ -392,8 +392,8 @@ pragma Style_Checks (Off);
       Unused    : Bits_1;
       FIFO_TRIG : Boolean; -- FIFO_TRIG
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for FIFO_STATUS_Type use record
       Entries   at 0 range 0 .. 5;
       Unused    at 0 range 6 .. 6;
