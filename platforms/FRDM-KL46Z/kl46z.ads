@@ -4672,11 +4672,204 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    -- 35.4.5 OTG Interrupt Status register (USBx_OTGISTAT)
+
+   type USBx_OTGISTAT_Type is record
+      AVBUSCHG       : Boolean := False; -- This bit is set when a change in VBUS is detected on an A device.
+      Reserved1      : Bits_1  := 0;
+      B_SESS_CHG     : Boolean := False; -- This bit is set when a change in VBUS is detected on a B device.
+      SESSVLDCHG     : Boolean := False; -- This bit is set when a change in VBUS is detected indicating a session valid or a session no longer valid.
+      Reserved2      : Bits_1  := 0;
+      LINE_STATE_CHG : Boolean := False; -- This bit is set when the USB line state changes.
+      ONEMSEC        : Boolean := False; -- This bit is set when the 1 millisecond timer expires.
+      IDCHG          : Boolean := False; -- This bit is set when a change in the ID Signal from the USB connector is sensed.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_OTGISTAT_Type use record
+      AVBUSCHG       at 0 range 0 .. 0;
+      Reserved1      at 0 range 1 .. 1;
+      B_SESS_CHG     at 0 range 2 .. 2;
+      SESSVLDCHG     at 0 range 3 .. 3;
+      Reserved2      at 0 range 4 .. 4;
+      LINE_STATE_CHG at 0 range 5 .. 5;
+      ONEMSEC        at 0 range 6 .. 6;
+      IDCHG          at 0 range 7 .. 7;
+   end record;
+
+   USBx_OTGISTAT_ADDRESS : constant := 16#4007_2010#;
+
+   USBx_OTGISTAT : aliased USBx_OTGISTAT_Type
+      with Address              => System'To_Address (USBx_OTGISTAT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.6 OTG Interrupt Control register (USBx_OTGICR)
+
+   type USBx_OTGICR_Type is record
+      AVBUSEN     : Boolean := False; -- A VBUS Valid Interrupt Enable
+      Reserved1   : Bits_1  := 0;
+      BSESSEN     : Boolean := False; -- B Session END Interrupt Enable
+      SESSVLDEN   : Boolean := False; -- Session Valid Interrupt Enable
+      Reserved2   : Bits_1  := 0;
+      LINESTATEEN : Boolean := False; -- Line State Change Interrupt Enable
+      ONEMSECEN   : Boolean := False; -- One Millisecond Interrupt Enable
+      IDEN        : Boolean := False; -- ID Interrupt Enable
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_OTGICR_Type use record
+      AVBUSEN     at 0 range 0 .. 0;
+      Reserved1   at 0 range 1 .. 1;
+      BSESSEN     at 0 range 2 .. 2;
+      SESSVLDEN   at 0 range 3 .. 3;
+      Reserved2   at 0 range 4 .. 4;
+      LINESTATEEN at 0 range 5 .. 5;
+      ONEMSECEN   at 0 range 6 .. 6;
+      IDEN        at 0 range 7 .. 7;
+   end record;
+
+   USBx_OTGICR_ADDRESS : constant := 16#4007_2014#;
+
+   USBx_OTGICR : aliased USBx_OTGICR_Type
+      with Address              => System'To_Address (USBx_OTGICR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.7 OTG Status register (USBx_OTGSTAT)
+
+   ID_TYPEA          : constant := 0; -- Indicates a Type A cable is plugged into the USB connector.
+   ID_NOCABLEORTYPEB : constant := 1; -- Indicates no cable is attached or a Type B cable is plugged into the USB connector.
+
+   type USBx_OTGSTAT_Type is record
+      AVBUSVLD        : Boolean := False;    -- A VBUS Valid
+      Reserved1       : Bits_1  := 0;
+      BSESSEND        : Boolean := False;    -- B Session End
+      SESS_VLD        : Boolean := False;    -- Session Valid
+      Reserved2       : Bits_1  := 0;
+      LINESTATESTABLE : Boolean := False;    -- Indicates that the internal signals that control the LINE_STATE_CHG field of OTGISTAT are stable for at least 1 millisecond.
+      ONEMSECEN       : Boolean := False;    -- This bit is reserved for the 1ms count, but it is not useful to software.
+      ID              : Bits_1  := ID_TYPEA; -- Indicates the current state of the ID pin on the USB connector
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_OTGSTAT_Type use record
+      AVBUSVLD        at 0 range 0 .. 0;
+      Reserved1       at 0 range 1 .. 1;
+      BSESSEND        at 0 range 2 .. 2;
+      SESS_VLD        at 0 range 3 .. 3;
+      Reserved2       at 0 range 4 .. 4;
+      LINESTATESTABLE at 0 range 5 .. 5;
+      ONEMSECEN       at 0 range 6 .. 6;
+      ID              at 0 range 7 .. 7;
+   end record;
+
+   USBx_OTGSTAT_ADDRESS : constant := 16#4007_2018#;
+
+   USBx_OTGSTAT : aliased USBx_OTGSTAT_Type
+      with Address              => System'To_Address (USBx_OTGSTAT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.8 OTG Control register (USBx_OTGCTL)
+
+   type USBx_OTGCTL_Type is record
+      Reserved1 : Bits_2  := 0;
+      OTGEN     : Boolean := False; -- On-The-Go pullup/pulldown resistor enable
+      Reserved2 : Bits_1  := 0;
+      DMLOW     : Boolean := False; -- D– Data Line pull-down resistor enable
+      DPLOW     : Boolean := False; -- D+ Data Line pull-down resistor enable
+      Reserved3 : Bits_1  := 0;
+      DPHIGH    : Boolean := False; -- D+ Data Line pullup resistor enable
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_OTGCTL_Type use record
+      Reserved1 at 0 range 0 .. 1;
+      OTGEN     at 0 range 2 .. 2;
+      Reserved2 at 0 range 3 .. 3;
+      DMLOW     at 0 range 4 .. 4;
+      DPLOW     at 0 range 5 .. 5;
+      Reserved3 at 0 range 6 .. 6;
+      DPHIGH    at 0 range 7 .. 7;
+   end record;
+
+   USBx_OTGCTL_ADDRESS : constant := 16#4007_201C#;
+
+   USBx_OTGCTL : aliased USBx_OTGCTL_Type
+      with Address              => System'To_Address (USBx_OTGCTL_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.9 Interrupt Status register (USBx_ISTAT)
+
+   type USBx_ISTAT_Type is record
+      USBRST : Boolean := False; -- This bit is set when the USB Module has decoded a valid USB reset.
+      ERROR  : Boolean := False; -- This bit is set when any of the error conditions within Error Interrupt Status (ERRSTAT) register occur.
+      SOFTOK : Boolean := False; -- This bit is set when the USB Module receives a Start Of Frame (SOF) token.
+      TOKDNE : Boolean := False; -- This bit is set when the current token being processed has completed.
+      SLEEP  : Boolean := False; -- This bit is set when the USB Module detects a constant idle on the USB bus for 3 ms.
+      RESUME : Boolean := False; -- This bit is set depending upon the DP/DM signals, and can be used to signal remote wake-up signaling on the USB bus.
+      ATTACH : Boolean := False; -- Attach Interrupt
+      STALL  : Boolean := False; -- Stall Interrupt
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_ISTAT_Type use record
+      USBRST at 0 range 0 .. 0;
+      ERROR  at 0 range 1 .. 1;
+      SOFTOK at 0 range 2 .. 2;
+      TOKDNE at 0 range 3 .. 3;
+      SLEEP  at 0 range 4 .. 4;
+      RESUME at 0 range 5 .. 5;
+      ATTACH at 0 range 6 .. 6;
+      STALL  at 0 range 7 .. 7;
+   end record;
+
+   USBx_ISTAT_ADDRESS : constant := 16#4007_2080#;
+
+   USBx_ISTAT : aliased USBx_ISTAT_Type
+      with Address              => System'To_Address (USBx_ISTAT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.10 Interrupt Enable register (USBx_INTEN)
+
+   type USBx_INTEN_Type is record
+      USBRSTEN : Boolean := False; -- USBRST Interrupt Enable
+      ERROREN  : Boolean := False; -- ERROR Interrupt Enable
+      SOFTOKEN : Boolean := False; -- SOFTOK Interrupt Enable
+      TOKDNEEN : Boolean := False; -- TOKDNE Interrupt Enable
+      SLEEPEN  : Boolean := False; -- SLEEP Interrupt Enable
+      RESUMEEN : Boolean := False; -- RESUME Interrupt Enable
+      ATTACHEN : Boolean := False; -- ATTACH Interrupt Enable
+      STALLEN  : Boolean := False; -- STALL Interrupt Enable
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_INTEN_Type use record
+      USBRSTEN at 0 range 0 .. 0;
+      ERROREN  at 0 range 1 .. 1;
+      SOFTOKEN at 0 range 2 .. 2;
+      TOKDNEEN at 0 range 3 .. 3;
+      SLEEPEN  at 0 range 4 .. 4;
+      RESUMEEN at 0 range 5 .. 5;
+      ATTACHEN at 0 range 6 .. 6;
+      STALLEN  at 0 range 7 .. 7;
+   end record;
+
+   USBx_INTEN_ADDRESS : constant := 16#4007_2084#;
+
+   USBx_INTEN : aliased USBx_INTEN_Type
+      with Address              => System'To_Address (USBx_INTEN_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.11 Error Interrupt Status register (USBx_ERRSTAT)
    -- 35.4.12 Error Interrupt Enable register (USBx_ERREN)
    -- 35.4.13 Status register (USBx_STAT)
