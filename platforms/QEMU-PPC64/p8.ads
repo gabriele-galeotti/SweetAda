@@ -33,9 +33,9 @@ package P8
    --========================================================================--
 
    use System;
-   package SSE renames System.Storage_Elements;
-   use SSE;
+   use System.Storage_Elements;
    use Interfaces;
+   use Bits;
 
    XSCOM_BASEADDRESS : constant := 16#0003_FC00_0000_0000#;
 
@@ -53,17 +53,17 @@ package P8
    ECCB_DATA  : constant := 3;
 
    type LPC_CMD_Type is record
-      Magic   : Bits.Bits_4 := 0; -- 0xD
-      Size    : Bits.Bits_4;      -- size
-      Unused2 : Bits.Bits_7 := 0;
+      Magic   : Bits_4      := 0; -- 0xD
+      Size    : Bits_4;           -- size
+      Unused2 : Bits_7      := 0;
       Read    : Boolean;          -- read/write
-      Unused3 : Bits.Bits_7 := 0;
-      Addrlen : Bits.Bits_3 := 0; -- address length (4)
-      Unused4 : Bits.Bits_6 := 0;
+      Unused3 : Bits_7      := 0;
+      Addrlen : Bits_3      := 0; -- address length (4)
+      Unused4 : Bits_6      := 0;
       Address : Unsigned_32;      -- address
    end record
-      with Bit_Order => High_Order_First,
-           Size      => 64;
+      with Bit_Order   => High_Order_First,
+           Object_Size => 64;
    for LPC_CMD_Type use record
       Magic   at 0 range  0 ..  3;
       Size    at 0 range  4 ..  7;
