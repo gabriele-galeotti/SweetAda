@@ -3,7 +3,7 @@
 #
 # SweetAda linker.ad[s|b] generator.
 #
-# Copyright (C) 2020-2025 Gabriele Galeotti
+# Copyright (C) 2020-2026 Gabriele Galeotti
 #
 # This work is licensed under the terms of the MIT License.
 # Please consult the LICENSE.txt file located in the top-level directory.
