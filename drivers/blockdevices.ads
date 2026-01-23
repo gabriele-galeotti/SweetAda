@@ -61,8 +61,8 @@ package BlockDevices
       CH : Natural range 0 ..   3;
       CL : Natural range 0 .. 255;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 3 * 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 3 * 8;
    for CHS_Layout_Type use record
       H  at 0 range 0 .. 7;
       S  at 1 range 0 .. 5;
