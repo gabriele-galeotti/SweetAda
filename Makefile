@@ -841,7 +841,6 @@ CLEAN_OBJECTS     := $(KERNEL_OBJFILE)       \
                      $(KERNEL_ROMFILE)       \
                      $(CLEAN_OBJECTS_COMMON)
 
-
 DISTCLEAN_OBJECTS := $(KERNEL_CFGFILE)           \
                      $(DISTCLEAN_OBJECTS_COMMON)
 ifeq ($(OSTYPE),cmd)
