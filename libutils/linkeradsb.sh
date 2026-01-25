@@ -12,10 +12,10 @@
 #
 # Arguments:
 # $1 = linker script filename
+# $2 = Ada unit pathname
 #
 # Environment variables:
-# CORE_DIRECTORY
-# KERNEL_PARENT_PATH
+# None
 #
 
 #
@@ -80,9 +80,14 @@ if [ "x${LINKER_SCRIPT}" = "x" ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: no linker script specified."
   exit 1
 fi
+ADA_UNIT_PATHNAME="$2"
+if [ "x${ADA_UNIT_PATHNAME}" = "x" ] ; then
+  log_print_error "${SCRIPT_FILENAME}: *** Error: no Ada unit pathname specified."
+  exit 1
+fi
 
 textlines=$(                                             \
-            grep -e "LINKERADSB:" ${LD_SCRIPT}         | \
+            grep -e "LINKERADSB:" ${LINKER_SCRIPT}     | \
             sed -e "s|.*\(LINKERADSB:.*:[^ ]*\).*|\1|"   \
            )
 if [ "x${textlines}" = "x" ] ; then
@@ -90,8 +95,8 @@ if [ "x${textlines}" = "x" ] ; then
 fi
 
 PACKAGE=Linker
-OUTPUT_FILENAME_ADS=${KERNEL_PARENT_PATH}/${CORE_DIRECTORY}/linker.ads
-OUTPUT_FILENAME_ADB=${KERNEL_PARENT_PATH}/${CORE_DIRECTORY}/linker.adb
+OUTPUT_FILENAME_ADS=${ADA_UNIT_PATHNAME}.ads
+OUTPUT_FILENAME_ADB=${ADA_UNIT_PATHNAME}.adb
 
 NL=$(printf "\n%s" "_") ; NL=${NL%_}
 

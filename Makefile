@@ -841,8 +841,14 @@ CLEAN_OBJECTS     := $(KERNEL_OBJFILE)       \
                      $(KERNEL_ROMFILE)       \
                      $(CLEAN_OBJECTS_COMMON)
 
+
 DISTCLEAN_OBJECTS := $(KERNEL_CFGFILE)           \
                      $(DISTCLEAN_OBJECTS_COMMON)
+ifeq ($(OSTYPE),cmd)
+DISTCLEAN_OBJECTS += $(CORE_DIRECTORY)\linker.ad*
+else
+DISTCLEAN_OBJECTS += $(CORE_DIRECTORY)/linker.ad*
+endif
 
 ################################################################################
 #                                                                              #
@@ -953,6 +959,15 @@ endif
 
 .PHONY: FORCE
 FORCE:
+
+$(PLATFORM_DIRECTORY)/$(LD_SCRIPT): FORCE
+	@$(MAKE) $(MAKE_PLATFORM) $(LD_SCRIPT)
+
+$(CORE_DIRECTORY)/linker.ads \
+$(CORE_DIRECTORY)/linker.adb: $(PLATFORM_DIRECTORY)/$(LD_SCRIPT)
+	$(LINKERADSB)                                    \
+                      $(PLATFORM_DIRECTORY)/$(LD_SCRIPT) \
+                      $(CORE_DIRECTORY)/linker
 
 $(OBJECT_DIRECTORY)/libplatform.a: FORCE
 	$(MAKE) $(MAKE_PLATFORM) all
@@ -1120,7 +1135,11 @@ endif
 # Compile the binder-generated source file.
 #
 
-$(OBJECT_DIRECTORY)/b__main.o: $(OBJECT_DIRECTORY)/b__main.adb
+B__MAIN_O_DEPS :=
+B__MAIN_O_DEPS += $(CORE_DIRECTORY)/linker.ads
+B__MAIN_O_DEPS += $(CORE_DIRECTORY)/linker.adb
+B__MAIN_O_DEPS += $(OBJECT_DIRECTORY)/b__main.adb
+$(OBJECT_DIRECTORY)/b__main.o: $(B__MAIN_O_DEPS)
 	@$(REM) compile the main program, incorporating the given elaboration order
 ifeq      ($(BUILD_MODE),GNATMAKE)
 ifeq ($(OSTYPE),cmd)
@@ -1143,9 +1162,6 @@ endif
 #
 # Link phase.
 #
-
-$(PLATFORM_DIRECTORY)/$(LD_SCRIPT):
-	@$(MAKE) $(MAKE_PLATFORM) $(LD_SCRIPT)
 
 ifeq ($(NOBUILD),Y)
 $(KERNEL_OUTFILE):
@@ -1317,10 +1333,6 @@ DOTSWEETADA_DEPS += $(CONFIGURE_DEPS)
 DOTSWEETADA_DEPS += $(GNATADC_FILENAME)
 DOTSWEETADA_DEPS += $(CONFIGUREGPR_FILENAME)
 DOTSWEETADA_DEPS += $(filter-out $(CONFIGUREGPR_FILENAME),$(GPRBUILD_DEPS))
-ifneq ($(wildcard $(PLATFORM_DIRECTORY)/$(LD_SCRIPT).S),)
-DOTSWEETADA_DEPS += $(PLATFORM_DIRECTORY)/$(LD_SCRIPT).S
-endif
-DOTSWEETADA_DEPS += $(PLATFORM_DIRECTORY)/$(LD_SCRIPT)
 ./$(DOTSWEETADA): $(DOTSWEETADA_DEPS)
 	$(MAKE) clean
 	$(configure-subdirs-command)
@@ -1371,6 +1383,9 @@ configure-end:
 	@$(call echo-print,"$(PLATFORM): configuration completed.")
 	@$(call echo-print,"")
 
+.PHONY: configure-linkeradsb
+configure-linkeradsb: $(CORE_DIRECTORY)/linker.ads $(CORE_DIRECTORY)/linker.adb
+
 .PHONY: configure-aux
 CONFIGURE_AUX_DEPS :=
 CONFIGURE_AUX_DEPS += configure-start
@@ -1378,6 +1393,7 @@ CONFIGURE_AUX_DEPS += configure-gnatadc
 CONFIGURE_AUX_DEPS += configure-gnattdi
 CONFIGURE_AUX_DEPS += configure-configuregpr
 CONFIGURE_AUX_DEPS += configure-subdirs
+CONFIGURE_AUX_DEPS += configure-linkeradsb
 CONFIGURE_AUX_DEPS += configure-end
 configure-aux: $(CONFIGURE_AUX_DEPS)
 
@@ -1586,8 +1602,13 @@ endif
 
 .PHONY: clean-configure
 clean-configure:
-	@$(RM) $(GNATADC_FILENAME)
-	@$(RM) $(CONFIGUREGPR_FILENAME)
+	@-$(RM) $(GNATADC_FILENAME)
+	@-$(RM) $(CONFIGUREGPR_FILENAME)
+ifeq ($(OSTYPE),cmd)
+	@-$(RM) $(CORE_DIRECTORY)\linker.ad*
+else
+	@-$(RM) $(CORE_DIRECTORY)/linker.ad*
+endif
 
 .PHONY: distclean
 distclean: clean

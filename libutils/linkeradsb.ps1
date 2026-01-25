@@ -11,10 +11,10 @@
 #
 # Arguments:
 # $1 = linker script filename
+# $2 = Ada unit pathname
 #
 # Environment variables:
-# CORE_DIRECTORY
-# KERNEL_PARENT_PATH
+# None
 #
 
 #
@@ -71,58 +71,6 @@ function Write-Stderr
 }
 
 ################################################################################
-# GetEnvVar()                                                                  #
-#                                                                              #
-################################################################################
-
-$GetEnvironmentVariable_signature = @'
-[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-public static extern uint
-GetEnvironmentVariable(
-  string lpName,
-  System.Text.StringBuilder lpBuffer,
-  uint nSize
-  );
-'@
-Add-Type                                              `
-  -MemberDefinition $GetEnvironmentVariable_signature `
-  -Name "Win32GetEnvironmentVariable"                 `
-  -Namespace Win32
-
-$gev_buffer_size = 4096
-$gev_buffer = [System.Text.StringBuilder]::new($gev_buffer_size)
-
-function GetEnvVar
-{
-  param([string]$varname)
-  if (-not (Test-Path Env:$varname))
-  {
-    return [string]::Empty
-  }
-  else
-  {
-    if ([System.Environment]::OSVersion.Platform -eq "Win32NT")
-    {
-      $nchars = [Win32.Win32GetEnvironmentVariable]::GetEnvironmentVariable(
-                  $varname,
-                  $gev_buffer,
-                  [uint32]$gev_buffer_size
-                  )
-      if ($nchars -gt $gev_buffer_size)
-      {
-        Write-Stderr "$($scriptname): *** Error: GetEnvVar: buffer size < $($nchars)."
-        ExitWithCode 1
-      }
-      return [string]$gev_buffer
-    }
-    else
-    {
-      return [string][Environment]::GetEnvironmentVariable($varname)
-    }
-  }
-}
-
-################################################################################
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
@@ -134,6 +82,12 @@ $ldscript_filename = $args[0]
 if ([string]::IsNullOrEmpty($ldscript_filename))
 {
   Write-Stderr "$($scriptname): *** Error: no linker script specified."
+  ExitWithCode 1
+}
+$ada_unit_pathname = $args[1]
+if ([string]::IsNullOrEmpty($ada_unit_pathname))
+{
+  Write-Stderr "$($scriptname): *** Error: no Ada unit pathname specified."
   ExitWithCode 1
 }
 
@@ -160,11 +114,8 @@ if ($linker_symbols.Count -eq 0)
 }
 
 $PACKAGE = "Linker"
-$output_directory = Join-Path                                  `
-                      -Path $(GetEnvVar "KERNEL_PARENT_PATH")  `
-                      -ChildPath $(GetEnvVar "CORE_DIRECTORY")
-$OUTPUT_FILENAME_ADS = Join-Path -Path $output_directory -ChildPath "linker.ads"
-$OUTPUT_FILENAME_ADB = Join-Path -Path $output_directory -ChildPath "linker.adb"
+$OUTPUT_FILENAME_ADS = $ada_unit_pathname + ".ads"
+$OUTPUT_FILENAME_ADB = $ada_unit_pathname + ".adb"
 
 $linkerads = ""
 $linkeradb = ""

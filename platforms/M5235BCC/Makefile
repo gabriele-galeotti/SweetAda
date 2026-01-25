@@ -53,7 +53,6 @@ installfiles:
 
 .PHONY: configure
 configure: clean-configure-files $(CONFIGURE_FILES_PLATFORM) $(LD_SCRIPT)
-	@$(LINKERADSB) $(LD_SCRIPT)
 
 ifneq ($(CONFIGURE_FILES_PLATFORM),)
 $(CONFIGURE_FILES_PLATFORM): % : %.in
@@ -61,8 +60,9 @@ $(CONFIGURE_FILES_PLATFORM): % : %.in
 endif
 
 ifneq ($(wildcard $(LD_SCRIPT).S),)
-$(LD_SCRIPT): $(LD_SCRIPT).S
+$(LD_SCRIPT): $(LD_SCRIPT).S $(LD_SCRIPT_DEPS)
 	$(CPP) -o $@ -C -E -P $<
+	@$(call echo-print,"pre-processing: $<: done.")
 else
 $(LD_SCRIPT):
 endif
@@ -89,11 +89,6 @@ ifneq ($(CONFIGURE_FILES_PLATFORM),)
 endif
 ifneq ($(wildcard $(LD_SCRIPT).S),)
 	$(RM) $(LD_SCRIPT)
-endif
-ifeq ($(OSTYPE),cmd)
-	-$(RM) $(KERNEL_PARENT_PATH)\$(CORE_DIRECTORY)\linker.ad*
-else
-	-$(RM) $(KERNEL_PARENT_PATH)/$(CORE_DIRECTORY)/linker.ad*
 endif
 
 .PHONY: clean
