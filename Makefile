@@ -1147,14 +1147,14 @@ ifeq ($(OSTYPE),cmd)
                          -o $(OBJECT_DIRECTORY)\b__main.o \
                          -c                               \
                          $(OBJECT_DIRECTORY)\b__main.adb  \
-        ,[ADAC],$(<F))
+        ,[ADAC],b__main.adb)
 else
 	$(call brief-command, \
         $(ADAC_GNATBIND)                                  \
                          -o $(OBJECT_DIRECTORY)/b__main.o \
                          -c                               \
                          $(OBJECT_DIRECTORY)/b__main.adb  \
-        ,[ADAC],$(<F))
+        ,[ADAC],b__main.adb)
 endif
 endif
 
