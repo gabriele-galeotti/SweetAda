@@ -4871,23 +4871,285 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    -- 35.4.11 Error Interrupt Status register (USBx_ERRSTAT)
+
+   type USBx_ERRSTAT_Type is record
+      PIDERR   : Boolean := False; -- This bit is set when the PID check field fails.
+      CRC5EOF  : Boolean := False; -- This error interrupt has two functions.
+      CRC16    : Boolean := False; -- This bit is set when a data packet is rejected due to a CRC16 error.
+      DFN8     : Boolean := False; -- This bit is set if the data field received was not 8 bits in length.
+      BTOERR   : Boolean := False; -- This bit is set when a bus turnaround timeout error occurs.
+      DMAERR   : Boolean := False; -- This bit is set if the USB Module has requested a DMA access to read a new BDT but has not been given the bus before it needs to receive or transmit data.
+      Reserved : Bits_1  := 0;
+      BTSERR   : Boolean := False; -- This bit is set when a bit stuff error is detected.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_ERRSTAT_Type use record
+      PIDERR   at 0 range 0 .. 0;
+      CRC5EOF  at 0 range 1 .. 1;
+      CRC16    at 0 range 2 .. 2;
+      DFN8     at 0 range 3 .. 3;
+      BTOERR   at 0 range 4 .. 4;
+      DMAERR   at 0 range 5 .. 5;
+      Reserved at 0 range 6 .. 6;
+      BTSERR   at 0 range 7 .. 7;
+   end record;
+
+   USBx_ERRSTAT_ADDRESS : constant := 16#4007_2088#;
+
+   USBx_ERRSTAT : aliased USBx_ERRSTAT_Type
+      with Address              => System'To_Address (USBx_ERRSTAT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.12 Error Interrupt Enable register (USBx_ERREN)
+
+   type USBx_ERREN_Type is record
+      PIDERREN  : Boolean := False; -- PIDERR Interrupt Enable
+      CRC5EOFEN : Boolean := False; -- CRC5/EOF Interrupt Enable
+      CRC16EN   : Boolean := False; -- CRC16 Interrupt Enable
+      DFN8EN    : Boolean := False; -- DFN8 Interrupt Enable
+      BTOERREN  : Boolean := False; -- BTOERR Interrupt Enable
+      DMAERREN  : Boolean := False; -- DMAERR Interrupt Enable
+      Reserved  : Bits_1  := 0;
+      BTSERREN  : Boolean := False; -- BTSERR Interrupt Enable
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_ERREN_Type use record
+      PIDERREN  at 0 range 0 .. 0;
+      CRC5EOFEN at 0 range 1 .. 1;
+      CRC16EN   at 0 range 2 .. 2;
+      DFN8EN    at 0 range 3 .. 3;
+      BTOERREN  at 0 range 4 .. 4;
+      DMAERREN  at 0 range 5 .. 5;
+      Reserved  at 0 range 6 .. 6;
+      BTSERREN  at 0 range 7 .. 7;
+   end record;
+
+   USBx_ERREN_ADDRESS : constant := 16#4007_208C#;
+
+   USBx_ERREN : aliased USBx_ERREN_Type
+      with Address              => System'To_Address (USBx_ERREN_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.13 Status register (USBx_STAT)
+
+   type USBx_STAT_Type is record
+      Reserved : Bits_2;
+      ODD      : Boolean; -- This bit is set if the last buffer descriptor updated was in the odd bank of the BDT.
+      TX       : Boolean; -- Transmit Indicator
+      ENDP     : Bits_4;  -- This four-bit field encodes the endpoint address that received or transmitted the previous token.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_STAT_Type use record
+      Reserved at 0 range 0 .. 1;
+      ODD      at 0 range 2 .. 2;
+      TX       at 0 range 3 .. 3;
+      ENDP     at 0 range 4 .. 7;
+   end record;
+
+   USBx_STAT_ADDRESS : constant := 16#4007_2090#;
+
+   USBx_STAT : aliased USBx_STAT_Type
+      with Address              => System'To_Address (USBx_STAT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.14 Control register (USBx_CTL)
+
+   SE0_0 : constant := 0;
+   SE0_1 : constant := 1;
+
+   JSTATE_0 : constant := 0;
+   JSTATE_1 : constant := 1;
+
+   type USBx_CTL_Type is record
+      USBENSOFEN         : Boolean := False;    -- USB Enable
+      ODDRST             : Boolean := False;    -- Setting this bit to 1 resets all the BDT ODD ping/pong fields to 0, which then specifies the EVEN BDT bank.
+      RESUME             : Boolean := False;    -- When set to 1 this bit enables the USB Module to execute resume signaling.
+      HOSTMODEEN         : Boolean := False;    -- When set to 1, this bit enables the USB Module to operate in Host mode.
+      RESET              : Boolean := False;    -- Setting this bit enables the USB Module to generate USB reset signaling.
+      TXSUSPENDTOKENBUSY : Boolean := False;    -- In Host mode, TOKEN_BUSY is set when the USB module is busy executing a USB token.
+      SE0                : Bits_1  := SE0_0;    -- Live USB Single Ended Zero signal
+      JSTATE             : Bits_1  := JSTATE_0; -- Live USB differential receiver JSTATE signal
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_CTL_Type use record
+      USBENSOFEN         at 0 range 0 .. 0;
+      ODDRST             at 0 range 1 .. 1;
+      RESUME             at 0 range 2 .. 2;
+      HOSTMODEEN         at 0 range 3 .. 3;
+      RESET              at 0 range 4 .. 4;
+      TXSUSPENDTOKENBUSY at 0 range 5 .. 5;
+      SE0                at 0 range 6 .. 6;
+      JSTATE             at 0 range 7 .. 7;
+   end record;
+
+   USBx_CTL_ADDRESS : constant := 16#4007_2094#;
+
+   USBx_CTL : aliased USBx_CTL_Type
+      with Address              => System'To_Address (USBx_CTL_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.15 Address register (USBx_ADDR)
+
+   type USBx_ADDR_Type is record
+      ADDR : Bits_7  := 0;     -- USB Address
+      LSEN : Boolean := False; -- Low Speed Enable bit
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_ADDR_Type use record
+      ADDR at 0 range 0 .. 6;
+      LSEN at 0 range 7 .. 7;
+   end record;
+
+   USBx_ADDR_ADDRESS : constant := 16#4007_2098#;
+
+   USBx_ADDR : aliased USBx_ADDR_Type
+      with Address              => System'To_Address (USBx_ADDR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.16 BDT Page register 1 (USBx_BDTPAGE1)
+
+   USBx_BDTPAGE1_ADDRESS : constant := 16#4007_209C#;
+
+   USBx_BDTPAGE1 : aliased Unsigned_8
+      with Address              => System'To_Address (USBx_BDTPAGE1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.17 Frame Number register Low (USBx_FRMNUML)
+
+   USBx_FRMNUML_ADDRESS : constant := 16#4007_20A0#;
+
+   USBx_FRMNUML : aliased Unsigned_8
+      with Address              => System'To_Address (USBx_FRMNUML_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.18 Frame Number register High (USBx_FRMNUMH)
+
+   USBx_FRMNUMH_ADDRESS : constant := 16#4007_20A4#;
+
+   USBx_FRMNUMH : aliased Unsigned_8
+      with Address              => System'To_Address (USBx_FRMNUMH_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.19 Token register (USBx_TOKEN)
+
+   USBx_TOKEN_ADDRESS : constant := 16#4007_20A8#;
+
+   USBx_TOKEN : aliased Unsigned_8
+      with Address              => System'To_Address (USBx_TOKEN_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.20 SOF Threshold register (USBx_SOFTHLD)
+
+   USBx_SOFTHLD_ADDRESS : constant := 16#4007_20AC#;
+
+   USBx_SOFTHLD : aliased Unsigned_8
+      with Address              => System'To_Address (USBx_SOFTHLD_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.21 BDT Page Register 2 (USBx_BDTPAGE2)
+
+   USBx_BDTPAGE2_ADDRESS : constant := 16#4007_20B0#;
+
+   USBx_BDTPAGE2 : aliased Unsigned_8
+      with Address              => System'To_Address (USBx_BDTPAGE2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.22 BDT Page Register 3 (USBx_BDTPAGE3)
+
+   USBx_BDTPAGE3_ADDRESS : constant := 16#4007_20B4#;
+
+   USBx_BDTPAGE3 : aliased Unsigned_8
+      with Address              => System'To_Address (USBx_BDTPAGE3_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.23 Endpoint Control register (USBx_ENDPTn)
+
+   USBx_ENDPTn_ADDRESS : constant := 16#4007_20C0#;
+
+   USBx_ENDPTn : aliased array (0 .. 15) of Unsigned_8
+      with Address    => System'To_Address (USBx_BDTPAGE3_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    -- 35.4.24 USB Control register (USBx_USBCTRL)
+
+   USBx_USBCTRL_ADDRESS : constant := 16#4007_2100#;
+
+   USBx_USBCTRL : aliased Unsigned_8
+      with Address              => System'To_Address (USBx_USBCTRL_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.25 USB OTG Observe register (USBx_OBSERVE)
+
+   USBx_OBSERVE_ADDRESS : constant := 16#4007_2104#;
+
+   USBx_OBSERVE : aliased Unsigned_8
+      with Address              => System'To_Address (USBx_OBSERVE_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.26 USB OTG Control register (USBx_CONTROL)
+
+   USBx_CONTROL_ADDRESS : constant := 16#4007_2108#;
+
+   USBx_CONTROL : aliased Unsigned_8
+      with Address              => System'To_Address (USBx_CONTROL_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.27 USB Transceiver Control register 0 (USBx_USBTRC0)
+
+   USBx_USBTRC0_ADDRESS : constant := 16#4007_210C#;
+
+   USBx_USBTRC0 : aliased Unsigned_8
+      with Address              => System'To_Address (USBx_USBTRC0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.4.28 Frame Adjust Register (USBx_USBFRMADJUST)
+
+   USBx_USBFRMADJUST_ADDRESS : constant := 16#4007_2114#;
+
+   USBx_USBFRMADJUST : aliased Unsigned_8
+      with Address              => System'To_Address (USBx_USBFRMADJUST_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 37 Serial Peripheral Interface (SPI)
