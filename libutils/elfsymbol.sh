@@ -87,7 +87,7 @@ if [ "x$2" = "x" ] ; then
   exit 1
 fi
 
-SYMBOL_NMLINE=$(${TOOLCHAIN_NM} --format=posix $2 2> /dev/null | grep -m 1 -e $1)
+SYMBOL_NMLINE=$(${TOOLCHAIN_NM} --format=posix $2 2> /dev/null | grep -w -m 1 -e $1)
 if [ "x${SYMBOL_NMLINE}" = "x" ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: no symbol \"$1\" found."
   exit 1
