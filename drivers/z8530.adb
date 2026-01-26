@@ -874,9 +874,9 @@ package body Z8530
    -- RX
    ----------------------------------------------------------------------------
    procedure RX
-      (Descriptor : in  Descriptor_Type;
-       Channel    : in  Channel_Type;
-       Data       : out Unsigned_8)
+      (Descriptor : in     Descriptor_Type;
+       Channel    : in     Channel_Type;
+       Data       :    out Unsigned_8)
       is
    begin
       -- wait for receiver available
