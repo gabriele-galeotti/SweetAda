@@ -1208,12 +1208,9 @@ endif
 ifeq ($(USE_ELFTOOL),Y)
 	@$(ELFTOOL) -c dumpsections $@
 	@$(call echo-print,"")
-else
-	@$(SIZE) $@
-endif
-ifeq ($(USE_ELFTOOL),Y)
 	@$(ELFTOOL) -p "Kernel entry point: " -c findsymbol=$(KERNEL_ENTRY_POINT) $@
 else
+	@$(SIZE) $@
 	@$(ELFSYMBOL) -p "Kernel entry point: " $(KERNEL_ENTRY_POINT) $@
 endif
 	@$(call echo-print,"")
