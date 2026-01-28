@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Configure;
 with Definitions;
@@ -50,6 +51,7 @@ package body BSP
    --========================================================================--
 
    use System;
+   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
@@ -63,6 +65,13 @@ package body BSP
       with Export        => True,
            Convention    => C,
            External_Name => "__gnat_number_of_cpus";
+
+   function PCI_Read_32
+      (Addr : Address)
+      return Unsigned_32;
+   procedure PCI_Write_32
+      (Addr  : in Address;
+       Value : in Unsigned_32);
 
    procedure Board_Init;
 
@@ -83,6 +92,26 @@ package body BSP
    begin
       return 1;
    end Number_Of_CPUs;
+
+   ----------------------------------------------------------------------------
+   -- PCI configuration space low-level access subprograms
+   ----------------------------------------------------------------------------
+
+   function PCI_Read_32
+      (Addr : Address)
+      return Unsigned_32
+      is
+   begin
+      return CPU.IO.PortIn (Unsigned_16 (To_Integer (Addr) and 16#0000_FFFF#));
+   end PCI_Read_32;
+
+   procedure PCI_Write_32
+      (Addr  : in Address;
+       Value : in Unsigned_32)
+      is
+   begin
+      CPU.IO.PortOut (Unsigned_16 (To_Integer (Addr) and 16#0000_FFFF#), Value);
+   end PCI_Write_32;
 
    ----------------------------------------------------------------------------
    -- Tclk_Init
@@ -219,8 +248,10 @@ package body BSP
       end if;
       -- PCI ------------------------------------------------------------------
       PCI_Descriptor := (
-         Read_32  => CPU.IO.PortIn'Access,
-         Write_32 => CPU.IO.PortOut'Access
+         Read_32  => PCI_Read_32'Access,
+         Write_32 => PCI_Write_32'Access,
+         Confaddr => System'To_Address (16#0000_0CF8#),
+         Confdata => System'To_Address (16#0000_0CFC#)
          );
       if True then
          declare
