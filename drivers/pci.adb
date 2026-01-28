@@ -146,17 +146,15 @@ package body PCI
        Register_Number : Register_Number_Type)
       return Unsigned_32
       is
-      Confaddr_Value : Confaddr_Type;
    begin
-      Confaddr_Value := (
+      Descriptor.Write_32 (Descriptor.Confaddr, To_U32 (Confaddr_Type'(
          REGNUM  => Register_Number and 16#FC#,
          FUNCNUM => Function_Number,
          DEVNUM  => Device_Number,
          BUSNUM  => Bus_Number,
          others  => <>
-         );
-      Descriptor.Write_32 (CONFADDR, To_U32 (Confaddr_Value));
-      return Descriptor.Read_32 (CONFDATA);
+         )));
+      return Descriptor.Read_32 (Descriptor.Confdata);
    end Cfg_Read;
 
    procedure Cfg_Write
@@ -167,17 +165,15 @@ package body PCI
        Register_Number : in Register_Number_Type;
        Value           : in Unsigned_32)
       is
-      Confaddr_Value : Confaddr_Type;
    begin
-      Confaddr_Value := (
+      Descriptor.Write_32 (Descriptor.Confaddr, To_U32 (Confaddr_Type'(
          REGNUM  => Register_Number and 16#FC#,
          FUNCNUM => Function_Number,
          DEVNUM  => Device_Number,
          BUSNUM  => Bus_Number,
          others  => <>
-         );
-      Descriptor.Write_32 (CONFADDR, To_U32 (Confaddr_Value));
-      Descriptor.Write_32 (CONFDATA, Value);
+         )));
+      Descriptor.Write_32 (Descriptor.Confdata, Value);
    end Cfg_Write;
 
    ----------------------------------------------------------------------------

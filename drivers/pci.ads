@@ -127,6 +127,8 @@ package PCI
    type Function_Number_Type is new Bits_3;
    type Register_Number_Type is new Bits_8;
 
+   BUS0 : constant Bus_Number_Type := 0;
+
    type Confaddr_Type is record
       REGNUM   : Register_Number_Type := 0;
       FUNCNUM  : Function_Number_Type := 0;
@@ -145,11 +147,6 @@ package PCI
       Reserved at 3 range 0 .. 6;
       CONE     at 3 range 7 .. 7;
    end record;
-
-   CONFADDR : constant Unsigned_16 := 16#0CF8#;
-   CONFDATA : constant Unsigned_16 := 16#0CFC#;
-
-   BUS0 : constant Bus_Number_Type := 0;
 
    -- standard register offsets of PCI Type 0 (non-bridge) configuration space header
    VID_Offset                     : constant := 16#00#;
@@ -216,12 +213,14 @@ package PCI
    -- read/write in PCI configuration space must be done with 32-bit accesses
    ----------------------------------------------------------------------------
 
-   type Cfg_Read_32_Ptr is access function (Port : Unsigned_16) return Unsigned_32;
-   type Cfg_Write_32_Ptr is access procedure (Port : in Unsigned_16; Value : in Unsigned_32);
+   type Cfg_Read_32_Ptr is access function (Addr : Address) return Unsigned_32;
+   type Cfg_Write_32_Ptr is access procedure (Addr : in Address; Value : in Unsigned_32);
 
    type Descriptor_Type is record
       Read_32  : Cfg_Read_32_Ptr;
       Write_32 : Cfg_Write_32_Ptr;
+      Confaddr : Address;
+      Confdata : Address;
    end record;
 
    ----------------------------------------------------------------------------
