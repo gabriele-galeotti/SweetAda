@@ -39,6 +39,13 @@ package body Malta
 
    PCI_Descriptor : PCI.Descriptor_Type;
 
+   function PCI_Read_32
+      (Addr : Address)
+      return Unsigned_32;
+   procedure PCI_Write_32
+      (Addr  : in Address;
+       Value : in Unsigned_32);
+
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -60,21 +67,21 @@ package body Malta
    -- PCI configuration space low-level access subprograms
    ----------------------------------------------------------------------------
 
-   function PCI_PortIn
-      (Port : Unsigned_16)
+   function PCI_Read_32
+      (Addr : Address)
       return Unsigned_32
       is
    begin
-      return MMIO.Read_U32 (To_Address (GT64120_BASEADDRESS + Integer_Address (Port)));
-   end PCI_PortIn;
+      return MMIO.Read_U32 (Addr);
+   end PCI_Read_32;
 
-   procedure PCI_PortOut
-      (Port  : in Unsigned_16;
+   procedure PCI_Write_32
+      (Addr  : in Address;
        Value : in Unsigned_32)
       is
    begin
-      MMIO.Write_U32 (To_Address (GT64120_BASEADDRESS + Integer_Address (Port)), Value);
-   end PCI_PortOut;
+      MMIO.Write_U32 (Addr, Value);
+   end PCI_Write_32;
 
    ----------------------------------------------------------------------------
    -- PCI_Init
@@ -84,8 +91,10 @@ package body Malta
       CPUIC : CPU_Interface_Configuration_Type;
    begin
       PCI_Descriptor := (
-         Read_32  => PCI_PortIn'Access,
-         Write_32 => PCI_PortOut'Access
+         Read_32  => PCI_Read_32'Access,
+         Write_32 => PCI_Write_32'Access,
+         Confaddr => System'To_Address (GT64120_BASEADDRESS + 16#0000_0CF8#),
+         Confdata => System'To_Address (GT64120_BASEADDRESS + 16#0000_0CFC#)
          );
       -- 4.5 CPU Interface Endianess, pg 47
       CPUIC_Read (GT_64120.CPU_Interface_Configuration'Address, CPUIC);

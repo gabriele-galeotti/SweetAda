@@ -80,7 +80,7 @@ package Malta
    -- GT-64120A bridge
    ----------------------------------------------------------------------------
 
-   GT64120_BUS_NUMBER    : constant PCI.Bus_Number_Type := 0;
+   GT64120_BUS_NUMBER    : constant PCI.Bus_Number_Type := PCI.BUS0;
    GT64120_DEVICE_NUMBER : constant PCI.Device_Number_Type := 0;
 
    GT_64120 : aliased GT64120_Type
@@ -110,14 +110,6 @@ package Malta
    ----------------------------------------------------------------------------
    -- PCI
    ----------------------------------------------------------------------------
-
-   function PCI_PortIn
-      (Port : Unsigned_16)
-      return Unsigned_32;
-
-   procedure PCI_PortOut
-      (Port  : in Unsigned_16;
-       Value : in Unsigned_32);
 
    procedure PCI_Init;
 
