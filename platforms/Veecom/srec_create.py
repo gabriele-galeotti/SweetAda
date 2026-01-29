@@ -84,10 +84,10 @@ for i in range(0, datalength):
         fd_output.write(b'\n')
     else:
         fd_output.write(b' ')
-    fd_output.write('{:02X}'.format(data[i]).encode('UTF-8'))
+    fd_output.write('{:02X}'.format(data[i]).encode('utf-8'))
     count += 1
     if count == 32:
-       count = 0
+        count = 0
 fd_output.write(b'\n')
 fd_output.close()
 
