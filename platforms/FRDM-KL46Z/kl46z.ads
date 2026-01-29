@@ -17,6 +17,7 @@
 
 with System;
 with Interfaces;
+with Interfaces.C.Extensions;
 with Bits;
 
 package KL46Z
@@ -34,6 +35,8 @@ package KL46Z
    use System;
    use Interfaces;
    use Bits;
+
+   subtype Signed_8 is Interfaces.C.Extensions.Signed_8;
 
 pragma Style_Checks (Off);
 
@@ -5023,9 +5026,20 @@ pragma Style_Checks (Off);
 
    -- 35.4.16 BDT Page register 1 (USBx_BDTPAGE1)
 
+   type USBx_BDTPAGE1_Type is record
+      Reserved : Bits_1 := 0;
+      BDTBA    : Bits_7 := 0; -- Provides address bits 15 through 9 of the BDT base address.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_BDTPAGE1_Type use record
+      Reserved at 0 range 0 .. 0;
+      BDTBA    at 0 range 1 .. 7;
+   end record;
+
    USBx_BDTPAGE1_ADDRESS : constant := 16#4007_209C#;
 
-   USBx_BDTPAGE1 : aliased Unsigned_8
+   USBx_BDTPAGE1 : aliased USBx_BDTPAGE1_Type
       with Address              => System'To_Address (USBx_BDTPAGE1_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
@@ -5033,9 +5047,18 @@ pragma Style_Checks (Off);
 
    -- 35.4.17 Frame Number register Low (USBx_FRMNUML)
 
+   type USBx_FRMNUML_Type is record
+      FRM : Bits_8 := 0; -- This 8-bit field and the 3-bit field in the Frame Number Register High are used to compute the address where the current Buffer Descriptor Table (BDT) resides in system memory.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_FRMNUML_Type use record
+      FRM at 0 range 0 .. 7;
+   end record;
+
    USBx_FRMNUML_ADDRESS : constant := 16#4007_20A0#;
 
-   USBx_FRMNUML : aliased Unsigned_8
+   USBx_FRMNUML : aliased USBx_FRMNUML_Type
       with Address              => System'To_Address (USBx_FRMNUML_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
@@ -5043,9 +5066,20 @@ pragma Style_Checks (Off);
 
    -- 35.4.18 Frame Number register High (USBx_FRMNUMH)
 
+   type USBx_FRMNUMH_Type is record
+      FRM      : Bits_3 := 0; -- This 3-bit field and the 8-bit field in the Frame Number Register Low are used to compute the address where the current Buffer Descriptor Table (BDT) resides in system memory.
+      Reserved : Bits_5 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_FRMNUMH_Type use record
+      FRM      at 0 range 0 .. 2;
+      Reserved at 0 range 3 .. 7;
+   end record;
+
    USBx_FRMNUMH_ADDRESS : constant := 16#4007_20A4#;
 
-   USBx_FRMNUMH : aliased Unsigned_8
+   USBx_FRMNUMH : aliased USBx_FRMNUMH_Type
       with Address              => System'To_Address (USBx_FRMNUMH_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
@@ -5053,9 +5087,24 @@ pragma Style_Checks (Off);
 
    -- 35.4.19 Token register (USBx_TOKEN)
 
+   TOKENPID_OUT   : constant := 2#0001#; -- OUT Token.
+   TOKENPID_IN    : constant := 2#1001#; -- IN Token.
+   TOKENPID_SETUP : constant := 2#1101#; -- SETUP Token.
+
+   type USBx_TOKEN_Type is record
+      TOKENENDPT : Bits_4 := 0; -- Holds the Endpoint address for the token command.
+      TOKENPID   : Bits_4 := 0; -- Contains the token type executed by the USB module.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_TOKEN_Type use record
+      TOKENENDPT at 0 range 0 .. 3;
+      TOKENPID   at 0 range 4 .. 7;
+   end record;
+
    USBx_TOKEN_ADDRESS : constant := 16#4007_20A8#;
 
-   USBx_TOKEN : aliased Unsigned_8
+   USBx_TOKEN : aliased USBx_TOKEN_Type
       with Address              => System'To_Address (USBx_TOKEN_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
@@ -5063,9 +5112,23 @@ pragma Style_Checks (Off);
 
    -- 35.4.20 SOF Threshold register (USBx_SOFTHLD)
 
+   CNT_64 : constant := 74; -- 64-byte packets
+   CNT_32 : constant := 42; -- 32-byte packets
+   CNT_16 : constant := 26; -- 16-byte packets
+   CNT_8  : constant := 18; -- 8-byte packets
+
+   type USBx_SOFTHLD_Type is record
+      CNT : Unsigned_8 := 0; -- Represents the SOF count threshold in byte times.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_SOFTHLD_Type use record
+      CNT at 0 range 0 .. 7;
+   end record;
+
    USBx_SOFTHLD_ADDRESS : constant := 16#4007_20AC#;
 
-   USBx_SOFTHLD : aliased Unsigned_8
+   USBx_SOFTHLD : aliased USBx_SOFTHLD_Type
       with Address              => System'To_Address (USBx_SOFTHLD_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
@@ -5073,9 +5136,18 @@ pragma Style_Checks (Off);
 
    -- 35.4.21 BDT Page Register 2 (USBx_BDTPAGE2)
 
+   type USBx_BDTPAGE2_Type is record
+      BDTBA : Bits_8 := 0; -- Provides address bits 23 through 16 of the BDT base address that defines the location of Buffer Descriptor Table resides in system memory.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_BDTPAGE2_Type use record
+      BDTBA at 0 range 0 .. 7;
+   end record;
+
    USBx_BDTPAGE2_ADDRESS : constant := 16#4007_20B0#;
 
-   USBx_BDTPAGE2 : aliased Unsigned_8
+   USBx_BDTPAGE2 : aliased USBx_BDTPAGE2_Type
       with Address              => System'To_Address (USBx_BDTPAGE2_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
@@ -5083,9 +5155,18 @@ pragma Style_Checks (Off);
 
    -- 35.4.22 BDT Page Register 3 (USBx_BDTPAGE3)
 
+   type USBx_BDTPAGE3_Type is record
+      BDTBA : Bits_8 := 0; -- Provides address bits 31 through 24 of the BDT base address that defines the location of Buffer Descriptor Table resides in system memory.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_BDTPAGE3_Type use record
+      BDTBA at 0 range 0 .. 7;
+   end record;
+
    USBx_BDTPAGE3_ADDRESS : constant := 16#4007_20B4#;
 
-   USBx_BDTPAGE3 : aliased Unsigned_8
+   USBx_BDTPAGE3 : aliased USBx_BDTPAGE3_Type
       with Address              => System'To_Address (USBx_BDTPAGE3_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
@@ -5093,19 +5174,59 @@ pragma Style_Checks (Off);
 
    -- 35.4.23 Endpoint Control register (USBx_ENDPTn)
 
-   USBx_ENDPTn_ADDRESS : constant := 16#4007_20C0#;
+   type USBx_ENDPTn_Type is record
+      EPHSHK    : Boolean := False; -- When set this bit enables an endpoint to perform handshaking during a transaction to this endpoint.
+      EPSTALL   : Boolean := False; -- When set this bit indicates that the endpoint is called.
+      EPTXEN    : Boolean := False; -- This bit, when set, enables the endpoint for TX transfers.
+      EPRXEN    : Boolean := False; -- This bit, when set, enables the endpoint for RX transfers.
+      EPCTLDIS  : Boolean := False; -- This bit, when set, disables control (SETUP) transfers.
+      Reserved  : Bits_1  := 0;
+      RETRYDIS  : Boolean := False; -- This is a Host mode only bit and is present in the control register for endpoint 0 (ENDPT0) only.
+      HOSTWOHUB : Boolean := False; -- This is a Host mode only field and is present in the control register for endpoint 0 (ENDPT0) only.
+   end record
+      with Bit_Order            => Low_Order_First,
+           Object_Size          => 8,
+           Volatile_Full_Access => True;
+   for USBx_ENDPTn_Type use record
+      EPHSHK    at 0 range 0 .. 0;
+      EPSTALL   at 0 range 1 .. 1;
+      EPTXEN    at 0 range 2 .. 2;
+      EPRXEN    at 0 range 3 .. 3;
+      EPCTLDIS  at 0 range 4 .. 4;
+      Reserved  at 0 range 5 .. 5;
+      RETRYDIS  at 0 range 6 .. 6;
+      HOSTWOHUB at 0 range 7 .. 7;
+   end record;
 
-   USBx_ENDPTn : aliased array (0 .. 15) of Unsigned_8
-      with Address    => System'To_Address (USBx_BDTPAGE3_ADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
+    type USBx_ENDPT_Array_Type is array (0 .. 15) of USBx_ENDPTn_Type
+       with Object_Size => 16 *8;
+
+   USBx_ENDPT_ADDRESS : constant := 16#4007_20C0#;
+
+   USBx_ENDPT : aliased USBx_ENDPT_Array_Type
+      with Address     => System'To_Address (USBx_ENDPT_ADDRESS),
+           Volatile    => True,
+           Import      => True,
+           Convention  => Ada;
 
    -- 35.4.24 USB Control register (USBx_USBCTRL)
 
+   type USBx_USBCTRL_Type is record
+      Reserved : Bits_6  := 0;
+      PDE      : Boolean := False; -- Enables the weak pulldowns on the USB transceiver.
+      SUSP     : Boolean := False; -- Places the USB transceiver into the suspend state.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_USBCTRL_Type use record
+      Reserved at 0 range 0 .. 5;
+      PDE      at 0 range 6 .. 6;
+      SUSP     at 0 range 7 .. 7;
+   end record;
+
    USBx_USBCTRL_ADDRESS : constant := 16#4007_2100#;
 
-   USBx_USBCTRL : aliased Unsigned_8
+   USBx_USBCTRL : aliased USBx_USBCTRL_Type
       with Address              => System'To_Address (USBx_USBCTRL_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
@@ -5113,9 +5234,28 @@ pragma Style_Checks (Off);
 
    -- 35.4.25 USB OTG Observe register (USBx_OBSERVE)
 
+   type USBx_OBSERVE_Type is record
+      Reserved1 : Bits_1;
+      Reserved2 : Bits_3;
+      DMPD      : Boolean; -- Provides observability of the D- Pulldown signal output from the USB OTG module
+      Reserved3 : Bits_1;
+      DPPD      : Boolean; -- Provides observability of the D+ Pulldown . signal output from the USB OTG module
+      DPPU      : Boolean; -- Provides observability of the D+ Pullup . signal output from the USB OTG module
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_OBSERVE_Type use record
+      Reserved1 at 0 range 0 .. 0;
+      Reserved2 at 0 range 1 .. 3;
+      DMPD      at 0 range 4 .. 4;
+      Reserved3 at 0 range 5 .. 5;
+      DPPD      at 0 range 6 .. 6;
+      DPPU      at 0 range 7 .. 7;
+   end record;
+
    USBx_OBSERVE_ADDRESS : constant := 16#4007_2104#;
 
-   USBx_OBSERVE : aliased Unsigned_8
+   USBx_OBSERVE : aliased USBx_OBSERVE_Type
       with Address              => System'To_Address (USBx_OBSERVE_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
@@ -5123,9 +5263,22 @@ pragma Style_Checks (Off);
 
    -- 35.4.26 USB OTG Control register (USBx_CONTROL)
 
+   type USBx_CONTROL_Type is record
+      Reserved1      : Bits_4  := 0;
+      DPPULLUPNONOTG : Boolean := False; -- Provides control of the DP Pullup in the USB OTG module, if USB is configured in non-OTG device mode.
+      Reserved2      : Bits_3  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_CONTROL_Type use record
+      Reserved1      at 0 range 0 .. 3;
+      DPPULLUPNONOTG at 0 range 4 .. 4;
+      Reserved2      at 0 range 5 .. 7;
+   end record;
+
    USBx_CONTROL_ADDRESS : constant := 16#4007_2108#;
 
-   USBx_CONTROL : aliased Unsigned_8
+   USBx_CONTROL : aliased USBx_CONTROL_Type
       with Address              => System'To_Address (USBx_CONTROL_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
@@ -5133,9 +5286,28 @@ pragma Style_Checks (Off);
 
    -- 35.4.27 USB Transceiver Control register 0 (USBx_USBTRC0)
 
+   type USBx_USBTRC0_Type is record
+      USB_RESUME_INT : Boolean := False; -- USB Asynchronous Interrupt
+      SYNC_DET       : Boolean := False; -- Synchronous USB Interrupt Detect
+      Reserved1      : Bits_3  := 0;
+      USBRESMEN      : Boolean := False; -- Asynchronous Resume Interrupt Enable
+      Reserved2      : Bits_1  := 0;
+      USBRESET       : Boolean := False; -- USB Reset
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_USBTRC0_Type use record
+      USB_RESUME_INT at 0 range 0 .. 0;
+      SYNC_DET       at 0 range 1 .. 1;
+      Reserved1      at 0 range 2 .. 4;
+      USBRESMEN      at 0 range 5 .. 5;
+      Reserved2      at 0 range 6 .. 6;
+      USBRESET       at 0 range 7 .. 7;
+   end record;
+
    USBx_USBTRC0_ADDRESS : constant := 16#4007_210C#;
 
-   USBx_USBTRC0 : aliased Unsigned_8
+   USBx_USBTRC0 : aliased USBx_USBTRC0_Type
       with Address              => System'To_Address (USBx_USBTRC0_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
@@ -5143,9 +5315,18 @@ pragma Style_Checks (Off);
 
    -- 35.4.28 Frame Adjust Register (USBx_USBFRMADJUST)
 
+   type USBx_USBFRMADJUST_Type is record
+      ADJ : Signed_8 := 0; -- Frame Adjustment
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for USBx_USBFRMADJUST_Type use record
+      ADJ at 0 range 0 .. 7;
+   end record;
+
    USBx_USBFRMADJUST_ADDRESS : constant := 16#4007_2114#;
 
-   USBx_USBFRMADJUST : aliased Unsigned_8
+   USBx_USBFRMADJUST : aliased USBx_USBFRMADJUST_Type
       with Address              => System'To_Address (USBx_USBFRMADJUST_ADDRESS),
            Volatile_Full_Access => True,
            Import               => True,
