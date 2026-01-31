@@ -47,6 +47,13 @@ package Bits
    BE_ByteOrder : constant := Boolean'Pos (BigEndian);
    LE_ByteOrder : constant := Boolean'Pos (LittleEndian);
 
+   -- XOR Boolean function for pragma No_Direct_Boolean_Operators
+   function exor
+      (A : Boolean;
+       B : Boolean)
+      return Boolean
+      with Inline => True;
+
    -- Positive Boolean
    type PBoolean is (PFalse, PTrue);
    for PBoolean'Size use 1;
