@@ -184,10 +184,8 @@ include Makefile.os.in
 CONFIGURE_DEPS += Makefile.os.in
 
 # add LIBUTILS_DIRECTORY to PATH
-ifeq      ($(OSTYPE),cmd)
+ifeq ($(OSTYPE),cmd)
 PATH := $(SWEETADA_PATH)\$(LIBUTILS_DIRECTORY);$(PATH)
-else ifeq ($(OSTYPE),msys)
-PATH := $(PATH):$(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY)
 else
 PATH := $(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY):$(PATH)
 endif
@@ -436,6 +434,7 @@ GCC_SWITCHES_LOWLEVEL_PLATFORM :=
 LD_SWITCHES_PLATFORM           :=
 OBJCOPY_SWITCHES_PLATFORM      :=
 OBJDUMP_SWITCHES_PLATFORM      :=
+SIZE_SWITCHES_PLATFORM         :=
 
 #
 # Initialize RTS-imported switches.
@@ -524,7 +523,19 @@ ifeq ($(filter rts,$(MAKECMDGOALS)),rts)
 $(error Error: no valid CPU)
 endif
 endif
-# standard components
+endif
+
+# toolchain specifications
+include Makefile.tc.in
+CONFIGURE_DEPS += Makefile.tc.in
+
+################################################################################
+#                                                                              #
+# Standard components configuration.                                           #
+#                                                                              #
+################################################################################
+
+ifneq ($(MAKECMDGOALS),)
 include $(APPLICATION_DIRECTORY)/configuration.in
 CONFIGURE_DEPS += $(APPLICATION_DIRECTORY)/configuration.in
 ifeq ($(USE_CLIBRARY),Y)
@@ -583,10 +594,6 @@ endif
 IMPLICIT_ALI_UNITS += $(IMPLICIT_CORE_UNITS)     \
                       $(IMPLICIT_CLIBRARY_UNITS)
 
-# toolchain specifications
-include Makefile.tc.in
-CONFIGURE_DEPS += Makefile.tc.in
-
 # fragment included by all library sub-makefiles
 CONFIGURE_DEPS += Makefile.lb.in
 
@@ -609,44 +616,6 @@ GPRBUILD_DEPS += $(sort $(shell                               \
                    2> /dev/null))
 endif
 endif
-endif
-
-################################################################################
-#                                                                              #
-# Query about RTS characteristics.                                             #
-#                                                                              #
-################################################################################
-
-ifeq ($(OSTYPE),cmd)
-$(foreach s,                                                         \
-  $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell                 \
-    SET "VERBOSE="                                                && \
-    SET "PATH=$(PATH)"                                            && \
-    SET "KERNEL_PARENT_PATH=.."                                   && \
-    SET "RTS=$(RTS)"                                              && \
-    SET "TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)"                        && \
-    SET "MULTILIB=$(GCC_MULTIDIR)"                                && \
-    "$(MAKE)"                                                        \
-      --no-print-directory                                           \
-      -C $(RTS_DIRECTORY)                                            \
-      PROBEVARIABLES="SUPPRESS_STANDARD_LIBRARY LIBGNAT LIBGNARL"    \
-      probevariables                                                 \
-    2>nul))),$(eval $(strip $(subst $(DEL),$(SPACE),$(s)))))
-else
-$(foreach s,                                                        \
-  $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell                \
-    VERBOSE=                                                        \
-    PATH="$(PATH)"                                                  \
-    KERNEL_PARENT_PATH=..                                           \
-    RTS=$(RTS)                                                      \
-    TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)                                \
-    MULTILIB=$(GCC_MULTIDIR)                                        \
-    "$(MAKE)"                                                       \
-      --no-print-directory                                          \
-      -C $(RTS_DIRECTORY)                                           \
-      PROBEVARIABLES="SUPPRESS_STANDARD_LIBRARY LIBGNAT LIBGNARL"   \
-      probevariables                                                \
-    2> /dev/null))),$(eval $(strip $(subst $(DEL),$(SPACE),$(s)))))
 endif
 
 ################################################################################
@@ -793,6 +762,8 @@ export                                \
        USE_CLIBRARY                   \
        USE_APPLICATION                \
        CONFIGURE_FILES_PLATFORM       \
+       ADAC_SWITCHES_RTS              \
+       CC_SWITCHES_RTS                \
        GCC_SWITCHES_PLATFORM          \
        LOWLEVEL_FILES_PLATFORM        \
        GCC_SWITCHES_LOWLEVEL_PLATFORM \
@@ -958,15 +929,6 @@ endif
 
 .PHONY: FORCE
 FORCE:
-
-$(PLATFORM_DIRECTORY)/$(LD_SCRIPT): FORCE
-	@$(MAKE) $(MAKE_PLATFORM) $(LD_SCRIPT)
-
-$(CORE_DIRECTORY)/linker.ads \
-$(CORE_DIRECTORY)/linker.adb: $(PLATFORM_DIRECTORY)/$(LD_SCRIPT)
-	$(LINKERADSB)                                    \
-                      $(PLATFORM_DIRECTORY)/$(LD_SCRIPT) \
-                      $(CORE_DIRECTORY)/linker
 
 $(OBJECT_DIRECTORY)/libplatform.a: FORCE
 	$(MAKE) $(MAKE_PLATFORM) all
@@ -1135,8 +1097,6 @@ endif
 #
 
 B__MAIN_O_DEPS :=
-B__MAIN_O_DEPS += $(CORE_DIRECTORY)/linker.ads
-B__MAIN_O_DEPS += $(CORE_DIRECTORY)/linker.adb
 B__MAIN_O_DEPS += $(OBJECT_DIRECTORY)/b__main.adb
 $(OBJECT_DIRECTORY)/b__main.o: $(B__MAIN_O_DEPS)
 	@$(REM) compile the main program, incorporating the given elaboration order
@@ -1162,12 +1122,22 @@ endif
 # Link phase.
 #
 
+$(PLATFORM_DIRECTORY)/$(LD_SCRIPT): FORCE
+	@$(MAKE) $(MAKE_PLATFORM) $(LD_SCRIPT)
+
+$(CORE_DIRECTORY)/linker.ads \
+$(CORE_DIRECTORY)/linker.adb: $(CONFIGURE_DEPS) $(PLATFORM_DIRECTORY)/$(LD_SCRIPT)
+	$(LINKERADSB)                                    \
+                      $(PLATFORM_DIRECTORY)/$(LD_SCRIPT) \
+                      $(CORE_DIRECTORY)/linker
+
 ifeq ($(NOBUILD),Y)
 $(KERNEL_OUTFILE):
 else
 KERNEL_OUTFILE_DEPS :=
 KERNEL_OUTFILE_DEPS += $(DOTSWEETADA)
-KERNEL_OUTFILE_DEPS += $(PLATFORM_DIRECTORY)/$(LD_SCRIPT)
+KERNEL_OUTFILE_DEPS += $(CORE_DIRECTORY)/linker.ads
+KERNEL_OUTFILE_DEPS += $(CORE_DIRECTORY)/linker.adb
 KERNEL_OUTFILE_DEPS += $(OBJECT_DIRECTORY)/b__main.o
 $(KERNEL_OUTFILE): $(KERNEL_OUTFILE_DEPS)
 endif
@@ -1367,6 +1337,9 @@ endif
 configure-subdirs:
 	$(configure-subdirs-command)
 
+.PHONY: configure-linkeradsb
+configure-linkeradsb: $(CORE_DIRECTORY)/linker.ads $(CORE_DIRECTORY)/linker.adb
+
 .PHONY: configure-start
 configure-start:
 	@$(call echo-print,"")
@@ -1378,9 +1351,6 @@ configure-end:
 	@$(call echo-print,"")
 	@$(call echo-print,"$(PLATFORM): configuration completed.")
 	@$(call echo-print,"")
-
-.PHONY: configure-linkeradsb
-configure-linkeradsb: $(CORE_DIRECTORY)/linker.ads $(CORE_DIRECTORY)/linker.adb
 
 .PHONY: configure-aux
 CONFIGURE_AUX_DEPS :=

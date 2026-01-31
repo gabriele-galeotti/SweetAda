@@ -43,9 +43,8 @@
 ################################################################################
 
 ifneq ($(TOOLCHAIN_NAME),)
-TOOLCHAIN_PROGRAM_PREFIX := $(TOOLCHAIN_NAME)-
-endif
 
+TOOLCHAIN_PROGRAM_PREFIX := $(TOOLCHAIN_NAME)-
 # raw compiler executable used for 1) retrieve informations, and 2) back-end
 # in the GNATMAKE wrapper
 # NOTE: this is not the same as TOOLCHAIN_CC, which is possibly used to
@@ -110,24 +109,6 @@ endif
 # libm
 LIBM_FILENAME := $(TOOLCHAIN_PREFIX)/$(TOOLCHAIN_NAME)/lib/$(GCC_MULTIDIR)/libm.a
 
-# RTS
-RTS_PATH      := $(SWEETADA_PATH)/$(RTS_DIRECTORY)/$(RTS)/$(TOOLCHAIN_NAME)/$(GCC_MULTIDIR)
-ifeq ($(OSTYPE),cmd)
-RTS_INSTALLED := $(shell                                              \
-                   SETLOCAL ENABLEDELAYEDEXPANSION                 && \
-                   SET "RTS_PATH=$(RTS_PATH)"                      && \
-                   SET "RTS_PATH_CMD=!RTS_PATH:/=\!"               && \
-                   IF EXIST "!RTS_PATH_CMD!"\adainclude\system.ads    \
-                     (ECHO Y) ELSE (ECHO N)                           \
-                   )
-else
-RTS_INSTALLED := $(shell                                                  \
-                   if [ -e "$(RTS_PATH)"/adainclude/system.ads ] ; then   \
-                     printf "%s\n" "Y"                                  ; \
-                   else                                                   \
-                     printf "%s\n" "N"                                  ; \
-                   fi                                                     \
-                   )
 endif
 
 ################################################################################
@@ -229,12 +210,12 @@ READELF  := $(TOOLCHAIN_READELF)
 SIZE     := $(TOOLCHAIN_SIZE)
 STRIP    := $(TOOLCHAIN_STRIP)
 
-# add RTS and import switches
-ADAC     += --RTS="$(RTS_PATH)"
-GNATLS   += --RTS="$(RTS_PATH)"
-GNATBIND += --RTS="$(RTS_PATH)"
+################################################################################
+#                                                                              #
+# RTS.                                                                         #
+#                                                                              #
+################################################################################
 
-# query ADAC/CC RTS switches
 ifeq ($(OSTYPE),cmd)
 $(foreach s,                                                 \
   $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell         \
@@ -248,7 +229,15 @@ $(foreach s,                                                 \
     "$(MAKE)"                                                \
       --no-print-directory                                   \
       -C $(RTS_DIRECTORY)                                    \
-      PROBEVARIABLES="ADAC_SWITCHES_RTS CC_SWITCHES_RTS"     \
+      PROBEVARIABLES="                                       \
+        RTS_PATH                                             \
+        RTS_INSTALLED                                        \
+        ADAC_SWITCHES_RTS                                    \
+        CC_SWITCHES_RTS                                      \
+        SUPPRESS_STANDARD_LIBRARY                            \
+        LIBGNAT                                              \
+        LIBGNARL                                             \
+        "                                                    \
       probevariables                                         \
     2>nul))),$(eval $(strip $(subst $(DEL),$(SPACE),$(s)))))
 else
@@ -264,12 +253,31 @@ $(foreach s,                                                        \
     "$(MAKE)"                                                       \
       --no-print-directory                                          \
       -C $(RTS_DIRECTORY)                                           \
-      PROBEVARIABLES="ADAC_SWITCHES_RTS CC_SWITCHES_RTS"            \
+      PROBEVARIABLES="                                              \
+        RTS_PATH                                                    \
+        RTS_INSTALLED                                               \
+        ADAC_SWITCHES_RTS                                           \
+        CC_SWITCHES_RTS                                             \
+        SUPPRESS_STANDARD_LIBRARY                                   \
+        LIBGNAT                                                     \
+        LIBGNARL                                                    \
+        "                                                           \
       probevariables                                                \
     2> /dev/null))),$(eval $(strip $(subst $(DEL),$(SPACE),$(s)))))
 endif
-export ADAC_SWITCHES_RTS
-export CC_SWITCHES_RTS
+
+RTS_PATH := $(SWEETADA_PATH)/$(RTS_DIRECTORY)/$(RTS_PATH)
+
+# add RTS and import switches
+ADAC     += --RTS="$(RTS_PATH)"
+GNATLS   += --RTS="$(RTS_PATH)"
+GNATBIND += --RTS="$(RTS_PATH)"
+
+################################################################################
+#                                                                              #
+# Basic switches.                                                              #
+#                                                                              #
+################################################################################
 
 # AS
 AS_SWITCHES_DEFAULT       +=
@@ -434,7 +442,7 @@ RANLIB   += $(RANLIB_SWITCHES_DEFAULT)
 
 READELF  += $(READELF_SWITCHES_DEFAULT)
 
-SIZE     += $(SIZE_SWITCHES_DEFAULT)
+SIZE     += $(SIZE_SWITCHES_DEFAULT) $(SIZE_SWITCHES_PLATFORM)
 
 STRIP    += $(STRIP_SWITCHES_DEFAULT)
 

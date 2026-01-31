@@ -91,6 +91,8 @@ endif
 
 TARGET := $(CPU)
 
+RTS_PATH := $(RTS)/$(TOOLCHAIN_NAME)/$(MULTILIB)
+
 # assemble RTS source paths
 RTS_SOURCE_PATH            := ./src/$(RTS)
 RTS_SOURCE_PATH_TARGET     := ./src/targets/$(TARGET)
@@ -174,6 +176,27 @@ MULTILIB_SKIPS := $(foreach m,$(MULTILIB_DIRECTORIES_SKIP),"$(m)")
 
 ADAC_SWITCHES := $(filter-out ,$(ADAC_SWITCHES))
 CC_SWITCHES   := $(filter-out ,$(CC_SWITCHES))
+
+ifeq ($(or                                               \
+  $(if $(findstring RTS_INSTALLED,$(PROBEVARIABLE)),Y,), \
+  $(if $(findstring RTS_INSTALLED,$(PROBEVARIABLES)),Y,) \
+  ),Y)
+ifeq ($(OSTYPE),cmd)
+RTS_INSTALLED := $(shell                                         \
+                   SETLOCAL ENABLEDELAYEDEXPANSION            && \
+                   IF EXIST $(ADAINCLUDE_PATH_CMD)\system.ads    \
+                     (ECHO Y) ELSE (ECHO N)                      \
+                   )
+else
+RTS_INSTALLED := $(shell                                            \
+                   if [ -e $(ADAINCLUDE_PATH)/system.ads ] ; then   \
+                     printf "%s\n" "Y"                            ; \
+                   else                                             \
+                     printf "%s\n" "N"                            ; \
+                   fi                                               \
+                   )
+endif
+endif
 
 ################################################################################
 #                                                                              #
