@@ -628,7 +628,7 @@ package body VGA
               Volatile   => True,
               Import     => True,
               Convention => Ada;
-      Video_Attributes : constant Text_Character_Attributes_Type := (FG => 16#0A#, BG => 16#00#);
+      Video_Attributes  : constant Text_Character_Attributes_Type := (FG => 16#0A#, BG => 16#00#);
    begin
       Video_Text_Memory (X + Y * VIDEO_TEXT_WIDTH) :=
          Text_Character_Type'(C => To_U8 (C), Attributes => Video_Attributes);
