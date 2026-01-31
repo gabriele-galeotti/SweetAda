@@ -514,6 +514,9 @@ $(error Error: no valid CPU)
 else
 CPU_DIRECTORY := $(CPU_BASE_DIRECTORY)/$(CPU)
 include $(CPU_DIRECTORY)/configuration.in
+ifeq ($(TOOLCHAIN_NAME),)
+$(warning *** Warning: no valid TOOLCHAIN_NAME.)
+endif
 CONFIGURE_DEPS += $(CPU_DIRECTORY)/configuration.in
 endif
 endif
