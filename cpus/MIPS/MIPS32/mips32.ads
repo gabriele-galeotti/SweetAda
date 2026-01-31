@@ -340,19 +340,4 @@ package MIPS32
       (Irq_Level : in Irq_Level_Type)
       with Inline => True;
 
-   ----------------------------------------------------------------------------
-   -- Locking
-   ----------------------------------------------------------------------------
-
-   procedure Lock_Try
-      (Lock_Object : in out Lock_Type;
-       Success     :    out Boolean)
-      with Inline => True;
-   procedure Lock
-      (Lock_Object : in out Lock_Type)
-      with Inline => True;
-   procedure Unlock
-      (Lock_Object : out Lock_Type)
-      with Inline => True;
-
 end MIPS32;

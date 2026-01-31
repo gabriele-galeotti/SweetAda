@@ -116,18 +116,6 @@ pragma Style_Checks (Off);
       (Target_Address : in Address)
       with Inline => True;
 
-   ----------------------------------------------------------------------------
-   -- Locking
-   ----------------------------------------------------------------------------
-
-   LOCK_UNLOCK : constant CPU_Unsigned := 0;
-   LOCK_LOCK   : constant CPU_Unsigned := 1;
-
-   type Lock_Type is record
-      Lock : aliased CPU_Unsigned := LOCK_UNLOCK with Atomic => True;
-   end record
-      with Size => CPU_Unsigned'Size;
-
 pragma Style_Checks (On);
 
 end MIPS;

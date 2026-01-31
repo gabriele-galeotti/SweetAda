@@ -63,21 +63,4 @@ package CPU
    procedure Irq_Disable
       renames MIPS32.Irq_Disable;
 
-   ----------------------------------------------------------------------------
-   -- Locking
-   ----------------------------------------------------------------------------
-
-   subtype Lock_Type is MIPS.Lock_Type;
-
-   procedure Lock_Try
-      (Lock_Object : in out MIPS.Lock_Type;
-       Success     :    out Boolean)
-      renames MIPS32.Lock_Try;
-   procedure Lock
-      (Lock_Object : in out MIPS.Lock_Type)
-      renames MIPS32.Lock;
-   procedure Unlock
-      (Lock_Object : out MIPS.Lock_Type)
-      renames MIPS32.Unlock;
-
 end CPU;
