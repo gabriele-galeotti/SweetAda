@@ -3,7 +3,7 @@
 #
 # VMIPS (VMIPS emulator).
 #
-# Copyright (C) 2020-2025 Gabriele Galeotti
+# Copyright (C) 2020-2026 Gabriele Galeotti
 #
 # This work is licensed under the terms of the MIT License.
 # Please consult the LICENSE.txt file located in the top-level directory.
@@ -61,7 +61,7 @@ $(terminal ${TERMINAL}) \
     -o clockintr=100000000 \
     -o testdev \
     ${VMIPS_DEBUG} \
-    ${SWEETADA_PATH}/${KERNEL_ROMFILE} \
+    "${SWEETADA_PATH}"/${KERNEL_ROMFILE} \
   &
 VMIPS_PID=$!
 

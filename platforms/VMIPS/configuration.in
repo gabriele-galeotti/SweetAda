@@ -28,15 +28,17 @@ CPU_MODEL := R3000
 #                                                                              #
 ################################################################################
 
-# big-endian
-GCC_SWITCHES_PLATFORM     := -march=r3000 -meb
-LD_SWITCHES_PLATFORM      := -EB
-export VMIPS_ENDIAN       := big
+# big-endian machine
+#GCC_SWITCHES_PLATFORM     := -march=r3000 -meb
+#LD_SWITCHES_PLATFORM      := -EB
+#SIZE_SWITCHES_PLATFORM    := --target=elf32-big
+#export VMIPS_ENDIAN       := big
 
-# little-endian
-#GCC_SWITCHES_PLATFORM     := -march=r3000 -mel
-#LD_SWITCHES_PLATFORM      := -EL
-#export VMIPS_ENDIAN       := little
+# little-endian machine
+GCC_SWITCHES_PLATFORM     := -march=r3000 -mel
+LD_SWITCHES_PLATFORM      := -EL
+SIZE_SWITCHES_PLATFORM    := --target=elf32-little
+export VMIPS_ENDIAN       := little
 
 LD_SWITCHES_PLATFORM      += --undefined=vectors
 OBJDUMP_SWITCHES_PLATFORM := -z --disassembler-options=hwr-names=r3000,reg-names=r3000
