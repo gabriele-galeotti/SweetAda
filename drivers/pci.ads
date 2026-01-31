@@ -130,12 +130,12 @@ package PCI
    BUS0 : constant Bus_Number_Type := 0;
 
    type Confaddr_Type is record
-      REGNUM   : Register_Number_Type := 0;
-      FUNCNUM  : Function_Number_Type := 0;
-      DEVNUM   : Device_Number_Type   := 0;
-      BUSNUM   : Bus_Number_Type      := 0;
+      REGNUM   : Register_Number_Type := 0;    -- Register Number
+      FUNCNUM  : Function_Number_Type := 0;    -- Function Number
+      DEVNUM   : Device_Number_Type   := 0;    -- Device Number
+      BUSNUM   : Bus_Number_Type      := 0;    -- Bus Number
       Reserved : Bits_7               := 0;
-      CONE     : Boolean              := True;
+      CONE     : Boolean              := True; -- Configuration Enable
    end record
       with Bit_Order   => Low_Order_First,
            Object_Size => 32;
