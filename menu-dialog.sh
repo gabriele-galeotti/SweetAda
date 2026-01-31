@@ -302,7 +302,20 @@ PLATFORM=
 SUBPLATFORM=
 CPU=
 
-ACTIONS="createkernelcfg configure all kernel postbuild session-start session-end run debug clean distclean rts"
+ACTIONS="\
+  createkernelcfg \
+  configure       \
+  all             \
+  kernel          \
+  postbuild       \
+  session-start   \
+  session-end     \
+  run             \
+  debug           \
+  clean           \
+  distclean       \
+  rts             \
+  "
 ACTION=""
 PAUSE=""
 
