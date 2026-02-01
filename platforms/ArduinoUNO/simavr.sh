@@ -36,10 +36,23 @@ cd "${SWEETADA_PATH}"/${PLATFORM_DIRECTORY}
 
 SIMAVR_ARGS=""
 SIMAVR_ARGS="${SIMAVR_ARGS} -v -v"
+if [ "x$1" = "x-debug" ] ; then
+  SIMAVR_ARGS="${SIMAVR_ARGS} -g"
+fi
+SIMAVR_ARGS="${SIMAVR_ARGS} -m atmega328p"
 
 rm -f *.vcd *.vcd.idx
 
-"${SIMAVR_PREFIX}"/bin/simavr ${SIMAVR_ARGS} "${SWEETADA_PATH}"/${KERNEL_OUTFILE}
+if [ "x$1" = "x-debug" ] ; then
+  "${SIMAVR_PREFIX}"/bin/simavr ${SIMAVR_ARGS} "${SWEETADA_PATH}"/${KERNEL_OUTFILE} &
+  xterm -e sh -c '\
+    "'"${GDB}"'" \
+      -q \
+      -ex "target extended-remote tcp:localhost:1234" \
+      "'"${SWEETADA_PATH}"'"/'${KERNEL_OUTFILE}
+else
+  "${SIMAVR_PREFIX}"/bin/simavr ${SIMAVR_ARGS} "${SWEETADA_PATH}"/${KERNEL_OUTFILE}
+fi
 
 exit $?
 
