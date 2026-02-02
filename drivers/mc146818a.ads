@@ -44,7 +44,9 @@ pragma Style_Checks (Off);
    -- ADI-1026
    ----------------------------------------------------------------------------
 
-   type Flags_Type is null record;
+   type Flags_Type is record
+      GXemul : Boolean;
+   end record;
 
    type Port_Read_8_Ptr is access function (Port : Address) return Unsigned_8;
    type Port_Write_8_Ptr is access procedure (Port : in Address; Value : in Unsigned_8);
@@ -52,7 +54,7 @@ pragma Style_Checks (Off);
    type Descriptor_Type is record
       Base_Address  : Address;
       Scale_Address : Address_Shift;
-      Flags         : Flags_Type;
+      Flags         : Flags_Type                := (others => False);
       Read_8        : not null Port_Read_8_Ptr  := MMIO.ReadN_U8'Access;
       Write_8       : not null Port_Write_8_Ptr := MMIO.WriteN_U8'Access;
    end record;
@@ -61,7 +63,7 @@ pragma Style_Checks (Off);
       (
        Base_Address  => Null_Address,
        Scale_Address => 0,
-       Flags         => (null record),
+       Flags         => (others => False),
        Read_8        => MMIO.ReadN_U8'Access,
        Write_8       => MMIO.WriteN_U8'Access
       );

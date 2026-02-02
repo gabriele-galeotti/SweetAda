@@ -300,6 +300,9 @@ package body MC146818A
       RTC_DayOfMonth := Register_Read (D, DayOfMonth);
       RTC_Month      := Register_Read (D, Month);
       RTC_Year       := Register_Read (D, Year);
+      if D.Flags.GXemul then
+         RTC_Year    := Register_Read (D, RAM3F);
+      end if;
       RB := To_RB (Register_Read (D, RegisterB));
       CPU.Intcontext_Set (Intcontext);
       RTC_BCD := RB.DM = DM_BCD;
@@ -348,6 +351,9 @@ package body MC146818A
       Register_Write (D, DayOfMonth, Adjust_BCD (Unsigned_8 (T.MDay), RTC_BCD));
       Register_Write (D, Month, Adjust_BCD (Unsigned_8 (T.Mon) + 1, RTC_BCD));
       Register_Write (D, Year, Adjust_BCD (Unsigned_8 (T.Year), RTC_BCD));
+      if D.Flags.GXemul then
+         Register_Write (D, RAM3F, Adjust_BCD (Unsigned_8 (T.Year), RTC_BCD));
+      end if;
       RB.DSE := T.IsDST > 0;
       RB.SET := False;
       Register_Write (D, RegisterB, To_U8 (RB));
