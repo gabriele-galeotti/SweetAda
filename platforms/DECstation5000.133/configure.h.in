@@ -6,4 +6,6 @@
 #define CPU       "@CPU@"
 #define CPU_MODEL "@CPU_MODEL@"
 
+#define GXEMUL @GXEMUL@
+
 #endif /* _CONFIGURE_H */

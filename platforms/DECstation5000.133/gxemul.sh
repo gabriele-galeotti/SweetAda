@@ -3,7 +3,7 @@
 #
 # DECstation 500/133 (GXemul emulator).
 #
-# Copyright (C) 2020-2025 Gabriele Galeotti
+# Copyright (C) 2020-2026 Gabriele Galeotti
 #
 # This work is licensed under the terms of the MIT License.
 # Please consult the LICENSE.txt file located in the top-level directory.
@@ -44,7 +44,7 @@ GXEMUL_EXECUTABLE="/opt/GXemul/bin/gxemul"
 "${GXEMUL_EXECUTABLE}" \
   -Q -X -x \
   -E decstation -e 3min \
-  0xBFC00000:${SWEETADA_PATH}/${KERNEL_ROMFILE} \
+  0xBFC00000:"${SWEETADA_PATH}"/${KERNEL_ROMFILE} \
   &
 
 exit $?

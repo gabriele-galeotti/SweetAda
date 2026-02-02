@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2026 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -19,7 +19,6 @@ with Interfaces;
 with CPU;
 with KN02BA;
 with MC146818A;
-with Console;
 with BSP;
 
 package body Exceptions
@@ -35,6 +34,8 @@ package body Exceptions
 
    use Interfaces;
    use KN02BA;
+
+   LED0_state : Boolean := False;
 
    --========================================================================--
    --                                                                        --
@@ -56,9 +57,13 @@ package body Exceptions
       is
    begin
       if IOASIC_SIR.RTC then
-         BSP.Tick_Count := @ + 1;
          MC146818A.Handle (BSP.RTC_Descriptor'Address);
          IOASIC_SIR.RTC := True;
+         BSP.Tick_Count := @ + 1;
+         if BSP.Tick_Count mod 1_000 = 0 then
+            LED0_state := not LED0_state;
+            IOASIC_SSR.LED0 := LED0_state;
+         end if;
       end if;
    end Irq_Process;
 

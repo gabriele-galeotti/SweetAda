@@ -2,7 +2,7 @@
 //
 // llkernel.S - Low-level kernel routines and exception handling.
 //
-// Copyright (C) 2020-2025 Gabriele Galeotti
+// Copyright (C) 2020-2026 Gabriele Galeotti
 //
 // This work is licensed under the terms of the MIT License.
 // Please consult the LICENSE.txt file located in the top-level directory.
@@ -10,6 +10,7 @@
 
 #define __ASSEMBLER__ 1
 
+#include <configure.h>
 #include <mips.h>
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -92,6 +93,12 @@ vectors:
                 .org    0x0180
                 j       irq_handler
                 nop
+
+#if defined(GXEMUL) && GXEMUL == 1
+                .org    0x0280
+                j       .-0x100
+                nop
+#endif
 
 irq_handler:
                 subu    $sp,$sp,REGISTER_AREA_SIZE

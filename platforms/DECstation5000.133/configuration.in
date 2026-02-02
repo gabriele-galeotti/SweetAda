@@ -18,6 +18,8 @@ USE_APPLICATION := test-decstation5000.133
 export NETWORK_BOOT := N
 #export NETWORK_BOOT := Y
 
+export GXEMUL :=
+
 ################################################################################
 # CPU.                                                                         #
 #                                                                              #
@@ -41,6 +43,7 @@ LD_SCRIPT                 := linker-ROM.lds
 endif
 OBJDUMP_SWITCHES_PLATFORM := -z --disassembler-options=hwr-names=r3000,reg-names=r3000
 OBJCOPY_SWITCHES_PLATFORM := -O binary
+SIZE_SWITCHES_PLATFORM    := --target=elf32-little
 POSTBUILD_ROMFILE         := Y
 
 CONFIGURE_FILES_PLATFORM := configure.ads configure.h
@@ -70,8 +73,8 @@ ifeq ($(NETWORK_BOOT),Y)
 RUN_COMMAND   := $(SHELL_EXEC) $(PLATFORM_DIRECTORY)/gxemul.sh
 DEBUG_COMMAND := $(RUN_COMMAND)
 else
-RUN_COMMAND   := $(SHELL_EXEC) $(PLATFORM_DIRECTORY)/boot-rom.sh
-#RUN_COMMAND   := $(SHELL_EXEC) $(PLATFORM_DIRECTORY)/gxemul.sh
+#RUN_COMMAND   := $(SHELL_EXEC) $(PLATFORM_DIRECTORY)/boot-rom.sh
+RUN_COMMAND   := $(SHELL_EXEC) $(PLATFORM_DIRECTORY)/gxemul.sh
 DEBUG_COMMAND := $(RUN_COMMAND)
 endif
 

@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2026 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -24,6 +24,7 @@ with MIPS;
 with R3000;
 with KN02BA;
 with Exceptions;
+with Time;
 with Console;
 
 package body BSP
@@ -104,7 +105,7 @@ package body BSP
       RTC_Descriptor := (
          Base_Address  => System'To_Address (MIPS.KSEG1_ADDRESS + RTC_BASEADDRESS),
          Scale_Address => 2,
-         Flags         => (null record),
+         Flags         => (GXemul => True),
          Read_8        => MMIO.Read'Access,
          Write_8       => MMIO.Write'Access
          );
@@ -189,6 +190,23 @@ package body BSP
          NVRAM     => False,
          others    => <>
          );
+      -------------------------------------------------------------------------
+      -- 01/01/2026 00:00:00
+      declare
+         TM : Time.TM_Time;
+      begin
+         TM := (
+            Sec    => 0,
+            Min    => 0,
+            Hour   => 0,
+            MDay   => 1,
+            Mon    => 1 - 1,
+            Year   => 26,
+            IsDST  => 0,
+            others => 0
+            );
+         MC146818A.Set_Clock (BSP.RTC_Descriptor, TM);
+      end;
       -------------------------------------------------------------------------
       R3000.Irq_Enable;
       -------------------------------------------------------------------------
