@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2026 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -39,13 +39,6 @@ package body Malta
 
    PCI_Descriptor : PCI.Descriptor_Type;
 
-   function PCI_Read_32
-      (Addr : Address)
-      return Unsigned_32;
-   procedure PCI_Write_32
-      (Addr  : in Address;
-       Value : in Unsigned_32);
-
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -64,26 +57,6 @@ package body Malta
    end Tclk_Init;
 
    ----------------------------------------------------------------------------
-   -- PCI configuration space low-level access subprograms
-   ----------------------------------------------------------------------------
-
-   function PCI_Read_32
-      (Addr : Address)
-      return Unsigned_32
-      is
-   begin
-      return MMIO.Read_U32 (Addr);
-   end PCI_Read_32;
-
-   procedure PCI_Write_32
-      (Addr  : in Address;
-       Value : in Unsigned_32)
-      is
-   begin
-      MMIO.Write_U32 (Addr, Value);
-   end PCI_Write_32;
-
-   ----------------------------------------------------------------------------
    -- PCI_Init
    ----------------------------------------------------------------------------
    procedure PCI_Init
@@ -91,8 +64,8 @@ package body Malta
       CPUIC : CPU_Interface_Configuration_Type;
    begin
       PCI_Descriptor := (
-         Read_32  => PCI_Read_32'Access,
-         Write_32 => PCI_Write_32'Access,
+         Read_32  => MMIO.Read_U32'Access,
+         Write_32 => MMIO.Write_U32'Access,
          Confaddr => System'To_Address (GT64120_BASEADDRESS + 16#0000_0CF8#),
          Confdata => System'To_Address (GT64120_BASEADDRESS + 16#0000_0CFC#)
          );
@@ -129,25 +102,25 @@ package body Malta
       begin
          Console.Print ("PCI device: ");
          Console.Print (DevName);
-         Console.Print (Unsigned_8 (DevNum), Prefix => " @ DevFn ", NL => True);
+         Console.Print (Unsigned_8 (DevNum), Prefix => " @ DevNum ", NL => True);
       end Print_Device;
    begin
       -- Galileo GT-64120A - VID/DID/Devnum = 0x11AB/0x4620/0
       PCI.Cfg_Find_Device_By_Id (
          PCI_Descriptor,
-         GT64120_BUS_NUMBER,
-         PCI.Vendor_Id_Type (Byte_Swap (Unsigned_16 (PCI.DEVICE_ID_GT64120))),
-         PCI.Device_Id_Type (Byte_Swap (Unsigned_16 (PCI.VENDOR_ID_MARVELL))),
+         GT64120_BUS,
+         PCI.VENDOR_ID_MARVELL,
+         PCI.DEVICE_ID_GT64120,
          Device_Number,
          Success
          );
       if Success then
-         Print_Device ("Galileo GT-64120", 0);
+         Print_Device ("Galileo GT-64120", Device_Number);
       end if;
       -- Intel PIIX4E - VID/DID/Devnum = 0x8086/0x7110/0xA
       PCI.Cfg_Find_Device_By_Id (
          PCI_Descriptor,
-         GT64120_BUS_NUMBER,
+         GT64120_BUS,
          PCI.VENDOR_ID_INTEL,
          PCI.DEVICE_ID_PIIX4,
          Device_Number,
@@ -159,7 +132,7 @@ package body Malta
       -- AMD Am79C973 - VID/DID/Devnum = 0x1022/0x2000/0xB
       PCI.Cfg_Find_Device_By_Id (
          PCI_Descriptor,
-         GT64120_BUS_NUMBER,
+         GT64120_BUS,
          PCI.VENDOR_ID_AMD,
          PCI.DEVICE_ID_Am79C973,
          Device_Number,
@@ -172,7 +145,7 @@ package body Malta
       -- QEMU default
       PCI.Cfg_Find_Device_By_Id (
          PCI_Descriptor,
-         GT64120_BUS_NUMBER,
+         GT64120_BUS,
          PCI.VENDOR_ID_CIRRUS,
          PCI.DEVICE_ID_CLGD5446,
          Device_Number,
@@ -185,7 +158,7 @@ package body Malta
       -- triggered by "-vga std" option
       PCI.Cfg_Find_Device_By_Id (
          PCI_Descriptor,
-         GT64120_BUS_NUMBER,
+         GT64120_BUS,
          PCI.VENDOR_ID_QEMU,
          PCI.DEVICE_ID_QEMU_VGA,
          Device_Number,

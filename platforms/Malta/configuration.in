@@ -31,8 +31,10 @@ CPU_MODEL := MIPS32-24K
 
 ifeq      ($(CPU_MODEL),MIPS32-24K)
 GCC_SWITCHES_PLATFORM     := -march=24kf
+SIZE_SWITCHES_PLATFORM    := --target=elf32-big
 else ifeq ($(CPU_MODEL),MIPS64-20K)
 GCC_SWITCHES_PLATFORM     := -march=20kc
+SIZE_SWITCHES_PLATFORM    := --target=elf64-big
 endif
 LD_SWITCHES_PLATFORM      := --undefined=reset
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
