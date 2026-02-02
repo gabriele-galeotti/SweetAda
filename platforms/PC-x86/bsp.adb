@@ -170,7 +170,7 @@ package body BSP
       RTC_Descriptor := (
          Base_Address  => System'To_Address (PC.RTC_BASEADDRESS),
          Scale_Address => 0,
-         Flags         => (null record),
+         Flags         => (others => <>),
          Read_8        => PC.RTC_Register_Read'Access,
          Write_8       => PC.RTC_Register_Write'Access
          );
