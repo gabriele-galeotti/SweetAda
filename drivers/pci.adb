@@ -57,13 +57,28 @@ package body PCI
       Result : Unsigned_8;
    begin
       Offset := Unsigned_8 (Register_Number and 16#03#);
-      Data := Cfg_Read (Descriptor, Bus_Number, Device_Number, Function_Number, Register_Number);
-      case Offset is
-         when 0 => Result := LByte (Data);
-         when 1 => Result := MByte (Data);
-         when 2 => Result := NByte (Data);
-         when 3 => Result := HByte (Data);
-      end case;
+      Data := Cfg_Read (
+         Descriptor,
+         Bus_Number,
+         Device_Number,
+         Function_Number,
+         Register_Number
+         );
+      if BigEndian then
+         case Offset is
+            when 0 => Result := HByte (Data);
+            when 1 => Result := NByte (Data);
+            when 2 => Result := MByte (Data);
+            when 3 => Result := LByte (Data);
+         end case;
+      else
+         case Offset is
+            when 0 => Result := LByte (Data);
+            when 1 => Result := MByte (Data);
+            when 2 => Result := NByte (Data);
+            when 3 => Result := HByte (Data);
+         end case;
+      end if;
       return Result;
    end Cfg_Read;
 
@@ -79,14 +94,44 @@ package body PCI
       Data   : Unsigned_32;
    begin
       Offset := Unsigned_8 (Register_Number and 16#03#);
-      Data := Cfg_Read (Descriptor, Bus_Number, Device_Number, Function_Number, Register_Number);
-      case Offset is
-         when 0 => Data := (@ and 16#FFFF_FF00#) or             Unsigned_32 (Value);
-         when 1 => Data := (@ and 16#FFFF_00FF#) or Shift_Left (Unsigned_32 (Value), 8);
-         when 2 => Data := (@ and 16#FF00_FFFF#) or Shift_Left (Unsigned_32 (Value), 16);
-         when 3 => Data := (@ and 16#00FF_FFFF#) or Shift_Left (Unsigned_32 (Value), 24);
-      end case;
-      Cfg_Write (Descriptor, Bus_Number, Device_Number, Function_Number, Register_Number, Data);
+      Data := Cfg_Read (
+         Descriptor,
+         Bus_Number,
+         Device_Number,
+         Function_Number,
+         Register_Number
+         );
+      if BigEndian then
+         case Offset is
+            when 0 => Data := (@ and 16#00FF_FFFF#)                or
+                              Shift_Left (Unsigned_32 (Value), 24);
+            when 1 => Data := (@ and 16#FF00_FFFF#)                or
+                              Shift_Left (Unsigned_32 (Value), 16);
+            when 2 => Data := (@ and 16#FFFF_00FF#)                or
+                              Shift_Left (Unsigned_32 (Value), 8);
+            when 3 => Data := (@ and 16#FFFF_FF00#)                or
+                              Unsigned_32 (Value);
+         end case;
+      else
+         case Offset is
+            when 0 => Data := (@ and 16#FFFF_FF00#)                or
+                              Unsigned_32 (Value);
+            when 1 => Data := (@ and 16#FFFF_00FF#)                or
+                              Shift_Left (Unsigned_32 (Value), 8);
+            when 2 => Data := (@ and 16#FF00_FFFF#)                or
+                              Shift_Left (Unsigned_32 (Value), 16);
+            when 3 => Data := (@ and 16#00FF_FFFF#)                or
+                              Shift_Left (Unsigned_32 (Value), 24);
+         end case;
+      end if;
+      Cfg_Write (
+         Descriptor,
+         Bus_Number,
+         Device_Number,
+         Function_Number,
+         Register_Number,
+         Data
+         );
    end Cfg_Write;
 
    -- Unsigned_16
@@ -105,12 +150,26 @@ package body PCI
    begin
       Offset := Unsigned_8 (Register_Number and 16#02#);
       -- pragma Assert (Offset /= 1)
-      Data := Cfg_Read (Descriptor, Bus_Number, Device_Number, Function_Number, Register_Number);
-      case Offset is
-         when 0 => Result := LWord (Data);
-         when 1 => Result := 0; -- __DNO__
-         when 2 => Result := HWord (Data);
-      end case;
+      Data := Cfg_Read (
+         Descriptor,
+         Bus_Number,
+         Device_Number,
+         Function_Number,
+         Register_Number
+         );
+      if BigEndian then
+         case Offset is
+            when 0 => Result := Byte_Swap (HWord (Data));
+            when 1 => Result := 0; -- __DNO__
+            when 2 => Result := Byte_Swap (LWord (Data));
+         end case;
+      else
+         case Offset is
+            when 0 => Result := LWord (Data);
+            when 1 => Result := 0; -- __DNO__
+            when 2 => Result := HWord (Data);
+         end case;
+      end if;
       return Result;
    end Cfg_Read;
 
@@ -127,13 +186,38 @@ package body PCI
    begin
       Offset := Unsigned_8 (Register_Number and 16#02#);
       -- pragma Assert (Offset /= 1)
-      Data := Cfg_Read (Descriptor, Bus_Number, Device_Number, Function_Number, Register_Number);
-      case Offset is
-         when 0 => Data := (@ and 16#FFFF_0000#) or Unsigned_32 (Value);
-         when 1 => null; -- __DNO__
-         when 2 => Data := (@ and 16#0000_FFFF#) or Shift_Left (Unsigned_32 (Value), 16);
-      end case;
-      Cfg_Write (Descriptor, Bus_Number, Device_Number, Function_Number, Register_Number, Data);
+      Data := Cfg_Read (
+         Descriptor,
+         Bus_Number,
+         Device_Number,
+         Function_Number,
+         Register_Number
+         );
+      if BigEndian then
+         case Offset is
+            when 0 => Data := (@ and 16#0000_FFFF#)                            or
+                              Shift_Left (Unsigned_32 (Byte_Swap (Value)), 16);
+            when 1 => null; -- __DNO__
+            when 2 => Data := (@ and 16#FFFF_0000#)                            or
+                              Unsigned_32 (Byte_Swap (Value));
+         end case;
+      else
+         case Offset is
+            when 0 => Data := (@ and 16#FFFF_0000#)                or
+                              Unsigned_32 (Value);
+            when 1 => null; -- __DNO__
+            when 2 => Data := (@ and 16#0000_FFFF#)                or
+                              Shift_Left (Unsigned_32 (Value), 16);
+         end case;
+      end if;
+      Cfg_Write (
+         Descriptor,
+         Bus_Number,
+         Device_Number,
+         Function_Number,
+         Register_Number,
+         Data
+         );
    end Cfg_Write;
 
    -- Unsigned_32
@@ -154,7 +238,7 @@ package body PCI
          BUSNUM  => Bus_Number,
          others  => <>
          )));
-      return Descriptor.Read_32 (Descriptor.Confdata);
+      return LE_To_CPUE (Descriptor.Read_32 (Descriptor.Confdata));
    end Cfg_Read;
 
    procedure Cfg_Write
@@ -173,7 +257,7 @@ package body PCI
          BUSNUM  => Bus_Number,
          others  => <>
          )));
-      Descriptor.Write_32 (Descriptor.Confdata, Value);
+      Descriptor.Write_32 (Descriptor.Confdata, CPUE_To_LE (Value));
    end Cfg_Write;
 
    ----------------------------------------------------------------------------
@@ -190,13 +274,23 @@ package body PCI
        Success       :    out Boolean)
       is
       -- PCI bridge responds with an invalid value if device does not exist
-      INVALID_DEVICE : constant := 16#FFFF_FFFF#;
-      Data           : Unsigned_32;
+      PCI_INVALID : constant := 16#FFFF#;
    begin
-      Data := Cfg_Read (Descriptor, Bus_Number, Device_Number, 0, 0);
-      Vendor_Id := (Vendor_Id_Type (LWord (Data)));
-      Device_Id := (Device_Id_Type (HWord (Data)));
-      if Data /= INVALID_DEVICE then
+      Vendor_Id := Vendor_Id_Type (Unsigned_16'(Cfg_Read (
+         Descriptor,
+         Bus_Number,
+         Device_Number,
+         0,
+         VID_Offset
+         )));
+      Device_Id := Device_Id_Type (Unsigned_16'(Cfg_Read (
+         Descriptor,
+         Bus_Number,
+         Device_Number,
+         0,
+         DID_Offset
+         )));
+      if Vendor_Id /= PCI_INVALID or else Device_Id /= PCI_INVALID then
          Success := True;
       else
          Success := False;
@@ -216,16 +310,27 @@ package body PCI
        Device_Number :    out Device_Number_Type;
        Success       :    out Boolean)
       is
-      Data : Unsigned_32;
+      Vid : Vendor_Id_Type;
+      Did : Device_Id_Type;
    begin
       Device_Number := 0;
       Success := False;
       for Device_Number_Idx in Device_Number_Type loop
-         Data := Cfg_Read (Descriptor, Bus_Number, Device_Number_Idx, 0, 0);
-         if
-            Vendor_Id_Type (LWord (Data)) = Vendor_Id and then
-            Device_Id_Type (HWord (Data)) = Device_Id
-         then
+         Vid := Vendor_Id_Type (Unsigned_16'(Cfg_Read (
+            Descriptor,
+            Bus_Number,
+            Device_Number_Idx,
+            0,
+            VID_Offset
+            )));
+         Did := Device_Id_Type (Unsigned_16'(Cfg_Read (
+            Descriptor,
+            Bus_Number,
+            Device_Number_Idx,
+            0,
+            DID_Offset
+            )));
+         if Vid = Vendor_Id and then Did = Device_Id then
             Device_Number := Device_Number_Idx;
             Success := True;
             exit;
