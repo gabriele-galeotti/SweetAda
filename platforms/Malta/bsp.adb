@@ -104,7 +104,7 @@ package body BSP
       PIIX4_RTC_Descriptor := (
          Base_Address  => System'To_Address (Malta.PIIX4_BASEADDRESS + 16#0000_0070#),
          Scale_Address => 0,
-         Flags         => (null record),
+         Flags         => (others => <>),
          Read_8        => Malta.RTC_Register_Read'Access,
          Write_8       => Malta.RTC_Register_Write'Access
          );
