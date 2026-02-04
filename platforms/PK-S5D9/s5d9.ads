@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2026 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -164,11 +164,11 @@ pragma Style_Checks (Off);
 
    RSTSR1_ADDRESS : constant := 16#4001_E0C0#;
 
-   RSTSR1 : aliased RSTSR1_Type with
-      Address              => System'To_Address (RSTSR1_ADDRESS),
-      Volatile_Full_Access => True,
-      Import               => True,
-      Convention           => Ada;
+   RSTSR1 : aliased RSTSR1_Type
+      with Address              => System'To_Address (RSTSR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    -- 6.2.3 Reset Status Register 2 (RSTSR2)
 
