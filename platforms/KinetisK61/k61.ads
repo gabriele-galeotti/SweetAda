@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2026 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -3231,8 +3231,9 @@ pragma Style_Checks (Off);
       tag       : Bits_14 := 0;     -- 14-bit tag for cache entry
       Reserved2 : Bits_12 := 0;
    end record
-      with Bit_Order   => Low_Order_First,
-           Object_Size => 32;
+      with Bit_Order            => Low_Order_First,
+           Object_Size          => 32,
+           Volatile_Full_Access => True;
    for FMC_TAGVDWxSy_Type use record
       valid     at 0 range  0 ..  0;
       Reserved1 at 0 range  1 ..  5;
@@ -3267,48 +3268,89 @@ pragma Style_Checks (Off);
    -- 29.4.22 Cache Data Storage (mid-lower word) (FMC_DATAW3SnML)
    -- 29.4.23 Cache Data Storage (lowermost word) (FMC_DATAW3SnLM)
 
+   -- 128-bit entry UM word
    type FMC_DATAWxSyUM_Type is record
       data : Unsigned_32; -- Bits [127:96] of data entry
    end record
-      with Bit_Order   => Low_Order_First,
-           Object_Size => 32;
+      with Bit_Order            => Low_Order_First,
+           Object_Size          => 32,
+           Volatile_Full_Access => True;
    for FMC_DATAWxSyUM_Type use record
       data at 0 range 0 .. 31;
    end record;
 
+   -- 128-bit entry MU word
    type FMC_DATAWxSyMU_Type is record
       data : Unsigned_32; -- Bits [95:64] of data entry
    end record
-      with Bit_Order   => Low_Order_First,
-           Object_Size => 32;
+      with Bit_Order            => Low_Order_First,
+           Object_Size          => 32,
+           Volatile_Full_Access => True;
    for FMC_DATAWxSyMU_Type use record
       data at 0 range 0 .. 31;
    end record;
 
+   -- 128-bit entry ML word
    type FMC_DATAWxSyML_Type is record
       data : Unsigned_32; -- Bits [63:32] of data entry
    end record
-      with Bit_Order   => Low_Order_First,
-           Object_Size => 32;
+      with Bit_Order            => Low_Order_First,
+           Object_Size          => 32,
+           Volatile_Full_Access => True;
    for FMC_DATAWxSyML_Type use record
       data at 0 range 0 .. 31;
    end record;
 
+   -- 128-bit entry LM word
    type FMC_DATAWxSyLM_Type is record
       data : Unsigned_32; -- Bits [31:0] of data entry
    end record
-      with Bit_Order   => Low_Order_First,
-           Object_Size => 32;
+      with Bit_Order            => Low_Order_First,
+           Object_Size          => 32,
+           Volatile_Full_Access => True;
    for FMC_DATAWxSyLM_Type use record
       data at 0 range 0 .. 31;
    end record;
 
-   FMC_DATA_UM : constant := 0;
-   FMC_DATA_MU : constant := 1;
-   FMC_DATA_ML : constant := 2;
-   FMC_DATA_LM : constant := 3;
+   -- a cache set is composed of a 128-bit entry subdivided in 4 words
+   type FMC_DATAWxSy_Type is record
+      UM : FMC_DATAWxSyUM_Type;
+      MU : FMC_DATAWxSyMU_Type;
+      ML : FMC_DATAWxSyML_Type;
+      LM : FMC_DATAWxSyLM_Type;
+   end record
+      with Object_Size => 4 * 32;
+   for FMC_DATAWxSy_Type use record
+      UM at 16#0# range 0 .. 31;
+      MU at 16#4# range 0 .. 31;
+      ML at 16#8# range 0 .. 31;
+      LM at 16#C# range 0 .. 31;
+   end record;
 
-   type FMC_DATAWS_Type is array (FMC_DATA_UM .. FMC_DATA_LM) of Unsigned_32;
+   -- a cache way is composed of 4 sets
+   type FMC_DATAWx_Type is record
+      S0 : FMC_DATAWxSy_Type;
+      S1 : FMC_DATAWxSy_Type;
+      S2 : FMC_DATAWxSy_Type;
+      S3 : FMC_DATAWxSy_Type;
+   end record
+      with Object_Size => 4 * 4 * 32;
+   for FMC_DATAWx_Type use record
+      S0 at 16#00# range 0 .. (4 * 32) - 1;
+      S1 at 16#10# range 0 .. (4 * 32) - 1;
+      S2 at 16#20# range 0 .. (4 * 32) - 1;
+      S3 at 16#30# range 0 .. (4 * 32) - 1;
+   end record;
+
+   -- 4-way, set-associative cache with 4 sets, 128-bit entries
+   type FMC_DATAW_Type is array (0 .. 3) of FMC_DATAWx_Type
+      with Object_Size => 4 * 4 * 4 * 32;
+
+   FMC_DATAW : aliased FMC_DATAW_Type
+      with Address    => System'To_Address (FMC_BASEADDRESS + 16#200#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 30 Flash Memory Module (FTFE)
