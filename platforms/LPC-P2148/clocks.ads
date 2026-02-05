@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ bsp.adb                                                                                                   --
+-- __FLN__ clocks.ads                                                                                                --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,69 +15,19 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with System.Storage_Elements;
-with Configure;
-with Definitions;
-with Bits;
-with CPU;
-with LPC2148;
-with Clocks;
-with Console;
-
-package body BSP
+package Clocks
    is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                           Local declarations                           --
+   --                               Public part                              --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use System.Storage_Elements;
-   use Interfaces;
-   use Definitions;
-   use Bits;
+   CLK_Core : Natural;
 
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Package subprograms                          --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
+   procedure Init;
 
-   ----------------------------------------------------------------------------
-   -- Console wrappers
-   ----------------------------------------------------------------------------
-
-   procedure Console_Putchar
-      (C : in Character)
-      is
-   begin
-      -- wait for transmitter available
-      null;
-   end Console_Putchar;
-
-   procedure Console_Getchar
-      (C : out Character)
-      is
-      Data : Unsigned_8;
-   begin
-      -- wait for receiver available
-      null;
-   end Console_Getchar;
-
-   ----------------------------------------------------------------------------
-   -- Setup
-   ----------------------------------------------------------------------------
-   procedure Setup
-      is
-   begin
-      Clocks.Init;
-   end Setup;
-
-end BSP;
+end Clocks;

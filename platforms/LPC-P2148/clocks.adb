@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ bsp.adb                                                                                                   --
+-- __FLN__ clocks.adb                                                                                                --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,17 +15,11 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with System.Storage_Elements;
-with Configure;
 with Definitions;
 with Bits;
-with CPU;
 with LPC2148;
-with Clocks;
-with Console;
 
-package body BSP
+package body Clocks
    is
 
    --========================================================================--
@@ -36,11 +30,9 @@ package body BSP
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use System.Storage_Elements;
-   use Interfaces;
    use Definitions;
    use Bits;
+   use LPC2148;
 
    --========================================================================--
    --                                                                        --
@@ -51,33 +43,35 @@ package body BSP
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Console wrappers
+   -- Init
    ----------------------------------------------------------------------------
-
-   procedure Console_Putchar
-      (C : in Character)
+   -- XTAL input frequency = 12 MHz
+   ----------------------------------------------------------------------------
+   procedure Init
       is
    begin
-      -- wait for transmitter available
-      null;
-   end Console_Putchar;
+      PLL0CFG := (
+         MSEL   => MSEL_M5, -- CCLK = 12 MHz x 5 = 60 MHz
+         PSEL   => PSEL_P2, -- FCCO = 60 MHz x 2 x 2 = 240 MHz
+         others => <>
+         );
+      PLL0CON := (
+         PLLE   => True,
+         PLLC   => False,
+         others => <>
+         );
+      PLL0FEED := PLLxFEED_VALUE1;
+      PLL0FEED := PLLxFEED_VALUE2;
+      loop exit when PLL0STAT.PLOCK; end loop;
+      PLL0CON := (
+         PLLE   => True,
+         PLLC   => True,
+         others => <>
+         );
+      PLL0FEED := PLLxFEED_VALUE1;
+      PLL0FEED := PLLxFEED_VALUE2;
+      -- setup values
+      CLK_Core := 60 * MHz1;
+   end Init;
 
-   procedure Console_Getchar
-      (C : out Character)
-      is
-      Data : Unsigned_8;
-   begin
-      -- wait for receiver available
-      null;
-   end Console_Getchar;
-
-   ----------------------------------------------------------------------------
-   -- Setup
-   ----------------------------------------------------------------------------
-   procedure Setup
-      is
-   begin
-      Clocks.Init;
-   end Setup;
-
-end BSP;
+end Clocks;

@@ -12,12 +12,8 @@ if {$debug_mode ne 0} {
 }
 puts stdout ""
 
-# hard reset (needs complete re-initialization)
-#puts stdout "reset CPU (hard reset) ..."
-#reset init
-# soft reset
-puts stdout "reset CPU (soft reset) ..."
-soft_reset_halt
+puts stdout "reset/halt CPU ..."
+reset halt
 
 puts stdout "CPU is "[lpc2148.cpu curstate]
 puts stdout [arm core_state]

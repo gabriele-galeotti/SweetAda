@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2026 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -191,6 +191,9 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    -- 4.8.7 PLL Feed register (PLL0FEED - 0xE01F C08C, PLL1FEED - 0xE01F C0AC)
+
+   PLLxFEED_VALUE1 : constant := 16#AA#;
+   PLLxFEED_VALUE2 : constant := 16#55#;
 
    PLL0FEED_ADDRESS : constant := 16#E01F_C08C#;
 
