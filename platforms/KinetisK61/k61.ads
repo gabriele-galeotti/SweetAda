@@ -1555,17 +1555,232 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 14.3.1 Power Mode Protection register (SMC_PMPROT)
+
+   type SMC_PMPROT_Type is record
+      Reserved1 : Bits_1  := 0;
+      AVLLS     : Boolean := False; -- Allow Very-Low-Leakage Stop Mode
+      Reserved2 : Bits_1  := 0;
+      ALLS      : Boolean := False; -- Allow Low-Leakage Stop Mode
+      Reserved3 : Bits_1  := 0;
+      AVLP      : Boolean := False; -- Allow Very-Low-Power Modes
+      Reserved4 : Bits_2  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for SMC_PMPROT_Type use record
+      Reserved1 at 0 range 0 .. 0;
+      AVLLS     at 0 range 1 .. 1;
+      Reserved2 at 0 range 2 .. 2;
+      ALLS      at 0 range 3 .. 3;
+      Reserved3 at 0 range 4 .. 4;
+      AVLP      at 0 range 5 .. 5;
+      Reserved4 at 0 range 6 .. 7;
+   end record;
+
+   SMC_PMPROT : aliased SMC_PMPROT_Type
+      with Address              => System'To_Address (16#4007_E000#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 14.3.2 Power Mode Control register (SMC_PMCTRL)
+
+   STOPM_STOP  : constant := 2#000#; -- Normal Stop (STOP)
+   STOPM_RSVD1 : constant := 2#001#; -- Reserved
+   STOPM_VLPS  : constant := 2#010#; -- Very-Low-Power Stop (VLPS)
+   STOPM_LLS   : constant := 2#011#; -- Low-Leakage Stop (LLS)
+   STOPM_VLLSx : constant := 2#100#; -- Very-Low-Leakage Stop (VLLSx)
+   STOPM_RSVD2 : constant := 2#101#; -- Reserved
+   STOPM_RSVD3 : constant := 2#110#; -- Reseved
+   STOPM_RSVD4 : constant := 2#111#; -- Reserved
+
+   RUNM_RUN   : constant := 2#00#; -- Normal Run mode (RUN)
+   RUNM_RSVD1 : constant := 2#01#; -- Reserved
+   RUNM_VLPR  : constant := 2#10#; -- Very-Low-Power Run mode (VLPR)
+   RUNM_RSVD2 : constant := 2#11#; -- Reserved
+
+   LPWUI_VLP : constant := 0; -- The system remains in a VLP mode on an interrupt
+   LPWUI_RUN : constant := 1; -- The system exits to Normal RUN mode on an interrupt
+
+   type SMC_PMCTRL_Type is record
+      STOPM    : Bits_3  := STOPM_STOP; -- Stop Mode Control
+      STOPA    : Boolean := False;      -- Stop Aborted
+      Reserved : Bits_1  := 0;
+      RUNM     : Bits_2  := RUNM_RUN;   -- Run Mode Control
+      LPWUI    : Bits_1  := LPWUI_VLP;  -- Low-Power Wake Up On Interrupt
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for SMC_PMCTRL_Type use record
+      STOPM    at 0 range 0 .. 2;
+      STOPA    at 0 range 3 .. 3;
+      Reserved at 0 range 4 .. 4;
+      RUNM     at 0 range 5 .. 6;
+      LPWUI    at 0 range 7 .. 7;
+   end record;
+
+   SMC_PMCTRL : aliased SMC_PMCTRL_Type
+      with Address              => System'To_Address (16#4007_E001#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 14.3.3 VLLS Control Register (SMC_VLLSCTRL)
+
+   VLLSM_RSVD1 : constant := 2#000#; -- Reserved
+   VLLSM_VLLS1 : constant := 2#001#; -- VLLS1
+   VLLSM_VLLS2 : constant := 2#010#; -- VLLS2
+   VLLSM_VLLS3 : constant := 2#011#; -- VLLS3
+   VLLSM_RSVD2 : constant := 2#100#; -- Reserved
+   VLLSM_RSVD3 : constant := 2#101#; -- Reserved
+   VLLSM_RSVD4 : constant := 2#110#; -- Reserved
+   VLLSM_RSVD5 : constant := 2#111#; -- Reserved
+
+   type SMC_VLLSCTRL_Type is record
+      VLLSM     : Bits_3 := VLLSM_VLLS3; -- VLLS Mode Control
+      Reserved1 : Bits_1 := 0;
+      Reserved2 : Bits_1 := 0;
+      Reserved3 : Bits_1 := 0;
+      Reserved4 : Bits_2 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for SMC_VLLSCTRL_Type use record
+      VLLSM     at 0 range 0 .. 2;
+      Reserved1 at 0 range 3 .. 3;
+      Reserved2 at 0 range 4 .. 4;
+      Reserved3 at 0 range 5 .. 5;
+      Reserved4 at 0 range 6 .. 7;
+   end record;
+
+   SMC_VLLSCTRL : aliased SMC_VLLSCTRL_Type
+      with Address              => System'To_Address (16#4007_E002#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 14.3.4 Power Mode Status register (SMC_PMSTAT)
+
+   PMSTAT_RUN  : constant := 2#0000_0001#; -- Current power mode is RUN.
+   PMSTAT_STOP : constant := 2#0000_0010#; -- Current power mode is STOP.
+   PMSTAT_VLPR : constant := 2#0000_0100#; -- Current power mode is VLPR.
+   PMSTAT_VLPW : constant := 2#0000_1000#; -- Current power mode is VLPW.
+   PMSTAT_VLPS : constant := 2#0001_0000#; -- Current power mode is VLPS.
+   PMSTAT_LLS  : constant := 2#0010_0000#; -- Current power mode is LLS.
+   PMSTAT_VLLS : constant := 2#0100_0000#; -- Current power mode is VLLS.
+   PMSTAT_RSVD : constant := 2#1000_0000#; -- Reserved
+
+   type SMC_PMSTAT_Type is record
+      PMSTAT : Bits_8; -- Power Mode Status
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for SMC_PMSTAT_Type use record
+      PMSTAT at 0 range 0 .. 7;
+   end record;
+
+   SMC_PMSTAT : aliased SMC_PMSTAT_Type
+      with Address              => System'To_Address (16#4007_E003#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 15 Power Management Controller (PMC)
    ----------------------------------------------------------------------------
 
    -- 15.5.1 Low Voltage Detect Status And Control 1 register (PMC_LVDSC1)
+
+   LVDV_LOWTRIP  : constant := 2#00#; -- Low trip point selected (V LVD = V LVDL )
+   LVDV_HIGHTRIP : constant := 2#01#; -- High trip point selected (V LVD = V LVDH )
+   LVDV_RSVD1    : constant := 2#10#; -- Reserved
+   LVDV_RSVD2    : constant := 2#11#; -- Reserved
+
+   type PMC_LVDSC1_Type is record
+      LVDV     : Bits_2  := LVDV_LOWTRIP; -- Low-Voltage Detect Voltage Select
+      Reserved : Bits_2  := 0;
+      LVDRE    : Boolean := True;         -- Low-Voltage Detect Reset Enable
+      LVDIE    : Boolean := False;        -- Low-Voltage Detect Interrupt Enable
+      LVDACK   : Boolean := False;        -- Low-Voltage Detect Acknowledge
+      LVDF     : Boolean := False;        -- Low-Voltage Detect Flag
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for PMC_LVDSC1_Type use record
+      LVDV     at 0 range 0 .. 1;
+      Reserved at 0 range 2 .. 3;
+      LVDRE    at 0 range 4 .. 4;
+      LVDIE    at 0 range 5 .. 5;
+      LVDACK   at 0 range 6 .. 6;
+      LVDF     at 0 range 7 .. 7;
+   end record;
+
+   PMC_LVDSC1 : aliased PMC_LVDSC1_Type
+      with Address              => System'To_Address (16#4007_D000#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 15.5.2 Low Voltage Detect Status And Control 2 register (PMC_LVDSC2)
+
+   LVWV_VLVW1 : constant := 2#00#; -- Low trip point selected (VLVW = VLVW1)
+   LVWV_VLVW2 : constant := 2#01#; -- Mid 1 trip point selected (VLVW = VLVW2)
+   LVWV_VLVW3 : constant := 2#10#; -- Mid 2 trip point selected (VLVW = VLVW3)
+   LVWV_VLVW4 : constant := 2#11#; -- High trip point selected (VLVW = VLVW4)
+
+   type PMC_LVDSC2_Type is record
+      LVWV     : Bits_2  := LVWV_VLVW1; -- Low-Voltage Warning Voltage Select
+      Reserved : Bits_3  := 0;
+      LVWIE    : Boolean := False;      -- Low-Voltage Warning Interrupt Enable
+      LVWACK   : Boolean := False;      -- Low-Voltage Warning Acknowledge
+      LVWF     : Boolean := False;      -- Low-Voltage Warning Flag
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for PMC_LVDSC2_Type use record
+      LVWV     at 0 range 0 .. 1;
+      Reserved at 0 range 2 .. 4;
+      LVWIE    at 0 range 5 .. 5;
+      LVWACK   at 0 range 6 .. 6;
+      LVWF     at 0 range 7 .. 7;
+   end record;
+
+   PMC_LVDSC2 : aliased PMC_LVDSC2_Type
+      with Address              => System'To_Address (16#4007_D001#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 15.5.3 Regulator Status And Control register (PMC_REGSC)
+
+   type PMC_REGSC_Type is record
+      BGBE      : Boolean := False; -- Bandgap Buffer Enable
+      Reserved1 : Bits_1  := 0;
+      REGONS    : Boolean := False; -- Regulator In Run Regulation Status
+      ACKISO    : Boolean := False; -- Acknowledge Isolation
+      Reserved2 : Bits_1  := 0;
+      Reserved3 : Bits_1  := 0;
+      Reserved4 : Bits_1  := 0;
+      Reserved5 : Bits_1  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for PMC_REGSC_Type use record
+      BGBE      at 0 range 0 .. 0;
+      Reserved1 at 0 range 1 .. 1;
+      REGONS    at 0 range 2 .. 2;
+      ACKISO    at 0 range 3 .. 3;
+      Reserved2 at 0 range 4 .. 4;
+      Reserved3 at 0 range 5 .. 5;
+      Reserved4 at 0 range 6 .. 6;
+      Reserved5 at 0 range 7 .. 7;
+   end record;
+
+   PMC_REGSC : aliased PMC_REGSC_Type
+      with Address              => System'To_Address (16#4007_D002#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 16 Low-Leakage Wakeup Unit (LLWU)
