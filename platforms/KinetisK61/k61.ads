@@ -1554,6 +1554,8 @@ pragma Style_Checks (Off);
    -- Chapter 14 System Mode Controller (SMC)
    ----------------------------------------------------------------------------
 
+   SMC_BASEADDRESS : constant := 16#4007_E000#;
+
    -- 14.3.1 Power Mode Protection register (SMC_PMPROT)
 
    type SMC_PMPROT_Type is record
@@ -1578,7 +1580,7 @@ pragma Style_Checks (Off);
    end record;
 
    SMC_PMPROT : aliased SMC_PMPROT_Type
-      with Address              => System'To_Address (16#4007_E000#),
+      with Address              => System'To_Address (SMC_BASEADDRESS + 16#0#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1620,7 +1622,7 @@ pragma Style_Checks (Off);
    end record;
 
    SMC_PMCTRL : aliased SMC_PMCTRL_Type
-      with Address              => System'To_Address (16#4007_E001#),
+      with Address              => System'To_Address (SMC_BASEADDRESS + 16#1#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1654,7 +1656,7 @@ pragma Style_Checks (Off);
    end record;
 
    SMC_VLLSCTRL : aliased SMC_VLLSCTRL_Type
-      with Address              => System'To_Address (16#4007_E002#),
+      with Address              => System'To_Address (SMC_BASEADDRESS + 16#2#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1680,7 +1682,7 @@ pragma Style_Checks (Off);
    end record;
 
    SMC_PMSTAT : aliased SMC_PMSTAT_Type
-      with Address              => System'To_Address (16#4007_E003#),
+      with Address              => System'To_Address (SMC_BASEADDRESS + 16#3#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1688,6 +1690,8 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
    -- Chapter 15 Power Management Controller (PMC)
    ----------------------------------------------------------------------------
+
+   PMC_BASEADDRESS : constant := 16#4007_D000#;
 
    -- 15.5.1 Low Voltage Detect Status And Control 1 register (PMC_LVDSC1)
 
@@ -1716,7 +1720,7 @@ pragma Style_Checks (Off);
    end record;
 
    PMC_LVDSC1 : aliased PMC_LVDSC1_Type
-      with Address              => System'To_Address (16#4007_D000#),
+      with Address              => System'To_Address (PMC_BASEADDRESS + 16#0#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1746,7 +1750,7 @@ pragma Style_Checks (Off);
    end record;
 
    PMC_LVDSC2 : aliased PMC_LVDSC2_Type
-      with Address              => System'To_Address (16#4007_D001#),
+      with Address              => System'To_Address (PMC_BASEADDRESS + 16#1#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1777,7 +1781,7 @@ pragma Style_Checks (Off);
    end record;
 
    PMC_REGSC : aliased PMC_REGSC_Type
-      with Address              => System'To_Address (16#4007_D002#),
+      with Address              => System'To_Address (PMC_BASEADDRESS + 16#2#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -1786,17 +1790,313 @@ pragma Style_Checks (Off);
    -- Chapter 16 Low-Leakage Wakeup Unit (LLWU)
    ----------------------------------------------------------------------------
 
+   LLWU_BASEADDRESS : constant := 16#4700_C000#;
+
    -- 16.3.1 LLWU Pin Enable 1 register (LLWU_PE1)
    -- 16.3.2 LLWU Pin Enable 2 register (LLWU_PE2)
    -- 16.3.3 LLWU Pin Enable 3 register (LLWU_PE3)
    -- 16.3.4 LLWU Pin Enable 4 register (LLWU_PE4)
+
+   WUPEx_DISABLE  : constant := 2#00#; -- External input pin disabled as wakeup input
+   WUPEx_RISEDGE  : constant := 2#01#; -- External input pin enabled with rising edge detection
+   WUPEx_FALLEDGE : constant := 2#10#; -- External input pin enabled with falling edge detection
+   WUPEx_ANYEDGE  : constant := 2#11#; -- External input pin enabled with any change detection
+
+   type LLWU_PE1_Type is record
+      WUPE0 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P0
+      WUPE1 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P1
+      WUPE2 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P2
+      WUPE3 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P3
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for LLWU_PE1_Type use record
+      WUPE0 at 0 range 0 .. 1;
+      WUPE1 at 0 range 2 .. 3;
+      WUPE2 at 0 range 4 .. 5;
+      WUPE3 at 0 range 6 .. 7;
+   end record;
+
+   LLWU_PE1 : aliased LLWU_PE1_Type
+      with Address              => System'To_Address (LLWU_BASEADDRESS + 16#0#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   type LLWU_PE2_Type is record
+      WUPE4 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P4
+      WUPE5 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P5
+      WUPE6 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P6
+      WUPE7 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P7
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for LLWU_PE2_Type use record
+      WUPE4 at 0 range 0 .. 1;
+      WUPE5 at 0 range 2 .. 3;
+      WUPE6 at 0 range 4 .. 5;
+      WUPE7 at 0 range 6 .. 7;
+   end record;
+
+   LLWU_PE2 : aliased LLWU_PE2_Type
+      with Address              => System'To_Address (LLWU_BASEADDRESS + 16#1#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   type LLWU_PE3_Type is record
+      WUPE8  : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P8
+      WUPE9  : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P9
+      WUPE10 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P10
+      WUPE11 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P11
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for LLWU_PE3_Type use record
+      WUPE8  at 0 range 0 .. 1;
+      WUPE9  at 0 range 2 .. 3;
+      WUPE10 at 0 range 4 .. 5;
+      WUPE11 at 0 range 6 .. 7;
+   end record;
+
+   LLWU_PE3 : aliased LLWU_PE3_Type
+      with Address              => System'To_Address (LLWU_BASEADDRESS + 16#2#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   type LLWU_PE4_Type is record
+      WUPE12 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P12
+      WUPE13 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P13
+      WUPE14 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P14
+      WUPE15 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P15
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for LLWU_PE4_Type use record
+      WUPE12 at 0 range 0 .. 1;
+      WUPE13 at 0 range 2 .. 3;
+      WUPE14 at 0 range 4 .. 5;
+      WUPE15 at 0 range 6 .. 7;
+   end record;
+
+   LLWU_PE4 : aliased LLWU_PE4_Type
+      with Address              => System'To_Address (LLWU_BASEADDRESS + 16#3#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 16.3.5 LLWU Module Enable register (LLWU_ME)
+
+   type LLWU_ME_Type is record
+      WUME0 : Boolean := False; -- Wakeup Module Enable For Module 0
+      WUME1 : Boolean := False; -- Wakeup Module Enable For Module 1
+      WUME2 : Boolean := False; -- Wakeup Module Enable For Module 2
+      WUME3 : Boolean := False; -- Wakeup Module Enable For Module 3
+      WUME4 : Boolean := False; -- Wakeup Module Enable For Module 4
+      WUME5 : Boolean := False; -- Wakeup Module Enable For Module 5
+      WUME6 : Boolean := False; -- Wakeup Module Enable For Module 6
+      WUME7 : Boolean := False; -- Wakeup Module Enable For Module 7
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for LLWU_ME_Type use record
+      WUME0 at 0 range 0 .. 0;
+      WUME1 at 0 range 1 .. 1;
+      WUME2 at 0 range 2 .. 2;
+      WUME3 at 0 range 3 .. 3;
+      WUME4 at 0 range 4 .. 4;
+      WUME5 at 0 range 5 .. 5;
+      WUME6 at 0 range 6 .. 6;
+      WUME7 at 0 range 7 .. 7;
+   end record;
+
+   LLWU_ME : aliased LLWU_ME_Type
+      with Address              => System'To_Address (LLWU_BASEADDRESS + 16#4#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 16.3.6 LLWU Flag 1 register (LLWU_F1)
+
+   type LLWU_F1_Type is record
+      WUF0 : Boolean := False; -- Wakeup Flag For LLWU_P0
+      WUF1 : Boolean := False; -- Wakeup Flag For LLWU_P1
+      WUF2 : Boolean := False; -- Wakeup Flag For LLWU_P2
+      WUF3 : Boolean := False; -- Wakeup Flag For LLWU_P3
+      WUF4 : Boolean := False; -- Wakeup Flag For LLWU_P4
+      WUF5 : Boolean := False; -- Wakeup Flag For LLWU_P5
+      WUF6 : Boolean := False; -- Wakeup Flag For LLWU_P6
+      WUF7 : Boolean := False; -- Wakeup Flag For LLWU_P7
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for LLWU_F1_Type use record
+      WUF0 at 0 range 0 .. 0;
+      WUF1 at 0 range 1 .. 1;
+      WUF2 at 0 range 2 .. 2;
+      WUF3 at 0 range 3 .. 3;
+      WUF4 at 0 range 4 .. 4;
+      WUF5 at 0 range 5 .. 5;
+      WUF6 at 0 range 6 .. 6;
+      WUF7 at 0 range 7 .. 7;
+   end record;
+
+   LLWU_F1 : aliased LLWU_F1_Type
+      with Address              => System'To_Address (LLWU_BASEADDRESS + 16#5#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 16.3.7 LLWU Flag 2 register (LLWU_F2)
+
+   type LLWU_F2_Type is record
+      WUF8  : Boolean := False; -- Wakeup Flag For LLWU_P8
+      WUF9  : Boolean := False; -- Wakeup Flag For LLWU_P9
+      WUF10 : Boolean := False; -- Wakeup Flag For LLWU_P10
+      WUF11 : Boolean := False; -- Wakeup Flag For LLWU_P11
+      WUF12 : Boolean := False; -- Wakeup Flag For LLWU_P12
+      WUF13 : Boolean := False; -- Wakeup Flag For LLWU_P13
+      WUF14 : Boolean := False; -- Wakeup Flag For LLWU_P14
+      WUF15 : Boolean := False; -- Wakeup Flag For LLWU_P15
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for LLWU_F2_Type use record
+      WUF8  at 0 range 0 .. 0;
+      WUF9  at 0 range 1 .. 1;
+      WUF10 at 0 range 2 .. 2;
+      WUF11 at 0 range 3 .. 3;
+      WUF12 at 0 range 4 .. 4;
+      WUF13 at 0 range 5 .. 5;
+      WUF14 at 0 range 6 .. 6;
+      WUF15 at 0 range 7 .. 7;
+   end record;
+
+   LLWU_F2 : aliased LLWU_F2_Type
+      with Address              => System'To_Address (LLWU_BASEADDRESS + 16#6#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 16.3.8 LLWU Flag 3 register (LLWU_F3)
+
+   type LLWU_F3_Type is record
+      MWUF0 : Boolean := False; -- Wakeup flag For module 0
+      MWUF1 : Boolean := False; -- Wakeup flag For module 1
+      MWUF2 : Boolean := False; -- Wakeup flag For module 2
+      MWUF3 : Boolean := False; -- Wakeup flag For module 3
+      MWUF4 : Boolean := False; -- Wakeup flag For module 4
+      MWUF5 : Boolean := False; -- Wakeup flag For module 5
+      MWUF6 : Boolean := False; -- Wakeup flag For module 6
+      MWUF7 : Boolean := False; -- Wakeup flag For module 7
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for LLWU_F3_Type use record
+      MWUF0 at 0 range 0 .. 0;
+      MWUF1 at 0 range 1 .. 1;
+      MWUF2 at 0 range 2 .. 2;
+      MWUF3 at 0 range 3 .. 3;
+      MWUF4 at 0 range 4 .. 4;
+      MWUF5 at 0 range 5 .. 5;
+      MWUF6 at 0 range 6 .. 6;
+      MWUF7 at 0 range 7 .. 7;
+   end record;
+
+   LLWU_F3 : aliased LLWU_F3_Type
+      with Address              => System'To_Address (LLWU_BASEADDRESS + 16#7#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 16.3.9 LLWU Pin Filter 1 register (LLWU_FILT1)
    -- 16.3.10 LLWU Pin Filter 2 register (LLWU_FILT2)
+
+   FILTSEL_P0  : constant := 2#0000#; -- Select LLWU_P0 for filter
+   FILTSEL_P1  : constant := 2#0001#; -- ...
+   FILTSEL_P2  : constant := 2#0010#;
+   FILTSEL_P3  : constant := 2#0011#;
+   FILTSEL_P4  : constant := 2#0100#;
+   FILTSEL_P5  : constant := 2#0101#;
+   FILTSEL_P6  : constant := 2#0110#;
+   FILTSEL_P7  : constant := 2#0111#;
+   FILTSEL_P8  : constant := 2#1000#;
+   FILTSEL_P9  : constant := 2#1001#;
+   FILTSEL_P10 : constant := 2#1010#;
+   FILTSEL_P11 : constant := 2#1011#;
+   FILTSEL_P12 : constant := 2#1100#;
+   FILTSEL_P13 : constant := 2#1101#;
+   FILTSEL_P14 : constant := 2#1110#;
+   FILTSEL_P15 : constant := 2#1111#; -- Select LLWU_P15 for filter
+
+   FILTE_DISABLED : constant := 2#00#; -- Filter disabled
+   FILTE_POSEDGE  : constant := 2#01#; -- Filter posedge detect enabled
+   FILTE_NEGEDGE  : constant := 2#10#; -- Filter negedge detect enabled
+   FILTE_ANYEDGE  : constant := 2#11#; -- Filter any edge detect enabled
+
+   type LLWU_FILT1_Type is record
+      FILTSEL  : Bits_4  := FILTSEL_P0;     -- Filter Pin Select
+      Reserved : Bits_1  := 0;
+      FILTE    : Bits_2  := FILTE_DISABLED; -- Digital Filter On External Pin
+      FILTF    : Boolean := False;          -- Filter Detect Flag
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for LLWU_FILT1_Type use record
+      FILTSEL  at 0 range 0 .. 3;
+      Reserved at 0 range 4 .. 4;
+      FILTE    at 0 range 5 .. 6;
+      FILTF    at 0 range 7 .. 7;
+   end record;
+
+   LLWU_FILT1 : aliased LLWU_FILT1_Type
+      with Address              => System'To_Address (LLWU_BASEADDRESS + 16#8#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   type LLWU_FILT2_Type is record
+      FILTSEL  : Bits_4  := FILTSEL_P0;     -- Filter Pin Select
+      Reserved : Bits_1  := 0;
+      FILTE    : Bits_2  := FILTE_DISABLED; -- Digital Filter On External Pin
+      FILTF    : Boolean := False;          -- Filter Detect Flag
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for LLWU_FILT2_Type use record
+      FILTSEL  at 0 range 0 .. 3;
+      Reserved at 0 range 4 .. 4;
+      FILTE    at 0 range 5 .. 6;
+      FILTF    at 0 range 7 .. 7;
+   end record;
+
+   LLWU_FILT2 : aliased LLWU_FILT2_Type
+      with Address              => System'To_Address (LLWU_BASEADDRESS + 16#9#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 16.3.11 LLWU Reset Enable register (LLWU_RST)
+
+   type LLWU_RST_Type is record
+      RSTFILT  : Boolean := False; -- Digital Filter On RESET Pin
+      LLRSTE   : Boolean := True;  -- Low-Leakage Mode RESET Enable
+      Reserved : Bits_6  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for LLWU_RST_Type use record
+      RSTFILT  at 0 range 0 .. 0;
+      LLRSTE   at 0 range 1 .. 1;
+      Reserved at 0 range 2 .. 7;
+   end record;
+
+   LLWU_RST : aliased LLWU_RST_Type
+      with Address              => System'To_Address (LLWU_BASEADDRESS + 16#A#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 17 Miscellaneous Control Module (MCM)
@@ -3571,14 +3871,305 @@ pragma Style_Checks (Off);
    -- Chapter 30 Flash Memory Module (FTFE)
    ----------------------------------------------------------------------------
 
+   FTFE_BASEADDRESS : constant := 16#4002_0000#;
+
    -- 30.34.1 Flash Status Register (FTFE_FSTAT)
+
+   type FTFE_FSTAT_Type is record
+      MGSTAT0  : Boolean := False; -- Memory Controller Command Completion Status Flag
+      Reserved : Bits_3  := 0;
+      FPVIOL   : Boolean := False; -- Flash Protection Violation Flag
+      ACCERR   : Boolean := False; -- Flash Access Error Flag
+      RDCOLERR : Boolean := False; -- FTFE Read Collision Error Flag
+      CCIF     : Boolean := False; -- Command Complete Interrupt Flag
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for FTFE_FSTAT_Type use record
+      MGSTAT0  at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 3;
+      FPVIOL   at 0 range 4 .. 4;
+      ACCERR   at 0 range 5 .. 5;
+      RDCOLERR at 0 range 6 .. 6;
+      CCIF     at 0 range 7 .. 7;
+   end record;
+
+   FTFE_FSTAT : aliased FTFE_FSTAT_Type
+      with Address              => System'To_Address (FTFE_BASEADDRESS + 16#00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 30.34.2 Flash Configuration Register (FTFE_FCNFG)
+
+   type FTFE_FCNFG_Type is record
+      EEERDY   : Boolean := False; -- For devices with FlexNVM: This flag indicates if the EEPROM backup data has been copied to the FlexRAM and is therefore available for read access.
+      RAMRDY   : Boolean := False; -- RAM Ready
+      PFLSH    : Boolean := False; -- FTFE configuration
+      SWAP     : Boolean := False; -- Swap
+      ERSSUSP  : Boolean := False; -- Erase Suspend
+      ERSAREQ  : Boolean := False; -- Erase All Request
+      RDCOLLIE : Boolean := False; -- Read Collision Error Interrupt Enable
+      CCIE     : Boolean := False; -- Command Complete Interrupt Enable
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for FTFE_FCNFG_Type use record
+      EEERDY   at 0 range 0 .. 0;
+      RAMRDY   at 0 range 1 .. 1;
+      PFLSH    at 0 range 2 .. 2;
+      SWAP     at 0 range 3 .. 3;
+      ERSSUSP  at 0 range 4 .. 4;
+      ERSAREQ  at 0 range 5 .. 5;
+      RDCOLLIE at 0 range 6 .. 6;
+      CCIE     at 0 range 7 .. 7;
+   end record;
+
+   FTFE_FCNFG : aliased FTFE_FCNFG_Type
+      with Address              => System'To_Address (FTFE_BASEADDRESS + 16#01#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 30.34.3 Flash Security Register (FTFE_FSEC)
+
+   SEC_SECURE   : constant := 2#00#; -- MCU security status is secure
+   SEC_UNSECURE : constant := 2#01#; -- MCU security status is secure
+   SEC_SECURE_2 : constant := 2#10#; -- MCU security status is unsecure (The standard shipping condition of the FTFE is unsecure.)
+   SEC_SECURE_3 : constant := 2#11#; -- MCU security status is secure
+
+   FSLACC_GRANTED   : constant := 2#00#; -- Freescale factory access granted
+   FSLACC_DENIED    : constant := 2#01#; -- Freescale factory access denied
+   FSLACC_DENIED_2  : constant := 2#10#; -- Freescale factory access denied
+   FSLACC_GRANTED_2 : constant := 2#11#; -- Freescale factory access granted
+
+   MEEN_ENABLED   : constant := 2#00#; -- Mass erase is enabled
+   MEEN_ENABLED_2 : constant := 2#01#; -- Mass erase is enabled
+   MEEN_DISABLED  : constant := 2#10#; -- Mass erase is disabled
+   MEEN_ENABLED_3 : constant := 2#11#; -- Mass erase is enabled
+
+   KEYEN_DISABLED_2 : constant := 2#00#; -- Backdoor key access disabled
+   KEYEN_DISABLED   : constant := 2#01#; -- Backdoor key access disabled (preferred KEYEN state to disable backdoor key access)
+   KEYEN_ENABLED    : constant := 2#10#; -- Backdoor key access enabled
+   KEYEN_DISABLED_3 : constant := 2#11#; -- Backdoor key access disabled
+
+   type FTFE_FSEC_Type is record
+      SEC    : Bits_2; -- Flash Security
+      FSLACC : Bits_2; -- Freescale Failure Analysis Access Code
+      MEEN   : Bits_2; -- Mass Erase Enable Bits
+      KEYEN  : Bits_2; -- Backdoor Key Security Enable
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for FTFE_FSEC_Type use record
+      SEC    at 0 range 0 .. 1;
+      FSLACC at 0 range 2 .. 3;
+      MEEN   at 0 range 4 .. 5;
+      KEYEN  at 0 range 6 .. 7;
+   end record;
+
+   FTFE_FSEC : aliased FTFE_FSEC_Type
+      with Address              => System'To_Address (FTFE_BASEADDRESS + 16#02#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 30.34.4 Flash Option Register (FTFE_FOPT)
+
+   type FTFE_FOPT_Type is record
+      OPT : Bits_8; -- Nonvolatile Option
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for FTFE_FOPT_Type use record
+      OPT at 0 range 0 .. 7;
+   end record;
+
+   FTFE_FOPT : aliased FTFE_FOPT_Type
+      with Address              => System'To_Address (FTFE_BASEADDRESS + 16#03#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 30.34.5 Flash Common Command Object Registers (FTFE_FCCOBn)
+
+   type FTFE_FCCOBn_Type is record
+      CCOBn : Bits_8; -- The FCCOB register provides a command code and relevant parameters to the memory controller.
+   end record
+      with Bit_Order            => Low_Order_First,
+           Object_Size          => 8,
+           Volatile_Full_Access => True;
+   for FTFE_FCCOBn_Type use record
+      CCOBn at 0 range 0 .. 7;
+   end record;
+
+   type FTFE_FCCOBn_Index_Type is range 0 .. 11;
+
+   type FTFE_FCCOBn_Array_Type is array (FTFE_FCCOBn_Index_Type) of FTFE_FCCOBn_Type
+      with Object_Size => 12 * 8;
+
+   FTFE_FCCOB3 : constant FTFE_FCCOBn_Index_Type := 0;
+   FTFE_FCCOB2 : constant FTFE_FCCOBn_Index_Type := 1;
+   FTFE_FCCOB1 : constant FTFE_FCCOBn_Index_Type := 2;
+   FTFE_FCCOB0 : constant FTFE_FCCOBn_Index_Type := 3;
+   FTFE_FCCOB7 : constant FTFE_FCCOBn_Index_Type := 4;
+   FTFE_FCCOB6 : constant FTFE_FCCOBn_Index_Type := 5;
+   FTFE_FCCOB5 : constant FTFE_FCCOBn_Index_Type := 6;
+   FTFE_FCCOB4 : constant FTFE_FCCOBn_Index_Type := 7;
+   FTFE_FCCOBB : constant FTFE_FCCOBn_Index_Type := 8;
+   FTFE_FCCOBA : constant FTFE_FCCOBn_Index_Type := 9;
+   FTFE_FCCOB9 : constant FTFE_FCCOBn_Index_Type := 10;
+   FTFE_FCCOB8 : constant FTFE_FCCOBn_Index_Type := 11;
+
+   FTFE_FCCOB : aliased FTFE_FCCOBn_Array_Type
+      with Address    => System'To_Address (FTFE_BASEADDRESS + 16#04#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    -- 30.34.6 Program Flash Protection Registers (FTFE_FPROTn)
    -- 30.34.7 EEPROM Protection Register (FTFE_FEPROT)
    -- 30.34.8 Data Flash Protection Register (FTFE_FDPROT)
+
+   type FTFE_Region_Type is range 0 .. 31;
+
+   FTFE_REGION_0  : constant FTFE_Region_Type := 0;
+   FTFE_REGION_1  : constant FTFE_Region_Type := 1;
+   FTFE_REGION_2  : constant FTFE_Region_Type := 2;
+   FTFE_REGION_3  : constant FTFE_Region_Type := 3;
+   FTFE_REGION_4  : constant FTFE_Region_Type := 4;
+   FTFE_REGION_5  : constant FTFE_Region_Type := 5;
+   FTFE_REGION_6  : constant FTFE_Region_Type := 6;
+   FTFE_REGION_7  : constant FTFE_Region_Type := 7;
+   FTFE_REGION_8  : constant FTFE_Region_Type := 8;
+   FTFE_REGION_9  : constant FTFE_Region_Type := 9;
+   FTFE_REGION_10 : constant FTFE_Region_Type := 10;
+   FTFE_REGION_11 : constant FTFE_Region_Type := 11;
+   FTFE_REGION_12 : constant FTFE_Region_Type := 12;
+   FTFE_REGION_13 : constant FTFE_Region_Type := 13;
+   FTFE_REGION_14 : constant FTFE_Region_Type := 14;
+   FTFE_REGION_15 : constant FTFE_Region_Type := 15;
+   FTFE_REGION_16 : constant FTFE_Region_Type := 16;
+   FTFE_REGION_17 : constant FTFE_Region_Type := 17;
+   FTFE_REGION_18 : constant FTFE_Region_Type := 18;
+   FTFE_REGION_19 : constant FTFE_Region_Type := 19;
+   FTFE_REGION_20 : constant FTFE_Region_Type := 20;
+   FTFE_REGION_21 : constant FTFE_Region_Type := 21;
+   FTFE_REGION_22 : constant FTFE_Region_Type := 22;
+   FTFE_REGION_23 : constant FTFE_Region_Type := 23;
+   FTFE_REGION_24 : constant FTFE_Region_Type := 24;
+   FTFE_REGION_25 : constant FTFE_Region_Type := 25;
+   FTFE_REGION_26 : constant FTFE_Region_Type := 26;
+   FTFE_REGION_27 : constant FTFE_Region_Type := 27;
+   FTFE_REGION_28 : constant FTFE_Region_Type := 28;
+   FTFE_REGION_29 : constant FTFE_Region_Type := 29;
+   FTFE_REGION_30 : constant FTFE_Region_Type := 30;
+   FTFE_REGION_31 : constant FTFE_Region_Type := 31;
+
+   FTFE_REGION_PROTECTED    : constant := 0; -- Program flash region is protected.
+   FTFE_REGION_NOTPROTECTED : constant := 1; -- Program flash region is not protected
+
+   type Bitmap_31_24 is array (FTFE_REGION_24 .. FTFE_REGION_31) of Bits_1
+      with Component_Size => 1;
+
+   type Bitmap_23_16 is array (FTFE_REGION_16 .. FTFE_REGION_23) of Bits_1
+      with Component_Size => 1;
+
+   type Bitmap_15_8 is array (FTFE_REGION_8 .. FTFE_REGION_15) of Bits_1
+      with Component_Size => 1;
+
+   type Bitmap_7_0 is array (FTFE_REGION_0 .. FTFE_REGION_7) of Bits_1
+      with Component_Size => 1;
+
+   type FTFE_FPROT0_Type is record
+      PROT : Bitmap_31_24; -- Program Flash Region Protect
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for FTFE_FPROT0_Type use record
+      PROT at 0 range 0 .. 7;
+   end record;
+
+   FTFE_FPROT0 : aliased FTFE_FPROT0_Type
+      with Address              => System'To_Address (FTFE_BASEADDRESS + 16#10#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   type FTFE_FPROT1_Type is record
+      PROT : Bitmap_31_24; -- Program Flash Region Protect
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for FTFE_FPROT1_Type use record
+      PROT at 0 range 0 .. 7;
+   end record;
+
+   FTFE_FPROT1 : aliased FTFE_FPROT1_Type
+      with Address              => System'To_Address (FTFE_BASEADDRESS + 16#11#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   type FTFE_FPROT2_Type is record
+      PROT : Bitmap_31_24; -- Program Flash Region Protect
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for FTFE_FPROT2_Type use record
+      PROT at 0 range 0 .. 7;
+   end record;
+
+   FTFE_FPROT2 : aliased FTFE_FPROT2_Type
+      with Address              => System'To_Address (FTFE_BASEADDRESS + 16#12#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   type FTFE_FPROT3_Type is record
+      PROT : Bitmap_31_24; -- Program Flash Region Protect
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for FTFE_FPROT3_Type use record
+      PROT at 0 range 0 .. 7;
+   end record;
+
+   FTFE_FPROT3 : aliased FTFE_FPROT3_Type
+      with Address              => System'To_Address (FTFE_BASEADDRESS + 16#13#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   type FTFE_FEPROT_Type is record
+      EPROT : Bitmap_7_0; -- EEPROM Region Protect
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for FTFE_FEPROT_Type use record
+      EPROT at 0 range 0 .. 7;
+   end record;
+
+   FTFE_FEPROT : aliased FTFE_FEPROT_Type
+      with Address              => System'To_Address (FTFE_BASEADDRESS + 16#16#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   type FTFE_FDPROT_Type is record
+      EPROT : Bitmap_7_0; -- Data Flash Region Protect
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for FTFE_FDPROT_Type use record
+      EPROT at 0 range 0 .. 7;
+   end record;
+
+   FTFE_FDPROT : aliased FTFE_FDPROT_Type
+      with Address              => System'To_Address (FTFE_BASEADDRESS + 16#17#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 32 NAND Flash Controller (NFC)
@@ -3604,10 +4195,262 @@ pragma Style_Checks (Off);
    -- Chapter 33 External Bus Interface (FlexBus)
    ----------------------------------------------------------------------------
 
+   FlexBus_BASEADDRESS : constant := 16#4000_C000#;
+
    -- 33.3.1 Chip Select Address Register (FB_CSARn)
+
+   type FB_CSARn_Type is record
+      Reserved : Bits_16     := 0;
+      BA       : Unsigned_16 := 0; -- Base Address
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for FB_CSARn_Type use record
+      Reserved at 16#0# range  0 .. 15;
+      BA       at 16#0# range 16 .. 31;
+   end record;
+
+   FB_CSAR0 : aliased FB_CSARn_Type
+      with Address    => System'To_Address (FlexBus_BASEADDRESS + 16#00#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   FB_CSAR1 : aliased FB_CSARn_Type
+      with Address    => System'To_Address (FlexBus_BASEADDRESS + 16#0C#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   FB_CSAR2 : aliased FB_CSARn_Type
+      with Address    => System'To_Address (FlexBus_BASEADDRESS + 16#18#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   FB_CSAR3 : aliased FB_CSARn_Type
+      with Address    => System'To_Address (FlexBus_BASEADDRESS + 16#24#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   FB_CSAR4 : aliased FB_CSARn_Type
+      with Address    => System'To_Address (FlexBus_BASEADDRESS + 16#30#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   FB_CSAR5 : aliased FB_CSARn_Type
+      with Address    => System'To_Address (FlexBus_BASEADDRESS + 16#3C#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    -- 33.3.2 Chip Select Mask Register (FB_CSMRn)
+
+   type FB_CSMRn_Type is record
+      V         : Boolean     := False; -- Valid
+      Reserved1 : Bits_7      := 0;
+      WP        : Boolean     := False; -- Write Protect
+      Reserved2 : Bits_7      := 0;
+      BAM       : Unsigned_16 := 0;     -- Base Address Mask
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for FB_CSMRn_Type use record
+      V         at 16#0# range  0 ..  0;
+      Reserved1 at 16#0# range  1 ..  7;
+      WP        at 16#0# range  8 ..  8;
+      Reserved2 at 16#0# range  9 .. 15;
+      BAM       at 16#0# range 16 .. 31;
+   end record;
+
+   FB_CSMR0 : aliased FB_CSMRn_Type
+      with Address    => System'To_Address (FlexBus_BASEADDRESS + 16#04#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   FB_CSMR1 : aliased FB_CSMRn_Type
+      with Address    => System'To_Address (FlexBus_BASEADDRESS + 16#10#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   FB_CSMR2 : aliased FB_CSMRn_Type
+      with Address    => System'To_Address (FlexBus_BASEADDRESS + 16#1C#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   FB_CSMR3 : aliased FB_CSMRn_Type
+      with Address    => System'To_Address (FlexBus_BASEADDRESS + 16#28#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   FB_CSMR4 : aliased FB_CSMRn_Type
+      with Address    => System'To_Address (FlexBus_BASEADDRESS + 16#34#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   FB_CSMR5 : aliased FB_CSMRn_Type
+      with Address    => System'To_Address (FlexBus_BASEADDRESS + 16#40#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    -- 33.3.3 Chip Select Control Register (FB_CSCRn)
+
+   BEM_WR   : constant := 0; -- /FB_BE is asserted for data write only.
+   BEM_RDWR : constant := 1; -- /FB_BE is asserted for data read and write accesses.
+
+   PS_32   : constant := 2#00#; -- 32-bit port size. Valid data is sampled and driven on FB_D[31:0].
+   PS_8    : constant := 2#01#; -- 8-bit port size. Valid data is sampled and driven on FB_D[31:24] when BLS is 0b, or FB_D[7:0] when BLS is 1b.
+   PS_16   : constant := 2#10#; -- 16-bit port size. Valid data is sampled and driven on FB_D[31:16] when BLS is 0b, or FB_D[15:0] when BLS is 1b.
+   PS_16_2 : constant := 2#11#; -- 16-bit port size. Valid data is sampled and driven on FB_D[31:16] when BLS is 0b, or FB_D[15:0] when BLS is 1b.
+
+   WRAH_CYC1 : constant := 2#00#; -- 1 cycle (default for all but /FB_CS0 )
+   WRAH_CYC2 : constant := 2#01#; -- 2 cycles
+   WRAH_CYC3 : constant := 2#10#; -- 3 cycles
+   WRAH_CYC4 : constant := 2#11#; -- 4 cycles (default for /FB_CS0 )
+
+   -- AA = 0
+   RDAH_AA0CYC0 : constant := 2#00#; -- When AA is 0b, 0 cycles.
+   RDAH_AA0CYC1 : constant := 2#01#; -- When AA is 0b, 1 cycle.
+   RDAH_AA0CYC2 : constant := 2#10#; -- When AA is 0b, 2 cycles.
+   RDAH_AA0CYC3 : constant := 2#11#; -- When AA is 0b, 3 cycles.
+   -- AA = 1
+   RDAH_AA1CYC1 : constant := 2#00#; -- When AA is 1b, 1 cycle.
+   RDAH_AA1CYC2 : constant := 2#01#; -- When AA is 1b, 2 cycles.
+   RDAH_AA1CYC3 : constant := 2#10#; -- When AA is 1b, 3 cycles.
+   RDAH_AA1CYC4 : constant := 2#11#; -- When AA is 1b, 4 cycles.
+
+   ASET_CLK1 : constant := 2#00#; -- Assert /FB_CSn on the first rising clock edge after the address is asserted (default for all but /FB_CS0 ).
+   ASET_CLK2 : constant := 2#01#; -- Assert /FB_CSn on the second rising clock edge after the address is asserted.
+   ASET_CLK3 : constant := 2#10#; -- Assert /FB_CSn on the third rising clock edge after the address is asserted.
+   ASET_CLK4 : constant := 2#11#; -- Assert /FB_CSn on the fourth rising clock edge after the address is asserted (default for /FB_CS0 ).
+
+   type FB_CSCRn_Type is record
+      Reserved1 : Bits_3  := 0;
+      BSTW      : Boolean := False;        -- Burst-Write Enable
+      BSTR      : Boolean := False;        -- Burst-Read Enable
+      BEM       : Bits_1  := BEM_WR;       -- Byte-Enable Mode
+      PS        : Bits_2  := PS_32;        -- Port Size
+      AA        : Boolean := False;        -- Auto-Acknowledge Enable
+      BLS       : Boolean := False;        -- Byte-Lane Shift
+      WS        : Bits_6  := 0;            -- Wait States
+      WRAH      : Bits_2  := WRAH_CYC1;    -- Write Address Hold or Deselect
+      RDAH      : Bits_2  := RDAH_AA0CYC0; -- Read Address Hold or Deselect
+      ASET      : Bits_2  := ASET_CLK1;    -- Address Setup
+      EXTS      : Boolean := False;        -- Extended Transfer Start/Extended Address Latch Enable
+      SWSEN     : Boolean := False;        -- Secondary Wait State Enable
+      Reserved2 : Bits_2  := 0;
+      SWS       : Bits_6  := 0;            -- Secondary Wait States
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for FB_CSCRn_Type use record
+      Reserved1 at 0 range  0 ..  2;
+      BSTW      at 0 range  3 ..  3;
+      BSTR      at 0 range  4 ..  4;
+      BEM       at 0 range  5 ..  5;
+      PS        at 0 range  6 ..  7;
+      AA        at 0 range  8 ..  8;
+      BLS       at 0 range  9 ..  9;
+      WS        at 0 range 10 .. 15;
+      WRAH      at 0 range 16 .. 17;
+      RDAH      at 0 range 18 .. 19;
+      ASET      at 0 range 20 .. 21;
+      EXTS      at 0 range 22 .. 22;
+      SWSEN     at 0 range 23 .. 23;
+      Reserved2 at 0 range 24 .. 25;
+      SWS       at 0 range 26 .. 31;
+   end record;
+
+   FB_CSCR0 : aliased FB_CSCRn_Type
+      with Address    => System'To_Address (FlexBus_BASEADDRESS + 16#08#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   FB_CSCR1 : aliased FB_CSCRn_Type
+      with Address    => System'To_Address (FlexBus_BASEADDRESS + 16#14#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   FB_CSCR2 : aliased FB_CSCRn_Type
+      with Address    => System'To_Address (FlexBus_BASEADDRESS + 16#20#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   FB_CSCR3 : aliased FB_CSCRn_Type
+      with Address    => System'To_Address (FlexBus_BASEADDRESS + 16#2C#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   FB_CSCR4 : aliased FB_CSCRn_Type
+      with Address    => System'To_Address (FlexBus_BASEADDRESS + 16#38#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   FB_CSCR5 : aliased FB_CSCRn_Type
+      with Address    => System'To_Address (FlexBus_BASEADDRESS + 16#44#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
    -- 33.3.4 Chip Select port Multiplexing Control Register (FB_CSPMCR)
+
+   GROUP5_nFBTA   : constant := 2#0000#; -- /FB_TA
+   GROUP5_nFBCS3  : constant := 2#0001#; -- /FB_CS3 .
+   GROUP5_nFBBE70 : constant := 2#0010#; -- /FB_BE_7_0 .
+
+   GROUP4_nFBTBST  : constant := 2#0000#; -- /FB_TBST
+   GROUP4_nFBCS2   : constant := 2#0001#; -- /FB_CS2
+   GROUP4_nFBBE158 : constant := 2#0010#; -- /FB_BE_15_8
+
+   GROUP3_nFBCS5    : constant := 2#0000#; -- /FB_CS5
+   GROUP3_FBTSIZ1   : constant := 2#0001#; -- FB_TSIZ1
+   GROUP3_nFBBE2316 : constant := 2#0010#; -- /FB_BE_23_16
+
+   GROUP2_nFBCS4    : constant := 2#0000#; -- /FB_CS4
+   GROUP2_FBTSIZ0   : constant := 2#0001#; -- FB_TSIZ0
+   GROUP2_nFBBE3124 : constant := 2#0010#; -- /FB_BE_31_24
+
+   GROUP1_FBALE  : constant := 2#0000#; -- FB_ALE
+   GROUP1_nFBCS1 : constant := 2#0001#; -- /FB_CS1
+   GROUP1_nFBTS  : constant := 2#0010#; -- /FB_TS
+
+   type FB_CSPMCR_Type is record
+      Reserved : Bits_12 := 0;
+      GROUP5   : Bits_4  := GROUP5_nFBTA;   -- FlexBus Signal Group 5 Multiplex control
+      GROUP4   : Bits_4  := GROUP4_nFBTBST; -- FlexBus Signal Group 4 Multiplex control
+      GROUP3   : Bits_4  := GROUP3_nFBCS5;  -- FlexBus Signal Group 3 Multiplex control
+      GROUP2   : Bits_4  := GROUP2_nFBCS4;  -- FlexBus Signal Group 2 Multiplex control
+      GROUP1   : Bits_4  := GROUP1_FBALE;   -- FlexBus Signal Group 1 Multiplex control
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for FB_CSPMCR_Type use record
+      Reserved at 0 range  0 .. 11;
+      GROUP5   at 0 range 12 .. 15;
+      GROUP4   at 0 range 16 .. 19;
+      GROUP3   at 0 range 20 .. 23;
+      GROUP2   at 0 range 24 .. 27;
+      GROUP1   at 0 range 28 .. 31;
+   end record;
+
+   FB_CSPMCR : aliased FB_CSPMCR_Type
+      with Address    => System'To_Address (FlexBus_BASEADDRESS + 16#60#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 34 DDR1/2/LP SDRAM Memory Controller (DDRMC)
@@ -3980,7 +4823,7 @@ pragma Style_Checks (Off);
            Import               => True,
            Convention           => Ada;
 
-  -- 34.4.14 DDR Control Register 13 (DDR_CR13)
+   -- 34.4.14 DDR Control Register 13 (DDR_CR13)
 
    type DDR_CR13_Type is record
       Reserved1 : Bits_14 := 0;
@@ -6707,6 +7550,15 @@ pragma Style_Checks (Off);
 
    -- 55.3.5 I2C Data I/O register (I2Cx_D)
 
+   type I2Cx_D_Type is record
+      DATA : Unsigned_8; -- Data
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for I2Cx_D_Type use record
+      DATA at 0 range 0 .. 7;
+   end record;
+
    -- 55.3.6 I2C Control Register 2 (I2Cx_C2)
 
    SBRC_FOLLOW : constant := 0; -- The slave baud rate follows the master baud rate and clock stretching may occur
@@ -6806,23 +7658,42 @@ pragma Style_Checks (Off);
    end record;
 
    -- 55.3.11 I2C SCL Low Timeout Register High (I2Cx_SLTH)
+
+   type I2Cx_SLTH_Type is record
+      SSLT : Unsigned_8 := 0; -- SSLT[15:8]
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for I2Cx_SLTH_Type use record
+      SSLT at 0 range 0 .. 7;
+   end record;
+
    -- 55.3.12 I2C SCL Low Timeout Register Low (I2Cx_SLTL)
+
+   type I2Cx_SLTL_Type is record
+      SSLT : Unsigned_8 := 0; -- SSLT[7:0]
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for I2Cx_SLTL_Type use record
+      SSLT at 0 range 0 .. 7;
+   end record;
 
    -- 55.3 Memory map/register definition
 
    type I2C_Type is record
-      A1   : I2Cx_A1_Type  with Volatile_Full_Access => True;
-      F    : I2Cx_F_Type   with Volatile_Full_Access => True;
-      C1   : I2Cx_C1_Type  with Volatile_Full_Access => True;
-      S    : I2Cx_S_Type   with Volatile_Full_Access => True;
-      D    : Unsigned_8    with Volatile_Full_Access => True;
-      C2   : I2Cx_C2_Type  with Volatile_Full_Access => True;
-      FLT  : I2Cx_FLT_Type with Volatile_Full_Access => True;
-      RA   : I2Cx_RA_Type  with Volatile_Full_Access => True;
-      SMB  : I2Cx_SMB_Type with Volatile_Full_Access => True;
-      A2   : I2Cx_A2_Type  with Volatile_Full_Access => True;
-      SLTH : Unsigned_8    with Volatile_Full_Access => True;
-      SLTL : Unsigned_8    with Volatile_Full_Access => True;
+      A1   : I2Cx_A1_Type   with Volatile_Full_Access => True;
+      F    : I2Cx_F_Type    with Volatile_Full_Access => True;
+      C1   : I2Cx_C1_Type   with Volatile_Full_Access => True;
+      S    : I2Cx_S_Type    with Volatile_Full_Access => True;
+      D    : I2Cx_D_Type    with Volatile_Full_Access => True;
+      C2   : I2Cx_C2_Type   with Volatile_Full_Access => True;
+      FLT  : I2Cx_FLT_Type  with Volatile_Full_Access => True;
+      RA   : I2Cx_RA_Type   with Volatile_Full_Access => True;
+      SMB  : I2Cx_SMB_Type  with Volatile_Full_Access => True;
+      A2   : I2Cx_A2_Type   with Volatile_Full_Access => True;
+      SLTH : I2Cx_SLTH_Type with Volatile_Full_Access => True;
+      SLTL : I2Cx_SLTL_Type with Volatile_Full_Access => True;
    end record
       with Object_Size => 16#C# * 8,
            Volatile    => True;
