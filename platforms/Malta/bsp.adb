@@ -104,9 +104,9 @@ package body BSP
       PIIX4_RTC_Descriptor := (
          Base_Address  => System'To_Address (Malta.PIIX4_BASEADDRESS + 16#0000_0070#),
          Scale_Address => 0,
-         Flags         => (others => <>),
          Read_8        => Malta.RTC_Register_Read'Access,
-         Write_8       => Malta.RTC_Register_Write'Access
+         Write_8       => Malta.RTC_Register_Write'Access,
+         others        => <>
          );
       MC146818A.Init (PIIX4_RTC_Descriptor);
       -- PIIX4 UARTs ----------------------------------------------------------

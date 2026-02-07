@@ -100,9 +100,8 @@ package body Malta
           DevNum  : in PCI.Device_Number_Type)
          is
       begin
-         Console.Print ("PCI device: ");
-         Console.Print (DevName);
-         Console.Print (Unsigned_8 (DevNum), Prefix => " @ DevNum ", NL => True);
+         Console.Print (Prefix => "PCI device: ", Value => DevName);
+         Console.Print (Prefix => " @ DevNum ", Value => Unsigned_8 (DevNum), NL => True);
       end Print_Device;
    begin
       -- Galileo GT-64120A - VID/DID/Devnum = 0x11AB/0x4620/0
