@@ -95,6 +95,7 @@ fi
 #
 # Perform variable substitution.
 #
+DATETIME=$(date "+%FT%T%z" 2> /dev/null)
 if [ "x${SYMBOLS}" != "x" ] ; then
   sed_command_string=""
   for symbol in ${SYMBOLS} ; do

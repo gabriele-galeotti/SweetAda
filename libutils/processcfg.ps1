@@ -155,6 +155,7 @@ catch
   ExitWithCode 1
 }
 
+$Env:DATETIME = Get-Date -UFormat "+%Y-%m-%dT%H:%M:%S%Z"
 [string]$stdout = ""
 [int]$count = 0
 $textlines | ForEach-Object `
