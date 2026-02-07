@@ -170,9 +170,9 @@ package body BSP
       RTC_Descriptor := (
          Base_Address  => System'To_Address (PC.RTC_BASEADDRESS),
          Scale_Address => 0,
-         Flags         => (others => <>),
          Read_8        => PC.RTC_Register_Read'Access,
-         Write_8       => PC.RTC_Register_Write'Access
+         Write_8       => PC.RTC_Register_Write'Access,
+         others        => <>
          );
       MC146818A.Init (RTC_Descriptor);
       -- UARTs ----------------------------------------------------------------
