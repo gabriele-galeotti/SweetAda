@@ -1514,9 +1514,8 @@ private
    --========================================================================--
 
    type Null_Object is null record
-      with Alignment               => 1,
-           Size                    => 0,
-           Suppress_Initialization => True;
+      with Alignment => 1,
+           Size      => 0;
 
    type Asm_Entry_Point is new Null_Object
       with Convention => Asm;
