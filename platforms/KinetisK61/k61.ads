@@ -1797,7 +1797,7 @@ pragma Style_Checks (Off);
    -- 16.3.3 LLWU Pin Enable 3 register (LLWU_PE3)
    -- 16.3.4 LLWU Pin Enable 4 register (LLWU_PE4)
 
-   WUPEx_DISABLE  : constant := 2#00#; -- External input pin disabled as wakeup input
+   WUPEx_DISABLED : constant := 2#00#; -- External input pin disabled as wakeup input
    WUPEx_RISEDGE  : constant := 2#01#; -- External input pin enabled with rising edge detection
    WUPEx_FALLEDGE : constant := 2#10#; -- External input pin enabled with falling edge detection
    WUPEx_ANYEDGE  : constant := 2#11#; -- External input pin enabled with any change detection
@@ -6220,7 +6220,7 @@ pragma Style_Checks (Off);
    SPARE_DLY_CTRL_7    : constant := 2#0010#; -- 7 buffers
    SPARE_DLY_CTRL_10   : constant := 2#0011#; -- 10 buffers
 
-   PAD_ODT_CS0_DISABLE  : constant := 2#00#; -- ODT Disabled
+   PAD_ODT_CS0_DISABLED : constant := 2#00#; -- ODT Disabled
    PAD_ODT_CS0_150OHM   : constant := 2#01#; -- 150 Ohms
    PAD_ODT_CS0_150OHM_2 : constant := 2#10#; -- 150 Ohms
    PAD_ODT_CS0_75OHM    : constant := 2#11#; -- 75 Ohms
@@ -6442,7 +6442,7 @@ pragma Style_Checks (Off);
 
    -- 43.3.10 Features Mode Selection (FTMx_MODE)
 
-   FAULTM_DISABLE       : constant := 2#00#; -- Fault control is disabled for all channels.
+   FAULTM_DISABLED      : constant := 2#00#; -- Fault control is disabled for all channels.
    FAULTM_EVENCHNMANCLR : constant := 2#01#; -- Fault control is enabled for even channels only (channels 0, 2, 4, and 6), and the selected mode is the manual fault clearing.
    FAULTM_ALLCHNMANCLR  : constant := 2#10#; -- Fault control is enabled for all channels, and the selected mode is the manual fault clearing.
    FAULTM_ALLCHNAUTOCLR : constant := 2#11#; -- Fault control is enabled for all channels, and the selected mode is the automatic fault clearing.
