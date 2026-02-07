@@ -327,7 +327,7 @@ while ($argsindex -lt $args.Length)
     }
     if ($verbose -eq "Y")
     {
-      Write-Host "'$($link_name)' -> '$($target)'"
+      Write-Host "$($scriptname): '$($link_name)' -> '$($target)'"
     }
     if (![string]::IsNullOrEmpty($filelist_filename))
     {
@@ -376,7 +376,7 @@ while ($argsindex -lt $args.Length)
       }
       if ($verbose -eq "Y")
       {
-        Write-Host "'$($link_directory)/$($f)' -> '$($target)/$($f)'"
+        Write-Host "$($scriptname): '$($link_directory)/$($f)' -> '$($target)/$($f)'"
       }
       if (![string]::IsNullOrEmpty($filelist_filename))
       {

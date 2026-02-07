@@ -138,7 +138,10 @@ while true ; do
   if [ -f "${TARGET}" ] ; then
     LINK_NAME="$2"
     rm -f "${LINK_NAME}"
-    ln -s ${VERBOSE_OPTION} "${TARGET}" "${LINK_NAME}" || exit $?
+    ln -s "${TARGET}" "${LINK_NAME}" > /dev/null || exit $?
+    if [ "x${VERBOSE}" = "xY" ] ; then
+      log_print "${SCRIPT_FILENAME}: '${LINK_NAME}' -> '${TARGET}'"
+    fi
     if [ "x${FILELIST_FILENAME}" != "x" ] ; then
       printf "%s\n" "INSTALLED_FILENAMES += ${LINK_NAME}" >> "${FILELIST_FILENAME}"
     fi
@@ -146,7 +149,10 @@ while true ; do
     LINK_DIRECTORY="$2"
     for f in $(ls -A "${TARGET}"/) ; do
       rm -f "${f}"
-      ln -s ${VERBOSE_OPTION} "${TARGET}"/"${f}" "${LINK_DIRECTORY}"/"${f}" || exit $?
+      ln -s "${TARGET}"/"${f}" "${LINK_DIRECTORY}"/"${f}" > /dev/null || exit $?
+      if [ "x${VERBOSE}" = "xY" ] ; then
+        log_print "${SCRIPT_FILENAME}: '${LINK_DIRECTORY}/${f}' -> '${TARGET}/${f}'"
+      fi
       if [ "x${FILELIST_FILENAME}" != "x" ] ; then
         printf "%s\n" "INSTALLED_FILENAMES += ${LINK_DIRECTORY}/${f}" >> "${FILELIST_FILENAME}"
       fi
