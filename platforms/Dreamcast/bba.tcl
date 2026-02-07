@@ -148,7 +148,7 @@ while {true} {
     if {$data_length < $chunk_length} {
         break
     }
-    set LOAD_ADDRESS [expr $LOAD_ADDRESS + $data_length]
+    set LOAD_ADDRESS [expr {$LOAD_ADDRESS + $data_length}]
     incr sequence
     msleep 30
 }

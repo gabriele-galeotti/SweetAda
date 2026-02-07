@@ -33,19 +33,19 @@ set SCRIPT_FILENAME [file tail $argv0]
 proc crc16 {data offset length} {
     set data_list [split $data ""]
     set crc 0xFFFF
-    for {set i $offset} {$i < [expr $offset + $length]} {incr i} {
+    for {set i $offset} {$i < [expr {$offset + $length}]} {incr i} {
         set c [lindex $data_list $i]
         set hexvalue 0
         binary scan $c H2 hexvalue
-        set crc [expr $crc ^ (0x$hexvalue << 8)]
+        set crc [expr {$crc ^ ("0x$hexvalue" << 8)}]
         for {set n 0} {$n < 8} {incr n} {
-            if {[expr $crc & 0x8000] ne 0} {
-                set crc [expr ($crc << 1) ^ 0x1021]
+            if {[expr {$crc & 0x8000}] ne 0} {
+                set crc [expr {($crc << 1) ^ 0x1021}]
             } else {
-                set crc [expr $crc << 1]
+                set crc [expr {$crc << 1}]
             }
         }
-        set crc [expr $crc & 0xFFFF]
+        set crc [expr {$crc & 0xFFFF}]
     }
     return $crc
 }
@@ -56,8 +56,8 @@ proc crc16 {data offset length} {
 ################################################################################
 proc randomize {} {
     global seed
-    set seed [expr ($seed * 2109 + 9273) & 0x7FFF]
-    return [expr ($seed + 0xC000) & 0xFFFF]
+    set seed [expr {($seed * 2109 + 9273) & 0x7FFF}]
+    return [expr {($seed + 0xC000) & 0xFFFF}]
 }
 
 ################################################################################
@@ -65,20 +65,20 @@ proc randomize {} {
 #                                                                              #
 ################################################################################
 proc save_chunk {fd data offset size} {
-    set size [expr $size / 32]
+    set size [expr {$size / 32}]
     set table {}
     for {set i 0} {$i < $size} {incr i} {
         lappend table $i
     }
-    for {set i [expr $size - 1]} {$i >= 0} {incr i -1} {
-        set x [expr ([randomize] * $i) >> 16]
+    for {set i [expr {$size - 1}]} {$i >= 0} {incr i -1} {
+        set x [expr {([randomize] * $i) >> 16}]
         # swap
         set tmp [lindex $table $i]
         lset table $i [lindex $table $x]
         lset table $x $tmp
         # write a 32-byte chunk
-        set start [expr $offset + 32 * [lindex $table $i]]
-        set end [expr $start + 32 - 1]
+        set start [expr {$offset + 32 * [lindex $table $i]}]
+        set end [expr {$start + 32 - 1}]
         puts -nonewline $fd [string range $data $start $end]
     }
 }
@@ -182,11 +182,11 @@ foreach textline $filein_textlines {
     # create a maximum length space-padded string and write the value
     # left-justified
     set string_padded [format {%- *s} $length $token_value]
-    set tmpl_data [string replace                                           \
-                      $tmpl_data                                            \
-                      $position                                             \
-                      [expr $position + [string length $string_padded] - 1] \
-                      $string_padded                                        \
+    set tmpl_data [string replace                                             \
+                      $tmpl_data                                              \
+                      $position                                               \
+                      [expr {$position + [string length $string_padded] - 1}] \
+                      $string_padded                                          \
                       ]
     # flag as processed
     lset field 4 true
@@ -226,7 +226,7 @@ close $fd_fileout
 # - 1ST_READ.BIN
 #
 
-set MAXCHUNK [expr 2048 * 1024]
+set MAXCHUNK [expr {2048 * 1024}]
 
 set filein [lindex $argv 2]
 set fileout 1ST_READ.BIN
@@ -241,7 +241,7 @@ close $fd_filein
 set filein_size [string length $filein_data]
 
 # create a seed
-set seed [expr $filein_size & 0xFFFF]
+set seed [expr {$filein_size & 0xFFFF}]
 
 # generate output file
 set fd_fileout [open $fileout w]
@@ -249,17 +249,17 @@ fconfigure $fd_fileout -encoding binary -translation binary
 # descramble 2 M blocks for as long as possible, then gradually reduce the
 # window down to 32 bytes (1 slice)
 set offset 0
-for {set chunk_size $MAXCHUNK} {$chunk_size >= 32} {set chunk_size [expr $chunk_size >> 1]} {
+for {set chunk_size $MAXCHUNK} {$chunk_size >= 32} {set chunk_size [expr {$chunk_size >> 1}]} {
     while {$filein_size >= $chunk_size} {
         save_chunk $fd_fileout $filein_data $offset $chunk_size
-        set filein_size [expr $filein_size - $chunk_size]
-        set offset [expr $offset + $chunk_size]
+        set filein_size [expr {$filein_size - $chunk_size}]
+        set offset [expr {$offset + $chunk_size}]
     }
 }
 # write incomplete slice
 if {$filein_size > 0} {
     set start $offset
-    set end [expr $start + $filein_size - 1]
+    set end [expr {$start + $filein_size - 1}]
     puts -nonewline $fd_fileout [string range $filein_data $start $end]
 }
 close $fd_fileout
