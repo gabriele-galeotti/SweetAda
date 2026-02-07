@@ -3934,8 +3934,8 @@ pragma Style_Checks (Off);
    -- 30.34.3 Flash Security Register (FTFE_FSEC)
 
    SEC_SECURE   : constant := 2#00#; -- MCU security status is secure
-   SEC_UNSECURE : constant := 2#01#; -- MCU security status is secure
-   SEC_SECURE_2 : constant := 2#10#; -- MCU security status is unsecure (The standard shipping condition of the FTFE is unsecure.)
+   SEC_SECURE_2 : constant := 2#01#; -- MCU security status is secure
+   SEC_UNSECURE : constant := 2#10#; -- MCU security status is unsecure (The standard shipping condition of the FTFE is unsecure.)
    SEC_SECURE_3 : constant := 2#11#; -- MCU security status is secure
 
    FSLACC_GRANTED   : constant := 2#00#; -- Freescale factory access granted
