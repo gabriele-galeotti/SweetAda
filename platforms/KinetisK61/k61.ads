@@ -1803,10 +1803,10 @@ pragma Style_Checks (Off);
    WUPEx_ANYEDGE  : constant := 2#11#; -- External input pin enabled with any change detection
 
    type LLWU_PE1_Type is record
-      WUPE0 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P0
-      WUPE1 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P1
-      WUPE2 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P2
-      WUPE3 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P3
+      WUPE0 : Bits_2 := WUPEx_DISABLED; -- Wakeup Pin Enable For LLWU_P0
+      WUPE1 : Bits_2 := WUPEx_DISABLED; -- Wakeup Pin Enable For LLWU_P1
+      WUPE2 : Bits_2 := WUPEx_DISABLED; -- Wakeup Pin Enable For LLWU_P2
+      WUPE3 : Bits_2 := WUPEx_DISABLED; -- Wakeup Pin Enable For LLWU_P3
    end record
       with Bit_Order   => Low_Order_First,
            Object_Size => 8;
@@ -1824,10 +1824,10 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    type LLWU_PE2_Type is record
-      WUPE4 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P4
-      WUPE5 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P5
-      WUPE6 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P6
-      WUPE7 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P7
+      WUPE4 : Bits_2 := WUPEx_DISABLED; -- Wakeup Pin Enable For LLWU_P4
+      WUPE5 : Bits_2 := WUPEx_DISABLED; -- Wakeup Pin Enable For LLWU_P5
+      WUPE6 : Bits_2 := WUPEx_DISABLED; -- Wakeup Pin Enable For LLWU_P6
+      WUPE7 : Bits_2 := WUPEx_DISABLED; -- Wakeup Pin Enable For LLWU_P7
    end record
       with Bit_Order   => Low_Order_First,
            Object_Size => 8;
@@ -1845,10 +1845,10 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    type LLWU_PE3_Type is record
-      WUPE8  : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P8
-      WUPE9  : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P9
-      WUPE10 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P10
-      WUPE11 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P11
+      WUPE8  : Bits_2 := WUPEx_DISABLED; -- Wakeup Pin Enable For LLWU_P8
+      WUPE9  : Bits_2 := WUPEx_DISABLED; -- Wakeup Pin Enable For LLWU_P9
+      WUPE10 : Bits_2 := WUPEx_DISABLED; -- Wakeup Pin Enable For LLWU_P10
+      WUPE11 : Bits_2 := WUPEx_DISABLED; -- Wakeup Pin Enable For LLWU_P11
    end record
       with Bit_Order   => Low_Order_First,
            Object_Size => 8;
@@ -1866,10 +1866,10 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    type LLWU_PE4_Type is record
-      WUPE12 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P12
-      WUPE13 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P13
-      WUPE14 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P14
-      WUPE15 : Bits_2 := WUPEx_DISABLE; -- Wakeup Pin Enable For LLWU_P15
+      WUPE12 : Bits_2 := WUPEx_DISABLED; -- Wakeup Pin Enable For LLWU_P12
+      WUPE13 : Bits_2 := WUPEx_DISABLED; -- Wakeup Pin Enable For LLWU_P13
+      WUPE14 : Bits_2 := WUPEx_DISABLED; -- Wakeup Pin Enable For LLWU_P14
+      WUPE15 : Bits_2 := WUPEx_DISABLED; -- Wakeup Pin Enable For LLWU_P15
    end record
       with Bit_Order   => Low_Order_First,
            Object_Size => 8;
@@ -6226,14 +6226,14 @@ pragma Style_Checks (Off);
    PAD_ODT_CS0_75OHM    : constant := 2#11#; -- 75 Ohms
 
    type DDR_PAD_CTRL_Type is record
-      SPARE_DLY_CTRL : Bits_4 := SPARE_DLY_CTRL_NONE; -- These SPARE_DLY_CTRL[3:0]bits set the delay chains in the spare logic.
+      SPARE_DLY_CTRL : Bits_4 := SPARE_DLY_CTRL_NONE;  -- These SPARE_DLY_CTRL[3:0]bits set the delay chains in the spare logic.
       Reserved1      : Bits_4 := 0;
       Reserved2      : Bits_8 := 2#00000010#;
       Reserved3      : Bits_2 := 0;
       Reserved4      : Bits_2 := 0;
       Reserved5      : Bits_1 := 0;
       Reserved6      : Bits_3 := 0;
-      PAD_ODT_CS0    : Bits_2 := PAD_ODT_CS0_DISABLE; -- Required to enable ODT and configure ODT resistor value in the pad.
+      PAD_ODT_CS0    : Bits_2 := PAD_ODT_CS0_DISABLED; -- Required to enable ODT and configure ODT resistor value in the pad.
       Reserved7      : Bits_2 := 0;
       Reserved8      : Bits_4 := 0;
    end record
@@ -6448,13 +6448,13 @@ pragma Style_Checks (Off);
    FAULTM_ALLCHNAUTOCLR : constant := 2#11#; -- Fault control is enabled for all channels, and the selected mode is the automatic fault clearing.
 
    type FTMx_MODE_Type is record
-      FTMEN    : Boolean := False;          -- FTM Enable
-      INIT     : Boolean := False;          -- Initialize The Channels Output
-      WPDIS    : Boolean := True;           -- Write Protection Disable
-      PWMSYNC  : Boolean := False;          -- PWM Synchronization Mode
-      CAPTEST  : Boolean := False;          -- Capture Test Mode Enable
-      FAULTM   : Bits_2  := FAULTM_DISABLE; -- Fault Control Mode
-      FAULTIE  : Boolean := False;          -- Fault Interrupt Enable
+      FTMEN    : Boolean := False;           -- FTM Enable
+      INIT     : Boolean := False;           -- Initialize The Channels Output
+      WPDIS    : Boolean := True;            -- Write Protection Disable
+      PWMSYNC  : Boolean := False;           -- PWM Synchronization Mode
+      CAPTEST  : Boolean := False;           -- Capture Test Mode Enable
+      FAULTM   : Bits_2  := FAULTM_DISABLED; -- Fault Control Mode
+      FAULTIE  : Boolean := False;           -- Fault Interrupt Enable
       Reserved : Bits_24 := 0;
    end record
       with Bit_Order   => Low_Order_First,
