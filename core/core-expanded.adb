@@ -43,7 +43,7 @@ package body Core.Expanded
    -- Runtime_Initialize
    ----------------------------------------------------------------------------
    procedure Runtime_Initialize
-      (Install_Handler : in Integer)
+      (Install_Handler : in Integer with Unreferenced => True)
       is
    begin
       GNAT_RT_Init_Count := @ + 1;
