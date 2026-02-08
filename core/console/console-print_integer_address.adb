@@ -24,6 +24,7 @@ procedure Print_Integer_Address
     Prefix : in String := "";
     Suffix : in String := "")
    is
+   use type SSE.Integer_Address;
    IAddress        : SSE.Integer_Address := Value;
    MDigits         : constant Natural := (SSE.Integer_Address'Size + 3) / 4;
    Address_Digit   : Interfaces.Unsigned_8;

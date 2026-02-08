@@ -22,6 +22,7 @@ procedure Print_Bits1
     Prefix : in String := "";
     Suffix : in String := "")
    is
+   use type Bits.Bits_1;
 begin
    if Prefix'Length /= 0 then
       Print (Prefix);

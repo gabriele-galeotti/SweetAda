@@ -24,6 +24,7 @@ procedure Print_sizet
     Prefix : in String := "";
     Suffix : in String := "")
    is
+   use type Bits.C.size_t;
    Number         : Bits.C.size_t := Value;
    Number_Literal : String (1 .. 16);
    Literal_Index  : Natural := 0;

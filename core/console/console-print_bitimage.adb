@@ -22,6 +22,7 @@ procedure Print_BitImage
     Prefix : in String := "";
     Suffix : in String := "")
    is
+   use type Interfaces.Unsigned_8;
 begin
    if Prefix'Length /= 0 then
       Print (Prefix);

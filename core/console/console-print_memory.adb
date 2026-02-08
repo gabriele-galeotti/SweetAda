@@ -21,6 +21,8 @@ procedure Print_Memory
     Data_Size     : in Bits.Bytesize;
     Row_Size      : in Row_Size_Type := 16)
    is
+   use type SSE.Integer_Address;
+   use type Bits.C.size_t;
    IAddress   : SSE.Integer_Address;
    IAddress_H : SSE.Integer_Address; -- row starting address
    IAddress_L : SSE.Integer_Address; -- byte offset in a row

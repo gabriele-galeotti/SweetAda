@@ -23,6 +23,10 @@ procedure Print_ASCIIZ_String
     Prefix         : in String := "";
     Suffix         : in String := "")
    is
+   use type System.Address;
+   use type SSE.Storage_Offset;
+   use type Bits.C.char;
+   use type Bits.C.size_t;
    nul : constant Bits.C.char := Bits.C.char'First;
    SA  : System.Address := String_Address;
 begin
@@ -40,7 +44,8 @@ begin
             exit when c = nul;
             Print (c);
          end;
-         SA := @ + 1;
+         -- SA := @ + SSE.Storage_Offset'(1);
+         SA := @ + System.Storage_Elements.Storage_Offset'(1);
       end loop;
    end if;
    if Suffix'Length /= 0 then

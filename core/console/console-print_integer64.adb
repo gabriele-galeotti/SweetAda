@@ -24,6 +24,7 @@ procedure Print_Integer64
     Prefix : in String := "";
     Suffix : in String := "")
    is
+   use type Interfaces.Integer_64;
    subtype Negative_64 is Interfaces.Integer_64 range Interfaces.Integer_64'First .. -1;
    subtype Positive_64 is Interfaces.Integer_64 range 0 .. Interfaces.Integer_64'Last;
    Negative_Sign  : Boolean := False;

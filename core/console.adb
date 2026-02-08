@@ -28,17 +28,6 @@ package body Console
    --                                                                        --
    --========================================================================--
 
-   use type System.Address;
-   use type SSE.Storage_Offset;
-   use type SSE.Integer_Address;
-   use type Interfaces.Unsigned_8;
-   use type Interfaces.Integer_8;
-   use type Interfaces.Integer_16;
-   use type Interfaces.Integer_32;
-   use type Interfaces.Integer_64;
-   use type Bits.Bits_1;
-   use type Bits.C.char;
-   use type Bits.C.size_t;
    use Definitions;
 
    -- helper subprogram

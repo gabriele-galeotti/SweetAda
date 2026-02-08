@@ -24,6 +24,7 @@ procedure Print_Storage_Offset
     Prefix : in String := "";
     Suffix : in String := "")
    is
+   use type SSE.Storage_Offset;
    subtype Negative_SO is SSE.Storage_Offset range SSE.Storage_Offset'First .. -1;
    subtype Positive_SO is SSE.Storage_Offset range 0 .. SSE.Storage_Offset'Last;
    Negative_Sign  : Boolean := False;
