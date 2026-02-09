@@ -30,7 +30,6 @@ package GEMI
    --                                                                        --
    --========================================================================--
 
-   use System;
    use Interfaces;
 
    LEDPORT_ADDRESS  : constant := 16#0600_0000#;

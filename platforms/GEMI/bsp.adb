@@ -20,7 +20,6 @@ with Configure;
 with Definitions;
 with Bits;
 with MMIO;
-with CPU;
 with SH;
 with SH7032;
 with GEMI;
