@@ -49,7 +49,7 @@ export SIMAVR_PREFIX
 LD_SCRIPT                      := linker-simavr.lds
 LD_SWITCHES_PLATFORM           += --undefined=_vcdtrace
 LOWLEVEL_FILES_PLATFORM        += simavr.c
-GCC_SWITCHES_LOWLEVEL_PLATFORM += -I $(SIMAVR_PREFIX)/include
+GCC_SWITCHES_LOWLEVEL_PLATFORM += -I$(SIMAVR_PREFIX)/include
 POSTBUILD_ROMFILE              :=
 CLEAN_OBJECTS_COMMON           += *.vcd *.vcd.idx
 endif
@@ -73,6 +73,6 @@ RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/avrdude.sh
 DEBUG_COMMAND :=
 else
 RUN_COMMAND   := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/simavr.sh
-DEBUG_COMMAND :=
+DEBUG_COMMAND := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/simavr.sh -debug
 endif
 
