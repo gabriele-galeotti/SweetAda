@@ -3901,11 +3901,225 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 19.3.1 TAxCTL Register
+
+   MC_STOP : constant := 2#00#; -- Stop mode: Timer is halted
+   MC_UP   : constant := 2#01#; -- Up mode: Timer counts up to TAxCCR0
+   MC_CONT : constant := 2#10#; -- Continuous mode: Timer counts up to 0FFFFh
+   MC_UPDN : constant := 2#11#; -- Up/down mode: Timer counts up to TAxCCR0 then down to 0000h
+
+   ID_DIV1 : constant := 2#00#; -- /1
+   ID_DIV2 : constant := 2#01#; -- /2
+   ID_DIV4 : constant := 2#10#; -- /4
+   ID_DIV8 : constant := 2#11#; -- /8
+
+   TASSEL_TAxCLK : constant := 2#00#; -- TAxCLK
+   TASSEL_ACLK   : constant := 2#01#; -- ACLK
+   TASSEL_SMCLK  : constant := 2#10#; -- SMCLK
+   TASSEL_INCLK  : constant := 2#11#; -- INCLK
+
+   type TAxCTL_Type is record
+      TAIFG     : Boolean := False;         -- Timer_A interrupt flag
+      TAIE      : Boolean := False;         -- Timer_A interrupt enable.
+      TACLR     : Boolean := False;         -- Timer_A clear.
+      Reserved1 : Bits_1  := 0;
+      MC        : Bits_2  := MC_STOP;       -- Mode control.
+      ID        : Bits_2  := ID_DIV1;       -- Input divider.
+      TASSEL    : Bits_2  := TASSEL_TAxCLK; -- Timer_A clock source select
+      Reserved2 : Bits_6  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for TAxCTL_Type use record
+      TAIFG     at 0 range  0 ..  0;
+      TAIE      at 0 range  1 ..  1;
+      TACLR     at 0 range  2 ..  2;
+      Reserved1 at 0 range  3 ..  3;
+      MC        at 0 range  4 ..  5;
+      ID        at 0 range  6 ..  7;
+      TASSEL    at 0 range  8 ..  9;
+      Reserved2 at 0 range 10 .. 15;
+   end record;
+
    -- 19.3.2 TAxR Register
+
+   type TAxR_Type is record
+      TAxR : Unsigned_16; -- Timer_A register.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for TAxR_Type use record
+      TAxR at 0 range 0 .. 15;
+   end record;
+
    -- 19.3.3 TAxCCTL0 to TAxCCTL6 Register
+
+   -- __INF__ use "OU7" instead of "OUT"
+   OU7_LOW  : constant := 0; -- Output low
+   OU7_HIGH : constant := 1; -- Output high
+
+   OUTMOD_OUT    : constant := 2#000#; -- OUT bit value
+   OUTMOD_SET    : constant := 2#001#; -- Set
+   OUTMOD_TGLRST : constant := 2#010#; -- Toggle/reset
+   OUTMOD_SETRST : constant := 2#011#; -- Set/reset
+   OUTMOD_TGL    : constant := 2#100#; -- Toggle
+   OUTMOD_RST    : constant := 2#101#; -- Reset
+   OUTMOD_TGLSET : constant := 2#110#; -- Toggle/set
+   OUTMOD_RSTSET : constant := 2#111#; -- Reset/set
+
+   CAP_COMPARE : constant := 0; -- Compare mode
+   CAP_CAPTURE : constant := 1; -- Capture mode
+
+   SCS_ASYNC : constant := 0; -- Asynchronous capture
+   SCS_SYNC  : constant := 1; -- Synchronous capture
+
+   CCIS_CCIxA : constant := 2#00#; -- CCIxA
+   CCIS_CCIxB : constant := 2#01#; -- CCIxB
+   CCIS_GND   : constant := 2#10#; -- GND
+   CCIS_VCC   : constant := 2#11#; -- VCC
+
+   CM_NONE     : constant := 2#00#; -- No capture
+   CM_RISEDGE  : constant := 2#01#; -- Capture on rising edge
+   CM_FALLEDGE : constant := 2#10#; -- Capture on falling edge
+   CM_BOTHEDGE : constant := 2#11#; -- Capture on both rising and falling edges
+
+   -- __INF__ use "OU7" instead of "OUT"
+   type TAxCCTL_Type is record
+      CCIFG    : Boolean := False;       -- Capture/compare interrupt flag
+      COV      : Boolean := False;       -- Capture overflow.
+      OU7      : Bits_1  := OU7_LOW;     -- Output.
+      CCI      : Bits_1  := 0;           -- Capture/compare input.
+      CCIE     : Boolean := False;       -- Capture/compare interrupt enable.
+      OUTMOD   : Bits_3  := OUTMOD_OUT;  -- Output mode.
+      CAP      : Bits_1  := CAP_COMPARE; -- Capture mode
+      Reserved : Bits_1  := 0;
+      SCCI     : Bits_1  := 0;           -- Synchronized capture/compare input.
+      SCS      : Bits_1  := SCS_ASYNC;   -- Synchronize capture source.
+      CCIS     : Bits_2  := CCIS_CCIxA;  -- Capture/compare input select.
+      CM       : Bits_2  := CM_NONE;     -- Capture mode
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for TAxCCTL_Type use record
+      CCIFG    at 0 range  0 ..  0;
+      COV      at 0 range  1 ..  1;
+      OU7      at 0 range  2 ..  2;
+      CCI      at 0 range  3 ..  3;
+      CCIE     at 0 range  4 ..  4;
+      OUTMOD   at 0 range  5 ..  7;
+      CAP      at 0 range  8 ..  8;
+      Reserved at 0 range  9 ..  9;
+      SCCI     at 0 range 10 .. 10;
+      SCS      at 0 range 11 .. 11;
+      CCIS     at 0 range 12 .. 13;
+      CM       at 0 range 14 .. 15;
+   end record;
+
    -- 19.3.4 TAxCCR0 to TAxCCR6 Register
+
+   type TAxCCR_Type is record
+      TAxCCR : Unsigned_16; -- Compare mode: TAxCCRn holds the data for the comparison to the timer value in the Timer_A Register, TAxR. Capture mode: The Timer_A Register, TAxR, is copied into the TAxCCRn register when a capture is performed.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for TAxCCR_Type use record
+      TAxCCR at 0 range 0 .. 15;
+   end record;
+
    -- 19.3.5 TAxIV Register
+
+   TAIV_NONE          : constant := 16#00#; -- No interrupt pending
+   TAIV_TAxCCR1_CCIFG : constant := 16#02#; -- Interrupt Source: Capture/compare 1; Interrupt Flag: TAxCCR1 CCIFG; Interrupt Priority: Highest
+   TAIV_TAxCCR2_CCIFG : constant := 16#04#; -- Interrupt Source: Capture/compare 2; Interrupt Flag: TAxCCR2 CCIFG
+   TAIV_TAxCCR3_CCIFG : constant := 16#06#; -- Interrupt Source: Capture/compare 3; Interrupt Flag: TAxCCR3 CCIFG
+   TAIV_TAxCCR4_CCIFG : constant := 16#08#; -- Interrupt Source: Capture/compare 4; Interrupt Flag: TAxCCR4 CCIFG
+   TAIV_TAxCCR5_CCIFG : constant := 16#0A#; -- Interrupt Source: Capture/compare 5; Interrupt Flag: TAxCCR5 CCIFG
+   TAIV_TAxCCR6_CCIFG : constant := 16#0C#; -- Interrupt Source: Capture/compare 6; Interrupt Flag: TAxCCR6 CCIFG
+   TAIV_TAxCTL_TAIFG  : constant := 16#0E#; -- Interrupt Source: Timer overflow; Interrupt Flag: TAxCTL TAIFG; Interrupt Priority: Lowest
+
+   type TAxIV_Type is record
+      TAIV : Unsigned_16; -- Timer_A interrupt vector value
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for TAxIV_Type use record
+      TAIV at 0 range 0 .. 15;
+   end record;
+
    -- 19.3.6 TAxEX0 Register
+
+   TAIDEX_DIV1 : constant := 2#000#; -- Divide by 1
+   TAIDEX_DIV2 : constant := 2#001#; -- Divide by 2
+   TAIDEX_DIV3 : constant := 2#010#; -- Divide by 3
+   TAIDEX_DIV4 : constant := 2#011#; -- Divide by 4
+   TAIDEX_DIV5 : constant := 2#100#; -- Divide by 5
+   TAIDEX_DIV6 : constant := 2#101#; -- Divide by 6
+   TAIDEX_DIV7 : constant := 2#110#; -- Divide by 7
+   TAIDEX_DIV8 : constant := 2#111#; -- Divide by 8
+
+   type TAxEX0_Type is record
+      TAIDEX   : Bits_3  := TAIDEX_DIV1; -- Input divider expansion.
+      Reserved : Bits_13 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for TAxEX0_Type use record
+      TAIDEX   at 0 range 0 ..  2;
+      Reserved at 0 range 3 .. 15;
+   end record;
+
+   -- 19.3 Timer_A Registers
+
+   type Timer_A_Type is record
+      TAxCTL   : TAxCTL_Type  with Volatile_Full_Access => True;
+      TAxCCTL0 : TAxCCTL_Type with Volatile_Full_Access => True;
+      TAxCCTL1 : TAxCCTL_Type with Volatile_Full_Access => True;
+      TAxCCTL2 : TAxCCTL_Type with Volatile_Full_Access => True;
+      TAxCCTL3 : TAxCCTL_Type with Volatile_Full_Access => True;
+      TAxCCTL4 : TAxCCTL_Type with Volatile_Full_Access => True;
+      TAxCCTL5 : TAxCCTL_Type with Volatile_Full_Access => True;
+      TAxCCTL6 : TAxCCTL_Type with Volatile_Full_Access => True;
+      TAxR     : TAxR_Type    with Volatile_Full_Access => True;
+      TAxCCR0  : TAxCCR_Type  with Volatile_Full_Access => True;
+      TAxCCR1  : TAxCCR_Type  with Volatile_Full_Access => True;
+      TAxCCR2  : TAxCCR_Type  with Volatile_Full_Access => True;
+      TAxCCR3  : TAxCCR_Type  with Volatile_Full_Access => True;
+      TAxCCR4  : TAxCCR_Type  with Volatile_Full_Access => True;
+      TAxCCR5  : TAxCCR_Type  with Volatile_Full_Access => True;
+      TAxCCR6  : TAxCCR_Type  with Volatile_Full_Access => True;
+      TAxEX0   : TAxEX0_Type  with Volatile_Full_Access => True;
+      TAxIV    : TAxIV_Type   with Volatile_Full_Access => True;
+   end record
+      with Object_Size => 16#30# * 8;
+   for Timer_A_Type use record
+      TAxCTL   at 16#00# range 0 .. 15;
+      TAxCCTL0 at 16#02# range 0 .. 15;
+      TAxCCTL1 at 16#04# range 0 .. 15;
+      TAxCCTL2 at 16#06# range 0 .. 15;
+      TAxCCTL3 at 16#08# range 0 .. 15;
+      TAxCCTL4 at 16#0A# range 0 .. 15;
+      TAxCCTL5 at 16#0C# range 0 .. 15;
+      TAxCCTL6 at 16#0E# range 0 .. 15;
+      TAxR     at 16#10# range 0 .. 15;
+      TAxCCR0  at 16#12# range 0 .. 15;
+      TAxCCR1  at 16#14# range 0 .. 15;
+      TAxCCR2  at 16#16# range 0 .. 15;
+      TAxCCR3  at 16#18# range 0 .. 15;
+      TAxCCR4  at 16#1A# range 0 .. 15;
+      TAxCCR5  at 16#1C# range 0 .. 15;
+      TAxCCR6  at 16#1E# range 0 .. 15;
+      TAxEX0   at 16#20# range 0 .. 15;
+      TAxIV    at 16#2E# range 0 .. 15;
+   end record;
+
+   -- Table 6-2. Timer_A0 Registers
+
+   Timer_A0_BASEADDRESS : constant := 16#4000_0000#;
+
+   Timer_A0 : aliased Timer_A_Type
+      with Address    => System'To_Address (Timer_A0_BASEADDRESS + 16#0C#),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 20 Real-Time Clock (RTC_C)
@@ -5781,10 +5995,10 @@ pragma Style_Checks (Off);
    -- UCSYNC_ASYNC : constant := 0; -- Asynchronous mode
    -- UCSYNC_SYNC  : constant := 1; -- Synchronous mode
 
-   UCMODEx_SPI3  : constant := 2#00#; -- 3-pin SPI
-   UCMODEx_SPI4H : constant := 2#01#; -- 4-pin SPI with UCxSTE active high: Slave enabled when UCxSTE = 1
-   UCMODEx_SPI4L : constant := 2#10#; -- 4-pin SPI with UCxSTE active low: Slave enabled when UCxSTE = 0
-   UCMODEx_I2C   : constant := 2#11#; -- I2C mode
+   UCMODEx_SPI3       : constant := 2#00#; -- 3-pin SPI
+   UCMODEx_SPI4_STEHI : constant := 2#01#; -- 4-pin SPI with UCxSTE active high: Slave enabled when UCxSTE = 1
+   UCMODEx_SPI4_STELO : constant := 2#10#; -- 4-pin SPI with UCxSTE active low: Slave enabled when UCxSTE = 0
+   UCMODEx_I2C        : constant := 2#11#; -- I2C mode
 
    UCMST_SLAVE  : constant := 0; -- Slave mode
    UCMST_MASTER : constant := 1; -- Master mode
@@ -5974,22 +6188,451 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 26.4.1 UCBxCTLW0 Register
+
+   UCTR_RX : constant := 0; -- Receiver
+   UCTR_TX : constant := 1; -- Transmitter
+
+   -- UCSSELx_* already defined at 24.4.1
+   -- UCSSELx_UCLKI   : constant := 2#00#; -- UCLKI
+   -- UCSSELx_ACLK    : constant := 2#01#; -- ACLK
+   -- UCSSELx_SMCLK   : constant := 2#10#; -- SMCLK
+   -- UCSSELx_SMCLK_2 : constant := 2#11#; -- SMCLK
+
+   -- UCMODEx_* already defined at 25.4.1
+   -- UCMODEx_SPI3       : constant := 2#00#; -- 3-pin SPI
+   -- UCMODEx_SPI4_STEHI : constant := 2#01#; -- 4-pin SPI (master or slave enabled if STE = 1)
+   -- UCMODEx_SPI4_STELO : constant := 2#10#; -- 4-pin SPI (master or slave enabled if STE = 0)
+   -- UCMODEx_I2C        : constant := 2#11#; -- I2C mode
+
+   -- UCMST_* already defined at 25.4.1
+   -- UCMST_SLAVE  : constant := 0; -- Slave mode
+   -- UCMST_MASTER : constant := 1; -- Master mode
+
+   UCMM_SINGLE : constant := 0; -- Single master environment.
+   UCMM_MULTI  : constant := 1; -- Multi-master environment
+
+   UCSLA10_7  : constant := 0; -- Address slave with 7-bit address
+   UCSLA10_10 : constant := 1; -- Address slave with 10-bit address
+
+   UCA10_7  : constant := 0; -- Own address is a 7-bit address.
+   UCA10_10 : constant := 1; -- Own address is a 10-bit address.
+
+   type UCBxCTLW0_Type is record
+      UCSWRST  : Boolean := True;            -- Software reset enable.
+      UCTXSTT  : Boolean := False;           -- Transmit START condition in master mode.
+      UCTXSTP  : Boolean := False;           -- Transmit STOP condition in master mode.
+      UCTXNACK : Boolean := False;           -- Transmit a NACK.
+      UCTR     : Bits_1  := UCTR_RX;         -- Transmitter/receiver
+      UCTXACK  : Boolean := False;           -- Transmit ACK condition in slave mode with enabled address mask register.
+      UCSSELx  : Bits_2  := UCSSELx_SMCLK_2; -- eUSCI_B clock source select.
+      UCSYNC   : Boolean := True;            -- Synchronous mode enable.
+      UCMODEx  : Bits_2  := UCMODEx_SPI3;    -- eUSCI_B mode.
+      UCMST    : Bits_1  := UCMST_SLAVE;     -- Master mode select.
+      Reserved : Bits_1  := 0;
+      UCMM     : Bits_1  := UCMM_SINGLE;     -- Multi-master environment select.
+      UCSLA10  : Bits_1  := UCSLA10_7;       -- Slave addressing mode select
+      UCA10    : Bits_1  := UCA10_7;         -- Own addressing mode select.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for UCBxCTLW0_Type use record
+      UCSWRST  at 0 range  0 ..  0;
+      UCTXSTT  at 0 range  1 ..  1;
+      UCTXSTP  at 0 range  2 ..  2;
+      UCTXNACK at 0 range  3 ..  3;
+      UCTR     at 0 range  4 ..  4;
+      UCTXACK  at 0 range  5 ..  5;
+      UCSSELx  at 0 range  6 ..  7;
+      UCSYNC   at 0 range  8 ..  8;
+      UCMODEx  at 0 range  9 .. 10;
+      UCMST    at 0 range 11 .. 11;
+      Reserved at 0 range 12 .. 12;
+      UCMM     at 0 range 13 .. 13;
+      UCSLA10  at 0 range 14 .. 14;
+      UCA10    at 0 range 15 .. 15;
+   end record;
+
    -- 26.4.2 UCBxCTLW1 Register
+
+   UCGLITx_50n  : constant := 2#00#; -- 50 ns
+   UCGLITx_25n  : constant := 2#01#; -- 25 ns
+   UCGLITx_12n5 : constant := 2#10#; -- 12.5 ns
+   UCGLITx_6n25 : constant := 2#11#; -- 6.25 ns
+
+   UCASTPx_NONE : constant := 2#00#; -- No automatic STOP generation.
+   UCASTPx_THRE : constant := 2#01#; -- UCBCNTIFG is set with the byte counter reaches the threshold defined in UCBxTBCNT
+   UCASTPx_AUTO : constant := 2#10#; -- A STOP condition is generated automatically after the byte counter value reached UCBxTBCNT.
+   UCASTPx_RSVD : constant := 2#11#; -- Reserved
+
+   UCSWACK_MODULE : constant := 0; -- The address acknowledge of the slave is controlled by the eUSCI_B module
+   UCSWACK_USER   : constant := 1; -- The user needs to trigger the sending of the address ACK by issuing UCTXACK
+
+   UCSTPNACK_STD : constant := 0; -- Send a not acknowledge before the STOP condition as a master receiver (conform to I2C standard)
+   UCSTPNACK_ALL : constant := 1; -- All bytes are acknowledged by the eUSCI_B when configured as master receiver
+
+   UCCLTO_DISABLE    : constant := 2#00#; -- Disable clock low timeout counter
+   UCCLTO_SYSCLK135k : constant := 2#01#; -- 135 000 SYSCLK cycles (approximately 28 ms)
+   UCCLTO_SYSCLK150k : constant := 2#10#; -- 150 000 SYSCLK cycles (approximately 31 ms)
+   UCCLTO_SYSCLK165k : constant := 2#11#; -- 165 000 SYSCLK cycles (approximately 34 ms)
+
+   UCETXINT_ADDRMATCH : constant := 0; -- UCTXIFGx is set after an address match with UCxI2COAx and the direction bit indicating slave transmit
+   UCETXINT_START     : constant := 1; -- UCTXIFG0 is set for each START condition
+
+   type UCBxCTLW1_Type is record
+      UCGLITx   : Bits_2 := UCGLITx_50n;        -- Deglitch time
+      UCASTPx   : Bits_2 := UCASTPx_NONE;       -- Automatic STOP condition generation.
+      UCSWACK   : Bits_1 := UCSWACK_MODULE;     -- Using this bit it is possible to select, whether the eUSCI_B module triggers the sending of the ACK of the address or if it is controlled by software.
+      UCSTPNACK : Bits_1 := UCSTPNACK_STD;      -- The UCSTPNACK bit allows to make the eUSCI_B master acknowledge the last byte in master receiver mode as well.
+      UCCLTO    : Bits_2 := UCCLTO_DISABLE;     -- Clock low timeout select.
+      UCETXINT  : Bits_1 := UCETXINT_ADDRMATCH; -- Early UCTXIFG0.
+      Reserved  : Bits_7 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for UCBxCTLW1_Type use record
+      UCGLITx   at 0 range 0 ..  1;
+      UCASTPx   at 0 range 2 ..  3;
+      UCSWACK   at 0 range 4 ..  4;
+      UCSTPNACK at 0 range 5 ..  5;
+      UCCLTO    at 0 range 6 ..  7;
+      UCETXINT  at 0 range 8 ..  8;
+      Reserved  at 0 range 9 .. 15;
+   end record;
+
    -- 26.4.3 UCBxBRW Register
+
+   type UCBxBRW_Type is record
+      UCBRx : Unsigned_16; -- Bit clock prescaler.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for UCBxBRW_Type use record
+      UCBRx at 0 range 0 .. 15;
+   end record;
+
    -- 26.4.4 UCBxSTATW
+
+   type UCBxSTATW_Type is record
+      Reserved1 : Bits_4;
+      UCBBUSY   : Boolean;    -- Bus busy
+      UCGC      : Boolean;    -- General call address received.
+      UCSCLLOW  : Boolean;    -- SCL low
+      Reserved2 : Bits_1;
+      UCBCNTx   : Unsigned_8; -- Hardware byte counter value.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for UCBxSTATW_Type use record
+      Reserved1 at 0 range 0 ..  3;
+      UCBBUSY   at 0 range 4 ..  4;
+      UCGC      at 0 range 5 ..  5;
+      UCSCLLOW  at 0 range 6 ..  6;
+      Reserved2 at 0 range 7 ..  7;
+      UCBCNTx   at 0 range 8 .. 15;
+   end record;
+
    -- 26.4.5 UCBxTBCNT Register
+
+   type UCBxTBCNT_Type is record
+      UCTBCNTx : Unsigned_8 := 0; -- The byte counter threshold value is used to set the number of I2C data bytes after which the automatic STOP or the UCSTPIFG should occur.
+      Reserved : Bits_8     := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for UCBxTBCNT_Type use record
+      UCTBCNTx at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 15;
+   end record;
+
    -- 26.4.6 UCBxRXBUF Register
+
+   type UCBxRXBUF_Type is record
+      UCRXBUFx : Unsigned_8; -- The receive-data buffer is user accessible and contains the last received character from the receive shift register.
+      Reserved : Bits_8;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for UCBxRXBUF_Type use record
+      UCRXBUFx at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 15;
+   end record;
+
    -- 26.4.7 UCBxTXBUF
+
+   type UCBxTXBUF_Type is record
+      UCTXBUFx : Unsigned_8 := 0; -- The transmit data buffer is user accessible and holds the data waiting to be moved into the transmit shift register and transmitted.
+      Reserved : Bits_8     := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for UCBxTXBUF_Type use record
+      UCTXBUFx at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 15;
+   end record;
+
    -- 26.4.8 UCBxI2COA0 Register
+
+   type UCBxI2COA0_Type is record
+      I2COA0   : Bits_10 := 0;     -- I2C own address.
+      UCOAEN   : Boolean := False; -- Own Address enable register.
+      Reserved : Bits_4  := 0;
+      UCGCEN   : Boolean := False; -- General call response enable.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for UCBxI2COA0_Type use record
+      I2COA0   at 0 range  0 ..  9;
+      UCOAEN   at 0 range 10 .. 10;
+      Reserved at 0 range 11 .. 14;
+      UCGCEN   at 0 range 15 .. 15;
+   end record;
+
    -- 26.4.9 UCBxI2COA1 Register
+
+   type UCBxI2COA1_Type is record
+      I2COA1   : Bits_10 := 0;     -- I2C own address.
+      UCOAEN   : Boolean := False; -- Own Address enable register.
+      Reserved : Bits_5  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for UCBxI2COA1_Type use record
+      I2COA1   at 0 range  0 ..  9;
+      UCOAEN   at 0 range 10 .. 10;
+      Reserved at 0 range 11 .. 15;
+   end record;
+
    -- 26.4.10 UCBxI2COA2 Register
+
+   type UCBxI2COA2_Type is record
+      I2COA2   : Bits_10 := 0;     -- I2C own address.
+      UCOAEN   : Boolean := False; -- Own Address enable register.
+      Reserved : Bits_5  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for UCBxI2COA2_Type use record
+      I2COA2   at 0 range  0 ..  9;
+      UCOAEN   at 0 range 10 .. 10;
+      Reserved at 0 range 11 .. 15;
+   end record;
+
    -- 26.4.11 UCBxI2COA3 Register
+
+   type UCBxI2COA3_Type is record
+      I2COA3   : Bits_10 := 0;     -- I2C own address.
+      UCOAEN   : Boolean := False; -- Own Address enable register.
+      Reserved : Bits_5  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for UCBxI2COA3_Type use record
+      I2COA3   at 0 range  0 ..  9;
+      UCOAEN   at 0 range 10 .. 10;
+      Reserved at 0 range 11 .. 15;
+   end record;
+
    -- 26.4.12 UCBxADDRX Register
+
+   type UCBxADDRX_Type is record
+      ADDRXx   : Bits_10; -- Received Address Register.
+      Reserved : Bits_6;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for UCBxADDRX_Type use record
+      ADDRXx   at 0 range  0 ..  9;
+      Reserved at 0 range 10 .. 15;
+   end record;
+
    -- 26.4.13 UCBxADDMASK Register
+
+   type UCBxADDMASK_Type is record
+      ADDMASKx : Bits_10; -- Address Mask Register.
+      Reserved : Bits_6;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for UCBxADDMASK_Type use record
+      ADDMASKx at 0 range  0 ..  9;
+      Reserved at 0 range 10 .. 15;
+   end record;
+
    -- 26.4.14 UCBxI2CSA Register
+
+   type UCBxI2CSA_Type is record
+      I2CSAx   : Bits_10; -- I2C slave address.
+      Reserved : Bits_6;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for UCBxI2CSA_Type use record
+      I2CSAx   at 0 range  0 ..  9;
+      Reserved at 0 range 10 .. 15;
+   end record;
+
    -- 26.4.15 UCBxIE Register
+
+   type UCBxIE_Type is record
+      UCRXIE0  : Boolean := False; -- Receive interrupt enable 0
+      UCTXIE0  : Boolean := False; -- Transmit interrupt enable 0
+      UCSTTIE  : Boolean := False; -- START condition interrupt enable
+      UCSTPIE  : Boolean := False; -- STOP condition interrupt enable
+      UCALIE   : Boolean := False; -- Arbitration lost interrupt enable
+      UCNACKIE : Boolean := False; -- Not-acknowledge interrupt enable
+      UCBCNTIE : Boolean := False; -- Byte counter interrupt enable.
+      UCCLTOIE : Boolean := False; -- Clock low timeout interrupt enable.
+      UCRXIE1  : Boolean := False; -- Receive interrupt enable 1
+      UCTXIE1  : Boolean := False; -- Transmit interrupt enable 1
+      UCRXIE2  : Boolean := False; -- Receive interrupt enable 2
+      UCTXIE2  : Boolean := False; -- Transmit interrupt enable 2
+      UCRXIE3  : Boolean := False; -- Receive interrupt enable 3
+      UCTXIE3  : Boolean := False; -- Transmit interrupt enable 3
+      UCBIT9IE : Boolean := False; -- Bit position 9 interrupt enable
+      Reserved : Bits_1  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for UCBxIE_Type use record
+      UCRXIE0  at 0 range  0 ..  0;
+      UCTXIE0  at 0 range  1 ..  1;
+      UCSTTIE  at 0 range  2 ..  2;
+      UCSTPIE  at 0 range  3 ..  3;
+      UCALIE   at 0 range  4 ..  4;
+      UCNACKIE at 0 range  5 ..  5;
+      UCBCNTIE at 0 range  6 ..  6;
+      UCCLTOIE at 0 range  7 ..  7;
+      UCRXIE1  at 0 range  8 ..  8;
+      UCTXIE1  at 0 range  9 ..  9;
+      UCRXIE2  at 0 range 10 .. 10;
+      UCTXIE2  at 0 range 11 .. 11;
+      UCRXIE3  at 0 range 12 .. 12;
+      UCTXIE3  at 0 range 13 .. 13;
+      UCBIT9IE at 0 range 14 .. 14;
+      Reserved at 0 range 15 .. 15;
+   end record;
+
    -- 26.4.16 UCBxIFG Register
+
+   type UCBxIFG_Type is record
+      UCRXIFG0  : Boolean := False; -- eUSCI_B receive interrupt flag 0.
+      UCTXIFG0  : Boolean := False; -- eUSCI_B transmit interrupt flag 0.
+      UCSTTIFG  : Boolean := False; -- START condition interrupt flag
+      UCSTPIFG  : Boolean := False; -- STOP condition interrupt flag
+      UCALIFG   : Boolean := False; -- Arbitration lost interrupt flag
+      UCNACKIFG : Boolean := False; -- Not-acknowledge received interrupt flag.
+      UCBCNTIFG : Boolean := False; -- Byte counter interrupt flag.
+      UCCLTOIFG : Boolean := False; -- Clock low timeout interrupt flag
+      UCRXIFG1  : Boolean := False; -- Receive interrupt flag 1.
+      UCTXIFG1  : Boolean := True;  -- eUSCI_B transmit interrupt flag 1.
+      UCRXIFG2  : Boolean := False; -- Receive interrupt flag 2.
+      UCTXIFG2  : Boolean := False; -- eUSCI_B transmit interrupt flag 2.
+      UCRXIFG3  : Boolean := False; -- Receive interrupt flag 3.
+      UCTXIFG3  : Boolean := True;  -- eUSCI_B transmit interrupt flag 3.
+      UCBIT9IFG : Boolean := False; -- Bit position 9 interrupt flag
+      Reserved  : Bits_1  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for UCBxIFG_Type use record
+      UCRXIFG0  at 0 range  0 ..  0;
+      UCTXIFG0  at 0 range  1 ..  1;
+      UCSTTIFG  at 0 range  2 ..  2;
+      UCSTPIFG  at 0 range  3 ..  3;
+      UCALIFG   at 0 range  4 ..  4;
+      UCNACKIFG at 0 range  5 ..  5;
+      UCBCNTIFG at 0 range  6 ..  6;
+      UCCLTOIFG at 0 range  7 ..  7;
+      UCRXIFG1  at 0 range  8 ..  8;
+      UCTXIFG1  at 0 range  9 ..  9;
+      UCRXIFG2  at 0 range 10 .. 10;
+      UCTXIFG2  at 0 range 11 .. 11;
+      UCRXIFG3  at 0 range 12 .. 12;
+      UCTXIFG3  at 0 range 13 .. 13;
+      UCBIT9IFG at 0 range 14 .. 14;
+      Reserved  at 0 range 15 .. 15;
+   end record;
+
    -- 26.4.17 UCBxIV Register
+
+   -- UCIVx_NONE already defined at 24.4.12
+   -- UCIVx_NONE      : constant := 16#00#; -- No interrupt pending
+   UCIVx_UCALIFG   : constant := 16#02#; -- Interrupt Source: Arbitration lost; Interrupt Flag: UCALIFG; Interrupt Priority: Highest
+   UCIVx_UCNACKIFG : constant := 16#04#; -- Interrupt Source: Not acknowledgment; Interrupt Flag: UCNACKIFG
+   UCIVx_UCSTTIFG  : constant := 16#06#; -- Interrupt Source: Start condition received; Interrupt Flag: UCSTTIFG
+   UCIVx_UCSTPIFG  : constant := 16#08#; -- Interrupt Source: Stop condition received; Interrupt Flag: UCSTPIFG
+   UCIVx_UCRXIFG3  : constant := 16#0A#; -- Interrupt Source: Slave 3 Data received; Interrupt Flag: UCRXIFG3
+   UCIVx_UCTXIFG3  : constant := 16#0C#; -- Interrupt Source: Slave 3 Transmit buffer empty; Interrupt Flag: UCTXIFG3
+   UCIVx_UCRXIFG2  : constant := 16#0E#; -- Interrupt Source: Slave 2 Data received; Interrupt Flag: UCRXIFG2
+   UCIVx_UCTXIFG2  : constant := 16#10#; -- Interrupt Source: Slave 2 Transmit buffer empty; Interrupt Flag: UCTXIFG2
+   UCIVx_UCRXIFG1  : constant := 16#12#; -- Interrupt Source: Slave 1 Data received; Interrupt Flag: UCRXIFG1
+   UCIVx_UCTXIFG1  : constant := 16#14#; -- Interrupt Source: Slave 1 Transmit buffer empty; Interrupt Flag: UCTXIFG1
+   UCIVx_UCRXIFG0  : constant := 16#16#; -- Interrupt Source: Data received; Interrupt Flag: UCRXIFG0
+   UCIVx_UCTXIFG0  : constant := 16#18#; -- Interrupt Source: Transmit buffer empty; Interrupt Flag: UCTXIFG0
+   UCIVx_UCBCNTIFG : constant := 16#1A#; -- Interrupt Source: Byte counter zero; Interrupt Flag: UCBCNTIFG
+   UCIVx_UCCLTOIFG : constant := 16#1C#; -- Interrupt Source: Clock low timeout; Interrupt Flag: UCCLTOIFG
+   UCIVx_UCBIT9IFG : constant := 16#1E#; -- Interrupt Source: 9th bit position; Interrupt Flag: UCBIT9IFG; Priority: Lowest
+
+   type UCBxIV_Type is record
+      UCIVx : Unsigned_16; -- eUSCI_B interrupt vector value.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for UCBxIV_Type use record
+      UCIVx at 0 range 0 .. 15;
+   end record;
+
+   -- 26.4 eUSCI_B I2C Registers
+
+   type eUSCI_B0_I2C_Type is record
+      UCBxCTLW0   : UCBxCTLW0_Type   with Volatile_Full_Access => True;
+      UCBxCTLW1   : UCBxCTLW1_Type   with Volatile_Full_Access => True;
+      UCBxBRW     : UCBxBRW_Type     with Volatile_Full_Access => True;
+      UCBxSTATW   : UCBxSTATW_Type   with Volatile_Full_Access => True;
+      UCBxTBCNT   : UCBxTBCNT_Type   with Volatile_Full_Access => True;
+      UCBxRXBUF   : UCBxRXBUF_Type   with Volatile_Full_Access => True;
+      UCBxTXBUF   : UCBxTXBUF_Type   with Volatile_Full_Access => True;
+      UCBxI2COA0  : UCBxI2COA0_Type  with Volatile_Full_Access => True;
+      UCBxI2COA1  : UCBxI2COA1_Type  with Volatile_Full_Access => True;
+      UCBxI2COA2  : UCBxI2COA2_Type  with Volatile_Full_Access => True;
+      UCBxI2COA3  : UCBxI2COA3_Type  with Volatile_Full_Access => True;
+      UCBxADDRX   : UCBxADDRX_Type   with Volatile_Full_Access => True;
+      UCBxADDMASK : UCBxADDMASK_Type with Volatile_Full_Access => True;
+      UCBxI2CSA   : UCBxI2CSA_Type   with Volatile_Full_Access => True;
+      UCBxIE      : UCBxIE_Type      with Volatile_Full_Access => True;
+      UCBxIFG     : UCBxIFG_Type     with Volatile_Full_Access => True;
+      UCBxIV      : UCBxIV_Type      with Volatile_Full_Access => True;
+   end record
+      with Object_Size => 16#30# * 8;
+   for eUSCI_B0_I2C_Type use record
+      UCBxCTLW0   at 16#00# range 0 .. 15;
+      UCBxCTLW1   at 16#02# range 0 .. 15;
+      UCBxBRW     at 16#06# range 0 .. 15;
+      UCBxSTATW   at 16#08# range 0 .. 15;
+      UCBxTBCNT   at 16#0A# range 0 .. 15;
+      UCBxRXBUF   at 16#0C# range 0 .. 15;
+      UCBxTXBUF   at 16#0E# range 0 .. 15;
+      UCBxI2COA0  at 16#14# range 0 .. 15;
+      UCBxI2COA1  at 16#16# range 0 .. 15;
+      UCBxI2COA2  at 16#18# range 0 .. 15;
+      UCBxI2COA3  at 16#1A# range 0 .. 15;
+      UCBxADDRX   at 16#1C# range 0 .. 15;
+      UCBxADDMASK at 16#1E# range 0 .. 15;
+      UCBxI2CSA   at 16#20# range 0 .. 15;
+      UCBxIE      at 16#2A# range 0 .. 15;
+      UCBxIFG     at 16#2C# range 0 .. 15;
+      UCBxIV      at 16#2E# range 0 .. 15;
+   end record;
+
+   -- Table 6-10. eUSCI_B0 Registers
+
+   eUSCI_B0_I2C_ADDRESS : constant := 16#4000_2000#;
+
+   eUSCI_B0_I2C : aliased eUSCI_B0_I2C_Type
+      with Address    => System'To_Address (eUSCI_B0_I2C_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 27 LCD_F Controller
