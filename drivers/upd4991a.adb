@@ -103,6 +103,7 @@ package body uPD4991A
       Unused at 0 range 1 .. 7;
    end record;
 
+   -- modes for MODE
    MODE_BASIC1    : constant := 2#0000#; -- 0 * 0 0 BASIC TIME MODE
    MODE_ALRMTP1   : constant := 2#0001#; -- 0 * 0 1 ALARM SET & TP1 CONTROL MODE
    MODE_ALRMTP2   : constant := 2#0010#; -- 0 * 1 0 ALARM SET & TP2 CONTROL MODE
@@ -165,7 +166,7 @@ package body uPD4991A
    end Register_Write;
 
    ----------------------------------------------------------------------------
-   -- Register_Write
+   -- Read_Clock
    ----------------------------------------------------------------------------
    procedure Read_Clock
       (D : in     Descriptor_Type;
@@ -197,7 +198,7 @@ package body uPD4991A
       (D : in out Descriptor_Type)
       is
    begin
-      Register_Write (D, MODE, 0);
+      Register_Write (D, MODE, MODE_BASIC1);
       Register_Write (D, CR2, 0);
       Register_Write (D, CR1, 0);
    end Init;
