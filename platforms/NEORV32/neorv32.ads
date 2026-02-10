@@ -805,12 +805,74 @@ pragma Style_Checks (Off);
    -- 2.8.19. Pulse-Width Modulation Controller (PWM)
    ----------------------------------------------------------------------------
 
-   type PWM_Channel_Type is new Unsigned_32
-      with Object_Size          => 32,
-           Volatile_Full_Access => True;
+   type PWM_POLARITY_Type is new Bits_1;
 
-   type PWM_Type is array (0 .. 15) of PWM_Channel_Type
-      with Pack => True;
+   PWM_POLARITY_DIRECT   : constant PWM_POLARITY_Type := 0;
+   PWM_POLARITY_INVERTED : constant PWM_POLARITY_Type := 1;
+
+   type PWM_POLARITY_Bitmap_32 is array (0 .. 31) of PWM_POLARITY_Type
+      with Component_Size => 1,
+           Object_Size    => 32;
+
+   CLKPRSC_2    : constant := 2#000#; -- Resulting clock_prescaler = 2
+   CLKPRSC_4    : constant := 2#001#; -- Resulting clock_prescaler = 4
+   CLKPRSC_8    : constant := 2#010#; -- Resulting clock_prescaler = 8
+   CLKPRSC_64   : constant := 2#011#; -- Resulting clock_prescaler = 64
+   CLKPRSC_128  : constant := 2#100#; -- Resulting clock_prescaler = 128
+   CLKPRSC_1024 : constant := 2#101#; -- Resulting clock_prescaler = 1024
+   CLKPRSC_2048 : constant := 2#110#; -- Resulting clock_prescaler = 2048
+   CLKPRSC_4096 : constant := 2#111#; -- Resulting clock_prescaler = 4096
+
+   type PWM_CLKPRSC_Type is record
+      CLKPRSC : Bits_3;
+      Unused  : Bits_29 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for PWM_CLKPRSC_Type use record
+      CLKPRSC at 0 range 0 ..  2;
+      Unused  at 0 range 3 .. 31;
+   end record;
+
+   type PWM_MODE_Type is new Bits_1;
+
+   PWM_MODE_fastPWM      : constant PWM_MODE_Type := 0;
+   PWM_MODE_phasecorrect : constant PWM_MODE_Type := 1;
+
+   type PWM_MODE_Bitmap_32 is array (0 .. 31) of PWM_MODE_Type
+      with Component_Size => 1,
+           Object_Size    => 32;
+
+   type PWM_TOPCMP_Type is record
+      CMP : Unsigned_16; -- Channel x top/wrap value register
+      TOP : Unsigned_16; -- Channel x compare value register
+   end record
+      with Bit_Order            => Low_Order_First,
+           Object_Size          => 32,
+           Volatile_Full_Access => True;
+   for PWM_TOPCMP_Type use record
+      CMP at 0 range  0 .. 15;
+      TOP at 0 range 16 .. 31;
+   end record;
+
+   type PWM_TOPCMP_Array_Type is array (0 .. 31) of PWM_TOPCMP_Type
+      with Object_Size => 32 * 32;
+
+   type PWM_Type is record
+      ENABLE   : Bitmap_32              with Volatile_Full_Access => True;
+      POLARITY : PWM_POLARITY_Bitmap_32 with Volatile_Full_Access => True;
+      CLKPRSC  : PWM_CLKPRSC_Type       with Volatile_Full_Access => True;
+      MODE     : PWM_MODE_Bitmap_32     with Volatile_Full_Access => True;
+      TOPCMP   : PWM_TOPCMP_Array_Type  with Volatile => True;
+   end record
+      with Object_Size => 256 * 8;
+   for PWM_Type use record
+      ENABLE   at 16#00# range 0 .. 31;
+      POLARITY at 16#04# range 0 .. 31;
+      CLKPRSC  at 16#08# range 0 .. 31;
+      MODE     at 16#0C# range 0 .. 31;
+      TOPCMP   at 16#80# range 0 .. 32 * 32 - 1;
+   end record;
 
    PWM_BASEADDRESS : constant := 16#FFF0_0000#;
 
