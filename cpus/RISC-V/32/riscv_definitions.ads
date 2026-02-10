@@ -240,7 +240,7 @@ package RISCV_Definitions
       L : Unsigned_32 with Volatile_Full_Access => True;
       H : Unsigned_32 with Volatile_Full_Access => True;
    end record
-      with Size => 64;
+      with Object_Size => 64;
    for mtime_Type use record
       L at BE_ByteOrder * 4 + LE_ByteOrder * 0 range 0 .. 31;
       H at BE_ByteOrder * 0 + LE_ByteOrder * 4 range 0 .. 31;

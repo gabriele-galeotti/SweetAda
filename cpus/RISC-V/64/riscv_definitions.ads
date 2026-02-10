@@ -236,7 +236,7 @@ package RISCV_Definitions
    type mtime_Type is record
       T : Unsigned_64 with Volatile_Full_Access => True;
    end record
-      with Size => 64;
+      with Object_Size => 64;
    for mtime_Type use record
       T at 0 range 0 .. 63;
    end record;
