@@ -1,8 +1,9 @@
 
 #
-# NEORV32
+# NEORV32 (DE10-Lite)
 #
 # RISC-V RV32I
+# https://github.com/emb4fun/neorv32-examples
 #
 
 ################################################################################

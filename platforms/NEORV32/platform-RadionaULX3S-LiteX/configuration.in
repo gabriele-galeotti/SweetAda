@@ -1,6 +1,6 @@
 
 #
-# NEORV32
+# NEORV32 (RadionaULX3S-LiteX)
 #
 # RISC-V RV32I
 #
@@ -24,6 +24,11 @@
 #     --log-filename ./neorv32_ulx3s_litex.log
 #     --log-level debug
 #     --doc
+#
+# NOTE:
+# 1) Yosys oss-cad-suite tool executables must be present in PATH
+# 2) RISC-V toolchain executables must be present in PATH
+# 3) fujprog executable is required when downloading an FPGA bitstream
 #
 
 ################################################################################
