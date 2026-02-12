@@ -18,7 +18,6 @@
 with Configure;
 with Definitions;
 with Bits;
-with CPU;
 with ARMv7M;
 with MSP432P401R;
 with Clocks;
@@ -95,15 +94,6 @@ package body BSP
    procedure Setup
       is
    begin
-      -- stop WDT -------------------------------------------------------------
-      MSP432P401R.WDTCTL := (
-         WDTIS    => WDTIS_DIV2E15,
-         WDTCNTCL => False,
-         WDTTMSEL => WDTTMSEL_WATCHDOG,
-         WDTSSEL  => WDTSSEL_SMCLK,
-         WDTHOLD  => True,
-         WDTPW    => WDTPW_PASSWD
-         );
       -- PCM ------------------------------------------------------------------
       PCMCTL0.AMR := AMR_AM_LDO_VCORE0;
       loop exit when PCMCTL0.CPM = CPM_AM_LDO_VCORE0; end loop;

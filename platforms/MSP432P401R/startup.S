@@ -28,6 +28,18 @@ _start:
                 cpsid   i
 
                 //
+                // Disable Watchdog.
+                //
+#define WDT_A_BASEADDRESS 0x40004800
+#define WDTCTL_OFFSET     0x0C
+#define WDTIS_DIV2E15     0x04
+#define WDTHOLD           (1<<7)
+#define WDTPW_PASSWD      (0x5A<<8)
+                ldr     r0,=WDT_A_BASEADDRESS
+                movw    r1,#(WDTPW_PASSWD|WDTHOLD|WDTIS_DIV2E15)
+                strh    r1,[r0,#WDTCTL_OFFSET]
+
+                //
                 // Setup stack pointer.
                 //
                 ldr     r0,=kernel_stack
