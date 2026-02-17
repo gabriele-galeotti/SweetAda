@@ -35,7 +35,6 @@ package uPD4991A
    use System;
    use Interfaces;
    use Bits;
-   use Time;
 
    ----------------------------------------------------------------------------
    -- μPD4991A 4-BIT PARALLEL I/O CALENDAR CLOCK
@@ -61,9 +60,13 @@ package uPD4991A
        Write_8       => MMIO.WriteN_U8'Access
       );
 
-   procedure Read_Clock
+   procedure Time_Read
       (D : in     Descriptor_Type;
        T :    out Time.TM_Time);
+
+   procedure Time_Set
+      (D : in Descriptor_Type;
+       T : in Time.TM_Time);
 
    procedure Init
       (D : in out Descriptor_Type);
