@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2026 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -82,8 +82,8 @@ pragma Style_Checks (Off);
          hfroscen   : Boolean := True;           -- Ring Oscillator Enable
          hfroscrdy  : Boolean := False;          -- Ring Oscillator Ready
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for hfrosccfg_Type use record
          hfroscdiv  at 0 range  0 ..  5;
          Reserved1  at 0 range  6 .. 15;
@@ -100,8 +100,8 @@ pragma Style_Checks (Off);
          hfxoscen  : Boolean := True;  -- Crystal Oscillator Enable
          hfxoscrdy : Boolean := False; -- Crystal Oscillator Ready
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for hfxosccfg_Type use record
          Reserved  at 0 range  0 .. 29;
          hfxoscen  at 0 range 30 .. 30;
@@ -154,8 +154,8 @@ pragma Style_Checks (Off);
          Reserved3 : Bits_12 := 0;
          plllock   : Boolean := False;            -- PLL Lock (RO)
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for pllcfg_Type use record
          pllr      at 0 range  0 ..  2;
          Reserved1 at 0 range  3 ..  3;
@@ -197,8 +197,8 @@ pragma Style_Checks (Off);
          plloutdivby1 : Bits_6  := plloutdivby1_SET; -- PLL Final Divide By 1
          Reserved2    : Bits_18 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for plloutdiv_Type use record
          plloutdiv    at 0 range  0 ..  5;
          Reserved1    at 0 range  6 ..  7;
@@ -233,8 +233,8 @@ pragma Style_Checks (Off);
          lfroscen   : Boolean := True;           -- Ring Oscillator Enable
          lfroscrdy  : Boolean := False;          -- Ring Oscillator Ready
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for lfrosccfg_Type use record
          lfroscdiv  at 0 range  0 ..  5;
          Reserved1  at 0 range  6 .. 15;
@@ -254,8 +254,8 @@ pragma Style_Checks (Off);
          Reserved            : Bits_30 := 0;
          lfextclk_mux_status : Boolean := False;               -- Setting of the aon_lfclksel pin (RO)
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for lfclkmux_Type use record
          lfextclk_sel        at 0 range  0 ..  0;
          Reserved            at 0 range  1 .. 30;
@@ -313,8 +313,8 @@ pragma Style_Checks (Off);
          MSIP     : Boolean;      -- Machine-mode software interrupt
          Reserved : Bits_31 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for msip_Type use record
          MSIP     at 0 range 0 ..  0;
          Reserved at 0 range 1 .. 31;
@@ -416,7 +416,7 @@ pragma Style_Checks (Off);
          Reserved : Bits_29 := 0;
       end record
          with Bit_Order            => Low_Order_First,
-              Size                 => 32,
+              Object_Size          => 32,
               Volatile_Full_Access => True;
       for priority_Type use record
          Priority at 0 range 0 ..  2;
@@ -463,8 +463,8 @@ pragma Style_Checks (Off);
          Threshold : Bits_3;       -- Sets the priority threshold
          Reserved  : Bits_29 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for threshold_Type use record
          Threshold at 0 range 0 ..  2;
          Reserved  at 0 range 3 .. 31;
@@ -514,8 +514,8 @@ pragma Style_Checks (Off);
          tacc     : Boolean := False;   -- Read access time
          Reserved : Bits_26 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for rsctrl_Type use record
          scale    at 0 range 0 ..  2;
          tas      at 0 range 3 ..  3;
@@ -620,8 +620,8 @@ pragma Style_Checks (Off);
          wdogip0       : Boolean;          -- Interrupt 0 Pending
          Reserved4     : Bits_3  := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for wdogcfg_Type use record
          wdogscale     at 0 range  0 ..  3;
          Reserved1     at 0 range  4 ..  7;
@@ -641,8 +641,8 @@ pragma Style_Checks (Off);
          wdogcmp0 : Unsigned_16;      -- Comparator 0
          Reserved : Bits_16     := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for wdogcmp_Type use record
          wdogcmp0 at 0 range  0 .. 15;
          Reserved at 0 range 16 .. 31;
@@ -715,7 +715,7 @@ pragma Style_Checks (Off);
          Reserved     : Bits_23 := 0;
       end record
          with Bit_Order            => Low_Order_First,
-              Size                 => 32,
+              Object_Size          => 32,
               Volatile_Full_Access => True;
       for pmu_sleep_wakeup_iX_Type use record
          delaym       at 0 range 0 ..  3;
@@ -755,8 +755,8 @@ pragma Style_Checks (Off);
          awakeup  : Boolean;      -- ??? Analog input wakeup
          Reserved : Bits_29 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for pmuie_Type use record
          rtc      at 0 range 0 ..  0;
          dwakeup  at 0 range 1 ..  1;
@@ -780,8 +780,8 @@ pragma Style_Checks (Off);
          wdogreset : Boolean; -- Watchdog timer reset
          Reserved2 : Bits_21;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for pmucause_Type use record
          reset     at 0 range  0 ..  0;
          rtc       at 0 range  1 ..  1;
@@ -833,8 +833,8 @@ pragma Style_Checks (Off);
          rtcip0      : Boolean;      -- Interrupt 0 Pending
          Reserved3   : Bits_3  := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for rtccfg_Type use record
          rtcscale    at 0 range  0 ..  3;
          Reserved1   at 0 range  4 .. 11;
@@ -1037,8 +1037,8 @@ pragma Style_Checks (Off);
          Reserved : Bits_23    := 0;
          full     : Boolean    := False; -- Transmit FIFO full (RO)
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for txdata_Type use record
          txdata   at 0 range  0 ..  7;
          Reserved at 0 range  8 .. 30;
@@ -1052,8 +1052,8 @@ pragma Style_Checks (Off);
          Reserved : Bits_23    := 0;
          empty    : Boolean    := False; -- Receive FIFO empty (RO)
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for rxdata_Type use record
          rxdata   at 0 range  0 ..  7;
          Reserved at 0 range  8 .. 30;
@@ -1072,8 +1072,8 @@ pragma Style_Checks (Off);
          txcnt     : Bits_3;       -- Transmit watermark level
          Reserved2 : Bits_13 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for txctrl_Type use record
          txen      at 0 range  0 ..  0;
          nstop     at 0 range  1 ..  1;
@@ -1090,8 +1090,8 @@ pragma Style_Checks (Off);
          rxcnt     : Bits_3;       -- Receive watermark level
          Reserved2 : Bits_13 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for rxctrl_Type use record
          rxen      at 0 range  0 ..  0;
          Reserved1 at 0 range  1 .. 15;
@@ -1106,8 +1106,8 @@ pragma Style_Checks (Off);
          rxwm     : Boolean;      -- Receive watermark interrupt enable
          Reserved : Bits_30 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for ie_Type use record
          txwm     at 0 range 0 ..  0;
          rxwm     at 0 range 1 ..  1;
@@ -1119,8 +1119,8 @@ pragma Style_Checks (Off);
          rxwm     : Boolean;      -- Receive watermark interrupt pending
          Reserved : Bits_30 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for ip_Type use record
          txwm     at 0 range 0 ..  0;
          rxwm     at 0 range 1 ..  1;
@@ -1133,8 +1133,8 @@ pragma Style_Checks (Off);
          div      : Unsigned_16;      -- Baud rate divisor.
          Reserved : Bits_16     := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for div_Type use record
          div      at 0 range  0 .. 15;
          Reserved at 0 range 16 .. 31;
@@ -1151,7 +1151,7 @@ pragma Style_Checks (Off);
          ip     : ip_Type     with Volatile_Full_Access => True;
          div    : div_Type    with Volatile_Full_Access => True;
       end record
-         with Size => 7 * 32;
+         with Object_Size => 7 * 32;
       for UART_Type use record
          txdata at 16#00# range 0 .. 31;
          rxdata at 16#04# range 0 .. 31;
@@ -1204,8 +1204,8 @@ pragma Style_Checks (Off);
          div      : Bits_12 := sckdiv_div8;
          Reserved : Bits_20 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for sckdiv_Type use record
          div      at 0 range  0 .. 11;
          Reserved at 0 range 12 .. 31;
@@ -1231,8 +1231,8 @@ pragma Style_Checks (Off);
          pol      : Bits_1  := 0; -- Serial clock polarity
          Reserved : Bits_30 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for sckmode_Type use record
          pha      at 0 range 0 ..  0;
          pol      at 0 range 1 ..  1;
@@ -1249,8 +1249,8 @@ pragma Style_Checks (Off);
          mode     : Bits_2  := 0; -- Chip select mode
          Reserved : Bits_30 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for csmode_Type use record
          mode     at 0 range 0 ..  1;
          Reserved at 0 range 2 .. 31;
@@ -1264,8 +1264,8 @@ pragma Style_Checks (Off);
          sckcs     : Unsigned_8 := 1; -- SCK to CS Delay
          Reserved2 : Bits_8     := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for delay0_Type use record
          cssck     at 0 range  0 ..  7;
          Reserved1 at 0 range  8 .. 15;
@@ -1279,8 +1279,8 @@ pragma Style_Checks (Off);
          interxfr  : Unsigned_8 := 0; -- Maximum interframe delay
          Reserved2 : Bits_8     := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for delay1_Type use record
          intercs   at 0 range  0 ..  7;
          Reserved1 at 0 range  8 .. 15;
@@ -1304,8 +1304,8 @@ pragma Style_Checks (Off);
          len       : Bits_4     := 8;            -- Number of bits per frame
          Reserved2 : Bits_12    := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for fmt_Type use record
          proto     at 0 range  0 ..  1;
          endian    at 0 range  2 ..  2;
@@ -1322,8 +1322,8 @@ pragma Style_Checks (Off);
          Reserved : Bits_23    := 0;
          full     : Boolean    := False; -- FIFO full flag (RO)
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for txdata_Type use record
          txdata   at 0 range  0 ..  7;
          Reserved at 0 range  8 .. 30;
@@ -1337,8 +1337,8 @@ pragma Style_Checks (Off);
          Reserved : Bits_23    := 0;
          empty    : Boolean    := False; -- FIFO empty flag (RO)
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for rxdata_Type use record
          rxdata   at 0 range  0 ..  7;
          Reserved at 0 range  8 .. 30;
@@ -1351,8 +1351,8 @@ pragma Style_Checks (Off);
          txmark   : Bits_3  := 0; -- Transmit watermark.
          Reserved : Bits_29 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for txmark_Type use record
          txmark   at 0 range 0 ..  2;
          Reserved at 0 range 3 .. 31;
@@ -1364,8 +1364,8 @@ pragma Style_Checks (Off);
          rxmark   : Bits_3  := 0; -- Receive watermark
          Reserved : Bits_29 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for rxmark_Type use record
          rxmark   at 0 range 0 ..  2;
          Reserved at 0 range 3 .. 31;
@@ -1378,8 +1378,8 @@ pragma Style_Checks (Off);
          rxwm     : Boolean := False; -- Receive watermark enable
          Reserved : Bits_30 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for ie_Type use record
          txwm     at 0 range 0 ..  0;
          rxwm     at 0 range 1 ..  1;
@@ -1391,8 +1391,8 @@ pragma Style_Checks (Off);
          rxwm     : Boolean := False; -- Receive watermark pending
          Reserved : Bits_30 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for ip_Type use record
          txwm     at 0 range 0 ..  0;
          rxwm     at 0 range 1 ..  1;
@@ -1405,8 +1405,8 @@ pragma Style_Checks (Off);
          en       : Boolean := True; -- SPI Flash Mode Select
          Reserved : Bits_31 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for fctrl_Type use record
          en       at 0 range 0 ..  0;
          Reserved at 0 range 1 .. 31;
@@ -1425,8 +1425,8 @@ pragma Style_Checks (Off);
          cmd_code   : Unsigned_8 := 3;            -- Value of command byte
          pad_code   : Unsigned_8 := 0;            -- First 8 bits to transmit during dummy cycles
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for ffmt_Type use record
          cmd_en     at 0 range  0 ..  0;
          addr_len   at 0 range  1 ..  3;
@@ -1459,7 +1459,7 @@ pragma Style_Checks (Off);
          ie      : ie_Type      with Volatile_Full_Access => True;
          ip      : ip_Type      with Volatile_Full_Access => True;
       end record
-         with Size => 16#78# * 8;
+         with Object_Size => 16#78# * 8;
       for SPI_Type use record
          sckdiv  at 16#00# range 0 .. 31;
          sckmode at 16#04# range 0 .. 31;
@@ -1522,8 +1522,8 @@ pragma Style_Checks (Off);
          pwmcount : Bits_23;      -- PWM count register. cmpwidth + 15 bits wide.
          Reserved : Bits_9  := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for pwmcount8_Type use record
          pwmcount at 0 range  0 .. 22;
          Reserved at 0 range 23 .. 31;
@@ -1533,8 +1533,8 @@ pragma Style_Checks (Off);
          pwmcount : Bits_31;      -- PWM count register. cmpwidth + 15 bits wide.
          Reserved : Bits_1  := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for pwmcount16_Type use record
          pwmcount at 0 range  0 .. 30;
          Reserved at 0 range 31 .. 31;
@@ -1566,8 +1566,8 @@ pragma Style_Checks (Off);
          pwmcmp2ip     : Boolean;      -- PWM2 Interrupt Pending
          pwmcmp3ip     : Boolean;      -- PWM3 Interrupt Pending
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for pwmcfg_Type use record
          pwmscale      at 0 range  0 ..  3;
          Reserved1     at 0 range  4 ..  7;
@@ -1599,8 +1599,8 @@ pragma Style_Checks (Off);
          pwms     : Bits_8;       -- Scaled PWM count register. cmpwidth bits wide.
          Reserved : Bits_24 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for pwms8_Type use record
          pwms     at 0 range 0 ..  7;
          Reserved at 0 range 8 .. 31;
@@ -1610,8 +1610,8 @@ pragma Style_Checks (Off);
          pwms     : Bits_16;      -- Scaled PWM count register. cmpwidth bits wide.
          Reserved : Bits_16 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for pwms16_Type use record
          pwms     at 0 range  0 .. 15;
          Reserved at 0 range 16 .. 31;
@@ -1623,8 +1623,8 @@ pragma Style_Checks (Off);
          pwmcmp   : Bits_8;       -- PWM [0 .. 3] Compare Value
          Reserved : Bits_24 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for pwmcmp8_Type use record
          pwmcmp   at 0 range 0 ..  7;
          Reserved at 0 range 8 .. 31;
@@ -1634,8 +1634,8 @@ pragma Style_Checks (Off);
          pwmcmp   : Bits_16;      -- PWM [0 .. 3] Compare Value
          Reserved : Bits_16 := 0;
       end record
-         with Bit_Order => Low_Order_First,
-              Size      => 32;
+         with Bit_Order   => Low_Order_First,
+              Object_Size => 32;
       for pwmcmp16_Type use record
          pwmcmp   at 0 range  0 .. 15;
          Reserved at 0 range 16 .. 31;
@@ -1657,7 +1657,7 @@ pragma Style_Checks (Off);
          pwmcmp2   : pwmcmp8_Type   with Volatile_Full_Access => True;
          pwmcmp3   : pwmcmp8_Type   with Volatile_Full_Access => True;
       end record
-         with Size => 16#30# * 8;
+         with Object_Size => 16#30# * 8;
       for pwm_cmpwidth8_Type use record
          pwmcfg    at 16#00# range 0 .. 31;
          Reserved1 at 16#04# range 0 .. 31;
@@ -1693,7 +1693,7 @@ pragma Style_Checks (Off);
          pwmcmp2   : pwmcmp16_Type   with Volatile_Full_Access => True;
          pwmcmp3   : pwmcmp16_Type   with Volatile_Full_Access => True;
       end record
-         with Size => 16#30# * 8;
+         with Object_Size => 16#30# * 8;
       for pwm_cmpwidth16_Type use record
          pwmcfg    at 16#00# range 0 .. 31;
          Reserved1 at 16#04# range 0 .. 31;
