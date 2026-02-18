@@ -93,8 +93,9 @@ if [ "x${SYMBOL_NMLINE}" = "x" ] ; then
   exit 1
 fi
 
-SYMBOL_VALUE=$(printf "%s\n" "${SYMBOL_NMLINE}" | \
-               sed -e "s|^\([A-Za-z_]\+\) *. *\([0-9A-Fa-f]\+\) *.*\$|\2|")
+SYMBOL_VALUE=$(printf "%s\n" "${SYMBOL_NMLINE}"                            | \
+               sed -e "s|^\([A-Za-z_]\+\) *. *\([0-9A-Fa-f]\+\) *.*\$|\2|" | \
+               tr "[:lower:]" "[:upper:]")
 
 if [ "x${SYMBOL_VALUE}" != "x" ] ; then
   printf "%s0x%s\n" "${PREFIX_STRING}" "${SYMBOL_VALUE}"

@@ -178,7 +178,7 @@ foreach ($line in $lines)
   if ($symbolspec[0] -eq $symbol)
   {
     $found = $true
-    Write-Host "$($prefix_string)0x$($symbolspec[2])"
+    Write-Host "$($prefix_string)0x$($symbolspec[2].ToUpper())"
     break
   }
 }
