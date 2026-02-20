@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2026 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -59,15 +59,6 @@ package body BSP
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- Timer_Reload
-   ----------------------------------------------------------------------------
-   procedure Timer_Reload
-      is
-   begin
-      RPI3.SYSTEM_TIMER.C1 := RPI3.SYSTEM_TIMER.CLO + Timer_Constant;
-   end Timer_Reload;
-
-   ----------------------------------------------------------------------------
    -- Number_Of_CPUs
    ----------------------------------------------------------------------------
    function Number_Of_CPUs
@@ -76,6 +67,15 @@ package body BSP
    begin
       return 4;
    end Number_Of_CPUs;
+
+   ----------------------------------------------------------------------------
+   -- Timer_Reload
+   ----------------------------------------------------------------------------
+   procedure Timer_Reload
+      is
+   begin
+      RPI3.SYSTEM_TIMER.C1 := RPI3.SYSTEM_TIMER.CLO + Timer_Constant;
+   end Timer_Reload;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -145,6 +145,7 @@ package body BSP
          Read  => Console_Getchar'Access
          );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
+      -------------------------------------------------------------------------
       Console.Print ("Raspberry Pi 3", NL => True);
       Console.Print (Prefix => "Current EL:   ", Value => Natural (ARMv8A.CurrentEL_Read.EL), NL => True);
       Console.Print (Prefix => "ARM Timer ID: ", Value => RPI3.ARMTIMER_IRQ_ClrAck, NL => True); -- "TMRA"

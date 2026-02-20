@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2026 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -66,8 +66,8 @@ pragma Style_Checks (Off);
       SPI2_Enable     : Boolean;      -- If set the SPI 2 module is enabled.
       Reserved        : Bits_29 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for AUXENB_Type use record
       MiniUART_Enable at 0 range 0 ..  0;
       SPI1_Enable     at 0 range 1 ..  1;
@@ -87,8 +87,8 @@ pragma Style_Checks (Off);
       DATA     : Unsigned_8;      -- RX DATA, TX DATA or baud rate LSB (DLAB = 1)
       Reserved : Bits_24    := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for AUX_MU_IO_Type use record
       DATA     at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
@@ -108,8 +108,8 @@ pragma Style_Checks (Off);
       Other_Ints : Bits_6;
       Reserved   : Bits_24 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for AUX_MU_IER_Type use record
       En_RX_Int  at 0 range 0 ..  0;
       En_TX_Int  at 0 range 1 ..  1;
@@ -143,7 +143,7 @@ pragma Style_Checks (Off);
    end record
       with Bit_Order       => Low_Order_First,
            Unchecked_Union => True,
-           Size            => 32;
+           Object_Size     => 32;
    for AUX_MU_IIR_Type use record
       Int_Pend      at 0 range 0 ..  0;
       THRE          at 0 range 1 ..  1;
@@ -173,8 +173,8 @@ pragma Style_Checks (Off);
       DLAB_Access : Boolean;      -- If set the first to Mini UART register give access the the Baudrate register.
       Reserved2   : Bits_24 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for AUX_MU_LCR_Type use record
       Data_Size   at 0 range 0 ..  1;
       Reserved1   at 0 range 2 ..  5;
@@ -197,8 +197,8 @@ pragma Style_Checks (Off);
       Reserved2 : Bits_6  := 0;
       Reserved3 : Bits_24 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for AUX_MU_MCR_Type use record
       Reserved1 at 0 range 0 ..  0;
       RTS       at 0 range 1 ..  1;
@@ -223,8 +223,8 @@ pragma Style_Checks (Off);
       Reserved2         : Bits_1  := 0;
       Reserved3         : Bits_24 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for AUX_MU_LSR_Type use record
       Data_Ready        at 0 range 0 ..  0;
       Receiver_Overrun  at 0 range 1 ..  1;
@@ -249,8 +249,8 @@ pragma Style_Checks (Off);
       Reserved2  : Bits_3  := 0;
       Reserved3  : Bits_24 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for AUX_MU_MSR_Type use record
       Reserved1  at 0 range 0 ..  3;
       CTS_Status at 0 range 4 ..  4;
@@ -270,8 +270,8 @@ pragma Style_Checks (Off);
       Scratch  : Unsigned_8;
       Reserved : Bits_24    := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for AUX_MU_SCRATCH_Type use record
       Scratch  at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
@@ -306,8 +306,8 @@ pragma Style_Checks (Off);
       CTS_Assert_Level   : Bits_1;       -- This bit allows one to invert the CTS auto flow operation polarity.
       Reserved           : Bits_24 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for AUX_MU_CNTL_Type use record
       Receiver_Enable    at 0 range 0 ..  0;
       Transmitter_Enable at 0 range 1 ..  1;
@@ -344,8 +344,8 @@ pragma Style_Checks (Off);
       TX_FIFOLevel : Bits_4;       -- Transmit FIFO fill level
       Reserved3    : Bits_4  := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for AUX_MU_STAT_Type use record
       Sym_Avail    at 0 range  0 ..  0;
       SP_Avail     at 0 range  1 ..  1;
@@ -376,8 +376,8 @@ pragma Style_Checks (Off);
       Baudrate : Unsigned_16;      -- mini UART baudrate counter
       Reserved : Bits_16     := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for AUX_MU_BAUD_Type use record
       Baudrate at 0 range  0 .. 15;
       Reserved at 0 range 16 .. 31;
@@ -415,8 +415,8 @@ pragma Style_Checks (Off);
       FSEL9    : Bits_3;
       Reserved : Bits_2;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GPFSEL0_Type use record
       FSEL0    at 0 range  0 ..  2;
       FSEL1    at 0 range  3 ..  5;
@@ -450,8 +450,8 @@ pragma Style_Checks (Off);
       FSEL19   : Bits_3;
       Reserved : Bits_2;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GPFSEL1_Type use record
       FSEL10   at 0 range  0 ..  2;
       FSEL11   at 0 range  3 ..  5;
@@ -485,8 +485,8 @@ pragma Style_Checks (Off);
       FSEL29   : Bits_3;
       Reserved : Bits_2;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GPFSEL2_Type use record
       FSEL20   at 0 range  0 ..  2;
       FSEL21   at 0 range  3 ..  5;
@@ -520,8 +520,8 @@ pragma Style_Checks (Off);
       FSEL39   : Bits_3;
       Reserved : Bits_2;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GPFSEL3_Type use record
       FSEL30   at 0 range  0 ..  2;
       FSEL31   at 0 range  3 ..  5;
@@ -555,8 +555,8 @@ pragma Style_Checks (Off);
       FSEL49   : Bits_3;
       Reserved : Bits_2;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GPFSEL4_Type use record
       FSEL40   at 0 range  0 ..  2;
       FSEL41   at 0 range  3 ..  5;
@@ -584,8 +584,8 @@ pragma Style_Checks (Off);
       FSEL53   : Bits_3;
       Reserved : Bits_20;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GPFSEL5_Type use record
       FSEL50   at 0 range  0 ..  2;
       FSEL51   at 0 range  3 ..  5;
@@ -634,8 +634,8 @@ pragma Style_Checks (Off);
       SET30 : Boolean;
       SET31 : Boolean;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GPSET0_Type use record
       SET0  at 0 range  0 ..  0;
       SET1  at 0 range  1 ..  1;
@@ -702,8 +702,8 @@ pragma Style_Checks (Off);
       SET53    : Boolean;
       Reserved : Bits_10;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GPSET1_Type use record
       SET32    at 0 range  0 ..  0;
       SET33    at 0 range  1 ..  1;
@@ -770,8 +770,8 @@ pragma Style_Checks (Off);
       CLR30 : Boolean;
       CLR31 : Boolean;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GPCLR0_Type use record
       CLR0  at 0 range  0 ..  0;
       CLR1  at 0 range  1 ..  1;
@@ -838,8 +838,8 @@ pragma Style_Checks (Off);
       CLR53    : Boolean;
       Reserved : Bits_10;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GPCLR1_Type use record
       CLR32    at 0 range  0 ..  0;
       CLR33    at 0 range  1 ..  1;
@@ -981,8 +981,8 @@ pragma Style_Checks (Off);
       M3       : Boolean;      -- System Timer Match 3
       Reserved : Bits_28 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for CS_Type use record
       M0       at 0 range 0 ..  0;
       M1       at 0 range 1 ..  1;
@@ -1000,7 +1000,7 @@ pragma Style_Checks (Off);
       C2  : Unsigned_32 with Volatile_Full_Access => True; -- System Timer Compare 2
       C3  : Unsigned_32 with Volatile_Full_Access => True; -- System Timer Compare 3
    end record
-      with Size => 7 * 32;
+      with Object_Size => 7 * 32;
    for System_Timer_Type use record
       CS  at 16#00# range 0 .. 31;
       CLO at 16#04# range 0 .. 31;
@@ -1077,8 +1077,8 @@ pragma Style_Checks (Off);
       Channel : Bits_4;
       Data    : Bits_28;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for Message_Type use record
       Channel at 0 range 0 ..  3;
       Data    at 0 range 4 .. 31;
@@ -1089,8 +1089,8 @@ pragma Style_Checks (Off);
       Empty    : Boolean;
       Full     : Boolean;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for Message_Status_Type use record
       Reserved at 0 range  0 .. 29;
       Empty    at 0 range 30 .. 30;
