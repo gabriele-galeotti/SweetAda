@@ -5712,6 +5712,15 @@ pragma Style_Checks (Off);
 
    -- 38.3.5 I2C Data I/O register (I2Cx_D)
 
+   type I2Cx_D_Type is record
+      DATA : Unsigned_8; -- Data
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for I2Cx_D_Type use record
+      DATA at 0 range 0 .. 7;
+   end record;
+
    -- 38.3.6 I2C Control Register 2 (I2Cx_C2)
 
    SBRC_FOLLOW : constant := 0; -- The slave baud rate follows the master baud rate and clock stretching may occur
@@ -5813,23 +5822,42 @@ pragma Style_Checks (Off);
    end record;
 
    -- 38.3.11 I2C SCL Low Timeout Register High (I2Cx_SLTH)
+
+   type I2Cx_SLTH_Type is record
+      SSLT : Unsigned_8; -- Most significant byte of SCL low timeout value that determines the timeout period of SCL low.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for I2Cx_SLTH_Type use record
+      SSLT at 0 range 0 .. 7;
+   end record;
+
    -- 38.3.12 I2C SCL Low Timeout Register Low (I2Cx_SLTL)
+
+   type I2Cx_SLTL_Type is record
+      SSLT : Unsigned_8; -- Least significant byte of SCL low timeout value that determines the timeout period of SCL low.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for I2Cx_SLTL_Type use record
+      SSLT at 0 range 0 .. 7;
+   end record;
 
    -- 38.3 Memory map/register definition
 
    type I2C_Type is record
-      A1   : I2Cx_A1_Type  with Volatile_Full_Access => True;
-      F    : I2Cx_F_Type   with Volatile_Full_Access => True;
-      C1   : I2Cx_C1_Type  with Volatile_Full_Access => True;
-      S    : I2Cx_S_Type   with Volatile_Full_Access => True;
-      D    : Unsigned_8    with Volatile_Full_Access => True;
-      C2   : I2Cx_C2_Type  with Volatile_Full_Access => True;
-      FLT  : I2Cx_FLT_Type with Volatile_Full_Access => True;
-      RA   : I2Cx_RA_Type  with Volatile_Full_Access => True;
-      SMB  : I2Cx_SMB_Type with Volatile_Full_Access => True;
-      A2   : I2Cx_A2_Type  with Volatile_Full_Access => True;
-      SLTH : Unsigned_8    with Volatile_Full_Access => True;
-      SLTL : Unsigned_8    with Volatile_Full_Access => True;
+      A1   : I2Cx_A1_Type   with Volatile_Full_Access => True;
+      F    : I2Cx_F_Type    with Volatile_Full_Access => True;
+      C1   : I2Cx_C1_Type   with Volatile_Full_Access => True;
+      S    : I2Cx_S_Type    with Volatile_Full_Access => True;
+      D    : I2Cx_D_Type    with Volatile_Full_Access => True;
+      C2   : I2Cx_C2_Type   with Volatile_Full_Access => True;
+      FLT  : I2Cx_FLT_Type  with Volatile_Full_Access => True;
+      RA   : I2Cx_RA_Type   with Volatile_Full_Access => True;
+      SMB  : I2Cx_SMB_Type  with Volatile_Full_Access => True;
+      A2   : I2Cx_A2_Type   with Volatile_Full_Access => True;
+      SLTH : I2Cx_SLTH_Type with Volatile_Full_Access => True;
+      SLTL : I2Cx_SLTL_Type with Volatile_Full_Access => True;
    end record
       with Object_Size => 16#C# * 8,
            Volatile    => True;
