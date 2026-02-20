@@ -250,6 +250,27 @@ pragma Style_Checks (Off);
    function ACCDATA_EL1_Read return ACCDATA_EL1_Type is function MRS_Read is new MRS ("accdata_el1", ACCDATA_EL1_Type); begin return MRS_Read; end ACCDATA_EL1_Read;
    procedure ACCDATA_EL1_Write (Value : in ACCDATA_EL1_Type) is procedure MSR_Write is new MSR ("accdata_el1", ACCDATA_EL1_Type); begin MSR_Write (Value); end ACCDATA_EL1_Write;
 
+   function ACTLR_EL1_Read return ACTLR_EL1_Type is function MRS_Read is new MRS ("actlr_el1", ACTLR_EL1_Type); begin return MRS_Read; end ACTLR_EL1_Read;
+   procedure ACTLR_EL1_Write (Value : in ACTLR_EL1_Type) is procedure MSR_Write is new MSR ("actlr_el1", ACTLR_EL1_Type); begin MSR_Write (Value); end ACTLR_EL1_Write;
+   function ACTLR_EL2_Read return ACTLR_EL2_Type is function MRS_Read is new MRS ("actlr_el2", ACTLR_EL2_Type); begin return MRS_Read; end ACTLR_EL2_Read;
+   procedure ACTLR_EL2_Write (Value : in ACTLR_EL2_Type) is procedure MSR_Write is new MSR ("actlr_el2", ACTLR_EL2_Type); begin MSR_Write (Value); end ACTLR_EL2_Write;
+   function ACTLR_EL3_Read return ACTLR_EL3_Type is function MRS_Read is new MRS ("actlr_el3", ACTLR_EL3_Type); begin return MRS_Read; end ACTLR_EL3_Read;
+   procedure ACTLR_EL3_Write (Value : in ACTLR_EL3_Type) is procedure MSR_Write is new MSR ("actlr_el3", ACTLR_EL3_Type); begin MSR_Write (Value); end ACTLR_EL3_Write;
+
+   function AFSR0_EL1_Read return AFSR0_EL1_Type is function MRS_Read is new MRS ("afsr0_el1", AFSR0_EL1_Type); begin return MRS_Read; end AFSR0_EL1_Read;
+   procedure AFSR0_EL1_Write (Value : in AFSR0_EL1_Type) is procedure MSR_Write is new MSR ("afsr0_el1", AFSR0_EL1_Type); begin MSR_Write (Value); end AFSR0_EL1_Write;
+   function AFSR0_EL2_Read return AFSR0_EL2_Type is function MRS_Read is new MRS ("afsr0_el2", AFSR0_EL2_Type); begin return MRS_Read; end AFSR0_EL2_Read;
+   procedure AFSR0_EL2_Write (Value : in AFSR0_EL2_Type) is procedure MSR_Write is new MSR ("afsr0_el2", AFSR0_EL2_Type); begin MSR_Write (Value); end AFSR0_EL2_Write;
+   function AFSR0_EL3_Read return AFSR0_EL3_Type is function MRS_Read is new MRS ("afsr0_el3", AFSR0_EL3_Type); begin return MRS_Read; end AFSR0_EL3_Read;
+   procedure AFSR0_EL3_Write (Value : in AFSR0_EL3_Type) is procedure MSR_Write is new MSR ("afsr0_el3", AFSR0_EL3_Type); begin MSR_Write (Value); end AFSR0_EL3_Write;
+
+   function AFSR1_EL1_Read return AFSR1_EL1_Type is function MRS_Read is new MRS ("afsr1_el1", AFSR1_EL1_Type); begin return MRS_Read; end AFSR1_EL1_Read;
+   procedure AFSR1_EL1_Write (Value : in AFSR1_EL1_Type) is procedure MSR_Write is new MSR ("afsr1_el1", AFSR1_EL1_Type); begin MSR_Write (Value); end AFSR1_EL1_Write;
+   function AFSR1_EL2_Read return AFSR1_EL2_Type is function MRS_Read is new MRS ("afsr1_el2", AFSR1_EL2_Type); begin return MRS_Read; end AFSR1_EL2_Read;
+   procedure AFSR1_EL2_Write (Value : in AFSR1_EL2_Type) is procedure MSR_Write is new MSR ("afsr1_el2", AFSR1_EL2_Type); begin MSR_Write (Value); end AFSR1_EL2_Write;
+   function AFSR1_EL3_Read return AFSR1_EL3_Type is function MRS_Read is new MRS ("afsr1_el3", AFSR1_EL3_Type); begin return MRS_Read; end AFSR1_EL3_Read;
+   procedure AFSR1_EL3_Write (Value : in AFSR1_EL3_Type) is procedure MSR_Write is new MSR ("afsr1_el3", AFSR1_EL3_Type); begin MSR_Write (Value); end AFSR1_EL3_Write;
+
 #if CCSIDR2_EL1
    function CCSIDR2_EL1_Read return CCSIDR2_EL1_Type is function MRS_Read is new MRS ("ccsidr2_el1", CCSIDR2_EL1_Type); begin return MRS_Read; end CCSIDR2_EL1_Read;
 #end if;
@@ -281,6 +302,11 @@ pragma Style_Checks (Off);
 
    function HCR_EL2_Read return HCR_EL2_Type is function MRS_Read is new MRS ("hcr_el2", HCR_EL2_Type); begin return MRS_Read; end HCR_EL2_Read;
    procedure HCR_EL2_Write (Value : in HCR_EL2_Type) is procedure MSR_Write is new MSR ("hcr_el2", HCR_EL2_Type); begin MSR_Write (Value); end HCR_EL2_Write;
+
+#if HCRX_EL2
+   function HCRX_EL2_Read return HCRX_EL2_Type is function MRS_Read is new MRS ("hcrx_el2", HCRX_EL2_Type); begin return MRS_Read; end HCRX_EL2_Read;
+   procedure HCRX_EL2_Write (Value : in HCRX_EL2_Type) is procedure MSR_Write is new MSR ("hcrx_el2", HCRX_EL2_Type); begin MSR_Write (Value); end HCRX_EL2_Write;
+#end if;
 
    function ID_AA64ISAR0_EL1_Read return ID_AA64ISAR0_EL1_Type is function MRS_Read is new MRS ("id_aa64isar0_el1", ID_AA64ISAR0_EL1_Type); begin return MRS_Read; end ID_AA64ISAR0_EL1_Read;
    function ID_AA64ISAR1_EL1_Read return ID_AA64ISAR1_EL1_Type is function MRS_Read is new MRS ("id_aa64isar1_el1", ID_AA64ISAR1_EL1_Type); begin return MRS_Read; end ID_AA64ISAR1_EL1_Read;

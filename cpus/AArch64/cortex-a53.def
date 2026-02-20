@@ -6,6 +6,7 @@ ELR_EL12     := False
 CCSIDR2_EL1  := False
 CPACR_EL12   := False
 FAR_EL12     := False
+HCRX_EL2     := False
 TCR2_EL1     := False
 TCR2_EL2     := False
 TTBR1_EL2    := False

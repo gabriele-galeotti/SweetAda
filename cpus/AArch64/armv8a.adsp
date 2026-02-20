@@ -419,12 +419,159 @@ pragma Style_Checks (Off);
    -- D19.2.2 ACTLR_EL1, Auxiliary Control Register (EL1)
    -- D19.2.3 ACTLR_EL2, Auxiliary Control Register (EL2)
    -- D19.2.4 ACTLR_EL3, Auxiliary Control Register (EL3)
+
+   type ACTLR_EL1_Type is record
+      Impldefd : Bits_64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for ACTLR_EL1_Type use record
+      Impldefd at 0 range 0 .. 63;
+   end record;
+
+   function ACTLR_EL1_Read
+      return ACTLR_EL1_Type
+      with Inline => True;
+   procedure ACTLR_EL1_Write
+      (Value : in ACTLR_EL1_Type)
+      with Inline => True;
+
+   type ACTLR_EL2_Type is record
+      Impldefd : Bits_64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for ACTLR_EL2_Type use record
+      Impldefd at 0 range 0 .. 63;
+   end record;
+
+   function ACTLR_EL2_Read
+      return ACTLR_EL2_Type
+      with Inline => True;
+   procedure ACTLR_EL2_Write
+      (Value : in ACTLR_EL2_Type)
+      with Inline => True;
+
+   type ACTLR_EL3_Type is record
+      Impldefd : Bits_64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for ACTLR_EL3_Type use record
+      Impldefd at 0 range 0 .. 63;
+   end record;
+
+   function ACTLR_EL3_Read
+      return ACTLR_EL3_Type
+      with Inline => True;
+   procedure ACTLR_EL3_Write
+      (Value : in ACTLR_EL3_Type)
+      with Inline => True;
+
    -- D19.2.5 AFSR0_EL1, Auxiliary Fault Status Register 0 (EL1)
    -- D19.2.6 AFSR0_EL2, Auxiliary Fault Status Register 0 (EL2)
    -- D19.2.7 AFSR0_EL3, Auxiliary Fault Status Register 0 (EL3)
+
+   type AFSR0_EL1_Type is record
+      Impldefd : Bits_64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for AFSR0_EL1_Type use record
+      Impldefd at 0 range 0 .. 63;
+   end record;
+
+   function AFSR0_EL1_Read
+      return AFSR0_EL1_Type
+      with Inline => True;
+   procedure AFSR0_EL1_Write
+      (Value : in AFSR0_EL1_Type)
+      with Inline => True;
+
+   type AFSR0_EL2_Type is record
+      Impldefd : Bits_64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for AFSR0_EL2_Type use record
+      Impldefd at 0 range 0 .. 63;
+   end record;
+
+   function AFSR0_EL2_Read
+      return AFSR0_EL2_Type
+      with Inline => True;
+   procedure AFSR0_EL2_Write
+      (Value : in AFSR0_EL2_Type)
+      with Inline => True;
+
+   type AFSR0_EL3_Type is record
+      Impldefd : Bits_64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for AFSR0_EL3_Type use record
+      Impldefd at 0 range 0 .. 63;
+   end record;
+
+   function AFSR0_EL3_Read
+      return AFSR0_EL3_Type
+      with Inline => True;
+   procedure AFSR0_EL3_Write
+      (Value : in AFSR0_EL3_Type)
+      with Inline => True;
+
    -- D19.2.8 AFSR1_EL1, Auxiliary Fault Status Register 1 (EL1)
    -- D19.2.9 AFSR1_EL2, Auxiliary Fault Status Register 1 (EL2)
    -- D19.2.10 AFSR1_EL3, Auxiliary Fault Status Register 1 (EL3)
+
+   type AFSR1_EL1_Type is record
+      Impldefd : Bits_64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for AFSR1_EL1_Type use record
+      Impldefd at 0 range 0 .. 63;
+   end record;
+
+   function AFSR1_EL1_Read
+      return AFSR1_EL1_Type
+      with Inline => True;
+   procedure AFSR1_EL1_Write
+      (Value : in AFSR1_EL1_Type)
+      with Inline => True;
+
+   type AFSR1_EL2_Type is record
+      Impldefd : Bits_64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for AFSR1_EL2_Type use record
+      Impldefd at 0 range 0 .. 63;
+   end record;
+
+   function AFSR1_EL2_Read
+      return AFSR1_EL2_Type
+      with Inline => True;
+   procedure AFSR1_EL2_Write
+      (Value : in AFSR1_EL2_Type)
+      with Inline => True;
+
+   type AFSR1_EL3_Type is record
+      Impldefd : Bits_64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for AFSR1_EL3_Type use record
+      Impldefd at 0 range 0 .. 63;
+   end record;
+
+   function AFSR1_EL3_Read
+      return AFSR1_EL3_Type
+      with Inline => True;
+   procedure AFSR1_EL3_Write
+      (Value : in AFSR1_EL3_Type)
+      with Inline => True;
+
    -- D19.2.11 AIDR_EL1, Auxiliary ID Register
    -- D19.2.12 AMAIR_EL1, Auxiliary Memory Attribute Indirection Register (EL1)
    -- D19.2.13 AMAIR_EL2, Auxiliary Memory Attribute Indirection Register (EL2)
@@ -865,7 +1012,92 @@ pragma Style_Checks (Off);
       (Value : in HCR_EL2_Type)
       with Inline => True;
 
+#if HCRX_EL2
    -- D19.2.49 HCRX_EL2, Extended Hypervisor Configuration Register
+
+   EnAS0_ST64BV0_EL0_TRAPPED : constant := 0; -- Execution of an ST64BV0 instruction at EL0 is trapped to EL2 if the execution is not trapped by SCTLR_EL1.EnAS0.
+   EnAS0_NOTRAPPED           : constant := 1; -- This control does not cause any instructions to be trapped.
+
+   EnALS_LDST64B_EL0_TRAPPED : constant := 0; -- Execution of an LD64B or ST64B instruction at EL0 is trapped to EL2 if the execution is not trapped by SCTLR_EL1.EnALS.
+   EnALS_NOTRAPPED           : constant := 1; -- This control does not cause any instructions to be trapped.
+
+   EnASR_ST64BV_EL0_TRAPPED : constant := 0; -- Execution of an ST64BV instruction at EL0 is trapped to EL2 if the execution is not trapped by SCTLR_EL1.EnASR.
+   EnASR_NOTRAPPED          : constant := 1; -- This control does not cause any instructions to be trapped.
+
+   FnXS_NONE      : constant := 0; -- This control does not have any effect on the behavior of the TLBI maintenance instructions.
+   FnXS_TLBI_SAME : constant := 1; -- A TLBI maintenance instruction without the nXS qualifier executed at EL1 behaves in the same way as the corresponding TLBI maintenance instruction with the nXS qualifier.
+
+   FGTnXS_APPLIES    : constant := 0; -- The fine-grained trap in the HFGITR_EL2 that applies to a TLBI maintenance instruction at EL1 also applies to the corresponding TLBI instruction with the nXS qualifier at EL1.
+   FGTnXS_NOTAPPLIES : constant := 1; -- The fine-grained trap in the HFGITR_EL2 that applies to a TLBI maintenance instruction at EL1 does not apply to the corresponding TLBI instruction with the nXS qualifier at EL1.
+
+   SMPME_SMPRI_EL1         : constant := 0; -- The effective priority value is taken from SMPRI_EL1.Priority.
+   SMPME_EL01_SMPRIMAP_EL2 : constant := 1; -- The effective priority value is: When the current Exception level is EL2 or EL3, the value of SMPRI_EL1.Priority. When the current Exception level is EL0 or EL1, the value of the SMPRIMAP_EL2 field corresponding to the value of SMPRI_EL1.Priority.
+
+   TALLINT_NOTRAPPED   : constant := 0; -- This control does not cause any instructions to be trapped.
+   TALLINT_EL2_TRAPPED : constant := 1; -- The specified MSR accesses at EL1 using AArch64 are trapped to EL2.
+
+   CMOW_NOFAULT     : constant := 0; -- These instructions executed at EL1 or EL0 with stage 2 read permission, but without stage 2 write permission do not generate a stage 2 permission fault.
+   CMOW_STAGE2FAULT : constant := 1; -- These instructions executed at EL1 or EL0, if enabled as a result of SCTLR_EL1.UCI==1, with stage 2 read permission, but without stage 2 write permission generate a stage 2 permission fault.
+
+   MCE2_EL1 : constant := 0; -- Memory Copy and Memory Set exceptions generated from EL1 are taken to EL1.
+   MCE2_EL2 : constant := 1; -- Memory Copy and Memory Set exceptions generated from EL1 are taken to EL2.
+
+   MSCEn_EL01_UNDEFINED : constant := 0; -- Execution of the Memory Copy and Memory Set instructions is UNDEFINED at EL1 or EL0.
+   MSCEn_NONE           : constant := 1; -- This control does not cause any instructions to be UNDEFINED.
+
+   TCR2En_EL2_TRAPPED : constant := 0; -- Accesses to TCR2_EL1 at EL1 are trapped to EL2, unless the access generates a higher priority exception. The value in TCR2_EL1 is treated as 0.
+   TCR2En_NOTRAPPED   : constant := 1; -- This control does not cause any instructions to be trapped.
+
+   SCTLR2En_EL2_TRAPPED : constant := 0; -- Accesses to SCTLR2_EL1 at EL1 are trapped to EL2, unless the access generates a higher priority exception. The value in SCTLR2_EL1 is treated as 0.
+   SCTLR2En_NOTRAPPED   : constant := 1; -- This control does not cause any instructions to be trapped.
+
+   type HCRX_EL2_Type is record
+      EnAS0     : Bits_1;  -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution of an ST64BV0 instruction at EL0 or EL1 to EL2.
+      EnALS     : Bits_1;  -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution of an LD64B or ST64B instruction at EL0 or EL1 to EL2.
+      EnASR     : Bits_1;  -- When HCR_EL2.{E2H, TGE} != {1, 1}, traps execution of an ST64BV instruction at EL0 or EL1 to EL2.
+      FnXS      : Bits_1;  -- Determines the behavior of TLBI instructions affected by the XS attribute.
+      FGTnXS    : Bits_1;  -- Determines if the fine-grained traps in HFGITR_EL2 that apply to each of the TLBI maintenance instructions that are accessible at EL1 also apply to the corresponding TLBI maintenance instructions with the nXS qualifier.
+      SMPME     : Bits_1;  -- Streaming Mode Priority Mapping Enable.
+      TALLINT   : Bits_1;  -- Traps the following writes at EL1 using AArch64 to EL2, when EL2 is implemented and enabled: MSR (register) writes of ALLINT. MSR (immediate) writes of ALLINT with a value of 1.
+      VINMI     : Boolean; -- Virtual IRQ Interrupt with Superpriority. Enables signaling of virtual IRQ interrupts with Superpriority.
+      VFNMI     : Boolean; -- Virtual FIQ Interrupt with Superpriority. Enables signaling of virtual FIQ interrupts with Superpriority.
+      CMOW      : Bits_1;  -- Controls cache maintenance instruction permission for the following instructions executed at EL1 or EL0. IC IVAU, DC CIVAC, DC CIGDVAC and DC CIGVAC. ICIMVAU, DCCIMVAC.
+      MCE2      : Bits_1;  -- Controls Memory Copy and Memory Set exceptions generated as part of attempting to execute the Memory Copy and Memory Set instructions from EL1.
+      MSCEn     : Bits_1;  -- Memory Set and Memory Copy instructions Enable. Enables execution of the CPY*, SETG*, SETP*, SETM*, and SETE* instructions at EL1 or EL0.
+      Reserved1 : Bits_2;
+      TCR2En    : Bits_1;  -- TCR2_EL1 Enable.
+      SCTLR2En  : Bits_1;  -- SCTLR2_EL1 Enable.
+      Reserved2 : Bits_48;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for HCRX_EL2_Type use record
+      EnAS0     at 0 range  0 ..  0;
+      EnALS     at 0 range  1 ..  1;
+      EnASR     at 0 range  2 ..  2;
+      FnXS      at 0 range  3 ..  3;
+      FGTnXS    at 0 range  4 ..  4;
+      SMPME     at 0 range  5 ..  5;
+      TALLINT   at 0 range  6 ..  6;
+      VINMI     at 0 range  7 ..  7;
+      VFNMI     at 0 range  8 ..  8;
+      CMOW      at 0 range  9 ..  9;
+      MCE2      at 0 range 10 .. 10;
+      MSCEn     at 0 range 11 .. 11;
+      Reserved1 at 0 range 12 .. 13;
+      TCR2En    at 0 range 14 .. 14;
+      SCTLR2En  at 0 range 15 .. 15;
+      Reserved2 at 0 range 16 .. 63;
+   end record;
+
+   function HCRX_EL2_Read
+      return HCRX_EL2_Type
+      with Inline => True;
+   procedure HCRX_EL2_Write
+      (Value : in HCRX_EL2_Type)
+      with Inline => True;
+#end if;
+
    -- D19.2.50 HDFGRTR_EL2, Hypervisor Debug Fine-Grained Read Trap Register
    -- D19.2.51 HDFGWTR_EL2, Hypervisor Debug Fine-Grained Write Trap Register
    -- D19.2.52 HFGITR_EL2, Hypervisor Fine-Grained Instruction Trap Register
@@ -1862,13 +2094,14 @@ pragma Style_Checks (Off);
 
    -- D19.2.94 ISR_EL1, Interrupt Status Register
 
+   -- __INF__ use "I5" instead of "IS"
    type ISR_EL1_Type is record
       Reserved1 : Bits_6;
       F         : Boolean; -- FIQ pending bit.
       I         : Boolean; -- IRQ pending bit.
       A         : Boolean; -- SError interrupt pending bit.
-      F_S       : Boolean; -- FIQ with Superpriority pending bit.
-      I_S       : Boolean; -- IRQ with Superpriority pending bit.
+      FS        : Boolean; -- FIQ with Superpriority pending bit.
+      I5        : Boolean; -- IRQ with Superpriority pending bit.
       Reserved2 : Bits_53;
    end record
       with Bit_Order => Low_Order_First,
@@ -1878,8 +2111,8 @@ pragma Style_Checks (Off);
       F         at 0 range  6 ..  6;
       I         at 0 range  7 ..  7;
       A         at 0 range  8 ..  8;
-      F_S       at 0 range  9 ..  9;
-      I_S       at 0 range 10 .. 10;
+      FS        at 0 range  9 ..  9;
+      I5        at 0 range 10 .. 10;
       Reserved2 at 0 range 11 .. 63;
    end record;
 
