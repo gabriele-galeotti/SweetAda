@@ -76,6 +76,8 @@ exist.
 Sometimes we write "3" in place of "e", e.g., "Rang3" instead of "Range",
 "D3lay" instead of "Delay", "Typ3" instead of "Type".
 
+Sometimes we write "5" in place of "s", e.g., "I5" instead of "IS".
+
 Sometimes we write "7" in place of "t", e.g., "A7" instead of "AT", "ou7"
 instead of "out".
 
