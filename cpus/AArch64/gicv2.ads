@@ -249,40 +249,40 @@ pragma Style_Checks (Off);
    -- 4.3.18 Identification registers
 
    type GICD_ICPIDR2_Type is record
-      ImplDef1 : Bits_4;  -- IMPLEMENTATION DEFINED.
-      ArchRev  : Bits_4;  -- Revision field for the GIC architecture.
-      ImplDef2 : Bits_24; -- IMPLEMENTATION DEFINED.
+      Impldefd1 : Bits_4;  -- IMPLEMENTATION DEFINED.
+      ArchRev   : Bits_4;  -- Revision field for the GIC architecture.
+      Impldefd2 : Bits_24; -- IMPLEMENTATION DEFINED.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 32;
    for GICD_ICPIDR2_Type use record
-      ImplDef1 at 0 range 0 ..  3;
-      ArchRev  at 0 range 4 ..  7;
-      ImplDef2 at 0 range 8 .. 31;
+      Impldefd1 at 0 range 0 ..  3;
+      ArchRev   at 0 range 4 ..  7;
+      Impldefd2 at 0 range 8 .. 31;
    end record;
 
    -- 4.1.2 Distributor register map
 
-pragma Warnings (Off, "* bits of ""GICD_Type"" unused");
    type GICD_Type is record
-      GICD_CTLR       : GICD_CTLR_Type    with Volatile_Full_Access => True;
-      GICD_TYPER      : GICD_TYPER_Type   with Volatile_Full_Access => True;
-      GICD_IIDR       : GICD_IIDR_Type    with Volatile_Full_Access => True;
-      GICD_IGROUPR    : GICD_IGROUPRn_Type    (0 .. 31);
-      GICD_ISENABLER  : GICD_ISENABLERn_Type  (0 .. 31);
-      GICD_ICENABLER  : GICD_ICENABLERn_Type  (0 .. 31);
-      GICD_ISPENDR    : GICD_ISPENDRn_Type    (0 .. 31);
-      GICD_ICPENDR    : GICD_ICPENDRn_Type    (0 .. 31);
-      GICD_ISACTIVER  : GICD_ISACTIVERn_Type  (0 .. 31);
-      GICD_ICACTIVER  : GICD_ICACTIVERn_Type  (0 .. 31);
+      GICD_CTLR       : GICD_CTLR_Type                  with Volatile_Full_Access => True;
+      GICD_TYPER      : GICD_TYPER_Type                 with Volatile_Full_Access => True;
+      GICD_IIDR       : GICD_IIDR_Type                  with Volatile_Full_Access => True;
+      GICD_IGROUPR    : GICD_IGROUPRn_Type (0 .. 31);
+      GICD_ISENABLER  : GICD_ISENABLERn_Type (0 .. 31);
+      GICD_ICENABLER  : GICD_ICENABLERn_Type (0 .. 31);
+      GICD_ISPENDR    : GICD_ISPENDRn_Type (0 .. 31);
+      GICD_ICPENDR    : GICD_ICPENDRn_Type (0 .. 31);
+      GICD_ISACTIVER  : GICD_ISACTIVERn_Type (0 .. 31);
+      GICD_ICACTIVER  : GICD_ICACTIVERn_Type (0 .. 31);
       GICD_IPRIORITYR : GICD_IPRIORITYRn_Type (0 .. 31);
-      GICD_ITARGETSR  : GICD_ITARGETSRn_Type  (0 .. 7);
-      GICD_ICFGR      : GICD_ICFGRn_Type      (0 .. 63);
-      GICD_NSACR      : GICD_NSACRn_Type      (0 .. 63);
-      GICD_SGIR       : GICD_SGIR_Type    with Volatile_Full_Access => True;
-      GICD_CPENDSGIR  : GICD_CPENDSGIRn_Type  (0 .. 1);
-      GICD_SPENDSGIR  : GICD_SPENDSGIRn_Type  (0 .. 1);
-      GICD_ICPIDR2    : GICD_ICPIDR2_Type with Volatile_Full_Access => True;
+      GICD_ITARGETSR  : GICD_ITARGETSRn_Type (0 .. 7);
+      GICD_ICFGR      : GICD_ICFGRn_Type (0 .. 63);
+      GICD_NSACR      : GICD_NSACRn_Type (0 .. 63);
+      GICD_SGIR       : GICD_SGIR_Type                  with Volatile_Full_Access => True;
+      GICD_CPENDSGIR  : GICD_CPENDSGIRn_Type (0 .. 1);
+      GICD_SPENDSGIR  : GICD_SPENDSGIRn_Type (0 .. 1);
+      GICD_ICPIDR2    : GICD_ICPIDR2_Type               with Volatile_Full_Access => True;
+      Unused          : Pad_B20;
    end record
       with Size => 16#1000# * 8;
    for GICD_Type use record
@@ -304,8 +304,8 @@ pragma Warnings (Off, "* bits of ""GICD_Type"" unused");
       GICD_CPENDSGIR  at 16#F10# range 0 .. 2 * 32 - 1;
       GICD_SPENDSGIR  at 16#F20# range 0 .. 2 * 32 - 1;
       GICD_ICPIDR2    at 16#FE8# range 0 .. 31;
+      Unused          at 16#FEC# range 0 .. PAD_B20_SIZE - 1;
    end record;
-pragma Warnings (On, "* bits of ""GICD_Type"" unused");
 
    ----------------------------------------------------------------------------
    -- 4.4 CPU interface register descriptions
