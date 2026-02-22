@@ -197,54 +197,62 @@ pragma Style_Checks (Off);
 
    -- 20.2 Register Maps
 
-pragma Warnings (Off, "* bits of ""GT64120_Type"" unused");
+-- pragma Warnings (Off, "* bits of ""GT64120_Type"" unused");
    type GT64120_Type is record
-      CPU_Interface_Configuration    : CPU_Interface_Configuration_Type with Volatile_Full_Access => True;
-      PCI_0_IO_Low_Decode_Address    : PCI_Low_Decode_Address_Type      with Volatile_Full_Access => True;
-      PCI_0_IO_High_Decode_Address   : PCI_High_Decode_Address_Type     with Volatile_Full_Access => True;
-      PCI_0_MEM0_Low_Decode_Address  : PCI_Low_Decode_Address_Type      with Volatile_Full_Access => True;
-      PCI_0_MEM0_High_Decode_Address : PCI_High_Decode_Address_Type     with Volatile_Full_Access => True;
-      ISD                            : Unsigned_32                      with Volatile_Full_Access => True;
-      PCI_0_MEM1_Low_Decode_Address  : PCI_Low_Decode_Address_Type      with Volatile_Full_Access => True;
-      PCI_0_MEM1_High_Decode_Address : PCI_High_Decode_Address_Type     with Volatile_Full_Access => True;
-      PCI_1_IO_Low_Decode_Address    : PCI_Low_Decode_Address_Type      with Volatile_Full_Access => True;
-      PCI_1_IO_High_Decode_Address   : PCI_High_Decode_Address_Type     with Volatile_Full_Access => True;
-      PCI_1_MEM0_Low_Decode_Address  : PCI_Low_Decode_Address_Type      with Volatile_Full_Access => True;
-      PCI_1_MEM0_High_Decode_Address : PCI_High_Decode_Address_Type     with Volatile_Full_Access => True;
-      PCI_1_MEM1_Low_Decode_Address  : PCI_Low_Decode_Address_Type      with Volatile_Full_Access => True;
-      PCI_1_MEM1_High_Decode_Address : PCI_High_Decode_Address_Type     with Volatile_Full_Access => True;
-      MULTIGT                        : Unsigned_32                      with Volatile_Full_Access => True;
-      SDRAMC                         : Unsigned_32                      with Volatile_Full_Access => True;
-      SDRAMOM                        : Unsigned_32                      with Volatile_Full_Access => True;
-      SDRAMBM                        : Unsigned_32                      with Volatile_Full_Access => True;
-      SDRAMAD                        : Unsigned_32                      with Volatile_Full_Access => True;
-      PCI_0_Command                  : PCI_0_Command_Type               with Volatile_Full_Access => True;
+      CPU_Interface_Configuration      : CPU_Interface_Configuration_Type with Volatile_Full_Access => True;
+      PCI_0_IO_Low_Decode_Address      : PCI_Low_Decode_Address_Type      with Volatile_Full_Access => True;
+      PCI_0_IO_High_Decode_Address     : PCI_High_Decode_Address_Type     with Volatile_Full_Access => True;
+      PCI_0_MEM0_Low_Decode_Address    : PCI_Low_Decode_Address_Type      with Volatile_Full_Access => True;
+      PCI_0_MEM0_High_Decode_Address   : PCI_High_Decode_Address_Type     with Volatile_Full_Access => True;
+      ISD                              : Unsigned_32                      with Volatile_Full_Access => True;
+      PCI_0_MEM1_Low_Decode_Address    : PCI_Low_Decode_Address_Type      with Volatile_Full_Access => True;
+      PCI_0_MEM1_High_Decode_Address   : PCI_High_Decode_Address_Type     with Volatile_Full_Access => True;
+      PCI_1_IO_Low_Decode_Address      : PCI_Low_Decode_Address_Type      with Volatile_Full_Access => True;
+      PCI_1_IO_High_Decode_Address     : PCI_High_Decode_Address_Type     with Volatile_Full_Access => True;
+      PCI_1_MEM0_Low_Decode_Address    : PCI_Low_Decode_Address_Type      with Volatile_Full_Access => True;
+      PCI_1_MEM0_High_Decode_Address   : PCI_High_Decode_Address_Type     with Volatile_Full_Access => True;
+      PCI_1_MEM1_Low_Decode_Address    : PCI_Low_Decode_Address_Type      with Volatile_Full_Access => True;
+      PCI_1_MEM1_High_Decode_Address   : PCI_High_Decode_Address_Type     with Volatile_Full_Access => True;
+      MULTIGT                          : Unsigned_32                      with Volatile_Full_Access => True;
+      SDRAMC                           : Unsigned_32                      with Volatile_Full_Access => True;
+      SDRAMOM                          : Unsigned_32                      with Volatile_Full_Access => True;
+      SDRAMBM                          : Unsigned_32                      with Volatile_Full_Access => True;
+      SDRAMAD                          : Unsigned_32                      with Volatile_Full_Access => True;
+      PCI_0_Command                    : PCI_0_Command_Type               with Volatile_Full_Access => True;
+      PCI_1_Configuration_Address      : Unsigned_32                      with Volatile_Full_Access => True;
+      PCI_1_Configuration_Data_Virtual : Unsigned_32                      with Volatile_Full_Access => True;
+      PCI_0_Configuration_Address      : Unsigned_32                      with Volatile_Full_Access => True;
+      PCI_0_Configuration_Data_Virtual : Unsigned_32                      with Volatile_Full_Access => True;
    end record
       with Alignment => 4,
-           Size      => 16#CA0# * 8;
+           Size      => 16#D00# * 8;
    for GT64120_Type use record
-      CPU_Interface_Configuration    at 16#000# range 0 .. 31;
-      PCI_0_IO_Low_Decode_Address    at 16#048# range 0 .. 31;
-      PCI_0_IO_High_Decode_Address   at 16#050# range 0 .. 31;
-      PCI_0_MEM0_Low_Decode_Address  at 16#058# range 0 .. 31;
-      PCI_0_MEM0_High_Decode_Address at 16#060# range 0 .. 31;
-      ISD                            at 16#068# range 0 .. 31;
-      PCI_0_MEM1_Low_Decode_Address  at 16#080# range 0 .. 31;
-      PCI_0_MEM1_High_Decode_Address at 16#088# range 0 .. 31;
-      PCI_1_IO_Low_Decode_Address    at 16#090# range 0 .. 31;
-      PCI_1_IO_High_Decode_Address   at 16#098# range 0 .. 31;
-      PCI_1_MEM0_Low_Decode_Address  at 16#0A0# range 0 .. 31;
-      PCI_1_MEM0_High_Decode_Address at 16#0A8# range 0 .. 31;
-      PCI_1_MEM1_Low_Decode_Address  at 16#0B0# range 0 .. 31;
-      PCI_1_MEM1_High_Decode_Address at 16#0B8# range 0 .. 31;
-      MULTIGT                        at 16#120# range 0 .. 31;
-      SDRAMC                         at 16#448# range 0 .. 31;
-      SDRAMOM                        at 16#474# range 0 .. 31;
-      SDRAMBM                        at 16#478# range 0 .. 31;
-      SDRAMAD                        at 16#47C# range 0 .. 31;
-      PCI_0_Command                  at 16#C00# range 0 .. 31;
+      CPU_Interface_Configuration      at 16#000# range 0 .. 31;
+      PCI_0_IO_Low_Decode_Address      at 16#048# range 0 .. 31;
+      PCI_0_IO_High_Decode_Address     at 16#050# range 0 .. 31;
+      PCI_0_MEM0_Low_Decode_Address    at 16#058# range 0 .. 31;
+      PCI_0_MEM0_High_Decode_Address   at 16#060# range 0 .. 31;
+      ISD                              at 16#068# range 0 .. 31;
+      PCI_0_MEM1_Low_Decode_Address    at 16#080# range 0 .. 31;
+      PCI_0_MEM1_High_Decode_Address   at 16#088# range 0 .. 31;
+      PCI_1_IO_Low_Decode_Address      at 16#090# range 0 .. 31;
+      PCI_1_IO_High_Decode_Address     at 16#098# range 0 .. 31;
+      PCI_1_MEM0_Low_Decode_Address    at 16#0A0# range 0 .. 31;
+      PCI_1_MEM0_High_Decode_Address   at 16#0A8# range 0 .. 31;
+      PCI_1_MEM1_Low_Decode_Address    at 16#0B0# range 0 .. 31;
+      PCI_1_MEM1_High_Decode_Address   at 16#0B8# range 0 .. 31;
+      MULTIGT                          at 16#120# range 0 .. 31;
+      SDRAMC                           at 16#448# range 0 .. 31;
+      SDRAMOM                          at 16#474# range 0 .. 31;
+      SDRAMBM                          at 16#478# range 0 .. 31;
+      SDRAMAD                          at 16#47C# range 0 .. 31;
+      PCI_0_Command                    at 16#C00# range 0 .. 31;
+      PCI_1_Configuration_Address      at 16#CF0# range 0 .. 31;
+      PCI_1_Configuration_Data_Virtual at 16#CF4# range 0 .. 31;
+      PCI_0_Configuration_Address      at 16#CF8# range 0 .. 31;
+      PCI_0_Configuration_Data_Virtual at 16#CFC# range 0 .. 31;
    end record;
-pragma Warnings (On, "* bits of ""GT64120_Type"" unused");
+-- pragma Warnings (On, "* bits of ""GT64120_Type"" unused");
 
    -- Subprograms
 
