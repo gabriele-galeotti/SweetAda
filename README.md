@@ -48,6 +48,8 @@ execute the system code; a brief list could be given, e.g.:
 - M5235BCC ColdFire development board (ROM-boot)
 - SPARCstation&trade; 5 (ROM-boot)
 - Spartan 3E MicroBlaze softcore (JTAG-boot)
+- SiFive&reg; HiFive1 (JTAG-boot)
+- NEORV32 RISC-V softcore (LiteX/VHDL)
 - Raspberry Pi&trade; 3 ARMv8 (microSD-boot)
 
 Some machines are supported through a virtual emulator like QEMU(TM), and as
