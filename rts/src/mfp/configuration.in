@@ -17,6 +17,7 @@ LIBGNAT_SRCS_COMMON += ../common/s-unstyp.ads
 
 LIBGNAT_SRCS_COMMON += ../sfp/a-assert.ads ../sfp/a-assert.adb
 LIBGNAT_SRCS_COMMON += ../sfp/a-except.ads ../sfp/a-except.adb
+LIBGNAT_SRCS_COMMON += ../sfp/a-numeri.ads
 LIBGNAT_SRCS_COMMON += ../sfp/a-string.ads
 LIBGNAT_SRCS_COMMON += ../sfp/a-strmap.ads ../sfp/a-strmap.adb
 LIBGNAT_SRCS_COMMON += ../sfp/a-tags.ads   ../sfp/a-tags.adb
