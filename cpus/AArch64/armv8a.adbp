@@ -340,6 +340,11 @@ pragma Style_Checks (Off);
    function RMR_EL3_Read return RMR_EL3_Type is function MRS_Read is new MRS ("rmr_el3", RMR_EL3_Type); begin return MRS_Read; end RMR_EL3_Read;
    procedure RMR_EL3_Write (Value : in RMR_EL3_Type) is procedure MSR_Write is new MSR ("rmr_el3", RMR_EL3_Type); begin MSR_Write (Value); end RMR_EL3_Write;
 
+#if RNG
+   function RNDR_Read return RNDR_Type is function MRS_Read is new MRS ("rndr", RNDR_Type); begin return MRS_Read; end RNDR_Read;
+   function RNDRRS_Read return RNDRRS_Type is function MRS_Read is new MRS ("rndrrs", RNDRRS_Type); begin return MRS_Read; end RNDRRS_Read;
+#end if;
+
 #if CPUECTLR_EL1
    function CPUECTLR_EL1_Read return CPUECTLR_EL1_Type is function MRS_Read is new MRS ("s3_1_c15_c2_1", CPUECTLR_EL1_Type); begin return MRS_Read; end CPUECTLR_EL1_Read;
    procedure CPUECTLR_EL1_Write (Value : in CPUECTLR_EL1_Type) is procedure MSR_Write is new MSR ("s3_1_c15_c2_1", CPUECTLR_EL1_Type); begin MSR_Write (Value); end CPUECTLR_EL1_Write;

@@ -10,4 +10,5 @@ HCRX_EL2     := True
 TCR2_EL1     := False
 TCR2_EL2     := False
 TTBR1_EL2    := False
+RNG          := False
 CPUECTLR_EL1 := True
