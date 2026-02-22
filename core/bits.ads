@@ -648,6 +648,136 @@ package Bits
    Unsigned_32_NMask : constant := 16#FFFF_FFFF_0000_0000#;
    Unsigned_64_NMask : constant := 16#0000_0000_0000_0000#;
 
+   -- padding bytes
+   PAD_B1_SIZE  : constant := 8 * 1;
+   type Pad_B1  is array (0 ..  0) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B1_SIZE;
+   PAD_B2_SIZE  : constant := 8 * 2;
+   type Pad_B2  is array (0 ..  1) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B2_SIZE;
+   PAD_B3_SIZE  : constant := 8 * 3;
+   type Pad_B3  is array (0 ..  2) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B3_SIZE;
+   PAD_B4_SIZE  : constant := 8 * 4;
+   type Pad_B4  is array (0 ..  3) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B4_SIZE;
+   PAD_B5_SIZE  : constant := 8 * 5;
+   type Pad_B5  is array (0 ..  4) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B5_SIZE;
+   PAD_B6_SIZE  : constant := 8 * 6;
+   type Pad_B6  is array (0 ..  5) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B6_SIZE;
+   PAD_B7_SIZE  : constant := 8 * 7;
+   type Pad_B7  is array (0 ..  6) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B7_SIZE;
+   PAD_B8_SIZE  : constant := 8 * 8;
+   type Pad_B8  is array (0 ..  7) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B8_SIZE;
+   PAD_B9_SIZE  : constant := 8 * 9;
+   type Pad_B9  is array (0 ..  8) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B9_SIZE;
+   PAD_B10_SIZE : constant := 8 * 10;
+   type Pad_B10 is array (0 ..  9) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B10_SIZE;
+   PAD_B11_SIZE : constant := 8 * 11;
+   type Pad_B11 is array (0 .. 10) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B11_SIZE;
+   PAD_B12_SIZE : constant := 8 * 12;
+   type Pad_B12 is array (0 .. 11) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B12_SIZE;
+   PAD_B13_SIZE : constant := 8 * 13;
+   type Pad_B13 is array (0 .. 12) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B13_SIZE;
+   PAD_B14_SIZE : constant := 8 * 14;
+   type Pad_B14 is array (0 .. 13) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B14_SIZE;
+   PAD_B15_SIZE : constant := 8 * 15;
+   type Pad_B15 is array (0 .. 14) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B15_SIZE;
+   PAD_B16_SIZE : constant := 8 * 16;
+   type Pad_B16 is array (0 .. 15) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B16_SIZE;
+   PAD_B17_SIZE : constant := 8 * 17;
+   type Pad_B17 is array (0 .. 16) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B17_SIZE;
+   PAD_B18_SIZE : constant := 8 * 18;
+   type Pad_B18 is array (0 .. 17) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B18_SIZE;
+   PAD_B19_SIZE : constant := 8 * 19;
+   type Pad_B19 is array (0 .. 18) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B19_SIZE;
+   PAD_B20_SIZE : constant := 8 * 20;
+   type Pad_B20 is array (0 .. 19) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B20_SIZE;
+   PAD_B21_SIZE : constant := 8 * 21;
+   type Pad_B21 is array (0 .. 20) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B21_SIZE;
+   PAD_B22_SIZE : constant := 8 * 22;
+   type Pad_B22 is array (0 .. 21) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B22_SIZE;
+   PAD_B23_SIZE : constant := 8 * 23;
+   type Pad_B23 is array (0 .. 22) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B23_SIZE;
+   PAD_B24_SIZE : constant := 8 * 24;
+   type Pad_B24 is array (0 .. 23) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B24_SIZE;
+   PAD_B25_SIZE : constant := 8 * 25;
+   type Pad_B25 is array (0 .. 24) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B25_SIZE;
+   PAD_B26_SIZE : constant := 8 * 26;
+   type Pad_B26 is array (0 .. 25) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B26_SIZE;
+   PAD_B27_SIZE : constant := 8 * 27;
+   type Pad_B27 is array (0 .. 26) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B27_SIZE;
+   PAD_B28_SIZE : constant := 8 * 28;
+   type Pad_B28 is array (0 .. 27) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B28_SIZE;
+   PAD_B29_SIZE : constant := 8 * 29;
+   type Pad_B29 is array (0 .. 28) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B29_SIZE;
+   PAD_B30_SIZE : constant := 8 * 30;
+   type Pad_B30 is array (0 .. 29) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B30_SIZE;
+   PAD_B31_SIZE : constant := 8 * 31;
+   type Pad_B31 is array (0 .. 30) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B31_SIZE;
+   PAD_B32_SIZE : constant := 8 * 32;
+   type Pad_B32 is array (0 .. 31) of Bits_8
+      with Alignment   => 1,
+           Object_Size => PAD_B32_SIZE;
+
    ----------------------------------------------------------------------------
    -- Types and pointers for low-level interfacing.
    ----------------------------------------------------------------------------
