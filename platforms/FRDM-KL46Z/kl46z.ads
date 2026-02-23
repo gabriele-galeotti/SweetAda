@@ -6246,21 +6246,587 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 41.3.1 SAI Transmit Control Register (I2Sx_TCSR)
+
+   type I2Sx_TCSR_Type is record
+      Reserved1 : Bits_1  := 0;
+      FWDE      : Boolean := False; -- FIFO Warning DMA Enable
+      Reserved2 : Bits_3  := 0;
+      Reserved3 : Bits_3  := 0;
+      Reserved4 : Bits_1  := 0;
+      FWIE      : Boolean := False; -- FIFO Warning Interrupt Enable
+      FEIE      : Boolean := False; -- FIFO Error Interrupt Enable
+      SEIE      : Boolean := False; -- Sync Error Interrupt Enable
+      WSIE      : Boolean := False; -- Word Start Interrupt Enable
+      Reserved5 : Bits_3  := 0;
+      Reserved6 : Bits_1  := 0;
+      FWF       : Boolean := False; -- FIFO Warning Flag
+      FEF       : Boolean := False; -- FIFO Error Flag
+      SEF       : Boolean := False; -- Sync Error Flag
+      WSF       : Boolean := False; -- Word Start Flag
+      Reserved7 : Bits_3  := 0;
+      SR        : Boolean := False; -- Software Reset
+      FR        : Boolean := False; -- FIFO Reset
+      Reserved8 : Bits_2  := 0;
+      BCE       : Boolean := False; -- Bit Clock Enable
+      DBGE      : Boolean := False; -- Debug Enable
+      STOPE     : Boolean := False; -- Stop Enable
+      TE        : Boolean := False; -- Transmitter Enable
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for I2Sx_TCSR_Type use record
+      Reserved1 at 0 range  0 ..  0;
+      FWDE      at 0 range  1 ..  1;
+      Reserved2 at 0 range  2 ..  4;
+      Reserved3 at 0 range  5 ..  7;
+      Reserved4 at 0 range  8 ..  8;
+      FWIE      at 0 range  9 ..  9;
+      FEIE      at 0 range 10 .. 10;
+      SEIE      at 0 range 11 .. 11;
+      WSIE      at 0 range 12 .. 12;
+      Reserved5 at 0 range 13 .. 15;
+      Reserved6 at 0 range 16 .. 16;
+      FWF       at 0 range 17 .. 17;
+      FEF       at 0 range 18 .. 18;
+      SEF       at 0 range 19 .. 19;
+      WSF       at 0 range 20 .. 20;
+      Reserved7 at 0 range 21 .. 23;
+      SR        at 0 range 24 .. 24;
+      FR        at 0 range 25 .. 25;
+      Reserved8 at 0 range 26 .. 27;
+      BCE       at 0 range 28 .. 28;
+      DBGE      at 0 range 29 .. 29;
+      STOPE     at 0 range 30 .. 30;
+      TE        at 0 range 31 .. 31;
+   end record;
+
+   I2S0_TCSR_ADDRESS : constant := 16#4002_F000#;
+
+   I2S0_TCSR : aliased I2Sx_TCSR_Type
+      with Address              => System'To_Address (I2S0_TCSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 41.3.2 SAI Transmit Configuration 2 Register (I2Sx_TCR2)
+
+   DIV_2 : constant := 0;
+   function DIV_SAIBITCLOCK (Value : Natural) return Bits_8 with Inline => True;
+
+   BCD_SLAVE  : constant := 0; -- Bit clock is generated externally in Slave mode.
+   BCD_MASTER : constant := 1; -- Bit clock is generated internally in Master mode.
+
+   BCP_HIGH : constant := 0; -- Bit clock is active high with drive outputs on rising edge and sample inputs on falling edge.
+   BCP_LOW  : constant := 1; -- Bit clock is active low with drive outputs on falling edge and sample inputs on rising edge.
+
+   MSEL_BUS   : constant := 2#00#; -- Bus Clock selected.
+   MSEL_MCLK1 : constant := 2#01#; -- Master Clock (MCLK) 1 option selected.
+   MSEL_MCLK2 : constant := 2#10#; -- Master Clock (MCLK) 2 option selected.
+   MSEL_MCLK3 : constant := 2#11#; -- Master Clock (MCLK) 3 option selected.
+
+   BCI_NONE   : constant := 0; -- No effect.
+   BCI_EXTCLK : constant := 1; -- Internal logic is clocked as if bit clock was externally generated.
+
+   BCS_NORMAL : constant := 0; -- Use the normal bit clock source.
+   BCS_SWAP   : constant := 1; -- Swap the bit clock source.
+
+   SYNC_ASYNC : constant := 2#00#; -- Asynchronous mode.
+   SYNC_RX    : constant := 2#01#; -- Synchronous with receiver.
+   SYNC_SAITX : constant := 2#10#; -- Synchronous with another SAI transmitter.
+   SYNC_SAIRX : constant := 2#11#; -- Synchronous with another SAI receiver.
+
+   type I2Sx_TCR2_Type is record
+      DIV      : Bits_8  := DIV_2;      -- Bit Clock Divide
+      Reserved : Bits_16 := 0;
+      BCD      : Bits_1  := BCD_SLAVE;  -- Bit Clock Direction
+      BCP      : Bits_1  := BCP_HIGH;   -- Bit Clock Polarity
+      MSEL     : Bits_2  := MSEL_BUS;   -- MCLK Select
+      BCI      : Bits_1  := BCI_NONE;   -- Bit Clock Input
+      BCS      : Bits_1  := BCS_NORMAL; -- Bit Clock Swap
+      SYNC     : Bits_2  := SYNC_ASYNC; -- Synchronous Mode
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for I2Sx_TCR2_Type use record
+      DIV      at 0 range  0 ..  7;
+      Reserved at 0 range  8 .. 23;
+      BCD      at 0 range 24 .. 24;
+      BCP      at 0 range 25 .. 25;
+      MSEL     at 0 range 26 .. 27;
+      BCI      at 0 range 28 .. 28;
+      BCS      at 0 range 29 .. 29;
+      SYNC     at 0 range 30 .. 31;
+   end record;
+
+   I2S0_TCR2_ADDRESS : constant := 16#4002_F008#;
+
+   I2S0_TCR2 : aliased I2Sx_TCR2_Type
+      with Address              => System'To_Address (I2S0_TCR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 41.3.3 SAI Transmit Configuration 3 Register (I2Sx_TCR3)
+
+   type I2Sx_TCR3_Type is record
+      WDFL      : Bits_1  := 0;     -- Word Flag Configuration
+      Reserved1 : Bits_15 := 0;
+      TCE       : Boolean := False; -- Transmit Channel Enable
+      Reserved2 : Bits_7  := 0;
+      Reserved3 : Bits_8  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for I2Sx_TCR3_Type use record
+      WDFL      at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 .. 15;
+      TCE       at 0 range 16 .. 16;
+      Reserved2 at 0 range 17 .. 23;
+      Reserved3 at 0 range 24 .. 31;
+   end record;
+
+   I2S0_TCR3_ADDRESS : constant := 16#4002_F00C#;
+
+   I2S0_TCR3 : aliased I2Sx_TCR3_Type
+      with Address              => System'To_Address (I2S0_TCR3_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 41.3.4 SAI Transmit Configuration 4 Register (I2Sx_TCR4)
+
+   FSD_SLAVE  : constant := 0; -- Frame sync is generated externally in Slave mode.
+   FSD_MASTER : constant := 1; -- Frame sync is generated internally in Master mode.
+
+   FSP_HIGH : constant := 0; -- Frame sync is active high.
+   FSP_LOW  : constant := 1; -- Frame sync is active low.
+
+   FSE_FIRST : constant := 0; -- Frame sync asserts with the first bit of the frame.
+   FSE_EARLY : constant := 1; -- Frame sync asserts one bit before the first bit of the frame.
+
+   MF_LSB : constant := 0; -- LSB is transmitted first.
+   MF_SMB : constant := 1; -- MSB is transmitted first.
+
+   type I2Sx_TCR4_Type is record
+      FSD       : Bits_1 := FSD_SLAVE; -- Frame Sync Direction
+      FSP       : Bits_1 := FSP_HIGH;  -- Frame Sync Polarity
+      Reserved1 : Bits_1 := 0;
+      FSE       : Bits_1 := FSE_FIRST; -- Frame Sync Early
+      MF        : Bits_1 := MF_LSB;    -- MSB First
+      Reserved2 : Bits_3 := 0;
+      SYWD      : Bits_5 := 0;         -- Sync Width
+      Reserved3 : Bits_3 := 0;
+      FRSZ      : Bits_1 := 0;         -- Frame size
+      Reserved4 : Bits_7 := 0;
+      Reserved5 : Bits_2 := 0;
+      Reserved6 : Bits_2 := 0;
+      Reserved7 : Bits_1 := 0;
+      Reserved8 : Bits_3 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for I2Sx_TCR4_Type use record
+      FSD       at 0 range  0 ..  0;
+      FSP       at 0 range  1 ..  1;
+      Reserved1 at 0 range  2 ..  2;
+      FSE       at 0 range  3 ..  3;
+      MF        at 0 range  4 ..  4;
+      Reserved2 at 0 range  5 ..  7;
+      SYWD      at 0 range  8 .. 12;
+      Reserved3 at 0 range 13 .. 15;
+      FRSZ      at 0 range 16 .. 16;
+      Reserved4 at 0 range 17 .. 23;
+      Reserved5 at 0 range 24 .. 25;
+      Reserved6 at 0 range 26 .. 27;
+      Reserved7 at 0 range 28 .. 28;
+      Reserved8 at 0 range 29 .. 31;
+   end record;
+
+   I2S0_TCR4_ADDRESS : constant := 16#4002_F010#;
+
+   I2S0_TCR4 : aliased I2Sx_TCR4_Type
+      with Address              => System'To_Address (I2S0_TCR4_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 41.3.5 SAI Transmit Configuration 5 Register (I2Sx_TCR5)
+
+   type I2Sx_TCR5_Type is record
+      Reserved1 : Bits_8 := 0;
+      FBT       : Bits_5 := 0; -- First Bit Shifted
+      Reserved2 : Bits_3 := 0;
+      W0W       : Bits_5 := 0; -- Word 0 Width
+      Reserved3 : Bits_3 := 0;
+      WNW       : Bits_5 := 0; -- Word N Width
+      Reserved4 : Bits_3 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for I2Sx_TCR5_Type use record
+      Reserved1 at 0 range  0 ..  7;
+      FBT       at 0 range  8 .. 12;
+      Reserved2 at 0 range 13 .. 15;
+      W0W       at 0 range 16 .. 20;
+      Reserved3 at 0 range 21 .. 23;
+      WNW       at 0 range 24 .. 28;
+      Reserved4 at 0 range 29 .. 31;
+   end record;
+
+   I2S0_TCR5_ADDRESS : constant := 16#4002_F014#;
+
+   I2S0_TCR5 : aliased I2Sx_TCR5_Type
+      with Address              => System'To_Address (I2S0_TCR5_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 41.3.6 SAI Transmit Data Register (I2Sx_TDRn)
+
+   type I2Sx_TDRn_Type is record
+      TDR : Unsigned_32; -- Transmit Data Register
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for I2Sx_TDRn_Type use record
+      TDR at 0 range 0 .. 31;
+   end record;
+
+   I2S0_TDR0_ADDRESS : constant := 16#4002_F020#;
+
+   I2S0_TDR0 : aliased I2Sx_TDRn_Type
+      with Address              => System'To_Address (I2S0_TDR0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 41.3.7 SAI Transmit Mask Register (I2Sx_TMR)
+
+   type I2Sx_TMR_Type is record
+      TWM      : Bits_2  := 0; -- Transmit Word Mask
+      Reserved : Bits_30 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for I2Sx_TMR_Type use record
+      TWM      at 0 range 0 ..  1;
+      Reserved at 0 range 2 .. 31;
+   end record;
+
+   I2S0_TMR_ADDRESS : constant := 16#4002_F060#;
+
+   I2S0_TMR : aliased I2Sx_TMR_Type
+      with Address              => System'To_Address (I2S0_TMR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 41.3.8 SAI Receive Control Register (I2Sx_RCSR)
+
+   type I2Sx_RCSR_Type is record
+      Reserved1 : Bits_1  := 0;
+      FWDE      : Boolean := False; -- FIFO Warning DMA Enable
+      Reserved2 : Bits_3  := 0;
+      Reserved3 : Bits_3  := 0;
+      Reserved4 : Bits_1  := 0;
+      FWIE      : Boolean := False; -- FIFO Warning Interrupt Enable
+      FEIE      : Boolean := False; -- FIFO Error Interrupt Enable
+      SEIE      : Boolean := False; -- Sync Error Interrupt Enable
+      WSIE      : Boolean := False; -- Word Start Interrupt Enable
+      Reserved5 : Bits_3  := 0;
+      Reserved6 : Bits_1  := 0;
+      FWF       : Boolean := False; -- FIFO Warning Flag
+      FEF       : Boolean := False; -- FIFO Error Flag
+      SEF       : Boolean := False; -- Sync Error Flag
+      WSF       : Boolean := False; -- Word Start Flag
+      Reserved7 : Bits_3  := 0;
+      SR        : Boolean := False; -- Software Reset
+      FR        : Boolean := False; -- FIFO Reset
+      Reserved8 : Bits_2  := 0;
+      BCE       : Boolean := False; -- Bit Clock Enable
+      DBGE      : Boolean := False; -- Debug Enable
+      STOPE     : Boolean := False; -- Stop Enable
+      RE        : Boolean := False; -- Receiver Enable
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for I2Sx_RCSR_Type use record
+      Reserved1 at 0 range  0 ..  0;
+      FWDE      at 0 range  1 ..  1;
+      Reserved2 at 0 range  2 ..  4;
+      Reserved3 at 0 range  5 ..  7;
+      Reserved4 at 0 range  8 ..  8;
+      FWIE      at 0 range  9 ..  9;
+      FEIE      at 0 range 10 .. 10;
+      SEIE      at 0 range 11 .. 11;
+      WSIE      at 0 range 12 .. 12;
+      Reserved5 at 0 range 13 .. 15;
+      Reserved6 at 0 range 16 .. 16;
+      FWF       at 0 range 17 .. 17;
+      FEF       at 0 range 18 .. 18;
+      SEF       at 0 range 19 .. 19;
+      WSF       at 0 range 20 .. 20;
+      Reserved7 at 0 range 21 .. 23;
+      SR        at 0 range 24 .. 24;
+      FR        at 0 range 25 .. 25;
+      Reserved8 at 0 range 26 .. 27;
+      BCE       at 0 range 28 .. 28;
+      DBGE      at 0 range 29 .. 29;
+      STOPE     at 0 range 30 .. 30;
+      RE        at 0 range 31 .. 31;
+   end record;
+
+   I2S0_RCSR_ADDRESS : constant := 16#4002_F080#;
+
+   I2S0_RCSR : aliased I2Sx_RCSR_Type
+      with Address              => System'To_Address (I2S0_RCSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 41.3.9 SAI Receive Configuration 2 Register (I2Sx_RCR2)
+
+   -- DIV_* already defined at 41.3.2
+   -- BCD_* already defined at 41.3.2
+   -- BCP_* already defined at 41.3.2
+   -- MSEL_* already defined at 41.3.2
+   -- BCI_* already defined at 41.3.2
+   -- BCS_* already defined at 41.3.2
+   -- SYNC_* already defined at 41.3.2
+
+   type I2Sx_RCR2_Type is record
+      DIV      : Bits_8  := DIV_2;      -- Bit Clock Divide
+      Reserved : Bits_16 := 0;
+      BCD      : Bits_1  := BCD_SLAVE;  -- Bit Clock Direction
+      BCP      : Bits_1  := BCP_HIGH;   -- Bit Clock Polarity
+      MSEL     : Bits_2  := MSEL_BUS;   -- MCLK Select
+      BCI      : Bits_1  := BCI_NONE;   -- Bit Clock Input
+      BCS      : Bits_1  := BCS_NORMAL; -- Bit Clock Swap
+      SYNC     : Bits_2  := SYNC_ASYNC; -- Synchronous Mode
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for I2Sx_RCR2_Type use record
+      DIV      at 0 range  0 ..  7;
+      Reserved at 0 range  8 .. 23;
+      BCD      at 0 range 24 .. 24;
+      BCP      at 0 range 25 .. 25;
+      MSEL     at 0 range 26 .. 27;
+      BCI      at 0 range 28 .. 28;
+      BCS      at 0 range 29 .. 29;
+      SYNC     at 0 range 30 .. 31;
+   end record;
+
+   I2S0_RCR2_ADDRESS : constant := 16#4002_F088#;
+
+   I2S0_RCR2 : aliased I2Sx_RCR2_Type
+      with Address              => System'To_Address (I2S0_RCR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 41.3.10 SAI Receive Configuration 3 Register (I2Sx_RCR3)
+
+   type I2Sx_RCR3_Type is record
+      WDFL      : Bits_1  := 0;     -- Word Flag Configuration
+      Reserved1 : Bits_15 := 0;
+      RCE       : Boolean := False; -- Receive Channel Enable
+      Reserved2 : Bits_7  := 0;
+      Reserved3 : Bits_8  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for I2Sx_RCR3_Type use record
+      WDFL      at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 .. 15;
+      RCE       at 0 range 16 .. 16;
+      Reserved2 at 0 range 17 .. 23;
+      Reserved3 at 0 range 24 .. 31;
+   end record;
+
+   I2S0_RCR3_ADDRESS : constant := 16#4002_F08C#;
+
+   I2S0_RCR3 : aliased I2Sx_RCR3_Type
+      with Address              => System'To_Address (I2S0_RCR3_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 41.3.11 SAI Receive Configuration 4 Register (I2Sx_RCR4)
+
+   -- FSD_* already defined at 41.3.4
+   -- FSP_* already defined at 41.3.4
+   -- FSE_* already defined at 41.3.4
+   -- MF_* already defined at 41.3.4
+
+   type I2Sx_RCR4_Type is record
+      FSD       : Bits_1 := FSD_SLAVE; -- Frame Sync Direction
+      FSP       : Bits_1 := FSP_HIGH;  -- Frame Sync Polarity
+      Reserved1 : Bits_1 := 0;
+      FSE       : Bits_1 := FSE_FIRST; -- Frame Sync Early
+      MF        : Bits_1 := MF_LSB;    -- MSB First
+      Reserved2 : Bits_3 := 0;
+      SYWD      : Bits_5 := 0;         -- Sync Width
+      Reserved3 : Bits_3 := 0;
+      FRSZ      : Bits_1 := 0;         -- Frame size
+      Reserved4 : Bits_7 := 0;
+      Reserved5 : Bits_2 := 0;
+      Reserved6 : Bits_2 := 0;
+      Reserved7 : Bits_1 := 0;
+      Reserved8 : Bits_3 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for I2Sx_RCR4_Type use record
+      FSD       at 0 range  0 ..  0;
+      FSP       at 0 range  1 ..  1;
+      Reserved1 at 0 range  2 ..  2;
+      FSE       at 0 range  3 ..  3;
+      MF        at 0 range  4 ..  4;
+      Reserved2 at 0 range  5 ..  7;
+      SYWD      at 0 range  8 .. 12;
+      Reserved3 at 0 range 13 .. 15;
+      FRSZ      at 0 range 16 .. 16;
+      Reserved4 at 0 range 17 .. 23;
+      Reserved5 at 0 range 24 .. 25;
+      Reserved6 at 0 range 26 .. 27;
+      Reserved7 at 0 range 28 .. 28;
+      Reserved8 at 0 range 29 .. 31;
+   end record;
+
+   I2S0_RCR4_ADDRESS : constant := 16#4002_F090#;
+
+   I2S0_RCR4 : aliased I2Sx_RCR4_Type
+      with Address              => System'To_Address (I2S0_RCR4_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 41.3.12 SAI Receive Configuration 5 Register (I2Sx_RCR5)
+
+   type I2Sx_RCR5_Type is record
+      Reserved1 : Bits_8 := 0;
+      FBT       : Bits_5 := 0; -- First Bit Shifted
+      Reserved2 : Bits_3 := 0;
+      W0W       : Bits_5 := 0; -- Word 0 Width
+      Reserved3 : Bits_3 := 0;
+      WNW       : Bits_5 := 0; -- Word N Width
+      Reserved4 : Bits_3 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for I2Sx_RCR5_Type use record
+      Reserved1 at 0 range  0 ..  7;
+      FBT       at 0 range  8 .. 12;
+      Reserved2 at 0 range 13 .. 15;
+      W0W       at 0 range 16 .. 20;
+      Reserved3 at 0 range 21 .. 23;
+      WNW       at 0 range 24 .. 28;
+      Reserved4 at 0 range 29 .. 31;
+   end record;
+
+   I2S0_RCR5_ADDRESS : constant := 16#4002_F094#;
+
+   I2S0_RCR5 : aliased I2Sx_RCR5_Type
+      with Address              => System'To_Address (I2S0_RCR5_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 41.3.13 SAI Receive Data Register (I2Sx_RDRn)
+
+   type I2Sx_RDRn_Type is record
+      RDR : Unsigned_32; -- Receive Data Register
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for I2Sx_RDRn_Type use record
+      RDR at 0 range 0 .. 31;
+   end record;
+
+   I2S0_RDR0_ADDRESS : constant := 16#4002_F0A0#;
+
+   I2S0_RDR0 : aliased I2Sx_RDRn_Type
+      with Address              => System'To_Address (I2S0_RDR0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 41.3.14 SAI Receive Mask Register (I2Sx_RMR)
+
+   type I2Sx_RMR_Type is record
+      RWM      : Bits_2  := 0; -- Receive Word Mask
+      Reserved : Bits_30 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for I2Sx_RMR_Type use record
+      RWM      at 0 range 0 ..  1;
+      Reserved at 0 range 2 .. 31;
+   end record;
+
+   I2S0_RMR_ADDRESS : constant := 16#4002_F0E0#;
+
+   I2S0_RMR : aliased I2Sx_RMR_Type
+      with Address              => System'To_Address (I2S0_RMR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 41.3.15 SAI MCLK Control Register (I2Sx_MCR)
+
+   MICS_INCLK_0 : constant := 2#00#; -- MCLK divider input clock 0 selected.
+   MICS_INCLK_1 : constant := 2#01#; -- MCLK divider input clock 1 selected.
+   MICS_INCLK_2 : constant := 2#10#; -- MCLK divider input clock 2 selected.
+   MICS_INCLK_3 : constant := 2#11#; -- MCLK divider input clock 3 selected.
+
+   type I2Sx_MCR_Type is record
+      Reserved1 : Bits_24 := 0;
+      MICS      : Bits_2  := MICS_INCLK_0; -- MCLK Input Clock Select
+      Reserved2 : Bits_4  := 0;
+      MOE       : Boolean := False;        -- MCLK Output Enable
+      DUF       : Boolean := False;        -- Divider Update Flag
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for I2Sx_MCR_Type use record
+      Reserved1 at 0 range  0 .. 23;
+      MICS      at 0 range 24 .. 25;
+      Reserved2 at 0 range 26 .. 29;
+      MOE       at 0 range 30 .. 30;
+      DUF       at 0 range 31 .. 31;
+   end record;
+
+   I2S0_MCR_ADDRESS : constant := 16#4002_F100#;
+
+   I2S0_MCR : aliased I2Sx_MCR_Type
+      with Address              => System'To_Address (I2S0_MCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 41.3.16 SAI MCLK Divide Register (I2Sx_MDR)
+
+   type I2Sx_MDR_Type is record
+      DIVIDE   : Bits_12 := 0; -- MCLK Divide
+      FRACT    : Bits_8  := 0; -- MCLK Fraction
+      Reserved : Bits_12 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for I2Sx_MDR_Type use record
+      DIVIDE   at 0 range  0 .. 11;
+      FRACT    at 0 range 12 .. 19;
+      Reserved at 0 range 20 .. 31;
+   end record;
+
+   I2S0_MDR_ADDRESS : constant := 16#4002_F104#;
+
+   I2S0_MDR : aliased I2Sx_MDR_Type
+      with Address              => System'To_Address (I2S0_MDR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 42 General-Purpose Input/Output (GPIO)
