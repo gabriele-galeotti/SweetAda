@@ -59,6 +59,7 @@ export USE_ADA_MAIN_PROGRAM_NAME := False
 # s-parame.ads default configuration.
 #
 export SIZE_TYPE_ASPECTS              :=
+export STACK_GROWS_DOWN               := True
 export RUNTIME_DEFAULT_SEC_STACK_SIZE := 4 * 1024
 export SEC_STACK_DYNAMIC              := False
 
