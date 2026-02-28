@@ -6,7 +6,7 @@
 --                                                                          --
 --                                 S p e c                                  --
 --                                                                          --
---          Copyright (C) 1992-2019, Free Software Foundation, Inc.         --
+--          Copyright (C) 1992-2024, Free Software Foundation, Inc.         --
 --                                                                          --
 -- GNAT is free software;  you can  redistribute it  and/or modify it under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -48,8 +48,6 @@
 --  Note: do not introduce any pragma Inline statements into this unit, since
 --  otherwise the relinking and rebinding capability would be deactivated.
 
--- pragma Compiler_Unit_Warning;
-
 package System.Parameters is
    pragma Pure;
 
@@ -58,8 +56,8 @@ package System.Parameters is
    ---------------------------------------
 
    type Size_Type is range
-     -(2 ** (Integer'(Standard'Address_Size) - 1)) ..
-     +(2 ** (Integer'(Standard'Address_Size) - 1)) - 1
+      -(2 ** (Integer'(Standard'Address_Size) - 1)) ..
+      +(2 ** (Integer'(Standard'Address_Size) - 1)) - 1
       @-SIZE_TYPE_ASPECTS@;
    --  Type used to provide task stack sizes to the runtime. Sized to permit
    --  stack sizes of up to half the total addressable memory space. This may
@@ -70,6 +68,11 @@ package System.Parameters is
    Unspecified_Size : constant Size_Type := Size_Type'First;
    --  Value used to indicate that no size type is set
 
+   Stack_Grows_Down : constant Boolean := @STACK_GROWS_DOWN@;
+   --  This constant indicates whether the stack grows up (False) or
+   --  down (True) in memory as functions are called. It is used for
+   --  proper implementation of the stack overflow check.
+
    Runtime_Default_Sec_Stack_Size : constant Size_Type := @RUNTIME_DEFAULT_SEC_STACK_SIZE@;
    --  The run-time chosen default size for secondary stacks that may be
    --  overriden by the user with the use of binder -D switch.
@@ -77,6 +80,13 @@ package System.Parameters is
    Sec_Stack_Dynamic : constant Boolean := @SEC_STACK_DYNAMIC@;
    --  Indicates if secondary stacks can grow and shrink at run-time. If False,
    --  the size of a secondary stack is fixed at the point of its creation.
+
+   ------------------------------------
+   -- Characteristics of time_t type --
+   ------------------------------------
+
+   time_t_bits : constant := Long_Integer'Size;
+   --  Number of bits in type time_t
 
    ----------------------------------------------
    -- Characteristics of types in Interfaces.C --
@@ -90,5 +100,39 @@ package System.Parameters is
    ptr_bits  : constant := Standard'Address_Size;
    subtype C_Address is System.Address;
    --  Number of bits in Interfaces.C pointers, normally a standard address
+
+   C_Malloc_Linkname : constant String := "__gnat_malloc";
+   --  Name of runtime function used to allocate such a pointer
+
+   ----------------------------------------------
+   -- Behavior of Pragma Finalize_Storage_Only --
+   ----------------------------------------------
+
+   --  Garbage_Collected is a Boolean constant whose value indicates the
+   --  effect of the pragma Finalize_Storage_Entry on a controlled type.
+
+   --    Garbage_Collected = False
+
+   --      The system releases all storage on program termination only,
+   --      but not other garbage collection occurs, so finalization calls
+   --      are omitted only for outer level objects can be omitted if
+   --      pragma Finalize_Storage_Only is used.
+
+   --    Garbage_Collected = True
+
+   --      The system provides full garbage collection, so it is never
+   --      necessary to release storage for controlled objects for which
+   --      a pragma Finalize_Storage_Only is used.
+
+   Garbage_Collected : constant Boolean := False;
+   --  The storage mode for this system (release on program exit)
+
+   ------------------------------
+   -- Exception Message Length --
+   ------------------------------
+
+   Default_Exception_Msg_Max_Length : constant := 200;
+   --  This constant specifies the default number of characters to allow
+   --  in an exception message (200 is minimum required by RM 11.4.1(18)).
 
 end System.Parameters;
