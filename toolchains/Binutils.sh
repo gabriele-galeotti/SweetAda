@@ -59,7 +59,7 @@ return ${exit_status}
 #                                                                              #
 ################################################################################
 
-PACKAGE_NAME=binutils-2.44
+PACKAGE_NAME=binutils-2.46
 PACKAGE_NAME_SIMPLE=binutils
 PACKAGE_PARENT_PATH="/usr/local/src"
 PACKAGE_SOURCE_PATH=${PACKAGE_PARENT_PATH}/${PACKAGE_NAME}
