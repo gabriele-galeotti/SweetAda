@@ -16,7 +16,6 @@
  * int bcmp(const void *s1, const void *s2, size_t n)                         *
  *                                                                            *
  * http://pubs.opengroup.org/onlinepubs/7908799/xsh/bcmp.html                 *
- * http://snipplr.com/view/22147/stringsh-implementation/                     *
  ******************************************************************************/
 int
 bcmp(const void *s1, const void *s2, size_t n)
@@ -30,7 +29,6 @@ bcmp(const void *s1, const void *s2, size_t n)
  * void bcopy(const void *s1, void *s2, size_t n)                             *
  *                                                                            *
  * http://pubs.opengroup.org/onlinepubs/7908799/xsh/bcopy.html                *
- * http://snipplr.com/view/22147/stringsh-implementation/                     *
  ******************************************************************************/
 void
 bcopy(const void *s1, void *s2, size_t n)
@@ -44,7 +42,6 @@ bcopy(const void *s1, void *s2, size_t n)
  * void bzero(void *s, size_t n)                                              *
  *                                                                            *
  * http://pubs.opengroup.org/onlinepubs/7908799/xsh/bzero.html                *
- * http://snipplr.com/view/22147/stringsh-implementation/                     *
  ******************************************************************************/
 void
 bzero(void *s, size_t n)
