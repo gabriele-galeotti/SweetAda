@@ -174,7 +174,7 @@ catch
   ExitWithCode 1
 }
 
-Write-Host "$($scriptname): linker.ads: done."
+Write-Host "$($scriptname): $($OUTPUT_FILENAME_ADS): done."
 
 try
 {
@@ -188,7 +188,7 @@ catch
   ExitWithCode 1
 }
 
-Write-Host "$($scriptname): linker.adb: done."
+Write-Host "$($scriptname): $($OUTPUT_FILENAME_ADB): done."
 
 ExitWithCode 0
 

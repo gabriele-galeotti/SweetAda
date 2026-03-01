@@ -144,10 +144,10 @@ linkerads=${linkerads}$(printf "%s\n" "end ${PACKAGE};")${NL}
 linkeradb=${linkeradb}$(printf "%s\n" "end ${PACKAGE};")${NL}
 
 printf "%s" "${linkerads}" > ${OUTPUT_FILENAME_ADS}
-log_print "${SCRIPT_FILENAME}: linker.ads: done."
+log_print "${SCRIPT_FILENAME}: ${OUTPUT_FILENAME_ADS}: done."
 
 printf "%s" "${linkeradb}" > ${OUTPUT_FILENAME_ADB}
-log_print "${SCRIPT_FILENAME}: linker.adb: done."
+log_print "${SCRIPT_FILENAME}: ${OUTPUT_FILENAME_ADB}: done."
 
 exit 0
 
