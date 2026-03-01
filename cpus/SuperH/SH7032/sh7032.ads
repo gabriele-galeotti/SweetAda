@@ -1477,7 +1477,7 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
-   -- Section 15 Pin Function Controller (PFC)
+   -- Types for LE arrays of Booleans handled by a BE CPU
    ----------------------------------------------------------------------------
 
    type LEBitmap_8_IDX_Type  is (bi7, bi6, bi5, bi4, bi3, bi2, bi1, bi0);
@@ -1490,6 +1490,10 @@ pragma Style_Checks (Off);
    type LEBitmap_16 is array (LEBitmap_16_IDX_Type) of Boolean
       with Component_Size => 1,
            Object_Size    => 16;
+
+   ----------------------------------------------------------------------------
+   -- Section 15 Pin Function Controller (PFC)
+   ----------------------------------------------------------------------------
 
    -- 15.3.1 Port A I/O Register (PAIOR)
 
@@ -1826,6 +1830,46 @@ pragma Style_Checks (Off);
 
    CASCR : aliased CASCR_Type
       with Address              => System'To_Address (16#05FF_FFEE#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
+   -- Section 16 I/O Ports (I/O)
+   ----------------------------------------------------------------------------
+
+   type PxDR16_Type is record
+      DATA : LEBitmap_16 := [others => False];
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for PxDR16_Type use record
+      DATA at 0 range 0 .. 15;
+   end record;
+
+   type PxDR8_Type is record
+      DATA : LEBitmap_8 := [others => False];
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for PxDR8_Type use record
+      DATA at 0 range 0 .. 7;
+   end record;
+
+   PADR : aliased PxDR16_Type
+      with Address              => System'To_Address (16#05FF_FFC0#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   PBDR : aliased PxDR16_Type
+      with Address              => System'To_Address (16#05FF_FFC2#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   PCDR : aliased PxDR8_Type
+      with Address              => System'To_Address (16#05FF_FFD0#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
