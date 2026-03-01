@@ -16,9 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
-with Interfaces;
-with Bits;
 with RISCV_Definitions;
 
 package RISCV
@@ -34,9 +31,6 @@ package RISCV
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
-   use Interfaces;
-   use Bits;
 
    MXLEN renames RISCV_Definitions.XLEN;
 
