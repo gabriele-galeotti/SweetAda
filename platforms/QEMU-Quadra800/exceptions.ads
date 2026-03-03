@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2026 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -27,9 +27,9 @@ package Exceptions
    --========================================================================--
 
    procedure Exception_Process
-      with Export         => True,
-           Convention     => Asm,
-           External_Name  => "exception_process";
+      with Export        => True,
+           Convention    => Asm,
+           External_Name => "exception_process";
 
    procedure Irq_Process
       with Export        => True,
