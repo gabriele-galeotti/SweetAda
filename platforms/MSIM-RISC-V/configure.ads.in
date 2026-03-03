@@ -1,0 +1,18 @@
+
+with Definitions;
+
+package Configure
+   with Pure => True
+   is
+
+   use Definitions;
+
+   -- PLATFORM and CPU definitions
+   PLATFORM  : constant String := "MSIM";
+   CPU       : constant String := "@CPU@";
+   CPU_MODEL : constant String := "@CPU_MODEL@";
+
+   -- basic configuration parameters
+   TICK_FREQUENCY : constant := 1 * kHz1;
+
+end Configure;

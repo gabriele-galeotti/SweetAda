@@ -1,0 +1,58 @@
+
+#
+# RISC-V (MSIM emulator)
+#
+# RISC-V RV32IMA
+#
+
+################################################################################
+# Basic system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+RTS     := zfp
+PROFILE := zfp
+
+USE_APPLICATION := dummy
+
+################################################################################
+# CPU.                                                                         #
+#                                                                              #
+################################################################################
+
+CPU       := RISC-V
+CPU_MODEL := RV32IMA
+
+################################################################################
+# Build system parameters.                                                     #
+#                                                                              #
+################################################################################
+
+GCC_SWITCHES_PLATFORM     := -march=rv32ima -mabi=ilp32
+LD_SWITCHES_PLATFORM      := -m elf32lriscv
+LD_SWITCHES_PLATFORM      += --defsym _riscv_mtime_mmap=0xFF000000    \
+                             --defsym _riscv_mtimecmp_mmap=0xFF000008
+OBJDUMP_SWITCHES_PLATFORM :=
+OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
+POSTBUILD_ROMFILE         := Y
+
+CONFIGURE_FILES_PLATFORM := configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+################################################################################
+# User parameters.                                                             #
+#                                                                              #
+################################################################################
+
+################################################################################
+# Run/debug interface.                                                         #
+#                                                                              #
+################################################################################
+
+MSIM_PREFIX := /opt/MSIM
+
+SESSION_START_COMMAND :=
+SESSION_END_COMMAND   :=
+RUN_COMMAND           := "$(MSIM_PREFIX)"/bin/msim -n -c $(PLATFORM_DIRECTORY)/msim.conf
+DEBUG_COMMAND         := $(RUN_COMMAND)
+
