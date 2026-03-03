@@ -5,6 +5,8 @@
 # Nios® II
 #
 
+$(warning *** Warning: this platform is not supported.)
+
 ################################################################################
 # Basic system parameters.                                                     #
 #                                                                              #
