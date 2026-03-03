@@ -5,6 +5,8 @@
 # Nios® II MAX10 10M50DAF484C7G
 #
 
+$(warning *** Warning: this platform is not supported.)
+
 ################################################################################
 # Basic system parameters.                                                     #
 #                                                                              #
@@ -41,7 +43,7 @@ LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 #                                                                              #
 ################################################################################
 
-export QUARTUS_PATH      := /opt/intelFPGA_lite/22.1std
+export QUARTUS_ROOTDIR   := /opt/intelFPGA_lite/22.1std/quartus
 export QSYS_PROJECT_PATH := /root/workspace/devices/DE10-Lite/DE10-Lite_base_design
 export QSYS_FILE         := $(QSYS_PROJECT_PATH)/de10lite.qsys
 export QSYS_SOF_FILE     := $(QSYS_PROJECT_PATH)/output_files/DE10-Lite.sof
