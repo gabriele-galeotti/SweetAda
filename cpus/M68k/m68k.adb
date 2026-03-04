@@ -340,7 +340,6 @@ package body M68k
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       is
-      Value : SR_Type;
    begin
       Asm (
            Template => ""                        & CRLF &
