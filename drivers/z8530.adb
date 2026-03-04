@@ -31,6 +31,8 @@ package body Z8530
 
    use System.Storage_Elements;
 
+pragma Warnings (Off, "* is not referenced");
+
    ----------------------------------------------------------------------------
    -- Zilog SCC/ESCC User Manual UM010903-0515
    ----------------------------------------------------------------------------
@@ -885,5 +887,7 @@ package body Z8530
       end loop;
       Data := Descriptor.Read_8 (Descriptor.Data_Port (Channel));
    end RX;
+
+pragma Warnings (On, "* is not referenced");
 
 end Z8530;
