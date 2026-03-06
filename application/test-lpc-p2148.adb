@@ -1,6 +1,7 @@
 
 with CPU;
 with LPC2148;
+with Console;
 
 package body Application
    is
@@ -30,6 +31,7 @@ package body Application
             LPC2148.IO0CLR (10) := True;
             LPC2148.IO0SET (11) := True;
             for Delay_Loop_Count in 1 .. 5_000_000 loop CPU.NOP; end loop;
+            Console.Print ("hello, SweetAda", NL => True);
          end loop;
       end if;
       -------------------------------------------------------------------------
