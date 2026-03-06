@@ -35,8 +35,11 @@
 
 MAKEFILE_MASTER_INCLUDED := Y
 
-.NOTPARALLEL:
+# obtain invocation informations
+MAKEFILENAME := $(lastword $(MAKEFILE_LIST))
+MAKEFILEDIR  := $(abspath $(dir $(MAKEFILENAME)))
 
+# default goal
 .DEFAULT_GOAL := help
 
 # default kernel basename
@@ -49,6 +52,8 @@ CONFIGURE_DEPS :=
 VERBOSE ?=
 override VERBOSE := $(subst y,Y,$(subst 1,y,$(VERBOSE)))
 export VERBOSE
+
+.NOTPARALLEL:
 
 ################################################################################
 #                                                                              #
@@ -170,7 +175,6 @@ endif
 ################################################################################
 
 # generate SWEETADA_PATH
-MAKEFILEDIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 SWEETADA_PATH ?= $(MAKEFILEDIR)
 export SWEETADA_PATH
 
@@ -1138,6 +1142,7 @@ ifeq ($(NOBUILD),Y)
 $(KERNEL_OUTFILE):
 else
 KERNEL_OUTFILE_DEPS :=
+KERNEL_OUTFILE_DEPS += $(GNATTDI_FILENAME)
 KERNEL_OUTFILE_DEPS += $(DOTSWEETADA)
 KERNEL_OUTFILE_DEPS += $(CORE_DIRECTORY)/linker.ads
 KERNEL_OUTFILE_DEPS += $(CORE_DIRECTORY)/linker.adb
@@ -1307,16 +1312,9 @@ DOTSWEETADA_DEPS += $(filter-out $(CONFIGUREGPR_FILENAME),$(GPRBUILD_DEPS))
 	$(configure-subdirs-command)
 	$(UPDATETM) $@
 
-.PHONY: configure-gnatadc
-configure-gnatadc: $(GNATADC_FILENAME)
-$(GNATADC_FILENAME): $(CONFIGURE_DEPS) $(GNATADC_FILENAME).in
-ifneq ($(RTS_INSTALLED),Y)
-	$(error Error: no RTS available)
-endif
-	$(CREATEGNATADC) "$(PROFILE)" $(GNATADC_FILENAME)
-
 .PHONY: configure-gnattdi
-configure-gnattdi:
+configure-gnattdi: $(GNATTDI_FILENAME)
+$(GNATTDI_FILENAME): $(CONFIGURE_DEPS)
 ifeq ($(OSTYPE),cmd)
 	-$(ADAC)                                            \
                  -c __tdi__.ads -gnatet=$(GNATTDI_FILENAME) \
@@ -1327,6 +1325,15 @@ else
                  1> /dev/null 2> /dev/null
 endif
 	-$(RM) __tdi__.*
+	$(info $(MAKEFILENAME): $(GNATTDI_FILENAME): done.)
+
+.PHONY: configure-gnatadc
+configure-gnatadc: $(GNATADC_FILENAME)
+$(GNATADC_FILENAME): $(CONFIGURE_DEPS) $(GNATADC_FILENAME).in
+ifneq ($(RTS_INSTALLED),Y)
+	$(error Error: no RTS available)
+endif
+	$(CREATEGNATADC) "$(PROFILE)" $(GNATADC_FILENAME)
 
 .PHONY: configure-configuregpr
 configure-configuregpr: $(CONFIGUREGPR_FILENAME)
@@ -1358,8 +1365,8 @@ configure-end:
 .PHONY: configure-aux
 CONFIGURE_AUX_DEPS :=
 CONFIGURE_AUX_DEPS += configure-start
-CONFIGURE_AUX_DEPS += configure-gnatadc
 CONFIGURE_AUX_DEPS += configure-gnattdi
+CONFIGURE_AUX_DEPS += configure-gnatadc
 CONFIGURE_AUX_DEPS += configure-configuregpr
 CONFIGURE_AUX_DEPS += configure-subdirs
 CONFIGURE_AUX_DEPS += configure-linkeradsb
