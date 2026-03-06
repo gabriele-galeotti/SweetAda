@@ -33,6 +33,8 @@ package body PL011
    use System.Storage_Elements;
    use Bits;
 
+pragma Warnings (Off, "* is not referenced");
+
    ----------------------------------------------------------------------------
    -- Register types
    ----------------------------------------------------------------------------
@@ -286,5 +288,7 @@ package body PL011
       end loop;
       Data := To_UARTDR (Register_Read (Descriptor, UARTDR)).DATA;
    end RX;
+
+pragma Warnings (On, "* is not referenced");
 
 end PL011;
