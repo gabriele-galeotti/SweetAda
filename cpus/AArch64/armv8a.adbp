@@ -32,6 +32,8 @@ package body ARMv8A
 
    use System.Machine_Code;
 
+pragma Warnings (Off, "* is not referenced");
+
    CRLF : String renames Definitions.CRLF;
 
    --========================================================================--
@@ -574,5 +576,7 @@ pragma Style_Checks (On);
            Volatile => True
           );
    end Irq_Disable;
+
+pragma Warnings (On, "* is not referenced");
 
 end ARMv8A;
