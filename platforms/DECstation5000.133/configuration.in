@@ -15,10 +15,10 @@ PROFILE := sfp
 
 USE_APPLICATION := test-decstation5000.133
 
+USE_GXEMUL := Y
+
 export NETWORK_BOOT := N
 #export NETWORK_BOOT := Y
-
-export GXEMUL :=
 
 ################################################################################
 # CPU.                                                                         #
@@ -53,6 +53,12 @@ LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 # User parameters.                                                             #
 #                                                                              #
 ################################################################################
+
+ifeq ($(USE_GXEMUL),Y)
+export GXEMUL := 1
+else
+export GXEMUL := 0
+endif
 
 ifeq ($(NETWORK_BOOT),Y)
 export BOOT_FROM_NETWORK := True
