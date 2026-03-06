@@ -15,7 +15,7 @@
 #
 # Environment variables:
 # PATH
-# QUARTUS_PATH
+# QUARTUS_ROOTDIR
 #
 
 ################################################################################
@@ -30,7 +30,9 @@ SCRIPT_FILENAME=$(basename "$0")
 #                                                                              #
 ################################################################################
 
-export PATH=${QUARTUS_PATH}/bin:${PATH}
+QUARTUS_ROOTDIR=/opt/intelFPGA_lite/22.1std/quartus
+
+export PATH=${QUARTUS_ROOTDIR}/bin:${PATH}
 
 nios2-gdb-server --cable "USB-Blaster" --device 1 --tcpport 1234 --init-cache &
 

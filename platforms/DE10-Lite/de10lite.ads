@@ -73,8 +73,8 @@ pragma Style_Checks (Off);
       RVALID   : Boolean     := False; -- Indicates whether the DATA field is valid.
       RAVAIL   : Unsigned_16 := 0;     -- The number of characters remaining in the read FIFO (after the current read).
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for JTAG_UART_data_Type use record
       DATA     at 0 range  0 ..  7;
       Reserved at 0 range  8 .. 14;
@@ -94,8 +94,8 @@ pragma Style_Checks (Off);
       Reserved2 : Bits_5      := 0;
       WSPACE    : Unsigned_16 := 0;     -- The number of spaces available in the write FIFO.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for JTAG_UART_control_Type use record
       RE        at 0 range  0 ..  0;
       WE        at 0 range  1 ..  1;
@@ -113,7 +113,7 @@ pragma Style_Checks (Off);
       data    : JTAG_UART_data_Type    with Volatile_Full_Access => True;
       control : JTAG_UART_control_Type with Volatile_Full_Access => True;
    end record
-      with Size => 8 * 8;
+      with Object_Size => 8 * 8;
    for JTAG_UART_Type use record
       data    at 0 range 0 .. 31;
       control at 4 range 0 .. 31;
@@ -134,7 +134,8 @@ pragma Style_Checks (Off);
       RUN      : Boolean;      -- The RUN bit reads as 1 when the internal counter is running; otherwise this bit reads as 0.
       Reserved : Bits_14 := 0;
    end record
-      with Size => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for ITC_status_Type use record
       TO       at 0 range 0 ..  0;
       RUN      at 0 range 1 ..  1;
@@ -148,7 +149,8 @@ pragma Style_Checks (Off);
       STOP     : Boolean;      -- Writing a 1 to the STOP bit stops the internal counter.
       Reserved : Bits_12 := 0;
    end record
-      with Size => 16;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
    for ITC_control_Type use record
       ITO      at 0 range 0 ..  0;
       CONT     at 0 range 1 ..  1;
@@ -165,7 +167,7 @@ pragma Style_Checks (Off);
       snapl   : Unsigned_16      with Volatile_Full_Access => True;
       snaph   : Unsigned_16      with Volatile_Full_Access => True;
    end record
-      with Size => 5 * 32 + 16;
+      with Object_Size => 5 * 32 + 16;
    for Interval_Timer32_Type use record
       status  at 16#00# range 0 .. 15;
       control at 16#04# range 0 .. 15;

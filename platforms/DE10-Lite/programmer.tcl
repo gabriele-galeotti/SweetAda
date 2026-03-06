@@ -17,7 +17,7 @@
 # SWEETADA_PATH
 # LIBUTILS_DIRECTORY
 # TOOLCHAIN_PROGRAM_PREFIX
-# QUARTUS_PATH
+# QUARTUS_ROOTDIR
 # QSYS_PROJECT_PATH
 # QSYS_SOF_FILE
 # QSYS_JDI_FILE
@@ -42,7 +42,7 @@ source [file join $::env(SWEETADA_PATH) $::env(LIBUTILS_DIRECTORY) library.tcl]
 #                                                                              #
 ################################################################################
 
-set QUARTUS_PATH             $::env(QUARTUS_PATH)
+set QUARTUS_ROOTDIR          $::env(QUARTUS_ROOTDIR)
 set TOOLCHAIN_PROGRAM_PREFIX $::env(TOOLCHAIN_PROGRAM_PREFIX)
 set PROJECT_PATH             $::env(QSYS_PROJECT_PATH)
 set SOF_FILE                 $::env(QSYS_SOF_FILE)
@@ -59,24 +59,24 @@ if {[platform_get] ne "unix"} {
 }
 
 if {[lindex $argv 0] eq "-jtagd"} {
-    exec -ignorestderr >@stdout 2>@stderr [file join $QUARTUS_PATH quartus/bin/jtagd]
+    exec -ignorestderr >@stdout 2>@stderr [file join $QUARTUS_ROOTDIR bin/jtagd]
     exit 0
 }
 
 puts stdout "Running nios2-configure-sof ..."
 exec -ignorestderr >@stdout 2>@stderr sh -c "\
-cd ${QUARTUS_PATH}/nios2eds && \
-./nios2_command_shell.sh       \
-nios2-configure-sof            \
-  --cable \"${CABLE_NAME}\"    \
-  --device ${DEVICE_NO}        \
-  ${SOF_FILE}                  \
+cd ${QUARTUS_ROOTDIR}/../nios2eds && \
+./nios2_command_shell.sh             \
+nios2-configure-sof                  \
+  --cable \"${CABLE_NAME}\"          \
+  --device ${DEVICE_NO}              \
+  ${SOF_FILE}                        \
 "
 
 # NOTE: needs nios2-elf-objcopy
 puts stdout "Running nios2-download ..."
 exec -ignorestderr >@stdout 2>@stderr sh -c "\
-cd ${QUARTUS_PATH}/nios2eds &&            \
+cd ${QUARTUS_ROOTDIR}/../nios2eds &&      \
 PATH=${TOOLCHAIN_PROGRAM_PREFIX}:\${PATH} \
 ./nios2_command_shell.sh                  \
 nios2-download                            \

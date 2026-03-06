@@ -17,7 +17,7 @@
 # SWEETADA_PATH
 # LIBUTILS_DIRECTORY
 # TOOLCHAIN_PROGRAM_PREFIX
-# QUARTUS_PATH
+# QUARTUS_ROOTDIR
 # QSYS_PROJECT_PATH
 # QSYS_SOF_FILE
 # QSYS_JDI_FILE
@@ -58,7 +58,7 @@ def errprintf(format, *args):
 ################################################################################
 
 TOOLCHAIN_PROGRAM_PREFIX = os.getenv('TOOLCHAIN_PROGRAM_PREFIX')
-QUARTUS_PATH             = os.getenv('QUARTUS_PATH')
+QUARTUS_ROOTDIR          = os.getenv('QUARTUS_ROOTDIR')
 SOF_FILE                 = os.getenv('QSYS_SOF_FILE')
 JDI_FILE                 = os.getenv('QSYS_JDI_FILE')
 ELF_FILE                 = os.path.join(os.getenv('SWEETADA_PATH'), os.getenv('KERNEL_OUTFILE'))
@@ -74,7 +74,7 @@ if platform != 'unix':
 
 if len(sys.argv) > 1:
     if sys.argv[1] == '-jtagd':
-        jtagd_command = [os.path.join(QUARTUS_PATH, 'quartus', 'bin', 'jtagd')]
+        jtagd_command = [os.path.join(QUARTUS_ROOTDIR, 'quartus', 'bin', 'jtagd')]
         result = subprocess.run(jtagd_command)
         exit(result.returncode)
     else:
@@ -84,11 +84,11 @@ if len(sys.argv) > 1:
 printf('Running nios2-configure-sof ...\n')
 configure_sof_command = [
     'sh', '-c',
-    'cd ' + os.path.join(QUARTUS_PATH, 'nios2eds') + ' && \
-     ./nios2_command_shell.sh                             \
-     nios2-configure-sof                                  \
-       --cable "' + CABLE_NAME + '"                       \
-       --device ' + DEVICE_NO + '                         \
+    'cd ' + os.path.join(QUARTUS_ROOTDIR, '../nios2eds') + ' && \
+     ./nios2_command_shell.sh                                   \
+     nios2-configure-sof                                        \
+       --cable "' + CABLE_NAME + '"                             \
+       --device ' + DEVICE_NO + '                               \
     ' + SOF_FILE
     ]
 result = subprocess.run(configure_sof_command)
@@ -100,10 +100,10 @@ if result.returncode != 0:
 printf('Running nios2-download ...\n')
 download_command = [
     'sh', '-c',
-    'cd ' + os.path.join(QUARTUS_PATH, 'nios2eds') + ' && \
-     PATH=' + TOOLCHAIN_PROGRAM_PREFIX + ':${PATH}        \
-     ./nios2_command_shell.sh                             \
-     nios2-download                                       \
+    'cd ' + os.path.join(QUARTUS_ROOTDIR, '../nios2eds') + ' && \
+     PATH=' + TOOLCHAIN_PROGRAM_PREFIX + ':${PATH}              \
+     ./nios2_command_shell.sh                                   \
+     nios2-download                                             \
        --cable "' + CABLE_NAME + '"                       \
        --device ' + DEVICE_NO + '                         \
        --jdi ' + JDI_FILE + '                             \

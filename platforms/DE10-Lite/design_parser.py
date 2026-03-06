@@ -11,7 +11,7 @@
 
 #
 # Arguments:
-# $1 = QSYS design fully qualified file name
+# $1 = QSYS design fully qualified filename
 # $2 = Ada package name
 # $3 = module name
 # $4 = module name
