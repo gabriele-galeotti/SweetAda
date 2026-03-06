@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Definitions;
-with Bits;
 with LPC2148;
 
 package body Clocks
@@ -31,7 +30,6 @@ package body Clocks
    --========================================================================--
 
    use Definitions;
-   use Bits;
    use LPC2148;
 
    --========================================================================--
@@ -70,8 +68,11 @@ package body Clocks
          );
       PLL0FEED := PLLxFEED_VALUE1;
       PLL0FEED := PLLxFEED_VALUE2;
+      -- peripheral clock
+      APBDIV := (APBDIV => APBDIV_DIV4, others => <>);
       -- setup values
-      CLK_Core := 60 * MHz1;
+      CLK_Core        := 60 * MHz1;
+      CLK_Peripherals := 60 / 4 * MHz1;
    end Init;
 
 end Clocks;

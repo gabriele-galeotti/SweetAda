@@ -27,6 +27,11 @@ _start:
                 mov     sp,r0
 
                 //
+                // Initialize .bss section.
+                //
+                bl      zerobss
+
+                //
                 // Jump to high-level code.
                 //
                 .extern _ada_main

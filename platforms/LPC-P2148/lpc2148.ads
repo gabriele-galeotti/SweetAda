@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package LPC2148
-   with Preelaborate => True
    is
 
    --========================================================================--
@@ -851,6 +850,13 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    UART0_BASEADDRESS : constant := 16#E000_C000#;
+
+   procedure UART0_Init
+      (Clock_Peripherals : in Positive);
+   procedure UART0_TX
+      (Data : in Unsigned_8);
+   procedure UART0_RX
+      (Data : out Unsigned_8);
 
    ----------------------------------------------------------------------------
    -- Chapter 11: LPC214x UART1
