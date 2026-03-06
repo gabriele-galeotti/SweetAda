@@ -34,6 +34,8 @@ package body UART16x50
    use System.Storage_Elements;
    use LLutils;
 
+pragma Warnings (Off, "* is not referenced");
+
    ----------------------------------------------------------------------------
    -- Register types
    ----------------------------------------------------------------------------
@@ -415,5 +417,7 @@ package body UART16x50
              LOOPBACK => False,
              Unused   => 0)));
    end Init;
+
+pragma Warnings (On, "* is not referenced");
 
 end UART16x50;
