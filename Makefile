@@ -226,11 +226,11 @@ KERNEL_OBJFILE := $(KERNEL_BASENAME).obj
 KERNEL_OUTFILE := $(KERNEL_BASENAME).o
 KERNEL_ROMFILE := $(KERNEL_BASENAME).rom
 
-# GNAT .adc filename
-GNATADC_FILENAME := gnat.adc
-
 # GNAT target dependent information
 GNATTDI_FILENAME := gnat.tdi
+
+# GNAT .adc filename
+GNATADC_FILENAME := gnat.adc
 
 # GPRbuild project
 KERNEL_GPRFILE := sweetada.gpr
