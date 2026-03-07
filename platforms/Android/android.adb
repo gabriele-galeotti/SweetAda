@@ -158,6 +158,7 @@ package body Android
       tz     : Timezone_Type;
       Status : Unsigned_64;
    begin
+      tv.tv_sec := 0; -- compiler warning
       Asm (
            Template => ""                      & CRLF &
                        "        mov     x0,%1" & CRLF &
@@ -183,7 +184,7 @@ package body Android
          TM : Time.TM_Time;
       begin
          Time.Make_Time (tv.tv_sec, TM);
-         Console.Print ("Current date: ");
+         Console.Print ("Current datetime: ");
          Console.Print (Prefix => "",  Value => TM.Year + 1_900);
          Console.Print (Prefix => "-", Value => TM.Mon + 1);
          Console.Print (Prefix => "-", Value => TM.MDay);
