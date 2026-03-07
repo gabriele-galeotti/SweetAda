@@ -15,12 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with System.Storage_Elements;
-with Configure;
 with Definitions;
 with Bits;
-with CPU;
 with LPC2148;
 with Clocks;
 with Console;
@@ -36,11 +32,10 @@ package body BSP
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
+   use LPC2148;
 
    --========================================================================--
    --                                                                        --
@@ -58,8 +53,7 @@ package body BSP
       (C : in Character)
       is
    begin
-      -- wait for transmitter available
-      null;
+      UART0_TX (To_U8 (C));
    end Console_Putchar;
 
    procedure Console_Getchar
@@ -67,8 +61,8 @@ package body BSP
       is
       Data : Unsigned_8;
    begin
-      -- wait for receiver available
-      null;
+      UART0_RX (Data);
+      C := To_Ch (Data);
    end Console_Getchar;
 
    ----------------------------------------------------------------------------
@@ -77,7 +71,24 @@ package body BSP
    procedure Setup
       is
    begin
+      -------------------------------------------------------------------------
       Clocks.Init;
+      -------------------------------------------------------------------------
+      PINSEL0 := (
+         P0     => P0_0_UART0TXD,
+         P1     => P0_1_UART0RXD,
+         others => <>
+         );
+      UART0_Init (Clocks.CLK_Peripherals);
+      -- Console --------------------------------------------------------------
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
+      Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
+      -------------------------------------------------------------------------
+      Console.Print ("LPC-P2148", NL => True);
+      -------------------------------------------------------------------------
    end Setup;
 
 end BSP;
