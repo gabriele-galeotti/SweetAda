@@ -17,7 +17,6 @@
 
 with Definitions;
 with Bits;
-with CPU;
 with KL46Z;
 
 package body Clocks

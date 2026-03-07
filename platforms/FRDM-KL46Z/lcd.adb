@@ -15,9 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Definitions;
-with Bits;
-with CPU;
 with KL46Z;
 
 package body LCD
@@ -31,8 +28,6 @@ package body LCD
    --                                                                        --
    --========================================================================--
 
-   use Definitions;
-   use Bits;
    use KL46Z;
 
    --========================================================================--

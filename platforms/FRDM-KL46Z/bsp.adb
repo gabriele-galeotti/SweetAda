@@ -17,7 +17,6 @@
 
 with Definitions;
 with Bits;
-with CPU;
 with ARMv6M;
 with KL46Z;
 with Clocks;
