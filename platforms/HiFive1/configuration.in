@@ -69,7 +69,7 @@ SESSION_END_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openo
 RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(SHARE_DIRECTORY)/openocd.py        \
                            -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE)                           \
                            -e $(ELFTOOL)                                                     \
-                           -s _start                                                         \
+                           -s $(KERNEL_ENTRY_POINT)                                          \
                            -noload -noexec                                                   \
                            -commandfile "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/openocd.cmd
 ifeq ($(OSTYPE),cmd)
