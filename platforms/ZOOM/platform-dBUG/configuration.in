@@ -1,6 +1,6 @@
 
 #
-# ZOOM ColdFire board
+# ZOOM
 #
 # Motorola® ColdFire MCF5373
 #
@@ -60,6 +60,6 @@ RUN_COMMAND   := "$(PYTHON)"                               \
                    -d /dev/ttyUSB0 -b 19200                \
                    -f "$(SWEETADA_PATH)"/$(KERNEL_OUTFILE) \
                    -e $(ELFTOOL)                           \
-                   -s _start
+                   -s $(KERNEL_ENTRY_POINT)
 DEBUG_COMMAND := $(RUN_COMMAND)
 
