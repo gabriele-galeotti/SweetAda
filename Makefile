@@ -675,7 +675,9 @@ export                           \
        RTSES                     \
        RTS_DIRECTORY             \
        SHARE_DIRECTORY           \
+       GNATTDI_FILENAME          \
        GNATADC_FILENAME          \
+       CONFIGUREGPR_FILENAME     \
        INCLUDE_DIRECTORIES       \
        IMPLICIT_CORE_UNITS       \
        IMPLICIT_CLIBRARY_UNITS   \
@@ -763,7 +765,6 @@ export                                \
        PROFILE                        \
        ADA_MODE                       \
        SUPPRESS_STANDARD_LIBRARY      \
-       GNATTDI_FILENAME               \
        USE_LIBGCC                     \
        USE_LIBM                       \
        USE_CLIBRARY                   \
@@ -1108,21 +1109,13 @@ B__MAIN_O_DEPS += $(OBJECT_DIRECTORY)/b__main.adb
 $(OBJECT_DIRECTORY)/b__main.o: $(B__MAIN_O_DEPS)
 	@$(REM) compile the main program, incorporating the given elaboration order
 ifeq      ($(BUILD_MODE),GNATMAKE)
-ifeq ($(OSTYPE),cmd)
-	$(call brief-command, \
-        $(ADAC_GNATBIND)                                  \
-                         -o $(OBJECT_DIRECTORY)\b__main.o \
-                         -c                               \
-                         $(OBJECT_DIRECTORY)\b__main.adb  \
+	$(CHDIR) $(OBJECT_DIRECTORY) && \
+        $(call brief-command, \
+        $(ADAC_GNATBIND)              \
+                         -o b__main.o \
+                         -c           \
+                         b__main.adb  \
         ,[ADAC],b__main.adb)
-else
-	$(call brief-command, \
-        $(ADAC_GNATBIND)                                  \
-                         -o $(OBJECT_DIRECTORY)/b__main.o \
-                         -c                               \
-                         $(OBJECT_DIRECTORY)/b__main.adb  \
-        ,[ADAC],b__main.adb)
-endif
 endif
 
 #
