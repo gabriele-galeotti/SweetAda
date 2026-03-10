@@ -34,10 +34,7 @@ SET "TERM="
 REM GDB options
 SET "GDB_EXEC_CMD=%GDB%"
 SET "GDB_EXEC_CMD=!GDB_EXEC_CMD! -q"
-SET "GDB_EXEC_CMD=!GDB_EXEC_CMD! -iex "set basenames-may-differ""
 SET "GDB_EXEC_CMD=!GDB_EXEC_CMD! -ex "target extended-remote tcp:localhost:3333""
-SET "GDB_EXEC_CMD=!GDB_EXEC_CMD! -ex "set language asm""
-SET "GDB_EXEC_CMD=!GDB_EXEC_CMD! -ex "set $pc=_start""
 SET "GDB_EXEC_CMD=!GDB_EXEC_CMD! %KERNEL_OUTFILE%"
 
 REM GDB session
