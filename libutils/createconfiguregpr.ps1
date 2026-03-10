@@ -292,8 +292,8 @@ $configuregpr += $(print_I "Toolchain_Prefix                  := `"$(GetEnvVar T
 $configuregpr += $(print_I "Toolchain_Name                    := `"$(GetEnvVar TOOLCHAIN_NAME)`";") + $nl
 $configuregpr += $(print_I "Gprbuild_Prefix                   := `"$(GetEnvVar GPRBUILD_PREFIX)`";") + $nl
 $configuregpr += $(print_I "GCC_Wrapper                       := `"$(GetEnvVar GCC_WRAPPER)`";") + $nl
-$configuregpr += $(print_I "GnatAdc_Filename                  := `"$(GetEnvVar GNATADC_FILENAME)`";") + $nl
 $configuregpr += $(print_I "GnatTDI_Filename                  := `"$(GetEnvVar GNATTDI_FILENAME)`";") + $nl
+$configuregpr += $(print_I "GnatAdc_Filename                  := `"$(GetEnvVar GNATADC_FILENAME)`";") + $nl
 $configuregpr += $(print_I "Library_Directory                 := `"$(GetEnvVar LIBRARY_DIRECTORY)`";") + $nl
 $configuregpr += $(print_I "Object_Directory                  := `"$(GetEnvVar OBJECT_DIRECTORY)`";") + $nl
 $configuregpr += $(print_I "RTS                               := `"$(GetEnvVar RTS)`";") + $nl
