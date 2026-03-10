@@ -140,11 +140,8 @@ pragma Style_Checks (On);
    procedure TEE_Enable
       (Enable : in Boolean)
       is
-      SR : SR_Type;
    begin
-      SR := SR_Read;
-      SR.TEE := Enable;
-      SR_Write (SR);
+      SR_Write ((SR_Read with delta TEE => Enable));
    end TEE_Enable;
 
    ----------------------------------------------------------------------------
