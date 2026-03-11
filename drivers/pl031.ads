@@ -44,9 +44,8 @@ pragma Style_Checks (Off);
       Base_Address : Address;
    end record;
 
-   DESCRIPTOR_INVALID : constant Descriptor_Type :=
-      (
-       Base_Address => Null_Address
+   DESCRIPTOR_INVALID : constant Descriptor_Type := (
+      Base_Address => Null_Address
       );
 
    procedure Read_Clock
