@@ -59,53 +59,63 @@ package body PL110
       is
    begin
       return Shift_Left (Unsigned_16 (R), 11) or
-             Shift_Left (Unsigned_16 (G), 5)  or
-             Unsigned_16 (B);
+             Shift_Left (Unsigned_16 (G),  5) or
+             Shift_Left (Unsigned_16 (B),  0);
    end RGB565;
 
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      (Descriptor : in Descriptor_Type)
+      (D : in Descriptor_Type)
       is
       PL110_Device : aliased PL110_Type
-         with Address    => Descriptor.Base_Address,
+         with Address    => D.Base_Address,
               Volatile   => True,
               Import     => True,
               Convention => Ada;
    begin
-      -- WxH = 640x480, 16 bpp RGB565
-      PL110_Device.LCDTiming0 :=
-         (Reserved => 0,
-          PPL      => 640 / 16 - 1,
-          HSW      => 64 - 1,
-          HFP      => 32 - 1,
-          HBP      => 64 - 1);
-      PL110_Device.LCDTiming1 :=
-         (LPP => 480 - 1,
-          VSW => 19 - 1,
-          VFP => 11,
-          VBP => 8);
-      PL110_Device.LCDUPBASE := FRAMEBUFFER_BASEADDRESS;
-      PL110_Device.LCDControl :=
-         (LcdEn     => True,
-          LcdBpp    => BPP16,
-          LcdBW     => False,
-          LcdTFT    => True,
-          LcdMono8  => False,
-          LcdDual   => False,
-          BGR       => BGR_RGB,
-          BEBO      => False,
-          BEPO      => False,
-          LcdPwr    => True,
-          LcdVComp  => VCOMPBP,
-          Reserved1 => 0,
-          WATERMARK => WATERMARK_4,
-          Reserved2 => 0);
+      -- 16 bpp RGB565
+      PL110_Device.LCDTiming0 := (
+         Reserved => 0,
+         PPL      => D.Width / 16 - 1,
+         HSW      => 64 - 1,
+         HFP      => 32 - 1,
+         HBP      => 64 - 1
+         );
+      PL110_Device.LCDTiming1 := (
+         LPP => D.Heigth - 1,
+         VSW => 19 - 1,
+         VFP => 11,
+         VBP => 8
+         );
+      PL110_Device.LCDUPBASE :=
+         Unsigned_32 (To_Integer (D.Framebuffer_Address));
+      PL110_Device.LCDControl := (
+         LcdEn     => True,
+         LcdBpp    => BPP16,
+         LcdBW     => False,
+         LcdTFT    => True,
+         LcdMono8  => False,
+         LcdDual   => False,
+         BGR       => BGR_RGB,
+         BEBO      => False,
+         BEPO      => False,
+         LcdPwr    => True,
+         LcdVComp  => VCOMPBP,
+         Reserved1 => 0,
+         WATERMARK => WATERMARK_4,
+         Reserved2 => 0
+         );
       -- clear screen
       declare
-         BG_Color : constant Unsigned_16 := RGB565 (16#1F#, 16#0F#, 16#00#);
+         BG_Color    : constant Unsigned_16 := RGB565 (16#1F#, 16#0F#, 16#00#);
+         Framebuffer : aliased U16_Array
+            (0 .. VIDEO_WIDTH_MAX * VIDEO_HEIGHT_MAX - 1)
+            with Address    => D.Framebuffer_Address,
+                 Volatile   => True,
+                 Import     => True,
+                 Convention => Ada;
       begin
          for Index in Framebuffer'Range loop
             Framebuffer (Index) := BG_Color;
@@ -117,14 +127,21 @@ package body PL110
    -- Print (Character)
    ----------------------------------------------------------------------------
    procedure Print
-      (X : in Video_X_Coordinate_Type;
-       Y : in Video_Y_Coordinate_Type;
+      (D : in Descriptor_Type;
+       X : in Text_XCoord_Type;
+       Y : in Text_YCoord_Type;
        C : in Character)
       is
+      Framebuffer        : aliased U16_Array
+         (0 .. VIDEO_WIDTH_MAX * VIDEO_HEIGHT_MAX - 1)
+         with Address    => D.Framebuffer_Address,
+              Volatile   => True,
+              Import     => True,
+              Convention => Ada;
       Framebuffer_Offset : Natural;
       Pattern            : Unsigned_8;
    begin
-      Framebuffer_Offset := X * 8 + Y * 16 * VIDEO_WIDTH;
+      Framebuffer_Offset := X * 8 + Y * 16 * D.Width;
       for Index in Storage_Offset range 0 .. Videofont8x16.Font_Height - 1 loop
          Pattern := Unsigned_8 (Videofont8x16.Font (Character'Pos (C)) (Index));
          for B in 0 .. 7 loop
@@ -132,7 +149,7 @@ package body PL110
                Framebuffer (Framebuffer_Offset + (7 - B)) := 16#FFFF#;
             end if;
          end loop;
-         Framebuffer_Offset := Framebuffer_Offset + VIDEO_WIDTH;
+         Framebuffer_Offset := @ + D.Width;
       end loop;
    end Print;
 
@@ -140,28 +157,29 @@ package body PL110
    -- Print (String)
    ----------------------------------------------------------------------------
    procedure Print
-      (X : in Video_X_Coordinate_Type;
-       Y : in Video_Y_Coordinate_Type;
+      (D : in Descriptor_Type;
+       X : in Text_XCoord_Type;
+       Y : in Text_YCoord_Type;
        S : in String)
       is
-      X1 : Video_X_Coordinate_Type;
-      Y1 : Video_Y_Coordinate_Type;
+      X1 : Text_XCoord_Type;
+      Y1 : Text_YCoord_Type;
       C  : Character;
    begin
       X1 := X;
       Y1 := Y;
       for Index in S'Range loop
          C := S (Index);
-         Print (X1, Y1, C);
-         if X1 = Video_X_Coordinate_Type'Last then
+         Print (D, X1, Y1, C);
+         if X1 = Text_XCoord_Type'Last then
             X1 := 0;
-            if Y1 = Video_Y_Coordinate_Type'Last then
+            if Y1 = Text_YCoord_Type'Last then
                Y1 := 0;
             else
-               Y1 := Y1 + 1;
+               Y1 := @ + 1;
             end if;
          else
-            X1 := X1 + 1;
+            X1 := @ + 1;
          end if;
       end loop;
    end Print;

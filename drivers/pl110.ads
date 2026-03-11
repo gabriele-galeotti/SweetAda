@@ -169,56 +169,53 @@ pragma Style_Checks (Off);
    end record;
 
    ----------------------------------------------------------------------------
-   -- Framebuffer and video parameters
-   ----------------------------------------------------------------------------
-
-   VIDEO_WIDTH  : constant := 640;
-   VIDEO_HEIGHT : constant := 480;
-
-   FRAMEBUFFER_BASEADDRESS : constant := 16#0020_0000#;
-
-   Framebuffer : aliased U16_Array (0 .. VIDEO_WIDTH * VIDEO_HEIGHT - 1)
-      with Address    => System'To_Address (FRAMEBUFFER_BASEADDRESS),
-           Volatile   => True,
-           Import     => True,
-           Convention => Ada;
-
-   ----------------------------------------------------------------------------
    -- Interface
    ----------------------------------------------------------------------------
 
-   subtype Video_X_Coordinate_Type is Natural range 0 .. VIDEO_WIDTH / Videofont8x16.Font_Width - 1;
-   subtype Video_Y_Coordinate_Type is Natural range 0 .. VIDEO_HEIGHT / Videofont8x16.Font_Height - 1;
+   VIDEO_WIDTH_MAX  : constant := 1024;
+   VIDEO_HEIGHT_MAX : constant := 768;
 
    type Descriptor_Type is record
-      Base_Address : Address;
+      Base_Address        : Address;
+      Framebuffer_Address : Address;
+      Width               : Natural range 0 .. VIDEO_WIDTH_MAX;
+      Heigth              : Natural range 0 .. VIDEO_HEIGHT_MAX;
    end record;
 
-   DESCRIPTOR_INVALID : constant Descriptor_Type :=
-      (
-       Base_Address => Null_Address
+   DESCRIPTOR_INVALID : constant Descriptor_Type := (
+      Base_Address        => Null_Address,
+      Framebuffer_Address => Null_Address,
+      Width               => 0,
+      Heigth              => 0
       );
+
+   subtype Text_XCoord_Type is Natural
+      range 0 .. VIDEO_WIDTH_MAX / Videofont8x16.Font_Width - 1;
+   subtype Text_YCoord_Type is Natural
+      range 0 .. VIDEO_HEIGHT_MAX / Videofont8x16.Font_Height - 1;
 
    ----------------------------------------------------------------------------
    -- Initialization procedure.
    ----------------------------------------------------------------------------
    procedure Init
-      (Descriptor : in Descriptor_Type);
+      (D : in Descriptor_Type);
 
    ----------------------------------------------------------------------------
    -- Print character C @ X, Y.
    ----------------------------------------------------------------------------
    procedure Print
-      (X : in Video_X_Coordinate_Type;
-       Y : in Video_Y_Coordinate_Type;
+      (D : in Descriptor_Type;
+       X : in Text_XCoord_Type;
+       Y : in Text_YCoord_Type;
        C : in Character);
 
    ----------------------------------------------------------------------------
    -- Print string S @ X, Y.
    ----------------------------------------------------------------------------
    procedure Print
-      (X : in Video_X_Coordinate_Type;
-       Y : in Video_Y_Coordinate_Type;
+      (D : in Descriptor_Type;
+       X : in Text_XCoord_Type;
+       Y : in Text_YCoord_Type;
        S : in String);
 
 pragma Style_Checks (On);
