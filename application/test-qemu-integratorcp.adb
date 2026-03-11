@@ -35,7 +35,7 @@ package body Application
       is
    begin
       if True then
-         PL110.Print (0, 0, "hello SweetAda ...");
+         PL110.Print (BSP.PL110_Descriptor, 0, 0, "hello SweetAda ...");
       end if;
       -------------------------------------------------------------------------
       if True then

@@ -111,7 +111,10 @@ package body BSP
       PL031.Init (PL031_Descriptor);
       -- PL110 LCD ------------------------------------------------------------
       PL110_Descriptor := (
-         Base_Address => System'To_Address (PL110_BASEADDRESS)
+         Base_Address        => System'To_Address (PL110_BASEADDRESS),
+         Framebuffer_Address => System'To_Address (PL110_FRAMEBUFFERADDRESS),
+         Width               => PL110.VIDEO_WIDTH_MAX,
+         Heigth              => PL110.VIDEO_HEIGHT_MAX
          );
       PL110.Init (PL110_Descriptor);
       -- Timer ----------------------------------------------------------------

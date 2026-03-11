@@ -50,6 +50,7 @@ pragma Style_Checks (Off);
    PL011_UART0_BASEADDRESS  : constant := 16#1600_0000#;
    PL011_UART1_BASEADDRESS  : constant := 16#1700_0000#;
    PL110_BASEADDRESS        : constant := 16#C000_0000#;
+   PL110_FRAMEBUFFERADDRESS : constant := 16#0020_0000#;
    LAN91C111_BASEADDRESS    : constant := 16#C800_0000#;
 
    -- 3.6.1 Primary interrupt controller
