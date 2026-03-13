@@ -49,8 +49,11 @@ endif
 export OSTYPE
 
 # workarounds for some environments
-ifeq ($(OSTYPE),cmd)
-SHELL := cmd.exe
+ifeq      ($(OSTYPE),cmd)
+SHELL     := cmd.exe
+else ifeq ($(OSTYPE),msys)
+SHELL_CMD := cmd.exe //C
+export SHELL_CMD
 endif
 
 # executable and script extensions
@@ -68,7 +71,6 @@ EXEEXT     :=
 endif
 SCREXT     := $(SCREXT_unx)
 SHELL_EXEC := $(SHELL)
-SHELL_CMD  := cmd.exe //C
 endif
 export EXEEXT SCREXT_cmd SCREXT_unx SCREXT SHELL_EXEC
 
