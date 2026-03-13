@@ -68,6 +68,7 @@ EXEEXT     :=
 endif
 SCREXT     := $(SCREXT_unx)
 SHELL_EXEC := $(SHELL)
+SHELL_CMD  := cmd.exe //C
 endif
 export EXEEXT SCREXT_cmd SCREXT_unx SCREXT SHELL_EXEC
 
