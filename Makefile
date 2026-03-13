@@ -244,8 +244,8 @@ GPRBUILD_DEPS :=
 # cleaning
 CLEAN_OBJECTS_COMMON     := *.a *.aout *.bin *.d *.dwo *.elf *.hex *.log *.lst \
                             *.map *.o *.out* *.srec *.td *.tmp
-DISTCLEAN_OBJECTS_COMMON := $(GNATADC_FILENAME)      \
-                            $(GNATTDI_FILENAME)      \
+DISTCLEAN_OBJECTS_COMMON := $(GNATTDI_FILENAME)      \
+                            $(GNATADC_FILENAME)      \
                             $(CONFIGUREGPR_FILENAME)
 
 # check for RTS build
@@ -1108,7 +1108,7 @@ B__MAIN_O_DEPS :=
 B__MAIN_O_DEPS += $(OBJECT_DIRECTORY)/b__main.adb
 $(OBJECT_DIRECTORY)/b__main.o: $(B__MAIN_O_DEPS)
 	@$(REM) compile the main program, incorporating the given elaboration order
-ifeq      ($(BUILD_MODE),GNATMAKE)
+ifeq ($(BUILD_MODE),GNATMAKE)
 	$(CHDIR) $(OBJECT_DIRECTORY) && \
         $(call brief-command, \
         $(ADAC_GNATBIND)              \
@@ -1131,6 +1131,14 @@ $(CORE_DIRECTORY)/linker.adb: $(CONFIGURE_DEPS) $(PLATFORM_DIRECTORY)/$(LD_SCRIP
                       $(PLATFORM_DIRECTORY)/$(LD_SCRIPT) \
                       $(CORE_DIRECTORY)/linker
 
+.PHONY: b__main_update
+b__main_update:
+ifeq ($(OSTYPE),cmd)
+	@$(RM) $(OBJECT_DIRECTORY)\b__main.adb
+else
+	@$(RM) $(OBJECT_DIRECTORY)/b__main.adb
+endif
+
 ifeq ($(NOBUILD),Y)
 $(KERNEL_OUTFILE):
 else
@@ -1139,6 +1147,11 @@ KERNEL_OUTFILE_DEPS += $(GNATTDI_FILENAME)
 KERNEL_OUTFILE_DEPS += $(DOTSWEETADA)
 KERNEL_OUTFILE_DEPS += $(CORE_DIRECTORY)/linker.ads
 KERNEL_OUTFILE_DEPS += $(CORE_DIRECTORY)/linker.adb
+ifeq ($(BUILD_MODE),GPRbuild)
+ifeq ($(wildcard $(OBJECT_DIRECTORY)/b__main.o),)
+KERNEL_OUTFILE_DEPS += b__main_update
+endif
+endif
 KERNEL_OUTFILE_DEPS += $(OBJECT_DIRECTORY)/b__main.o
 $(KERNEL_OUTFILE): $(KERNEL_OUTFILE_DEPS)
 endif
@@ -1309,15 +1322,20 @@ DOTSWEETADA_DEPS += $(filter-out $(CONFIGUREGPR_FILENAME),$(GPRBUILD_DEPS))
 configure-gnattdi: $(GNATTDI_FILENAME)
 $(GNATTDI_FILENAME): $(CONFIGURE_DEPS)
 ifeq ($(OSTYPE),cmd)
-	-$(ADAC)                                            \
-                 -c __tdi__.ads -gnatet=$(GNATTDI_FILENAME) \
-                 1>nul 2>nul
+	-$(CHDIR) $(OBJECT_DIRECTORY)          && \
+        $(ADAC)                                   \
+                -gnatet=../$(GNATTDI_FILENAME)    \
+                -c                                \
+                __tdi__.ads                       \
+                1>nul 2>nul
 else
-	-$(ADAC)                                            \
-                 -c __tdi__.ads -gnatet=$(GNATTDI_FILENAME) \
-                 1> /dev/null 2> /dev/null
+	-$(CHDIR) $(OBJECT_DIRECTORY)          && \
+        $(ADAC)                                   \
+                -gnatet=../$(GNATTDI_FILENAME)    \
+                -c                                \
+                __tdi__.ads                       \
+                1> /dev/null 2> /dev/null
 endif
-	-$(RM) __tdi__.*
 	$(info $(MAKEFILENAME): $(GNATTDI_FILENAME): done.)
 
 .PHONY: configure-gnatadc
