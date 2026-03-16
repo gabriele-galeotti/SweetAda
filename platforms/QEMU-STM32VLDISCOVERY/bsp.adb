@@ -19,7 +19,6 @@ with Definitions;
 with Configure;
 with Bits;
 with Core;
-with CPU;
 with ARMv7M;
 with STM32VLDISCOVERY;
 with Exceptions;
