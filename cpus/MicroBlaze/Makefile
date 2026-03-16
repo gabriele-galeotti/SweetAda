@@ -37,12 +37,12 @@ LIBRARY_NAME := cpu
 OBJECTS :=
 
 ifneq ($(USE_LIBGCC),Y)
-OBJECTS += $(OBJ_DIRECTORY)/divsi3.o
-OBJECTS += $(OBJ_DIRECTORY)/modsi3.o
-OBJECTS += $(OBJ_DIRECTORY)/mulsi3.o
-OBJECTS += $(OBJ_DIRECTORY)/udivsi3.o
-OBJECTS += $(OBJ_DIRECTORY)/umodsi3.o
-OBJECTS += $(OBJ_DIRECTORY)/divsi3table.o
+OBJECTS += $(OBJ_DIRECTORY)/divsi3.o      \
+           $(OBJ_DIRECTORY)/modsi3.o      \
+           $(OBJ_DIRECTORY)/mulsi3.o      \
+           $(OBJ_DIRECTORY)/udivsi3.o     \
+           $(OBJ_DIRECTORY)/umodsi3.o     \
+           $(OBJ_DIRECTORY)/divsi3table.o
 endif
 
 .PHONY: all
