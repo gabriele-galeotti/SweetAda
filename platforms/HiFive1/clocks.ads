@@ -26,6 +26,8 @@ package Clocks
    --                                                                        --
    --========================================================================--
 
+   CLK_Core : Natural;
+
    procedure Init;
 
 end Clocks;

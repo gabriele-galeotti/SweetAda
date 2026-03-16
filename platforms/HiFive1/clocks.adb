@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Definitions;
 with CPU;
 with HiFive1;
 
@@ -29,8 +30,6 @@ package body Clocks
    --                                                                        --
    --========================================================================--
 
-   use HiFive1;
-
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -44,7 +43,8 @@ package body Clocks
    ----------------------------------------------------------------------------
    procedure Init
       is
-      use PRCI;
+      use Definitions;
+      use HiFive1.PRCI;
    begin
       -- external clock frequency = 16 MHz
       plloutdiv := (
@@ -64,9 +64,16 @@ package body Clocks
          );
       -- wait for PLL to settle down
       loop
-         for Delay_Loop_Count in 1 .. 10_000_000 loop CPU.NOP; end loop;
          exit when pllcfg.plllock;
+         for D3lay in 1 .. 2**20 loop CPU.NOP; end loop;
       end loop;
+      -- setup values
+      case pllcfg.pllf is
+         when pllf_x8  => CLK_Core := 16 * MHz1;
+         when pllf_x16 => CLK_Core := 32 * MHz1;
+         when pllf_x32 => CLK_Core := 64 * MHz1;
+         when others   => raise Constraint_Error;
+      end case;
    end Init;
 
 end Clocks;

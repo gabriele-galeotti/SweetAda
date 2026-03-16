@@ -15,10 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
-with Ada.Unchecked_Conversion;
 with Interfaces;
-with Definitions;
 with Abort_Library;
 with Bits;
 with LLutils;
@@ -38,11 +35,8 @@ package body Exceptions
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
-   use RISCV;
-   use MTIME;
 
    --========================================================================--
    --                                                                        --
@@ -57,18 +51,54 @@ package body Exceptions
    ----------------------------------------------------------------------------
    procedure Exception_Process
       is
+      use RISCV;
+      use MTIME;
       mcause : mcause_Type;
+      MsgPtr : access constant String;
    begin
       mcause := mcause_Read;
       if mcause.Interrupt then
-         BSP.Tick_Count := @ + 1;
-         -- if BSP.Tick_Count mod 1_000 = 0 then
-         --    Console.Print ("T", NL => False);
-         -- end if;
-         BSP.Timer_Value := @ + BSP.Timer_Constant;
-         mtimecmp_Write (BSP.Timer_Value);
+         case mcause.Exception_Code is
+            when EXC_TIMERINT =>
+               -- Machine timer interrupt
+               BSP.Tick_Count := @ + 1;
+               BSP.Timer_Value := @ + BSP.Timer_Constant;
+               mtimecmp_Write (BSP.Timer_Value);
+            when EXC_SWINT =>
+               -- Machine software interrupt
+               null;
+            when EXC_EXTINT =>
+               -- Machine external interrupt
+               null;
+            when others =>
+               Console.Print (
+                  Prefix => "*** INTERRUPT",
+                  Value  => MXLEN_Type (mcause.Exception_Code),
+                  NL     => True
+                  );
+               Abort_Library.System_Abort;
+         end case;
       else
-         Console.Print (Prefix => "*** EXCEPTION: ", Value => To_MXLEN (mcause), NL => True);
+         case mcause.Exception_Code is
+            when EXC_INSTRADDRMIS  => MsgPtr := MsgPtr_EXC_INSTRADDRMIS;
+            when EXC_INSTRACCFAULT => MsgPtr := MsgPtr_EXC_INSTRACCFAULT;
+            when EXC_INSTRILL      => MsgPtr := MsgPtr_EXC_INSTRILL;
+            when EXC_BREAKPT       => MsgPtr := MsgPtr_EXC_BREAKPT;
+            when EXC_LOADADDRMIS   => MsgPtr := MsgPtr_EXC_LOADADDRMIS;
+            when EXC_LOADACCFAULT  => MsgPtr := MsgPtr_EXC_LOADACCFAULT;
+            when EXC_STAMOADDRMIS  => MsgPtr := MsgPtr_EXC_STAMOADDRMIS;
+            when EXC_STAMOACCFAULT => MsgPtr := MsgPtr_EXC_STAMOACCFAULT;
+            when EXC_ENVCALLUMODE  => MsgPtr := MsgPtr_EXC_ENVCALLUMODE;
+            when EXC_ENVCALLMMODE  => MsgPtr := MsgPtr_EXC_ENVCALLMMODE;
+            when others            => MsgPtr := MsgPtr_EXC_UNKNOWN;
+         end case;
+         Console.Print (
+            Prefix => "*** EXCEPTION",
+            Value  => MXLEN_Type (mcause.Exception_Code),
+            NL     => True
+            );
+         Console.Print (MsgPtr.all, NL => True);
+         Console.Print (Prefix => "MEPC: ", Value => mepc_Read, NL => True);
          Abort_Library.System_Abort;
       end if;
    end Exception_Process;
@@ -78,6 +108,7 @@ package body Exceptions
    ----------------------------------------------------------------------------
    procedure Init
       is
+      use RISCV;
       Vectors : aliased Asm_Entry_Point
          with Import        => True,
               External_Name => "vectors";

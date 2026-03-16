@@ -16,12 +16,11 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Bits;
-with CPU;
 with RISCV;
 with MTIME;
 with HiFive1;
-with Exceptions;
 with Clocks;
+with Exceptions;
 with QSPI;
 with Console;
 
@@ -40,7 +39,6 @@ package body BSP
    use Bits;
    use RISCV;
    use MTIME;
-   use HiFive1;
 
    --========================================================================--
    --                                                                        --
@@ -57,7 +55,7 @@ package body BSP
    procedure Console_Putchar
       (C : in Character)
       is
-      use UART;
+      use HiFive1.UART;
    begin
       -- wait for transmitter available
       loop exit when not UART0.txdata.full; end loop;
@@ -67,7 +65,7 @@ package body BSP
    procedure Console_Getchar
       (C : out Character)
       is
-      use UART;
+      use HiFive1.UART;
       rxdata : rxdata_Type;
    begin
       -- wait for receiver available
@@ -83,8 +81,10 @@ package body BSP
    ----------------------------------------------------------------------------
    procedure Setup
       is
-      use GPIO;
-      use UART;
+      use HiFive1.GPIO;
+      use HiFive1.UART;
+      use Clocks;
+      Baud_Rate : constant := Baud_Rate_Type'Enum_Rep (BR_115200);
    begin
       -- Clock setup ----------------------------------------------------------
       Clocks.Init;
@@ -94,15 +94,11 @@ package body BSP
       iof_en    := [16 | 17 | 18 | 23 => True, others => <>];
       output_en := [16 | 17 | 18 | 23 => True, others => <>];
       -- UART0 ----------------------------------------------------------------
-      -- UART0.div.div := 16#008A#; -- 115200 bps @ 16 MHz
-      -- UART0.div.div := 16#0115#; -- 115200 bps @ 32 MHz
-      UART0.div.div := 16#022B#; -- 115200 bps @ 64 MHz
+      UART0.div.div := Unsigned_16 (CLK_Core / Baud_Rate);
       UART0.txctrl  := (txen => True, nstop => 1, txcnt => 1, others => <>);
       UART0.rxctrl  := (rxen => True, rxcnt => 0, others => <>);
       -- UART1 ----------------------------------------------------------------
-      -- UART1.div.div := 16#008A#; -- 115200 bps @ 16 MHz
-      -- UART1.div.div := 16#0115#; -- 115200 bps @ 32 MHz
-      UART1.div.div := 16#022B#; -- 115200 bps @ 64 MHz
+      UART1.div.div := Unsigned_16 (CLK_Core / Baud_Rate);
       UART1.txctrl  := (txen => True, nstop => 1, txcnt => 1, others => <>);
       UART1.rxctrl  := (rxen => True, rxcnt => 0, others => <>);
       -- Console --------------------------------------------------------------
