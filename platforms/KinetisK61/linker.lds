@@ -4,8 +4,8 @@ ENTRY(_start)
 MEMORY
 {
         FLASHROM : ORIGIN = 0x00000000, LENGTH = 0x100000 /* 1M */
-        SRAM_L   : ORIGIN = 0x1FFF0000, LENGTH = 0x10000  /* 64K */
-        SRAM_U   : ORIGIN = 0x20000000, LENGTH = 0x10000  /* 64K */
+        SRAM_L   : ORIGIN = 0x1FFF0000, LENGTH = 0x10000  /* 64k */
+        SRAM_U   : ORIGIN = 0x20000000, LENGTH = 0x10000  /* 64k */
 }
 
 SECTIONS
