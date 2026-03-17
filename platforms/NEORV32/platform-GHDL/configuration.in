@@ -65,13 +65,10 @@ LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 # - go into the "<NEORV32_HOME>/sw/example/hello_world" and issue:
 #   make ../../../sw/image_gen/image_gen
 #
-# Then, check whether the shell script "<NEORV32_HOME>/sim/ghdl.sh" has
-# execute permission.
-#
 # GHDL_PATH is the prefix of the GHDL installation.
 #
 
-export NEORV32_HOME := /root/workspace/hardware/NEORV32/neorv32-1.11.8
+export NEORV32_HOME := /root/workspace/hardware/NEORV32/neorv32-1.12.8
 export GHDL_PATH    := /opt/GHDL
 
 SESSION_START_COMMAND :=

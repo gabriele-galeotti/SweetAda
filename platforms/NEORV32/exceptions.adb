@@ -15,10 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
-with Definitions;
 with Bits;
 with LLutils;
 with RISCV;
@@ -37,7 +35,6 @@ package body Exceptions
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
    use RISCV;

@@ -964,16 +964,75 @@ pragma Style_Checks (Off);
    -- 2.8.23. General Purpose Timer (GPTMR)
    ----------------------------------------------------------------------------
 
-   type GPTMR_Type is record
-      CTRL  : Unsigned_32 with Volatile_Full_Access => True;
-      THRES : Unsigned_32 with Volatile_Full_Access => True;
-      COUNT : Unsigned_32 with Volatile_Full_Access => True;
+   MODE_SINGLESHOT : constant Boolean := False;
+   MODE_CONTINUOUS : constant Boolean := True;
+
+   type CSR0_Type is record
+      ENABLE : Bitmap_16 with Volatile_Full_Access => True; -- Slice enable
+      MODE   : Bitmap_16 with Volatile_Full_Access => True; -- Slice operation mode
    end record
-      with Object_Size => 3 * 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for CSR0_Type use record
+      ENABLE at 0 range 0 .. 15;
+      MODE   at 2 range 0 .. 15;
+   end record;
+
+   PRSC_2    : constant := 2#000#; -- Resulting prescaler = 2
+   PRSC_4    : constant := 2#001#; -- Resulting prescaler = 4
+   PRSC_8    : constant := 2#010#; -- Resulting prescaler = 8
+   PRSC_64   : constant := 2#011#; -- Resulting prescaler = 64
+   PRSC_128  : constant := 2#100#; -- Resulting prescaler = 128
+   PRSC_1024 : constant := 2#101#; -- Resulting prescaler = 1024
+   PRSC_2048 : constant := 2#110#; -- Resulting prescaler = 2048
+   PRSC_4096 : constant := 2#111#; -- Resulting prescaler = 4096
+
+   type CSR1_PRSC_Type is record
+      PRSC   : Bits_3;       -- Global clock prescaler select.
+      Unused : Bits_13 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CSR1_PRSC_Type use record
+      PRSC   at 0 range 0 ..  2;
+      Unused at 0 range 3 .. 15;
+   end record;
+
+   type CSR1_Type is record
+      IRQ  : Bitmap_16      with Volatile_Full_Access => True;
+      PRSC : CSR1_PRSC_Type with Volatile_Full_Access => True;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for CSR1_Type use record
+      IRQ  at 0 range 0 .. 15;
+      PRSC at 2 range 0 .. 15;
+   end record;
+
+   type GPTMR_SLICE_Type is record
+      CNT : Unsigned_32 with Volatile_Full_Access => True;
+      THR : Unsigned_32 with Volatile_Full_Access => True;
+   end record
+      with Object_Size => 2 * 32;
+   for GPTMR_SLICE_Type use record
+      CNT at 0 range 0 .. 31;
+      THR at 4 range 0 .. 31;
+   end record;
+
+   type GPTMR_SLICE_Array_Type is array (0 .. 15) of GPTMR_SLICE_Type
+      with Pack        => True,
+           Object_Size => 2 * 32 * 16;
+
+   type GPTMR_Type is record
+      CSR0  : CSR0_Type;
+      CSR1  : CSR1_Type;
+      SLICE : GPTMR_SLICE_Array_Type;
+   end record
+      with Object_Size => 256 * 8;
    for GPTMR_Type use record
-      CTRL  at 0 range 0 .. 31;
-      THRES at 4 range 0 .. 31;
-      COUNT at 8 range 0 .. 31;
+      CSR0  at 16#00# range 0 .. 31;
+      CSR1  at 16#04# range 0 .. 31;
+      SLICE at 16#80# range 0 .. 2 * 32 * 16 - 1;
    end record;
 
    GPTMR_BASEADDRESS : constant := 16#FFF1_0000#;

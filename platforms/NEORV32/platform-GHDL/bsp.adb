@@ -108,7 +108,7 @@ package body BSP
          );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
-      Console.Print ("NEORV32 1.11.8", NL => True);
+      Console.Print ("NEORV32 1.12.8", NL => True);
       Console.Print (
          Prefix => "number of harts:                 ",
          Value  => Natural (SYSINFO.MEM.SYSINFO_MISC_HART),
