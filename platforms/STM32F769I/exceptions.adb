@@ -18,7 +18,6 @@
 with LLutils;
 with Abort_Library;
 with ARMv7M;
-with CPU;
 with STM32F769I;
 with BSP;
 with Console;
