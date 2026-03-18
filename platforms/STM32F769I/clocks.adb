@@ -16,9 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Definitions;
-with Bits;
 with STM32F769I;
-with BSP;
 
 package body Clocks
    is
@@ -32,7 +30,6 @@ package body Clocks
    --========================================================================--
 
    use Definitions;
-   use Bits;
    use STM32F769I;
 
    -- HSI, PLL, 192 MHz
