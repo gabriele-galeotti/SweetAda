@@ -16,8 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
-with Interfaces;
 with Bits;
 with ARMv7M;
 
@@ -34,8 +32,6 @@ package CortexM4
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
-   use Interfaces;
    use Bits;
 
    -- Auxiliary Control Register
