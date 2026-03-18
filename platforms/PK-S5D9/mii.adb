@@ -182,7 +182,6 @@ package body MII
    ----------------------------------------------------------------------------
    procedure Init
       is
-      Data : Unsigned_16;
    begin
       -- ETH_RESET# active low
       PFSR (P806).PMR := False;   -- GPIO

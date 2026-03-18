@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
@@ -34,7 +33,6 @@ package body LCD
    --                                                                        --
    --========================================================================--
 
-   use System;
    use Interfaces;
    use Bits;
    use S5D9;
