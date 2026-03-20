@@ -47,10 +47,7 @@ fi
 $(terminal ${TERMINAL}) sh -c '\
   "'"${GDB}"'" \
     -q \
-    -iex "set basenames-may-differ" \
     -ex "target extended-remote tcp:localhost:3333" \
-    -ex "set language asm" \
-    -ex "set \$pc=_start" \
     '${KERNEL_OUTFILE}' \
   ; \
   if [ $? -ne 0 ] ; then \

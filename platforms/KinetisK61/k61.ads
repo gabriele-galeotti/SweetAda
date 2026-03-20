@@ -6768,13 +6768,182 @@ pragma Style_Checks (Off);
    -- Chapter 48 10/100-Mbps Ethernet MAC (ENET)
    ----------------------------------------------------------------------------
 
+   ENET_BASEADDRESS : constant := 16#400C_0000#;
+
    -- 48.4.1 Interrupt Event Register (ENET_EIR)
+
+   type ENET_EIR_Type is record
+      Reserved1 : Bits_8  := 0;
+      Reserved2 : Bits_1  := 0;
+      Reserved3 : Bits_3  := 0;
+      Reserved4 : Bits_1  := 0;
+      Reserved5 : Bits_2  := 0;
+      TS_TIMER  : Boolean := False; -- Timestamp Timer
+      TS_AVAIL  : Boolean := False; -- Transmit Timestamp Available
+      WAKEUP    : Boolean := False; -- Node Wakeup Request Indication
+      PLR       : Boolean := False; -- Payload Receive Error
+      UN        : Boolean := False; -- Transmit FIFO Underrun
+      RL        : Boolean := False; -- Collision Retry Limit
+      LC        : Boolean := False; -- Late Collision
+      EBERR     : Boolean := False; -- Ethernet Bus Error
+      MII       : Boolean := False; -- MII Interrupt.
+      RXB       : Boolean := False; -- Receive Buffer Interrupt
+      RXF       : Boolean := False; -- Receive Frame Interrupt
+      TXB       : Boolean := False; -- Transmit Buffer Interrupt
+      TXF       : Boolean := False; -- Transmit Frame Interrupt
+      GRA       : Boolean := False; -- Graceful Stop Complete
+      BABT      : Boolean := False; -- Babbling Transmit Error
+      BABR      : Boolean := False; -- Babbling Receive Error
+      Reserved6 : Bits_1  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_EIR_Type use record
+      Reserved1 at 0 range  0 ..  7;
+      Reserved2 at 0 range  8 ..  8;
+      Reserved3 at 0 range  9 .. 11;
+      Reserved4 at 0 range 12 .. 12;
+      Reserved5 at 0 range 13 .. 14;
+      TS_TIMER  at 0 range 15 .. 15;
+      TS_AVAIL  at 0 range 16 .. 16;
+      WAKEUP    at 0 range 17 .. 17;
+      PLR       at 0 range 18 .. 18;
+      UN        at 0 range 19 .. 19;
+      RL        at 0 range 20 .. 20;
+      LC        at 0 range 21 .. 21;
+      EBERR     at 0 range 22 .. 22;
+      MII       at 0 range 23 .. 23;
+      RXB       at 0 range 24 .. 24;
+      RXF       at 0 range 25 .. 25;
+      TXB       at 0 range 26 .. 26;
+      TXF       at 0 range 27 .. 27;
+      GRA       at 0 range 28 .. 28;
+      BABT      at 0 range 29 .. 29;
+      BABR      at 0 range 30 .. 30;
+      Reserved6 at 0 range 31 .. 31;
+   end record;
+
+   ENET_EIR : aliased ENET_EIR_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#04#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.2 Interrupt Mask Register (ENET_EIMR)
    -- 48.4.3 Receive Descriptor Active Register (ENET_RDAR)
    -- 48.4.4 Transmit Descriptor Active Register (ENET_TDAR)
    -- 48.4.5 Ethernet Control Register (ENET_ECR)
+
+   type ENET_ECR_Type is record
+      RESET     : Boolean := False;      -- Ethernet MAC Reset
+      ETHEREN   : Boolean := False;      -- Ethernet Enable
+      MAGICEN   : Boolean := False;      -- Magic Packet Detection Enable
+      SLEEP     : Boolean := False;      -- Sleep Mode Enable
+      EN1588    : Boolean := False;      -- EN1588 Enable
+      Reserved1 : Bits_1  := 0;
+      DBGEN     : Boolean := False;      -- Debug Enable
+      STOPEN    : Boolean := False;      -- STOPEN Signal Control
+      DBSWP     : Boolean := False;      -- Descriptor Byte Swapping Enable
+      Reserved2 : Bits_1  := 0;
+      Reserved3 : Bits_1  := 0;
+      Reserved4 : Bits_1  := 0;
+      Reserved5 : Bits_20 := 16#F_0000#;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_ECR_Type use record
+      RESET     at 0 range  0 ..  0;
+      ETHEREN   at 0 range  1 ..  1;
+      MAGICEN   at 0 range  2 ..  2;
+      SLEEP     at 0 range  3 ..  3;
+      EN1588    at 0 range  4 ..  4;
+      Reserved1 at 0 range  5 ..  5;
+      DBGEN     at 0 range  6 ..  6;
+      STOPEN    at 0 range  7 ..  7;
+      DBSWP     at 0 range  8 ..  8;
+      Reserved2 at 0 range  9 ..  9;
+      Reserved3 at 0 range 10 .. 10;
+      Reserved4 at 0 range 11 .. 11;
+      Reserved5 at 0 range 12 .. 31;
+   end record;
+
+   ENET_ECR : aliased ENET_ECR_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#24#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.6 MII Management Frame Register (ENET_MMFR)
+
+   TA_VALID : constant := 2#10#; -- generate a valid MII management frame
+
+   -- Clause 22
+   OP_STD_WRITE     : constant := 2#01#; -- Write operation
+   OP_STD_READ      : constant := 2#10#; -- Read operation
+   -- Clause 45
+   OP_EXT_ADDRWRITE : constant := 2#00#; -- Address write
+   OP_EXT_WRITE     : constant := 2#01#; -- Write operation
+   OP_EXT_READINC   : constant := 2#10#; -- Read inc. operation
+   OP_EXT_READ      : constant := 2#11#; -- Read operation
+
+   ST_EXT : constant := 2#00#; -- extended MDIO (Clause 45) frames
+   ST_STD : constant := 2#01#; -- Standard MDIO (Clause 22)
+
+   type ENET_MMFR_Type is record
+      DATA : Unsigned_16 := 0;                -- Management Frame Data
+      TA   : Bits_2      := 0;                -- Turn Around
+      RA   : Bits_5      := 0;                -- Register Address
+      PA   : Bits_5      := 0;                -- PHY Address
+      OP   : Bits_2      := OP_EXT_ADDRWRITE; -- Operation Code
+      ST   : Bits_2      := ST_EXT;           -- Start Of Frame Delimiter
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_MMFR_Type use record
+      DATA at 0 range  0 .. 15;
+      TA   at 0 range 16 .. 17;
+      RA   at 0 range 18 .. 22;
+      PA   at 0 range 23 .. 27;
+      OP   at 0 range 28 .. 29;
+      ST   at 0 range 30 .. 31;
+   end record;
+
+   ENET_MMFR : aliased ENET_MMFR_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#40#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.7 MII Speed Control Register (ENET_MSCR)
+
+   HOLDTIME_CYC1 : constant := 2#000#; -- 1 internal module clock cycle
+   HOLDTIME_CYC2 : constant := 2#001#; -- 2 internal module clock cycles
+   HOLDTIME_CYC3 : constant := 2#010#; -- 3 internal module clock cycles
+   HOLDTIME_CYC8 : constant := 2#111#; -- 8 internal module clock cycles
+
+   type ENET_MSCR_Type is record
+      Reserved1 : Bits_1  := 0;
+      MII_SPEED : Bits_6  := 0;             -- MII Speed
+      DIS_PRE   : Boolean := False;         -- Disable Preamble
+      HOLDTIME  : Bits_3  := HOLDTIME_CYC1; -- Hold time On MDIO Output
+      Reserved2 : Bits_21 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_MSCR_Type use record
+      Reserved1 at 0 range  0 ..  0;
+      MII_SPEED at 0 range  1 ..  6;
+      DIS_PRE   at 0 range  7 ..  7;
+      HOLDTIME  at 0 range  8 .. 10;
+      Reserved2 at 0 range 11 .. 31;
+   end record;
+
+   ENET_MSCR : aliased ENET_MSCR_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#44#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.8 MIB Control Register (ENET_MIBC)
    -- 48.4.9 Receive Control Register (ENET_RCR)
    -- 48.4.10 Transmit Control Register (ENET_TCR)

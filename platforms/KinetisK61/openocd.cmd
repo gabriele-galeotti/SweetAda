@@ -22,6 +22,8 @@ puts stdout [k60.cpu arm core_state]
 # the executable in the target memory
 puts stdout "loading $sweetada_elf ..."
 load_image $sweetada_elf
+dict set pc_register pc $start_address
+set_reg $pc_register
 puts stdout "start address: $start_address"
 
 # we specify "-noexec" in configuration.in, so we have to resume explicitly
