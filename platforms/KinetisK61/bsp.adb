@@ -18,7 +18,6 @@
 with Definitions;
 with Configure;
 with Bits;
-with CPU;
 with ARMv7M;
 with K61;
 with Clocks;

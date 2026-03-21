@@ -19,7 +19,6 @@ with Configure;
 with LLutils;
 with Abort_Library;
 with ARMv7M;
-with CPU;
 with K61;
 with BSP;
 with Console;
