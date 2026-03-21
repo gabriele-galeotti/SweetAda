@@ -6749,20 +6749,415 @@ pragma Style_Checks (Off);
    -- Chapter 47 Real Time Clock (RTC)
    ----------------------------------------------------------------------------
 
+   RTC_BASEADDRESS : constant := 16#4003_D000#;
+
    -- 47.2.1 RTC Time Seconds Register (RTC_TSR)
+
+   type RTC_TSR_Type is record
+      TSR : Unsigned_32; -- Time Seconds Register
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for RTC_TSR_Type use record
+      TSR at 0 range 0 .. 31;
+   end record;
+
+   RTC_TSR : aliased RTC_TSR_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#000#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 47.2.2 RTC Time Prescaler Register (RTC_TPR)
+
+   type RTC_TPR_Type is record
+      TPR      : Unsigned_16;      -- Time Prescaler Register
+      Reserved : Bits_16     := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for RTC_TPR_Type use record
+      TPR      at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
+   RTC_TPR : aliased RTC_TPR_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#004#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 47.2.3 RTC Time Alarm Register (RTC_TAR)
+
+   type RTC_TAR_Type is record
+      TAR : Unsigned_32; -- Time Alarm Register
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for RTC_TAR_Type use record
+      TAR at 0 range 0 .. 31;
+   end record;
+
+   RTC_TAR : aliased RTC_TAR_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#008#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 47.2.4 RTC Time Compensation Register (RTC_TCR)
+
+   type RTC_TCR_Type is record
+      TCR : Unsigned_8 := 0; -- Time Compensation Register
+      CIR : Unsigned_8 := 0; -- Compensation Interval Register
+      TCV : Unsigned_8 := 0; -- Time Compensation Value
+      CIC : Unsigned_8 := 0; -- Compensation Interval Counter
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for RTC_TCR_Type use record
+      TCR at 0 range  0 ..  7;
+      CIR at 0 range  8 .. 15;
+      TCV at 0 range 16 .. 23;
+      CIC at 0 range 24 .. 31;
+   end record;
+
+   RTC_TCR : aliased RTC_TCR_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#00C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 47.2.5 RTC Control Register (RTC_CR)
+
+   CLKO_OUT  : constant := 0; -- The 32 kHz clock is output to other peripherals.
+   CLKO_NONE : constant := 1; -- The 32 kHz clock is not output to other peripherals.
+
+   type RTC_CR_Type is record
+      SWR       : Boolean := False;    -- Software Reset
+      WPE       : Boolean := False;    -- Wakeup Pin Enable
+      SUP       : Boolean := False;    -- Supervisor Access
+      UM        : Boolean := False;    -- Update Mode
+      Reserved1 : Bits_1  := 0;
+      Reserved2 : Bits_3  := 0;
+      OSCE      : Boolean := False;    -- Oscillator Enable
+      CLKO      : Bits_1  := CLKO_OUT; -- Clock Output
+      SC16P     : Boolean := False;    -- Oscillator 16pF Load Configure
+      SC8P      : Boolean := False;    -- Oscillator 8pF Load Configure
+      SC4P      : Boolean := False;    -- Oscillator 4pF Load Configure
+      SC2P      : Boolean := False;    -- Oscillator 2pF Load Configure
+      Reserved3 : Bits_1  := 0;
+      Reserved4 : Bits_9  := 0;
+      Reserved5 : Bits_8  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for RTC_CR_Type use record
+      SWR       at 0 range  0 ..  0;
+      WPE       at 0 range  1 ..  1;
+      SUP       at 0 range  2 ..  2;
+      UM        at 0 range  3 ..  3;
+      Reserved1 at 0 range  4 ..  4;
+      Reserved2 at 0 range  5 ..  7;
+      OSCE      at 0 range  8 ..  8;
+      CLKO      at 0 range  9 ..  9;
+      SC16P     at 0 range 10 .. 10;
+      SC8P      at 0 range 11 .. 11;
+      SC4P      at 0 range 12 .. 12;
+      SC2P      at 0 range 13 .. 13;
+      Reserved3 at 0 range 14 .. 14;
+      Reserved4 at 0 range 15 .. 23;
+      Reserved5 at 0 range 24 .. 31;
+   end record;
+
+   RTC_CR : aliased RTC_CR_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#010#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 47.2.6 RTC Status Register (RTC_SR)
+
+   type RTC_SR_Type is record
+      TIF      : Boolean := False; -- Time Invalid Flag
+      TOF      : Boolean := False; -- Time Overflow Flag
+      TAF      : Boolean := False; -- Time Alarm Flag
+      MOF      : Boolean := False; -- Monotonic Overflow Flag
+      TCE      : Boolean := False; -- Time Counter Enable
+      Reserved : Bits_27 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for RTC_SR_Type use record
+      TIF      at 0 range 0 ..  0;
+      TOF      at 0 range 1 ..  1;
+      TAF      at 0 range 2 ..  2;
+      MOF      at 0 range 3 ..  3;
+      TCE      at 0 range 4 ..  4;
+      Reserved at 0 range 5 .. 31;
+   end record;
+
+   RTC_SR : aliased RTC_SR_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#014#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 47.2.7 RTC Lock Register (RTC_LR)
+
+   TCL_LOCKED   : constant := 0;
+   TCL_UNLOCKED : constant := 1;
+
+   CRL_LOCKED   : constant := 0;
+   CRL_UNLOCKED : constant := 1;
+
+   SRL_LOCKED   : constant := 0;
+   SRL_UNLOCKED : constant := 1;
+
+   LRL_LOCKED   : constant := 0;
+   LRL_UNLOCKED : constant := 1;
+
+   TTSL_LOCKED   : constant := 0;
+   TTSL_UNLOCKED : constant := 1;
+
+   MEL_LOCKED   : constant := 0;
+   MEL_UNLOCKED : constant := 1;
+
+   MCLL_LOCKED   : constant := 0;
+   MCLL_UNLOCKED : constant := 1;
+
+   MCHL_LOCKED   : constant := 0;
+   MCHL_UNLOCKED : constant := 1;
+
+   type RTC_LR_Type is record
+      Reserved1 : Bits_3  := 0;
+      TCL       : Bits_1  := TCL_LOCKED;  -- Time Compensation Lock
+      CRL       : Bits_1  := CRL_LOCKED;  -- Control Register Lock
+      SRL       : Bits_1  := SRL_LOCKED;  -- Status Register Lock
+      LRL       : Bits_1  := LRL_LOCKED;  -- Lock Register Lock
+      Reserved2 : Bits_1  := 0;
+      TTSL      : Bits_1  := TTSL_LOCKED; -- Tamper Time Seconds Lock
+      MEL       : Bits_1  := MEL_LOCKED;  -- Monotonic Enable Lock
+      MCLL      : Bits_1  := MCLL_LOCKED; -- Monotonic Counter Low Lock
+      MCHL      : Bits_1  := MCHL_LOCKED; -- Monotonic Counter High Lock
+      Reserved3 : Bits_4  := 0;
+      Reserved4 : Bits_16 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for RTC_LR_Type use record
+      Reserved1 at 0 range  0 ..  2;
+      TCL       at 0 range  3 ..  3;
+      CRL       at 0 range  4 ..  4;
+      SRL       at 0 range  5 ..  5;
+      LRL       at 0 range  6 ..  6;
+      Reserved2 at 0 range  7 ..  7;
+      TTSL      at 0 range  8 ..  8;
+      MEL       at 0 range  9 ..  9;
+      MCLL      at 0 range 10 .. 10;
+      MCHL      at 0 range 11 .. 11;
+      Reserved3 at 0 range 12 .. 15;
+      Reserved4 at 0 range 16 .. 31;
+   end record;
+
+   RTC_LR : aliased RTC_LR_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#018#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 47.2.8 RTC Interrupt Enable Register (RTC_IER)
+
+   type RTC_IER_Type is record
+     TIIE      : Boolean := True;  -- Time Invalid Interrupt Enable
+     TOIE      : Boolean := True;  -- Time Overflow Interrupt Enable
+     TAIE      : Boolean := True;  -- Time Alarm Interrupt Enable
+     MOIE      : Boolean := False; -- Monotonic Overflow Interrupt Enable
+     TSIE      : Boolean := False; -- Time Seconds Interrupt Enable
+     Reserved1 : Bits_2  := 0;
+     WPON      : Boolean := False; -- Wakeup Pin On
+     Reserved2 : Bits_8  := 0;
+     Reserved3 : Bits_16 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for RTC_IER_Type use record
+     TIIE      at 0 range  0 ..  0;
+     TOIE      at 0 range  1 ..  1;
+     TAIE      at 0 range  2 ..  2;
+     MOIE      at 0 range  3 ..  3;
+     TSIE      at 0 range  4 ..  4;
+     Reserved1 at 0 range  5 ..  6;
+     WPON      at 0 range  7 ..  7;
+     Reserved2 at 0 range  8 .. 15;
+     Reserved3 at 0 range 16 .. 31;
+   end record;
+
+   RTC_IER : aliased RTC_IER_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#01C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 47.2.9 RTC Tamper Time Seconds Register (RTC_TTSR)
+
+   type RTC_TTSR_Type is record
+      TTS : Unsigned_32; -- Tamper Time Seconds
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for RTC_TTSR_Type use record
+      TTS at 0 range 0 .. 31;
+   end record;
+
+   RTC_TTSR : aliased RTC_TTSR_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#020#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 47.2.10 RTC Monotonic Enable Register (RTC_MER)
+
+   MCE_LOAD : constant := 0; -- Writes to the monotonic counter load the counter with the value written.
+   MCE_INCR : constant := 1; -- Writes to the monotonic counter increment the counter.
+
+   type RTC_MER_Type is record
+      Reserved1 : Bits_4  := 0;
+      MCE       : Bits_1  := MCE_LOAD; -- Monotonic Counter Enable
+      Reserved2 : Bits_27 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for RTC_MER_Type use record
+      Reserved1 at 0 range 0 ..  3;
+      MCE       at 0 range 4 ..  4;
+      Reserved2 at 0 range 5 .. 31;
+   end record;
+
+   RTC_MER : aliased RTC_MER_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#024#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 47.2.11 RTC Monotonic Counter Low Register (RTC_MCLR)
+
+   type RTC_MCLR_Type is record
+      MCL : Unsigned_32; -- Monotonic Counter Low
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for RTC_MCLR_Type use record
+      MCL at 0 range 0 .. 31;
+   end record;
+
+   RTC_MCLR : aliased RTC_MCLR_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#028#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 47.2.12 RTC Monotonic Counter High Register (RTC_MCHR)
+
+   type RTC_MCHR_Type is record
+      MCH : Unsigned_32; -- Monotonic Counter High
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for RTC_MCHR_Type use record
+      MCH at 0 range 0 .. 31;
+   end record;
+
+   RTC_MCHR : aliased RTC_MCHR_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#02C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 47.2.13 RTC Write Access Register (RTC_WAR)
+
+   type RTC_WAR_Type is record
+      TSRW      : Boolean := True;    -- Time Seconds Register Write
+      TPRW      : Boolean := True;    -- Time Prescaler Register Write
+      TARW      : Boolean := True;    -- Time Alarm Register Write
+      TCRW      : Boolean := True;    -- Time Compensation Register Write
+      CRW       : Boolean := True;    -- Control Register Write
+      SRW       : Boolean := True;    -- Status Register Write
+      LRW       : Boolean := True;    -- Lock Register Write
+      IERW      : Boolean := True;    -- Interrupt Enable Register Write
+      TTSW      : Boolean := True;    -- Tamper Time Seconds Write
+      MERW      : Boolean := True;    -- Monotonic Enable Register Write
+      MCLW      : Boolean := True;    -- Monotonic Counter Low Write
+      MCHW      : Boolean := True;    -- Monotonic Counter High Write
+      Reserved1 : Bits_4  := 2#1111#;
+      Reserved2 : Bits_16 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for RTC_WAR_Type use record
+      TSRW      at 0 range  0 ..  0;
+      TPRW      at 0 range  1 ..  1;
+      TARW      at 0 range  2 ..  2;
+      TCRW      at 0 range  3 ..  3;
+      CRW       at 0 range  4 ..  4;
+      SRW       at 0 range  5 ..  5;
+      LRW       at 0 range  6 ..  6;
+      IERW      at 0 range  7 ..  7;
+      TTSW      at 0 range  8 ..  8;
+      MERW      at 0 range  9 ..  9;
+      MCLW      at 0 range 10 .. 10;
+      MCHW      at 0 range 11 .. 11;
+      Reserved1 at 0 range 12 .. 15;
+      Reserved2 at 0 range 16 .. 31;
+   end record;
+
+   RTC_WAR : aliased RTC_WAR_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#800#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 47.2.14 RTC Read Access Register (RTC_RAR)
+
+   type RTC_RAR_Type is record
+      TSRR      : Boolean := True;    -- Time Seconds Register Read
+      TPRR      : Boolean := True;    -- Time Prescaler Register Read
+      TARR      : Boolean := True;    -- Time Alarm Register Read
+      TCRR      : Boolean := True;    -- Time Compensation Register Read
+      CRR       : Boolean := True;    -- Control Register Read
+      SRR       : Boolean := True;    -- Status Register Read
+      LRR       : Boolean := True;    -- Lock Register Read
+      IERR      : Boolean := True;    -- Interrupt Enable Register Read
+      TTSR      : Boolean := True;    -- Tamper Time Seconds Read
+      MERR      : Boolean := True;    -- Monotonic Enable Register Read
+      MCLR      : Boolean := True;    -- Monotonic Counter Low Read
+      MCHR      : Boolean := True;    -- Monotonic Counter High Read
+      Reserved1 : Bits_4  := 2#1111#;
+      Reserved2 : Bits_16 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for RTC_RAR_Type use record
+      TSRR      at 0 range  0 ..  0;
+      TPRR      at 0 range  1 ..  1;
+      TARR      at 0 range  2 ..  2;
+      TCRR      at 0 range  3 ..  3;
+      CRR       at 0 range  4 ..  4;
+      SRR       at 0 range  5 ..  5;
+      LRR       at 0 range  6 ..  6;
+      IERR      at 0 range  7 ..  7;
+      TTSR      at 0 range  8 ..  8;
+      MERR      at 0 range  9 ..  9;
+      MCLR      at 0 range 10 .. 10;
+      MCHR      at 0 range 11 .. 11;
+      Reserved1 at 0 range 12 .. 15;
+      Reserved2 at 0 range 16 .. 31;
+   end record;
+
+   RTC_RAR : aliased RTC_RAR_Type
+      with Address              => System'To_Address (RTC_BASEADDRESS + 16#804#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 48 10/100-Mbps Ethernet MAC (ENET)
