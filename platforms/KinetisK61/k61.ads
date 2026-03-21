@@ -6916,6 +6916,23 @@ pragma Style_Checks (Off);
 
    -- 48.4.7 MII Speed Control Register (ENET_MSCR)
 
+   MII_SPEED_DIV2   : constant := 16#00#; MII_SPEED_DIV4   : constant := 16#01#; MII_SPEED_DIV6   : constant := 16#02#; MII_SPEED_DIV8   : constant := 16#03#;
+   MII_SPEED_DIV10  : constant := 16#04#; MII_SPEED_DIV12  : constant := 16#05#; MII_SPEED_DIV14  : constant := 16#06#; MII_SPEED_DIV16  : constant := 16#07#;
+   MII_SPEED_DIV18  : constant := 16#08#; MII_SPEED_DIV20  : constant := 16#09#; MII_SPEED_DIV22  : constant := 16#0A#; MII_SPEED_DIV24  : constant := 16#0B#;
+   MII_SPEED_DIV26  : constant := 16#0C#; MII_SPEED_DIV28  : constant := 16#0D#; MII_SPEED_DIV30  : constant := 16#0E#; MII_SPEED_DIV32  : constant := 16#0F#;
+   MII_SPEED_DIV34  : constant := 16#10#; MII_SPEED_DIV36  : constant := 16#11#; MII_SPEED_DIV38  : constant := 16#12#; MII_SPEED_DIV40  : constant := 16#13#;
+   MII_SPEED_DIV42  : constant := 16#14#; MII_SPEED_DIV44  : constant := 16#15#; MII_SPEED_DIV46  : constant := 16#16#; MII_SPEED_DIV48  : constant := 16#17#;
+   MII_SPEED_DIV50  : constant := 16#18#; MII_SPEED_DIV52  : constant := 16#19#; MII_SPEED_DIV54  : constant := 16#1A#; MII_SPEED_DIV56  : constant := 16#1B#;
+   MII_SPEED_DIV58  : constant := 16#1C#; MII_SPEED_DIV60  : constant := 16#1D#; MII_SPEED_DIV62  : constant := 16#1E#; MII_SPEED_DIV64  : constant := 16#1F#;
+   MII_SPEED_DIV66  : constant := 16#20#; MII_SPEED_DIV68  : constant := 16#21#; MII_SPEED_DIV70  : constant := 16#22#; MII_SPEED_DIV72  : constant := 16#23#;
+   MII_SPEED_DIV74  : constant := 16#24#; MII_SPEED_DIV76  : constant := 16#25#; MII_SPEED_DIV78  : constant := 16#26#; MII_SPEED_DIV80  : constant := 16#27#;
+   MII_SPEED_DIV82  : constant := 16#28#; MII_SPEED_DIV84  : constant := 16#29#; MII_SPEED_DIV86  : constant := 16#2A#; MII_SPEED_DIV88  : constant := 16#2B#;
+   MII_SPEED_DIV90  : constant := 16#2C#; MII_SPEED_DIV92  : constant := 16#2D#; MII_SPEED_DIV94  : constant := 16#2E#; MII_SPEED_DIV96  : constant := 16#2F#;
+   MII_SPEED_DIV98  : constant := 16#30#; MII_SPEED_DIV100 : constant := 16#31#; MII_SPEED_DIV102 : constant := 16#32#; MII_SPEED_DIV104 : constant := 16#33#;
+   MII_SPEED_DIV106 : constant := 16#34#; MII_SPEED_DIV108 : constant := 16#35#; MII_SPEED_DIV110 : constant := 16#36#; MII_SPEED_DIV112 : constant := 16#37#;
+   MII_SPEED_DIV114 : constant := 16#38#; MII_SPEED_DIV116 : constant := 16#39#; MII_SPEED_DIV118 : constant := 16#3A#; MII_SPEED_DIV120 : constant := 16#3B#;
+   MII_SPEED_DIV122 : constant := 16#3C#; MII_SPEED_DIV124 : constant := 16#3D#; MII_SPEED_DIV126 : constant := 16#3E#; MII_SPEED_DIV128 : constant := 16#3F#;
+
    HOLDTIME_CYC1 : constant := 2#000#; -- 1 internal module clock cycle
    HOLDTIME_CYC2 : constant := 2#001#; -- 2 internal module clock cycles
    HOLDTIME_CYC3 : constant := 2#010#; -- 3 internal module clock cycles
@@ -6923,9 +6940,9 @@ pragma Style_Checks (Off);
 
    type ENET_MSCR_Type is record
       Reserved1 : Bits_1  := 0;
-      MII_SPEED : Bits_6  := 0;             -- MII Speed
-      DIS_PRE   : Boolean := False;         -- Disable Preamble
-      HOLDTIME  : Bits_3  := HOLDTIME_CYC1; -- Hold time On MDIO Output
+      MII_SPEED : Bits_6  := MII_SPEED_DIV2; -- MII Speed
+      DIS_PRE   : Boolean := False;          -- Disable Preamble
+      HOLDTIME  : Bits_3  := HOLDTIME_CYC1;  -- Hold time On MDIO Output
       Reserved2 : Bits_21 := 0;
    end record
       with Bit_Order   => Low_Order_First,
