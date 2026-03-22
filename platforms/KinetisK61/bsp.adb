@@ -95,6 +95,7 @@ package body BSP
    ----------------------------------------------------------------------------
    procedure Setup
       is
+      UART5_BaudRate : constant := Baud_Rate_Type'Enum_Rep (BR_115200);
    begin
       -------------------------------------------------------------------------
       Clocks.Init;
@@ -108,10 +109,9 @@ package body BSP
       PORTE_MUXCTRL.PCR (8).MUX := MUX_ALT3;
       PORTE_MUXCTRL.PCR (9).MUX := MUX_ALT3;
       UART5.C4 := (BRFA => 0, M10 => False, MAEN2 => False, MAEN1 => False);
-      UART5.BDL.SBR := Bits_8 ((Clocks.CLK_Peripherals / 16) / 115_200);
+      UART5.BDL.SBR := Bits_8 (Clocks.CLK_Peripherals / (16 * UART5_BaudRate));
       UART5.BDH.SBR := 0;
-      UART5.C2.TE := True;
-      UART5.C2.RE := True;
+      UART5.C2 := (@ with delta TE => True, RE => True);
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor := (
          Write => Console_Putchar'Access,
