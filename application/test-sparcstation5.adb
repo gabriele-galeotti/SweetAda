@@ -39,14 +39,6 @@ package body Application
    ----------------------------------------------------------------------------
    procedure Run
       is
-      procedure CHANNELB_Putchar
-         (C : in Character);
-      procedure CHANNELB_Putchar
-         (C : in Character)
-         is
-      begin
-         Z8530.TX (BSP.SCC_Descriptor, Z8530.CHANNELB, To_U8 (C));
-      end CHANNELB_Putchar;
    begin
       -------------------------------------------------------------------------
       if True then
@@ -67,10 +59,6 @@ package body Application
             loop
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
                Console.Print ("hello, SweetAda", NL => True);
-               CHANNELB_Putchar ('O');
-               CHANNELB_Putchar ('K');
-               CHANNELB_Putchar (Ada.Characters.Latin_1.CR);
-               CHANNELB_Putchar (Ada.Characters.Latin_1.LF);
             end loop;
          end;
       end if;
