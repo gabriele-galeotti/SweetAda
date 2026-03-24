@@ -37,8 +37,8 @@ LIBRARY_NAME := cpu
 OBJECTS :=
 
 ifneq ($(USE_LIBGCC),Y)
-OBJECTS += $(OBJ_DIRECTORY)/divsi3table.o
-OBJECTS += $(OBJ_DIRECTORY)/libgcc.o
+OBJECTS += $(OBJ_DIRECTORY)/divsi3table.o \
+           $(OBJ_DIRECTORY)/libgcc.o
 endif
 
 .PHONY: all
