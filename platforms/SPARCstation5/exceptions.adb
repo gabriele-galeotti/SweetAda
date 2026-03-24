@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2026 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -17,6 +17,7 @@
 
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
+with Bits;
 with Abort_Library;
 with LLutils;
 with SPARC;
@@ -37,6 +38,7 @@ package body Exceptions
    --========================================================================--
 
    use System.Storage_Elements;
+   use Bits;
    use LLutils;
    use SPARC;
 
@@ -70,9 +72,21 @@ package body Exceptions
    procedure Irq_Process
       (Code : in Unsigned_32)
       is
+      pragma Unreferenced (Code);
+      procedure CHANNELB_Putchar
+         (C : in Character);
+      procedure CHANNELB_Putchar
+         (C : in Character)
+         is
+      begin
+         Z8530.TX (BSP.SCC_Descriptor, Z8530.CHANNELB, To_U8 (C));
+      end CHANNELB_Putchar;
    begin
       if Sun4m.SIPR.T then
          BSP.Tick_Count := @ + 1;
+         if BSP.Tick_Count mod 1_000 = 0 then
+            CHANNELB_Putchar ('T');
+         end if;
          Sun4m.System_Timer_ClearLR;
       elsif Sun4m.SIPR.S then
          declare

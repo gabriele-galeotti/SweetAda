@@ -21,6 +21,7 @@ SECTIONS
                 *(.rodata)
                 *(.rodata.*)
                 . = ALIGN(0x1000);
+                _traptable = .;
                 *(.traptable)
                 . = ALIGN(0x10);
                 _etext = .;

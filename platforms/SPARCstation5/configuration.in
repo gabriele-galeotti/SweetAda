@@ -26,7 +26,7 @@ CPU := SPARC
 ################################################################################
 
 GCC_SWITCHES_PLATFORM     := -mcpu=v8 -m32
-LD_SWITCHES_PLATFORM      :=
+LD_SWITCHES_PLATFORM      := --undefined=trap_table
 OBJDUMP_SWITCHES_PLATFORM :=
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
 POSTBUILD_ROMFILE         := Y

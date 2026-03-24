@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2026 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -16,20 +16,18 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Machine_Code;
-with System.Parameters;
-with System.Secondary_Stack;
 with System.Storage_Elements;
-with Ada.Unchecked_Conversion;
+with System.Machine_Code;
 with Definitions;
 with Configure;
 with Core;
 with MMIO;
+with Secondary_Stack;
 with SPARC;
 with Sun4m;
 with Exceptions;
+with Linker;
 with Console;
-with CPU;
 
 package body BSP
    is
@@ -43,20 +41,12 @@ package body BSP
    --========================================================================--
 
    use System;
-   use System.Machine_Code;
    use System.Storage_Elements;
+   use System.Machine_Code;
    use Interfaces;
    use Definitions;
    use Bits;
    use Sun4m;
-
-   BSP_SS_Stack : System.Secondary_Stack.SS_Stack_Ptr;
-
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      with Export        => True,
-           Convention    => C,
-           External_Name => "__gnat_get_secondary_stack";
 
    function QEMU_Detect
       return Boolean;
@@ -68,16 +58,6 @@ package body BSP
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- Get_Sec_Stack
-   ----------------------------------------------------------------------------
-   function Get_Sec_Stack
-      return System.Secondary_Stack.SS_Stack_Ptr
-      is
-   begin
-      return BSP_SS_Stack;
-   end Get_Sec_Stack;
 
    ----------------------------------------------------------------------------
    -- Check if we are running under QEMU.
@@ -154,10 +134,11 @@ package body BSP
       is
    begin
       -------------------------------------------------------------------------
-      System.Secondary_Stack.SS_Init (BSP_SS_Stack, System.Parameters.Unspecified_Size);
+      Secondary_Stack.Init;
       -------------------------------------------------------------------------
-      -- Exceptions.Init;
+      Exceptions.Init;
       -- SPARC.TBR_Set (To_Address (0));
+      SPARC.TBR_Set (To_Address (Linker.TrapTable));
       -- SCC ------------------------------------------------------------------
       SCC_Descriptor := (
          Base_Address   => System'To_Address (SCC_BASEADDRESS),

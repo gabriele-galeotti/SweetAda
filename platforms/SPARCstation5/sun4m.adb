@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2026 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -27,26 +27,6 @@ package body Sun4m
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   -- E_CSR conversion functions
-
-   function To_U32
-      (Value : E_CSR_Type)
-      return Unsigned_32
-      is
-      function Convert is new Ada.Unchecked_Conversion (E_CSR_Type, Unsigned_32);
-   begin
-      return Convert (Value);
-   end To_U32;
-
-   function To_E_CSR
-      (Value : Unsigned_32)
-      return E_CSR_Type
-      is
-      function Convert is new Ada.Unchecked_Conversion (Unsigned_32, E_CSR_Type);
-   begin
-      return Convert (Value);
-   end To_E_CSR;
 
    ----------------------------------------------------------------------------
    -- System_Timer_ClearLR

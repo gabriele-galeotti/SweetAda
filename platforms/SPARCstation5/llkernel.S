@@ -2,7 +2,7 @@
 //
 // llkernel.S - Low-level kernel routines and exception handling.
 //
-// Copyright (C) 2020-2025 Gabriele Galeotti
+// Copyright (C) 2020-2026 Gabriele Galeotti
 //
 // This work is licensed under the terms of the MIT License.
 // Please consult the LICENSE.txt file located in the top-level directory.
@@ -216,6 +216,10 @@ trap_table:
                 set     0x1F,%o0
                 b       irq_not_handled
                 nop
+
+////////////////////////////////////////////////////////////////////////////////
+
+                .sect   .text,"ax"
 
 trap_error:
                 mov     %l1,%o1

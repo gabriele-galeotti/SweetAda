@@ -30,6 +30,7 @@ SECTIONS
                 *(.rodata)
                 *(.rodata.*)
                 . = ALIGN(0x1000);
+                _traptable = .;
                 *(.traptable)
                 . = ALIGN(0x4);
                 PROVIDE(_debug_flag = .);
@@ -113,4 +114,5 @@ SECTIONS
 /* LINKERADSB:_stext:SText */
 /* LINKERADSB:_sdata:SData */
 /* LINKERADSB:_sbss:SBss   */
+/* LINKERADSB:_traptable:TrapTable */
 

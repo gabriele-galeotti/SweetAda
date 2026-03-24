@@ -2,7 +2,7 @@
 //
 // startup.S - Low-level startup.
 //
-// Copyright (C) 2020-2025 Gabriele Galeotti
+// Copyright (C) 2020-2026 Gabriele Galeotti
 //
 // This work is licensed under the terms of the MIT License.
 // Please consult the LICENSE.txt file located in the top-level directory.
@@ -58,13 +58,7 @@ _init:
                 or      %g1,%g3,%g1
                 wr      %g1,%psr
                 NOP3
-                //
-                // Setup TBR.
-                //
-                .extern trap_table
-                set     trap_table,%g1
-                wr      %g1,%tbr
-                NOP3
+
                 //
                 // Initialize Y.
                 //

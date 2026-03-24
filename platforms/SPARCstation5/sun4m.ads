@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2026 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -72,8 +72,8 @@ pragma Style_Checks (Off);
       WD        : Boolean;
       Reserved2 : Bits_27;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for Slavio_SS_SC_Type use record
       SR        at 0 range 0 ..  0;
       RS        at 0 range 1 ..  1;
@@ -112,8 +112,8 @@ pragma Style_Checks (Off);
       ME        : Boolean;      -- Module Error (asynchronous fault)
       MA        : Boolean;      -- Mask All interrupts.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SI_Type use record
       Reserved1 at 0 range  0 ..  6;
       SBusIrq   at 0 range  7 .. 13;
@@ -175,8 +175,8 @@ pragma Style_Checks (Off);
       Limit     : Bits_22;
       Reserved2 : Bits_1;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for Slavio_Timer_Limit_Type use record
       Reserved1 at 0 range  0 ..  8;
       Limit     at 0 range  9 .. 30;
@@ -190,8 +190,8 @@ pragma Style_Checks (Off);
       Count    : Bits_22;
       L        : Bits_1;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for Slavio_Timer_Counter_Type use record
       Reserved at 0 range  0 ..  8;
       Count    at 0 range  9 .. 30;
@@ -203,7 +203,7 @@ pragma Style_Checks (Off);
       Counter    : Slavio_Timer_Counter_Type with Volatile_Full_Access => True;
       Counter_NR : Slavio_Timer_Limit_Type   with Volatile_Full_Access => True;
    end record
-      with Size => 3 * 32;
+      with Object_Size => 3 * 32;
    for Slavio_Timer_Type use record
       Limit      at 0 range 0 .. 31;
       Counter    at 4 range 0 .. 31;
@@ -220,13 +220,6 @@ pragma Style_Checks (Off);
       with Inline => True;
 
    procedure Tclk_Init;
-
-   ----------------------------------------------------------------------------
-   -- SCC
-   ----------------------------------------------------------------------------
-   -- CHANNEL A @ 0x7110_0004
-   -- CHANNEL B @ 0x7110_0000
-   ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
    -- DMA (Ethernet)
@@ -257,8 +250,8 @@ pragma Style_Checks (Off);
       Unused4         : Bits_5  := 0;
       E_DEV_ID        : Bits_4;       -- R   Device ID (For DMA2, E_DEV_ID=1010)
    end record
-      with Bit_Order => High_Order_First,
-           Size      => 32;
+      with Bit_Order   => High_Order_First,
+           Object_Size => 32;
    for E_CSR_Type use record
       E_INT_PEND      at 0 range  0 ..  0;
       E_ERR_PEND      at 0 range  1 ..  1;
@@ -290,15 +283,6 @@ pragma Style_Checks (Off);
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
-
-   function To_U32
-      (Value : E_CSR_Type)
-      return Unsigned_32
-      with Inline => True;
-   function To_E_CSR
-      (Value : Unsigned_32)
-      return E_CSR_Type
-      with Inline => True;
 
    -- Test Control/Status Reg
 
