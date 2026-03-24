@@ -136,7 +136,10 @@ pragma Warnings (On, "size is not a multiple of alignment");
    procedure Line_Feed
       is
    begin
-      Current_Row    := @ + 1;
+      Current_Row := @ + 1;
+      if Current_Row = 24 then
+         Current_Row := 0;
+      end if;
       Current_Column := 0;
    end Line_Feed;
 
