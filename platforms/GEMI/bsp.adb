@@ -25,6 +25,7 @@ with SH7032;
 with GEMI;
 with Exceptions;
 with Console;
+with Time;
 
 package body BSP
    is
@@ -149,6 +150,24 @@ package body BSP
          PB11   => PB11_TxD1, -- ''
          others => <>
          );
+      PBCR2 := (
+         PB0 => PB0_PB0,
+         PB1 => PB1_PB1,
+         PB2 => PB2_PB2,
+         PB3 => PB3_PB3,
+         PB4 => PB4_PB4,
+         PB5 => PB5_PB5,
+         PB6 => PB6_PB6,
+         PB7 => PB7_PB7
+         );
+      PBIOR.PB (bi0) := True;
+      PBIOR.PB (bi1) := True;
+      PBIOR.PB (bi2) := True;
+      PBIOR.PB (bi3) := True;
+      PBDR.DATA (bi0) := False;
+      PBDR.DATA (bi1) := False;
+      PBDR.DATA (bi2) := False;
+      PBDR.DATA (bi3) := False;
       -- SCI1 -----------------------------------------------------------------
       SCI1.SCR := (@ with delta RE => False, TE => False);
       -- async 8N1, clock prescaler = 1
@@ -178,14 +197,6 @@ package body BSP
          Data_Queue    => ([others => 0], 0, 0, 0)
          );
       UART16x50.Init (UART_Descriptor);
-      -- RTC uPD4991A ---------------------------------------------------------
-      RTC_Descriptor := (
-         Base_Address  => System'To_Address (GEMI.RTC_BASEADDRESS),
-         Scale_Address => 0,
-         Read_8        => MMIO.Read'Access,
-         Write_8       => MMIO.Write'Access
-         );
-      uPD4991A.Init (RTC_Descriptor);
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor := (
          Write => Console_Putchar'Access,
@@ -194,6 +205,28 @@ package body BSP
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("GEMI SH7032", NL => True);
+      -- RTC uPD4991A ---------------------------------------------------------
+      RTC_Descriptor := (
+         Base_Address  => System'To_Address (GEMI.RTC_BASEADDRESS),
+         Scale_Address => 0,
+         Read_8        => MMIO.Read'Access,
+         Write_8       => MMIO.Write'Access
+         );
+      uPD4991A.Init (RTC_Descriptor);
+      uPD4991A.Time_Set (
+         RTC_Descriptor,
+         Time.TM_Time'(
+            Sec   => 0,
+            Min   => 0,
+            Hour  => 0,
+            MDay  => 1,
+            Mon   => 0,
+            Year  => 126,
+            WDay  => 0,
+            YDay  => 0,
+            IsDST => 0
+            )
+         );
       -------------------------------------------------------------------------
       Tclk_Init;
       -------------------------------------------------------------------------

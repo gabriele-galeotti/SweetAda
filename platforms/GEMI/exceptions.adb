@@ -52,8 +52,8 @@ package body Exceptions
    begin
       TSR2.IMFA := False;
       BSP.Tick_Count := @ + 1;
-      if (BSP.Tick_Count and 16#FF#) = 0 then
-         GEMI.LEDPORT_Out (GEMI.LEDPORT_In xor 16#10#);
+      if BSP.Tick_Count mod 1_000 = 0 then
+         SH7032.PBDR.DATA (bi3) := not SH7032.PBDR.DATA (bi3);
       end if;
    end IRQ_Timer_Process;
 
@@ -63,7 +63,7 @@ package body Exceptions
    procedure Init
       is
    begin
-      IPRD.ITU2 := 2;
+      IPRD.ITU2 := 2; -- priority level
    end Init;
 
 end Exceptions;

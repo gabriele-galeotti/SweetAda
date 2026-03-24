@@ -15,18 +15,21 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Abort_Library;
+
 separate (Last_Chance_Handler)
 procedure Last_Chance_Handler
    (Source_Location : in System.Address;
     Line            : in Integer)
    is
-   procedure GEMI_Last_Chance_Handler
-      (SL : in System.Address;
-       L  : in Integer)
-      with Import        => True,
-           Convention    => C,
-           External_Name => "__gemi_last_chance_handler",
-           No_Return     => True;
+   -- procedure GEMI_Last_Chance_Handler
+   --    (SL : in System.Address;
+   --     L  : in Integer)
+   --    with Import        => True,
+   --         Convention    => C,
+   --         External_Name => "__gemi_last_chance_handler",
+   --         No_Return     => True;
 begin
-   GEMI_Last_Chance_Handler (Source_Location, Line);
+   -- GEMI_Last_Chance_Handler (Source_Location, Line);
+   Abort_Library.System_Abort (System.Null_Address, Line, 0, Source_Location);
 end Last_Chance_Handler;
