@@ -188,8 +188,8 @@ pragma Style_Checks (Off);
       plloutdiv_div114 : constant := 16#38#; plloutdiv_div116 : constant := 16#39#; plloutdiv_div118 : constant := 16#3A#; plloutdiv_div120 : constant := 16#3B#;
       plloutdiv_div122 : constant := 16#3C#; plloutdiv_div124 : constant := 16#3D#; plloutdiv_div126 : constant := 16#3E#; plloutdiv_div128 : constant := 16#3F#;
 
-      plloutdivby1_CLR : constant := 0; -- PLL Final Divide By plloutdiv_...
-      plloutdivby1_SET : constant := 1; -- PLL Final Divide By 1
+      plloutdivby1_CLR : constant := 0; -- the value N in plloutdiv sets the clock-divide ratio to 2 x (N + 1) (between 2–128)
+      plloutdivby1_SET : constant := 1; -- the PLL output clock is passed through undivided
 
       type plloutdiv_Type is record
          plloutdiv    : Bits_6  := plloutdiv_div2;   -- PLL Final Divider Value
