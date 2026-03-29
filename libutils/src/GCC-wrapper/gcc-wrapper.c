@@ -65,7 +65,7 @@ static struct switch_descriptor switches[] = {
         { "G",             EXACT_MATCH | HAS_ARGUMENT                   },
         { "I",             EXACT_MATCH | HAS_ARGUMENT                   },
         { "MF",            EXACT_MATCH | HAS_ARGUMENT                   },
-        { "MMD",           EXACT_MATCH | HAS_ARGUMENT                   },
+        { "MQ",            EXACT_MATCH | HAS_ARGUMENT                   },
         { "MT",            EXACT_MATCH | HAS_ARGUMENT                   },
         { "auxbase",       EXACT_MATCH | HAS_ARGUMENT                   },
         { "auxbase-strip", EXACT_MATCH | HAS_ARGUMENT                   },
