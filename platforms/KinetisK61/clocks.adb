@@ -100,7 +100,7 @@ package body Clocks
          others     => <>
          );
       MCG_C12 := (
-         VDIV1  => VDIV1_x24,  -- 12.5 MHz * 24 = 300 MHz (VCO)
+         VDIV1  => VDIV1_x24, -- 12.5 MHz * 24 = 300 MHz (VCO)
          others => <>
          );
       loop exit when MCG_S2.LOCK1; end loop;
