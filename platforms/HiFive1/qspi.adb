@@ -32,8 +32,7 @@ package body QSPI
    --========================================================================--
 
    use Interfaces;
-   use HiFive1;
-   use SPI;
+   use HiFive1.SPI;
 
    procedure Byte_Read
       (Byte    : out Unsigned_8;
