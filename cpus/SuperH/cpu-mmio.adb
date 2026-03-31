@@ -16,9 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
-with System.Storage_Elements;
 with Definitions;
-with Bits;
 
 package body CPU.MMIO
    is
@@ -32,7 +30,6 @@ package body CPU.MMIO
    --========================================================================--
 
    use System.Machine_Code;
-   use System.Storage_Elements;
 
    CRLF : String renames Definitions.CRLF;
 
