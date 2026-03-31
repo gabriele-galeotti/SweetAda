@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2026 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -37,6 +37,8 @@ package body Android
    use System.Machine_Code;
    use Interfaces;
    use Definitions;
+
+pragma Warnings (Off, "* is not referenced");
 
    --   arch    syscall#    return  arg0    arg1    arg2    arg3    arg4    arg5
    --   ARM     R7          R0      R0      R1      R2      R3      R4      R5
@@ -238,5 +240,7 @@ package body Android
            Volatile => True
           );
    end System_Exit;
+
+pragma Warnings (On, "* is not referenced");
 
 end Android;
