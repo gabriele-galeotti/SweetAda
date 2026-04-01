@@ -73,7 +73,7 @@ ADAC_SWITCHES_WARNING += -Wstack-usage=$(STACK_LIMIT)
 
 # turn on only for cosmetic purposes at the end of the development cycle
 # (nearly the same effect of -gnatwa)
-#ADAC_SWITCHES_WARNING += -gnatwu  # Activate warnings on unused entities.
+ADAC_SWITCHES_WARNING += -gnatwu  # Activate warnings on unused entities.
 
 #
 # C compiler warning switches.

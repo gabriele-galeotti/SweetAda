@@ -57,8 +57,8 @@ abstract project Gprbuild_Wr is
       "-gnatw.z",        -- Activate warnings for size not a multiple of alignment.
       "-Wstack-usage=" & Configure.Stack_Limit,
       "-Wunused",
-      "-Wuninitialized"
-      -- "-gnatwu"          -- Activate warnings on unused entities.
+      "-Wuninitialized",
+      "-gnatwu"          -- Activate warnings on unused entities.
       );
 
    CC_Switches_Warning := (

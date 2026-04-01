@@ -74,8 +74,7 @@ export VERBOSE
 # V  = probe variable(s) goal
 #
 # libutils-elftool      L       S       NP
-# libutils-gcc-wrapper  L       S       NP
-# libutils-gnat-wrapper L       S       NP
+# libutils-exe-wrapper  L       S       NP
 # infodump              I               NP
 # probevariable         V               NP
 # probevariables        V               NP
@@ -98,9 +97,8 @@ export VERBOSE
 #
 
 # libutils goals
-LIBUTILS_GOALS := libutils-elftool      \
-                  libutils-gcc-wrapper  \
-                  libutils-gnat-wrapper
+LIBUTILS_GOALS := libutils-elftool     \
+                  libutils-exe-wrapper
 
 # info goals
 INFO_GOALS := infodump
@@ -804,22 +802,35 @@ endif
 
 KERNEL_PARENT_PATH := .
 
-MAKE_APPLICATION := SHELL="$(SHELL)" KERNEL_PARENT_PATH=..    -C $(APPLICATION_DIRECTORY)
-MAKE_CLIBRARY    := SHELL="$(SHELL)" KERNEL_PARENT_PATH=..    -C $(CLIBRARY_DIRECTORY)
-MAKE_CORE        := SHELL="$(SHELL)" KERNEL_PARENT_PATH=..    -C $(CORE_DIRECTORY)
-MAKE_CPUS        := SHELL="$(SHELL)" KERNEL_PARENT_PATH=../.. -C $(CPU_BASE_DIRECTORY)
-MAKE_CPU         := $(MAKE_CPUS)/$(CPU)
-MAKE_DRIVERS     := SHELL="$(SHELL)" KERNEL_PARENT_PATH=..    -C $(DRIVERS_DIRECTORY)
-MAKE_MODULES     := SHELL="$(SHELL)" KERNEL_PARENT_PATH=..    -C $(MODULES_DIRECTORY)
-MAKE_PLATFORMS   := SHELL="$(SHELL)" KERNEL_PARENT_PATH=../.. -C $(PLATFORM_BASE_DIRECTORY)
-MAKE_PLATFORM    := $(MAKE_PLATFORMS)/$(PLATFORM)
-MAKE_RTS         := SHELL="$(SHELL)" KERNEL_PARENT_PATH=..    -C $(RTS_DIRECTORY)
+MAKE_APPLICATION := SHELL="$(SHELL)"              \
+                      KERNEL_PARENT_PATH=..       \
+                      -C $(APPLICATION_DIRECTORY)
+MAKE_CLIBRARY    := SHELL="$(SHELL)"           \
+                      KERNEL_PARENT_PATH=..    \
+                      -C $(CLIBRARY_DIRECTORY)
+MAKE_CORE        := SHELL="$(SHELL)"        \
+                      KERNEL_PARENT_PATH=.. \
+                      -C $(CORE_DIRECTORY)
+MAKE_CPU         := SHELL="$(SHELL)"                  \
+                      KERNEL_PARENT_PATH=../..        \
+                      -C $(CPU_BASE_DIRECTORY)/$(CPU)
+MAKE_DRIVERS     := SHELL="$(SHELL)"          \
+                      KERNEL_PARENT_PATH=..   \
+                      -C $(DRIVERS_DIRECTORY)
+MAKE_MODULES     := SHELL="$(SHELL)"          \
+                      KERNEL_PARENT_PATH=..   \
+                      -C $(MODULES_DIRECTORY)
+MAKE_PLATFORM    := SHELL="$(SHELL)"                            \
+                      KERNEL_PARENT_PATH=../..                  \
+                      -C $(PLATFORM_BASE_DIRECTORY)/$(PLATFORM)
+MAKE_RTS         := SHELL="$(SHELL)"        \
+                      KERNEL_PARENT_PATH=.. \
+                      -C $(RTS_DIRECTORY)
 
 CLEAN_OBJECTS     := $(KERNEL_OBJFILE)       \
                      $(KERNEL_OUTFILE)       \
                      $(KERNEL_ROMFILE)       \
                      $(CLEAN_OBJECTS_COMMON)
-
 DISTCLEAN_OBJECTS := $(KERNEL_CFGFILE)           \
                      $(DISTCLEAN_OBJECTS_COMMON)
 ifeq ($(OSTYPE),cmd)
@@ -906,10 +917,8 @@ help:
 	@$(call echo-print,"  Check wheter Makefile tools are available.")
 	@$(call echo-print,"make libutils-elftool")
 	@$(call echo-print,"  Build ELFtool.")
-	@$(call echo-print,"make libutils-gcc-wrapper")
-	@$(call echo-print,"  Build GCC-wrapper.")
-	@$(call echo-print,"make libutils-gnat-wrapper")
-	@$(call echo-print,"  Build GNAT-wrapper.")
+	@$(call echo-print,"make libutils-exe-wrapper")
+	@$(call echo-print,"  Build EXE-wrapper.")
 	@$(call echo-print,"make PROBEVARIABLE=<variablename> probevariable")
 	@$(call echo-print,"  Obtain the value of a variable.")
 	@$(call echo-print,"make PROBEVARIABLES=<variablename_list> probevariables")
@@ -935,6 +944,35 @@ endif
 # Compile phase.
 #
 
+ifeq ($(USE_EXE_WRAPPER),Y)
+EXE_WRAPPER_TIMESTAMP_FILENAME := $(OBJECT_DIRECTORY)/exe_wrapper.tmp
+ifeq      ($(BUILD_MODE),GNATMAKE)
+GNATMAKE_WRAPPER := --GCC="$(EXE_WRAPPER)"                                              \
+                    "-D_exewrapperexecutable=$(firstword $(ADAC))"                      \
+                    "-D_exewrappertmfname=$(EXE_WRAPPER_TIMESTAMP_FILENAME)"            \
+                    "-D_exewrapperverbose=$(VERBOSE)"                                   \
+                    "-D_exewrapperbrieftext=$(shell $(call brief-text,[EXE-WRAP],(+)))"
+else ifeq ($(BUILD_MODE),GPRbuild)
+ifeq ($(OSTYPE),cmd)
+GPRBUILD_WRAPPER := SET "USE_EXE_WRAPPER=$(USE_EXE_WRAPPER)"                               && \
+                    SET "EXE_WRAPPER_TIMESTAMP_FILENAME=$(EXE_WRAPPER_TIMESTAMP_FILENAME)" && \
+                    SET "EXE_WRAPPER_VERBOSE=$(VERBOSE)"                                   && \
+                    SET "EXE_WRAPPER_BRIEFTEXT="                                           &&
+else
+GPRBUILD_WRAPPER := USE_EXE_WRAPPER="$(USE_EXE_WRAPPER)"                               \
+                    EXE_WRAPPER_TIMESTAMP_FILENAME="$(EXE_WRAPPER_TIMESTAMP_FILENAME)" \
+                    EXE_WRAPPER_VERBOSE="$(VERBOSE)"                                   \
+                    EXE_WRAPPER_BRIEFTEXT=""
+endif
+endif
+else
+ifeq      ($(BUILD_MODE),GNATMAKE)
+GNATMAKE_WRAPPER :=
+else ifeq ($(BUILD_MODE),GPRbuild)
+GPRBUILD_WRAPPER :=
+endif
+endif
+
 .PHONY: FORCE
 FORCE:
 
@@ -952,11 +990,17 @@ ifeq ($(USE_CLIBRARY),Y)
 	$(MAKE) $(MAKE_CLIBRARY) all
 endif
 
-$(GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME): FORCE
+ifeq ($(USE_EXE_WRAPPER),Y)
+$(EXE_WRAPPER_TIMESTAMP_FILENAME): FORCE
+else
+.PHONY: compile_main
+compile_main:
+endif
 ifeq      ($(BUILD_MODE),GNATMAKE)
 	@$(REM) GNATMAKE-driven procedure
 	$(call brief-command, \
         $(GNATMAKE)                             \
+                    $(GNATMAKE_WRAPPER)         \
                     -c                          \
                     -gnatec=$(GNATADC_FILENAME) \
                     -D $(OBJECT_DIRECTORY)      \
@@ -969,6 +1013,7 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
 else ifeq ($(BUILD_MODE),GPRbuild)
 	@$(REM) GPRbuild-driven procedure
 	$(call brief-command, \
+        $(GPRBUILD_WRAPPER)              \
         $(GPRBUILD)                      \
                     -c -p                \
                     -P $(KERNEL_GPRFILE) \
@@ -984,9 +1029,23 @@ B__MAIN_ADB_DEPS += $(OBJECT_DIRECTORY)/libplatform.a
 B__MAIN_ADB_DEPS += $(OBJECT_DIRECTORY)/libcpu.a
 B__MAIN_ADB_DEPS += $(OBJECT_DIRECTORY)/libcore.a
 B__MAIN_ADB_DEPS += $(CLIBRARY_OBJECT)
-B__MAIN_ADB_DEPS += $(GCC_GNAT_WRAPPER_TIMESTAMP_FILENAME)
+ifeq ($(USE_EXE_WRAPPER),Y)
+B__MAIN_ADB_DEPS += $(EXE_WRAPPER_TIMESTAMP_FILENAME)
+else
+B__MAIN_ADB_DEPS += compile_main
+endif
 $(OBJECT_DIRECTORY)/b__main.adb: $(B__MAIN_ADB_DEPS)
 	@$(REM) bind all units and generate b__main
+ifeq ($(USE_EXE_WRAPPER),Y)
+ifeq ($(OSTYPE),cmd)
+	@IF NOT EXIST $(EXE_WRAPPER_TIMESTAMP_FILENAME)              \
+          $(call create-emptyfile,$(EXE_WRAPPER_TIMESTAMP_FILENAME))
+else
+	@if [ ! -e $(EXE_WRAPPER_TIMESTAMP_FILENAME) ] ; then          \
+          $(call create-emptyfile,$(EXE_WRAPPER_TIMESTAMP_FILENAME)) ; \
+        fi
+endif
+endif
 ifeq      ($(BUILD_MODE),GNATMAKE)
 	$(call brief-command, \
         $(GNATBIND)                                \
@@ -1621,8 +1680,7 @@ endif
 #
 .PHONY: tools-check
 tools-check:
-	$(GCC_WRAPPER) -v
-	$(GNAT_WRAPPER) -v
+	$(EXE_WRAPPER) -v
 ifeq ($(USE_ELFTOOL),Y)
 	$(ELFTOOL) -v
 endif
@@ -1635,16 +1693,11 @@ libutils-elftool:
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/ELFtool clean
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/ELFtool all
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/ELFtool install
-.PHONY: libutils-gcc-wrapper
-libutils-gcc-wrapper:
-	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GCC-wrapper clean
-	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GCC-wrapper all
-	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GCC-wrapper install
-.PHONY: libutils-gnat-wrapper
-libutils-gnat-wrapper:
-	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GNAT-wrapper clean
-	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GNAT-wrapper all
-	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/GNAT-wrapper install
+.PHONY: libutils-exe-wrapper
+libutils-exe-wrapper:
+	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/EXE-wrapper clean
+	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/EXE-wrapper all
+	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/EXE-wrapper install
 
 #
 # Probe variable values.

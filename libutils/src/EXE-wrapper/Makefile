@@ -1,6 +1,6 @@
 
 #
-# Makefile to build GNAT-wrapper.
+# Makefile to build EXE-wrapper.
 #
 # Copyright (C) 2020-2026 Gabriele Galeotti
 #
@@ -79,32 +79,32 @@ HOST_LD_SWITCHES ?= -g
 endif
 
 OBJS :=
-OBJS += gnat-wrapper.o
+OBJS += exe-wrapper.o
 OBJS += library.o
 
 .PHONY: all
-all: gnat-wrapper$(EXEEXT)
+all: exe-wrapper$(EXEEXT)
 
-gnat-wrapper$(EXEEXT): $(OBJS)
+exe-wrapper$(EXEEXT): $(OBJS)
 	$(HOST_CC) -o $@ $(HOST_LD_SWITCHES) $^
-gnat-wrapper.o: gnat-wrapper.c
+exe-wrapper.o: exe-wrapper.c
 	$(HOST_CC) -o $@ -c -I. -I.. $(HOST_CC_SWITCHES) $<
 library.o: ../library.c
-	$(HOST_CC) -o $@ -c -DNO_DLL_HANDLING=1 $(HOST_CC_SWITCHES) $<
+	$(HOST_CC) -o $@ -c -D_GNU_SOURCE -DNO_DLL_HANDLING=1 $(HOST_CC_SWITCHES) $<
 
 .PHONY: install
-install: gnat-wrapper$(EXEEXT)
+install: exe-wrapper$(EXEEXT)
 ifeq      ($(OSTYPE),cmd)
-	$(CP) gnat-wrapper$(EXEEXT) ..\..\gnat-wrapper-win$(EXEEXT)
+	$(CP) exe-wrapper$(EXEEXT) ..\..\exe-wrapper-win$(EXEEXT)
 else ifeq ($(OSTYPE),msys)
-	$(CP) gnat-wrapper$(EXEEXT) ../../gnat-wrapper-win$(EXEEXT)
+	$(CP) exe-wrapper$(EXEEXT) ../../exe-wrapper-win$(EXEEXT)
 else ifeq ($(OSTYPE),darwin)
-	$(CP) gnat-wrapper$(EXEEXT) ../../gnat-wrapper-osx$(EXEEXT)
+	$(CP) exe-wrapper$(EXEEXT) ../../exe-wrapper-osx$(EXEEXT)
 else ifeq ($(OSTYPE),linux)
-	$(CP) gnat-wrapper$(EXEEXT) ../../gnat-wrapper-lnx$(EXEEXT)
+	$(CP) exe-wrapper$(EXEEXT) ../../exe-wrapper-lnx$(EXEEXT)
 endif
 
 .PHONY: clean
 clean:
-	$(RM) $(OBJS) gnat-wrapper$(EXEEXT)
+	$(RM) $(OBJS) exe-wrapper$(EXEEXT)
 

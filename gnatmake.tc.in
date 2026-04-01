@@ -87,6 +87,7 @@ ifeq ($(ENABLE_SPLIT_DWARF),Y)
 ADAC_SWITCHES_DEFAULT += -gsplit-dwarf
 CC_SWITCHES_DEFAULT   += -gsplit-dwarf
 endif
+ADAC_SWITCHES_DEFAULT += -gnatdV
 
 #
 # Ada Run-Time Checks switches.
@@ -125,19 +126,21 @@ endif
 # re-routed from stdout to these files; gcc-wrapper will create empty
 # .expand files
 #
+ADAC_SWITCHES_DEFAULT += -save-temps
 ADAC_SWITCHES_DEFAULT += -fdump-ipa-cgraph           # .000i.cgraph
 ADAC_SWITCHES_DEFAULT += -fdump-rtl-expand           # .233r.expand
 ADAC_SWITCHES_DEFAULT += -fdump-rtl-dfinish          # .313r.dfinish
 ADAC_SWITCHES_DEFAULT += -fdump-tree-optimized-graph # .231t.optimized[.dot]
 ADAC_SWITCHES_DEFAULT += -fstack-usage               # Static Stack Usage Analysis.
+ADAC_SWITCHES_DEFAULT += -fcallgraph-info=da,su      # Static Stack Usage Analysis.
 ADAC_SWITCHES_DEFAULT += -gnatD                      # Create expanded source files for source level debugging.
 ADAC_SWITCHES_DEFAULT += -gnatG -gnatL               # List generated expanded code in source form.
 # -gnatR is mutually exclusive with -gnatD
 #ADAC_SWITCHES_DEFAULT += -gnatR                      # Output representation information for declared types and objects.
 #ADAC_SWITCHES_DEFAULT += -gnatdp                     # Generate messages for parser scope stack push/pops
-ADAC_SWITCHES_DEFAULT += -gnatdt                     # Print full tree.
-ADAC_SWITCHES_DEFAULT += -gnatd.b                    # Dump backend types
-ADAC_SWITCHES_DEFAULT += -gnatd.j                    # Generate listing of frontend inlined calls
+#ADAC_SWITCHES_DEFAULT += -gnatdt                     # Print full tree.
+#ADAC_SWITCHES_DEFAULT += -gnatd.b                    # Dump backend types
+#ADAC_SWITCHES_DEFAULT += -gnatd.j                    # Generate listing of frontend inlined calls
 
 #
 # Ada validity checks.

@@ -18,6 +18,7 @@
 # TOOLCHAIN_PREFIX
 # GPRBUILD_PREFIX
 # TOOLCHAIN_NAME
+# EXE_WRAPPER
 # GCC_WRAPPER
 # GNATADC_FILENAME
 # GNATTDI_FILENAME
@@ -291,7 +292,7 @@ $configuregpr += $(print_I "SweetAda_Path                     := `"$(GetEnvVar S
 $configuregpr += $(print_I "Toolchain_Prefix                  := `"$(GetEnvVar TOOLCHAIN_PREFIX)`";") + $nl
 $configuregpr += $(print_I "Toolchain_Name                    := `"$(GetEnvVar TOOLCHAIN_NAME)`";") + $nl
 $configuregpr += $(print_I "Gprbuild_Prefix                   := `"$(GetEnvVar GPRBUILD_PREFIX)`";") + $nl
-$configuregpr += $(print_I "GCC_Wrapper                       := `"$(GetEnvVar GCC_WRAPPER)`";") + $nl
+$configuregpr += $(print_I "EXE_Wrapper                       := `"$(GetEnvVar EXE_WRAPPER)`";") + $nl
 $configuregpr += $(print_I "GnatTDI_Filename                  := `"$(GetEnvVar GNATTDI_FILENAME)`";") + $nl
 $configuregpr += $(print_I "GnatAdc_Filename                  := `"$(GetEnvVar GNATADC_FILENAME)`";") + $nl
 $configuregpr += $(print_I "Library_Directory                 := `"$(GetEnvVar LIBRARY_DIRECTORY)`";") + $nl

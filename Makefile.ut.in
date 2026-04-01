@@ -22,20 +22,16 @@ MAKEFILE_UT_IN_INCLUDED := Y
 
 ifeq      ($(OSTYPE),cmd)
 ELFTOOL      := elftool-win$(EXEEXT)
-GCC_WRAPPER  := gcc-wrapper-win$(EXEEXT)
-GNAT_WRAPPER := gnat-wrapper-win$(EXEEXT)
+EXE_WRAPPER  := exe-wrapper-win$(EXEEXT)
 else ifeq ($(OSTYPE),msys)
 ELFTOOL      := elftool-win$(EXEEXT)
-GCC_WRAPPER  := gcc-wrapper-win$(EXEEXT)
-GNAT_WRAPPER := gnat-wrapper-win$(EXEEXT)
+EXE_WRAPPER  := exe-wrapper-win$(EXEEXT)
 else ifeq ($(OSTYPE),darwin)
 ELFTOOL      := elftool-osx$(EXEEXT)
-GCC_WRAPPER  := gcc-wrapper-osx$(EXEEXT)
-GNAT_WRAPPER := gnat-wrapper-osx$(EXEEXT)
+EXE_WRAPPER  := exe-wrapper-osx$(EXEEXT)
 else ifeq ($(OSTYPE),linux)
 ELFTOOL      := elftool-lnx$(EXEEXT)
-GCC_WRAPPER  := gcc-wrapper-lnx$(EXEEXT)
-GNAT_WRAPPER := gnat-wrapper-lnx$(EXEEXT)
+EXE_WRAPPER  := exe-wrapper-lnx$(EXEEXT)
 else
 $(error Error: no valid executables for OSTYPE '$(OSTYPE)')
 endif
@@ -78,7 +74,7 @@ endif
 endif
 
 # needed by GPRbuild
-export GCC_WRAPPER
+export EXE_WRAPPER
 # needed by RTS Makefile
 export PROCESSCFG
 # needed by Makefile.lb.in

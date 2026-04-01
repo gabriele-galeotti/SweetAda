@@ -1303,16 +1303,6 @@ execute_exec(execute_t this)
                 return -1;
         }
 
-        if (!file_exists(this->filename))
-        {
-                log_printf(
-                        LOG_STDERR,
-                        "execute_exec(): \"%s\" does not exist.",
-                        this->filename
-                        );
-                return -1;
-        }
-
         /*
          * Initialize process structures.
          */
@@ -1323,7 +1313,14 @@ execute_exec(execute_t this)
         /*
          * Define Application Name.
          */
-        lpApplicationName = (LPCSTR)this->filename;
+        if ((this->flags & EXEC_USE_PATH) != 0)
+        {
+                lpApplicationName = NULL;
+        }
+        else
+        {
+                lpApplicationName = (LPCSTR)this->filename;
+        }
 
         /*
          * Build a command line string from arguments.
@@ -1451,16 +1448,6 @@ execute_exec(execute_t this)
                 log_printf(
                         LOG_STDERR,
                         "execute_exec(): no executable filename supplied."
-                        );
-                return -1;
-        }
-
-        if (!file_exists(this->filename))
-        {
-                log_printf(
-                        LOG_STDERR,
-                        "execute_exec(): \"%s\" does not exist.",
-                        this->filename
                         );
                 return -1;
         }
@@ -1656,11 +1643,25 @@ execute_exec(execute_t this)
                 if (this->envp[0] != NULL && strcmp(this->envp[0], "*") == 0)
                 {
                         extern char **environ;
-                        execve(this->filename, (char * const *)this->argv, environ);
+                        if ((this->flags & EXEC_USE_PATH) != 0)
+                        {
+                                execvpe(this->filename, (char * const *)this->argv, environ);
+                        }
+                        else
+                        {
+                                execve(this->filename, (char * const *)this->argv, environ);
+                        }
                 }
                 else
                 {
-                        execve(this->filename, (char * const *)this->argv, (char * const *)this->envp);
+                        if ((this->flags & EXEC_USE_PATH) != 0)
+                        {
+                                execvpe(this->filename, (char * const *)this->argv, (char * const *)this->envp);
+                        }
+                        else
+                        {
+                                execve(this->filename, (char * const *)this->argv, (char * const *)this->envp);
+                        }
                 }
         }
 

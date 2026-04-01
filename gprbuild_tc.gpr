@@ -13,9 +13,14 @@ abstract project Gprbuild_Tc is
    -- Types and variables
    ----------------------------------------------------------------------------
 
-   Ostype  := External ("OSTYPE", "");
-   Verbose := External ("VERBOSE", "");
-   Mode    := External ("GPR_TOOL", "");
+   Ostype          := External ("OSTYPE", "");
+   Verbose         := External ("VERBOSE", "");
+   Mode            := External ("GPR_TOOL", "");
+
+   Use_EXE_Wrapper                := External ("USE_EXE_WRAPPER", "");
+   EXE_Wrapper_Timestamp_Filename := External ("EXE_WRAPPER_TIMESTAMP_FILENAME", "");
+   EXE_Wrapper_Verbose            := External ("EXE_WRAPPER_VERBOSE", "");
+   EXE_Wrapper_Brieftext          := External ("EXE_WRAPPER_BRIEFTEXT", "");
 
    ----------------------------------------------------------------------------
    -- Naming
@@ -68,11 +73,22 @@ abstract project Gprbuild_Tc is
    -- Compiler
    ----------------------------------------------------------------------------
 
-   GCC_FQExecutable :=
-      Configure.Toolchain_Prefix &
-      "/bin/"                    &
-      Configure.Toolchain_Name   &
-      "-gcc";
+   Compiler_FQExecutable := "";
+   EXE_Wrapper_Switches := ();
+
+   case Use_EXE_Wrapper is
+      when "Y" =>
+         Compiler_FQExecutable := Configure.EXE_Wrapper;
+         EXE_Wrapper_Switches := (
+            "-D_exewrapperexecutable=" & Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc",
+            "-D_exewrappertmfname=" & EXE_Wrapper_Timestamp_Filename,
+            "-D_exewrapperbasename=Y",
+            "-D_exewrapperverbose=" & EXE_Wrapper_Verbose,
+            "-D_exewrapperbrieftext=" & EXE_Wrapper_Brieftext
+            );
+      when others =>
+         Compiler_FQExecutable := Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
+   end case;
 
    Ada_Mode := "";
    case Configure.Ada_Mode is
@@ -93,16 +109,6 @@ abstract project Gprbuild_Tc is
       when others    => null;
    end case;
 
-   GCC_Wrapper_Switch := ();
-
-   case Mode is
-      when "gnatprove" =>
-         null;
-      when others      =>
-         GCC_Wrapper_Switch :=
-            GCC_Wrapper_Switch & ("-wrapper", Configure.GCC_Wrapper);
-   end case;
-
    No_DOS_LT_Switch := "";
    case Ostype is
       when "cmd" | "msys" => null;
@@ -111,16 +117,15 @@ abstract project Gprbuild_Tc is
 
    package Compiler is
       -- Asm_Cpp
-      for Driver ("Asm_Cpp") use GCC_FQExecutable;
+      for Driver ("Asm_Cpp") use Compiler_FQExecutable;
       for Switches ("Asm_Cpp") use (
          "-ffunction-sections",
          "-fdata-sections",
          "-g3", "-gdwarf-5"
          )                               &
-         GCC_Wrapper_Switch              &
          Configure.GCC_Switches_Platform;
       -- C
-      for Driver ("C") use GCC_FQExecutable;
+      for Driver ("C") use Compiler_FQExecutable;
       for Leading_Required_Switches ("C") use (
          "-ffreestanding",
          "-std=c99"
@@ -133,17 +138,15 @@ abstract project Gprbuild_Tc is
          "-fdata-sections",
          "-g3", "-gdwarf-5"
          )                               &
-         GCC_Wrapper_Switch              &
          Configure.CC_Switches_RTS       &
          Configure.GCC_Switches_Platform &
          Gprbuild_Wr.CC_Switches_Warning;
       -- Ada
-      for Driver ("Ada") use GCC_FQExecutable;
+      for Driver ("Ada") use Compiler_FQExecutable;
       for Mapping_Spec_Suffix ("Ada") use "%s";
       for Mapping_Body_Suffix ("Ada") use "%b";
       for Dependency_Kind ("Ada") use "ALI_File";
       for Multi_Unit_Object_Separator ("Ada") use "~";
-      for Leading_Required_Switches ("Ada") use ("-x", "ada");
       for Include_Switches ("Ada") use ("-I");
       for Switches ("Ada") use (
          Ada_Mode,
@@ -165,11 +168,10 @@ abstract project Gprbuild_Tc is
          "-gnatVa",
          "-gnatX",
          "-fstack-usage",
-         "-fdump-rtl-expand",
          No_DOS_LT_Switch
          )                                 &
+         EXE_Wrapper_Switches              &
          Elaboration_Model_Switches        &
-         GCC_Wrapper_Switch                &
          Configure.ADAC_Switches_RTS       &
          Configure.GCC_Switches_Platform   &
          Gprbuild_Wr.ADAC_Switches_Warning &

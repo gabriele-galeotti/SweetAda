@@ -389,11 +389,12 @@ extern int          execute_child_exit_status(execute_t);
 extern execute_t    execute_destroy(execute_t);
 
 #define EXEC_FORK           (1 << 0)
+#define EXEC_USE_PATH       (1 << 1)
 /* do not log exit errors from the executable we just launched, they are */
 /* normal execution errors, and we do not want to add useless notifications */
-#define EXEC_NO_EXIT_ERRORS (1 << 1)
-#define EXEC_PRINT_CPID     (1 << 2)
-#define EXEC_PRINT_ARGV     (1 << 3)
+#define EXEC_NO_EXIT_ERRORS (1 << 2)
+#define EXEC_PRINT_CPID     (1 << 3)
+#define EXEC_PRINT_ARGV     (1 << 4)
 
 extern int  execute_system(int, char **);
 extern bool process_terminate(pid_t);
