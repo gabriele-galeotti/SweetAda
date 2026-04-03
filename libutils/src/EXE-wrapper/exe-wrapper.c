@@ -292,8 +292,8 @@ main(int argc, char **argv)
                                                 }
                                                 else
                                                 {
-                                                                fprintf(stderr, "%s: *** Error: unknown argument for 'exewrapper'.\n", program_name);
-                                                                error_flag = true;
+                                                        fprintf(stderr, "%s: *** Error: unknown argument for 'exewrapper'.\n", program_name);
+                                                        error_flag = true;
                                                 }
                                         }
                                         break;
@@ -333,7 +333,6 @@ main(int argc, char **argv)
         }
         if (error_flag)
         {
-                exit_status = EXIT_FAILURE;
                 goto main_exit;
         }
 
@@ -342,10 +341,7 @@ main(int argc, char **argv)
          */
         if (executable_filename == NULL || STRING_LENGTH(executable_filename) == 0)
         {
-                if (executable_filename == NULL || STRING_LENGTH(executable_filename) == 0)
-                {
-                        goto main_exit;
-                }
+                goto main_exit;
         }
 
         /*
