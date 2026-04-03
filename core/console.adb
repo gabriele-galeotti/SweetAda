@@ -28,8 +28,6 @@ package body Console
    --                                                                        --
    --========================================================================--
 
-   use Definitions;
-
    -- helper subprogram
    procedure Print_UnsignedHex8
       (Value : in Interfaces.Unsigned_8);
@@ -57,6 +55,7 @@ package body Console
    procedure Console_Null_Read
       (C : out Character)
       is
+      use Definitions;
    begin
       C := ISO88591.NUL;
    end Console_Null_Read;

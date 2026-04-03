@@ -18,6 +18,7 @@
 separate (Console)
 procedure Print_NewLine
    is
+   use Definitions;
 begin
    for Index in CRLF'Range loop
       Print (CRLF (Index));
