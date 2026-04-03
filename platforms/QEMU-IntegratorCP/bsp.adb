@@ -38,7 +38,6 @@ package body BSP
    --                                                                        --
    --========================================================================--
 
-   use System;
    use Interfaces;
    use Definitions;
    use Bits;
