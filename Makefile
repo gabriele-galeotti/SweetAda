@@ -1680,7 +1680,9 @@ endif
 #
 .PHONY: tools-check
 tools-check:
+ifeq ($(USE_EXE_WRAPPER),Y)
 	$(EXE_WRAPPER) -v
+endif
 ifeq ($(USE_ELFTOOL),Y)
 	$(ELFTOOL) -v
 endif
