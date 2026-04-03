@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System.Storage_Elements;
+
 package body PL110
    is
 
@@ -25,6 +27,8 @@ package body PL110
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use System.Storage_Elements;
 
    ----------------------------------------------------------------------------
    -- RGB565 encoding
