@@ -26,9 +26,15 @@ pragma Assertion_Policy (Pre            => Ignore,
                          Contract_Cases => Ignore,
                          Ghost          => Ignore);
 
-package Interfaces.C
-  with SPARK_Mode, Pure
+with System;
+with System.Parameters;
+
+package Interfaces.C with
+  SPARK_Mode,
+  Pure,
+  Always_Terminates
 is
+
    --  Each of the types declared in Interfaces.C is C-compatible.
 
    --  The types int, short, long, unsigned, ptrdiff_t, size_t, double,
@@ -54,8 +60,8 @@ is
 
    type int   is new Integer;
    type short is new Short_Integer;
-   type long  is range -(2 ** (Long_Integer'Size - Integer'(1)))
-     .. +(2 ** (Long_Integer'Size - Integer'(1))) - 1;
+   type long  is range -(2 ** (System.Parameters.long_bits - Integer'(1)))
+     .. +(2 ** (System.Parameters.long_bits - Integer'(1))) - 1;
    type long_long is new Long_Long_Integer;
 
    type signed_char is range SCHAR_MIN .. SCHAR_MAX;
@@ -80,10 +86,9 @@ is
    --  a non-private system.address type.
 
    type ptrdiff_t is
-     range -(2 ** (Standard'Address_Size - Integer'(1))) ..
-           +(2 ** (Standard'Address_Size - Integer'(1)) - 1);
+     range -System.Memory_Size / 2 .. System.Memory_Size / 2 - 1;
 
-   type size_t is mod 2 ** Standard'Address_Size;
+   type size_t is mod System.Memory_Size;
 
    --  Boolean type
 
