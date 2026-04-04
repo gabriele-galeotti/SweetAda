@@ -23,12 +23,12 @@ function ModSI3
     D : GCC.Types.SI_Type)
    return GCC.Types.SI_Type
    is
-   function To_USI is new Ada.Unchecked_Conversion (GCC.Types.SI_Type, GCC.Types.USI_Type);
-   function To_SI is new Ada.Unchecked_Conversion (GCC.Types.USI_Type, GCC.Types.SI_Type);
    Num      : GCC.Types.SI_Type := N;
    Den      : GCC.Types.SI_Type := D;
    Negative : Boolean;
    Result   : GCC.Types.SI_Type;
+   function To_USI is new Ada.Unchecked_Conversion (GCC.Types.SI_Type, GCC.Types.USI_Type);
+   function To_SI is new Ada.Unchecked_Conversion (GCC.Types.USI_Type, GCC.Types.SI_Type);
 begin
    Negative := False;
    if Num < 0 then

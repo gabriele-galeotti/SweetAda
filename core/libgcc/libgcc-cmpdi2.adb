@@ -23,8 +23,6 @@ function CmpDI2
     B : GCC.Types.DI_Type)
    return GCC.Types.SI_Type
    is
-   function To_USI_2 is new Ada.Unchecked_Conversion (GCC.Types.DI_Type, USI_2);
-   function To_SI is new Ada.Unchecked_Conversion (GCC.Types.USI_Type, GCC.Types.SI_Type);
    T_A    : constant USI_2 := To_USI_2 (A);
    T_B    : constant USI_2 := To_USI_2 (B);
    A_HIGH : constant GCC.Types.SI_Type  := To_SI (T_A (HI64));
@@ -32,6 +30,8 @@ function CmpDI2
    B_HIGH : constant GCC.Types.SI_Type  := To_SI (T_B (HI64));
    B_LOW  : constant GCC.Types.USI_Type := T_B (LO64);
    R      : GCC.Types.SI_Type;
+   function To_USI_2 is new Ada.Unchecked_Conversion (GCC.Types.DI_Type, USI_2);
+   function To_SI is new Ada.Unchecked_Conversion (GCC.Types.USI_Type, GCC.Types.SI_Type);
 begin
    R := 1;
    if    A_HIGH < B_HIGH then

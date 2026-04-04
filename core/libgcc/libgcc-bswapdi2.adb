@@ -22,9 +22,9 @@ function BswapDI2
    (V : GCC.Types.DI_Type)
    return GCC.Types.DI_Type
    is
+   UV : constant GCC.Types.UDI_Type := To_UDI (V);
    function To_UDI is new Ada.Unchecked_Conversion (GCC.Types.DI_Type, GCC.Types.UDI_Type);
    function To_DI is new Ada.Unchecked_Conversion (GCC.Types.UDI_Type, GCC.Types.DI_Type);
-   UV : constant GCC.Types.UDI_Type := To_UDI (V);
 begin
 
    return To_DI (
