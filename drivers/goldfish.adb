@@ -30,6 +30,8 @@ package body Goldfish
 
    use LLutils;
 
+pragma Warnings (Off, "* is not referenced");
+
    ----------------------------------------------------------------------------
    -- Register types
    ----------------------------------------------------------------------------
@@ -121,5 +123,7 @@ package body Goldfish
       T.IsDST := 0;
       T.YDay  := 0;
    end Read_Clock;
+
+pragma Warnings (On, "* is not referenced");
 
 end Goldfish;
