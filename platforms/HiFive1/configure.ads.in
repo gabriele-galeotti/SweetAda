@@ -8,9 +8,11 @@ package Configure
    use Definitions;
 
    -- PLATFORM and CPU definitions
-   PLATFORM  : constant String := "HiFive1";
-   CPU       : constant String := "@CPU@";
-   CPU_MODEL : constant String := "@CPU_MODEL@";
+   PLATFORM         : constant String := "HiFive1";
+   CPU              : constant String := "@CPU@";
+   CPU_MODEL        : constant String := "@CPU_MODEL@";
+   MTIME_ADDRESS    : constant := 16#0200_BFF8#;
+   MTIMECMP_ADDRESS : constant := 16#0200_4000#;
 
    -- basic configuration parameters
    XTAL_FREQUENCY : constant := 16 * MHz1;
