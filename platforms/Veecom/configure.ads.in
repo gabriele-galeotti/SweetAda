@@ -4,9 +4,11 @@ package Configure
    is
 
    -- PLATFORM and CPU definitions
-   PLATFORM  : constant String := "Veecom";
-   CPU       : constant String := "@CPU@";
-   CPU_MODEL : constant String := "@CPU_MODEL@";
+   PLATFORM         : constant String := "Veecom";
+   CPU              : constant String := "@CPU@";
+   CPU_MODEL        : constant String := "@CPU_MODEL@";
+   MTIME_ADDRESS    : constant := 16#FFFF_FFFF#; -- not implemented
+   MTIMECMP_ADDRESS : constant := 16#FFFF_FFFF#; -- not implemented
 
    -- basic configuration parameters
    TICK_FREQUENCY : constant := 1_000;
