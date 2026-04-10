@@ -4,8 +4,8 @@ ENTRY(_start)
 MEMORY
 {
         itim       (ARX) : ORIGIN = 0x08000000, LENGTH = 8k
-        flash-qspi (RX)  : ORIGIN = 0x20010000, LENGTH = 0x6A120
         dtim       (ARW) : ORIGIN = 0x80000000, LENGTH = 16k
+        flash-qspi (RX)  : ORIGIN = 0x20010000, LENGTH = 0x6A120
 }
 
 SECTIONS
