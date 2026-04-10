@@ -73,6 +73,10 @@ abstract project Gprbuild_Tc is
    -- Compiler
    ----------------------------------------------------------------------------
 
+   Compiler_GCC := Configure.Toolchain_Prefix &
+                   "/bin/"                    &
+                   Configure.Toolchain_Name   &
+                   "-gcc";
    Compiler_FQExecutable := "";
    EXE_Wrapper_Switches := ();
 
@@ -80,14 +84,14 @@ abstract project Gprbuild_Tc is
       when "Y" =>
          Compiler_FQExecutable := Configure.EXE_Wrapper;
          EXE_Wrapper_Switches := (
-            "-D_exewrapperexecutable=" & Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc",
+            "-D_exewrapperexecutable=" & Compiler_GCC,
             "-D_exewrappertmfname=" & EXE_Wrapper_Timestamp_Filename,
             "-D_exewrapperbasename=Y",
             "-D_exewrapperverbose=" & EXE_Wrapper_Verbose,
             "-D_exewrapperbrieftext=" & EXE_Wrapper_Brieftext
             );
       when others =>
-         Compiler_FQExecutable := Configure.Toolchain_Prefix & "/bin/" & Configure.Toolchain_Name & "-gcc";
+         Compiler_FQExecutable := Compiler_GCC;
    end case;
 
    Ada_Mode := "";
