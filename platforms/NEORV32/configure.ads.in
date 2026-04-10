@@ -4,9 +4,11 @@ package Configure
    is
 
    -- PLATFORM and CPU definitions
-   PLATFORM  : constant String := "NEORV32";
-   CPU       : constant String := "@CPU@";
-   CPU_MODEL : constant String := "@CPU_MODEL@";
+   PLATFORM         : constant String := "NEORV32";
+   CPU              : constant String := "@CPU@";
+   CPU_MODEL        : constant String := "@CPU_MODEL@";
+   MTIME_ADDRESS    : constant := 16#FFF4_BFF8#;
+   MTIMECMP_ADDRESS : constant := 16#FFF4_4000#;
 
    -- basic configuration parameters
    TICK_FREQUENCY : constant := 1_000;
