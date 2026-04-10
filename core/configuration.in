@@ -24,21 +24,21 @@ INCLUDE_DIRECTORIES += $(CORE_DIRECTORY)                     \
 #
 # Units not automatically inferred as dependencies by the build system.
 #
-# abort_library         may be called by C library, with''ed by gnat_exceptions, last_chance_handler
-# bits                  with''ed by console, core, integer_math, malloc, memory_functions
-# bits-c                with''ed by console, malloc, memory_functions
-# console               with''ed by abort_library, core, malloc
+# abort_library         may be called by C library, with'ed by gnat_exceptions, last_chance_handler
+# bits                  with'ed by console, core, integer_math, malloc, memory_functions
+# bits-c                with'ed by console, malloc, memory_functions
+# console               with'ed by abort_library, core, malloc
 # core                  basic core unit
 # core-base             secondary stack allocation and stack checking
 # core-expanded         objects claimed by the binder
-# definitions           with''ed by console
+# definitions           with'ed by console
 # gnat_exceptions       called by inline checks
-# integer_math          with''ed by malloc
+# integer_math          with'ed by malloc
 # last_chance_handler   called by inline checks
-# llutils               with''ed by console
+# llutils               with'ed by console
 # malloc                called by allocator code
-# memory_functions      called by inline code, with''ed by malloc
-# mutex                 with''ed by malloc
+# memory_functions      called by inline code, with'ed by malloc
+# mutex                 with'ed by malloc
 #
 IMPLICIT_CORE_UNITS += abort_library       \
                        bits                \
