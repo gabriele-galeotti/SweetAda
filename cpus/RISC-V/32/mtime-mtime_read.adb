@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
+with Configure;
 with Bits;
 with RISCV;
 
@@ -23,9 +25,9 @@ function mtime_Read
    return Unsigned_64
    is
    mtime_mmap : aliased RISCV.mtime_Type
-      with Import        => True,
-           Convention    => Ada,
-           External_Name => "_riscv_mtime_mmap";
+      with Address    => System'To_Address (Configure.MTIME_ADDRESS),
+           Import     => True,
+           Convention => Ada;
    L          : Unsigned_32;
    H          : Unsigned_32;
 begin

@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
+with Configure;
 with Bits;
 with RISCV;
 
@@ -23,9 +25,9 @@ procedure mtimecmp_Write
    (Value : in Unsigned_64)
    is
    mtimecmp_mmap : aliased RISCV.mtime_Type
-      with Import        => True,
-           Convention    => Ada,
-           External_Name => "_riscv_mtimecmp_mmap";
+      with Address    => System'To_Address (Configure.MTIMECMP_ADDRESS),
+           Import     => True,
+           Convention => Ada;
 begin
    mtimecmp_mmap.H := 16#FFFF_FFFF#;
    mtimecmp_mmap.L := Bits.LWord (Value);
