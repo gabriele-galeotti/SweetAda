@@ -143,11 +143,11 @@ main(int argc, char **argv)
         const char *brieftext;
 
         exit_status = EXIT_FAILURE;
-        executable_filename = NULL;
         input_filename = NULL;
-        (void)output_filename;
         output_filename = NULL;
+        (void)output_filename;
         execute = NULL;
+        executable_filename = NULL;
         timestamp_filename = NULL;
         use_basename = NULL;
         verbose = NULL;
