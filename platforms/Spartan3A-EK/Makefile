@@ -2,7 +2,7 @@
 #
 # Platform sub-Makefile
 #
-# Copyright (C) 2020-2025 Gabriele Galeotti
+# Copyright (C) 2020-2026 Gabriele Galeotti
 #
 # This work is licensed under the terms of the MIT License.
 # Please consult the LICENSE.txt file located in the top-level directory.
@@ -79,8 +79,7 @@ clean:
 
 .PHONY: distclean
 distclean: clean-configure-files clean
-	$(RM) $(DISTCLEAN_OBJECTS_COMMON) \
-              download.bit*
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 

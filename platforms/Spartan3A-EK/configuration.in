@@ -2,7 +2,7 @@
 #
 # Spartan 3A-EK
 #
-# MicroBlaze v7.00.b BE XC3S400AFT256-4
+# MicroBlaze™ v7.00.b BE XC3S400AFT256-4
 #
 
 ################################################################################
@@ -32,9 +32,12 @@ LD_SWITCHES_PLATFORM      := --undefined=vectors --no-warn-rwx-segments
 OBJDUMP_SWITCHES_PLATFORM :=
 OBJCOPY_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         :=
+POSTBUILD_COMMAND         := $(SHELL_EXEC) bitinit$(SCREXT)
 
 CONFIGURE_FILES_PLATFORM := configure.ads configure.h
 LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+DISTCLEAN_OBJECTS_COMMON += download.bit*
 
 ################################################################################
 # User parameters.                                                             #
@@ -42,13 +45,15 @@ LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 ################################################################################
 
 # Xilinx ISE
-export XILINX_PATH  := /opt/XilinxISE/14.7/ISE_DS
+export XILINX_PATH    := /opt/XilinxISE/14.7/ISE_DS
 # top-level directory of the project
-export PROJECT_PATH := /root/workspace/hardware/Xilinx_Spartan-3A_EK/Spartan_3A_Eval_Test_Source_v92
+export PROJECT_PATH   := /root/workspace/hardware/Xilinx_Spartan-3A_EK/Spartan_3A_Eval_Test_Source_v92
 # device part
-export DEVICE       := xc3s400aft256-4
+export DEVICE         := xc3s400aft256-4
+# bitstream
+export FPGA_BITSTREAM := "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/download.bit
 # communication port
-export COMMPORT     := /dev/ttyACM0
+export COMMPORT       := /dev/ttyACM0
 
 ################################################################################
 # Run/debug interface.                                                         #
@@ -58,9 +63,9 @@ export COMMPORT     := /dev/ttyACM0
 SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
 
-RUN_COMMAND   := "$(TCLSH)"                                                 \
-                   "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl  \
-                   -b "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/download.bit \
+RUN_COMMAND   := "$(TCLSH)"                                                \
+                   "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl \
+                   -b $(FPGA_BITSTREAM)                                    \
                    -c $(COMMPORT)
 DEBUG_COMMAND := $(RUN_COMMAND)
 

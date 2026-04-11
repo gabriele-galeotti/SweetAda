@@ -3,7 +3,7 @@
 #
 # Spartan-3A-EK FPGA bitstream download.
 #
-# Copyright (C) 2020-2025 Gabriele Galeotti
+# Copyright (C) 2020-2026 Gabriele Galeotti
 #
 # This work is licensed under the terms of the MIT License.
 # Please consult the LICENSE.txt file located in the top-level directory.
@@ -49,7 +49,7 @@ proc download_bitstream {fd bitstream_filename} {
         after 1
         set fd_data [read $fd 256]
         # check if reply string end with "ack" + NUL
-        set idx [string last ack\x00 $fd_data [expr [string length $fd_data] - 1]]
+        set idx [string last ack\x00 $fd_data [expr {[string length $fd_data] - 1}]]
         if {$idx < 0} {
             return -1
             break
@@ -76,7 +76,7 @@ proc do_command {fd command_string} {
     after 100
     set fd_data [read $fd 256]
     # check if reply string end with "ack" + NUL
-    set idx [string last ack\x00 $fd_data [expr [string length $fd_data] - 1]]
+    set idx [string last ack\x00 $fd_data [expr {[string length $fd_data] - 1}]]
     if {$idx < 0} {
         puts stderr "$SCRIPT_FILENAME: *** Error: no ack received."
         close $fd
