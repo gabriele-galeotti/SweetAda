@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2026 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -20,6 +20,7 @@ with System.Storage_Elements;
 with Interfaces;
 with Definitions;
 with Bits;
+with Bits.C;
 with Videofont8x8;
 
 package Amiga
@@ -39,6 +40,7 @@ package Amiga
    use Interfaces;
    use Definitions;
    use Bits;
+   use Bits.C;
 
 pragma Style_Checks (Off);
 
@@ -458,6 +460,100 @@ pragma Style_Checks (Off);
       (Value : in Unsigned_8)
       with Inline => True;
 
+pragma Warnings (Off);
+   -- LVOs
+   ExecBase         : constant Integer_Address := 4;
+   -- exec.library
+   LVOSupervisor    : constant Integer_Address := -30;
+   LVOSuperState    : constant Integer_Address := -150;
+   LVOCloseLibrary  : constant Integer_Address := -414;
+   LVOOpenLibrary   : constant Integer_Address := -552;
+   -- expansion.library
+   ExpansionLibrary : aliased constant char_array := "expansion.library" & nul;
+   LVOFindConfigDev : constant Integer_Address := -72;
+pragma Warnings (On);
+
+   -- ConfigDev types
+
+   type Node_Type;
+   type Node_Ptr is access all Node_Type;
+
+   type Node_Type is record
+      ln_Succ : Node_Ptr;   -- Pointer to next (successor)
+      ln_Pred : Node_Ptr;   -- Pointer to previous (predecessor)
+      ln_Type : Unsigned_8; -- Type
+      ln_Pri  : Unsigned_8; -- Priority, for sorting
+      ln_Name : Address;    -- ID string, null terminated
+   end record
+      with Alignment => 2;
+   for Node_Type use record
+      ln_Succ at 16#0# range 0 .. 31;
+      ln_Pred at 16#4# range 0 .. 31;
+      ln_Type at 16#8# range 0 ..  7;
+      ln_Pri  at 16#9# range 0 ..  7;
+      ln_Name at 16#A# range 0 .. 31;
+   end record;
+
+   -- first 16 bytes of the expansion ROM
+   type ExpansionRom_Type is record
+      er_Type         : Unsigned_8;  -- Board type, size and flags
+      er_Product      : Unsigned_8;  -- Product number, assigned by manufacturer
+      er_Flags        : Unsigned_8;  -- Flags
+      er_Reserved03   : Unsigned_8;  -- Must be zero ($ff inverted)
+      er_Manufacturer : Unsigned_16; -- Unique ID,ASSIGNED BY AmigaOS development team
+      er_SerialNumber : Unsigned_32; -- Available for use by manufacturer
+      er_InitDiagVec  : Unsigned_16; -- Offset to optional DiagArea structure
+      er_Reserved0c   : Unsigned_8;
+      er_Reserved0d   : Unsigned_8;
+      er_Reserved0e   : Unsigned_8;
+      er_Reserved0f   : Unsigned_8;
+   end record;
+   for ExpansionRom_Type use record
+      er_Type         at 16#0# range 0 ..  7;
+      er_Product      at 16#1# range 0 ..  7;
+      er_Flags        at 16#2# range 0 ..  7;
+      er_Reserved03   at 16#3# range 0 ..  7;
+      er_Manufacturer at 16#4# range 0 .. 15;
+      er_SerialNumber at 16#6# range 0 .. 31;
+      er_InitDiagVec  at 16#A# range 0 .. 15;
+      er_Reserved0c   at 16#C# range 0 ..  7;
+      er_Reserved0d   at 16#D# range 0 ..  7;
+      er_Reserved0e   at 16#E# range 0 ..  7;
+      er_Reserved0f   at 16#F# range 0 ..  7;
+   end record;
+
+   type ConfigDev_Type;
+   type ConfigDev_Ptr is access all ConfigDev_Type;
+
+   type DriverData_Type is array (0 .. 3) of Unsigned_32;
+
+   type ConfigDev_Type is record
+     cd_Node      : Node_Type;         -- List Node Structure
+     cd_Flags     : Unsigned_8;        -- (read/write)
+     cd_Pad       : Unsigned_8;        -- reserved
+     cd_Rom       : ExpansionRom_Type; -- copy of board's expansion ROM
+     cd_BoardAddr : Integer_Address;   -- where in memory the board was placed
+     cd_BoardSize : Unsigned_32;       -- size of board in bytes
+     cd_SlotAddr  : Unsigned_16;       -- which slot number (PRIVATE)
+     cd_SlotSize  : Unsigned_16;       -- number of slots (PRIVATE)
+     cd_Driver    : Integer_Address;   -- pointer to node of driver
+     cd_NextCD    : ConfigDev_Ptr;     -- linked list of drivers to config
+     cd_Unused    : DriverData_Type;   -- for whatever the driver wants
+   end record;
+   for ConfigDev_Type use record
+     cd_Node      at 16#00# range 0 .. (16#0E# * 8) - 1;
+     cd_Flags     at 16#0E# range 0 ..  7;
+     cd_Pad       at 16#0F# range 0 ..  7;
+     cd_Rom       at 16#10# range 0 .. (16#10# * 8) - 1;
+     cd_BoardAddr at 16#20# range 0 .. 31;
+     cd_BoardSize at 16#24# range 0 .. 31;
+     cd_SlotAddr  at 16#28# range 0 .. 15;
+     cd_SlotSize  at 16#2A# range 0 .. 15;
+     cd_Driver    at 16#2C# range 0 .. 31;
+     cd_NextCD    at 16#30# range 0 .. 31;
+     cd_Unused    at 16#34# range 0 .. (4 * 32) - 1;
+   end record;
+
    -- Subprograms
 
    procedure Tclk_Init;
@@ -467,6 +563,17 @@ pragma Style_Checks (Off);
    procedure Serialport_TX
       (C : in Character);
 
+   function OpenLibrary
+      (Library_Name : char_array)
+      return Integer_Address;
+   procedure CloseLibrary
+      (Library_Address : Integer_Address);
+   function FindConfigDev
+      (Library_Base    : Integer_Address;
+       oldDev          : Integer_Address;
+       Manufacturer_ID : Unsigned_32;
+       Product_ID      : Unsigned_32)
+      return Integer_Address;
 
 pragma Style_Checks (On);
 

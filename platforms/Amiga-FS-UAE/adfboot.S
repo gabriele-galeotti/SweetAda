@@ -2,7 +2,7 @@
 //
 // adfboot.S
 //
-// Copyright (C) 2020-2025 Gabriele Galeotti
+// Copyright (C) 2020-2026 Gabriele Galeotti
 //
 // This work is licensed under the terms of the MIT License.
 // Please consult the LICENSE.txt file located in the top-level directory.
@@ -33,6 +33,7 @@ _start:
 
                 // offset 0x12
 
+                // a1 points to a struct IOStdReq
                 move.w  #CMD_READ,IO_COMMAND(%a1)
                 // address of data
                 move.l  #LOADADDRESS,IO_DATA(%a1)
@@ -40,16 +41,15 @@ _start:
                 move.l  #(NSECTORS*512),IO_LENGTH(%a1)
                 // offset of data start (sector 2)
                 move.l  #(2*512),IO_OFFSET(%a1)
-                jsr     LVODoIO(%a6)
+                jsr     _LVODoIO(%a6)
                 // turn on supervisor mode
-                move.l  EXECBASE,%a6
-                jsr     SUPERSTATE(%a6)
-                // entry point
-                move.l  #ENTRYPOINT,%a6
-                // pass the entry point in A0
-                move.l  %a6,%a0
+                lea.l   supervisor(%pc),%a5
+                move.l  ExecBase,%a6
+                jsr     _LVOSupervisor(%a6)
                 // jump to payload
-                jmp     (%a6)
+supervisor:     move.w  #0x2700,%sr
+                move.l  #ENTRYPOINT,%a0
+                jmp     (%a0)
 
                 .space  1024-(.-_start)
 

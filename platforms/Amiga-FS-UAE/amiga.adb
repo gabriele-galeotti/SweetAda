@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2026 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -15,11 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Ada.Characters.Latin_1;
+with System.Machine_Code;
 with Ada.Unchecked_Conversion;
 with Configure;
 with Memory_Functions;
-with MMIO;
 
 package body Amiga
    is
@@ -31,6 +30,8 @@ package body Amiga
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use System.Machine_Code;
 
    BYTES_PER_RASTER   : constant := 80;
    BYTES_PER_TEXTLINE : constant := BYTES_PER_RASTER * 8;
@@ -288,47 +289,6 @@ package body Amiga
    end CIAA_ICR_SetBitMask;
 
    ----------------------------------------------------------------------------
-   -- Serialport_RX
-   ----------------------------------------------------------------------------
-   procedure Serialport_RX
-      (C : out Character)
-      is
-      R : SERDATR_Type;
-   begin
-      loop
-         R := CUSTOM.SERDATR;
-         if R.RBF then
-            C := To_Ch (R.DB);
-            INTREQ_ClearBitMask (16#0800#);
-            exit;
-         end if;
-      end loop;
-   end Serialport_RX;
-
-   ----------------------------------------------------------------------------
-   -- Serialport_TX
-   ----------------------------------------------------------------------------
-   procedure Serialport_TX
-      (C : in Character)
-      is
-   begin
-      loop exit when CUSTOM.SERDATR.TBE; end loop;
-      CUSTOM.SERDAT := (D => To_U8 (C), S => 16#01#);
-   end Serialport_TX;
-
-   ----------------------------------------------------------------------------
-   -- Serialport_Init
-   ----------------------------------------------------------------------------
-   procedure Serialport_Init
-      is
-   begin
-      -- CUSTOM.SERPER := (RATE => 16#0173#, LONG => False); -- NTSC clock, 9600 bps
-      CUSTOM.SERPER := (RATE => 16#005C#, LONG => False); -- NTSC clock, 38400 bps
-      -- CUSTOM.SERPER := (RATE => 16#0170#, LONG => False); -- PAL clock, 9600 bps
-      -- CUSTOM.SERPER := (RATE => 16#005B#, LONG => False); -- PAL clock, 38400 bps
-   end Serialport_Init;
-
-   ----------------------------------------------------------------------------
    -- Tclk_Init
    ----------------------------------------------------------------------------
    procedure Tclk_Init
@@ -363,5 +323,131 @@ package body Amiga
       CIAA.TAHI := Unsigned_8 (Tclk_Value / 2**8);
       CIAA.CRA.START := True;
    end Tclk_Init;
+
+   ----------------------------------------------------------------------------
+   -- Serialport_Init
+   ----------------------------------------------------------------------------
+   procedure Serialport_Init
+      is
+   begin
+      -- CUSTOM.SERPER := (RATE => 16#0173#, LONG => False); -- NTSC clock, 9600 bps
+      CUSTOM.SERPER := (RATE => 16#005C#, LONG => False); -- NTSC clock, 38400 bps
+      -- CUSTOM.SERPER := (RATE => 16#0170#, LONG => False); -- PAL clock, 9600 bps
+      -- CUSTOM.SERPER := (RATE => 16#005B#, LONG => False); -- PAL clock, 38400 bps
+   end Serialport_Init;
+
+   ----------------------------------------------------------------------------
+   -- Serialport_RX
+   ----------------------------------------------------------------------------
+   procedure Serialport_RX
+      (C : out Character)
+      is
+      R : SERDATR_Type;
+   begin
+      loop
+         R := CUSTOM.SERDATR;
+         if R.RBF then
+            C := To_Ch (R.DB);
+            INTREQ_ClearBitMask (16#0800#);
+            exit;
+         end if;
+      end loop;
+   end Serialport_RX;
+
+   ----------------------------------------------------------------------------
+   -- Serialport_TX
+   ----------------------------------------------------------------------------
+   procedure Serialport_TX
+      (C : in Character)
+      is
+   begin
+      loop exit when CUSTOM.SERDATR.TBE; end loop;
+      CUSTOM.SERDAT := (D => To_U8 (C), S => 16#01#);
+   end Serialport_TX;
+
+   ----------------------------------------------------------------------------
+   -- OpenLibrary
+   ----------------------------------------------------------------------------
+   function OpenLibrary
+      (Library_Name : char_array)
+      return Integer_Address
+      is
+      Library_Address : Integer_Address;
+   begin
+      Asm (
+           Template => ""                            & CRLF &
+                       "        move.l  %%a6,%%sp@-" & CRLF &
+                       "        move.l  4,%%a6     " & CRLF &
+                       "        moveq   #0,%%d0    " & CRLF &
+                       "        move.l  %1,%%a1    " & CRLF &
+                       "        jsr     -552(%%a6) " & CRLF &
+                       "        move.l  %%d0,%0    " & CRLF &
+                       "        move.l  %%sp@+,%%a6" & CRLF &
+                       "",
+           Outputs  => Integer_Address'Asm_Output ("=d", Library_Address),
+           Inputs   => Address'Asm_Input ("a", Library_Name'Address),
+           Clobber  => "d0,d1,a0,a1,cc,memory",
+           Volatile => True
+           );
+      return Library_Address;
+   end OpenLibrary;
+
+   ----------------------------------------------------------------------------
+   -- CloseLibrary
+   ----------------------------------------------------------------------------
+   procedure CloseLibrary
+      (Library_Address : Integer_Address)
+      is
+   begin
+      Asm (
+           Template => ""                            & CRLF &
+                       "        move.l  %%a6,%%sp@-" & CRLF &
+                       "        move.l  4,%%a6     " & CRLF &
+                       "        move.l  %0,%%a1    " & CRLF &
+                       "        jsr     -414(%%a6) " & CRLF &
+                       "        move.l  %%sp@+,%%a6" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Integer_Address'Asm_Input ("a", Library_Address),
+           Clobber  => "d0,d1,a0,a1,cc,memory",
+           Volatile => True
+           );
+   end CloseLibrary;
+
+   ----------------------------------------------------------------------------
+   -- FindConfigDev
+   ----------------------------------------------------------------------------
+   function FindConfigDev
+      (Library_Base    : Integer_Address;
+       oldDev          : Integer_Address;
+       Manufacturer_ID : Unsigned_32;
+       Product_ID      : Unsigned_32)
+      return Integer_Address
+      is
+      ConfigDev : Integer_Address;
+   begin
+      Asm (
+           Template => ""                            & CRLF &
+                       "        move.l  %%a6,%%sp@-" & CRLF &
+                       "        move.l  %1,%%a6    " & CRLF &
+                       "        move.l  %2,%%a0    " & CRLF &
+                       "        move.l  %3,%%d0    " & CRLF &
+                       "        move.l  %4,%%d1    " & CRLF &
+                       "        jsr     -72(%%a6)  " & CRLF &
+                       "        move.l  %%d0,%0    " & CRLF &
+                       "        move.l  %%sp@+,%%a6" & CRLF &
+                       "",
+           Outputs  => Integer_Address'Asm_Output ("=d", ConfigDev),
+           Inputs   => [
+                        Integer_Address'Asm_Input ("a", Library_Base),
+                        Integer_Address'Asm_Input ("a", oldDev),
+                        Unsigned_32'Asm_Input ("d", Manufacturer_ID),
+                        Unsigned_32'Asm_Input ("d", Product_ID)
+                       ],
+           Clobber  => "d0,d1,a0,a1,cc,memory",
+           Volatile => True
+           );
+      return ConfigDev;
+   end FindConfigDev;
 
 end Amiga;

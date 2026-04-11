@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2026 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with System.Storage_Elements;
 with Configure;
 with Definitions;
 with Core;
@@ -43,6 +44,7 @@ package body BSP is
    --========================================================================--
 
    use System;
+   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
@@ -102,6 +104,25 @@ package body BSP is
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("Amiga/FS-UAE", NL => True);
+      -------------------------------------------------------------------------
+      declare
+         EL                 : Integer_Address;
+         A2065_ConfigDev    : Integer_Address;
+         A2065_manufacturer : constant Unsigned_32 := 16#202#;
+      begin
+         EL := OpenLibrary (ExpansionLibrary);
+         Console.Print (EL, NL => True);
+         A2065_ConfigDev := FindConfigDev (EL, 0, A2065_manufacturer, -1);
+         Console.Print (A2065_ConfigDev, NL => True);
+         declare
+            CD : aliased ConfigDev_Type
+               with Address => To_Address (A2065_ConfigDev),
+                    Import  => True;
+         begin
+            Console.Print (Prefix => "cd_BoardAddr: ", Value => CD.cd_BoardAddr, NL => True);
+         end;
+         CloseLibrary (EL);
+      end;
       -- A2065 ----------------------------------------------------------------
       if False then
          declare
@@ -121,15 +142,15 @@ package body BSP is
             end loop;
          end;
       end if;
-      -- if False then
-      --    declare
-      --       Success : Boolean;
-      --       PIC     : ZorroII.PIC_Type;
-      --    begin
-      --       ZorroII.Setup (A2065.A2065_BASEADDRESS);
-      --       A2065.Probe (PIC, Success);
-      --    end;
-      -- end if;
+      if True then
+         declare
+            -- Success : Boolean;
+            -- PIC     : ZorroII.PIC_Type;
+         begin
+            ZorroII.Setup (A2065.A2065_BASEADDRESS);
+            -- A2065.Probe (PIC, Success);
+         end;
+      end if;
       -- Gayle IDE ------------------------------------------------------------
       if False then
          IDE_Descriptor := (
