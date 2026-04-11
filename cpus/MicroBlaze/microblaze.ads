@@ -15,8 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Interfaces;
-
 package MicroBlaze
    with Preelaborate => True
    is
@@ -28,8 +26,6 @@ package MicroBlaze
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   use Interfaces;
 
    ----------------------------------------------------------------------------
    -- Generic definitions

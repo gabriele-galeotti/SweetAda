@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
+with Interfaces;
 with Definitions;
 
 package body MicroBlaze
@@ -30,6 +31,7 @@ package body MicroBlaze
    --========================================================================--
 
    use System.Machine_Code;
+   use Interfaces;
 
    CRLF : String renames Definitions.CRLF;
 
