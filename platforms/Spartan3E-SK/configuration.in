@@ -32,9 +32,12 @@ LD_SWITCHES_PLATFORM      :=
 OBJDUMP_SWITCHES_PLATFORM :=
 OBJCOPY_SWITCHES_PLATFORM :=
 POSTBUILD_ROMFILE         :=
+POSTBUILD_COMMAND         := $(SHELL_EXEC) postbuild$(SCREXT)
 
 CONFIGURE_FILES_PLATFORM := configure.ads configure.h
 LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+
+DISTCLEAN_OBJECTS_COMMON += impact.cmd xmd.ini download.bit*
 
 ################################################################################
 # User parameters.                                                             #
