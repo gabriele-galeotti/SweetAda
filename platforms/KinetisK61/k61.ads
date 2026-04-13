@@ -6263,8 +6263,88 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 35.2.1 CRC Data register (CRC_DATA)
+
+   type CRC_DATA_Type is record
+      LL : Unsigned_8 := 16#FF#; -- CRC Low Lower Byte
+      LU : Unsigned_8 := 16#FF#; -- CRC Low Upper Byte
+      HL : Unsigned_8 := 16#FF#; -- CRC High Lower Byte
+      HU : Unsigned_8 := 16#FF#; -- CRC High Upper Byte
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for CRC_DATA_Type use record
+      LL at 0 range  0 ..  7;
+      LU at 0 range  8 .. 15;
+      HL at 0 range 16 .. 23;
+      HU at 0 range 24 .. 31;
+   end record;
+
+   CRC_DATA : aliased CRC_DATA_Type
+      with Address              => System'To_Address (16#4003_2000# + 16#0#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.2.2 CRC Polynomial register (CRC_GPOLY)
+
+   type CRC_GPOLY_Type is record
+      LOW  : Unsigned_16 := 16#1021#; -- Low Polynominal Half-word
+      HIGH : Unsigned_16 := 16#0000#; -- High Polynominal Half-word
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for CRC_GPOLY_Type use record
+      LOW  at 0 range  0 .. 15;
+      HIGH at 0 range 16 .. 31;
+   end record;
+
+   CRC_GPOLY : aliased CRC_GPOLY_Type
+      with Address              => System'To_Address (16#4003_2000# + 16#4#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 35.2.3 CRC Control register (CRC_CTRL)
+
+   TCRC_16 : constant := 0; -- 16-bit CRC protocol.
+   TCRC_32 : constant := 1; -- 32-bit CRC protocol.
+
+   TOTR_NONE  : constant := 2#00#; -- No transposition.
+   TOTR_BITS  : constant := 2#01#; -- Bits in bytes are transposed; bytes are not transposed.
+   TOTR_BOTH  : constant := 2#10#; -- Both bits in bytes and bytes are transposed.
+   TOTR_BYTES : constant := 2#11#; -- Only bytes are transposed; no bits in a byte are transposed.
+
+   TOT_NONE  renames TOTR_NONE;
+   TOT_BITS  renames TOTR_BITS;
+   TOT_BOTH  renames TOTR_BOTH;
+   TOT_BYTES renames TOTR_BYTES;
+
+   type CRC_CTRL_Type is record
+      Reserved1 : Bits_24 := 0;
+      TCRC      : Bits_1  := TCRC_16;   -- Width of CRC protocol.
+      WAS       : Boolean := False;     -- Write CRC Data Register As Seed
+      FXOR      : Boolean := False;     -- Complement Read Of CRC Data Register
+      Reserved2 : Bits_1  := 0;
+      TOTR      : Bits_2  := TOTR_NONE; -- Type Of Transpose For Read
+      TOT       : Bits_2  := TOT_NONE;  -- Type Of Transpose For Writes
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for CRC_CTRL_Type use record
+      Reserved1 at 0 range  0 .. 23;
+      TCRC      at 0 range 24 .. 24;
+      WAS       at 0 range 25 .. 25;
+      FXOR      at 0 range 26 .. 26;
+      Reserved2 at 0 range 27 .. 27;
+      TOTR      at 0 range 28 .. 29;
+      TOT       at 0 range 30 .. 31;
+   end record;
+
+   CRC_CTRL : aliased CRC_CTRL_Type
+      with Address              => System'To_Address (16#4003_2000# + 16#8#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 36 Cryptographic Acceleration Unit (CAU)
@@ -7482,6 +7562,28 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    -- 48.4.8 MIB Control Register (ENET_MIBC)
+
+   type ENET_MIBC_Type is record
+      Reserved  : Bits_29 := 0;
+      MIB_CLEAR : Boolean := False; -- MIB Clear
+      MIB_IDLE  : Boolean := True;  -- MIB Idle
+      MIB_DIS   : Boolean := True;  -- Disable MIB Logic
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_MIBC_Type use record
+      Reserved  at 0 range  0 .. 28;
+      MIB_CLEAR at 0 range 29 .. 29;
+      MIB_IDLE  at 0 range 30 .. 30;
+      MIB_DIS   at 0 range 31 .. 31;
+   end record;
+
+   ENET_MIBC : aliased ENET_MIBC_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#64#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.9 Receive Control Register (ENET_RCR)
    -- 48.4.10 Transmit Control Register (ENET_TCR)
    -- 48.4.11 Physical Address Lower Register (ENET_PALR)
