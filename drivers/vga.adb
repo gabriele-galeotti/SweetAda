@@ -35,6 +35,8 @@ package body VGA
    use System;
    use Bits;
 
+pragma Warnings (Off, "* is not referenced");
+
    Video_Buffer_BaseAddress : Integer_Address := 16#000A_0000#;
    Text_Buffer_BaseAddress  : Integer_Address := 16#000B_8000#;
 
@@ -732,5 +734,7 @@ package body VGA
          end loop;
       end loop;
    end Draw_Picture;
+
+pragma Warnings (On, "* is not referenced");
 
 end VGA;
