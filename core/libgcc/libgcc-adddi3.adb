@@ -23,6 +23,8 @@ function AddDI3
     A2 : GCC.Types.UDI_Type)
    return GCC.Types.UDI_Type
    is
+   function To_USI_2 is new Ada.Unchecked_Conversion (GCC.Types.UDI_Type, USI_2);
+   function To_UDI is new Ada.Unchecked_Conversion (USI_2, GCC.Types.UDI_Type);
    T_A1    : constant USI_2 := To_USI_2 (A1);
    T_A2    : constant USI_2 := To_USI_2 (A2);
    A1_HIGH : GCC.Types.USI_Type renames T_A1 (HI64);
@@ -32,8 +34,6 @@ function AddDI3
    R       : USI_2;
    R_HIGH  : GCC.Types.USI_Type renames R (HI64);
    R_LOW   : GCC.Types.USI_Type renames R (LO64);
-   function To_USI_2 is new Ada.Unchecked_Conversion (GCC.Types.UDI_Type, USI_2);
-   function To_UDI is new Ada.Unchecked_Conversion (USI_2, GCC.Types.UDI_Type);
 begin
    R_LOW  := A1_LOW  + A2_LOW;
    R_HIGH := A1_HIGH + A2_HIGH;

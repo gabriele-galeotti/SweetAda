@@ -23,6 +23,8 @@ function MulDI3
     M2 : GCC.Types.UDI_Type)
    return GCC.Types.UDI_Type
    is
+   function To_USI_2 is new Ada.Unchecked_Conversion (GCC.Types.UDI_Type, USI_2);
+   function To_UDI is new Ada.Unchecked_Conversion (USI_2, GCC.Types.UDI_Type);
    T_M1    : constant USI_2 := To_USI_2 (M1);
    T_M2    : constant USI_2 := To_USI_2 (M2);
    M1_HIGH : GCC.Types.USI_Type renames T_M1 (HI64);
@@ -31,9 +33,6 @@ function MulDI3
    M2_LOW  : GCC.Types.USI_Type renames T_M2 (LO64);
    R       : USI_2;
    R_HIGH  : GCC.Types.USI_Type renames R (HI64);
-   R_LOW   : GCC.Types.USI_Type renames R (LO64);
-   function To_USI_2 is new Ada.Unchecked_Conversion (GCC.Types.UDI_Type, USI_2);
-   function To_UDI is new Ada.Unchecked_Conversion (USI_2, GCC.Types.UDI_Type);
 begin
    R := To_USI_2 (UMulSIDI3 (M1_LOW, M2_LOW));
    R_HIGH := @ + M1_LOW * M2_HIGH + M1_HIGH * M2_LOW;

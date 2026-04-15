@@ -23,6 +23,7 @@ function UCmpDI2
     B : GCC.Types.UDI_Type)
    return GCC.Types.SI_Type
    is
+   function To_USI_2 is new Ada.Unchecked_Conversion (GCC.Types.UDI_Type, USI_2);
    T_A    : constant USI_2 := To_USI_2 (A);
    T_B    : constant USI_2 := To_USI_2 (B);
    A_HIGH : GCC.Types.USI_Type renames T_A (HI64);
@@ -30,7 +31,6 @@ function UCmpDI2
    B_HIGH : GCC.Types.USI_Type renames T_B (HI64);
    B_LOW  : GCC.Types.USI_Type renames T_B (LO64);
    R      : GCC.Types.SI_Type;
-   function To_USI_2 is new Ada.Unchecked_Conversion (GCC.Types.UDI_Type, USI_2);
 begin
    R := 1;
    if    A_HIGH < B_HIGH then
