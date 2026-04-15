@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
@@ -33,7 +32,6 @@ package OpenRISC
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
 
