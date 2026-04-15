@@ -19,7 +19,6 @@ with System;
 with Interfaces;
 with Bits;
 with MIPS;
-with R3000;
 
 package VMIPS
    with Preelaborate => True

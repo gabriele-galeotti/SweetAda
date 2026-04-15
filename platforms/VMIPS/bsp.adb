@@ -18,7 +18,6 @@
 with Definitions;
 with Bits;
 with Secondary_Stack;
-with MIPS;
 with R3000;
 with VMIPS;
 with Exceptions;
