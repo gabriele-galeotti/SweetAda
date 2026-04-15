@@ -433,7 +433,7 @@ package x86
 
    EXCEPTION_ITEMS : constant := 256;
 
-   type Intcontext_Type is new CPU_Unsigned;
+   subtype Intcontext_Type is CPU_Unsigned;
    -- Exception_Id_Type is a subtype of Unsigned_32, allowing handlers to
    -- accept the 32-bit parameter code from low-level exception frames
    subtype Exception_Id_Type is Unsigned_32 range 0 .. EXCEPTION_ITEMS - 1;
