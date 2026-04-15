@@ -55,7 +55,7 @@ package SH
       (VBR : in Address)
       with Inline => True;
 
-   type Intcontext_Type is new Unsigned_32;
+   subtype Intcontext_Type is Unsigned_32;
 
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
