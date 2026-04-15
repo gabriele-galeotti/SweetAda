@@ -29,6 +29,8 @@ package body Ethernet
    --                                                                        --
    --========================================================================--
 
+pragma Warnings (Off, "* is not referenced");
+
    IEEE8023_Max_Length : constant := 1500;
 
    EtherType_IPv4 : constant := 16#0800#;
@@ -208,5 +210,7 @@ package body Ethernet
       end if;
       CPU.Intcontext_Set (Intcontext);
    end Dequeue;
+
+pragma Warnings (On, "* is not referenced");
 
 end Ethernet;
