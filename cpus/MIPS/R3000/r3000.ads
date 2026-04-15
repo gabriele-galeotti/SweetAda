@@ -143,7 +143,7 @@ package R3000
    ----------------------------------------------------------------------------
 
    subtype Intcontext_Type is Unsigned_32;
-   type Irq_Id_Type is new Natural;
+   subtype Irq_Id_Type is Natural;
 
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)

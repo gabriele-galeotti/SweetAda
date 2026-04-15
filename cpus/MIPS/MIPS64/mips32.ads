@@ -321,8 +321,8 @@ package MIPS32
    -- Interrupts
    ----------------------------------------------------------------------------
 
-   type Intcontext_Type is new Natural;
-   type Irq_Id_Type is new Natural;
+   subtype Intcontext_Type is Natural;
+   subtype Irq_Id_Type is Natural;
    subtype Irq_Level_Type is Unsigned_16 range 0 .. 63;
 
    procedure Intcontext_Get
