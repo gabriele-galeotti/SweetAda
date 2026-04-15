@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
 with Interfaces.C;
 with Definitions;
 with Bits;
@@ -24,8 +23,6 @@ with ARMv8A;
 with RPI3;
 with Exceptions;
 with Console;
-
-with CPU;
 
 package body BSP
    is
