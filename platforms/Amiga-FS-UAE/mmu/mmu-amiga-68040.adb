@@ -91,14 +91,14 @@ package body MMU.Amiga
          Page_Address := Memory_Space (Idx).Base_Address;
          Page_Setup (Memory_Space (Idx).Descriptor_Ptr, To_Address (Page_Address));
          Pointer_Table (Natural (Page_Address / 2**18)) := (
-             PAGESIZE => PAGESIZE4k,
-             UDT      => UDT_RESIDENT,
-             W        => False,
-             U        => False,
-             PTA4     => Bits_24 (Select_Address_Bits (
-                            Memory_Space (Idx).Descriptor_Ptr.all (0)'Address, 8, 31
-                            )),
-             others   => <>
+            PAGESIZE => PAGESIZE4k,
+            UDT      => UDT_RESIDENT,
+            W        => False,
+            U        => False,
+            PTA4     => Bits_24 (Select_Address_Bits (
+                           Memory_Space (Idx).Descriptor_Ptr.all (0)'Address, 8, 31
+                           )),
+            others   => <>
             );
       end loop;
       MMU.Enable;
