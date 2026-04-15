@@ -32,7 +32,6 @@ package body PC
    --========================================================================--
 
    use System.Storage_Elements;
-   use type CPU.Irq_Id_Type;
 
    PIC_Lock : Mutex.Semaphore_Binary := Mutex.SEMAPHORE_UNLOCKED;
    PIT_Lock : Mutex.Semaphore_Binary := Mutex.SEMAPHORE_UNLOCKED;
