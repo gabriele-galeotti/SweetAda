@@ -52,7 +52,6 @@ package body Exceptions
    ----------------------------------------------------------------------------
    procedure Irq_Process
       is
-      TTMR : OpenRISC.TTMR_Type;
    begin
       OpenRISC.TTMR_Write ((
          TP => 0,
