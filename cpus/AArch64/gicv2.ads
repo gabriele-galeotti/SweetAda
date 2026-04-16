@@ -48,8 +48,8 @@ pragma Style_Checks (Off);
       EnableGrp1 : Boolean;      -- Global enable for forwarding pending Group 1 interrupts from the Distributor ...
       Reserved   : Bits_30 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GICD_CTLR_Type use record
       EnableGrp0 at 0 range 0 ..  0;
       EnableGrp1 at 0 range 1 ..  1;
@@ -66,8 +66,8 @@ pragma Style_Checks (Off);
       LSPI          : Bits_5;       -- If the GIC implements the Security Extensions, the value of this field is the ...
       Reserved2     : Bits_16 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GICD_TYPER_Type use record
       ITLinesNumber at 0 range  0 ..  4;
       CPUNumber     at 0 range  5 ..  7;
@@ -86,8 +86,8 @@ pragma Style_Checks (Off);
       Reserved    : Bits_4;
       ProductID   : Bits_8;  -- An IMPLEMENTATION DEFINED product identifier
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GICD_IIDR_Type use record
       Implementer at 0 range  0 .. 11;
       Revision    at 0 range 12 .. 15;
@@ -139,8 +139,8 @@ pragma Style_Checks (Off);
       Priority_bo2 : Unsigned_8;
       Priority_bo3 : Unsigned_8;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for IPRIORITY_Type use record
       Priority_bo0 at 0 range  0 ..  7;
       Priority_bo1 at 0 range  8 .. 15;
@@ -159,8 +159,8 @@ pragma Style_Checks (Off);
       CPUtargets_bo2 : Unsigned_8;
       CPUtargets_bo3 : Unsigned_8;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for ITARGETS_Type use record
       CPUtargets_bo0 at 0 range  0 ..  7;
       CPUtargets_bo1 at 0 range  8 .. 15;
@@ -219,8 +219,8 @@ pragma Style_Checks (Off);
       TargetListFilter : Bits_2;          -- Determines how the distributor must process the requested SGI:
       Reserved2        : Bits_6     := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GICD_SGIR_Type use record
       SGIINTID         at 0 range  0 ..  3;
       Reserved1        at 0 range  4 .. 14;
@@ -253,8 +253,8 @@ pragma Style_Checks (Off);
       ArchRev   : Bits_4;  -- Revision field for the GIC architecture.
       Impldefd2 : Bits_24; -- IMPLEMENTATION DEFINED.
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GICD_ICPIDR2_Type use record
       Impldefd1 at 0 range 0 ..  3;
       ArchRev   at 0 range 4 ..  7;
@@ -284,7 +284,7 @@ pragma Style_Checks (Off);
       GICD_ICPIDR2    : GICD_ICPIDR2_Type               with Volatile_Full_Access => True;
       Unused          : Pad_B20;
    end record
-      with Size => 16#1000# * 8;
+      with Object_Size => 16#1000# * 8;
    for GICD_Type use record
       GICD_CTLR       at 16#000# range 0 .. 31;
       GICD_TYPER      at 16#004# range 0 .. 31;
@@ -342,8 +342,8 @@ pragma Style_Checks (Off);
       EOImodeNS     : Bits_1;       -- Alias of EOImodeNS from the Non-secure copy of this register, ...
       Reserved      : Bits_21 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GICC_CTLR_Type use record
       EnableGrp0    at 0 range  0 ..  0;
       EnableGrp1    at 0 range  1 ..  1;
@@ -365,8 +365,8 @@ pragma Style_Checks (Off);
       Priority : Unsigned_8;      -- The priority mask level for the CPU interface.
       Reserved : Bits_24    := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GICC_PMR_Type use record
       Priority at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
@@ -378,8 +378,8 @@ pragma Style_Checks (Off);
       Binary_point : Bits_3;       -- The value of this field controls how the 8-bit interrupt priority field is split ...
       Reserved     : Bits_29 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GICC_BPR_Type use record
       Binary_point at 0 range 0 ..  2;
       Reserved     at 0 range 3 .. 31;
@@ -392,8 +392,8 @@ pragma Style_Checks (Off);
       CPUID        : Bits_3;       -- For SGIs in a multiprocessor implementation, this field identifies the processor ...
       Reserved     : Bits_19 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GICC_IAR_Type use record
       Interrupt_ID at 0 range  0 ..  9;
       CPUID        at 0 range 10 .. 12;
@@ -407,8 +407,8 @@ pragma Style_Checks (Off);
       CPUID    : Bits_3;       -- On a multiprocessor implementation, if the write refers to an SGI, this field contains ...
       Reserved : Bits_19 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GICC_EOIR_Type use record
       EOIINTID at 0 range  0 ..  9;
       CPUID    at 0 range 10 .. 12;
@@ -421,8 +421,8 @@ pragma Style_Checks (Off);
       Priority : Unsigned_8;      -- The current running priority on the CPU interface.
       Reserved : Bits_24    := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GICC_RPR_Type use record
       Priority at 0 range 0 ..  7;
       Reserved at 0 range 8 .. 31;
@@ -435,8 +435,8 @@ pragma Style_Checks (Off);
       CPUID     : Bits_3;       -- On a multiprocessor implementation, if the PENDINTID field returns the ID of an SGI, ...
       Reserved  : Bits_19 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GICC_HPPIR_Type use record
       PENDINTID at 0 range  0 ..  9;
       CPUID     at 0 range 10 .. 12;
@@ -470,8 +470,8 @@ pragma Style_Checks (Off);
       Architecture_version : Bits_4;  -- The value of this field depends on the GIC architecture version, as follows: ...
       ProductID            : Bits_12; -- An IMPLEMENTATION DEFINED product identifier
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GICC_IIDR_Type use record
       Implementer          at 0 range  0 .. 11;
       Revision             at 0 range 12 .. 15;
@@ -486,8 +486,8 @@ pragma Style_Checks (Off);
       CPUID        : Bits_3;       -- For an SGI in a multiprocessor implementation, this field identifies the processor ...
       Reserved     : Bits_19 := 0;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for GICC_DIR_Type use record
       Interrupt_ID at 0 range  0 ..  9;
       CPUID        at 0 range 10 .. 12;
@@ -519,7 +519,7 @@ pragma Style_Checks (Off);
       GICC_IIDR   : GICC_IIDR_Type   with Volatile_Full_Access => True;
       GICC_DIR    : GICC_DIR_Type    with Volatile_Full_Access => True;
    end record
-      with Size => 16#1004# * 8;
+      with Object_Size => 16#1004# * 8;
    for GICC_Type use record
       GICC_CTLR   at 16#0000# range 0 .. 31;
       GICC_PMR    at 16#0004# range 0 .. 31;
