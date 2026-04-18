@@ -346,7 +346,15 @@ pragma Style_Checks (Off);
 
    -- 12.2.1 System Options Register 1 (SIM_SOPT1)
 
+   RAMSIZE_8   : constant := 2#0001#; -- 8 KB
+   RAMSIZE_16  : constant := 2#0011#; -- 16 KB
+   RAMSIZE_24  : constant := 2#0100#; -- 24 KB
+   RAMSIZE_32  : constant := 2#0101#; -- 32 KB
+   RAMSIZE_48  : constant := 2#0110#; -- 48 KB
+   RAMSIZE_64  : constant := 2#0111#; -- 64 KB
+   RAMSIZE_96  : constant := 2#1000#; -- 96 KB
    RAMSIZE_128 : constant := 2#1001#; -- 128 KB
+   RAMSIZE_256 : constant := 2#1011#; -- 256 KB
 
    OSC32KSEL_SYS : constant := 0; -- System oscillator (OSC32KCLK)
    OSC32KSEL_RTC : constant := 1; -- RTC oscillator
