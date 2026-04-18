@@ -5655,11 +5655,247 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 23.3.1 CExCTL0 Register
+
+   CEIPSEL_C0  : constant := 2#0000#; -- Channel 0
+   CEIPSEL_C1  : constant := 2#0001#; -- Channel 1
+   CEIPSEL_C2  : constant := 2#0010#; -- Channel 2
+   CEIPSEL_C3  : constant := 2#0011#; -- Channel 3
+   CEIPSEL_C4  : constant := 2#0100#; -- Channel 4
+   CEIPSEL_C5  : constant := 2#0101#; -- Channel 5
+   CEIPSEL_C6  : constant := 2#0110#; -- Channel 6
+   CEIPSEL_C7  : constant := 2#0111#; -- Channel 7
+   CEIPSEL_C8  : constant := 2#1000#; -- Channel 8
+   CEIPSEL_C9  : constant := 2#1001#; -- Channel 9
+   CEIPSEL_C10 : constant := 2#1010#; -- Channel 10
+   CEIPSEL_C11 : constant := 2#1011#; -- Channel 11
+   CEIPSEL_C12 : constant := 2#1100#; -- Channel 12
+   CEIPSEL_C13 : constant := 2#1101#; -- Channel 13
+   CEIPSEL_C14 : constant := 2#1110#; -- Channel 14
+   CEIPSEL_C15 : constant := 2#1111#; -- Channel 15
+
+   CEIMSEL_C0  renames CEIPSEL_C0;
+   CEIMSEL_C1  renames CEIPSEL_C1;
+   CEIMSEL_C2  renames CEIPSEL_C2;
+   CEIMSEL_C3  renames CEIPSEL_C3;
+   CEIMSEL_C4  renames CEIPSEL_C4;
+   CEIMSEL_C5  renames CEIPSEL_C5;
+   CEIMSEL_C6  renames CEIPSEL_C6;
+   CEIMSEL_C7  renames CEIPSEL_C7;
+   CEIMSEL_C8  renames CEIPSEL_C8;
+   CEIMSEL_C9  renames CEIPSEL_C9;
+   CEIMSEL_C10 renames CEIPSEL_C10;
+   CEIMSEL_C11 renames CEIPSEL_C11;
+   CEIMSEL_C12 renames CEIPSEL_C12;
+   CEIMSEL_C13 renames CEIPSEL_C13;
+   CEIMSEL_C14 renames CEIPSEL_C14;
+   CEIMSEL_C15 renames CEIPSEL_C15;
+
+   type CExCTL0_Type is record
+      CEIPSEL   : Bits_4  := CEIPSEL_C0; -- Channel input selected for the V+ terminal of the comparator if CEIPEN is set to 1.
+      Reserved1 : Bits_3  := 0;
+      CEIPEN    : Boolean := False;      -- Channel input enable for the V+ terminal of the comparator.
+      CEIMSEL   : Bits_4  := CEIMSEL_C0; -- Channel input selected for the V- terminal of the comparator if CEIMEN is set to 1.
+      Reserved2 : Bits_3  := 0;
+      CEIMEN    : Boolean := False;      -- Channel input enable for the V- terminal of the comparator.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CExCTL0_Type use record
+      CEIPSEL   at 0 range  0 ..  3;
+      Reserved1 at 0 range  4 ..  6;
+      CEIPEN    at 0 range  7 ..  7;
+      CEIMSEL   at 0 range  8 .. 11;
+      Reserved2 at 0 range 12 .. 14;
+      CEIMEN    at 0 range 15 .. 15;
+   end record;
+
    -- 23.3.2 CExCTL1 Register
+
+   CEOUTPOL_NONINVED : constant := 0; -- Noninverted
+   CEOUTPOL_INVERTED : constant := 1; -- Inverted
+
+   CEIES_RISEDGE  : constant := 0; -- Rising edge for CEIFG, falling edge for CEIIFG
+   CEIES_FALLEDGE : constant := 1; -- Falling edge for CEIFG, rising edge for CEIIFG
+
+   CEFDLY_500ns  : constant := 2#00#; -- Typical filter delay of 500 ns
+   CEFDLY_800ns  : constant := 2#01#; -- Typical filter delay of 800 ns
+   CEFDLY_1500ns : constant := 2#10#; -- Typical filter delay of 1500 ns
+   CEFDLY_3000ns : constant := 2#11#; -- Typical filter delay of 3000 ns
+
+   CEPWRMD_HISPEED  : constant := 2#00#; -- High-speed mode
+   CEPWRMD_NORMAL   : constant := 2#01#; -- Normal mode
+   CEPWRMD_ULOPWR   : constant := 2#10#; -- Ultra-low power mode
+   CEPWRMD_RESERVED : constant := 2#11#; -- Reserved
+
+   CEMRVL_VREF0 : constant := 0; -- VREF0 is selected if CERS = 00, 01, or 10
+   CEMRVL_VREF1 : constant := 1; -- VREF1 is selected if CERS = 00, 01, or 10
+
+   CEMRVS_COMPOUT : constant :=0; -- Comparator output state selects between VREF0 or VREF1.
+   CEMRVS_CEMRVL  : constant :=1; -- CEMRVL selects between VREF0 or VREF1.
+
+   type CExCTL1_Type is record
+      CEOUT    : Bits_1  := 0;                 -- Output value.
+      CEOUTPOL : Bits_1  := CEOUTPOL_NONINVED; -- Output polarity.
+      CEF      : Boolean := False;             -- Output filter.
+      CEIES    : Bits_1  := CEIES_RISEDGE;     -- Interrupt edge select for CEIIFG and CEIFG
+      CESHORT  : Boolean := False;             -- Input short.
+      CEEX     : Boolean := False;             -- Exchange.
+      CEFDLY   : Bits_2  := CEFDLY_500ns;      -- Filter delay.
+      CEPWRMD  : Bits_2  := CEPWRMD_HISPEED;   -- Power Mode
+      CEON     : Boolean := False;             -- On.
+      CEMRVL   : Bits_1  := CEMRVL_VREF0;      -- This bit is valid if CEMRVS is set to 1.
+      CEMRVS   : Bits_1  := CEMRVS_COMPOUT;    -- This bit defines if the comparator output selects between VREF0 or VREF1 if CERS = 00, 01, or 10.
+      Reserved : Bits_3  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CExCTL1_Type use record
+      CEOUT    at 0 range  0 ..  0;
+      CEOUTPOL at 0 range  1 ..  1;
+      CEF      at 0 range  2 ..  2;
+      CEIES    at 0 range  3 ..  3;
+      CESHORT  at 0 range  4 ..  4;
+      CEEX     at 0 range  5 ..  5;
+      CEFDLY   at 0 range  6 ..  7;
+      CEPWRMD  at 0 range  8 ..  9;
+      CEON     at 0 range 10 .. 10;
+      CEMRVL   at 0 range 11 .. 11;
+      CEMRVS   at 0 range 12 .. 12;
+      Reserved at 0 range 13 .. 15;
+   end record;
+
    -- 23.3.3 CExCTL2 Register
+
+   CERSEL_VPOS      : constant := 0; -- When CEEX = 0, VREF is applied to the V+ terminal; When CEEX = 1, VREF is applied to the V- terminal
+   CERSEL_VNEG      : constant := 1; -- When CEEX = 0, VREF is applied to the V- terminal; When CEEX = 1, VREF is applied to the V+ terminal
+   CERSEL_CEEX_VNEG : constant := 0; -- When CEEX = 0, VREF is applied to the V+ terminal; When CEEX = 1, VREF is applied to the V- terminal
+   CERSEL_CEEX_VPOS : constant := 1; -- When CEEX = 0, VREF is applied to the V- terminal; When CEEX = 1, VREF is applied to the V+ terminal
+
+   CERS_NONE    : constant := 2#00#; -- No current is drawn by the reference circuitry.
+   CERS_VCCRLAD : constant := 2#01#; -- VCC applied to the resistor ladder
+   CERS_SHRLAD  : constant := 2#10#; -- Shared reference voltage applied to the resistor ladder.
+   CERS_SHVCREF : constant := 2#11#; -- Shared reference voltage supplied to V(CREF). Resistor ladder is off.
+
+   CEREFL_NONE : constant := 2#00#; -- Reference amplifier is disabled. No reference voltage is requested.
+   CEREFL_1V2  : constant := 2#01#; -- 1.2 V is selected as shared reference voltage input
+   CEREFL_2V0  : constant := 2#10#; -- 2.0 V is selected as shared reference voltage input
+   CEREFL_2V5  : constant := 2#11#; -- 2.5 V is selected as shared reference voltage input
+
+   CEREFACC_STATIC  : constant := 0; -- Static mode
+   CEREFACC_CLOCKED : constant := 1; -- Clocked (low power, low accuracy) mode
+
+   type CExCTL2_Type is record
+      CEREF0   : Bits_5 := 0;               -- Reference resistor tap 0.
+      CERSEL   : Bits_1 := CERSEL_VPOS;     -- Reference select.
+      CERS     : Bits_2 := CERS_NONE;       -- Reference source.
+      CEREF1   : Bits_5 := 0;               -- Reference resistor tap 1.
+      CEREFL   : Bits_2 := CEREFL_NONE;     -- Reference voltage level
+      CEREFACC : Bits_1 := CEREFACC_STATIC; -- Reference accuracy.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CExCTL2_Type use record
+      CEREF0   at 0 range  0 ..  4;
+      CERSEL   at 0 range  5 ..  5;
+      CERS     at 0 range  6 ..  7;
+      CEREF1   at 0 range  8 .. 12;
+      CEREFL   at 0 range 13 .. 14;
+      CEREFACC at 0 range 15 .. 15;
+   end record;
+
    -- 23.3.4 CExCTL3 Register
+
+   type CExCTL3_Type is record
+      CEPD : Bitmap_16 := [others => False]; -- Port disable.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CExCTL3_Type use record
+      CEPD at 0 range 0 ..  15;
+   end record;
+
    -- 23.3.5 CExINT Register
+
+   type CExINT_Type is record
+      CEIFG     : Boolean := False; -- Comparator output interrupt flag.
+      CEIIFG    : Boolean := False; -- Comparator output inverted interrupt flag.
+      Reserved1 : Bits_2  := 0;
+      CERDYIFG  : Boolean := False; -- Comparator ready interrupt flag.
+      Reserved2 : Bits_3  := 0;
+      CEIE      : Boolean := False; -- Comparator output interrupt enable
+      CEIIE     : Boolean := False; -- Comparator output interrupt enable inverted polarity
+      Reserved3 : Bits_2  := 0;
+      CERDYIE   : Boolean := False; -- Comparator ready interrupt enable
+      Reserved4 : Bits_3  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CExINT_Type use record
+      CEIFG     at 0 range  0 ..  0;
+      CEIIFG    at 0 range  1 ..  1;
+      Reserved1 at 0 range  2 ..  3;
+      CERDYIFG  at 0 range  4 ..  4;
+      Reserved2 at 0 range  5 ..  7;
+      CEIE      at 0 range  8 ..  8;
+      CEIIE     at 0 range  9 ..  9;
+      Reserved3 at 0 range 10 .. 11;
+      CERDYIE   at 0 range 12 .. 12;
+      Reserved4 at 0 range 13 .. 15;
+   end record;
+
    -- 23.3.6 CExIV Register
+
+   CEIV_NONE     : constant := 16#00#; -- No interrupt pending
+   CEIV_CEIFG    : constant := 16#02#; -- Interrupt Source: CEOUT interrupt; Interrupt Flag: CEIFG; Interrupt Priority: Highest
+   CEIV_CEIIFG   : constant := 16#04#; -- Interrupt Source: CEOUT interrupt inverted polarity; Interrupt Flag: CEIIFG
+   CEIV_RSVD1    : constant := 16#06#; -- Reserved
+   CEIV_RSVD2    : constant := 16#08#; -- Reserved
+   CEIV_CERDYIFG : constant := 16#0A#; -- Interrupt Source: Comparator ready interrupt; Interrupt Flag: CERDYIFG; Interrupt Priority: Lowest
+
+   type CExIV_Type is record
+      CEIV : Unsigned_16; -- Comparator interrupt vector word register.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CExIV_Type use record
+      CEIV at 0 range 0 .. 15;
+   end record;
+
+   -- 23.3 COMP_E Registers
+
+   type COMP_Ex_Type is record
+     CExCTL0 : CExCTL0_Type with Volatile_Full_Access => True;
+     CExCTL1 : CExCTL1_Type with Volatile_Full_Access => True;
+     CExCTL2 : CExCTL2_Type with Volatile_Full_Access => True;
+     CExCTL3 : CExCTL3_Type with Volatile_Full_Access => True;
+     CExINT  : CExINT_Type  with Volatile_Full_Access => True;
+     CExIV   : CExIV_Type   with Volatile_Full_Access => True;
+   end record
+      with Object_Size => 16#10# * 8;
+   for COMP_Ex_Type use record
+     CExCTL0 at 16#0# range 0 .. 15;
+     CExCTL1 at 16#2# range 0 .. 15;
+     CExCTL2 at 16#4# range 0 .. 15;
+     CExCTL3 at 16#6# range 0 .. 15;
+     CExINT  at 16#C# range 0 .. 15;
+     CExIV   at 16#E# range 0 .. 15;
+   end record;
+
+   COMP_E0_BASEADDRESS : constant := 16#4000_3400#;
+
+   COMP_E0 : aliased COMP_Ex_Type
+      with Address    => System'To_Address (COMP_E0_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   COMP_E1_BASEADDRESS : constant := 16#4000_3800#;
+
+   COMP_E1 : aliased COMP_Ex_Type
+      with Address    => System'To_Address (COMP_E1_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 24 Enhanced Universal Serial Communication Interface (eUSCI) – UART Mode
