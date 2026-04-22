@@ -40,22 +40,7 @@ OBJECTS :=
 all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: configure
-configure: clean-gnatprep armv8a.adb armv8a.ads
-
-%.adb: %.adbp $(CPU_DEF)
-	$(call brief-command, \
-        $(GNATPREP)                  \
-                    $< $@ $(CPU_DEF) \
-        ,[GNATPREP],$@)
-%.ads: %.adsp $(CPU_DEF)
-	$(call brief-command, \
-        $(GNATPREP)                  \
-                    $< $@ $(CPU_DEF) \
-        ,[GNATPREP],$@)
-
-.PHONY: clean-gnatprep
-clean-gnatprep:
-	$(RM) armv8a.adb armv8a.ads
+configure:
 
 .PHONY: clean
 clean:
@@ -63,8 +48,7 @@ clean:
 
 .PHONY: distclean
 distclean: clean
-	$(RM) $(DISTCLEAN_OBJECTS_COMMON) \
-        armv8a.adb armv8a.ads
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 

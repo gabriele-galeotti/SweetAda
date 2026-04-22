@@ -8,9 +8,9 @@ else ifeq ($(CPU_MODEL),Cortex-A520)
 endif
 export CPU_DEF
 
-CONFIGURE_DEPS += $(CPU_DIRECTORY)/$(CPU_DEF)  \
-                  $(CPU_DIRECTORY)/armv8a.adbp \
-                  $(CPU_DIRECTORY)/armv8a.adsp
+GNATPREP_FILES          += $(CPU_DIRECTORY)/armv8a.ads \
+                           $(CPU_DIRECTORY)/armv8a.adb
+GNATPREP_DEFINES_armv8a := $(CPU_DIRECTORY)/$(CPU_DEF)
 
 GPR_CORE_CPU += cpu.ads    \
                 armv8a.adb \
