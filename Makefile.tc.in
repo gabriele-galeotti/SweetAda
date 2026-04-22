@@ -290,7 +290,8 @@ CC_SWITCHES_DEFAULT       += $(CC_SWITCHES_RTS)
 CPP_SWITCHES_DEFAULT      +=
 
 # GNATBIND
-GNATBIND_SWITCHES_DEFAULT += -nostdinc -nostdlib
+GNATBIND_SWITCHES_DEFAULT += -nostdinc
+GNATBIND_SWITCHES_DEFAULT += -nostdlib
 
 # GNATCHOP
 GNATCHOP_SWITCHES_DEFAULT +=
@@ -302,7 +303,10 @@ GNATLINK_SWITCHES_DEFAULT +=
 GNATLS_SWITCHES_DEFAULT   +=
 
 # GNATPREP
-# retain all lines in the output source
+# Use LF as line terminators when writing files.
+GNATPREP_SWITCHES_DEFAULT += -T
+# Causes both preprocessor lines and the lines deleted by preprocessing to be
+# retained in the output source as comments marked with the special string "--! ".
 GNATPREP_SWITCHES_DEFAULT += -c
 
 # GNATXREF
@@ -334,12 +338,14 @@ OBJDUMP_SWITCHES_DEFAULT  += --demangle=gnat
 RANLIB_SWITCHES_DEFAULT   +=
 
 # READELF
-# Allow output width to exceed 80 characters
-READELF_SWITCHES_DEFAULT  += --wide
-# display the section details
-#READELF_SWITCHES_DEFAULT  += -t
-# Equivalent to: -h -l -S -s -r -d -V -A -I
+# Equivalent to specifying --file-header, --program-headers, --sections,
+# --symbols, --relocs, --dynamic, --notes, --version-info, --arch-specific,
+# --unwind, --section-groups and --histogram.
 READELF_SWITCHES_DEFAULT  += --all
+# Displays the detailed section information.
+#READELF_SWITCHES_DEFAULT  += -t
+# Don't break output lines to fit into 80 columns.
+READELF_SWITCHES_DEFAULT  += --wide
 
 # SIZE
 SIZE_SWITCHES_DEFAULT     += --format=sysv
