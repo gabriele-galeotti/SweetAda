@@ -472,6 +472,11 @@ ENABLE_SPLIT_DWARF :=
 #
 CONFIGURE_FILES_PLATFORM :=
 
+#
+# Ada source files to be preprocessed.
+#
+GNATPREP_FILES :=
+
 ################################################################################
 #                                                                              #
 # Global PLATFORM/CPU configuration logic.                                     #
@@ -835,8 +840,10 @@ DISTCLEAN_OBJECTS := $(KERNEL_CFGFILE)           \
                      $(DISTCLEAN_OBJECTS_COMMON)
 ifeq ($(OSTYPE),cmd)
 DISTCLEAN_OBJECTS += $(CORE_DIRECTORY)\linker.ad*
+DISTCLEAN_OBJECTS += $(subst /,\,$(GNATPREP_FILES))
 else
 DISTCLEAN_OBJECTS += $(CORE_DIRECTORY)/linker.ad*
+DISTCLEAN_OBJECTS += $(GNATPREP_FILES)
 endif
 
 ################################################################################
@@ -939,6 +946,23 @@ ifneq ($(SUBPLATFORM),)
 	@$(call echo-print,"")
 endif
 endif
+
+#
+# Ada source files to be preprocessed.
+#
+
+%.ads: %.adsp
+	$(call brief-command, \
+        $(GNATPREP)                                                 \
+                    $< $@                                           \
+                    $(GNATPREP_DEFINES_$(notdir $(subst .ads,,$@))) \
+        ,[GNATPREP],$@)
+%.adb: %.adbp
+	$(call brief-command, \
+        $(GNATPREP)                                                 \
+                    $< $@                                           \
+                    $(GNATPREP_DEFINES_$(notdir $(subst .adb,,$@))) \
+        ,[GNATPREP],$@)
 
 #
 # Compile phase.
@@ -1178,7 +1202,7 @@ ifeq ($(BUILD_MODE),GNATMAKE)
 endif
 
 #
-# Link phase.
+# Linker script management.
 #
 
 $(PLATFORM_DIRECTORY)/$(LD_SCRIPT): FORCE
@@ -1189,6 +1213,10 @@ $(CORE_DIRECTORY)/linker.adb: $(CONFIGURE_DEPS) $(PLATFORM_DIRECTORY)/$(LD_SCRIP
 	$(LINKERADSB)                                    \
                       $(PLATFORM_DIRECTORY)/$(LD_SCRIPT) \
                       $(CORE_DIRECTORY)/linker
+
+#
+# Link phase.
+#
 
 .PHONY: b__main_update
 b__main_update:
@@ -1204,6 +1232,7 @@ else
 KERNEL_OUTFILE_DEPS :=
 KERNEL_OUTFILE_DEPS += $(GNATTDI_FILENAME)
 KERNEL_OUTFILE_DEPS += $(DOTSWEETADA)
+KERNEL_OUTFILE_DEPS += $(GNATPREP_FILES)
 KERNEL_OUTFILE_DEPS += $(CORE_DIRECTORY)/linker.ads
 KERNEL_OUTFILE_DEPS += $(CORE_DIRECTORY)/linker.adb
 ifeq ($(BUILD_MODE),GPRbuild)
