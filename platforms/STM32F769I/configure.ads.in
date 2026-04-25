@@ -8,12 +8,12 @@ package Configure
    use Definitions;
 
    -- PLATFORM and CPU definitions
-   PLATFORM  : constant String := "STM32F769I";
+   PLATFORM  : constant String := "@PLATFORM@";
    CPU       : constant String := "@CPU@";
    CPU_MODEL : constant String := "@CPU_MODEL@";
 
    -- basic configuration parameters
-   SYSCLK_FREQUENCY : constant := 200 * MHz1;
+   SYSCLK_FREQUENCY : constant := CLK_200M;
    TICK_FREQUENCY   : constant := 1 * kHz1;
 
 end Configure;

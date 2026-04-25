@@ -4,7 +4,7 @@ package Configure
    is
 
    -- PLATFORM and CPU definitions
-   PLATFORM : constant String := "MPC8306-Switch";
+   PLATFORM : constant String := "@PLATFORM@";
    CPU      : constant String := "@CPU@";
 
 end Configure;

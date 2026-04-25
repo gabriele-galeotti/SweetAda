@@ -8,13 +8,13 @@ package Configure
    use Definitions;
 
    -- PLATFORM and CPU definitions
-   PLATFORM         : constant String := "MSIM-RISC-V";
+   PLATFORM         : constant String := "@PLATFORM@";
    CPU              : constant String := "@CPU@";
    CPU_MODEL        : constant String := "@CPU_MODEL@";
-   MTIME_ADDRESS    : constant := 16#FF00_0000#;
-   MTIMECMP_ADDRESS : constant := 16#FF00_0008#;
 
    -- basic configuration parameters
    TICK_FREQUENCY : constant := 1 * kHz1;
+   MTIME_ADDRESS    : constant := 16#FF00_0000#;
+   MTIMECMP_ADDRESS : constant := 16#FF00_0008#;
 
 end Configure;

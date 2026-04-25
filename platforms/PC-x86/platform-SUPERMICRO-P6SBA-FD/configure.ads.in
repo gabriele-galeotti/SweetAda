@@ -4,8 +4,8 @@ package Configure
    is
 
    -- PLATFORM and CPU definitions
-   PLATFORM    : constant String := "PC-x86";
-   SUBPLATFORM : constant String := "SUPERMICRO-P6SBA-FD";
+   PLATFORM    : constant String := "@PLATFORM@";
+   SUBPLATFORM : constant String := "@SUBPLATFORM@";
    CPU         : constant String := "@CPU@";
    CPU_MODEL   : constant String := "@CPU_MODEL@";
 

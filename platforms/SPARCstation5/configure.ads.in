@@ -4,7 +4,7 @@ package Configure
    is
 
    -- PLATFORM and CPU definitions
-   PLATFORM : constant String := "SPARCstation5";
+   PLATFORM : constant String := "@PLATFORM@";
    CPU      : constant String := "@CPU@";
 
    -- basic configuration parameters

@@ -2,8 +2,8 @@
 #ifndef _CONFIGURE_H
 #define _CONFIGURE_H 1
 
-#define PLATFORM          "PC-x86"
-#define SUBPLATFORM       "PC-USBkey"
+#define PLATFORM          "@PLATFORM@"
+#define SUBPLATFORM       "@SUBPLATFORM@"
 #define CPU               "@CPU@"
 #define CPU_MODEL         "@CPU_MODEL@"
 #define KERNEL_STACK_SIZE @KERNEL_STACK_SIZE@

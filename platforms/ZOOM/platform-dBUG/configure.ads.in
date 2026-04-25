@@ -8,8 +8,8 @@ package Configure
    use Definitions;
 
    -- PLATFORM and CPU definitions
-   PLATFORM    : constant String := "ZOOM";
-   SUBPLATFORM : constant String := "dBUG";
+   PLATFORM    : constant String := "@PLATFORM@";
+   SUBPLATFORM : constant String := "@SUBPLATFORM@";
    CPU         : constant String := "@CPU@";
    CPU_MODEL   : constant String := "@CPU_MODEL@";
 

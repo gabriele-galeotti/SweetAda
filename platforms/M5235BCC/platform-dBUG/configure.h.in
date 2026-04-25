@@ -2,8 +2,8 @@
 #ifndef _CONFIGURE_H
 #define _CONFIGURE_H 1
 
-#define PLATFORM    "M5235BCC"
-#define SUBPLATFORM "dBUG"
+#define PLATFORM    "@PLATFORM@"
+#define SUBPLATFORM "@SUBPLATFORM@"
 #define CPU         "@CPU@"
 #define CPU_MODEL   "@CPU_MODEL@"
 
