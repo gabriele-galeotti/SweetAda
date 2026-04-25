@@ -14,6 +14,14 @@
 
                 .syntax unified
 
+                .sect   .flashcfg,"ax"
+
+flashromkeys:
+                .long   0xFFFFFFFF
+                .long   0xFFFFFFFF
+                .long   0xFFFFFFFF
+                .long   0xFFFFFFFE
+
                 .sect   .startup,"ax"
 
                 .thumb_func
@@ -76,7 +84,7 @@ dead:           b       .
 
                 .sect   .bss
 
-                .align  8
+                .balign 8
                 .space  1024
 kernel_stack:
 
