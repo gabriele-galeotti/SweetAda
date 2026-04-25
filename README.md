@@ -1,8 +1,6 @@
 
 ![alt text](https://www.sweetada.org/images/banner.jpg)
 
-<scroll down for the news>
-
 ## SweetAda overview
 
 Welcome to SweetAda.
