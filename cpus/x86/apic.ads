@@ -21,7 +21,6 @@ with Interfaces;
 with Bits;
 
 package APIC
-   with Preelaborate => True
    is
 
    --========================================================================--

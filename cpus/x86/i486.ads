@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package i486
-   with Preelaborate => True
    is
 
    --========================================================================--

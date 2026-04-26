@@ -18,7 +18,6 @@
 with x86;
 
 package GDT_Simple
-   with Preelaborate => True
    is
 
    --========================================================================--
