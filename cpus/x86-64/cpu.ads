@@ -19,7 +19,6 @@ with System;
 with x86_64;
 
 package CPU
-   with Preelaborate => True
    is
 
    --========================================================================--

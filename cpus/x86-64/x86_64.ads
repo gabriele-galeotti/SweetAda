@@ -15,12 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System;
 with Interfaces;
 with Bits;
 
 package x86_64
-   with Preelaborate => True
    is
 
    --========================================================================--
@@ -35,6 +36,8 @@ package x86_64
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
    ----------------------------------------------------------------------------
    -- Basic definitions
    ----------------------------------------------------------------------------
@@ -42,6 +45,7 @@ package x86_64
    -- Privilege Levels
 
    type PL_Type is new Bits_2;
+
    PL0 : constant PL_Type := 2#00#; -- RING0
    PL1 : constant PL_Type := 2#01#; -- RING1
    PL2 : constant PL_Type := 2#10#; -- RING2
@@ -50,6 +54,7 @@ package x86_64
    -- Table Indicator
 
    type TI_Type is new Bits_1;
+
    TI_GDT : constant TI_Type := 0; -- GDT
    TI_LDT : constant TI_Type := 1; -- current LDT
 
@@ -70,66 +75,69 @@ package x86_64
       Index at 0 range 3 .. 15;
    end record;
 
-   NULL_Selector : constant Selector_Type := (PL0, TI_GDT, 0);
+   Selector_NULL : constant Selector_Type := (PL0, TI_GDT, 0);
 
    -- Descriptor type
 
    type Descriptor_Type is new Bits_1;
-   DESCRIPTOR_SYSTEM   : constant := 0; -- "system" TSS/GATE segment (system objects)
-   DESCRIPTOR_CODEDATA : constant := 1; -- "storage application" code/data segment (memory objects)
+
+   DESCRIPTOR_SYSTEM   : constant Descriptor_Type := 0; -- "system" TSS/GATE segment (system objects)
+   DESCRIPTOR_CODEDATA : constant Descriptor_Type := 1; -- "storage application" code/data segment (memory objects)
 
    -- Segment/Gate descriptor type
 
    type Segment_Gate_Type is new Bits_4;
    -- Code- and Data-Segment Types
-   --                         EWA
-   DATA_R    : constant := 2#0000#; -- Data Read-Only
-   DATA_RA   : constant := 2#0001#; -- Data Read-Only, accessed
-   DATA_RW   : constant := 2#0010#; -- Data Read/Write
-   DATA_RWA  : constant := 2#0011#; -- Data Read/Write, accessed
-   DATA_RE   : constant := 2#0100#; -- Data Read-Only, expand-down
-   DATA_REA  : constant := 2#0101#; -- Data Read-Only, expand-down, accessed
-   DATA_RWE  : constant := 2#0110#; -- Data Read/Write, expand-down
-   DATA_RWEA : constant := 2#0111#; -- Data Read/Write, expand-down, accessed
-   --                         CRA
-   CODE_E    : constant := 2#1000#; -- Code Execute-Only
-   CODE_EA   : constant := 2#1001#; -- Code Execute-Only, accessed
-   CODE_ER   : constant := 2#1010#; -- Code Execute/Read
-   CODE_ERA  : constant := 2#1011#; -- Code Execute/Read, accessed
-   CODE_EC   : constant := 2#1100#; -- Code Execute-Only, conforming
-   CODE_ECA  : constant := 2#1101#; -- Code Execute-Only, conforming, accessed
-   CODE_ERC  : constant := 2#1110#; -- Code Execute/Read, conforming
-   CODE_ERCA : constant := 2#1111#; -- Code Execute/Read, conforming, accessed
+   --                                                    EWA
+   DATA_R    : constant Segment_Gate_Type := 2#0000#; -- Data Read-Only
+   DATA_RA   : constant Segment_Gate_Type := 2#0001#; -- Data Read-Only, accessed
+   DATA_RW   : constant Segment_Gate_Type := 2#0010#; -- Data Read/Write
+   DATA_RWA  : constant Segment_Gate_Type := 2#0011#; -- Data Read/Write, accessed
+   DATA_RE   : constant Segment_Gate_Type := 2#0100#; -- Data Read-Only, expand-down
+   DATA_REA  : constant Segment_Gate_Type := 2#0101#; -- Data Read-Only, expand-down, accessed
+   DATA_RWE  : constant Segment_Gate_Type := 2#0110#; -- Data Read/Write, expand-down
+   DATA_RWEA : constant Segment_Gate_Type := 2#0111#; -- Data Read/Write, expand-down, accessed
+   --                                                    CRA
+   CODE_E    : constant Segment_Gate_Type := 2#1000#; -- Code Execute-Only
+   CODE_EA   : constant Segment_Gate_Type := 2#1001#; -- Code Execute-Only, accessed
+   CODE_ER   : constant Segment_Gate_Type := 2#1010#; -- Code Execute/Read
+   CODE_ERA  : constant Segment_Gate_Type := 2#1011#; -- Code Execute/Read, accessed
+   CODE_EC   : constant Segment_Gate_Type := 2#1100#; -- Code Execute-Only, conforming
+   CODE_ECA  : constant Segment_Gate_Type := 2#1101#; -- Code Execute-Only, conforming, accessed
+   CODE_ERC  : constant Segment_Gate_Type := 2#1110#; -- Code Execute/Read, conforming
+   CODE_ERCA : constant Segment_Gate_Type := 2#1111#; -- Code Execute/Read, conforming, accessed
    -- System-Segment and Gate-Descriptor Types
-   --                                       32-Bit Mode            IA-32e Mode
-   SYSGATE_DSCBIG : constant := 2#0000#; -- Reserved               Upper 8 byte of an 16-byte descriptor
-   SYSGATE_TSSA16 : constant := 2#0001#; -- 16-bit TSS (Available) Reserved
-   SYSGATE_LDT    : constant := 2#0010#; -- LDT                    LDT
-   SYSGATE_TSSB16 : constant := 2#0011#; -- 16-bit TSS (Busy)      Reserved
-   SYSGATE_CALL16 : constant := 2#0100#; -- 16-bit Call Gate       Reserved
-   SYSGATE_TASK   : constant := 2#0101#; -- Task Gate              Reserved
-   SYSGATE_INT16  : constant := 2#0110#; -- 16-bit Interrupt Gate  Reserved
-   SYSGATE_TRAP16 : constant := 2#0111#; -- 16-bit Trap Gate       Reserved
-   SYSGATE_RES1   : constant := 2#1000#; -- Reserved               Reserved
-   SYSGATE_TSSA   : constant := 2#1001#; -- 32-bit TSS (Available) 64-bit TSS (Available)
-   SYSGATE_RES2   : constant := 2#1010#; -- Reserved               Reserved
-   SYSGATE_TSSB   : constant := 2#1011#; -- 32-bit TSS (Busy)      64-bit TSS (Busy)
-   SYSGATE_CALL   : constant := 2#1100#; -- 32-bit Call Gate       64-bit Call Gate
-   SYSGATE_RES3   : constant := 2#1101#; -- Reserved               Reserved
-   SYSGATE_INT    : constant := 2#1110#; -- 32-bit Interrupt Gate  64-bit Interrupt Gate
-   SYSGATE_TRAP   : constant := 2#1111#; -- 32-bit Trap Gate       64-bit Trap Gate
+   --                                                         32-Bit Mode            IA-32e Mode
+   SYSGATE_DSCBIG : constant Segment_Gate_Type := 2#0000#; -- Reserved               Upper 8 byte of an 16-byte descriptor
+   SYSGATE_TSSA16 : constant Segment_Gate_Type := 2#0001#; -- 16-bit TSS (Available) Reserved
+   SYSGATE_LDT    : constant Segment_Gate_Type := 2#0010#; -- LDT                    LDT
+   SYSGATE_TSSB16 : constant Segment_Gate_Type := 2#0011#; -- 16-bit TSS (Busy)      Reserved
+   SYSGATE_CALL16 : constant Segment_Gate_Type := 2#0100#; -- 16-bit Call Gate       Reserved
+   SYSGATE_TASK   : constant Segment_Gate_Type := 2#0101#; -- Task Gate              Reserved
+   SYSGATE_INT16  : constant Segment_Gate_Type := 2#0110#; -- 16-bit Interrupt Gate  Reserved
+   SYSGATE_TRAP16 : constant Segment_Gate_Type := 2#0111#; -- 16-bit Trap Gate       Reserved
+   SYSGATE_RES1   : constant Segment_Gate_Type := 2#1000#; -- Reserved               Reserved
+   SYSGATE_TSSA   : constant Segment_Gate_Type := 2#1001#; -- 32-bit TSS (Available) 64-bit TSS (Available)
+   SYSGATE_RES2   : constant Segment_Gate_Type := 2#1010#; -- Reserved               Reserved
+   SYSGATE_TSSB   : constant Segment_Gate_Type := 2#1011#; -- 32-bit TSS (Busy)      64-bit TSS (Busy)
+   SYSGATE_CALL   : constant Segment_Gate_Type := 2#1100#; -- 32-bit Call Gate       64-bit Call Gate
+   SYSGATE_RES3   : constant Segment_Gate_Type := 2#1101#; -- Reserved               Reserved
+   SYSGATE_INT    : constant Segment_Gate_Type := 2#1110#; -- 32-bit Interrupt Gate  64-bit Interrupt Gate
+   SYSGATE_TRAP   : constant Segment_Gate_Type := 2#1111#; -- 32-bit Trap Gate       64-bit Trap Gate
 
    -- Default Operand Size
 
    type Default_OpSize_Type is new Bits_1;
-   DEFAULT_OPSIZE16 : constant := 0;
-   DEFAULT_OPSIZE32 : constant := 1;
+
+   DEFAULT_OPSIZE16 : constant Default_OpSize_Type := 0;
+   DEFAULT_OPSIZE32 : constant Default_OpSize_Type := 1;
 
    -- Segment Granularity
 
    type Granularity_Type is new Bits_1;
-   GRANULARITY_BYTE : constant := 0;
-   GRANULARITY_4k   : constant := 1;
+
+   GRANULARITY_BYTE : constant Granularity_Type := 0;
+   GRANULARITY_4k   : constant Granularity_Type := 1;
 
    ----------------------------------------------------------------------------
    -- Registers
@@ -230,21 +238,20 @@ package x86_64
       Base_HI  at 7 range 0 ..  7;
    end record;
 
-   SEGMENT_DESCRIPTOR_INVALID : constant Segment_Descriptor_Type :=
-      (
-       Limit_LO => 0,
-       Base_LO  => 0,
-       Base_MI  => 0,
-       SegType  => SYSGATE_RES1,
-       S        => DESCRIPTOR_SYSTEM,
-       DPL      => PL0,
-       P        => False,
-       Limit_HI => 0,
-       AVL      => 0,
-       L        => False,
-       D_B      => DEFAULT_OPSIZE16,
-       G        => GRANULARITY_4k,
-       Base_HI  => 0
+   SEGMENT_DESCRIPTOR_INVALID : constant Segment_Descriptor_Type := (
+      Limit_LO => 0,
+      Base_LO  => 0,
+      Base_MI  => 0,
+      SegType  => SYSGATE_RES1,
+      S        => DESCRIPTOR_SYSTEM,
+      DPL      => PL0,
+      P        => False,
+      Limit_HI => 0,
+      AVL      => 0,
+      L        => False,
+      D_B      => DEFAULT_OPSIZE16,
+      G        => GRANULARITY_4k,
+      Base_HI  => 0
       );
 
    ----------------------------------------------------------------------------
@@ -303,17 +310,19 @@ package x86_64
       Reserved4 at 12 range 0 .. 31;
    end record;
 
-   EXCEPTION_DESCRIPTOR_INVALID : constant Exception_Descriptor_Type :=
-      (
-       Offset_LO => 0,
-       Selector  => (PL0, TI_GDT, 0),
-       IST       => 0,
-       SegType   => SYSGATE_RES1,
-       DPL       => PL0,
-       P         => False,
-       Offset_MI => 0,
-       Offset_HI => 0,
-       others    => <>
+   EXCEPTION_DESCRIPTOR_INVALID : constant Exception_Descriptor_Type := (
+      Offset_LO => 0,
+      Selector  => Selector_NULL,
+      IST       => 0,
+      Reserved1 => 0,
+      Reserved2 => 0,
+      SegType   => SYSGATE_RES1,
+      Reserved3 => 0,
+      DPL       => PL0,
+      P         => False,
+      Offset_MI => 0,
+      Offset_HI => 0,
+      Reserved4 => 0
       );
 
    ----------------------------------------------------------------------------
@@ -336,12 +345,11 @@ package x86_64
       Base_HI at 6 range 0 .. 31;
    end record;
 
-   IDT_DESCRIPTOR_INVALID : constant IDT_Descriptor_Type :=
-      (
-       Limit   => 0,
-       Base_LO => 0,
-       Base_MI => 0,
-       Base_HI => 0
+   IDT_DESCRIPTOR_INVALID : constant IDT_Descriptor_Type := (
+      Limit   => 0,
+      Base_LO => 0,
+      Base_MI => 0,
+      Base_HI => 0
       );
 
    EXCEPTION_ITEMS : constant := 256;
@@ -741,5 +749,7 @@ package x86_64
       with Inline => True;
    procedure Irq_Disable
       with Inline => True;
+
+pragma Style_Checks (On);
 
 end x86_64;
