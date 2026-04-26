@@ -1449,6 +1449,9 @@ configure-subdirs:
 .PHONY: configure-linkeradsb
 configure-linkeradsb: $(CORE_DIRECTORY)/linker.ads $(CORE_DIRECTORY)/linker.adb
 
+.PHONY: configure-gnatprep
+configure-gnatprep: $(GNATPREP_FILES)
+
 .PHONY: configure-start
 configure-start:
 	@$(call echo-print,"")
@@ -1469,6 +1472,7 @@ CONFIGURE_AUX_DEPS += configure-gnatadc
 CONFIGURE_AUX_DEPS += configure-configuregpr
 CONFIGURE_AUX_DEPS += configure-subdirs
 CONFIGURE_AUX_DEPS += configure-linkeradsb
+CONFIGURE_AUX_DEPS += configure-gnatprep
 CONFIGURE_AUX_DEPS += configure-end
 configure-aux: $(CONFIGURE_AUX_DEPS)
 
