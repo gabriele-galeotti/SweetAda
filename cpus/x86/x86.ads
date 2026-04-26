@@ -78,7 +78,7 @@ pragma Style_Checks (Off);
       Index at 0 range 3 .. 15;
    end record;
 
-   NULL_Selector : constant Selector_Type := (PL0, TI_GDT, 0);
+   Selector_NULL : constant Selector_Type := (PL0, TI_GDT, 0);
 
    function To_U16
       (Value : Selector_Type)
@@ -398,7 +398,7 @@ pragma Style_Checks (Off);
 
    EXCEPTION_DESCRIPTOR_INVALID : constant Exception_Descriptor_Type := (
       Offset_LO => 0,
-      Selector  => (PL0, TI_GDT, 0),
+      Selector  => Selector_NULL,
       Reserved1 => 0,
       Reserved2 => 0,
       SegType   => SYSGATE_RES1,
