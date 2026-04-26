@@ -60,21 +60,20 @@ package NE2000
       Next_Ptr      : Unsigned_8                := 0             with Volatile => True;
    end record;
 
-   DESCRIPTOR_INVALID : constant Descriptor_Type :=
-      (
-       NE2000PCI     => False,
-       Device_Number => 0,
-       BAR           => 0,
-       PCI_Irq_Line  => 0,
-       Base_Address  => Null_Address,
-       MAC           => [others => 0],
-       Read_8        => null,
-       Write_8       => null,
-       Read_16       => null,
-       Write_16      => null,
-       Read_32       => null,
-       Write_32      => null,
-       Next_Ptr      => 0
+   DESCRIPTOR_INVALID : constant Descriptor_Type := (
+      NE2000PCI     => False,
+      Device_Number => 0,
+      BAR           => 0,
+      PCI_Irq_Line  => 0,
+      Base_Address  => Null_Address,
+      MAC           => [others => 0],
+      Read_8        => null,
+      Write_8       => null,
+      Read_16       => null,
+      Write_16      => null,
+      Read_32       => null,
+      Write_32      => null,
+      Next_Ptr      => 0
       );
 
    RAM_Address : constant := 16#4000#;

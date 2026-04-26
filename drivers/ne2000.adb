@@ -36,6 +36,8 @@ package body NE2000
    use System.Storage_Elements;
    use Bits;
 
+pragma Warnings (Off, "* is not referenced");
+
    ----------------------------------------------------------------------------
    -- Register mapping
    ----------------------------------------------------------------------------
@@ -1072,5 +1074,7 @@ package body NE2000
       D.BAR       := Unsigned_16 (To_Integer (D.Base_Address) and 16#FFE0#);
       Setup (D);
    end Init_PCI;
+
+pragma Warnings (On, "* is not referenced");
 
 end NE2000;
