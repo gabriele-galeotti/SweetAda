@@ -17,12 +17,12 @@
 
 with System;
 with GCC.Defines;
-with CPU;
 
 separate (Mutex)
 procedure Acquire
    (S : in out Semaphore_Binary)
    is
+   use GCC.Defines;
    use LLutils;
    use type Atomic_Type'Base;
    procedure Wait
@@ -32,13 +32,13 @@ procedure Acquire
       (Object_Address : in System.Address)
       is
    begin
-      while Atomic_Load (Object_Address, GCC.Defines.ATOMIC_SEQ_CST) /= 0 loop
-         CPU.NOP;
+      loop
+         exit when Atomic_Load (Object_Address, ATOMIC_SEQ_CST) = 0;
       end loop;
    end Wait;
 begin
    loop
-      exit when not Atomic_Test_And_Set (S.Lock'Address, GCC.Defines.ATOMIC_SEQ_CST);
+      exit when not Atomic_Test_And_Set (S.Lock'Address, ATOMIC_SEQ_CST);
       Wait (S.Lock'Address);
    end loop;
 end Acquire;

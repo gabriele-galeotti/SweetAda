@@ -21,7 +21,8 @@ separate (Mutex)
 procedure Release
    (S : in out Semaphore_Binary)
    is
+   use GCC.Defines;
    use LLutils;
 begin
-   Atomic_Clear (S.Lock'Address, GCC.Defines.ATOMIC_SEQ_CST);
+   Atomic_Clear (S.Lock'Address, ATOMIC_SEQ_CST);
 end Release;
