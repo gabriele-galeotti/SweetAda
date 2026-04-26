@@ -36,7 +36,10 @@ package Interrupts
       Data_Address : System.Address;
    end record;
 
-   INTERRUPT_DESCRIPTOR_INVALID : constant Interrupt_Descriptor_Type := (null, System.Null_Address);
+   INTERRUPT_DESCRIPTOR_INVALID : constant Interrupt_Descriptor_Type := (
+      Irq_Handler  => null,
+      Data_Address => System.Null_Address
+      );
 
    procedure Init;
    procedure Install
