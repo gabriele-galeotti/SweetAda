@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package PCI
-   with Preelaborate => True
    is
 
    --========================================================================--
