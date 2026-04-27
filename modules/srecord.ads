@@ -18,7 +18,6 @@
 with System.Storage_Elements;
 
 package Srecord
-   with Preelaborate => True
    is
 
    --========================================================================--
