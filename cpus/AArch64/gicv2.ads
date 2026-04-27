@@ -20,7 +20,7 @@ with Interfaces;
 with Bits;
 
 package GICv2
-   with Preelaborate => True
+--   with Preelaborate => True
    is
 
    --========================================================================--

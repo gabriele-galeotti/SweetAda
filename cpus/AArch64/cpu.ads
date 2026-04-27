@@ -19,7 +19,6 @@ with System;
 with ARMv8A;
 
 package CPU
-   with Preelaborate => True
    is
 
    --========================================================================--
