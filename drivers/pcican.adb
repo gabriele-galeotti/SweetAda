@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Bits;
@@ -35,10 +34,10 @@ package body PCICAN
    --========================================================================--
 
    use System;
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
-   use CPU;
+
+pragma Warnings (Off, "* is not referenced");
 
    type CR_Type is record
       RR       : Boolean;
@@ -59,9 +58,10 @@ package body PCICAN
       Reserved at 0 range 5 .. 7;
    end record;
 
+   -- __INF__ use "A7" instead of "AT"
    type CMR_Type is record
       TR       : Boolean;
-      ABTTX    : Boolean; -- "AT" (Abort Transmission) conflicts with reserved word
+      A7       : Boolean;
       RRB      : Boolean;
       CDO      : Boolean;
       GTS      : Boolean;
@@ -71,7 +71,7 @@ package body PCICAN
            Size      => 8;
    for CMR_Type use record
       TR       at 0 range 0 .. 0;
-      ABTTX    at 0 range 1 .. 1;
+      A7       at 0 range 1 .. 1;
       RRB      at 0 range 2 .. 2;
       CDO      at 0 range 3 .. 3;
       GTS      at 0 range 4 .. 4;
@@ -216,5 +216,7 @@ package body PCICAN
       Data32 := CPU.IO.PortIn (16#D038#);        -- D000+38 S5920+INTCSR
       CPU.IO.PortOut (16#D101#, Unsigned_8'(1)); -- D100+01 SJA1000+TX
    end TX;
+
+pragma Warnings (On, "* is not referenced");
 
 end PCICAN;
