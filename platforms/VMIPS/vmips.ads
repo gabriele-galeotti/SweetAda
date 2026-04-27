@@ -21,7 +21,7 @@ with Bits;
 with MIPS;
 
 package VMIPS
-   with Preelaborate => True
+--   with Preelaborate => True
    is
 
    --========================================================================--
