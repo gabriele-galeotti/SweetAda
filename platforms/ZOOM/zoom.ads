@@ -19,7 +19,7 @@ with System;
 with Interfaces;
 
 package ZOOM
-   with Preelaborate => True
+--   with Preelaborate => True
    is
 
    --========================================================================--
