@@ -44,7 +44,7 @@ package body C_Wrappers
    BLANK : constant := 2#01000000#; -- "C" LOCALE WHITE SPACE CHARACTER (HT/LF/VT/FF/CR/SP)
    DIGIX : constant := 2#10000000#; -- HEXADECIMAL DIGIT
 
-   Ctype_Character_Table : array (Ctype_Idx_Type) of Bits.Bits_8 := [
+   Ctype_Character_Table : constant array (Ctype_Idx_Type) of Bits.Bits_8 := [
         --                DEC  HEX |    |
         0,             --          |    | EOF
         CNTRL,         --   0 0x00 |  ^@| NUL
