@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package M68030
-   with Preelaborate => True
    is
 
    --========================================================================--
@@ -34,6 +33,14 @@ package M68030
    use System;
    use Interfaces;
    use Bits;
+
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
+   -- MC68030
+   -- ENHANCED 32-BIT MICROPROCESSOR USER'S MANUAL THIRD EDITION
+   -- MC68030UM/AD REV 2
+   ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
    -- MMU

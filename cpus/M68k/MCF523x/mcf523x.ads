@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package MCF523x
-   with Preelaborate => True
    is
 
    --========================================================================--

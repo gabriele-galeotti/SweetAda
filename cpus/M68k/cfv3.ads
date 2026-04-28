@@ -15,11 +15,12 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System;
 with CFv2;
 
 package CFv3
-   with Preelaborate => True
    is
 
    --========================================================================--

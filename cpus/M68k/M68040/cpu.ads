@@ -19,7 +19,6 @@ with System;
 with M68k;
 
 package CPU
-   with Preelaborate => True
    is
 
    --========================================================================--

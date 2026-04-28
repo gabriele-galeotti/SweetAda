@@ -22,7 +22,6 @@ with Configure;
 with Bits;
 
 package MCF5206
-   with Preelaborate => True
    is
 
    --========================================================================--

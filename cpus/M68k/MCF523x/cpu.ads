@@ -19,7 +19,6 @@ with System;
 with CFv2;
 
 package CPU
-   with Preelaborate => True
    is
 
    --========================================================================--

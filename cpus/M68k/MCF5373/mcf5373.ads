@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package MCF5373
-   with Preelaborate => True
    is
 
    --========================================================================--

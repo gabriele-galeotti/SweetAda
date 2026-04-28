@@ -15,12 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System;
 with Interfaces;
 with Bits;
 
 package M68k
-   with Preelaborate => True
    is
 
    --========================================================================--
@@ -38,9 +39,9 @@ package M68k
 pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
-   -- M68000PM/AD REV. 1
    -- MOTOROLA M68000 FAMILY Programmer’s Reference Manual
    -- (Includes CPU32 Instructions)
+   -- M68000PM/AD REV. 1
    ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------

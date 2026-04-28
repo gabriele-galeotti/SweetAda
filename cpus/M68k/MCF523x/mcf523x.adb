@@ -18,7 +18,6 @@
 with Ada.Unchecked_Conversion;
 
 package body MCF523x
-   with Preelaborate => True
    is
 
    --========================================================================--
