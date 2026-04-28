@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package S5D9
-   with Preelaborate => True
    is
 
    --========================================================================--
