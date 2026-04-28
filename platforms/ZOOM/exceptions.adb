@@ -17,8 +17,6 @@
 
 with Abort_Library;
 with CPU;
-with MCF5373;
-with BSP;
 with Console;
 
 package body Exceptions
@@ -31,8 +29,6 @@ package body Exceptions
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   use MCF5373;
 
    --========================================================================--
    --                                                                        --
