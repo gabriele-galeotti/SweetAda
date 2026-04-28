@@ -22,14 +22,14 @@ function CString_Length
    is
    use type Bits.C.char;
    use type Bits.C.size_t;
-   nul        : constant Bits.C.char := Bits.C.char'First;
-   Char_Array : Bits.C.char_array (Bits.C.size_t)
-      with Address => String_Address;
-   Nchars     : Bits.C.size_t;
+   CArray : Bits.C.char_array (Bits.C.size_t)
+      with Address => String_Address,
+           Import  => True;
+   Nchars : Bits.C.size_t;
 begin
    Nchars := 0;
    loop
-      exit when Char_Array (Nchars) = nul;
+      exit when CArray (Nchars) = Bits.C.nul;
       Nchars := @ + 1;
    end loop;
    return Nchars;
