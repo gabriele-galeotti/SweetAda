@@ -66,7 +66,9 @@ package body TCPIP
       Length : Natural := Data'Length;
       Index  : Integer := Data'First;
       Data16 : U16_Array (Data'First .. Natural'Last)
-         with Address => Data'Address;
+         with Address    => Data'Address,
+              Import     => True,
+              Convention => Ada;
    begin
       while Length > 1 loop
          Sum := @ + Unsigned_32 (Data16 (Index));
