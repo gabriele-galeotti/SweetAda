@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package K61
-   with Preelaborate => True
    is
 
    --========================================================================--
@@ -38,7 +37,8 @@ package K61
 pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
-   -- K61P256M150SF3RM
+   -- K61 Sub-Family Reference Manual with Addendum
+   -- Document Number: K61P256M150SF3RM
    -- Rev. 4, 10/2015
    ----------------------------------------------------------------------------
 
