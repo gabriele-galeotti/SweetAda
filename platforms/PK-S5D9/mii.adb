@@ -36,6 +36,8 @@ package body MII
    use Bits;
    use S5D9;
 
+pragma Warnings (Off, "* is not referenced");
+
    READ  : constant := 0;
    WRITE : constant := 1;
 
@@ -214,5 +216,7 @@ package body MII
       Turn_Around;
       Console.Print (Prefix => "MII reg3: ", Value => RegisterRead, NL => True);
    end Init;
+
+pragma Warnings (On, "* is not referenced");
 
 end MII;
