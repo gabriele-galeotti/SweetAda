@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 package body Core.Expanded
    is
 
@@ -53,5 +55,23 @@ package body Core.Expanded
          pragma Warnings (On);
       end if;
    end Runtime_Initialize;
+
+   ----------------------------------------------------------------------------
+   -- Get_Env
+   ----------------------------------------------------------------------------
+   procedure Get_Env
+      (Name   : in System.Address with Unreferenced => True;
+       Length : in System.Address;
+       Ptr    : in System.Address with Unreferenced => True)
+      is
+      use type Bits.C.char_array;
+      GNAT_INIT_SCALARS_String : constant Bits.C.char_array :=
+         "GNAT_INIT_SCALARS" & Bits.C.nul;
+      L                        : aliased Bits.C.size_t
+         with Address => Length,
+              Import  => True;
+   begin
+      L := 0;
+   end Get_Env;
 
 end Core.Expanded;

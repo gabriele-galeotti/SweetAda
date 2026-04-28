@@ -20,8 +20,7 @@ pragma Restrictions (No_Elaboration_Code);
 with System;
 
 package Core.Expanded
-   with Preelaborate => True,
-        SPARK_Mode   => On
+   with SPARK_Mode => On
    is
 
    --========================================================================--
@@ -107,5 +106,13 @@ package Core.Expanded
       with Export        => True,
            Convention    => C,
            External_Name => "__gnat_runtime_initialize";
+
+   procedure Get_Env
+      (Name   : in System.Address;
+       Length : in System.Address;
+       Ptr    : in System.Address)
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__gnat_getenv";
 
 end Core.Expanded;
