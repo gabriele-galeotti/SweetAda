@@ -21,7 +21,6 @@ with Interfaces.C.Extensions;
 with Bits;
 
 package KL46Z
-   with Preelaborate => True
    is
 
    --========================================================================--
