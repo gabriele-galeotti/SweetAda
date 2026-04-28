@@ -18,7 +18,6 @@
 with ARMv5TE;
 
 package CPU
-   with Preelaborate => True
    is
 
    --========================================================================--

@@ -15,10 +15,11 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with ARMv4;
 
 package ARMv5TE
-   with Preelaborate => True
    is
 
    --========================================================================--
