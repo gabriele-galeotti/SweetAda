@@ -19,7 +19,6 @@ with System;
 with Interfaces;
 
 package Veecom
---   with Preelaborate => True
    is
 
    --========================================================================--
