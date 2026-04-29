@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package IntegratorCP
-   with Preelaborate => True
    is
 
    --========================================================================--
