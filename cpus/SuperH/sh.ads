@@ -19,7 +19,6 @@ with System;
 with Interfaces;
 
 package SH
-   with Preelaborate => True
    is
 
    --========================================================================--
@@ -32,6 +31,8 @@ package SH
 
    use System;
    use Interfaces;
+
+pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- Generic definitions
@@ -68,5 +69,7 @@ package SH
       with Inline => True;
    procedure Irq_Disable
       with Inline => True;
+
+pragma Style_Checks (On);
 
 end SH;

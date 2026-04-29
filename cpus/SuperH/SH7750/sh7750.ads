@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package SH7750
-   with Preelaborate => True
    is
 
    --========================================================================--
