@@ -19,7 +19,6 @@ with System;
 with SPARC;
 
 package CPU
-   with Preelaborate => True
    is
 
    --========================================================================--

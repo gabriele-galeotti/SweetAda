@@ -19,7 +19,6 @@ with System;
 with Interfaces;
 
 package CPU.MMIO
-   with Preelaborate => True
    is
 
    --========================================================================--

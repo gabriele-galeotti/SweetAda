@@ -19,7 +19,6 @@ with System;
 with Bits;
 
 package SPARC
-   with Preelaborate => True
    is
 
    --========================================================================--
@@ -32,6 +31,8 @@ package SPARC
 
    use System;
    use Bits;
+
+pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- Generic definitions
@@ -149,5 +150,7 @@ package SPARC
       with Inline => True;
    procedure Irq_Disable
       with Inline => True;
+
+pragma Style_Checks (On);
 
 end SPARC;
