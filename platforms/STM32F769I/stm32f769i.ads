@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package STM32F769I
-   with Preelaborate => True
    is
 
    --========================================================================--
