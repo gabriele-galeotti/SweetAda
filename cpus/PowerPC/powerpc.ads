@@ -21,7 +21,6 @@ with Bits;
 with PowerPC_Definitions;
 
 package PowerPC
-   with Preelaborate => True
    is
 
    --========================================================================--
@@ -35,6 +34,8 @@ package PowerPC
    use System;
    use Interfaces;
    use Bits;
+
+pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- Generic definitions
@@ -345,5 +346,7 @@ package PowerPC
       with Inline_Always => True;
    procedure Irq_Disable
       with Inline_Always => True;
+
+pragma Style_Checks (On);
 
 end PowerPC;

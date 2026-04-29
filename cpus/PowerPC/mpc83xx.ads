@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package MPC83XX
-   with Preelaborate => True
    is
 
    --========================================================================--

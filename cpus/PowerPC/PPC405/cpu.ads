@@ -19,7 +19,6 @@ with PowerPC;
 with PPC405;
 
 package CPU
-   with Preelaborate => True
    is
 
    --========================================================================--

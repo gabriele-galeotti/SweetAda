@@ -19,7 +19,6 @@ with Interfaces;
 with PowerPC;
 
 package e300
-   with Preelaborate => True
    is
 
    --========================================================================--
