@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package STM32VLDISCOVERY
-   with Preelaborate => True
    is
 
    --========================================================================--
