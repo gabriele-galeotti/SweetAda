@@ -31,6 +31,8 @@ package body uPD4991A
 
    use LLutils;
 
+pragma Warnings (Off, "* is not referenced");
+
    ----------------------------------------------------------------------------
    -- Register data types
    ----------------------------------------------------------------------------
@@ -265,5 +267,7 @@ package body uPD4991A
       Register_Write (D, CR2, 0);
       Register_Write (D, CR1, 0);
    end Init;
+
+pragma Warnings (On, "* is not referenced");
 
 end uPD4991A;
