@@ -18,7 +18,6 @@
 with System;
 
 package AVR
-   with Preelaborate => True
    is
 
    --========================================================================--

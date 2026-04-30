@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package ATmega128A
-   with Preelaborate => True
    is
 
    --========================================================================--

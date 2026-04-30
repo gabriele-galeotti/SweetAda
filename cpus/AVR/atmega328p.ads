@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package ATmega328P
-   with Preelaborate => True
    is
 
    --========================================================================--
@@ -38,6 +37,7 @@ package ATmega328P
 pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
+   -- ATmega48PA/88PA/168PA/328P
    -- 8-bit Microcontroller with 4/8/16/32K Bytes In-System Programmable Flash
    -- Rev. 8161D–AVR–10/09
    ----------------------------------------------------------------------------
