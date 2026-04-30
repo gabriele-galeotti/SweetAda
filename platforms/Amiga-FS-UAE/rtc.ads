@@ -20,7 +20,6 @@ with Bits;
 with Time;
 
 package RTC
-   with Preelaborate => True
    is
 
    --========================================================================--

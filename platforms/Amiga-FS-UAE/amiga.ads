@@ -24,7 +24,6 @@ with Bits.C;
 with Videofont8x8;
 
 package Amiga
-   with Preelaborate => True
    is
 
    --========================================================================--

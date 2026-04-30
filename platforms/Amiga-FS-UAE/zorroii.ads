@@ -19,7 +19,6 @@ with System.Storage_Elements;
 with Interfaces;
 
 package ZorroII
-   with Preelaborate => True
    is
 
    --========================================================================--
