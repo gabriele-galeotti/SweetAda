@@ -18,7 +18,6 @@
 with Configure;
 
 package MIPSSIM
-   with Preelaborate => True
    is
 
    --========================================================================--
