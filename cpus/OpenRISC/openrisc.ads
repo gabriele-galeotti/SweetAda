@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package OpenRISC
-   with Preelaborate => True
    is
 
    --========================================================================--

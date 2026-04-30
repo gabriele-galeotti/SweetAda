@@ -18,7 +18,6 @@
 with OpenRISC;
 
 package CPU
-   with Preelaborate => True
    is
 
    --========================================================================--
