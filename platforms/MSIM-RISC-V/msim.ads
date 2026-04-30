@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package MSIM
-   with Preelaborate => True
    is
 
    --========================================================================--
