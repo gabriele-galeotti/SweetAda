@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package Spartan3A
-   with Preelaborate => True
    is
 
    --========================================================================--
