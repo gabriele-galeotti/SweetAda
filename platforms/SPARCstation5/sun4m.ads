@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package Sun4m
-   with Preelaborate => True
    is
 
    --========================================================================--
