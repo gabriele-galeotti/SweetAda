@@ -21,7 +21,6 @@ with Bits;
 with RISCV;
 
 package HiFive1
-   with Preelaborate => True
    is
 
    --========================================================================--
