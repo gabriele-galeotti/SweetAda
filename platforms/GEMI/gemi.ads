@@ -19,7 +19,6 @@ with System;
 with Interfaces;
 
 package GEMI
-   with Preelaborate => True
    is
 
    --========================================================================--
