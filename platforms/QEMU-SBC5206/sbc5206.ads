@@ -18,7 +18,6 @@
 with Interfaces;
 
 package SBC5206
-   with Preelaborate => True
    is
 
    --========================================================================--
