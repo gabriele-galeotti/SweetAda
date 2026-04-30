@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package NEORV32
-   with Preelaborate => True
    is
 
    --========================================================================--

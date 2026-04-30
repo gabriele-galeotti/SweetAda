@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package ULX3S
-   with Preelaborate => True
    is
 
    --========================================================================--
