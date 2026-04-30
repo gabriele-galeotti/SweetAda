@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package MSP432P401R
-   with Preelaborate => True
    is
 
    --========================================================================--
@@ -38,6 +37,7 @@ package MSP432P401R
 pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
+   -- MSP432P4xx SimpleLinkTM Microcontrollers Technical Reference Manual
    -- SLAU356H March 2015 – Revised December 2017
    -- SLAS826H – MARCH 2015 – REVISED JUNE 2019
    ----------------------------------------------------------------------------
