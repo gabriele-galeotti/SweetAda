@@ -34,6 +34,8 @@ package body IDE
    use System.Storage_Elements;
    use LLutils;
 
+pragma Warnings (Off, "* is not referenced");
+
    ----------------------------------------------------------------------------
    -- Register types
    ----------------------------------------------------------------------------
@@ -410,5 +412,7 @@ package body IDE
    begin
       null;
    end Init;
+
+pragma Warnings (On, "* is not referenced");
 
 end IDE;

@@ -55,14 +55,13 @@ package IDE
       Write_16      : Port_Write_16_Ptr;
    end record;
 
-   DESCRIPTOR_INVALID : constant Descriptor_Type :=
-      (
-       Base_Address  => Null_Address,
-       Scale_Address => 0,
-       Read_8        => null,
-       Write_8       => null,
-       Read_16       => null,
-       Write_16      => null
+   DESCRIPTOR_INVALID : constant Descriptor_Type := (
+      Base_Address  => Null_Address,
+      Scale_Address => 0,
+      Read_8        => null,
+      Write_8       => null,
+      Read_16       => null,
+      Write_16      => null
       );
 
    procedure Read
