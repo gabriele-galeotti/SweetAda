@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package GT64120
-   with Preelaborate => True
    is
 
    --========================================================================--
