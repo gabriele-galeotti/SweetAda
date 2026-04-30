@@ -20,9 +20,7 @@ with System.Address_To_Access_Conversions;
 with System.Storage_Elements;
 with Ada.Unchecked_Deallocation;
 with Interfaces;
-with Definitions;
 with Bits;
-with S390;
 with EBCDIC;
 
 package body X3270
@@ -40,8 +38,9 @@ package body X3270
    use System.Storage_Elements;
    use Interfaces;
    use Bits;
-   use S390;
    use EBCDIC;
+
+pragma Warnings (Off, "* is not referenced");
 
 pragma Warnings (Off, "size is not a multiple of alignment");
    MSG_HDR_SIZE : constant := 6;
@@ -198,5 +197,7 @@ pragma Warnings (On, "size is not a multiple of alignment");
       Line_Feed;
       -- Current_Column := @ + Message'Length;
    end Write_Message;
+
+pragma Warnings (On, "* is not referenced");
 
 end X3270;
