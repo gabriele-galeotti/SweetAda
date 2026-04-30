@@ -22,7 +22,6 @@ with Definitions;
 with Bits;
 
 package NETARM
-   with Preelaborate => True
    is
 
    --========================================================================--
