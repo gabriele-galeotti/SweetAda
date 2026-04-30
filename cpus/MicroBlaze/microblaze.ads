@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 package MicroBlaze
-   with Preelaborate => True
    is
 
    --========================================================================--
@@ -26,6 +25,8 @@ package MicroBlaze
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- Generic definitions
@@ -132,5 +133,7 @@ package MicroBlaze
       with Inline => True;
    procedure Irq_Disable
       with Inline => True;
+
+pragma Style_Checks (On);
 
 end MicroBlaze;
