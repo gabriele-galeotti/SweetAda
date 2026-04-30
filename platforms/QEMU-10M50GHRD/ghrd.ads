@@ -21,7 +21,6 @@ with Configure;
 with Bits;
 
 package GHRD
-   with Preelaborate => True
    is
 
    --========================================================================--
