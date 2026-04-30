@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package NiosII
-   with Preelaborate => True
    is
 
    --========================================================================--

@@ -19,7 +19,6 @@ with System;
 with NiosII;
 
 package CPU
-   with Preelaborate => True
    is
 
    --========================================================================--
