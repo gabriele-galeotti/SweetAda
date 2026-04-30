@@ -21,7 +21,6 @@ with Bits;
 with MIPS;
 
 package KN02BA
-   with Preelaborate => True
    is
 
    --========================================================================--
