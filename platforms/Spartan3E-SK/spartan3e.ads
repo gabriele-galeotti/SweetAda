@@ -19,7 +19,6 @@ with System;
 with Interfaces;
 
 package Spartan3E
-   with Preelaborate => True
    is
 
    --========================================================================--
