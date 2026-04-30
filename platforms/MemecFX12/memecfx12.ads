@@ -19,7 +19,6 @@ with System;
 with Interfaces;
 
 package MemecFX12
-   with Preelaborate => True
    is
 
    --========================================================================--
