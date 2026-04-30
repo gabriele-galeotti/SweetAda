@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package RPI3
-   with Preelaborate => True
    is
 
    --========================================================================--
