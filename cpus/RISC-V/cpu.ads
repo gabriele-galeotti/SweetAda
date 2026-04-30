@@ -19,7 +19,6 @@ with System;
 with RISCV;
 
 package CPU
-   with Preelaborate => True
    is
 
    --========================================================================--

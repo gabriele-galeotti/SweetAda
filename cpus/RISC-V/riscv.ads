@@ -19,7 +19,6 @@ with System;
 with RISCV_Definitions;
 
 package RISCV
-   with Preelaborate => True
    is
 
    --========================================================================--
@@ -31,6 +30,8 @@ package RISCV
    --========================================================================--
 
    use System;
+
+pragma Style_Checks (Off);
 
    MXLEN renames RISCV_Definitions.XLEN;
 
@@ -192,5 +193,7 @@ package RISCV
       with Inline => True;
    procedure Irq_Disable
       with Inline => True;
+
+pragma Style_Checks (On);
 
 end RISCV;
