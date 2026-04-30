@@ -19,7 +19,6 @@ with System;
 with GICv2;
 
 package Virt
-   with Preelaborate => True
    is
 
    --========================================================================--
