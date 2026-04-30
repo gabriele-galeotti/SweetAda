@@ -18,7 +18,6 @@
 with System;
 
 package MIPS
-   with Preelaborate => True
    is
 
    --========================================================================--

@@ -20,7 +20,6 @@ with MIPS;
 with R3000;
 
 package CPU
-   with Preelaborate => True
    is
 
    --========================================================================--

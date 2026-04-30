@@ -21,7 +21,6 @@ with Bits;
 with MIPS;
 
 package MIPS32
-   with Preelaborate => True
    is
 
    --========================================================================--
@@ -36,6 +35,8 @@ package MIPS32
    use Interfaces;
    use Bits;
    use MIPS;
+
+pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- 6.2.10 Count Register (CP0 Register 9, Select 0)
@@ -339,5 +340,7 @@ package MIPS32
    procedure Irq_Level_Set
       (Irq_Level : in Irq_Level_Type)
       with Inline => True;
+
+pragma Style_Checks (On);
 
 end MIPS32;

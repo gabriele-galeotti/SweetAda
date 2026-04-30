@@ -20,7 +20,6 @@ with Interfaces;
 with Bits;
 
 package R3000
-   with Preelaborate => True
    is
 
    --========================================================================--
@@ -34,6 +33,8 @@ package R3000
    use System;
    use Interfaces;
    use Bits;
+
+pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- Status Register (CP0 register 12)
@@ -156,5 +157,7 @@ package R3000
       with Inline => True;
    procedure Irq_Disable
       with Inline => True;
+
+pragma Style_Checks (On);
 
 end R3000;

@@ -20,7 +20,6 @@ with MIPS;
 with MIPS32;
 
 package CPU
-   with Preelaborate => True
    is
 
    --========================================================================--
