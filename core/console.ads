@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System;
 with System.Storage_Elements;
 with Interfaces;
@@ -22,8 +24,7 @@ with Bits;
 with Bits.C;
 
 package Console
-   with Preelaborate => True,
-        SPARK_Mode   => On
+   with SPARK_Mode => On
    is
 
    --========================================================================--
@@ -53,9 +54,10 @@ package Console
    procedure Console_Null_Read
       (C : out Character);
 
-   Console_Descriptor : Console_Descriptor_Type :=
-      (Console_Null_Write'Access,
-       Console_Null_Read'Access);
+   Console_Descriptor : Console_Descriptor_Type := (
+      Write => Console_Null_Write'Access,
+      Read  => Console_Null_Read'Access
+      );
 
    ----------------------------------------------------------------------------
    -- Print (Character)
