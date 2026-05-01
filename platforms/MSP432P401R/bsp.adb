@@ -19,7 +19,7 @@ with Configure;
 with Definitions;
 with Bits;
 with ARMv7M;
-with MSP432P401R;
+with MSP432P4xx;
 with Clocks;
 with Exceptions;
 with Console;
@@ -38,7 +38,7 @@ package body BSP
    use Interfaces;
    use Definitions;
    use Bits;
-   use MSP432P401R;
+   use MSP432P4xx;
 
    procedure SysTick_Init;
 

@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ msp432p401r.ads                                                                                           --
+-- __FLN__ msp432p4xx.ads                                                                                            --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -19,7 +19,7 @@ with System;
 with Interfaces;
 with Bits;
 
-package MSP432P401R
+package MSP432P4xx
    is
 
    --========================================================================--
@@ -6892,4 +6892,4 @@ pragma Style_Checks (Off);
 
 pragma Style_Checks (On);
 
-end MSP432P401R;
+end MSP432P4xx;

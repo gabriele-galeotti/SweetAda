@@ -1,6 +1,6 @@
 
 with Interfaces;
-with MSP432P401R;
+with MSP432P4xx;
 with CPU;
 with Console;
 
@@ -16,7 +16,7 @@ package body Application
    --========================================================================--
 
    use Interfaces;
-   use MSP432P401R;
+   use MSP432P4xx;
 
    --========================================================================--
    --                                                                        --

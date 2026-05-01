@@ -17,7 +17,7 @@
 
 with Definitions;
 with CPU;
-with MSP432P401R;
+with MSP432P4xx;
 
 package body Clocks
    is
@@ -31,7 +31,7 @@ package body Clocks
    --========================================================================--
 
    use Definitions;
-   use MSP432P401R;
+   use MSP432P4xx;
 
    function Status_Ready
       return Boolean

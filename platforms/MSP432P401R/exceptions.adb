@@ -18,7 +18,7 @@
 with LLutils;
 with Abort_Library;
 with ARMv7M;
-with MSP432P401R;
+with MSP432P4xx;
 with BSP;
 with Console;
 
@@ -78,7 +78,7 @@ package body Exceptions
       BSP.Tick_Count := @ + 1;
       if BSP.Tick_Count mod 1_000 = 0 then
          -- LED1
-         MSP432P401R.P1.PxOUT (0) := not MSP432P401R.P1.PxIN (0);
+         MSP432P4xx.P1.PxOUT (0) := not MSP432P4xx.P1.PxIN (0);
       end if;
    end SysTick_Process;
 
