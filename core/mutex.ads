@@ -20,7 +20,7 @@ pragma Restrictions (No_Elaboration_Code);
 with LLutils;
 
 package Mutex
-   with Preelaborate => True
+   with SPARK_Mode => On
    is
 
    --========================================================================--
