@@ -23,8 +23,7 @@ with Bits;
 with Bits.C;
 
 package Memory_Functions
-   with Preelaborate => True,
-        SPARK_Mode   => On
+   with SPARK_Mode => On
    is
 
    --========================================================================--
