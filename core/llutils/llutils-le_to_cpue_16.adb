@@ -21,7 +21,9 @@ function LE_To_CPUE_16
    return Interfaces.Unsigned_16
    is
    Value  : aliased Interfaces.Unsigned_16
-      with Address => Object_Address;
+      with Address    => Object_Address,
+           Import     => True,
+           Convention => Ada;
    Result : Interfaces.Unsigned_16;
 begin
    if Bits.BigEndian then

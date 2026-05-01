@@ -21,7 +21,9 @@ function BE_To_CPUE_64
    return Interfaces.Unsigned_64
    is
    Value  : aliased Interfaces.Unsigned_64
-      with Address => Object_Address;
+      with Address    => Object_Address,
+           Import     => True,
+           Convention => Ada;
    Result : Interfaces.Unsigned_64;
 begin
    if Bits.LittleEndian then
