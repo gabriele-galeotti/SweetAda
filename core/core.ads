@@ -18,8 +18,7 @@
 pragma Restrictions (No_Elaboration_Code);
 
 package Core
-   with Preelaborate => True,
-        SPARK_Mode   => On
+   with SPARK_Mode => On
    is
 
    --========================================================================--
