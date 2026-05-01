@@ -32,10 +32,9 @@ package body Core.Base
    -- Stack_Check
    ----------------------------------------------------------------------------
    function Stack_Check
-      (Stack_Address : System.Address)
+      (Stack_Address : System.Address with Unreferenced => True)
       return Stack_Access
       is
-      pragma Unreferenced (Stack_Address);
    begin
       return null;
    end Stack_Check;
