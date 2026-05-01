@@ -15,9 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 package Floating_Point
-   with Preelaborate => True,
-        SPARK_Mode   => On
+   with SPARK_Mode => On
    is
 
    --========================================================================--
