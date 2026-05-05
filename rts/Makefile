@@ -205,19 +205,20 @@ endif
 ################################################################################
 
 .PHONY: all
-ifneq ($(findstring "$(MULTILIB_DIRECTORY)",$(MULTILIB_SKIPS)),)
-all:
-	$(info *** Skipping target "all" for multilib directory "$(MULTILIB_DIRECTORY)".)
-else
-all: configure-rts configure-rts-target multilib
-endif
+all: multilib
 
-.PHONY: configure
-ifneq ($(findstring "$(MULTILIB_DIRECTORY)",$(MULTILIB_SKIPS)),)
-configure:
-	$(info *** Skipping target "configure" for multilib directory "$(MULTILIB_DIRECTORY)".)
+.PHONY: create-dirs
+create-dirs:
+ifeq ($(OSTYPE),cmd)
+	@IF EXIST $(ADAINCLUDE_PATH_CMD)\ $(RMDIR) $(ADAINCLUDE_PATH_CMD)\ $(NULL)
+	@$(MKDIR) $(ADAINCLUDE_PATH_CMD)
+	@IF EXIST $(ADALIB_PATH_CMD)\ $(RMDIR) $(ADALIB_PATH_CMD)\ $(NULL)
+	@$(MKDIR) $(ADALIB_PATH_CMD)
 else
-configure: create-dirs configure-rts configure-rts-target
+	@$(RMDIR) $(ADAINCLUDE_PATH)
+	@$(MKDIR) $(ADAINCLUDE_PATH)
+	@$(RMDIR) $(ADALIB_PATH)
+	@$(MKDIR) $(ADALIB_PATH)
 endif
 
 .PHONY: configure-rts
@@ -268,26 +269,15 @@ else
         done
 endif
 
-.PHONY: create-dirs
-create-dirs:
-ifeq ($(OSTYPE),cmd)
-	@IF EXIST $(ADAINCLUDE_PATH_CMD)\ $(RMDIR) $(ADAINCLUDE_PATH_CMD)\ $(NULL)
-	@$(MKDIR) $(ADAINCLUDE_PATH_CMD)
-	@IF EXIST $(ADALIB_PATH_CMD)\ $(RMDIR) $(ADALIB_PATH_CMD)\ $(NULL)
-	@$(MKDIR) $(ADALIB_PATH_CMD)
-else
-	@$(RMDIR) $(ADAINCLUDE_PATH)
-	@$(MKDIR) $(ADAINCLUDE_PATH)
-	@$(RMDIR) $(ADALIB_PATH)
-	@$(MKDIR) $(ADALIB_PATH)
-endif
+.PHONY: configure
+configure: create-dirs configure-rts configure-rts-target
 
 .PHONY: multilib
 ifneq ($(findstring "$(MULTILIB_DIRECTORY)",$(MULTILIB_SKIPS)),)
 multilib:
 	$(info *** Skipping target "multilib" for multilib directory "$(MULTILIB_DIRECTORY)".)
 else
-multilib: $(LIBGNAT) $(LIBGNARL) clean-objs
+multilib: configure $(LIBGNAT) $(LIBGNARL) clean-objs
 endif
 
 $(LIBGNAT): $(LIBGNAT_OBJS)

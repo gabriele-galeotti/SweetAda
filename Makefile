@@ -483,13 +483,19 @@ GNATPREP_FILES :=
 #                                                                              #
 ################################################################################
 
+ifneq ($(MAKECMDGOALS),)
+ifeq ($(filter distclean,$(MAKECMDGOALS)),distclean)
+        override undefine PLATFORM
+        override undefine CPU
+endif
 ifneq ($(filter createkernelcfg,$(MAKECMDGOALS)),createkernelcfg)
 -include $(KERNEL_CFGFILE)
 endif
-
-ifneq ($(MAKECMDGOALS),)
 # PLATFORM processing
-ifneq ($(filter $(sort $(CLEANING_GOALS) $(INFOCONFIG_GOALS) rts $(PLATFORM_GOALS)),$(MAKECMDGOALS)),)
+ifneq ($(filter $(sort                                                 \
+         $(CLEANING_GOALS) $(INFOCONFIG_GOALS) rts $(PLATFORM_GOALS)), \
+         $(MAKECMDGOALS)                                               \
+         ),)
 ifneq ($(PLATFORM),)
 # PLATFORM defined
 ifeq ($(filter $(PLATFORM),$(PLATFORMS)),)
@@ -515,17 +521,19 @@ endif
 # CPU processing
 ifneq ($(CPU),)
 # CPU defined
-ifneq ($(filter $(sort $(INFOCONFIG_GOALS) rts $(PLATFORM_GOALS)),$(MAKECMDGOALS)),)
 ifeq ($(filter $(CPU),$(CPUS)),)
 $(error Error: no valid CPU)
-else
+endif
+ifneq ($(filter $(sort                                                 \
+         $(CLEANING_GOALS) $(INFOCONFIG_GOALS) rts $(PLATFORM_GOALS)), \
+         $(MAKECMDGOALS)                                               \
+         ),)
 CPU_DIRECTORY := $(CPU_BASE_DIRECTORY)/$(CPU)
 include $(CPU_DIRECTORY)/configuration.in
 ifeq ($(TOOLCHAIN_NAME),)
 $(warning *** Warning: no valid TOOLCHAIN_NAME.)
 endif
 CONFIGURE_DEPS += $(CPU_DIRECTORY)/configuration.in
-endif
 endif
 else
 # CPU must be known for the RTS goal
@@ -1629,7 +1637,6 @@ ifeq ($(OSTYPE),cmd)
           (                                                                  \
            ECHO.&& ECHO $(CPU): RTS = $(RTS_BUILD), multilib = %%M&& ECHO.&& \
            SET "MAKEFLAGS=" && SET "RTS=$(RTS_BUILD)"                     && \
-           "$(MAKE)" $(MAKE_RTS) MULTILIB=%%M configure                   && \
            "$(MAKE)" $(MAKE_RTS) MULTILIB=%%M multilib                       \
           ) || EXIT /B 1
 else
@@ -1638,7 +1645,6 @@ else
            printf "%s\n" ""                                                           && \
            printf "%s\n" "$(CPU): RTS = $(RTS_BUILD), multilib = \"$$m\""             && \
            printf "%s\n" ""                                                           && \
-           MAKEFLAGS= RTS=$(RTS_BUILD) "$(MAKE)" $(MAKE_RTS) MULTILIB="$$m" configure && \
            MAKEFLAGS= RTS=$(RTS_BUILD) "$(MAKE)" $(MAKE_RTS) MULTILIB="$$m" multilib     \
           ) || exit $$? ;                                                                \
         done
