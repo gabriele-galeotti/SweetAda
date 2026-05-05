@@ -518,8 +518,7 @@ pragma Style_Checks (Off);
    MsgPtr_UNKNOWN              : constant access constant String := String_UNKNOWN'Access;
 
    type IDT_Type is array (Exception_Id_Type range <>) of Exception_Descriptor_Type
-      with Pack                    => True,
-           Suppress_Initialization => True;
+      with Pack => True;
 
    subtype IDT_Length_Type is Positive range 1 .. EXCEPTION_ITEMS;
 
@@ -588,9 +587,8 @@ pragma Style_Checks (Off);
    -- Page table: 1024 entries aligned on 4k boundary
 
    type PT_Type is array (0 .. 2**10 - 1) of PTEntry_Type
-      with Alignment               => PAGESIZE4k,
-           Pack                    => True,
-           Suppress_Initialization => True;
+      with Alignment => PAGESIZE4k,
+           Pack      => True;
 
    -- Page Directory Entry
 
@@ -658,9 +656,8 @@ pragma Style_Checks (Off);
 
    -- Page directory (4k): 1024 entries aligned on 4k boundary
    type PD4k_Type is array (0 .. 2**10 - 1) of PDEntry_Type (PAGESELECT4k)
-      with Alignment               => PAGESIZE4k,
-           Pack                    => True,
-           Suppress_Initialization => True;
+      with Alignment => PAGESIZE4k,
+           Pack      => True;
 
    -- offset in a 4-KiB page
    function Select_Address_Bits_OFS

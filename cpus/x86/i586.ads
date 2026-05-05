@@ -61,9 +61,8 @@ package i586
    ----------------------------------------------------------------------------
 
    type PD4M_Type is array (0 .. 2**10 - 1) of PDEntry_Type (PAGESELECT4M)
-      with Pack                    => True,
-           Alignment               => PAGESIZE4k,
-           Suppress_Initialization => True;
+      with Pack      => True,
+           Alignment => PAGESIZE4k;
 
    ----------------------------------------------------------------------------
    -- MSRs
