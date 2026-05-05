@@ -22,8 +22,8 @@ function Address_Displacement
     Scale_Factor   : Bits.Address_Shift)
    return SSE.Storage_Offset
    is
-   type Address_Word_Type is mod 2**Standard'Address_Size;
-   for Address_Word_Type'Size use Standard'Address_Size;
+   type Address_Word_Type is mod 2**Standard'Address_Size
+      with Size => Standard'Address_Size;
    function Shift_Left
       (Value  : Address_Word_Type;
        Amount : Natural)
