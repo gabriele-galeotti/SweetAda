@@ -390,13 +390,12 @@ pragma Style_Checks (Off);
       Write_16      : not null Port_Write_16_Ptr := MMIO.WriteN_U16'Access;
    end record;
 
-   DESCRIPTOR_INVALID : constant Descriptor_Type :=
-      (
-       Base_Address  => Null_Address,
-       Scale_Address => 0,
-       Flags         => (null record),
-       Read_16       => MMIO.ReadN_U16'Access,
-       Write_16      => MMIO.WriteN_U16'Access
+   DESCRIPTOR_INVALID : constant Descriptor_Type := (
+      Base_Address  => Null_Address,
+      Scale_Address => 0,
+      Flags         => (null record),
+      Read_16       => MMIO.ReadN_U16'Access,
+      Write_16      => MMIO.WriteN_U16'Access
       );
 
    ----------------------------------------------------------------------------
