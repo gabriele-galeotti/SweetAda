@@ -3614,15 +3614,178 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 15.3.0.1 CRC32DI Register
+
+   type CRC32DI_Type is record
+      CRC32DI : Unsigned_16 := 0; -- Data input for CRC32 Computation.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CRC32DI_Type use record
+      CRC32DI at 0 range 0 .. 15;
+   end record;
+
    -- 15.3.0.2 CRC32DIRB Register
+
+   type CRC32DIRB_Type is record
+      CRC32DIRB : Unsigned_16 := 0; -- CRC32 data in bit reversed.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CRC32DIRB_Type use record
+      CRC32DIRB at 0 range 0 .. 15;
+   end record;
+
    -- 15.3.0.3 CRC32INIRES_LO Register
+
+   type CRC32INIRES_LO_Type is record
+      CRC32INIRES_LO : Unsigned_16 := 0; -- CRC32 initialization and result, lower 16 bits.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CRC32INIRES_LO_Type use record
+      CRC32INIRES_LO at 0 range 0 .. 15;
+   end record;
+
    -- 15.3.0.4 CRC32INIRES_HI Register
+
+   type CRC32INIRES_HI_Type is record
+      CRC32INIRES_HI : Unsigned_16 := 0; -- CRC32 initialization and result, upper 16 bits.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CRC32INIRES_HI_Type use record
+      CRC32INIRES_HI at 0 range 0 .. 15;
+   end record;
+
    -- 15.3.0.5 CRC32RESR_LO Register
+
+   type CRC32RESR_LO_Type is record
+      CRC32RESR_LO : Unsigned_16 := 16#FFFF#; -- CRC32 reverse result, lower 16 bits.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CRC32RESR_LO_Type use record
+      CRC32RESR_LO at 0 range 0 .. 15;
+   end record;
+
    -- 15.3.0.6 CRC32RESR_HI Register
+
+   type CRC32RESR_HI_Type is record
+      CRC32RESR_HI : Unsigned_16 := 16#FFFF#; -- CRC32 reverse result, upper 16 bits.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CRC32RESR_HI_Type use record
+      CRC32RESR_HI at 0 range 0 .. 15;
+   end record;
+
    -- 15.3.0.7 CRC16DI Register
+
+   type CRC16DI_Type is record
+      CRC16DI : Unsigned_16 := 0; -- CRC16 data in.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CRC16DI_Type use record
+      CRC16DI at 0 range 0 .. 15;
+   end record;
+
    -- 15.3.0.8 CRC16DIRB Register
+
+   type CRC16DIRB_Type is record
+      CRC16DIRB : Unsigned_16 := 0; -- CRC16 data in reverse byte.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CRC16DIRB_Type use record
+      CRC16DIRB at 0 range 0 .. 15;
+   end record;
+
    -- 15.3.0.9 CRC16INIRES Register
+
+   type CRC16INIRES_Type is record
+      CRC16INIRES : Unsigned_16 := 16#FF#; -- CRC16 initialization and result.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CRC16INIRES_Type use record
+      CRC16INIRES at 0 range 0 .. 15;
+   end record;
+
    -- 15.3.0.10 CRC16RESR Register
+
+   type CRC16RESR_Type is record
+      CRC16RESR : Unsigned_16 := 16#FF#; -- CRC16 reverse result.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CRC16RESR_Type use record
+      CRC16RESR at 0 range 0 .. 15;
+   end record;
+
+   -- Table 15-1. CRC32 Registers
+
+   CRC32_BASEADDRESS : constant := 16#4000_4000#;
+
+   CRC32DI : aliased CRC32DI_Type
+      with Address              => System'To_Address (CRC32_BASEADDRESS + 16#00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CRC32DIRB : aliased CRC32DIRB_Type
+      with Address              => System'To_Address (CRC32_BASEADDRESS + 16#04#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CRC32INIRES_LO : aliased CRC32INIRES_LO_Type
+      with Address              => System'To_Address (CRC32_BASEADDRESS + 16#08#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CRC32INIRES_HI : aliased CRC32INIRES_HI_Type
+      with Address              => System'To_Address (CRC32_BASEADDRESS + 16#0A#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CRC32RESR_LO : aliased CRC32RESR_LO_Type
+      with Address              => System'To_Address (CRC32_BASEADDRESS + 16#0C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CRC32RESR_HI : aliased CRC32RESR_HI_Type
+      with Address              => System'To_Address (CRC32_BASEADDRESS + 16#0E#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CRC16DI : aliased CRC16DI_Type
+      with Address              => System'To_Address (CRC32_BASEADDRESS + 16#10#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CRC16DIRB : aliased CRC16DIRB_Type
+      with Address              => System'To_Address (CRC32_BASEADDRESS + 16#14#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CRC16INIRES : aliased CRC16INIRES_Type
+      with Address              => System'To_Address (CRC32_BASEADDRESS + 16#18#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CRC16RESR : aliased CRC16RESR_Type
+      with Address              => System'To_Address (CRC32_BASEADDRESS + 16#1E#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 16 AES256 Accelerator
