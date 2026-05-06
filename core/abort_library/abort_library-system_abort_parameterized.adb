@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
 with Console;
 
 separate (Abort_Library)
