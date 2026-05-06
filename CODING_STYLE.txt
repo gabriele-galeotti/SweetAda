@@ -121,9 +121,10 @@ peripheral devices to configure in a system), we often use the name "NItems"
 Hexadecimal literals all uppercase, C-style "0x" prefix preferred in comments.
 
 Some object prefixes/suffixes/abbreviations:
-Idx = index
-Mem = memory
-Reg = register
+Idx = "index"
+Mem = "memory"
+Ptr = "pointer"
+Reg = "register"
 
 When dealing with subprograms, the operation carried out by the code should
 come last, e.g., "CPU_SR_Read" instead of "Read_CPU_SR". This helps in
