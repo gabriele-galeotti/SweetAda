@@ -129,13 +129,12 @@ package Ethernet
       Data_Address : Address;
    end record;
 
-   DESCRIPTOR_INVALID : constant Descriptor_Type :=
-      (
-       Haddress     => [0, 0, 0, 0, 0, 0],
-       Paddress     => [0, 0, 0, 0],
-       RX           => null,
-       TX           => null,
-       Data_Address => Null_Address
+   DESCRIPTOR_INVALID : constant Descriptor_Type := (
+      Haddress     => [0, 0, 0, 0, 0, 0],
+      Paddress     => [0, 0, 0, 0],
+      RX           => null,
+      TX           => null,
+      Data_Address => Null_Address
       );
 
    ----------------------------------------------------------------------------
