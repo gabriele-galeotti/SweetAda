@@ -32,6 +32,14 @@ package e300
    use Interfaces;
    use PowerPC;
 
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
+   -- e300 Power ArchitectureTM Core
+   -- Family Reference Manual
+   -- e300CORERM Rev. 4 12/2007
+   ----------------------------------------------------------------------------
+
    ----------------------------------------------------------------------------
    -- SPRs
    ----------------------------------------------------------------------------
@@ -83,5 +91,7 @@ package e300
    function SVR_Read
       return Unsigned_32
       with Inline => True;
+
+pragma Style_Checks (On);
 
 end e300;
