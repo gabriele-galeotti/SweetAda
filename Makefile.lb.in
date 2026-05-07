@@ -83,7 +83,7 @@ endef
 define compile-gnatmake-depend =
 $(call brief-command, \
 $(GNATMAKE_DEPEND)                                                   \
-                   -M                                                \
+                   -M -q                                             \
                    -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
                    -D $(OBJ_DIRECTORY)                               \
                    $(GCC_SWITCHES_LIBRARY)                           \

@@ -343,6 +343,7 @@ RTSES     := $(shell                          \
                SET "PATH=$(PATH)"          && \
                SET "KERNEL_PARENT_PATH=.." && \
                "$(MAKE)"                      \
+                 --debug=n                    \
                  --no-print-directory         \
                  -C $(RTS_DIRECTORY)          \
                  PROBEVARIABLE=RTSES          \
@@ -356,6 +357,7 @@ RTSES     := $(shell                  \
                PATH="$(PATH)"         \
                KERNEL_PARENT_PATH=..  \
                "$(MAKE)"              \
+                 --debug=n            \
                  --no-print-directory \
                  -C $(RTS_DIRECTORY)  \
                  PROBEVARIABLE=RTSES  \
@@ -1640,13 +1642,13 @@ ifeq ($(OSTYPE),cmd)
            "$(MAKE)" $(MAKE_RTS) MULTILIB=%%M multilib                       \
           ) || EXIT /B 1
 else
-	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do                               \
-          (                                                                              \
-           printf "%s\n" ""                                                           && \
-           printf "%s\n" "$(CPU): RTS = $(RTS_BUILD), multilib = \"$$m\""             && \
-           printf "%s\n" ""                                                           && \
-           MAKEFLAGS= RTS=$(RTS_BUILD) "$(MAKE)" $(MAKE_RTS) MULTILIB="$$m" multilib     \
-          ) || exit $$? ;                                                                \
+	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do                              \
+          (                                                                             \
+           printf "%s\n" ""                                                          && \
+           printf "%s\n" "$(CPU): RTS = $(RTS_BUILD), multilib = \"$$m\""            && \
+           printf "%s\n" ""                                                          && \
+           MAKEFLAGS= RTS=$(RTS_BUILD) "$(MAKE)" $(MAKE_RTS) MULTILIB="$$m" multilib    \
+          ) || exit $$? ;                                                               \
         done
 endif
 
