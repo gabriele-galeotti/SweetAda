@@ -225,9 +225,9 @@ pragma Style_Checks (Off);
       G        : Granularity_Type;    -- Granularity
       Base_HI  : Unsigned_8;          -- Segment base address 24 .. 31
    end record
-      with Alignment => SEGMENT_DESCRIPTOR_ALIGNMENT,
-           Bit_Order => Low_Order_First,
-           Size      => 64;
+      with Alignment   => SEGMENT_DESCRIPTOR_ALIGNMENT,
+           Bit_Order   => Low_Order_First,
+           Object_Size => 8 * 8;
    for Segment_Descriptor_Type use record
       Limit_LO at 0 range 0 .. 15;
       Base_LO  at 2 range 0 .. 15;
@@ -269,9 +269,9 @@ pragma Style_Checks (Off);
       Base_LO : Unsigned_16;
       Base_HI : Unsigned_16;
    end record
-      with Alignment => 2,
-           Bit_Order => Low_Order_First,
-           Size      => 48;
+      with Alignment   => 2,
+           Bit_Order   => Low_Order_First,
+           Object_Size => 6 * 8;
    for GDT_Descriptor_Type use record
       Limit   at 0 range 0 .. 15;
       Base_LO at 2 range 0 .. 15;
@@ -298,9 +298,9 @@ pragma Style_Checks (Off);
       Offset_HI : Unsigned_32;            -- Offset to procedure entry point 32 .. 63
       Reserved4 : Unsigned_32;
    end record
-      with Alignment => EXCEPTION_DESCRIPTOR_ALIGNMENT,
-           Bit_Order => Low_Order_First,
-           Size      => 128;
+      with Alignment   => EXCEPTION_DESCRIPTOR_ALIGNMENT,
+           Bit_Order   => Low_Order_First,
+           Object_Size => 16 * 8;
    for Exception_Descriptor_Type use record
       Offset_LO at 0  range 0 .. 15;
       Selector  at 2  range 0 .. 15;
@@ -341,9 +341,9 @@ pragma Style_Checks (Off);
       Base_MI : Unsigned_16;
       Base_HI : Unsigned_32;
    end record
-      with Alignment => 2,
-           Bit_Order => Low_Order_First,
-           Size      => 80;
+      with Alignment   => 2,
+           Bit_Order   => Low_Order_First,
+           Object_Size => 10 * 8;
    for IDT_Descriptor_Type use record
       Limit   at 0 range 0 .. 15;
       Base_LO at 2 range 0 .. 15;
