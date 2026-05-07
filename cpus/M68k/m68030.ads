@@ -237,4 +237,6 @@ pragma Style_Checks (Off);
       (Value : in TCR_Type)
       with Inline => True;
 
+pragma Style_Checks (On);
+
 end M68030;

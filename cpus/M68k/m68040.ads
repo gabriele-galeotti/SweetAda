@@ -320,4 +320,6 @@ pragma Style_Checks (Off);
    procedure PFLUSHA
       with Inline => True;
 
+pragma Style_Checks (On);
+
 end M68040;
