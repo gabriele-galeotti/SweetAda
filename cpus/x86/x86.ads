@@ -275,9 +275,9 @@ pragma Style_Checks (Off);
       G        : Granularity_Type    := GRANULARITY_4k;    -- Granularity
       Base_HI  : Unsigned_8          := 0;                 -- Segment base address 24 .. 31
    end record
-      with Alignment => SEGMENT_DESCRIPTOR_ALIGNMENT,
-           Bit_Order => Low_Order_First,
-           Size      => 64;
+      with Alignment   => SEGMENT_DESCRIPTOR_ALIGNMENT,
+           Bit_Order   => Low_Order_First,
+           Object_Size => 8 * 8;
    for Segment_Descriptor_Type use record
       Limit_LO at 0 range 0 .. 15;
       Base_LO  at 2 range 0 .. 15;
@@ -319,9 +319,9 @@ pragma Style_Checks (Off);
       Base_LO : Unsigned_16 := 0;
       Base_HI : Unsigned_16 := 0;
    end record
-      with Alignment => 2,
-           Bit_Order => Low_Order_First,
-           Size      => 6 * 8;
+      with Alignment   => 2,
+           Bit_Order   => Low_Order_First,
+           Object_Size => 6 * 8;
    for GDT_Descriptor_Type use record
       Limit   at 0 range 0 .. 15;
       Base_LO at 2 range 0 .. 15;
@@ -387,9 +387,9 @@ pragma Style_Checks (Off);
       P         : Boolean;                -- Segment Present flag
       Offset_HI : Unsigned_16;            -- Offset to procedure entry point 16 .. 31
    end record
-      with Alignment => EXCEPTION_DESCRIPTOR_ALIGNMENT,
-           Bit_Order => Low_Order_First,
-           Size      => 64;
+      with Alignment   => EXCEPTION_DESCRIPTOR_ALIGNMENT,
+           Bit_Order   => Low_Order_First,
+           Object_Size => 8 * 8;
    for Exception_Descriptor_Type use record
       Offset_LO at 0 range 0 .. 15;
       Selector  at 2 range 0 .. 15;
@@ -423,9 +423,9 @@ pragma Style_Checks (Off);
       Base_LO : Unsigned_16;
       Base_HI : Unsigned_16;
    end record
-      with Alignment => 2,
-           Bit_Order => Low_Order_First,
-           Size      => 6 * 8;
+      with Alignment   => 2,
+           Bit_Order   => Low_Order_First,
+           Object_Size => 6 * 8;
    for IDT_Descriptor_Type use record
       Limit   at 0 range 0 .. 15;
       Base_LO at 2 range 0 .. 15;
@@ -575,8 +575,8 @@ pragma Style_Checks (Off);
       G   : Boolean; -- Global
       PFA : Bits_20; -- Address of 4KB page frame
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for PTEntry_Type use record
       P   at 0 range  0 ..  0;
       RW  at 0 range  1 ..  1;
@@ -616,8 +616,8 @@ pragma Style_Checks (Off);
             PFA   : Bits_10; -- Address of 4MB page frame
       end case;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for PDEntry_Type use record
       P     at 0 range  0 ..  0;
       RW    at 0 range  1 ..  1;
@@ -799,7 +799,7 @@ pragma Style_Checks (Off);
       Unused : Bits_16;
       EFLAGS : EFLAGS_Type;
    end record
-      with Size => 96;
+      with Object_Size => 12 * 8;
    for Exception_Stack_Frame_Type use record
       EIP    at 0 range  0 .. 31;
       CS     at 4 range  0 .. 15;
