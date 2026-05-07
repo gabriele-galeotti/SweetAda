@@ -47,9 +47,8 @@ package body Console
    ----------------------------------------------------------------------------
 
    procedure Console_Null_Write
-      (C : in Character)
+      (C : in Character with Unreferenced => True)
       is
-      pragma Unreferenced (C);
    begin
       null;
    end Console_Null_Write;
