@@ -23,8 +23,9 @@ function CString_Length
    use type Bits.C.char;
    use type Bits.C.size_t;
    CArray : Bits.C.char_array (Bits.C.size_t)
-      with Address => String_Address,
-           Import  => True;
+      with Address    => String_Address,
+           Import     => True,
+           Convention => Ada;
    Nchars : Bits.C.size_t;
 begin
    Nchars := 0;
