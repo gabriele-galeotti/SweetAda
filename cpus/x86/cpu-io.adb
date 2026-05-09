@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
-with Ada.Unchecked_Conversion;
+with System.Storage_Elements;
 with Definitions;
 with Bits;
 
@@ -31,6 +31,7 @@ package body CPU.IO
    --                                                                        --
    --========================================================================--
 
+   use System.Storage_Elements;
    use System.Machine_Code;
    use Bits;
 
@@ -163,8 +164,6 @@ package body CPU.IO
    -- I/O operations referenced by addresses
    ----------------------------------------------------------------------------
 
-   function To_U32 is new Ada.Unchecked_Conversion (Address, Unsigned_32);
-
    -- Unsigned_8
 
    function IO_Read
@@ -172,7 +171,7 @@ package body CPU.IO
       return Unsigned_8
       is
    begin
-      return PortIn (Unsigned_16 (To_U32 (Port_Address) and Unsigned_16_Mask));
+      return PortIn (Unsigned_16 (To_Integer (Port_Address)) and Unsigned_16_Mask);
    end IO_Read;
 
    procedure IO_Write
@@ -180,7 +179,7 @@ package body CPU.IO
        Value        : in Unsigned_8)
       is
    begin
-      PortOut (Unsigned_16 (To_U32 (Port_Address) and Unsigned_16_Mask), Value);
+      PortOut (Unsigned_16 (To_Integer (Port_Address)) and Unsigned_16_Mask, Value);
    end IO_Write;
 
    -- Unsigned_16
@@ -190,7 +189,7 @@ package body CPU.IO
       return Unsigned_16
       is
    begin
-      return PortIn (Unsigned_16 (To_U32 (Port_Address) and Unsigned_16_Mask));
+      return PortIn (Unsigned_16 (To_Integer (Port_Address)) and Unsigned_16_Mask);
    end IO_Read;
 
    procedure IO_Write
@@ -198,7 +197,7 @@ package body CPU.IO
        Value        : in Unsigned_16)
       is
    begin
-      PortOut (Unsigned_16 (To_U32 (Port_Address) and Unsigned_16_Mask), Value);
+      PortOut (Unsigned_16 (To_Integer (Port_Address)) and Unsigned_16_Mask, Value);
    end IO_Write;
 
    -- Unsigned_32
@@ -208,7 +207,7 @@ package body CPU.IO
       return Unsigned_32
       is
    begin
-      return PortIn (Unsigned_16 (To_U32 (Port_Address) and Unsigned_16_Mask));
+      return PortIn (Unsigned_16 (To_Integer (Port_Address)) and Unsigned_16_Mask);
    end IO_Read;
 
    procedure IO_Write
@@ -216,7 +215,7 @@ package body CPU.IO
        Value        : in Unsigned_32)
       is
    begin
-      PortOut (Unsigned_16 (To_U32 (Port_Address) and Unsigned_16_Mask), Value);
+      PortOut (Unsigned_16 (To_Integer (Port_Address)) and Unsigned_16_Mask, Value);
    end IO_Write;
 
 end CPU.IO;
