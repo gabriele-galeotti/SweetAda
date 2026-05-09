@@ -17,7 +17,6 @@
 
 with System;
 with System.Storage_Elements;
-with Ada.Unchecked_Conversion;
 with Bits;
 
 package body MMU
@@ -83,9 +82,8 @@ package body MMU
       is
       TA  : Unsigned_32;
       TCR : TCR_Type;
-      function To_U32 is new Ada.Unchecked_Conversion (Integer_Address, Unsigned_32);
    begin
-      TA := To_U32 (To_Integer (Table_1 (0)'Address));
+      TA := Unsigned_32 (To_Integer (Table_1 (0)'Address));
       Root_Pointer := (
          TA_LO  => Bits_12 (Shift_Right (LWord (TA), 4)), -- Table Address 4 .. 15
          TA_HI  => HWord (TA),                            -- Table Address 16 .. 31
