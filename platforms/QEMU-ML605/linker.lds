@@ -25,6 +25,7 @@ SECTIONS
                 BYTE(0x00);
                 . = ALIGN(0x10);
                 _etext = .;
+                _vectors_etext = .;
         } > RAM
         /**********************************************************************
          *                                                                    *
@@ -105,6 +106,7 @@ SECTIONS
 /* export to core/linker.ad[s|b] */
 /* LINKERADSB:_stext:SText */
 /* LINKERADSB:_etext:EText */
+/* LINKERADSB:_vectors_etext:Vectors_EText */
 /* LINKERADSB:_sdata:SData */
 /* LINKERADSB:_sbss:SBss   */
 

@@ -16,9 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with Interfaces;
-with Bits;
-with MicroBlaze;
 with XPS;
 
 package ML605
@@ -32,10 +29,6 @@ package ML605
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use Interfaces;
-   use Bits;
-   use MicroBlaze;
    use XPS;
 
    SPI_BASEADDRESS       : constant := 16#40A0_0000#;

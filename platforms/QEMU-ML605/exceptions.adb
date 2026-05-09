@@ -15,8 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System.Machine_Code;
 with System.Storage_Elements;
 with Interfaces;
+with Definitions;
 with Linker;
 with Memory_Functions;
 with ML605;
@@ -33,10 +35,13 @@ package body Exceptions
    --                                                                        --
    --========================================================================--
 
+   use System.Machine_Code;
    use Interfaces;
    use ML605;
 
    package SSE renames System.Storage_Elements;
+
+   CRLF : String renames Definitions.CRLF;
 
    --========================================================================--
    --                                                                        --
@@ -63,11 +68,33 @@ package body Exceptions
    procedure Init
       is
    begin
-      Memory_Functions.Cpymem (
-         SSE.To_Address (Linker.EText), -- .vectors section
-         SSE.To_Address (0),            -- LMB RAM @ 0
-         256
-         );
+      -- Memory_Functions.Cpymem (
+      --   SSE.To_Address (Linker.Vectors_EText), -- .vectors section
+      --   SSE.To_Address (0),                    -- LMB RAM @ 0
+      --   256
+      --   );
+      Asm (
+           Template => ""                         & CRLF &
+                       "        beqid   %2,$L2  " & CRLF &
+                       "        addk    r4,r0,r0" & CRLF &
+                       "$L1:                    " & CRLF &
+                       "        lbu     r5,r4,%0" & CRLF &
+                       "        sb      r5,r4,%1" & CRLF &
+                       "        addik   r4,r4,1 " & CRLF &
+                       "        xor     r8,r4,%2" & CRLF &
+                       "        bnei    r8,$L1  " & CRLF &
+                       "$L2:                    " & CRLF &
+                       "        nop             " & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => [
+                        System.Address'Asm_Input ("r", SSE.To_Address (Linker.Vectors_EText)),
+                        System.Address'Asm_Input ("r", SSE.To_Address (0)),
+                        Unsigned_32'Asm_Input ("r", 256)
+                       ],
+           Clobber  => "r4,r5,r8",
+           Volatile => True
+          );
    end Init;
 
 end Exceptions;

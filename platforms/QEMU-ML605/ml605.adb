@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Interfaces;
 with Definitions;
 
 package body ML605
@@ -28,6 +29,7 @@ package body ML605
    --                                                                        --
    --========================================================================--
 
+   use Interfaces;
    use Definitions;
 
    -- Timers run @ 100 MHz
