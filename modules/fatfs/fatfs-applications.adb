@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with FATFS.Directory;
-with FATFS.Rawfile;
 with FATFS.Textfile;
 with Console;
 

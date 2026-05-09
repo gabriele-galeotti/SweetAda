@@ -199,6 +199,7 @@ package body FATFS.Rawfile
       (D    : in     Descriptor_Type;
        File : in out FCB_Type)
       is
+      pragma Unreferenced (D);
    begin
       if Is_Valid (File) then
          Cluster.Close (File.CCB);
