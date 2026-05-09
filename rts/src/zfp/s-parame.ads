@@ -60,4 +60,8 @@ package System.Parameters is
    --  is that this is the same as type Long_Integer, but this may not be true
    --  of all targets.
 
+   ptr_bits  : constant := Standard'Address_Size;
+   subtype C_Address is System.Address;
+   --  Number of bits in Interfaces.C pointers, normally a standard address
+
 end System.Parameters;
