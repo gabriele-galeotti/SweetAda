@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
-with Ada.Unchecked_Conversion;
+with System.Storage_Elements;
 with Interfaces;
 with Definitions;
 
@@ -32,6 +32,7 @@ package body SPARC
    --========================================================================--
 
    use System.Machine_Code;
+   use System.Storage_Elements;
    use Interfaces;
 
    CRLF : String renames Definitions.CRLF;
@@ -124,14 +125,16 @@ package body SPARC
    procedure TBR_Set
       (TBR_Address : in Address)
       is
-      function To_U32 is new Ada.Unchecked_Conversion (Address, Unsigned_32);
    begin
       Asm (
            Template => ""                           & CRLF &
                        "        wr      %0,0,%%tbr" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => Unsigned_32'Asm_Input ("r", To_U32 (TBR_Address) and 16#FFFF_FFF0#),
+           Inputs   => Integer_Address'Asm_Input (
+                          "r",
+                          To_Integer (TBR_Address) and 16#FFFF_FFF0#
+                          ),
            Clobber  => "",
            Volatile => True
           );
