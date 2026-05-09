@@ -37,6 +37,7 @@ package RISCV_Definitions
 
    ----------------------------------------------------------------------------
    -- The RISC-V Instruction Set Manual
+   -- Volume I: Unprivileged ISA
    -- Volume II: Privileged Architecture
    -- Document Version 20211203
    ----------------------------------------------------------------------------
