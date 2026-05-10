@@ -17,9 +17,10 @@
 
 separate (Malloc)
 function Malloc
-   (Size : size_t)
-   return Address
+   (Size : Interfaces.C.size_t)
+   return Interfaces.C.Extensions.void_ptr
    is
+   use Interfaces.C;
    RSize : size_t;
    P     : Memory_Block_Ptr;
    Q     : Memory_Block_Ptr;

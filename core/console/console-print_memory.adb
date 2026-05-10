@@ -22,7 +22,7 @@ procedure Print_Memory
     Row_Size      : in Row_Size_Type := 16)
    is
    use type SSE.Integer_Address;
-   use type Bits.C.size_t;
+   use type Interfaces.C.size_t;
    IAddress   : SSE.Integer_Address;
    IAddress_H : SSE.Integer_Address; -- row starting address
    IAddress_L : SSE.Integer_Address; -- byte offset in a row
@@ -78,7 +78,7 @@ begin
       Print_NewLine;
       -- compute address of next block of bytes
       -- IAddress_H := @ + SSE.Integer_Address (Row_Size);
-      IAddress_H := IAddress_H + SSE.Integer_Address (Row_Size);
+      IAddress_H := @ + System.Storage_Elements.Integer_Address (Row_Size);
       exit when IAddress_H >= IAddress + SSE.Integer_Address (Data_Size);
       -- update # of bytes remaining
       NBytes := @ - NBytes_Row;

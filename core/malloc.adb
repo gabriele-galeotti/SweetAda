@@ -19,7 +19,6 @@ pragma Restrictions (No_Elaboration_Code);
 
 with System.Storage_Elements;
 with Integer_Math;
-with Memory_Functions;
 with Mutex;
 with Console;
 
@@ -37,19 +36,21 @@ package body Malloc
    use System;
    use System.Storage_Elements;
    use Bits;
-   use Bits.C;
    use Integer_Math;
 
    DEFAULT_ALIGNMENT    : constant := 16;
    -- Size includes Memory_Block tag
-   MEMORYBLOCKTYPE_SIZE : constant := DEFAULT_ALIGNMENT *
-      ((((size_t'Size + Standard'Address_Size) / Storage_Unit) + DEFAULT_ALIGNMENT - 1) / DEFAULT_ALIGNMENT);
+   MEMORYBLOCKTYPE_SIZE : constant :=
+      DEFAULT_ALIGNMENT * ((
+         ((Interfaces.C.size_t'Size + Standard'Address_Size) / Storage_Unit)
+         + DEFAULT_ALIGNMENT - 1
+         ) / DEFAULT_ALIGNMENT);
 
    type Memory_Block_Type;
    type Memory_Block_Ptr is access all Memory_Block_Type;
 
    type Memory_Block_Type is record
-      Size     : size_t;
+      Size     : Interfaces.C.size_t;
       Next_Ptr : Memory_Block_Ptr;
    end record
       with Pack      => True,
@@ -63,9 +64,9 @@ package body Malloc
    Debug : Boolean := False;
 
    function Round_Size
-      (Size      : size_t;
+      (Size      : Interfaces.C.size_t;
        Alignment : Natural)
-      return size_t
+      return Interfaces.C.size_t
       with Inline => True;
 
    --========================================================================--
@@ -80,12 +81,12 @@ package body Malloc
    -- Round_Size
    ----------------------------------------------------------------------------
    function Round_Size
-      (Size      : size_t;
+      (Size      : Interfaces.C.size_t;
        Alignment : Natural)
-      return size_t
+      return Interfaces.C.size_t
       is
    begin
-      return size_t (Roundup (Natural (Size), Alignment));
+      return Interfaces.C.size_t (Roundup (Natural (Size), Alignment));
    end Round_Size;
 
    ----------------------------------------------------------------------------
@@ -124,7 +125,7 @@ package body Malloc
    -- Malloc
    ----------------------------------------------------------------------------
    function Malloc
-      (Size : size_t)
+      (Size : Interfaces.C.size_t)
       return Address
       is
    separate;
@@ -133,7 +134,7 @@ package body Malloc
    -- Free
    ----------------------------------------------------------------------------
    procedure Free
-      (Memory_Address : in Address)
+      (Memory_Address : in Interfaces.C.Extensions.void_ptr)
       is
    separate;
 
@@ -141,8 +142,8 @@ package body Malloc
    -- Calloc
    ----------------------------------------------------------------------------
    function Calloc
-      (Nmemb : size_t;
-       Size  : size_t)
+      (Nmemb : Interfaces.C.size_t;
+       Size  : Interfaces.C.size_t)
       return Address
       is
    separate;
@@ -151,8 +152,8 @@ package body Malloc
    -- Realloc
    ----------------------------------------------------------------------------
    function Realloc
-      (Memory_Address : Address;
-       Size           : size_t)
+      (Memory_Address : Interfaces.C.Extensions.void_ptr;
+       Size           : Interfaces.C.size_t)
       return Address
       is
    separate;

@@ -269,7 +269,7 @@ package body LLutils
    ----------------------------------------------------------------------------
    function CString_Length
       (String_Address : System.Address)
-      return Bits.C.size_t
+      return Interfaces.C.size_t
       is
    separate;
 

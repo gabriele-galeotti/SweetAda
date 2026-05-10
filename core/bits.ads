@@ -18,6 +18,7 @@
 with System;
 with System.Storage_Elements;
 with Interfaces;
+with Interfaces.C;
 
 package Bits
    with Pure       => True,
@@ -80,7 +81,7 @@ package Bits
    type Bitsize is (BITNONE, BIT8, BIT16, BIT32, BIT64);
 
    -- Bytesize is a modular type representing size in bytes of large objects
-   type Bytesize is mod 2**Standard'Address_Size;
+   subtype Bytesize is Interfaces.C.size_t;
 
    ----------------------------------------------------------------------------
    -- Fundamental bit-level types and constants.

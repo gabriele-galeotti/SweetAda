@@ -17,6 +17,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 
+with System;
 with Bits;
 
 package body C_Wrappers
@@ -30,8 +31,8 @@ package body C_Wrappers
    --                                                                        --
    --========================================================================--
 
+   use type Interfaces.C.int;
    use type Bits.Bits_8;
-   use type Bits.C.int;
 
    type Ctype_Idx_Type is range 0 .. 256;
 
@@ -309,14 +310,14 @@ package body C_Wrappers
            External_Name => "_CTYPE_character_table";
 
    function To_CtypeIdx
-      (c : Bits.C.int)
+      (c : Interfaces.C.int)
       return Ctype_Idx_Type
       with Inline => True;
 
    function Is_Something
-      (c : Bits.C.int;
+      (c : Interfaces.C.int;
        x : Bits.Bits_8)
-      return Bits.C.int
+      return Interfaces.C.int
       with Inline => True;
 
    --========================================================================--
@@ -328,7 +329,7 @@ package body C_Wrappers
    --========================================================================--
 
    function To_CtypeIdx
-      (c : Bits.C.int)
+      (c : Interfaces.C.int)
       return Ctype_Idx_Type
       is
    begin
@@ -336,12 +337,12 @@ package body C_Wrappers
    end To_CtypeIdx;
 
    function Is_Something
-      (c : Bits.C.int;
+      (c : Interfaces.C.int;
        x : Bits.Bits_8)
-      return Bits.C.int
+      return Interfaces.C.int
       is
    begin
-      return Bits.C.int (Ctype_Character_Table (To_CtypeIdx (c)) and x);
+      return Interfaces.C.int (Ctype_Character_Table (To_CtypeIdx (c)) and x);
    end Is_Something;
 
    ----------------------------------------------------------------------------
@@ -349,96 +350,96 @@ package body C_Wrappers
    ----------------------------------------------------------------------------
 
    function Is_Alnum
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       is
    begin
       return Is_Something (c, Bits.Bits_8'(UCASE or LCASE or DIGIT));
    end Is_Alnum;
 
    function Is_Alpha
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       is
    begin
       return Is_Something (c, Bits.Bits_8'(UCASE or LCASE));
    end Is_Alpha;
 
    function Is_Cntrl
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       is
    begin
       return Is_Something (c, Bits.Bits_8'(CNTRL));
    end Is_Cntrl;
 
    function Is_Digit
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       is
    begin
       return Is_Something (c, Bits.Bits_8'(DIGIT));
    end Is_Digit;
 
    function Is_Graph
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       is
    begin
       return Is_Something (c, Bits.Bits_8'(UCASE or LCASE or DIGIT or PUNCT));
    end Is_Graph;
 
    function Is_Lower
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       is
    begin
       return Is_Something (c, Bits.Bits_8'(LCASE));
    end Is_Lower;
 
    function Is_Print
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       is
    begin
       return Is_Something (c, Bits.Bits_8'(UCASE or LCASE or DIGIT or SPACE or PUNCT));
    end Is_Print;
 
    function Is_Punct
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       is
    begin
       return Is_Something (c, Bits.Bits_8'(PUNCT));
    end Is_Punct;
 
    function Is_Space
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       is
    begin
       return Is_Something (c, Bits.Bits_8'(BLANK));
    end Is_Space;
 
    function Is_Upper
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       is
    begin
       return Is_Something (c, Bits.Bits_8'(UCASE));
    end Is_Upper;
 
    function Is_XDigit
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       is
    begin
       return Is_Something (c, Bits.Bits_8'(DIGIT or DIGIX));
    end Is_XDigit;
 
    function Is_ASCII
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       is
       Idx : Ctype_Idx_Type;
    begin
@@ -447,11 +448,11 @@ package body C_Wrappers
    end Is_ASCII;
 
    function To_ASCII
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       is
       Idx   : Ctype_Idx_Type;
-      Value : Bits.C.int := c;
+      Value : Interfaces.C.int := c;
    begin
       Idx := To_CtypeIdx (c);
       if Idx > 16#80# then
@@ -461,10 +462,10 @@ package body C_Wrappers
    end To_ASCII;
 
    function To_Lower
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       is
-      Value : Bits.C.int := c;
+      Value : Interfaces.C.int := c;
    begin
       if Is_Upper (c) /= 0 then
          Value := @ + 16#20#;
@@ -473,10 +474,10 @@ package body C_Wrappers
    end To_Lower;
 
    function To_Upper
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       is
-      Value : Bits.C.int := c;
+      Value : Interfaces.C.int := c;
    begin
       if Is_Lower (c) /= 0 then
          Value := @ - 16#20#;
@@ -489,10 +490,10 @@ package body C_Wrappers
    ----------------------------------------------------------------------------
 
    procedure Ada_Print_Character
-      (c : in Bits.C.char)
+      (c : in Interfaces.C.char)
       is
       procedure Print
-         (cc : in Bits.C.char)
+         (cc : in Interfaces.C.char)
          with Import        => True,
               Convention    => Ada,
               External_Name => "console__print__cchar";
@@ -516,11 +517,11 @@ package body C_Wrappers
    end Ada_Abort;
 
    function Ada_Malloc
-      (S : Bits.C.size_t)
+      (S : Interfaces.C.size_t)
       return System.Address
       is
       function Malloc
-         (SS : Bits.C.size_t)
+         (SS : Interfaces.C.size_t)
          return System.Address
          with Import        => True,
               Convention    => C,
@@ -542,13 +543,13 @@ package body C_Wrappers
    end Ada_Free;
 
    function Ada_Calloc
-      (N : Bits.C.size_t;
-       S : Bits.C.size_t)
+      (N : Interfaces.C.size_t;
+       S : Interfaces.C.size_t)
       return System.Address
       is
       function Calloc
-         (NN : Bits.C.size_t;
-          SS : Bits.C.size_t)
+         (NN : Interfaces.C.size_t;
+          SS : Interfaces.C.size_t)
          return System.Address
          with Import        => True,
               Convention    => Ada,
@@ -559,12 +560,12 @@ package body C_Wrappers
 
    function Ada_Realloc
       (A : System.Address;
-       S : Bits.C.size_t)
+       S : Interfaces.C.size_t)
       return System.Address
       is
       function Realloc
          (AA : System.Address;
-          SS : Bits.C.size_t)
+          SS : Interfaces.C.size_t)
          return System.Address
          with Import        => True,
               Convention    => Ada,

@@ -20,8 +20,8 @@ pragma Restrictions (No_Elaboration_Code);
 with System;
 with System.Storage_Elements;
 with Interfaces;
+with Interfaces.C;
 with Bits;
-with Bits.C;
 
 package LLutils
    with SPARK_Mode => On
@@ -185,7 +185,7 @@ package LLutils
    ----------------------------------------------------------------------------
    function CString_Length
       (String_Address : System.Address)
-      return Bits.C.size_t;
+      return Interfaces.C.size_t;
 
    ----------------------------------------------------------------------------
    -- Atomic clear

@@ -18,6 +18,8 @@
 pragma Restrictions (No_Elaboration_Code);
 
 with Ada.Unchecked_Conversion;
+with System.Address_To_Access_Conversions;
+with Interfaces.C.Extensions;
 
 package body Memory_Functions
    is
@@ -33,44 +35,41 @@ package body Memory_Functions
    use type System.Address;
 
    -- generic external memory area
-   subtype Memory_Area_Type is Bits.C.char_array (Bits.C.size_t);
-   type Memory_Area_Ptr is access all Memory_Area_Type;
-   pragma No_Strict_Aliasing (Memory_Area_Ptr);
-
-   function To_CSizeT is new Ada.Unchecked_Conversion (Bits.Bytesize, Bits.C.size_t);
+   subtype Memory_Area_Type is Interfaces.C.char_array (Interfaces.C.size_t);
+   package MAP is new System.Address_To_Access_Conversions (Memory_Area_Type);
 
    function EMemcmp
-      (S1 : System.Address;
-       S2 : System.Address;
-       N  : Bits.C.size_t)
-      return Bits.C.int
+      (S1 : Interfaces.C.Extensions.void_ptr;
+       S2 : Interfaces.C.Extensions.void_ptr;
+       N  : Interfaces.C.size_t)
+      return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "memcmp";
 
    function EMemcpy
-      (S1 : System.Address;
-       S2 : System.Address;
-       N  : Bits.C.size_t)
-      return System.Address
+      (S1 : Interfaces.C.Extensions.void_ptr;
+       S2 : Interfaces.C.Extensions.void_ptr;
+       N  : Interfaces.C.size_t)
+      return Interfaces.C.Extensions.void_ptr
       with Export        => True,
            Convention    => C,
            External_Name => "memcpy";
 
    function EMemmove
-      (S1 : System.Address;
-       S2 : System.Address;
-       N  : Bits.C.size_t)
-      return System.Address
+      (S1 : Interfaces.C.Extensions.void_ptr;
+       S2 : Interfaces.C.Extensions.void_ptr;
+       N  : Interfaces.C.size_t)
+      return Interfaces.C.Extensions.void_ptr
       with Export        => True,
            Convention    => C,
            External_Name => "memmove";
 
    function EMemset
-      (S : System.Address;
-       C : Bits.C.int;
-       N : Bits.C.size_t)
-      return System.Address
+      (S : Interfaces.C.Extensions.void_ptr;
+       C : Interfaces.C.int;
+       N : Interfaces.C.size_t)
+      return Interfaces.C.Extensions.void_ptr
       with Export        => True,
            Convention    => C,
            External_Name => "memset";
@@ -83,12 +82,6 @@ package body Memory_Functions
    --                                                                        --
    --========================================================================--
 
-   --
-   -- NOTE: memory functions have pragma Suppress (Access_Check) because some
-   -- targets (most notably MicroBlaze, during vectors relocation) want to
-   -- write at address 0 (which is an invalid access value)
-   --
-
    ----------------------------------------------------------------------------
    -- Overridable library versions
    ----------------------------------------------------------------------------
@@ -97,10 +90,10 @@ package body Memory_Functions
    -- EMemcmp
    ----------------------------------------------------------------------------
    function EMemcmp
-      (S1 : System.Address;
-       S2 : System.Address;
-       N  : Bits.C.size_t)
-      return Bits.C.int
+      (S1 : Interfaces.C.Extensions.void_ptr;
+       S2 : Interfaces.C.Extensions.void_ptr;
+       N  : Interfaces.C.size_t)
+      return Interfaces.C.int
       is
    separate;
 
@@ -108,10 +101,10 @@ package body Memory_Functions
    -- EMemcpy
    ----------------------------------------------------------------------------
    function EMemcpy
-      (S1 : System.Address;
-       S2 : System.Address;
-       N  : Bits.C.size_t)
-      return System.Address
+      (S1 : Interfaces.C.Extensions.void_ptr;
+       S2 : Interfaces.C.Extensions.void_ptr;
+       N  : Interfaces.C.size_t)
+      return Interfaces.C.Extensions.void_ptr
       is
    separate;
 
@@ -119,10 +112,10 @@ package body Memory_Functions
    -- EMemmove
    ----------------------------------------------------------------------------
    function EMemmove
-      (S1 : System.Address;
-       S2 : System.Address;
-       N  : Bits.C.size_t)
-      return System.Address
+      (S1 : Interfaces.C.Extensions.void_ptr;
+       S2 : Interfaces.C.Extensions.void_ptr;
+       N  : Interfaces.C.size_t)
+      return Interfaces.C.Extensions.void_ptr
       is
    separate;
 
@@ -130,10 +123,10 @@ package body Memory_Functions
    -- EMemset
    ----------------------------------------------------------------------------
    function EMemset
-      (S : System.Address;
-       C : Bits.C.int;
-       N : Bits.C.size_t)
-      return System.Address
+      (S : Interfaces.C.Extensions.void_ptr;
+       C : Interfaces.C.int;
+       N : Interfaces.C.size_t)
+      return Interfaces.C.Extensions.void_ptr
       is
    separate;
 
@@ -147,14 +140,14 @@ package body Memory_Functions
    function Memcmp
       (S1 : System.Address;
        S2 : System.Address;
-       N  : Bits.C.size_t)
-      return Bits.C.int
+       N  : Interfaces.C.size_t)
+      return Interfaces.C.int
       is
       function MC
-         (A1 : System.Address;
-          A2 : System.Address;
-          N  : Bits.C.size_t)
-         return Bits.C.int
+         (A1 : Interfaces.C.Extensions.void_ptr;
+          A2 : Interfaces.C.Extensions.void_ptr;
+          N  : Interfaces.C.size_t)
+         return Interfaces.C.int
          with Import        => True,
               Convention    => Intrinsic,
               External_Name => "__builtin_memcmp";
@@ -168,14 +161,14 @@ package body Memory_Functions
    function Memcpy
       (S1 : System.Address;
        S2 : System.Address;
-       N  : Bits.C.size_t)
+       N  : Interfaces.C.size_t)
       return System.Address
       is
       function MC
-         (A1 : System.Address;
-          A2 : System.Address;
-          N  : Bits.C.size_t)
-         return System.Address
+         (A1 : Interfaces.C.Extensions.void_ptr;
+          A2 : Interfaces.C.Extensions.void_ptr;
+          N  : Interfaces.C.size_t)
+         return Interfaces.C.Extensions.void_ptr
          with Import        => True,
               Convention    => Intrinsic,
               External_Name => "__builtin_memcpy";
@@ -189,13 +182,13 @@ package body Memory_Functions
    function Memmove
       (S1 : System.Address;
        S2 : System.Address;
-       N  : Bits.C.size_t)
+       N  : Interfaces.C.size_t)
       return System.Address
       is
       function MM
-         (A1 : System.Address;
-          A2 : System.Address;
-          N  : Bits.C.size_t)
+         (A1 : Interfaces.C.Extensions.void_ptr;
+          A2 : Interfaces.C.Extensions.void_ptr;
+          N  : Interfaces.C.size_t)
          return System.Address
          with Import        => True,
               Convention    => Intrinsic,
@@ -208,15 +201,15 @@ package body Memory_Functions
    -- Memset
    ----------------------------------------------------------------------------
    function Memset
-      (S : System.Address;
-       C : Bits.C.int;
-       N : Bits.C.size_t)
+      (S : Interfaces.C.Extensions.void_ptr;
+       C : Interfaces.C.int;
+       N : Interfaces.C.size_t)
       return System.Address
       is
       function MS
          (A : System.Address;
-          X : Bits.C.int;
-          N : Bits.C.size_t)
+          X : Interfaces.C.int;
+          N : Interfaces.C.size_t)
          return System.Address
          with Import        => True,
               Convention    => Intrinsic,
@@ -239,7 +232,7 @@ package body Memory_Functions
       Src  : constant System.Address := S1;
       Dest : constant System.Address := S2;
    begin
-      R := Integer (Memcmp (Dest, Src, To_CSizeT (N)));
+      R := Integer (Memcmp (Dest, Src, Interfaces.C.size_t (N)));
    end Cmpmem;
 
    ----------------------------------------------------------------------------
@@ -256,7 +249,7 @@ package body Memory_Functions
       Dest   : constant System.Address := S2;
       Unused : System.Address with Unreferenced => True;
    begin
-      Unused := Memcpy (Dest, Src, To_CSizeT (N));
+      Unused := Memcpy (Dest, Src, Interfaces.C.size_t (N));
    end Cpymem;
 
    ----------------------------------------------------------------------------
@@ -273,7 +266,7 @@ package body Memory_Functions
       Dest   : constant System.Address := S2;
       Unused : System.Address with Unreferenced => True;
    begin
-      Unused := Memmove (Dest, Src, To_CSizeT (N));
+      Unused := Memmove (Dest, Src, Interfaces.C.size_t (N));
    end Movemem;
 
    ----------------------------------------------------------------------------
@@ -288,7 +281,7 @@ package body Memory_Functions
       is
       Unused : System.Address with Unreferenced => True;
    begin
-      Unused := Memset (S, Bits.C.int (V), To_CSizeT (N));
+      Unused := Memset (S, Interfaces.C.int (V), Interfaces.C.size_t (N));
    end Setmem;
 
 end Memory_Functions;

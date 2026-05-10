@@ -20,8 +20,8 @@ pragma Restrictions (No_Elaboration_Code);
 with System;
 with System.Storage_Elements;
 with Interfaces;
+with Interfaces.C;
 with Bits;
-with Bits.C;
 
 package Console
    with SPARK_Mode => On
@@ -69,7 +69,7 @@ package Console
    -- Print (cchar)
    ----------------------------------------------------------------------------
    procedure Print
-      (c : in Bits.C.char)
+      (c : in Interfaces.C.char)
       with Export        => True,
            Convention    => Ada,
            External_Name => "console__print__cchar";
@@ -318,12 +318,12 @@ package Console
    -- Print[_sizet]
    ----------------------------------------------------------------------------
    procedure Print_sizet
-      (Value  : in Bits.C.size_t;
+      (Value  : in Interfaces.C.size_t;
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "");
    procedure Print
-      (Value  : in Bits.C.size_t;
+      (Value  : in Interfaces.C.size_t;
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
@@ -362,7 +362,7 @@ package Console
    ----------------------------------------------------------------------------
    procedure Print_ASCIIZ_String
       (String_Address : in System.Address;
-       Limit          : in Bits.C.size_t := Maximum_String_Length;
+       Limit          : in Bits.Bytesize := Maximum_String_Length;
        NL             : in Boolean := False;
        Prefix         : in String := "";
        Suffix         : in String := "");

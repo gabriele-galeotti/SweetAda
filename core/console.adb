@@ -75,7 +75,7 @@ package body Console
    -- Print (Bits.C.char)
    ----------------------------------------------------------------------------
    procedure Print
-      (c : in Bits.C.char)
+      (c : in Interfaces.C.char)
       is
    separate;
 
@@ -274,7 +274,7 @@ package body Console
    -- Print_sizet
    ----------------------------------------------------------------------------
    procedure Print_sizet
-      (Value  : in Bits.C.size_t;
+      (Value  : in Interfaces.C.size_t;
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
@@ -309,7 +309,7 @@ package body Console
    ----------------------------------------------------------------------------
    procedure Print_ASCIIZ_String
       (String_Address : in System.Address;
-       Limit          : in Bits.C.size_t := Maximum_String_Length;
+       Limit          : in Interfaces.C.size_t := Maximum_String_Length;
        NL             : in Boolean := False;
        Prefix         : in String := "";
        Suffix         : in String := "")

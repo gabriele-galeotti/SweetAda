@@ -17,8 +17,8 @@
 
 pragma Restrictions (No_Elaboration_Code);
 
-with System;
-with Bits.C;
+with Interfaces.C;
+with Interfaces.C.Extensions;
 
 package C_Wrappers
    with SPARK_Mode => On
@@ -37,106 +37,106 @@ package C_Wrappers
    ----------------------------------------------------------------------------
 
    function Is_Alnum
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "isalnum";
 
    function Is_Alpha
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "isalpha";
 
    function Is_Cntrl
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "iscntrl";
 
    function Is_Digit
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "isdigit";
 
    function Is_Graph
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "isgraph";
 
    function Is_Lower
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "islower";
 
    function Is_Print
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "isprint";
 
    function Is_Punct
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "ispunct";
 
    function Is_Space
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "isspace";
 
    function Is_Upper
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "isupper";
 
    function Is_XDigit
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "isxdigit";
 
    function Is_ASCII
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "isascii";
 
    function To_ASCII
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "toascii";
 
    function To_Lower
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "tolower";
 
    function To_Upper
-      (c : Bits.C.int)
-      return Bits.C.int
+      (c : Interfaces.C.int)
+      return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "toupper";
@@ -145,7 +145,7 @@ package C_Wrappers
    -- ERRNO
    ----------------------------------------------------------------------------
 
-   Errno : Bits.C.int
+   Errno : Interfaces.C.int
       with Volatile      => True,
            Export        => True,
            Convention    => C,
@@ -156,7 +156,7 @@ package C_Wrappers
    ----------------------------------------------------------------------------
 
    procedure Ada_Print_Character
-      (c : in Bits.C.char)
+      (c : in Interfaces.C.char)
       with Export        => True,
            Convention    => C,
            External_Name => "ada_print_character";
@@ -172,30 +172,30 @@ package C_Wrappers
            No_Return     => True;
 
    function Ada_Malloc
-      (S : Bits.C.size_t)
-      return System.Address
+      (S : Interfaces.C.size_t)
+      return Interfaces.C.Extensions.void_ptr
       with Export        => True,
            Convention    => C,
            External_Name => "ada_malloc";
 
    procedure Ada_Free
-      (A : in System.Address)
+      (A : in Interfaces.C.Extensions.void_ptr)
       with Export        => True,
            Convention    => C,
            External_Name => "ada_free";
 
    function Ada_Calloc
-      (N : Bits.C.size_t;
-       S : Bits.C.size_t)
-      return System.Address
+      (N : Interfaces.C.size_t;
+       S : Interfaces.C.size_t)
+      return Interfaces.C.Extensions.void_ptr
       with Export        => True,
            Convention    => C,
            External_Name => "ada_calloc";
 
    function Ada_Realloc
-      (A : System.Address;
-       S : Bits.C.size_t)
-      return System.Address
+      (A : Interfaces.C.Extensions.void_ptr;
+       S : Interfaces.C.size_t)
+      return Interfaces.C.Extensions.void_ptr
       with Export        => True,
            Convention    => C,
            External_Name => "ada_realloc";

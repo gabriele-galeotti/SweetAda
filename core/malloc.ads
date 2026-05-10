@@ -18,8 +18,9 @@
 pragma Restrictions (No_Elaboration_Code);
 
 with System;
+with Interfaces.C;
+with Interfaces.C.Extensions;
 with Bits;
-with Bits.C;
 
 package Malloc
    with SPARK_Mode => On
@@ -45,8 +46,8 @@ package Malloc
    -- Malloc
    ----------------------------------------------------------------------------
    function Malloc
-      (Size : Bits.C.size_t)
-      return System.Address
+      (Size : Interfaces.C.size_t)
+      return Interfaces.C.Extensions.void_ptr
       with Export        => True,
            Convention    => C,
            External_Name => "__gnat_malloc";
@@ -55,7 +56,7 @@ package Malloc
    -- Free
    ----------------------------------------------------------------------------
    procedure Free
-      (Memory_Address : in System.Address)
+      (Memory_Address : in Interfaces.C.Extensions.void_ptr)
       with Export        => True,
            Convention    => C,
            External_Name => "__gnat_free";
@@ -64,9 +65,9 @@ package Malloc
    -- Calloc
    ----------------------------------------------------------------------------
    function Calloc
-      (Nmemb : Bits.C.size_t;
-       Size  : Bits.C.size_t)
-      return System.Address
+      (Nmemb : Interfaces.C.size_t;
+       Size  : Interfaces.C.size_t)
+      return Interfaces.C.Extensions.void_ptr
       with Export        => True,
            Convention    => Ada,
            External_Name => "malloc__calloc";
@@ -78,9 +79,9 @@ package Malloc
    -- Realloc (Memory_Address, 0) is the same as Free (Memory_Address)
    ----------------------------------------------------------------------------
    function Realloc
-      (Memory_Address : System.Address;
-       Size           : Bits.C.size_t)
-      return System.Address
+      (Memory_Address : Interfaces.C.Extensions.void_ptr;
+       Size           : Interfaces.C.size_t)
+      return Interfaces.C.Extensions.void_ptr
       with Export        => True,
            Convention    => Ada,
            External_Name => "malloc__realloc";

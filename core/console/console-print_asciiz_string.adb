@@ -18,25 +18,23 @@
 separate (Console)
 procedure Print_ASCIIZ_String
    (String_Address : in System.Address;
-    Limit          : in Bits.C.size_t := Maximum_String_Length;
+    Limit          : in Bits.Bytesize := Maximum_String_Length;
     NL             : in Boolean := False;
     Prefix         : in String := "";
     Suffix         : in String := "")
    is
    use type System.Address;
    use type SSE.Storage_Offset;
-   use type Bits.C.char;
-   use type Bits.C.size_t;
-   nul : constant Bits.C.char := Bits.C.char'First;
-   SA  : System.Address := String_Address;
+   use Interfaces.C;
+   SA : System.Address := String_Address;
 begin
    if Prefix'Length /= 0 then
       Print (Prefix);
    end if;
    if SA /= System.Null_Address then
-      for Index in Bits.C.size_t range 0 .. Limit - 1 loop
+      for Index in size_t range 0 .. Limit - 1 loop
          declare
-            c : aliased Bits.C.char
+            c : aliased char
                with Address    => SA,
                     Import     => True,
                     Convention => Ada;

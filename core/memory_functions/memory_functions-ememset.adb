@@ -15,20 +15,20 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Ada.Unchecked_Conversion;
+
 separate (Memory_Functions)
 function EMemset
-   (S : System.Address;
-    C : Bits.C.int;
-    N : Bits.C.size_t)
-   return System.Address
+   (S : Interfaces.C.Extensions.void_ptr;
+    C : Interfaces.C.int;
+    N : Interfaces.C.size_t)
+   return Interfaces.C.Extensions.void_ptr
    is
-   pragma Suppress (Access_Check);
-   use type Bits.Bytesize;
-   type int_mod is mod 2**Bits.C.int'Size;
-   function To_im is new Ada.Unchecked_Conversion (Bits.C.int, int_mod);
-   function To_MAP is new Ada.Unchecked_Conversion (System.Address, Memory_Area_Ptr);
-   P  : constant Memory_Area_Ptr := To_MAP (S);
-   Ic : Bits.C.char;
+   use Interfaces.C;
+   type int_mod is mod 2**int'Size;
+   P  : constant MAP.Object_Pointer := MAP.To_Pointer (S);
+   Ic : char;
+   function To_im is new Ada.Unchecked_Conversion (int, int_mod);
 begin
    -- avoid underflow since size_t is a modular type
    if N > 0 then
@@ -36,7 +36,7 @@ begin
       -- modular type in order to avoid warnings on implicit conditionals
       -- when applying the mod operation which restricts output range to
       -- char type values
-      Ic := Bits.C.char'Val (To_im (C) mod 2**Bits.C.char'Size);
+      Ic := char'Val (To_im (C) mod 2**char'Size);
       for Index in 0 .. N - 1 loop
          P.all (Index) := Ic;
       end loop;

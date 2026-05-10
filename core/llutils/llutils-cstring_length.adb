@@ -18,19 +18,18 @@
 separate (LLutils)
 function CString_Length
    (String_Address : System.Address)
-   return Bits.C.size_t
+   return Interfaces.C.size_t
    is
-   use type Bits.C.char;
-   use type Bits.C.size_t;
-   CArray : Bits.C.char_array (Bits.C.size_t)
+   use Interfaces.C;
+   CArray : char_array (size_t)
       with Address    => String_Address,
            Import     => True,
            Convention => Ada;
-   Nchars : Bits.C.size_t;
+   Nchars : size_t;
 begin
    Nchars := 0;
    loop
-      exit when CArray (Nchars) = Bits.C.nul;
+      exit when CArray (Nchars) = nul;
       Nchars := @ + 1;
    end loop;
    return Nchars;

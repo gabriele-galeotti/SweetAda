@@ -15,17 +15,21 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Memory_Functions;
+
 separate (Malloc)
 function Realloc
-   (Memory_Address : Address;
-    Size           : size_t)
+   (Memory_Address : Interfaces.C.Extensions.void_ptr;
+    Size           : Interfaces.C.size_t)
    return Address
    is
+   use Interfaces.C;
+   use Interfaces.C.Extensions;
    Memory_Block         : aliased Memory_Block_Type
       with Address    => Memory_Address - MEMORYBLOCKTYPE_SIZE, -- uncover the data structure
            Import     => True,
            Convention => Ada;
-   Memory_Block_Address : Address;
+   Memory_Block_Address : void_ptr;
    RSize                : size_t;
    P                    : Memory_Block_Ptr;
    Q                    : Memory_Block_Ptr;

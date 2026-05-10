@@ -17,16 +17,14 @@
 
 separate (Memory_Functions)
 function EMemcpy
-   (S1 : System.Address;
-    S2 : System.Address;
-    N  : Bits.C.size_t)
-   return System.Address
+   (S1 : Interfaces.C.Extensions.void_ptr;
+    S2 : Interfaces.C.Extensions.void_ptr;
+    N  : Interfaces.C.size_t)
+   return Interfaces.C.Extensions.void_ptr
    is
-   pragma Suppress (Access_Check);
-   use type Bits.Bytesize;
-   function To_MAP is new Ada.Unchecked_Conversion (System.Address, Memory_Area_Ptr);
-   P_S1 : constant Memory_Area_Ptr := To_MAP (S1);
-   P_S2 : constant Memory_Area_Ptr := To_MAP (S2);
+   use Interfaces.C;
+   P_S1 : constant MAP.Object_Pointer := MAP.To_Pointer (S1);
+   P_S2 : constant MAP.Object_Pointer := MAP.To_Pointer (S2);
 begin
    -- avoid underflow since size_t is a modular type
    if N > 0 then

@@ -19,8 +19,8 @@ pragma Restrictions (No_Elaboration_Code);
 
 with System;
 with Interfaces;
+with Interfaces.C;
 with Bits;
-with Bits.C;
 
 package Memory_Functions
    with SPARK_Mode => On
@@ -42,28 +42,28 @@ package Memory_Functions
    function Memcmp
       (S1 : System.Address;
        S2 : System.Address;
-       N  : Bits.C.size_t)
-      return Bits.C.int
+       N  : Interfaces.C.size_t)
+      return Interfaces.C.int
       with Inline => True;
 
    function Memcpy
       (S1 : System.Address;
        S2 : System.Address;
-       N  : Bits.C.size_t)
+       N  : Interfaces.C.size_t)
       return System.Address
       with Inline => True;
 
    function Memmove
       (S1 : System.Address;
        S2 : System.Address;
-       N  : Bits.C.size_t)
+       N  : Interfaces.C.size_t)
       return System.Address
       with Inline => True;
 
    function Memset
       (S : System.Address;
-       C : Bits.C.int;
-       N : Bits.C.size_t)
+       C : Interfaces.C.int;
+       N : Interfaces.C.size_t)
       return System.Address
       with Inline => True;
 

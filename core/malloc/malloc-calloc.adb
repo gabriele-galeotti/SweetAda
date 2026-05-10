@@ -15,14 +15,18 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Memory_Functions;
+
 separate (Malloc)
 function Calloc
-   (Nmemb : size_t;
-    Size  : size_t)
-   return Address
+   (Nmemb : Interfaces.C.size_t;
+    Size  : Interfaces.C.size_t)
+   return Interfaces.C.Extensions.void_ptr
    is
+   use Interfaces.C;
+   use Interfaces.C.Extensions;
    Nbytes         : size_t;
-   Memory_Address : Address;
+   Memory_Address : void_ptr;
 begin
    Nbytes := Nmemb * Size;
    Memory_Address := Malloc (Nbytes);

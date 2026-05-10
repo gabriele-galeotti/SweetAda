@@ -17,7 +17,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 
-with Bits.C;
+with Interfaces.C;
 
 package body Core.Expanded
    is
@@ -66,11 +66,11 @@ package body Core.Expanded
        Length : in System.Address;
        Ptr    : in System.Address with Unreferenced => True)
       is
-      use type Bits.C.char_array;
-      GNAT_INIT_SCALARS_String : constant Bits.C.char_array :=
-         "GNAT_INIT_SCALARS" & Bits.C.nul
+      use Interfaces.C;
+      GNAT_INIT_SCALARS_String : constant char_array :=
+         "GNAT_INIT_SCALARS" & nul
          with Unreferenced => True;
-      L                        : aliased Bits.C.size_t
+      L                        : aliased size_t
          with Address => Length,
               Import  => True;
    begin
