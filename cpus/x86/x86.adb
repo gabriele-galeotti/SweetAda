@@ -364,6 +364,24 @@ package body x86
    end IDT_Set_Handler;
 
    ----------------------------------------------------------------------------
+   -- LTR
+   ----------------------------------------------------------------------------
+   procedure LTR
+      (Selector : in Selector_Type)
+      is
+   begin
+      Asm (
+           Template => ""                   & CRLF &
+                       "        ltr     %0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Selector_Type'Asm_Input ("r", Selector),
+           Clobber  => "",
+           Volatile => True
+          );
+   end LTR;
+
+   ----------------------------------------------------------------------------
    -- Select Address Bits
    ----------------------------------------------------------------------------
 
