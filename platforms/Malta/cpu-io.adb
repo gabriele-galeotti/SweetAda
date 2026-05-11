@@ -17,8 +17,6 @@
 
 with System.Storage_Elements;
 with MMIO;
--- with MIPS;
--- with PIIX4;
 with Malta;
 
 package body CPU.IO
