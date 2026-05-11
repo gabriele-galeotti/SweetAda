@@ -196,7 +196,6 @@ pragma Style_Checks (Off);
 
    -- 20.2 Register Maps
 
--- pragma Warnings (Off, "* bits of ""GT64120_Type"" unused");
    type GT64120_Type is record
       CPU_Interface_Configuration      : CPU_Interface_Configuration_Type with Volatile_Full_Access => True;
       PCI_0_IO_Low_Decode_Address      : PCI_Low_Decode_Address_Type      with Volatile_Full_Access => True;
@@ -251,7 +250,6 @@ pragma Style_Checks (Off);
       PCI_0_Configuration_Address      at 16#CF8# range 0 .. 31;
       PCI_0_Configuration_Data_Virtual at 16#CFC# range 0 .. 31;
    end record;
--- pragma Warnings (On, "* bits of ""GT64120_Type"" unused");
 
    -- Subprograms
 
