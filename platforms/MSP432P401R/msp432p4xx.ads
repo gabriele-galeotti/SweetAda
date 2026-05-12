@@ -3792,13 +3792,203 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 16.3.1 AESACTL0 Register
+
+   AESOPx_ENCRYPT     : constant := 2#00#; -- Encryption
+   AESOPx_DECRYPT     : constant := 2#01#; -- Decryption. The provided key is the same key used for encryption.
+   AESOPx_GEN1STKEY   : constant := 2#10#; -- Generate first round key required for decryption.
+   AESOPx_DECRYPTWKEY : constant := 2#11#; -- Decryption. The provided key is the first round key required for decryption.
+
+   AESKLx_AES128 : constant := 2#00#; -- AES128. The key size is 128 bit.
+   AESKLx_AES192 : constant := 2#01#; -- AES192. The key size is 192 bit.
+   AESKLx_AES256 : constant := 2#10#; -- AES256. The key size is 256 bit.
+   AESKLx_RSVD   : constant := 2#11#; -- Reserved
+
+   AESCMx_ECB : constant := 2#00#; -- ECB
+   AESCMx_CBC : constant := 2#01#; -- CBC
+   AESCMx_OFB : constant := 2#10#; -- OFB
+   AESCMx_CFB : constant := 2#11#; -- CFB
+
+   type AESACTL0_Type is record
+      AESOPx    : Bits_2  := AESOPx_ENCRYPT; -- AES operation.
+      AESKLx    : Bits_2  := AESKLx_AES128;  -- AES key length.
+      Reserved1 : Bits_1  := 0;
+      AESCMx    : Bits_2  := AESCMx_ECB;     -- AES cipher mode select.
+      AESSWRST  : Boolean := False;          -- AES software reset.
+      AESRDYIFG : Boolean := False;          -- AES ready interrupt flag.
+      Reserved2 : Bits_2  := 0;
+      AESERRFG  : Boolean := False;          -- AES error flag.
+      AESRDYIE  : Boolean := False;          -- AES ready interrupt enable.
+      Reserved3 : Bits_2  := 0;
+      AESCMEN   : Boolean := False;          -- AESCMEN enables the support of the ciphermodes ECB, CBC, OFB and CFB together with the DMA.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for AESACTL0_Type use record
+      AESOPx    at 0 range  0 ..  1;
+      AESKLx    at 0 range  2 ..  3;
+      Reserved1 at 0 range  4 ..  4;
+      AESCMx    at 0 range  5 ..  6;
+      AESSWRST  at 0 range  7 ..  7;
+      AESRDYIFG at 0 range  8 ..  8;
+      Reserved2 at 0 range  9 .. 10;
+      AESERRFG  at 0 range 11 .. 11;
+      AESRDYIE  at 0 range 12 .. 12;
+      Reserved3 at 0 range 13 .. 14;
+      AESCMEN   at 0 range 15 .. 15;
+   end record;
+
    -- 16.3.2 AESACTL1 Register
+
+   type AESACTL1_Type is record
+      AESBLKCNTx : Unsigned_8 := 0; -- Cipher Block Counter.
+      Reserved   : Unsigned_8 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for AESACTL1_Type use record
+      AESBLKCNTx at 0 range 0 ..  7;
+      Reserved   at 0 range 8 .. 15;
+   end record;
+
    -- 16.3.3 AESASTAT Register
+
+   type AESASTAT_Type is record
+      AESBUSY     : Boolean := False; -- AES accelerator module busy; encryption, decryption, or key generation in progress.
+      AESKEYWR    : Boolean := False; -- All 16 bytes written to AESAKEY.
+      AESDINWR    : Boolean := False; -- All 16 bytes written to AESADIN, AESAXDIN or AESAXIN.
+      AESDOUTRD   : Boolean := False; -- All 16 bytes read from AESADOUT.
+      AESKEYCNTx  : Bits_4  := 0;     -- Bytes written through AESAKEY for AESKLx=00, half-words written through AESAKEY if AESKLx = 01, 10, 11.
+      AESDINCNTx  : Bits_4  := 0;     -- Bytes written through AESADIN, AESAXDIN or AESAXIN.
+      AESDOUTCNTx : Bits_4  := 0;     -- Bytes read through AESADOUT.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for AESASTAT_Type use record
+      AESBUSY     at 0 range  0 ..  0;
+      AESKEYWR    at 0 range  1 ..  1;
+      AESDINWR    at 0 range  2 ..  2;
+      AESDOUTRD   at 0 range  3 ..  3;
+      AESKEYCNTx  at 0 range  4 ..  7;
+      AESDINCNTx  at 0 range  8 .. 11;
+      AESDOUTCNTx at 0 range 12 .. 15;
+   end record;
+
    -- 16.3.4 AESAKEY Register
+
+   type AESAKEY_Type is record
+      AESKEY0x : Unsigned_8 := 0; -- AES key byte n when AESAKEY is written as half-word.
+      AESKEY1x : Unsigned_8 := 0; -- AES key byte n+1 when AESAKEY is written as half-word.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for AESAKEY_Type use record
+      AESKEY0x at 0 range 0 ..  7;
+      AESKEY1x at 0 range 8 .. 15;
+   end record;
+
    -- 16.3.5 AESADIN Register
+
+   type AESADIN_Type is record
+      AESDIN0x : Unsigned_8 := 0; -- AES data in byte n when AESADIN is written as half-word.
+      AESDIN1x : Unsigned_8 := 0; -- AES data in byte n+1 when AESADIN is written as half-word.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for AESADIN_Type use record
+      AESDIN0x at 0 range 0 ..  7;
+      AESDIN1x at 0 range 8 .. 15;
+   end record;
+
    -- 16.3.6 AESADOUT Register
+
+   type AESADOUT_Type is record
+      AESDOUT0x : Unsigned_8; -- AES data out byte n when AESADOUT is read as half-word.
+      AESDOUT1x : Unsigned_8; -- AES data out byte n+1 when AESADOUT is read as half-word.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for AESADOUT_Type use record
+      AESDOUT0x at 0 range 0 ..  7;
+      AESDOUT1x at 0 range 8 .. 15;
+   end record;
+
    -- 16.3.7 AESAXDIN Register
+
+   type AESAXDIN_Type is record
+      AESXDIN0x : Unsigned_8 := 0; -- AES data in byte n when AESAXDIN is written as half-word.
+      AESXDIN1x : Unsigned_8 := 0; -- AES data in byte n+1 when AESAXDIN is written as half-word.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for AESAXDIN_Type use record
+      AESXDIN0x at 0 range 0 ..  7;
+      AESXDIN1x at 0 range 8 .. 15;
+   end record;
+
    -- 16.3.8 AESAXIN Register
+
+   type AESAXIN_Type is record
+      AESXIN0x : Unsigned_8 := 0; -- AES data in byte n when AESAXIN is written as half-word.
+      AESXIN1x : Unsigned_8 := 0; -- AES data in byte n+1 when AESAXIN is written as half-word.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for AESAXIN_Type use record
+      AESXIN0x at 0 range 0 ..  7;
+      AESXIN1x at 0 range 8 .. 15;
+   end record;
+
+   -- Table 16-11. AES256 Registers
+
+   AES256_BASEADDRESS : constant := 16#4000_3C00#;
+
+   AESACTL0 : aliased AESACTL0_Type
+      with Address              => System'To_Address (AES256_BASEADDRESS + 16#0#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AESACTL1 : aliased AESACTL1_Type
+      with Address              => System'To_Address (AES256_BASEADDRESS + 16#2#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AESASTAT : aliased AESASTAT_Type
+      with Address              => System'To_Address (AES256_BASEADDRESS + 16#4#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AESAKEY : aliased AESAKEY_Type
+      with Address              => System'To_Address (AES256_BASEADDRESS + 16#6#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AESADIN : aliased AESADIN_Type
+      with Address              => System'To_Address (AES256_BASEADDRESS + 16#8#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AESADOUT : aliased AESADOUT_Type
+      with Address              => System'To_Address (AES256_BASEADDRESS + 16#A#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AESAXDIN : aliased AESAXDIN_Type
+      with Address              => System'To_Address (AES256_BASEADDRESS + 16#C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AESAXIN : aliased AESAXIN_Type
+      with Address              => System'To_Address (AES256_BASEADDRESS + 16#E#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 17 Watchdog Timer (WDT_A)
@@ -7038,19 +7228,413 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 27.3.1 LCDCTL Register
+
+   LCDMXx_STATIC : constant := 2#000#; -- Static
+   LCDMXx_2MUX   : constant := 2#001#; -- 2-mux
+   LCDMXx_3MUX   : constant := 2#010#; -- 3-mux
+   LCDMXx_4MUX   : constant := 2#011#; -- 4-mux
+   LCDMXx_5MUX   : constant := 2#100#; -- 5-mux
+   LCDMXx_6MUX   : constant := 2#101#; -- 6-mux
+   LCDMXx_7MUX   : constant := 2#110#; -- 7-mux
+   LCDMXx_8MUX   : constant := 2#111#; -- 8-mux
+
+   LCDPREx_DIV1  : constant := 2#000#; -- Divide by 1
+   LCDPREx_DIV2  : constant := 2#001#; -- Divide by 2
+   LCDPREx_DIV4  : constant := 2#010#; -- Divide by 4
+   LCDPREx_DIV8  : constant := 2#011#; -- Divide by 8
+   LCDPREx_DIV16 : constant := 2#100#; -- Divide by 16
+   LCDPREx_DIV32 : constant := 2#101#; -- Divide by 32
+   LCDPREx_RSVD1 : constant := 2#110#; -- Reserved (defaults to divide by 32)
+   LCDPREx_RSVD2 : constant := 2#111#; -- Reserved (defaults to divide by 32)
+
+   LCDDIVx_DIV1  : constant := 2#00000#; -- Divide by 1
+   LCDDIVx_DIV2  : constant := 2#00001#; -- Divide by 2
+   LCDDIVx_DIV3  : constant := 2#00010#; -- Divide by 3
+   LCDDIVx_DIV4  : constant := 2#00011#; -- Divide by 4
+   LCDDIVx_DIV5  : constant := 2#00100#; -- Divide by 5
+   LCDDIVx_DIV6  : constant := 2#00101#; -- Divide by 6
+   LCDDIVx_DIV7  : constant := 2#00110#; -- Divide by 7
+   LCDDIVx_DIV8  : constant := 2#00111#; -- Divide by 8
+   LCDDIVx_DIV9  : constant := 2#01000#; -- Divide by 9
+   LCDDIVx_DIV10 : constant := 2#01001#; -- Divide by 10
+   LCDDIVx_DIV11 : constant := 2#01010#; -- Divide by 11
+   LCDDIVx_DIV12 : constant := 2#01011#; -- Divide by 12
+   LCDDIVx_DIV13 : constant := 2#01100#; -- Divide by 13
+   LCDDIVx_DIV14 : constant := 2#01101#; -- Divide by 14
+   LCDDIVx_DIV15 : constant := 2#01110#; -- Divide by 15
+   LCDDIVx_DIV16 : constant := 2#01111#; -- Divide by 16
+   LCDDIVx_DIV17 : constant := 2#10000#; -- Divide by 17
+   LCDDIVx_DIV18 : constant := 2#10001#; -- Divide by 18
+   LCDDIVx_DIV19 : constant := 2#10010#; -- Divide by 19
+   LCDDIVx_DIV20 : constant := 2#10011#; -- Divide by 20
+   LCDDIVx_DIV21 : constant := 2#10100#; -- Divide by 21
+   LCDDIVx_DIV22 : constant := 2#10101#; -- Divide by 22
+   LCDDIVx_DIV23 : constant := 2#10110#; -- Divide by 23
+   LCDDIVx_DIV24 : constant := 2#10111#; -- Divide by 24
+   LCDDIVx_DIV25 : constant := 2#11000#; -- Divide by 25
+   LCDDIVx_DIV26 : constant := 2#11001#; -- Divide by 26
+   LCDDIVx_DIV27 : constant := 2#11010#; -- Divide by 27
+   LCDDIVx_DIV28 : constant := 2#11011#; -- Divide by 28
+   LCDDIVx_DIV29 : constant := 2#11100#; -- Divide by 29
+   LCDDIVx_DIV30 : constant := 2#11101#; -- Divide by 30
+   LCDDIVx_DIV31 : constant := 2#11110#; -- Divide by 31
+   LCDDIVx_DIV32 : constant := 2#11111#; -- Divide by 32
+
+   LCDSSEL_ACLK    : constant := 2#00#; -- ACLK
+   LCDSSEL_VLOCLK  : constant := 2#01#; -- VLOCLK
+   LCDSSEL_REFOCLK : constant := 2#10#; -- REFOCLK
+   LCDSSEL_LFXTCLK : constant := 2#11#; -- LFXTCLK
+
+   type LCDCTL_Type is record
+      LCDON     : Boolean := False;         -- LCD on.
+      LCDLP     : Boolean := False;         -- LCD low-power waveform
+      LCDSON    : Boolean := False;         -- LCD segments on.
+      LCDMXx    : Bits_3  := LCDMXx_STATIC; -- LCD mux rate.
+      Reserved1 : Bits_2  := 0;
+      LCDPREx   : Bits_3  := LCDPREx_DIV1;  -- LCD frequency pre-scaler.
+      LCDDIVx   : Bits_5  := LCDDIVx_DIV1;  -- LCD frequency divider.
+      LCDSSEL   : Bits_2  := LCDSSEL_ACLK;  -- Clock source select for LCD and blinking frequency
+      Reserved2 : Bits_14 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for LCDCTL_Type use record
+      LCDON     at 0 range  0 ..  0;
+      LCDLP     at 0 range  1 ..  1;
+      LCDSON    at 0 range  2 ..  2;
+      LCDMXx    at 0 range  3 ..  5;
+      Reserved1 at 0 range  6 ..  7;
+      LCDPREx   at 0 range  8 .. 10;
+      LCDDIVx   at 0 range 11 .. 15;
+      LCDSSEL   at 0 range 16 .. 17;
+      Reserved2 at 0 range 18 .. 31;
+   end record;
+
    -- 27.3.2 LCDBMCTL Register
+
+   LCDBLKMODx_DISABLED    : constant := 2#00#; -- Blinking disabled
+   LCDBLKMODx_ENABLEDSEGS : constant := 2#01#; -- Blinking of individual segments as enabled in blinking memory register LCDBMx.
+   LCDBLKMODx_ALLSEGS     : constant := 2#10#; -- Blinking of all segments
+   LCDBLKMODx_SWITCHING   : constant := 2#11#; -- Switching between display contents as stored in LCDMx and LCDBMx memory registers.
+
+   LCDBLKPREx_DIV512 : constant := 2#000#; -- Divide by 512
+   LCDBLKPREx_DIV1k  : constant := 2#001#; -- Divide by 1024
+   LCDBLKPREx_DIV2k  : constant := 2#010#; -- Divide by 2048
+   LCDBLKPREx_DIV4k  : constant := 2#011#; -- Divide by 4096
+   LCDBLKPREx_DIV8k  : constant := 2#100#; -- Divide by 8162
+   LCDBLKPREx_DIV16k : constant := 2#101#; -- Divide by 16384
+   LCDBLKPREx_DIV32k : constant := 2#110#; -- Divide by 32768
+   LCDBLKPREx_DIV64k : constant := 2#111#; -- Divide by 65536
+
+   LCDBLKDIVx_DIV1 : constant := 2#000#; -- Divide by 1
+   LCDBLKDIVx_DIV2 : constant := 2#001#; -- Divide by 2
+   LCDBLKDIVx_DIV3 : constant := 2#010#; -- Divide by 3
+   LCDBLKDIVx_DIV4 : constant := 2#011#; -- Divide by 4
+   LCDBLKDIVx_DIV5 : constant := 2#100#; -- Divide by 5
+   LCDBLKDIVx_DIV6 : constant := 2#101#; -- Divide by 6
+   LCDBLKDIVx_DIV7 : constant := 2#110#; -- Divide by 7
+   LCDBLKDIVx_DIV8 : constant := 2#111#; -- Divide by 8
+
+   LCDDISP_LCDMx  : constant := 0; -- Display content of LCD memory registers LCDMx
+   LCDDISP_LCDBMx : constant := 1; -- Display content of LCD blinking memory registers LCDBMx
+
+   type LCDBMCTL_Type is record
+      LCDBLKMODx : Bits_2  := LCDBLKMODx_DISABLED; -- Blinking mode
+      LCDBLKPREx : Bits_3  := LCDBLKPREx_DIV512;   -- Clock pre-scaler for blinking frequency.
+      LCDBLKDIVx : Bits_3  := LCDBLKDIVx_DIV1;     -- Clock divider for blinking frequency.
+      Reserved1  : Bits_8  := 0;
+      LCDDISP    : Bits_1  := LCDDISP_LCDMx;       -- Select LCD memory registers for display
+      LCDCLRM    : Boolean := False;               -- Clear LCD memory
+      LCDCLRBM   : Boolean := False;               -- Clear LCD blinking memory
+      Reserved2  : Bits_13 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for LCDBMCTL_Type use record
+      LCDBLKMODx at 0 range  0 ..  1;
+      LCDBLKPREx at 0 range  2 ..  4;
+      LCDBLKDIVx at 0 range  5 ..  7;
+      Reserved1  at 0 range  8 .. 15;
+      LCDDISP    at 0 range 16 .. 16;
+      LCDCLRM    at 0 range 17 .. 17;
+      LCDCLRBM   at 0 range 18 .. 18;
+      Reserved2  at 0 range 19 .. 31;
+   end record;
+
    -- 27.3.3 LCDVCTL Register
+
+   -- For 2-mux to 4-mux modes:
+   LCD2B_24MUX_DIV3 : constant := 0; -- 1/3 bias
+   LCD2B_24MUX_DIV2 : constant := 1; -- 1/2 bias
+   -- For 5-mux to 8-mux modes:
+   LCD2B_58MUX_DIV3 : constant := 0; -- 1/3 bias
+   LCD2B_58MUX_DIV4 : constant := 1; -- 1/4 bias
+
+   type LCDVCTL_Type is record
+      LCD2B      : Bits_1  := LCD2B_24MUX_DIV3; -- Bias select.
+      Reserved1  : Bits_4  := 0;
+      LCDEXTBIAS : Boolean := False;            -- V2 to V4 voltage select.
+      R03EXT     : Boolean := False;            -- V5 voltage select.
+      LCDREXT    : Boolean := False;            -- V2 to V4 voltage on external Rx3 pins.
+      Reserved2  : Bits_1  := 0;
+      Reserved3  : Bits_4  := 0;
+      Reserved4  : Bits_3  := 0;
+      Reserved5  : Bits_3  := 0;
+      Reserved6  : Bits_12 := 0;
+      Reserved7  : Bits_1  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for LCDVCTL_Type use record
+      LCD2B      at 0 range  0 ..  0;
+      Reserved1  at 0 range  1 ..  4;
+      LCDEXTBIAS at 0 range  5 ..  5;
+      R03EXT     at 0 range  6 ..  6;
+      LCDREXT    at 0 range  7 ..  7;
+      Reserved2  at 0 range  8 ..  8;
+      Reserved3  at 0 range  9 .. 12;
+      Reserved4  at 0 range 13 .. 15;
+      Reserved5  at 0 range 16 .. 18;
+      Reserved6  at 0 range 19 .. 30;
+      Reserved7  at 0 range 31 .. 31;
+   end record;
+
+   -- types for LCD[PCTLx|CSSELx] registers
+
+   type Bitmap_32I00_Type is array (0 .. 31) of Boolean
+      with Component_Size => 1,
+           Size           => 32;
+
+   type Bitmap_32I32_Type is array (32 .. 63) of Boolean
+      with Component_Size => 1,
+           Size           => 32;
+
+   type LCDPINMODE_Type is new Bits_1;
+   SEGMENT_LINE : constant LCDPINMODE_Type := 0;
+   COMMON_LINE  : constant LCDPINMODE_Type := 1;
+
+   type Bitmap_32I00_LPM_Type is array (0 .. 31) of LCDPINMODE_Type
+      with Component_Size => 1,
+           Size           => 32;
+
+   type Bitmap_32I32_LPM_Type is array (32 .. 63) of LCDPINMODE_Type
+      with Component_Size => 1,
+           Size           => 32;
+
    -- 27.3.4 LCDPCTL0 Register
+
+   type LCDPCTL0_Type is record
+      LCDS : Bitmap_32I00_Type; -- LCD pin 0 .. 31 enable
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for LCDPCTL0_Type use record
+      LCDS at 0 range 0 .. 31;
+   end record;
+
    -- 27.3.5 LCDPCTL1 Register
+
+   type LCDPCTL1_Type is record
+      LCDS : Bitmap_32I32_Type; -- LCD pin 32 .. 63 enable
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for LCDPCTL1_Type use record
+      LCDS at 0 range 0 .. 31;
+   end record;
+
    -- 27.3.6 LCDCSSEL0 Register
+
+   type LCDCSSEL0_Type is record
+      LCDCSS : Bitmap_32I00_LPM_Type; -- Selects pin L0 .. L31 as either common or segment line.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for LCDCSSEL0_Type use record
+      LCDCSS at 0 range 0 .. 31;
+   end record;
+
    -- 27.3.7 LCDCSSEL1 Register
+
+   type LCDCSSEL1_Type is record
+      LCDCSS : Bitmap_32I32_LPM_Type; -- Selects pin L32 .. L63 as either common or segment line.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for LCDCSSEL1_Type use record
+      LCDCSS at 0 range 0 .. 31;
+   end record;
+
    -- 27.3.8 LCDANMCTL Register
+
+   LCDANMSTP_T0T7 : constant := 2#111#; -- T0 to T7
+   LCDANMSTP_T0T6 : constant := 2#110#; -- T0 to T6
+   LCDANMSTP_T0T5 : constant := 2#101#; -- T0 to T5
+   LCDANMSTP_T0T4 : constant := 2#100#; -- T0 to T4
+   LCDANMSTP_T0T3 : constant := 2#011#; -- T0 to T3
+   LCDANMSTP_T0T2 : constant := 2#010#; -- T0 to T2
+   LCDANMSTP_T0T1 : constant := 2#001#; -- T0 to T1
+   LCDANMSTP_T0   : constant := 2#000#; -- T0
+
+   LCDANMPREx_DIV512 : constant := 2#000#; -- Divide by 512
+   LCDANMPREx_DIV1k  : constant := 2#001#; -- Divide by 1024
+   LCDANMPREx_DIV2k  : constant := 2#010#; -- Divide by 2048
+   LCDANMPREx_DIV4k  : constant := 2#011#; -- Divide by 4096
+   LCDANMPREx_DIV8k  : constant := 2#100#; -- Divide by 8162
+   LCDANMPREx_DIV16k : constant := 2#101#; -- Divide by 16384
+   LCDANMPREx_DIV32k : constant := 2#110#; -- Divide by 32768
+   LCDANMPREx_DIV64k : constant := 2#111#; -- Divide by 65536
+
+   LCDANMDIVx_DIV1 : constant := 2#000#; -- Divide by 1
+   LCDANMDIVx_DIV2 : constant := 2#001#; -- Divide by 2
+   LCDANMDIVx_DIV3 : constant := 2#010#; -- Divide by 3
+   LCDANMDIVx_DIV4 : constant := 2#011#; -- Divide by 4
+   LCDANMDIVx_DIV5 : constant := 2#100#; -- Divide by 5
+   LCDANMDIVx_DIV6 : constant := 2#101#; -- Divide by 6
+   LCDANMDIVx_DIV7 : constant := 2#110#; -- Divide by 7
+   LCDANMDIVx_DIV8 : constant := 2#111#; -- Divide by 8
+
+   type LCDANMCTL_Type is record
+      LCDANMEN   : Boolean := False;             -- Enable Animation
+      LCDANMSTP  : Bits_3  := LCDANMSTP_T0;      -- Determines number of animation frames to be repeated based on value
+      Reserved1  : Bits_3  := 0;
+      LCDANMCLR  : Boolean := False;             -- Clear Animation memory
+      Reserved2  : Bits_8  := 0;
+      LCDANMPREx : Bits_3  := LCDANMPREx_DIV512; -- Clock pre-scaler for animation frequency.
+      LCDANMDIVx : Bits_3  := LCDANMDIVx_DIV1;   -- Clock divider for animation frequency.
+      Reserved3  : Bits_10 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for LCDANMCTL_Type use record
+      LCDANMEN   at 0 range  0 ..  0;
+      LCDANMSTP  at 0 range  1 ..  3;
+      Reserved1  at 0 range  4 ..  6;
+      LCDANMCLR  at 0 range  7 ..  7;
+      Reserved2  at 0 range  8 .. 15;
+      LCDANMPREx at 0 range 16 .. 18;
+      LCDANMDIVx at 0 range 19 .. 21;
+      Reserved3  at 0 range 22 .. 31;
+   end record;
+
    -- 27.3.9 LCDIE Register
+
+   type LCDIE_Type is record
+      Reserved1    : Bits_1  := 0;
+      LCDBLKOFFIE  : Boolean := False; -- LCD Blink, segments off interrupt enable
+      LCDBLKONIE   : Boolean := False; -- LCD Blink, segments on interrupt enable
+      LCDFRMIE     : Boolean := False; -- LCD Frame interrupt enable
+      Reserved2    : Bits_4  := 0;
+      LCDANMSTPIE  : Boolean := False; -- LCD Animation step interrupt enable
+      LCDANMLOOPIE : Boolean := False; -- LCD Animation loop interrupt enable
+      Reserved3    : Bits_22 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for LCDIE_Type use record
+      Reserved1    at 0 range  0 ..  0;
+      LCDBLKOFFIE  at 0 range  1 ..  1;
+      LCDBLKONIE   at 0 range  2 ..  2;
+      LCDFRMIE     at 0 range  3 ..  3;
+      Reserved2    at 0 range  4 ..  7;
+      LCDANMSTPIE  at 0 range  8 ..  8;
+      LCDANMLOOPIE at 0 range  9 ..  9;
+      Reserved3    at 0 range 10 .. 31;
+   end record;
+
    -- 27.3.10 LCDIFG Register
+
+   type LCDIFG_Type is record
+      Reserved1     : Bits_1;
+      LCDBLKOFFIFG  : Boolean; -- LCD Blink, segments off interrupt flag
+      LCDBLKONIFG   : Boolean; -- LCD Blink, segments on interrupt flag
+      LCDFRMIFG     : Boolean; -- LCD Frame interrupt flag
+      Reserved2     : Bits_4;
+      LCDANMSTPIFG  : Boolean; -- LCD Animation step interrupt flag
+      LCDANMLOOPIFG : Boolean; -- LCD Animation loop interrupt flag
+      Reserved3     : Bits_22;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for LCDIFG_Type use record
+      Reserved1     at 0 range  0 ..  0;
+      LCDBLKOFFIFG  at 0 range  1 ..  1;
+      LCDBLKONIFG   at 0 range  2 ..  2;
+      LCDFRMIFG     at 0 range  3 ..  3;
+      Reserved2     at 0 range  4 ..  7;
+      LCDANMSTPIFG  at 0 range  8 ..  8;
+      LCDANMLOOPIFG at 0 range  9 ..  9;
+      Reserved3     at 0 range 10 .. 31;
+   end record;
+
    -- 27.3.11 LCDSETIFG Register
+
+   type LCDSETIFG_Type is record
+      Reserved1        : Bits_1  := 0;
+      SETLCDBLKOFFIFG  : Boolean := False; -- Sets LCDBLKOFFIFG
+      SETLCDBLKONIFG   : Boolean := False; -- Sets LCDBLKONIFG
+      SETLCDFRMIFG     : Boolean := False; -- Sets LCDFRMIFG
+      Reserved2        : Bits_4  := 0;
+      SETLCDANMSTPIFG  : Boolean := False; -- Sets LCDANMSTPIFG
+      SETLCDANMLOOPIFG : Boolean := False; -- Sets LCDANMLOOPIFG
+      Reserved3        : Bits_22 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for LCDSETIFG_Type use record
+      Reserved1        at 0 range  0 ..  0;
+      SETLCDBLKOFFIFG  at 0 range  1 ..  1;
+      SETLCDBLKONIFG   at 0 range  2 ..  2;
+      SETLCDFRMIFG     at 0 range  3 ..  3;
+      Reserved2        at 0 range  4 ..  7;
+      SETLCDANMSTPIFG  at 0 range  8 ..  8;
+      SETLCDANMLOOPIFG at 0 range  9 ..  9;
+      Reserved3        at 0 range 10 .. 31;
+   end record;
+
    -- 27.3.12 LCDCLRIFG Register
+
+   type LCDCLRIFG_Type is record
+      Reserved1        : Bits_1  := 0;
+      CLRLCDBLKOFFIFG  : Boolean := False; -- Clears LCDBLKOFFIFG
+      CLRLCDBLKONIFG   : Boolean := False; -- Clears LCDBLKONIFG
+      CLRLCDFRMIFG     : Boolean := False; -- Clears LCDFRMIFG
+      Reserved2        : Bits_4  := 0;
+      CLRLCDANMSTPIFG  : Boolean := False; -- Clears LCDANMSTPIFG
+      CLRLCDANMLOOPIFG : Boolean := False; -- Clears LCDANMLOOPIFG
+      Reserved3        : Bits_22 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for LCDCLRIFG_Type use record
+      Reserved1        at 0 range  0 ..  0;
+      CLRLCDBLKOFFIFG  at 0 range  1 ..  1;
+      CLRLCDBLKONIFG   at 0 range  2 ..  2;
+      CLRLCDFRMIFG     at 0 range  3 ..  3;
+      Reserved2        at 0 range  4 ..  7;
+      CLRLCDANMSTPIFG  at 0 range  8 ..  8;
+      CLRLCDANMLOOPIFG at 0 range  9 ..  9;
+      Reserved3        at 0 range 10 .. 31;
+   end record;
+
+   -- types for LCD[M|BM|ANM] registers
+
+   type LCDMBMANM_Type is record
+      MBIT : Bitmap_8 := [others => False];
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for LCDMBMANM_Type use record
+      MBIT at 0 range 0 .. 7;
+   end record;
+
+   type LCDMBMANM_Array_Type is array (0 .. 63) of LCDMBMANM_Type
+      with Pack => True;
+
    -- 27.3.13 LCDM[index] Register
+
    -- 27.3.14 LCDBM[index] Register
+
    -- 27.3.15 LCDANM[index] Register
 
 pragma Style_Checks (On);
