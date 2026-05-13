@@ -117,14 +117,17 @@ package body i486
       is
       Result       : aliased CPUID_VendorID_String_Type;
       EBX_Register : aliased Unsigned_32
-         with Address => Result (1)'Address,
-              Import  => True;
+         with Address    => Result (1)'Address,
+              Import     => True,
+              Convention => Asm;
       EDX_Register : aliased Unsigned_32
-         with Address => Result (5)'Address,
-              Import  => True;
+         with Address    => Result (5)'Address,
+              Import     => True,
+              Convention => Asm;
       ECX_Register : aliased Unsigned_32
-         with Address => Result (9)'Address,
-              Import  => True;
+         with Address    => Result (9)'Address,
+              Import     => True,
+              Convention => Asm;
    begin
       Asm (
            Template => ""              & CRLF &
