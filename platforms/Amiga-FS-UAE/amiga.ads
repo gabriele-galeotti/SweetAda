@@ -18,9 +18,9 @@
 with System;
 with System.Storage_Elements;
 with Interfaces;
+with Interfaces.C;
 with Definitions;
 with Bits;
-with Bits.C;
 with Videofont8x8;
 
 package Amiga
@@ -37,9 +37,9 @@ package Amiga
    use System;
    use System.Storage_Elements;
    use Interfaces;
+   use Interfaces.C;
    use Definitions;
    use Bits;
-   use Bits.C;
 
 pragma Style_Checks (Off);
 
