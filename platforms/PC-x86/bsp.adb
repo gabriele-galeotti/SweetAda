@@ -17,11 +17,11 @@
 
 with System;
 with System.Storage_Elements;
+with Interfaces.C;
 with Configure;
 with Definitions;
 with Core;
 with Bits;
-with Bits.C;
 with Secondary_Stack;
 with CPU;
 with CPU.IO;
@@ -59,7 +59,7 @@ package body BSP
    use APIC;
 
    function Number_Of_CPUs
-      return Bits.C.int
+      return Interfaces.C.int
       with Export        => True,
            Convention    => C,
            External_Name => "__gnat_number_of_cpus";
@@ -85,7 +85,7 @@ package body BSP
    -- Number_Of_CPUs
    ----------------------------------------------------------------------------
    function Number_Of_CPUs
-      return Bits.C.int
+      return Interfaces.C.int
       is
    begin
       return 1;
