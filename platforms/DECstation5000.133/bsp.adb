@@ -205,7 +205,7 @@ package body BSP
             IsDST  => 0,
             others => 0
             );
-         MC146818A.Set_Clock (BSP.RTC_Descriptor, TM);
+         MC146818A.Time_Set (BSP.RTC_Descriptor, TM);
       end;
       -------------------------------------------------------------------------
       R3000.Irq_Enable;
