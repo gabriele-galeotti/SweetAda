@@ -6,6 +6,7 @@ with Bits;
 with MMIO;
 with UART16x50;
 with uPD4991A;
+with CPU;
 with SH;
 with GEMI;
 with Time;
@@ -46,23 +47,12 @@ package body Application
       -------------------------------------------------------------------------
       if True then
          declare
-            Value          : Unsigned_8 := 16#20#;
+            Value          : Unsigned_8 := 16#10#;
             Direction_Left : Boolean := True;
             TM             : Time.TM_Time;
-            procedure Wait;
-            procedure Wait
-               is
-               X : Unsigned_32 with Volatile => True;
-            begin
-               X := 0;
-               loop
-                  X := @ + 1;
-                  exit when X = 16#4000#;
-               end loop;
-            end Wait;
          begin
             loop
-               LEDPORT_Out ((LEDPORT_In and 16#1F#) or (not Value));
+               LEDPORT_Out (not Value);
                if Direction_Left then
                   Value := Rotate_Left (Value, 1);
                else
@@ -71,19 +61,19 @@ package body Application
                if Value = 16#80# then
                   Direction_Left := False;
                end if;
-               if Value = 16#20# then
+               if Value = 16#10# then
                   Direction_Left := True;
                end if;
                -- UART16x50.TX (BSP.UART_Descriptor, To_U8 ('.'));
-               uPD4991A.Read_Clock (BSP.RTC_Descriptor, TM);
+               uPD4991A.Time_Read (BSP.RTC_Descriptor, TM);
                Console.Print (Prefix => "",  Value => TM.Year + 1_900);
-               Console.Print (Prefix => "-", Value => TM.Mon);
+               Console.Print (Prefix => "-", Value => TM.Mon + 1);
                Console.Print (Prefix => "-", Value => TM.MDay);
                Console.Print (Prefix => " ", Value => TM.Hour);
                Console.Print (Prefix => ":", Value => TM.Min);
                Console.Print (Prefix => ":", Value => TM.Sec);
                Console.Print_NewLine;
-               Wait;
+               for Delay_Loop_Count in 1 .. 300_000 loop CPU.NOP; end loop;
             end loop;
          end;
       end if;
