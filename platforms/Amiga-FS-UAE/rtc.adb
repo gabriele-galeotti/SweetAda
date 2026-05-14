@@ -36,7 +36,7 @@ package body RTC
    --                                                                        --
    --========================================================================--
 
-   procedure Read_Clock
+   procedure Time_Read
       (T : out TM_Time)
       is
 pragma Warnings (Off);
@@ -56,6 +56,6 @@ pragma Warnings (On);
       T.WDay  := To_N (MSM6242B.W.DATA);
       T.YDay  := 0;
       T.IsDST := 0;
-   end Read_Clock;
+   end Time_Read;
 
 end RTC;

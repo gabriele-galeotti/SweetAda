@@ -208,7 +208,7 @@ package RTC
            Import     => True,
            Convention => Ada;
 
-   procedure Read_Clock
+   procedure Time_Read
       (T : out TM_Time);
 
 end RTC;

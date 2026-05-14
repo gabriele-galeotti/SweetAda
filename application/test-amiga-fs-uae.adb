@@ -139,7 +139,7 @@ package body Application
                --    TC2 := BSP.Tick_Count;
                -- end if;
                if Tick_Count_Expired (TC3, 1000) then
-                  RTC.Read_Clock (TM);
+                  RTC.Time_Read (TM);
                   Console.Print (Prefix => "",  Value => TM.Year + 1_900);
                   Console.Print (Prefix => "-", Value => TM.Mon);
                   Console.Print (Prefix => "-", Value => TM.MDay);
