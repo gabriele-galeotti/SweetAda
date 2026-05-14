@@ -123,7 +123,7 @@ package body Application
             TM          : Time.TM_Time;
          begin
             loop
-               Goldfish.Read_Clock (BSP.RTC_Descriptor, TM);
+               Goldfish.Time_Read (BSP.RTC_Descriptor, TM);
                Mutex.Acquire (M);
                Console.Print (Prefix => "",  Value =>
                   Time.Day_Of_Week (Time.NDay_Of_Week (TM.MDay, TM.Mon + 1, TM.Year + 1_900)));
