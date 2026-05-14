@@ -56,7 +56,7 @@ package body Application
             TM : Time.TM_Time;
          begin
             Console.Print ("Current date: ", NL => False);
-            MC146818A.Read_Clock (Malta.PIIX4_RTC_Descriptor, TM);
+            MC146818A.Time_Read (Malta.PIIX4_RTC_Descriptor, TM);
             Console.Print (Prefix => "",  Value => TM.Year + 1_900);
             Console.Print (Prefix => "-", Value => TM.Mon + 1);
             Console.Print (Prefix => "-", Value => TM.MDay);
