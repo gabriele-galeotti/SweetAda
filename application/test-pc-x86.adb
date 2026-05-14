@@ -112,7 +112,7 @@ package body Application
             TM : Time.TM_Time;
          begin
             Console.Print ("Current date: ", NL => False);
-            MC146818A.Read_Clock (BSP.RTC_Descriptor, TM);
+            MC146818A.Time_Read (BSP.RTC_Descriptor, TM);
             Console.Print (Prefix => "",  Value => TM.Year + 1_900);
             Console.Print (Prefix => "-", Value => TM.Mon + 1);
             Console.Print (Prefix => "-", Value => TM.MDay);
@@ -124,7 +124,11 @@ package body Application
       end if;
       -------------------------------------------------------------------------
       if False then
-         Malloc.Init (Heap'Address, Heap'Size / Storage_Unit, False);
+         declare
+            use type Bytesize'Base;
+         begin
+            Malloc.Init (Heap'Address, Heap'Size / Storage_Unit, False);
+         end;
       end if;
       -------------------------------------------------------------------------
       if False then
