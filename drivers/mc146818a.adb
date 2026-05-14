@@ -34,6 +34,8 @@ package body MC146818A
    use System.Storage_Elements;
    use LLutils;
 
+pragma Warnings (Off, "* is not referenced");
+
    ----------------------------------------------------------------------------
    -- Register types
    ----------------------------------------------------------------------------
@@ -257,9 +259,9 @@ package body MC146818A
    end Handle;
 
    ----------------------------------------------------------------------------
-   -- Read_Clock
+   -- Time_Read
    ----------------------------------------------------------------------------
-   procedure Read_Clock
+   procedure Time_Read
       (D : in     Descriptor_Type;
        T :    out Time.TM_Time)
       is
@@ -316,12 +318,12 @@ package body MC146818A
       T.Year  := Natural (Adjust_BCD (RTC_Year, RTC_BCD));
       T.Year  := @ + (if @ < 70 then 100 else 0);
       T.YDay  := 0;
-   end Read_Clock;
+   end Time_Read;
 
    ----------------------------------------------------------------------------
-   -- Set_Clock
+   -- Time_Set
    ----------------------------------------------------------------------------
-   procedure Set_Clock
+   procedure Time_Set
       (D : in Descriptor_Type;
        T : in Time.TM_Time)
       is
@@ -357,7 +359,7 @@ package body MC146818A
       RB.DSE := T.IsDST > 0;
       RB.SET := False;
       Register_Write (D, RegisterB, To_U8 (RB));
-   end Set_Clock;
+   end Time_Set;
 
    ----------------------------------------------------------------------------
    -- Init
@@ -384,5 +386,7 @@ package body MC146818A
          );
       Register_Write (D, RegisterB, To_U8 (RB));
    end Init;
+
+pragma Warnings (On, "* is not referenced");
 
 end MC146818A;

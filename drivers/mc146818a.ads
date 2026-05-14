@@ -59,23 +59,22 @@ pragma Style_Checks (Off);
       Write_8       : not null Port_Write_8_Ptr := MMIO.WriteN_U8'Access;
    end record;
 
-   DESCRIPTOR_INVALID : constant Descriptor_Type :=
-      (
-       Base_Address  => Null_Address,
-       Scale_Address => 0,
-       Flags         => (others => False),
-       Read_8        => MMIO.ReadN_U8'Access,
-       Write_8       => MMIO.WriteN_U8'Access
+   DESCRIPTOR_INVALID : constant Descriptor_Type := (
+      Base_Address  => Null_Address,
+      Scale_Address => 0,
+      Flags         => (others => False),
+      Read_8        => MMIO.ReadN_U8'Access,
+      Write_8       => MMIO.WriteN_U8'Access
       );
 
    procedure Handle
       (Data_Address : in System.Address);
 
-   procedure Read_Clock
+   procedure Time_Read
       (D : in     Descriptor_Type;
        T :    out Time.TM_Time);
 
-   procedure Set_Clock
+   procedure Time_Set
       (D : in Descriptor_Type;
        T : in Time.TM_Time);
 
