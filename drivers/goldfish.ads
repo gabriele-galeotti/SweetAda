@@ -51,15 +51,14 @@ package Goldfish
       Write_32      : not null Port_Write_32_Ptr := MMIO.WriteN_U32'Access;
    end record;
 
-   DESCRIPTOR_INVALID : constant Descriptor_Type :=
-      (
-       Base_Address  => Null_Address,
-       Scale_Address => 0,
-       Read_32       => MMIO.ReadN_U32'Access,
-       Write_32      => MMIO.WriteN_U32'Access
+   DESCRIPTOR_INVALID : constant Descriptor_Type := (
+      Base_Address  => Null_Address,
+      Scale_Address => 0,
+      Read_32       => MMIO.ReadN_U32'Access,
+      Write_32      => MMIO.WriteN_U32'Access
       );
 
-   procedure Read_Clock
+   procedure Time_Read
       (D : in     Descriptor_Type;
        T :    out Time.TM_Time);
 

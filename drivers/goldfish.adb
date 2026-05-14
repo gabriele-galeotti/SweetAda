@@ -104,11 +104,11 @@ pragma Warnings (Off, "* is not referenced");
    end Register_Write;
 
    ----------------------------------------------------------------------------
-   -- Read_Clock
+   -- Time_Read
    ----------------------------------------------------------------------------
    -- strictly adhere to Goldfish RTC specifications
    ----------------------------------------------------------------------------
-   procedure Read_Clock
+   procedure Time_Read
       (D : in     Descriptor_Type;
        T :    out Time.TM_Time)
       is
@@ -122,7 +122,7 @@ pragma Warnings (Off, "* is not referenced");
       Time.Make_Time (Unsigned_32 (Time_ns / 10**9), T);
       T.IsDST := 0;
       T.YDay  := 0;
-   end Read_Clock;
+   end Time_Read;
 
 pragma Warnings (On, "* is not referenced");
 
