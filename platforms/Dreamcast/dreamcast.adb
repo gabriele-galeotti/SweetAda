@@ -7,7 +7,7 @@
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
 -----------------------------------------------------------------------------------------------------------------------
--- Copyright (C) 2020-2025 Gabriele Galeotti                                                                         --
+-- Copyright (C) 2020-2026 Gabriele Galeotti                                                                         --
 --                                                                                                                   --
 -- SweetAda web page: http://sweetada.org                                                                            --
 -- contact address: gabriele.galeotti@sweetada.org                                                                   --
@@ -93,12 +93,16 @@ package body Dreamcast
    ----------------------------------------------------------------------------
    -- RTC_Read
    ----------------------------------------------------------------------------
+   -- The Epoch of the RTC counter is January 1, 1950 00:00:00.
+   -- Since leap years happen in 1952, 1956, 1960, 1964, 1968, we have:
+   -- EPOCH_50_70 = (20 * 365 + 5) * 24 * 60 * 60 = 631_152_000
+   ----------------------------------------------------------------------------
    function RTC_Read
       return Unsigned_32
       is
-      EPOCH_50_70 : constant := (20 * 365 + 5) * 24 * 60 * 60;
+      EPOCH_50_70 : constant := 631_152_000;
    begin
-      return 0;
+      return 0; -- __TBD__
    end RTC_Read;
 
 end Dreamcast;

@@ -45,8 +45,8 @@ CLEAN_OBJECTS_COMMON += gxemullog.txt IP.BIN 1ST_READ.BIN sweetada.iso
 #                                                                              #
 ################################################################################
 
-export BOOT_MODE := ROM
-#export BOOT_MODE := CD-ROM
+#export BOOT_MODE := ROM
+export BOOT_MODE := CD-ROM
 #export BOOT_MODE := NETWORK
 
 ifeq      ($(BOOT_MODE),ROM)
@@ -70,9 +70,11 @@ SESSION_START_COMMAND :=
 SESSION_END_COMMAND   :=
 
 ifeq      ($(BOOT_MODE),ROM)
-RUN_COMMAND   := $(SHELL_EXEC) $(PLATFORM_DIRECTORY)/gxemul$(SCREXT)
+#RUN_COMMAND   := $(SHELL_EXEC) $(PLATFORM_DIRECTORY)/gxemul$(SCREXT)
+RUN_COMMAND   := $(SHELL_EXEC) $(PLATFORM_DIRECTORY)/redream$(SCREXT)
 else ifeq ($(BOOT_MODE),CD-ROM)
-RUN_COMMAND   := $(SHELL_EXEC) $(PLATFORM_DIRECTORY)/gxemul$(SCREXT)
+#RUN_COMMAND   := $(SHELL_EXEC) $(PLATFORM_DIRECTORY)/gxemul$(SCREXT)
+RUN_COMMAND   := $(SHELL_EXEC) $(PLATFORM_DIRECTORY)/redream$(SCREXT)
 else ifeq ($(BOOT_MODE),NETWORK)
 #RUN_COMMAND   := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/bba.tcl
 RUN_COMMAND   := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/bba.py

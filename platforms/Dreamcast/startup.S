@@ -2,7 +2,7 @@
 //
 // startup.S - Low-level startup.
 //
-// Copyright (C) 2020-2025 Gabriele Galeotti
+// Copyright (C) 2020-2026 Gabriele Galeotti
 //
 // This work is licensed under the terms of the MIT License.
 // Please consult the LICENSE.txt file located in the top-level directory.
@@ -11,6 +11,7 @@
 #define __ASSEMBLER__ 1
 
 #include <sh.h>
+#define CCR_P4 0xFF00001C
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -21,6 +22,45 @@
                 .type   _start,@function
                 .global _start
 _start:
+
+                //
+                // Disable interrupts.
+                //
+                mov.l   sr_init,r0
+                ldc     r0,sr
+
+                //
+                // Run in the P2 area.
+                //
+                mov.l   REF(setup_cache),r0
+                mov.l   p2_mask,r1
+                or      r1,r0
+                jmp     @r0
+                nop
+DEF_LREFL(setup_cache)
+setup_cache:
+                mov.w   ccr_data,r1
+                mov.l   REF(CCR_P4),r0
+                mov.l   r1,@r0
+
+
+                //
+                // After changing CCR, 8 instructions must be executed before
+                // entering a cached area such as P1.
+                //
+                nop                             // 1
+                nop                             // 2
+                nop                             // 3
+                nop                             // 4
+                nop                             // 5 (d-cache is safe)
+                nop                             // 6
+                mov.l   REF(init),r0            // 7
+                mov     #0,r1                   // 8
+                jmp     @r0
+                mov     r1,r0
+                nop
+DEF_LREFL(init)
+init:
 
                 //
                 // Set VBR.
@@ -61,12 +101,19 @@ dead:           bra     .
 
                 .size   _start,.-_start
 
-DEF_LREFL(kernel_stack)
+                .align  2
+sr_init:        .long   0x500000F0
+p2_mask:        .long   0xA0000000
+
+DEF_LREFL(CCR_P4)
+ccr_data:       .word   0x090D
+
 DEF_EREFL(vector_table)
 DEF_EREFL(_sbss)
 DEF_EREFL(_ebss)
 DEF_EREFL(adainit)
 DEF_EREFL(_ada_main)
+DEF_LREFL(kernel_stack)
 
 ////////////////////////////////////////////////////////////////////////////////
 
