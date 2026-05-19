@@ -1642,13 +1642,14 @@ ifeq ($(OSTYPE),cmd)
            "$(MAKE)" $(MAKE_RTS) MULTILIB=%%M multilib                       \
           ) || EXIT /B 1
 else
-	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do                              \
-          (                                                                             \
-           printf "%s\n" ""                                                          && \
-           printf "%s\n" "$(CPU): RTS = $(RTS_BUILD), multilib = \"$$m\""            && \
-           printf "%s\n" ""                                                          && \
-           MAKEFLAGS= RTS=$(RTS_BUILD) "$(MAKE)" $(MAKE_RTS) MULTILIB="$$m" multilib    \
-          ) || exit $$? ;                                                               \
+	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do                   \
+          (                                                                  \
+           printf "%s\n" ""                                               && \
+           printf "%s\n" "$(CPU): RTS = $(RTS_BUILD), multilib = \"$$m\"" && \
+           printf "%s\n" ""                                               && \
+           MAKEFLAGS= RTS=$(RTS_BUILD)                                       \
+           "$(MAKE)" $(MAKE_RTS) MULTILIB="$$m" multilib                     \
+          ) || exit $$? ;                                                    \
         done
 endif
 
@@ -1721,6 +1722,14 @@ endif
 #
 .PHONY: tools-check
 tools-check:
+ifeq ($(OSTYPE),cmd)
+	IF $(call substring,$(subst .,,$(MAKE_VERSION)),1,2) LSS 44          \
+          ECHO *** Warning: SweetAda requires GNU Make version 4.4 or later.
+else
+	if [ $(call substring,$(subst .,,$(MAKE_VERSION)),1,2) -lt 44 ] ; then            \
+          printf "%s\n" "*** Warning: SweetAda requires GNU Make version 4.4 or later." ; \
+        fi
+endif
 ifeq ($(USE_EXE_WRAPPER),Y)
 	$(EXE_WRAPPER) -v
 endif
