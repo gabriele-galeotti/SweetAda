@@ -20,7 +20,6 @@ with System.Storage_Elements;
 with Interfaces;
 with Definitions;
 with Linker;
-with Memory_Functions;
 with ML605;
 with BSP;
 
