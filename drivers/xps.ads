@@ -60,8 +60,8 @@ package XPS
       UDT0     : Bits_1;       -- Up/Down Count Timer0
       MDT0     : Bits_1;       -- Timer0 Mode
    end record
-      with Bit_Order => High_Order_First,
-           Size      => 32;
+      with Bit_Order   => High_Order_First,
+           Object_Size => 32;
    for XPS_Timer_CSR_Type use record
       Reserved at 0 range  0 .. 20;
       ENALL    at 0 range 21 .. 21;
@@ -82,7 +82,7 @@ package XPS
       TLR0  : Unsigned_32        with Volatile_Full_Access => True;
       TCR0  : Unsigned_32        with Volatile_Full_Access => True;
    end record
-      with Size => 3 * 32;
+      with Object_Size => 3 * 32;
    for XPS_Timer_Type use record
       TCSR0 at 0 range 0 .. 31;
       TLR0  at 4 range 0 .. 31;
@@ -100,8 +100,8 @@ package XPS
       HIE      : Boolean;      -- Hardware Interrupt Enable
       ME       : Boolean;      -- Master IRQ Enable
    end record
-      with Bit_Order => High_Order_First,
-           Size      => 32;
+      with Bit_Order   => High_Order_First,
+           Object_Size => 32;
    for XPS_INTC_MER_Type use record
       Reserved at 0 range  0 .. 29;
       HIE      at 0 range 30 .. 30;
@@ -118,7 +118,7 @@ package XPS
       IVR : Unsigned_32       with Volatile_Full_Access => True;
       MER : XPS_INTC_MER_Type with Volatile_Full_Access => True;
    end record
-      with Size => 8 * 32;
+      with Object_Size => 8 * 32;
    for XPS_INTC_Type use record
       ISR at 16#00# range 0 .. 31;
       IPR at 16#04# range 0 .. 31;
