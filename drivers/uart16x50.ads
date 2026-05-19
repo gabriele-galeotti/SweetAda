@@ -63,17 +63,16 @@ pragma Style_Checks (Off);
       Data_Queue    : aliased FIFO.Queue_Type   := ([others => 0], 0, 0, 0) with Volatile => True;
    end record;
 
-   DESCRIPTOR_INVALID : constant Descriptor_Type :=
-      (
-       Uart_Model    => UARTNONE,
-       Base_Address  => Null_Address,
-       Scale_Address => 0,
-       Baud_Clock    => 1,
-       Flags         => (PC_UART => False),
-       Read_8        => MMIO.ReadN_U8'Access,
-       Write_8       => MMIO.WriteN_U8'Access,
-       -- Data_Queue    => FIFO.QUEUE_DEFAULT
-       Data_Queue    => ([others => 0], 0, 0, 0)
+   DESCRIPTOR_INVALID : constant Descriptor_Type := (
+      Uart_Model    => UARTNONE,
+      Base_Address  => Null_Address,
+      Scale_Address => 0,
+      Baud_Clock    => 1,
+      Flags         => (PC_UART => False),
+      Read_8        => MMIO.ReadN_U8'Access,
+      Write_8       => MMIO.WriteN_U8'Access,
+      -- Data_Queue    => FIFO.QUEUE_DEFAULT
+      Data_Queue    => ([others => 0], 0, 0, 0)
       );
 
    procedure Baud_Rate_Set
