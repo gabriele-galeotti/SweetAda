@@ -52,12 +52,11 @@ package uPD4991A
       Write_8       : not null Port_Write_8_Ptr := MMIO.WriteN_U8'Access;
    end record;
 
-   DESCRIPTOR_INVALID : constant Descriptor_Type :=
-      (
-       Base_Address  => Null_Address,
-       Scale_Address => 0,
-       Read_8        => MMIO.ReadN_U8'Access,
-       Write_8       => MMIO.WriteN_U8'Access
+   DESCRIPTOR_INVALID : constant Descriptor_Type := (
+      Base_Address  => Null_Address,
+      Scale_Address => 0,
+      Read_8        => MMIO.ReadN_U8'Access,
+      Write_8       => MMIO.WriteN_U8'Access
       );
 
    procedure Time_Read
