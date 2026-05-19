@@ -2437,9 +2437,273 @@ pragma Style_Checks (Off);
    -- Chapter 18 Crossbar Switch (AXBS)
    ----------------------------------------------------------------------------
 
+   AXBS_BASEADDRESS : constant := 16#4000_4000#;
+
    -- 18.2.1 Priority Registers Slave (AXBS_PRSn)
+
+   type Mx_Priority_Type is new Bits_3;
+   Mx_PRIORITY1 : constant Mx_Priority_Type := 2#000#; -- This master has level 1, or highest, priority when accessing the slave port.
+   Mx_PRIORITY2 : constant Mx_Priority_Type := 2#001#; -- This master has level 2 priority when accessing the slave port.
+   Mx_PRIORITY3 : constant Mx_Priority_Type := 2#010#; -- This master has level 3 priority when accessing the slave port.
+   Mx_PRIORITY4 : constant Mx_Priority_Type := 2#011#; -- This master has level 4 priority when accessing the slave port.
+   Mx_PRIORITY5 : constant Mx_Priority_Type := 2#100#; -- This master has level 5 priority when accessing the slave port.
+   Mx_PRIORITY6 : constant Mx_Priority_Type := 2#101#; -- This master has level 6 priority when accessing the slave port.
+   Mx_PRIORITY7 : constant Mx_Priority_Type := 2#110#; -- This master has level 7 priority when accessing the slave port.
+   Mx_PRIORITY8 : constant Mx_Priority_Type := 2#111#; -- This master has level 8, or lowest, priority when accessing the slave port.
+
+   type AXBS_PRSn_Type is record
+      M0        : Mx_Priority_Type := Mx_PRIORITY1; -- Master 0 Priority.
+      Reserved1 : Bits_1           := 0;
+      M1        : Mx_Priority_Type := Mx_PRIORITY1; -- Master 1 Priority.
+      Reserved2 : Bits_1           := 0;
+      M2        : Mx_Priority_Type := Mx_PRIORITY1; -- Master 2 Priority.
+      Reserved3 : Bits_1           := 0;
+      M3        : Mx_Priority_Type := Mx_PRIORITY1; -- Master 3 Priority.
+      Reserved4 : Bits_1           := 0;
+      M4        : Mx_Priority_Type := Mx_PRIORITY1; -- Master 4 Priority.
+      Reserved5 : Bits_1           := 0;
+      M5        : Mx_Priority_Type := Mx_PRIORITY1; -- Master 5 Priority.
+      Reserved6 : Bits_1           := 0;
+      M6        : Mx_Priority_Type := Mx_PRIORITY1; -- Master 6 Priority.
+      Reserved7 : Bits_1           := 0;
+      M7        : Mx_Priority_Type := Mx_PRIORITY1; -- Master 7 Priority.
+      Reserved8 : Bits_1           := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for AXBS_PRSn_Type use record
+      M0        at 0 range  0 ..  2;
+      Reserved1 at 0 range  3 ..  3;
+      M1        at 0 range  4 ..  6;
+      Reserved2 at 0 range  7 ..  7;
+      M2        at 0 range  8 .. 10;
+      Reserved3 at 0 range 11 .. 11;
+      M3        at 0 range 12 .. 14;
+      Reserved4 at 0 range 15 .. 15;
+      M4        at 0 range 16 .. 18;
+      Reserved5 at 0 range 19 .. 19;
+      M5        at 0 range 20 .. 22;
+      Reserved6 at 0 range 23 .. 23;
+      M6        at 0 range 24 .. 26;
+      Reserved7 at 0 range 27 .. 27;
+      M7        at 0 range 28 .. 30;
+      Reserved8 at 0 range 31 .. 31;
+   end record;
+
    -- 18.2.2 Control Register (AXBS_CRSn)
+
+   PARK_M0 : constant := 2#000#; -- Park on master port M0
+   PARK_M1 : constant := 2#001#; -- Park on master port M1
+   PARK_M2 : constant := 2#010#; -- Park on master port M2
+   PARK_M3 : constant := 2#011#; -- Park on master port M3
+   PARK_M4 : constant := 2#100#; -- Park on master port M4
+   PARK_M5 : constant := 2#101#; -- Park on master port M5
+   PARK_M6 : constant := 2#110#; -- Park on master port M6
+   PARK_M7 : constant := 2#111#; -- Park on master port M7
+
+   PCTL_PARK : constant := 2#00#; -- When no master makes a request, the arbiter parks the slave port on the master port defined by the PARK field
+   PCTL_LAST : constant := 2#01#; -- When no master makes a request, the arbiter parks the slave port on the last master to be in control of the slave port
+   PCTL_SAFE : constant := 2#10#; -- When no master makes a request, the slave port is not parked on a master and the arbiter drives all outputs to a constant safe state
+   PCTL_RSVD : constant := 2#11#; -- Reserved
+
+   ARB_FIXED  : constant := 2#00#; -- Fixed priority
+   ARB_ROTATE : constant := 2#01#; -- Round-robin, or rotating, priority
+   ARB_RSVD1  : constant := 2#10#; -- Reserved
+   ARB_RSVD2  : constant := 2#11#; -- Reserved
+
+   HLP_HIGHEST : constant := 0; -- The low power mode request has the highest priority for arbitration on this slave port
+   HLP_LOWEST  : constant := 1; -- The low power mode request has the lowest initial priority for arbitration on this slave port
+
+   type AXBS_CRSn_Type is record
+      PARK      : Bits_3  := PARK_M0;     -- Park
+      Reserved1 : Bits_1  := 0;
+      PCTL      : Bits_2  := PCTL_PARK;   -- Parking Control
+      Reserved2 : Bits_2  := 0;
+      ARB       : Bits_2  := ARB_FIXED;   -- Arbitration Mode
+      Reserved3 : Bits_20 := 0;
+      HLP       : Bits_1  := HLP_HIGHEST; -- Halt Low Priority
+      RO        : Boolean := False;       -- Read Only
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for AXBS_CRSn_Type use record
+      PARK      at 0 range  0 ..  2;
+      Reserved1 at 0 range  3 ..  3;
+      PCTL      at 0 range  4 ..  5;
+      Reserved2 at 0 range  6 ..  7;
+      ARB       at 0 range  8 ..  9;
+      Reserved3 at 0 range 10 .. 29;
+      HLP       at 0 range 30 .. 30;
+      RO        at 0 range 31 .. 31;
+   end record;
+
    -- 18.2.3 Master General Purpose Control Register (AXBS_MGPCRn)
+
+   AULB_NONE    : constant := 2#000#; -- No arbitration is allowed during an undefined length burst
+   AULB_ANY     : constant := 2#001#; -- Arbitration is allowed at any time during an undefined length burst
+   AULB_BEATS4  : constant := 2#010#; -- Arbitration is allowed after four beats of an undefined length burst
+   AULB_BEATS8  : constant := 2#011#; -- Arbitration is allowed after eight beats of an undefined length burst
+   AULB_BEATS16 : constant := 2#100#; -- Arbitration is allowed after 16 beats of an undefined length burst
+   AULB_RSVD1   : constant := 2#101#; -- Reserved
+   AULB_RSVD2   : constant := 2#110#; -- Reserved
+   AULB_RSVD3   : constant := 2#111#; -- Reserved
+
+   type AXBS_MGPCRn_Type is record
+      AULB     : Bits_3  := AULB_NONE; -- Arbitrates On Undefined Length Bursts
+      Reserved : Bits_29 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for AXBS_MGPCRn_Type use record
+      AULB     at 0 range 0 ..  2;
+      Reserved at 0 range 3 .. 31;
+   end record;
+
+   -- 18.2 Memory Map / Register Definition
+
+   AXBS_PRS0 : aliased AXBS_PRSn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#000#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_CRS0 : aliased AXBS_CRSn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#010#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_PRS1 : aliased AXBS_PRSn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#100#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_CRS1 : aliased AXBS_CRSn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#110#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_PRS2 : aliased AXBS_PRSn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#200#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_CRS2 : aliased AXBS_CRSn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#210#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_PRS3 : aliased AXBS_PRSn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#300#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_CRS3 : aliased AXBS_CRSn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#310#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_PRS4 : aliased AXBS_PRSn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#400#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_CRS4 : aliased AXBS_CRSn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#410#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_PRS5 : aliased AXBS_PRSn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#500#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_CRS5 : aliased AXBS_CRSn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#510#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_PRS6 : aliased AXBS_PRSn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#600#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_CRS6 : aliased AXBS_CRSn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#610#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_PRS7 : aliased AXBS_PRSn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#700#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_CRS7 : aliased AXBS_CRSn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#710#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_MGPCR0 : aliased AXBS_MGPCRn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#800#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_MGPCR1 : aliased AXBS_MGPCRn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#900#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_MGPCR2 : aliased AXBS_MGPCRn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#A00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_MGPCR3 : aliased AXBS_MGPCRn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#B00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_MGPCR4 : aliased AXBS_MGPCRn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#C00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_MGPCR5 : aliased AXBS_MGPCRn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#D00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_MGPCR6 : aliased AXBS_MGPCRn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#E00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   AXBS_MGPCR7 : aliased AXBS_MGPCRn_Type
+      with Address              => System'To_Address (AXBS_BASEADDRESS + 16#F00#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- Chapter 19 Memory Protection Unit (MPU)
