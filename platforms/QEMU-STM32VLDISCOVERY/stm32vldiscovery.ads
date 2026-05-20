@@ -425,8 +425,8 @@ pragma Style_Checks (Off);
       USART_CR3  : USART_CR3_Type  with Volatile_Full_Access => True;
       USART_GTPR : USART_GTPR_Type with Volatile_Full_Access => True;
    end record
-      with Object_Size             => 16#1C# * 8,
-           Suppress_Initialization => True;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16#1C# * 8;
    for USART_Type use record
       USART_SR   at 16#00# range 0 .. 31;
       USART_DR   at 16#04# range 0 .. 31;
