@@ -463,6 +463,14 @@ pragma Style_Checks (Off);
        SegType           : in     Segment_Gate_Type);
 
    ----------------------------------------------------------------------------
+   -- TSS
+   ----------------------------------------------------------------------------
+
+   procedure LTR
+      (Selector : in Selector_Type)
+      with Inline => True;
+
+   ----------------------------------------------------------------------------
    -- CRX registers
    ----------------------------------------------------------------------------
 
@@ -609,6 +617,14 @@ pragma Style_Checks (Off);
       with Inline => True;
 
    ----------------------------------------------------------------------------
+   -- RDTSC
+   ----------------------------------------------------------------------------
+
+   function RDTSC
+      return Unsigned_64
+      with Inline => True;
+
+   ----------------------------------------------------------------------------
    -- MSRs
    ----------------------------------------------------------------------------
 
@@ -733,6 +749,8 @@ pragma Style_Checks (Off);
    BREAKPOINT_Asm_String : constant String := ".byte   0xCC";
 
    procedure NOP
+      with Inline => True;
+   procedure HLT
       with Inline => True;
    procedure BREAKPOINT
       with Inline => True;

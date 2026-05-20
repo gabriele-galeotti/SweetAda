@@ -122,6 +122,48 @@ pragma Style_Checks (On);
    end IDT_Set_Handler;
 
    ----------------------------------------------------------------------------
+   -- LTR
+   ----------------------------------------------------------------------------
+   procedure LTR
+      (Selector : in Selector_Type)
+      is
+   begin
+      Asm (
+           Template => ""                   & CRLF &
+                       "        ltr     %0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Selector_Type'Asm_Input ("r", Selector),
+           Clobber  => "",
+           Volatile => True
+          );
+   end LTR;
+
+   ---------------------------------------------------------------------------
+   -- RDTSC
+   ---------------------------------------------------------------------------
+   function RDTSC
+      return Unsigned_64
+      is
+      EAX : Unsigned_32;
+      EDX : Unsigned_32;
+   begin
+      Asm (
+           Template => ""              & CRLF &
+                       "        rdtsc" & CRLF &
+                       "",
+           Outputs  => [
+                        Unsigned_32'Asm_Output ("=a", EAX),
+                        Unsigned_32'Asm_Output ("=d", EDX)
+                       ],
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Make_Word (EDX, EAX);
+   end RDTSC;
+
+   ----------------------------------------------------------------------------
    -- IA32_APIC_BASE
    ----------------------------------------------------------------------------
 
@@ -222,6 +264,23 @@ pragma Style_Checks (On);
            Volatile => True
           );
    end NOP;
+
+   ----------------------------------------------------------------------------
+   -- HLT
+   ----------------------------------------------------------------------------
+   procedure HLT
+      is
+   begin
+      Asm (
+           Template => ""            & CRLF &
+                       "        hlt" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end HLT;
 
    ----------------------------------------------------------------------------
    -- BREAKPOINT
