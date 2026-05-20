@@ -169,7 +169,10 @@ package body BSP
       UART16x50.Init (UART_Descriptors (2));
       UART16x50.Baud_Rate_Set (UART_Descriptors (2), Baud_Rate_Type'Enum_Rep (BR_19200));
       -- Console --------------------------------------------------------------
-      Console.Console_Descriptor := (Console_Putchar'Access, Console_Getchar'Access);
+      Console.Console_Descriptor := (
+         Write => Console_Putchar'Access,
+         Read  => Console_Getchar'Access
+         );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -- CPU ------------------------------------------------------------------
       Console.Print ("PC-x86-64", NL => True);
@@ -229,7 +232,14 @@ package body BSP
          Success       : Boolean;
          Device_Number : PCI.Device_Number_Type with Unreferenced => True;
       begin
-         PCI.Cfg_Find_Device_By_Id (PCI_Descriptor, 0, PCI.VENDOR_ID_QEMU, PCI.DEVICE_ID_QEMU_VGA, Device_Number, Success);
+         PCI.Cfg_Find_Device_By_Id (
+            PCI_Descriptor,
+            0,
+            PCI.VENDOR_ID_QEMU,
+            PCI.DEVICE_ID_QEMU_VGA,
+            Device_Number,
+            Success
+            );
          if Success then
             QEMU := True;
          end if;
