@@ -6889,7 +6889,7 @@ pragma Warnings (On);
    -- 28.4.4 TIM6/TIM7 status register (TIMx_SR)
 
    type TIMx_SR_Basic_Type is record
-      UIF      : Boolean := False; -- Update interrupt flag
+      UIF      : Boolean := True; -- Update interrupt flag
       Reserved : Bits_15 := 0;
    end record
       with Bit_Order   => Low_Order_First,
@@ -7488,8 +7488,8 @@ pragma Warnings (On);
    -- 31.4.3 Status register (WWDG_SR)
 
    type WWDG_SR_Type is record
-     EWIF     : Boolean; -- Early wakeup interrupt flag
-     Reserved : Bits_31;
+     EWIF     : Boolean := True; -- Early wakeup interrupt flag
+     Reserved : Bits_31 := 0;
    end record
       with Bit_Order   => Low_Order_First,
            Object_Size => 32;
@@ -7665,19 +7665,19 @@ pragma Warnings (On);
       WUTWF    : Boolean := True;         -- Wakeup timer write flag
       SHPF     : Boolean := False;        -- Shift operation pending
       INITS    : Boolean := False;        -- Initialization status flag
-      RSF      : Boolean := False;        -- Registers synchronization flag
+      RSF      : Boolean := True;         -- Registers synchronization flag
       INITF    : Boolean := False;        -- Initialization flag
       INIT     : Bits_1  := INIT_FREERUN; -- Initialization mode
-      ALRAF    : Boolean := False;        -- Alarm A flag
-      ALRBF    : Boolean := False;        -- Alarm B flag
-      WUTF     : Boolean := False;        -- Wakeup timer flag
-      TSF      : Boolean := False;        -- Time-stamp flag
-      TSOVF    : Boolean := False;        -- Time-stamp overflow flag
-      TAMP1F   : Boolean := False;        -- RTC_TAMP1 detection flag
-      TAMP2F   : Boolean := False;        -- RTC_TAMP2 detection flag
-      TAMP3F   : Boolean := False;        -- RTC_TAMP3 detection flag
+      ALRAF    : Boolean := True;         -- Alarm A flag
+      ALRBF    : Boolean := True;         -- Alarm B flag
+      WUTF     : Boolean := True;         -- Wakeup timer flag
+      TSF      : Boolean := True;         -- Time-stamp flag
+      TSOVF    : Boolean := True;         -- Time-stamp overflow flag
+      TAMP1F   : Boolean := True;         -- RTC_TAMP1 detection flag
+      TAMP2F   : Boolean := True;         -- RTC_TAMP2 detection flag
+      TAMP3F   : Boolean := True;         -- RTC_TAMP3 detection flag
       RECALPF  : Boolean := False;        -- Recalibration pending Flag
-      ITSF     : Boolean := False;        -- Internal tTime-stamp flag
+      ITSF     : Boolean := True;         -- Internal tTime-stamp flag
       Reserved : Bits_14 := 0;
    end record
       with Bit_Order   => Low_Order_First,
