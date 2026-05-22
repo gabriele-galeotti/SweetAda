@@ -1126,7 +1126,6 @@ pragma Style_Checks (Off);
            Import               => True,
            Convention           => Ada;
 
-
    -- 9.2.18 Main Clock Oscillator Wait Control Register (MOSCWTCR)
 
    --                                           MOMCR.AUTODRVEN = 0        MOMCR.AUTODRVEN
@@ -1223,13 +1222,231 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 10.2.1 CAC Control Register 0 (CACR0)
+
+   type CACR0_Type is record
+      CFME     : Boolean := False; -- Clock Frequency Measurement Enable
+      Reserved : Bits_7  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for CACR0_Type use record
+      CFME     at 0 range 0 .. 0;
+      Reserved at 0 range 1 .. 7;
+   end record;
+
+   CACR0_ADDRESS : constant := 16#4004_4600#;
+
+   CACR0 : aliased CACR0_Type
+      with Address              => System'To_Address (CACR0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 10.2.2 CAC Control Register 1 (CACR1)
+
+   FMCS_MAINCLK : constant := 2#000#; -- Main clock oscillator
+   FMCS_SUBCLK  : constant := 2#001#; -- Sub-clock oscillator
+   FMCS_HOCOCLK : constant := 2#010#; -- HOCO clock
+   FMCS_MOCOCLK : constant := 2#011#; -- MOCO clock
+   FMCS_LOCOCLK : constant := 2#100#; -- LOCO clock
+   FMCS_PCLKB   : constant := 2#101#; -- Peripheral module clock (PCLKB)
+   FMCS_IWDTCLK : constant := 2#110#; -- IWDTCLK clock
+   FMCS_RSVD    : constant := 2#111#; -- Setting prohibited.
+
+   TCSS_NONE  : constant := 2#00#; -- No division
+   TCSS_DIV4  : constant := 2#01#; -- ×1/4 clock
+   TCSS_DIV8  : constant := 2#10#; -- ×1/8 clock
+   TCSS_DIV32 : constant := 2#11#; -- ×1/32 clock.
+
+   EDGES_RISEDGE  : constant := 2#00#; -- Rising edge
+   EDGES_FALLEDGE : constant := 2#01#; -- Falling edge
+   EDGES_BOTHEDGE : constant := 2#10#; -- Both rising and falling edges
+   EDGES_RSVD     : constant := 2#11#; -- Setting prohibited.
+
+   type CACR1_Type is record
+      CACREFE : Boolean := False;         -- CACREF Pin Input Enable
+      FMCS    : Bits_3  := FMCS_MAINCLK;  -- Measurement Target Clock Select
+      TCSS    : Bits_2  := TCSS_NONE;     -- Measurement Target Clock Frequency Division Ratio Select
+      EDGES   : Bits_2  := EDGES_RISEDGE; -- Valid Edge Select
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for CACR1_Type use record
+      CACREFE at 0 range 0 .. 0;
+      FMCS    at 0 range 1 .. 3;
+      TCSS    at 0 range 4 .. 5;
+      EDGES   at 0 range 6 .. 7;
+   end record;
+
+   CACR1_ADDRESS : constant := 16#4004_4601#;
+
+   CACR1 : aliased CACR1_Type
+      with Address              => System'To_Address (CACR1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 10.2.3 CAC Control Register 2 (CACR2)
+
+   RPS_CACREF : constant := 0; -- CACREF pin input
+   RPS_INTCLK : constant := 1; -- Internal clock (internally generated signal).
+
+   RSCS_MAINCLK renames FMCS_MAINCLK;
+   RSCS_SUBCLK  renames FMCS_SUBCLK;
+   RSCS_HOCOCLK renames FMCS_HOCOCLK;
+   RSCS_MOCOCLK renames FMCS_MOCOCLK;
+   RSCS_LOCOCLK renames FMCS_LOCOCLK;
+   RSCS_PCLKB   renames FMCS_PCLKB;
+   RSCS_IWDTCLK renames FMCS_IWDTCLK;
+   RSCS_RSVD    renames FMCS_RSVD;
+
+   RCDS_DIV32   : constant := 2#00#; -- ×1/32 clock
+   RCDS_DIV128  : constant := 2#01#; -- ×1/128 clock
+   RCDS_DIV1024 : constant := 2#10#; -- ×1/1024 clock
+   RCDS_DIV8192 : constant := 2#11#; -- ×1/8192 clock.
+
+   DFS_DISABLE     : constant := 2#00#; -- Disable digital filtering
+   DFS_SAMPLE      : constant := 2#01#; -- Use sampling clock for the digital filter as the frequency measuring clock
+   DFS_SAMPLEDIV4  : constant := 2#10#; -- Use sampling clock for the digital filter as the frequency measuring clock divided by 4
+   DFS_SAMPLEDIV16 : constant := 2#11#; -- Use sampling clock for the digital filter as the frequency measuring clock divided by 16.
+
+   type CACR2_Type is record
+      RPS  : Bits_1 := RPS_CACREF;   -- Reference Signal Select
+      RSCS : Bits_3 := RSCS_MAINCLK; -- Measurement Reference Clock Select
+      RCDS : Bits_2 := RCDS_DIV32;   -- Measurement Reference Clock Frequency Division Ratio Select
+      DFS  : Bits_2 := DFS_DISABLE;  -- Digital Filter Select
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for CACR2_Type use record
+      RPS  at 0 range 0 .. 0;
+      RSCS at 0 range 1 .. 3;
+      RCDS at 0 range 4 .. 5;
+      DFS  at 0 range 6 .. 7;
+   end record;
+
+   CACR2_ADDRESS : constant := 16#4004_4602#;
+
+   CACR2 : aliased CACR2_Type
+      with Address              => System'To_Address (CACR2_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 10.2.4 CAC Interrupt Control Register (CAICR)
+
+   type CAICR_Type is record
+      FERRIE    : Boolean := False; -- Frequency Error Interrupt Request Enable
+      MENDIE    : Boolean := False; -- Measurement End Interrupt Request Enable
+      OVFIE     : Boolean := False; -- Overflow Interrupt Request Enable
+      Reserved1 : Bits_1  := 0;
+      FERRFCL   : Boolean := False; -- FERRF Clear
+      MENDFCL   : Boolean := False; -- MENDF Clear
+      OVFFCL    : Boolean := False; -- OVFF Clear
+      Reserved2 : Bits_1  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for CAICR_Type use record
+      FERRIE    at 0 range 0 .. 0;
+      MENDIE    at 0 range 1 .. 1;
+      OVFIE     at 0 range 2 .. 2;
+      Reserved1 at 0 range 3 .. 3;
+      FERRFCL   at 0 range 4 .. 4;
+      MENDFCL   at 0 range 5 .. 5;
+      OVFFCL    at 0 range 6 .. 6;
+      Reserved2 at 0 range 7 .. 7;
+   end record;
+
+   CAICR_ADDRESS : constant := 16#4004_4603#;
+
+   CAICR : aliased CAICR_Type
+      with Address              => System'To_Address (CAICR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 10.2.5 CAC Status Register (CASTR)
+
+   type CASTR_Type is record
+      FERRF    : Boolean; -- Clock frequency has deviated beyond the allowable range (frequency error).
+      MENDF    : Boolean; -- Measurement ended.
+      OVFF     : Boolean; -- Counter overflowed.
+      Reserved : Bits_5;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for CASTR_Type use record
+      FERRF    at 0 range 0 .. 0;
+      MENDF    at 0 range 1 .. 1;
+      OVFF     at 0 range 2 .. 2;
+      Reserved at 0 range 3 .. 7;
+   end record;
+
+   CASTR_ADDRESS : constant := 16#4004_4604#;
+
+   CASTR : aliased CASTR_Type
+      with Address              => System'To_Address (CASTR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 10.2.6 CAC Upper-Limit Value Setting Register (CAULVR)
+
+   type CAULVR_Type is record
+      CAULVR : Unsigned_16 := 0; -- specifies the upper value of the allowable range.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CAULVR_Type use record
+      CAULVR at 0 range 0 .. 15;
+   end record;
+
+   CAULVR_ADDRESS : constant := 16#4004_4606#;
+
+   CAULVR : aliased CAULVR_Type
+      with Address              => System'To_Address (CAULVR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 10.2.7 CAC Lower-Limit Value Setting Register (CALLVR)
+
+   type CALLVR_Type is record
+      CALLVR : Unsigned_16 := 0; -- specifies the lower value of the allowable range.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CALLVR_Type use record
+      CALLVR at 0 range 0 .. 15;
+   end record;
+
+   CALLVR_ADDRESS : constant := 16#4004_4608#;
+
+   CALLVR : aliased CALLVR_Type
+      with Address              => System'To_Address (CALLVR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 10.2.8 CAC Counter Buffer Register (CACNTBR)
+
+   type CACNTBR_Type is record
+      CACNTBR : Unsigned_16; -- stores the measurement result.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for CACNTBR_Type use record
+      CACNTBR at 0 range 0 .. 15;
+   end record;
+
+   CACNTBR_ADDRESS : constant := 16#4004_460A#;
+
+   CACNTBR : aliased CACNTBR_Type
+      with Address              => System'To_Address (CACNTBR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 11. Low Power Modes
@@ -2164,7 +2381,8 @@ pragma Warnings (Off);
       DELSR  : DELSR_Array_Type;
       IELSR  : IELSR_Array_Type;
    end record
-      with Object_Size => 16#F00# * 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16#F00# * 8;
    for ICU_Type use record
       IRQCR  at 0        range 0 .. 16 * 8 - 1;
       NMICR  at 16#0100# range 0 ..  7;
@@ -2552,8 +2770,8 @@ pragma Warnings (Off);
       DMREQ : DMREQ_Type with Volatile_Full_Access => True;
       DMSTS : DMSTS_Type with Volatile_Full_Access => True;
    end record
-      with Object_Size             => 16#40# * 8,
-           Suppress_Initialization => True;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16#40# * 8;
    for DMAC_Type use record
       DMSAR at 16#00# range 0 .. 31;
       DMDAR at 16#04# range 0 .. 31;
@@ -2626,8 +2844,8 @@ pragma Warnings (Off);
       EORR : Bitmap_16 with Volatile_Full_Access => True;
       EOSR : Bitmap_16 with Volatile_Full_Access => True;
    end record
-      with Object_Size             => 16#20# * 8,
-           Suppress_Initialization => True;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16#20# * 8;
    for PORT_Type use record
       PODR at 16#00# range 0 .. 15;
       PDR  at 16#02# range 0 .. 15;
@@ -2709,10 +2927,9 @@ pragma Warnings (On);
       PSEL      : Bits_5  := PSEL_HiZ_JTAG_SWD; -- Peripheral Select
       Reserved5 : Bits_3  := 0;
    end record
-      with Bit_Order               => Low_Order_First,
-           Object_Size             => 32,
-           Volatile_Full_Access    => True,
-           Suppress_Initialization => True;
+      with Bit_Order            => Low_Order_First,
+           Object_Size          => 32,
+           Volatile_Full_Access => True;
    for PFSR_Type use record
       PODR      at 0 range  0 ..  0;
       PIDR      at 0 range  1 ..  1;
@@ -3115,7 +3332,8 @@ pragma Warnings (On);
       AGTCMSR  : AGTCMSR_Type  with Volatile_Full_Access => True;
       AGTIOSEL : AGTIOSEL_Type with Volatile_Full_Access => True;
    end record
-      with Object_Size => 16 * 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16 * 8;
    for AGT_Type use record
       AGT      at 16#00# range 0 .. 15;
       AGTCMA   at 16#02# range 0 .. 15;
@@ -4431,8 +4649,8 @@ pragma Warnings (On);
       SPTR     : SPTR_Type   with Volatile_Full_Access => True;
       Reserved : Bits_24;
    end record
-      with Object_Size             => 16#20# * 8,
-           Suppress_Initialization => True;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16#20# * 8;
    for SCI_Type use record
       SMR      at 16#00# range 0 ..  7;
       BRR      at 16#01# range 0 ..  7;
@@ -4496,8 +4714,8 @@ pragma Warnings (On);
    IRCR : aliased IRCR_Type
       with Address              => System'To_Address (IRCR_ADDRESS),
            Volatile_Full_Access => True,
-           Import     => True,
-           Convention => Ada;
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 36. I2C Bus Interface (IIC)
@@ -4959,8 +5177,8 @@ pragma Warnings (Off);
       ICDRR  : ICDRR_Type     with Volatile_Full_Access => True;
       ICDRS  : ICDRS_Type     with Volatile_Full_Access => True;
    end record
-      with Object_Size             => 16#100# * 8,
-           Suppress_Initialization => True;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16#100# * 8;
    for I2C_Type use record
       ICCR1  at 16#00# range 0 .. 7;
       ICCR2  at 16#01# range 0 .. 7;
@@ -5473,8 +5691,8 @@ pragma Warnings (Off);
       SPCMD  : SPCMD_Array_Type with Volatile => True;
       SPDCR2 : SPDCR2_Type      with Volatile_Full_Access => True;
    end record
-      with Object_Size             => 16#100# * 8,
-           Suppress_Initialization => True;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16#100# * 8;
    for SPI_Type use record
       SPCR   at 16#00# range 0 ..  7;
       SSLP   at 16#01# range 0 ..  7;
@@ -5810,8 +6028,8 @@ pragma Warnings (Off);
       SFMPMD  : SFMPMD_Type  with Volatile_Full_Access => True;
       SFMCNT1 : SFMCNT1_Type with Volatile_Full_Access => True;
    end record
-      with Object_Size             => 16#808# * 8,
-           Suppress_Initialization => True;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16#808# * 8;
    for QSPI_Type use record
       SFMSMD  at 16#000# range 0 .. 31;
       SFMSSC  at 16#004# range 0 .. 31;
