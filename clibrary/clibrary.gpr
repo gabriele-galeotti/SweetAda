@@ -36,8 +36,7 @@ library project CLibrary is
       "bits-byte_swap_8.adb",
       "bits-byte_swap_16.adb",
       "bits-byte_swap_32.adb",
-      "bits-byte_swap_64.adb",
-      "bits-c.ads"
+      "bits-byte_swap_64.adb"
       );
    C_Files := (
       "assert.c",
