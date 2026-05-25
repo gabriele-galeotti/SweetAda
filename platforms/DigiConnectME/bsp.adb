@@ -15,8 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
-with System.Storage_Elements;
+-- with System;
+-- with System.Storage_Elements;
 with Configure;
 with Definitions;
 with Bits;
@@ -34,8 +34,8 @@ package body BSP
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use System.Storage_Elements;
+--   use System;
+--   use System.Storage_Elements;
    use Interfaces;
    use Definitions;
    use Bits;
