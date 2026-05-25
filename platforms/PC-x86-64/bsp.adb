@@ -193,7 +193,7 @@ package body BSP
          );
       Console.Print (
          Prefix => "APIC_Base:          ",
-         Value  => Shift_Left (Unsigned_32 (To_IA32_APIC_BASE (RDMSR (IA32_APIC_BASE)).APIC_Base), 12),
+         Value  => Shift_Left (Unsigned_64 (To_IA32_APIC_BASE (RDMSR (IA32_APIC_BASE)).APIC_Base), 12),
          NL     => True
          );
       -- PCI ------------------------------------------------------------------
