@@ -37,7 +37,7 @@ package APIC
    use Bits;
 
    ----------------------------------------------------------------------------
-   -- x86 "local" APIC
+   -- Local APIC
    ----------------------------------------------------------------------------
 
    -- 10.8.3.1 Task and Processor Priorities
@@ -184,7 +184,7 @@ package APIC
       LINT1 at 16#360# range 0 .. 31;
    end record;
 
-   LAPIC_BASEADDRESS : constant := 16#0000_0000_FEE0_0000#;
+   LAPIC_BASEADDRESS : constant := 16#FEE0_0000#;
 
    LAPIC : aliased LAPIC_Type
       with Address    => To_Address (LAPIC_BASEADDRESS),
@@ -200,7 +200,7 @@ package APIC
    -- IOAPIC_QEMU_ID: 0
    ----------------------------------------------------------------------------
 
-   IOAPIC_BASEADDRESS : constant := 16#0000_0000_FEC0_0000#;
+   IOAPIC_BASEADDRESS : constant := 16#FEC0_0000#;
 
    IOREGSEL  : constant := 0;
    IOWIN     : constant := 16#10#;

@@ -142,7 +142,7 @@
 #define IRQ15 47
 
 /*
- * Breakpoint.
+ * Special opcodes.
  */
 
 #define OPCODE_NOP             0x90

@@ -15,9 +15,4 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package body GDT_Simple
-   is
-
-   procedure Null_Procedure is null;
-
-end GDT_Simple;
+pragma No_Body;
