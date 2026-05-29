@@ -183,17 +183,17 @@ package body BSP
       -------------------------------------------------------------------------
       Console.Print (
          Prefix => "64-bit mode:        ",
-         Value  => To_IA32_EFER (RDMSR (IA32_EFER)).LMA,
+         Value  => IA32_EFER_Read.LMA,
          NL     => True
          );
       Console.Print (
          Prefix => "APIC_Global_Enable: ",
-         Value  => To_IA32_APIC_BASE (RDMSR (IA32_APIC_BASE)).APIC_Global_Enable,
+         Value  => IA32_APIC_BASE_Read.EN,
          NL     => True
          );
       Console.Print (
          Prefix => "APIC_Base:          ",
-         Value  => Shift_Left (Unsigned_64 (To_IA32_APIC_BASE (RDMSR (IA32_APIC_BASE)).APIC_Base), 12),
+         Value  => Shift_Left (Unsigned_64 (IA32_APIC_BASE_Read.APIC_Base), 12),
          NL     => True
          );
       -- PCI ------------------------------------------------------------------
@@ -257,9 +257,9 @@ package body BSP
       declare
          Value : IA32_APIC_BASE_Type;
       begin
-         Value := To_IA32_APIC_BASE (RDMSR (IA32_APIC_BASE));
-         Value.APIC_Global_Enable := True;
-         WRMSR (IA32_APIC_BASE, To_U64 (Value));
+         Value := IA32_APIC_BASE_Read;
+         Value.EN := True;
+         IA32_APIC_BASE_Write (Value);
       end;
       APIC.LAPIC_Init;
       PC.PIC_Init (Unsigned_8 (PC.PIC_Irq0), Unsigned_8 (PC.PIC_Irq8));
