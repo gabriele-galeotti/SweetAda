@@ -135,7 +135,7 @@ package body x86
    end ESP_Read;
 
    ----------------------------------------------------------------------------
-   -- CRX registers
+   -- CRx registers
    ----------------------------------------------------------------------------
 
    function CR0_Read
@@ -171,21 +171,36 @@ package body x86
    end CR0_Write;
 
    function CR2_Read
-      return Address
+      return CR2_Type
       is
-      Result : Address;
+      Result : CR2_Type;
    begin
       Asm (
            Template => ""                         & CRLF &
                        "        movl    %%cr2,%0" & CRLF &
                        "",
-           Outputs  => Address'Asm_Output ("=a", Result),
+           Outputs  => CR2_Type'Asm_Output ("=a", Result),
            Inputs   => No_Input_Operands,
            Clobber  => "",
            Volatile => True
           );
       return Result;
    end CR2_Read;
+
+   procedure CR2_Write
+      (Value : in CR2_Type)
+      is
+   begin
+      Asm (
+           Template => ""                         & CRLF &
+                       "        movl    %0,%%cr2" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => CR2_Type'Asm_Input ("a", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end CR2_Write;
 
    function CR3_Read
       return CR3_Type

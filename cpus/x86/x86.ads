@@ -695,7 +695,7 @@ pragma Style_Checks (Off);
       with Inline => True;
 
    ----------------------------------------------------------------------------
-   -- CRX registers
+   -- CRx registers
    ----------------------------------------------------------------------------
 
    -- CR0
@@ -735,6 +735,31 @@ pragma Style_Checks (Off);
       PG        at 0 range 31 .. 31;
    end record;
 
+   function CR0_Read
+      return CR0_Type
+      with Inline => True;
+   procedure CR0_Write
+      (Value : in CR0_Type)
+      with Inline => True;
+
+   -- CR2
+
+   type CR2_Type is record
+      PFLA : Unsigned_32; -- Page-Fault Linear Address
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for CR2_Type use record
+      PFLA at 0 range 0 .. 31;
+   end record;
+
+   function CR2_Read
+      return CR2_Type
+      with Inline => True;
+   procedure CR2_Write
+      (Value : in CR2_Type)
+      with Inline => True;
+
    -- CR3
 
    type CR3_Type is record
@@ -754,25 +779,14 @@ pragma Style_Checks (Off);
       PDB       at 0 range 12 .. 31;
    end record;
 
-   -- 386s do not have CR4
-
-   -- subprograms
-
-   function CR0_Read
-      return CR0_Type
-      with Inline => True;
-   procedure CR0_Write
-      (Value : in CR0_Type)
-      with Inline => True;
-   function CR2_Read
-      return Address
-      with Inline => True;
    function CR3_Read
       return CR3_Type
       with Inline => True;
    procedure CR3_Write
       (Value : in CR3_Type)
       with Inline => True;
+
+   -- 386s do not have CR4
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
