@@ -513,13 +513,47 @@ pragma Style_Checks (Off);
       Reserved4 at 0 range 32 .. 63;
    end record;
 
-   function To_U64
-      (Value : CR0_Type)
-      return Unsigned_64
-      with Inline => True;
-   function To_CR0
-      (Value : Unsigned_64)
+   function CR0_Read
       return CR0_Type
+      with Inline => True;
+   procedure CR0_Write
+      (Value : in CR0_Type)
+      with Inline => True;
+
+   -- CR1
+
+   type CR1_Type is record
+      Reserved : Bits_64;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for CR1_Type use record
+      Reserved at 0 range 0 .. 63;
+   end record;
+
+   function CR1_Read
+      return CR1_Type
+      with Inline => True;
+   procedure CR1_Write
+      (Value : in CR1_Type)
+      with Inline => True;
+
+   -- CR2
+
+   type CR2_Type is record
+      PFLA : Unsigned_64; -- Page-Fault Linear Address
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for CR2_Type use record
+      PFLA at 0 range 0 .. 63;
+   end record;
+
+   function CR2_Read
+      return CR2_Type
+      with Inline => True;
+   procedure CR2_Write
+      (Value : in CR2_Type)
       with Inline => True;
 
    -- CR3
@@ -541,13 +575,11 @@ pragma Style_Checks (Off);
       PDB       at 0 range 12 .. 63;
    end record;
 
-   function To_U64
-      (Value : CR3_Type)
-      return Unsigned_64
-      with Inline => True;
-   function To_CR3
-      (Value : Unsigned_64)
+   function CR3_Read
       return CR3_Type
+      with Inline => True;
+   procedure CR3_Write
+      (Value : in CR3_Type)
       with Inline => True;
 
    -- CR4
@@ -607,13 +639,11 @@ pragma Style_Checks (Off);
       Reserved5  at 0 range 32 .. 63;
    end record;
 
-   function To_U64
-      (Value : CR4_Type)
-      return Unsigned_64
-      with Inline => True;
-   function To_CR4
-      (Value : Unsigned_64)
+   function CR4_Read
       return CR4_Type
+      with Inline => True;
+   procedure CR4_Write
+      (Value : in CR4_Type)
       with Inline => True;
 
    ----------------------------------------------------------------------------
@@ -767,49 +797,57 @@ pragma Style_Checks (Off);
    IA32_KERNEL_GS_BASE           : constant MSR_Type := 16#C000_0102#;
    IA32_TSC_AUX                  : constant MSR_Type := 16#C000_0103#;
 
+   -- subprograms
+
+   function RDMSR
+      (MSR : MSR_Type)
+      return Unsigned_64
+      with Inline => True;
+   procedure WRMSR
+      (MSR   : in MSR_Type;
+       Value : in Unsigned_64)
+      with Inline => True;
+
    -- IA32_APIC_BASE
 
    type IA32_APIC_BASE_Type is record
-      Reserved1          : Bits_8;
-      BSP                : Boolean; -- Indicates if the processor is the bootstrap processor (BSP).
-      Reserved2          : Bits_1;
-      Enable_x2APIC_mode : Boolean;
-      APIC_Global_Enable : Boolean; -- Enables or disables the local APIC
-      APIC_Base          : Bits_24; -- Specifies the base address of the APIC registers.
-      Reserved3          : Bits_28;
+      Reserved1 : Bits_8  := 0;
+      BSP       : Boolean := False; -- Indicates if the processor is the bootstrap processor (BSP).
+      Reserved2 : Bits_1  := 0;
+      EXTD      : Boolean := False; -- Enable x2APIC mode
+      EN        : Boolean := False; -- xAPIC global enable/disable
+      APIC_Base : Bits_24 := 0;     -- Base physical address
+      Reserved3 : Bits_28 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 64;
    for IA32_APIC_BASE_Type use record
-      Reserved1          at 0 range  0 ..  7;
-      BSP                at 0 range  8 ..  8;
-      Reserved2          at 0 range  9 ..  9;
-      Enable_x2APIC_mode at 0 range 10 .. 10;
-      APIC_Global_Enable at 0 range 11 .. 11;
-      APIC_Base          at 0 range 12 .. 35;
-      Reserved3          at 0 range 36 .. 63;
+      Reserved1 at 0 range  0 ..  7;
+      BSP       at 0 range  8 ..  8;
+      Reserved2 at 0 range  9 ..  9;
+      EXTD      at 0 range 10 .. 10;
+      EN        at 0 range 11 .. 11;
+      APIC_Base at 0 range 12 .. 35;
+      Reserved3 at 0 range 36 .. 63;
    end record;
 
-   function To_U64
-      (Value : IA32_APIC_BASE_Type)
-      return Unsigned_64
-      with Inline => True;
-   function To_IA32_APIC_BASE
-      (Value : Unsigned_64)
+   function IA32_APIC_BASE_Read
       return IA32_APIC_BASE_Type
+      with Inline => True;
+   procedure IA32_APIC_BASE_Write
+      (Value : in IA32_APIC_BASE_Type)
       with Inline => True;
 
    -- IA32_EFER
 
    type IA32_EFER_Type is record
-      SCE       : Boolean; -- SYSCALL Enable
-      Reserved1 : Bits_7;
-      LME       : Boolean; -- IA-32e Mode Enable
-      Reserved2 : Bits_1;
-      LMA       : Boolean; -- IA-32e Mode Active
-      NXE       : Boolean; -- Execute Disable Bit Enable
-      Reserved3 : Bits_20;
-      Reserved4 : Bits_32;
+      SCE       : Boolean := False; -- SYSCALL Enable
+      Reserved1 : Bits_7  := 0;
+      LME       : Boolean := False; -- IA-32e Mode Enable
+      Reserved2 : Bits_1  := 0;
+      LMA       : Boolean := False; -- IA-32e Mode Active
+      NXE       : Boolean := False; -- Execute Disable Bit Enable
+      Reserved3 : Bits_52 := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 64;
@@ -820,28 +858,14 @@ pragma Style_Checks (Off);
       Reserved2 at 0 range  9 ..  9;
       LMA       at 0 range 10 .. 10;
       NXE       at 0 range 11 .. 11;
-      Reserved3 at 0 range 12 .. 31;
-      Reserved4 at 0 range 32 .. 63;
+      Reserved3 at 0 range 12 .. 63;
    end record;
 
-   function To_U64
-      (Value : IA32_EFER_Type)
-      return Unsigned_64
-      with Inline => True;
-   function To_IA32_EFER
-      (Value : Unsigned_64)
+   function IA32_EFER_Read
       return IA32_EFER_Type
       with Inline => True;
-
-   -- subprograms
-
-   function RDMSR
-      (MSR_Register_Number : MSR_Type)
-      return Unsigned_64
-      with Inline => True;
-   procedure WRMSR
-      (MSR_Register_Number : in MSR_Type;
-       Value               : in Unsigned_64)
+   procedure IA32_EFER_Write
+      (Value : in IA32_EFER_Type)
       with Inline => True;
 
    ----------------------------------------------------------------------------

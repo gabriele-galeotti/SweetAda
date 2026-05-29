@@ -36,8 +36,6 @@ package body x86_64
    use System.Machine_Code;
    use LLutils;
 
-   generic function UC renames Ada.Unchecked_Conversion;
-
    CRLF : String renames Definitions.CRLF;
 
    --========================================================================--
@@ -49,17 +47,168 @@ package body x86_64
    --========================================================================--
 
    ----------------------------------------------------------------------------
-   -- CRx <-> Unsigned_64
+   -- CRx registers
    ----------------------------------------------------------------------------
 
-pragma Style_Checks (Off);
-   function To_U64 (Value : CR0_Type) return Unsigned_64 is function Convert is new UC (CR0_Type, Unsigned_64); begin return Convert (Value); end To_U64;
-   function To_CR0 (Value : Unsigned_64) return CR0_Type is function Convert is new UC (Unsigned_64, CR0_Type); begin return Convert (Value); end To_CR0;
-   function To_U64 (Value : CR3_Type) return Unsigned_64 is function Convert is new UC (CR3_Type, Unsigned_64); begin return Convert (Value); end To_U64;
-   function To_CR3 (Value : Unsigned_64) return CR3_Type is function Convert is new UC (Unsigned_64, CR3_Type); begin return Convert (Value); end To_CR3;
-   function To_U64 (Value : CR4_Type) return Unsigned_64 is function Convert is new UC (CR4_Type, Unsigned_64); begin return Convert (Value); end To_U64;
-   function To_CR4 (Value : Unsigned_64) return CR4_Type is function Convert is new UC (Unsigned_64, CR4_Type); begin return Convert (Value); end To_CR4;
-pragma Style_Checks (On);
+   function CR0_Read
+      return CR0_Type
+      is
+      Result : CR0_Type;
+   begin
+      Asm (
+           Template => ""                         & CRLF &
+                       "        movq    %%cr0,%0" & CRLF &
+                       "",
+           Outputs  => CR0_Type'Asm_Output ("=a", Result),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Result;
+   end CR0_Read;
+
+   procedure CR0_Write
+      (Value : in CR0_Type)
+      is
+   begin
+      Asm (
+           Template => ""                         & CRLF &
+                       "        movq    %0,%%cr0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => CR0_Type'Asm_Input ("a", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end CR0_Write;
+
+   function CR1_Read
+      return CR1_Type
+      is
+      Result : CR1_Type;
+   begin
+      Asm (
+           Template => ""                         & CRLF &
+                       "        movq    %%cr1,%0" & CRLF &
+                       "",
+           Outputs  => CR1_Type'Asm_Output ("=a", Result),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Result;
+   end CR1_Read;
+
+   procedure CR1_Write
+      (Value : in CR1_Type)
+      is
+   begin
+      Asm (
+           Template => ""                         & CRLF &
+                       "        movq    %0,%%cr1" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => CR1_Type'Asm_Input ("a", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end CR1_Write;
+
+   function CR2_Read
+      return CR2_Type
+      is
+      Result : CR2_Type;
+   begin
+      Asm (
+           Template => ""                         & CRLF &
+                       "        movq    %%cr2,%0" & CRLF &
+                       "",
+           Outputs  => CR2_Type'Asm_Output ("=a", Result),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Result;
+   end CR2_Read;
+
+   procedure CR2_Write
+      (Value : in CR2_Type)
+      is
+   begin
+      Asm (
+           Template => ""                         & CRLF &
+                       "        movq    %0,%%cr2" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => CR2_Type'Asm_Input ("a", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end CR2_Write;
+
+   function CR3_Read
+      return CR3_Type
+      is
+      Result : CR3_Type;
+   begin
+      Asm (
+           Template => ""                         & CRLF &
+                       "        movq    %%cr3,%0" & CRLF &
+                       "",
+           Outputs  => CR3_Type'Asm_Output ("=a", Result),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Result;
+   end CR3_Read;
+
+   procedure CR3_Write
+      (Value : in CR3_Type)
+      is
+   begin
+      Asm (
+           Template => ""                         & CRLF &
+                       "        movq    %0,%%cr3" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => CR3_Type'Asm_Input ("a", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end CR3_Write;
+
+   function CR4_Read
+      return CR4_Type
+      is
+      Result : CR4_Type;
+   begin
+      Asm (
+           Template => ""                         & CRLF &
+                       "        movq    %%cr4,%0" & CRLF &
+                       "",
+           Outputs  => CR4_Type'Asm_Output ("=a", Result),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Result;
+   end CR4_Read;
+
+   procedure CR4_Write
+      (Value : in CR4_Type)
+      is
+   begin
+      Asm (
+           Template => ""                         & CRLF &
+                       "        movq    %0,%%cr4" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => CR4_Type'Asm_Input ("a", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end CR4_Write;
 
    ----------------------------------------------------------------------------
    -- LIDTR
@@ -164,55 +313,11 @@ pragma Style_Checks (On);
    end RDTSC;
 
    ----------------------------------------------------------------------------
-   -- IA32_APIC_BASE
-   ----------------------------------------------------------------------------
-
-   function To_U64
-      (Value : IA32_APIC_BASE_Type)
-      return Unsigned_64
-      is
-      function Convert is new Ada.Unchecked_Conversion (IA32_APIC_BASE_Type, Unsigned_64);
-   begin
-      return Convert (Value);
-   end To_U64;
-
-   function To_IA32_APIC_BASE
-      (Value : Unsigned_64)
-      return IA32_APIC_BASE_Type
-      is
-      function Convert is new Ada.Unchecked_Conversion (Unsigned_64, IA32_APIC_BASE_Type);
-   begin
-      return Convert (Value);
-   end To_IA32_APIC_BASE;
-
-   ----------------------------------------------------------------------------
-   -- IA32_EFER
-   ----------------------------------------------------------------------------
-
-   function To_U64
-      (Value : IA32_EFER_Type)
-      return Unsigned_64
-      is
-      function Convert is new Ada.Unchecked_Conversion (IA32_EFER_Type, Unsigned_64);
-   begin
-      return Convert (Value);
-   end To_U64;
-
-   function To_IA32_EFER
-      (Value : Unsigned_64)
-      return IA32_EFER_Type
-      is
-      function Convert is new Ada.Unchecked_Conversion (Unsigned_64, IA32_EFER_Type);
-   begin
-      return Convert (Value);
-   end To_IA32_EFER;
-
-   ----------------------------------------------------------------------------
    -- RDMSR/WRMSR
    ----------------------------------------------------------------------------
 
    function RDMSR
-      (MSR_Register_Number : MSR_Type)
+      (MSR : MSR_Type)
       return Unsigned_64
       is
       Result : Unsigned_64;
@@ -222,7 +327,7 @@ pragma Style_Checks (On);
                        "        rdmsr" & CRLF &
                        "",
            Outputs  => Unsigned_64'Asm_Output ("=A", Result),
-           Inputs   => MSR_Type'Asm_Input ("c", MSR_Register_Number),
+           Inputs   => MSR_Type'Asm_Input ("c", MSR),
            Clobber  => "",
            Volatile => True
           );
@@ -230,8 +335,8 @@ pragma Style_Checks (On);
    end RDMSR;
 
    procedure WRMSR
-      (MSR_Register_Number : in MSR_Type;
-       Value               : in Unsigned_64)
+      (MSR   : in MSR_Type;
+       Value : in Unsigned_64)
       is
    begin
       Asm (
@@ -241,12 +346,52 @@ pragma Style_Checks (On);
            Outputs  => No_Output_Operands,
            Inputs   => [
                         Unsigned_64'Asm_Input ("A", Value),
-                        MSR_Type'Asm_Input ("c", MSR_Register_Number)
+                        MSR_Type'Asm_Input ("c", MSR)
                        ],
            Clobber  => "",
            Volatile => True
           );
    end WRMSR;
+
+   ----------------------------------------------------------------------------
+   -- IA32_APIC_BASE
+   ----------------------------------------------------------------------------
+
+   function IA32_APIC_BASE_Read
+      return IA32_APIC_BASE_Type
+      is
+      function Convert is new Ada.Unchecked_Conversion (Unsigned_64, IA32_APIC_BASE_Type);
+   begin
+      return Convert (RDMSR (IA32_APIC_BASE));
+   end IA32_APIC_BASE_Read;
+
+   procedure IA32_APIC_BASE_Write
+      (Value : in IA32_APIC_BASE_Type)
+      is
+      function Convert is new Ada.Unchecked_Conversion (IA32_APIC_BASE_Type, Unsigned_64);
+   begin
+      WRMSR (IA32_APIC_BASE, Convert (Value));
+   end IA32_APIC_BASE_Write;
+
+   ----------------------------------------------------------------------------
+   -- IA32_EFER
+   ----------------------------------------------------------------------------
+
+   function IA32_EFER_Read
+      return IA32_EFER_Type
+      is
+      function Convert is new Ada.Unchecked_Conversion (Unsigned_64, IA32_EFER_Type);
+   begin
+      return Convert (RDMSR (IA32_EFER));
+   end IA32_EFER_Read;
+
+   procedure IA32_EFER_Write
+      (Value : in IA32_EFER_Type)
+      is
+      function Convert is new Ada.Unchecked_Conversion (IA32_EFER_Type, Unsigned_64);
+   begin
+      WRMSR (IA32_EFER, Convert (Value));
+   end IA32_EFER_Write;
 
    ----------------------------------------------------------------------------
    -- NOP
