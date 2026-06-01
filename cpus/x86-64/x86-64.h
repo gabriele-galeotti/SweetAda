@@ -68,13 +68,17 @@
  */
 
 #define CR0_PE (1 << 0)
+#define CR0_MP (1 << 1)
+#define CR0_EM (1 << 2)
 #define CR0_NE (1 << 5)
 #define CR0_NW (1 << 29)
 #define CR0_CD (1 << 30)
 #define CR0_PG (1 << 31)
 
-#define CR4_PAE (1 << 5)
-#define CR4_PGE (1 << 7)
+#define CR4_PAE        (1 << 5)
+#define CR4_PGE        (1 << 7)
+#define CR4_OSFXSR     (1 << 9)
+#define CR4_OSXMMEXCPT (1 << 10)
 
 #define PAGE_ENTRIES 1024
 #define PAGE_SIZE    4096
@@ -106,8 +110,17 @@
  * MSRs
  */
 
+#define IA32_APIC_BASE     0x0000001B
+#define IA32_APIC_BASE_BSP (1 << 8)
+
 #define IA32_EFER     0xC0000080
 #define IA32_EFER_LME (1 << 8)
+
+#define ICR_LOW                                       0xFEE00300
+#define ICR_LOW_DELIVERYMODE_INIT                     (5 << 8)
+#define ICR_LOW_DELIVERYMODE_STARTUP                  (6 << 8)
+#define ICR_LOW_LEVEL_ASSERT                          (1 << 14)
+#define ICR_LOW_DESTINATIONSHORTHAND_ALLEXCLUDINGSELF (3 << 18)
 
 /*
  * Exceptions.
