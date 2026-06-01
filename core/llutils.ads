@@ -20,7 +20,6 @@ pragma Restrictions (No_Elaboration_Code);
 with System;
 with System.Storage_Elements;
 with Interfaces;
-with Interfaces.C;
 with Bits;
 
 package LLutils
@@ -179,13 +178,6 @@ package LLutils
        MSD     : in     Boolean;
        Value   : in out Interfaces.Unsigned_8;
        Success :    out Boolean);
-
-   ----------------------------------------------------------------------------
-   -- Compute the length of a C string.
-   ----------------------------------------------------------------------------
-   function CString_Length
-      (String_Address : System.Address)
-      return Interfaces.C.size_t;
 
    ----------------------------------------------------------------------------
    -- Atomic clear
