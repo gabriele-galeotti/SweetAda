@@ -53,6 +53,7 @@ VERBOSE ?=
 override VERBOSE := $(subst y,Y,$(subst 1,y,$(VERBOSE)))
 export VERBOSE
 
+# deterministic build
 .NOTPARALLEL:
 
 ################################################################################
