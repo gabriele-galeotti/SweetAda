@@ -61,10 +61,11 @@ _start:
 
                 //
                 // Check for BSP or AP.
+                // APs will halt waiting for an IPI message.
                 //
-                movl    $0x1B,%ecx
+                movl    $IA32_APIC_BASE,%ecx
                 rdmsr
-                testl   $(1<<8),%eax
+                testl   $IA32_APIC_BASE_BSP,%eax
                 jne     2f
 1:              hlt
                 jmp     1b
@@ -262,10 +263,6 @@ _longmode:
                 //
                 // Enable SSE.
                 //
-#define CR0_MP         (1<<1)
-#define CR0_EM         (1<<2)
-#define CR4_OSFXSR     (1<<9)
-#define CR4_OSXMMEXCPT (1<<10)
                 movq    %cr0,%rax
                 andw    $~CR0_EM,%ax                            // clear CR0.EM
                 orw     $CR0_MP,%ax                             // set CR0.MP
@@ -279,13 +276,18 @@ smpboot:
                 //
                 // IPI broadcast INIT, all-except-self
                 //
-                movl    $0x000C4500,%eax
-                movl    %eax,0xFEE00300
+                movl    $(ICR_LOW_DELIVERYMODE_INIT|                          \
+                          ICR_LOW_LEVEL_ASSERT|                               \
+                          ICR_LOW_DESTINATIONSHORTHAND_ALLEXCLUDINGSELF),%eax
+                movl    %eax,ICR_LOW
                 //
                 // IPI broadcast Startup, all-except-self
                 //
-                movl    $(0x000C4600|(AP_ENTRYPOINT>>12)),%eax
-                movl    %eax,0xFEE00300
+                movl    $(ICR_LOW_DELIVERYMODE_STARTUP|                  \
+                          ICR_LOW_LEVEL_ASSERT|                          \
+                          ICR_LOW_DESTINATIONSHORTHAND_ALLEXCLUDINGSELF| \
+                          (AP_ENTRYPOINT>>12)),%eax
+                movl    %eax,ICR_LOW
 
                 //
                 // Jump to high-level code.
