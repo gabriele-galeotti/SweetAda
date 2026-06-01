@@ -232,11 +232,15 @@ pragma Style_Checks (Off);
       (Enable : in Boolean)
       with Inline => True;
 
+   procedure IEE_Enable
+      (Enable : in Boolean)
+      with Inline => True;
+
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   subtype Intcontext_Type is Integer;
+   subtype Intcontext_Type is SR_Type;
 
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)

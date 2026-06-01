@@ -145,13 +145,23 @@ pragma Style_Checks (On);
    end TEE_Enable;
 
    ----------------------------------------------------------------------------
+   -- IEE_Enable
+   ----------------------------------------------------------------------------
+   procedure IEE_Enable
+      (Enable : in Boolean)
+      is
+   begin
+      SR_Write ((SR_Read with delta IEE => Enable));
+   end IEE_Enable;
+
+   ----------------------------------------------------------------------------
    -- Intcontext_Get
    ----------------------------------------------------------------------------
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       is
    begin
-      Intcontext := 0; -- __TBD__
+      Intcontext := SR_Read;
    end Intcontext_Get;
 
    ----------------------------------------------------------------------------
@@ -161,7 +171,8 @@ pragma Style_Checks (On);
       (Intcontext : in Intcontext_Type)
       is
    begin
-      null; -- __TBD__
+      SR_Write ((SR_Read with delta TEE => Intcontext.TEE,
+                                    IEE => Intcontext.IEE));
    end Intcontext_Set;
 
    ----------------------------------------------------------------------------
@@ -170,7 +181,7 @@ pragma Style_Checks (On);
    procedure Irq_Enable
       is
    begin
-      null; -- __TBD__
+      SR_Write ((SR_Read with delta TEE => True, IEE => True));
    end Irq_Enable;
 
    ----------------------------------------------------------------------------
@@ -179,7 +190,7 @@ pragma Style_Checks (On);
    procedure Irq_Disable
       is
    begin
-      null; -- __TBD__
+      SR_Write ((SR_Read with delta TEE => False, IEE => False));
    end Irq_Disable;
 
 end OpenRISC;
