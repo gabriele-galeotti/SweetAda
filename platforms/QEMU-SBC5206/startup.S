@@ -10,8 +10,9 @@
 
 #define __ASSEMBLER__ 1
 
+#include <configure.h>
+#include <m68k.h>
 #include <coldfire.h>
-#include "configure.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -24,7 +25,7 @@ _start:
                 //
                 // Supervisor mode, disable interrupts.
                 //
-                move.w  #0x2700,%sr
+                move.w  #(SR_ILEVEL(ILEVEL7)|SR_S),%sr
 
                 // QEMU cannot handle $C0F operations (MCF5206 MBAR)
 #if 0
