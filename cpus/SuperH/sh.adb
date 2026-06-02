@@ -62,15 +62,15 @@ package body SH
    -- SR_Read
    ----------------------------------------------------------------------------
    function SR_Read
-      return Unsigned_32
+      return SR_Type
       is
-      SR : Unsigned_32;
+      SR : SR_Type;
    begin
       Asm (
            Template => ""                      & CRLF &
                        "        stc     sr,%0" & CRLF &
                        "",
-           Outputs  => Unsigned_32'Asm_Output ("=r", SR),
+           Outputs  => SR_Type'Asm_Output ("=r", SR),
            Inputs   => No_Input_Operands,
            Clobber  => "",
            Volatile => True
@@ -82,7 +82,7 @@ package body SH
    -- SR_Write
    ----------------------------------------------------------------------------
    procedure SR_Write
-      (SR : in Unsigned_32)
+      (SR : in SR_Type)
       is
    begin
       Asm (
@@ -90,7 +90,7 @@ package body SH
                        "        ldc     %0,sr" & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => Unsigned_32'Asm_Input ("r", SR),
+           Inputs   => SR_Type'Asm_Input ("r", SR),
            Clobber  => "",
            Volatile => True
           );
@@ -121,7 +121,7 @@ package body SH
       (Intcontext : out Intcontext_Type)
       is
    begin
-      Intcontext := 0; -- __TBD__
+      Intcontext := SR_Read;
    end Intcontext_Get;
 
    ----------------------------------------------------------------------------
@@ -131,7 +131,7 @@ package body SH
       (Intcontext : in Intcontext_Type)
       is
    begin
-      null; -- __TBD__
+      SR_Write ((SR_Read with delta IMASK => Intcontext.IMASK));
    end Intcontext_Set;
 
    ----------------------------------------------------------------------------
@@ -140,7 +140,7 @@ package body SH
    procedure Irq_Enable
       is
    begin
-      SR_Write (SR_Read and 16#EFFF_FF0F#);
+      SR_Write ((SR_Read with delta IMASK => IMASK0));
    end Irq_Enable;
 
    ----------------------------------------------------------------------------
@@ -149,7 +149,7 @@ package body SH
    procedure Irq_Disable
       is
    begin
-      SR_Write ((SR_Read and 16#EFFF_FF0F#) or 16#0000_00F0#);
+      SR_Write ((SR_Read with delta IMASK => IMASK7));
    end Irq_Disable;
 
 end SH;

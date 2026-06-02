@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ sh.ads                                                                                                    --
+-- __FLN__ sh_definitions.ads                                                                                        --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -16,9 +16,10 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with SH_Definitions;
+with Bits;
 
-package SH
+package SH_Definitions
+   with Pure => True
    is
 
    --========================================================================--
@@ -30,57 +31,34 @@ package SH
    --========================================================================--
 
    use System;
-
-pragma Style_Checks (Off);
-
-   subtype SR_Type is SH_Definitions.SR_Type;
-
-   -- IMASK levels
-   IMASK0 : constant := 0;
-   IMASK1 : constant := 1;
-   IMASK2 : constant := 2;
-   IMASK3 : constant := 3;
-   IMASK4 : constant := 4;
-   IMASK5 : constant := 5;
-   IMASK6 : constant := 6;
-   IMASK7 : constant := 7;
+   use Bits;
 
    ----------------------------------------------------------------------------
-   -- Generic definitions
+   -- SH7032, SH7034 Hardware Manual
+   -- Rev.7.00 2006.01
    ----------------------------------------------------------------------------
 
-   procedure NOP
-      with Inline => True;
+   -- 2.1.2 Control Registers
 
-   ----------------------------------------------------------------------------
-   -- Exceptions and interrupts
-   ----------------------------------------------------------------------------
+   type SR_Type is record
+      T         : Boolean;      -- T bit
+      S         : Boolean;      -- S bit
+      Reserved1 : Bits_2  := 0;
+      IMASK     : Bits_4;       -- Interrupt mask bits.
+      Q         : Boolean;      -- Q bit
+      M         : Boolean;      -- M bit
+      Reserved2 : Bits_22 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for SR_Type use record
+      T         at 0 range  0 ..  0;
+      S         at 0 range  1 ..  1;
+      Reserved1 at 0 range  2 ..  3;
+      IMASK     at 0 range  4 ..  7;
+      Q         at 0 range  8 ..  8;
+      M         at 0 range  9 ..  9;
+      Reserved2 at 0 range 10 .. 31;
+   end record;
 
-   function SR_Read
-      return SR_Type
-      with Inline => True;
-   procedure SR_Write
-      (SR : in SR_Type)
-      with Inline => True;
-
-   procedure VBR_Set
-      (VBR : in Address)
-      with Inline => True;
-
-   subtype Intcontext_Type is SR_Type;
-
-   procedure Intcontext_Get
-      (Intcontext : out Intcontext_Type)
-      with Inline => True;
-   procedure Intcontext_Set
-      (Intcontext : in Intcontext_Type)
-      with Inline => True;
-
-   procedure Irq_Enable
-      with Inline => True;
-   procedure Irq_Disable
-      with Inline => True;
-
-pragma Style_Checks (On);
-
-end SH;
+end SH_Definitions;
