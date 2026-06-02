@@ -40,7 +40,7 @@ _start:
                 //
                 // Supervisor mode, disable interrupts.
                 //
-                move.w  #0x2700,%sr
+                move.w  #(SR_ILEVEL(ILEVEL7)|SR_S),%sr
 
                 //
                 // Setup control registers.

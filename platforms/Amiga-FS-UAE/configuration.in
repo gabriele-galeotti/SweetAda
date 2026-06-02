@@ -59,8 +59,9 @@ OBJDUMP_SWITCHES_PLATFORM := -m m68k:$(CPU_MODEL:M%=%)
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
 POSTBUILD_ROMFILE         := Y
 
-CONFIGURE_FILES_PLATFORM := fs-uae.conf configure.ads configure.h
-LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
+CONFIGURE_FILES_PLATFORM       := fs-uae.conf configure.ads configure.h
+LOWLEVEL_FILES_PLATFORM        := startup.S llkernel.S
+GCC_SWITCHES_LOWLEVEL_PLATFORM := -Wa,--bitwise-or
 
 CLEAN_OBJECTS_COMMON += debug.uae fs-uae.log.txt adfboot.o adboot.bin adfboot.lst boot.adf
 
