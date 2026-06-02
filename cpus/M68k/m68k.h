@@ -12,6 +12,31 @@
 #define _M68K_H 1
 
 /*
+ * Status register.
+ *
+ */
+
+#define SR_C  (1 << 0)
+#define SR_V  (1 << 1)
+#define SR_Z  (1 << 2)
+#define SR_N  (1 << 3)
+#define SR_X  (1 << 4)
+#define SR_M  (1 << 12)
+#define SR_S  (1 << 13)
+#define SR_T0 (1 << 14)
+#define SR_T1 (1 << 15)
+
+#define ILEVEL0 0
+#define ILEVEL1 1
+#define ILEVEL2 2
+#define ILEVEL3 3
+#define ILEVEL4 4
+#define ILEVEL5 5
+#define ILEVEL6 6
+#define ILEVEL7 7
+#define SR_ILEVEL(x) (x << 8)
+
+/*
  * Exception/vector table.
  */
 
@@ -85,18 +110,8 @@
 #define TRAP_FRAME_SIZE  8
 
 /*
- * Status register.
- *
+ * Special opcodes.
  */
-#define SR_C  (1 << 0)
-#define SR_V  (1 << 1)
-#define SR_Z  (1 << 2)
-#define SR_N  (1 << 3)
-#define SR_X  (1 << 4)
-#define SR_M  (1 << 12)
-#define SR_S  (1 << 13)
-#define SR_T0 (1 << 14)
-#define SR_T1 (1 << 15)
 
 #define OPCODE_NOP             0x4E71
 #define OPCODE_BREAKPOINT      0x4E4F

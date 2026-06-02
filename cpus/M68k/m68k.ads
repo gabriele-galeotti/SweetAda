@@ -45,15 +45,6 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
-   -- Generic definitions
-   ----------------------------------------------------------------------------
-
-   Opcode_BREAKPOINT      : constant := 16#4E4F#; -- TRAP #15
-   Opcode_BREAKPOINT_Size : constant := 2;
-
-   BREAKPOINT_Asm_String : constant String := ".word   0x4E4F";
-
-   ----------------------------------------------------------------------------
    -- Basic types
    ----------------------------------------------------------------------------
 
@@ -148,7 +139,7 @@ pragma Style_Checks (Off);
    end record;
 
    ----------------------------------------------------------------------------
-   -- M680X0 registers
+   -- M680x0 registers
    ----------------------------------------------------------------------------
 
    D0        : constant := 16#00#; -- 0
@@ -186,6 +177,15 @@ pragma Style_Checks (Off);
    PS        : constant := SR;
 
    subtype Register_Number_Type is Natural range D0 .. FPIADDR;
+
+   ----------------------------------------------------------------------------
+   -- Generic definitions
+   ----------------------------------------------------------------------------
+
+   Opcode_BREAKPOINT      : constant := 16#4E4F#; -- TRAP #15
+   Opcode_BREAKPOINT_Size : constant := 2;
+
+   BREAKPOINT_Asm_String : constant String := ".word   0x4E4F";
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
