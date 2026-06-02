@@ -3199,7 +3199,8 @@ pragma Warnings (On);
       M1AR : DMA_SxM1AR_Type with Volatile_Full_Access => True;
       FCR  : DMA_SxFCR_Type  with Volatile_Full_Access => True;
    end record
-      with Object_Size => 32 * 6;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32 * 6;
    for DMA_Stream_Type use record
       CR   at 16#00# range 0 .. 31;
       NDTR at 16#04# range 0 .. 31;
@@ -5057,22 +5058,687 @@ pragma Warnings (On);
    ----------------------------------------------------------------------------
 
    -- 15.13.1 ADC status register (ADC_SR)
+
+   type ADC_SR_Type is record
+      AWD      : Boolean := True; -- Analog watchdog flag
+      EOC      : Boolean := True; -- Regular channel end of conversion
+      JEOC     : Boolean := True; -- Injected channel end of conversion
+      JSTRT    : Boolean := True; -- Injected channel start flag
+      STRT     : Boolean := True; -- Regular channel start flag
+      OVR      : Boolean := True; -- Overrun
+      Reserved : Bits_26 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ADC_SR_Type use record
+      AWD      at 0 range 0 ..  0;
+      EOC      at 0 range 1 ..  1;
+      JEOC     at 0 range 2 ..  2;
+      JSTRT    at 0 range 3 ..  3;
+      STRT     at 0 range 4 ..  4;
+      OVR      at 0 range 5 ..  5;
+      Reserved at 0 range 6 .. 31;
+   end record;
+
    -- 15.13.2 ADC control register 1 (ADC_CR1)
+
+   AWDCH_CH0    : constant := 2#00000#; -- ADC analog input Channel0
+   AWDCH_CH1    : constant := 2#00001#; -- ADC analog input Channel1
+   AWDCH_CH2    : constant := 2#00010#; -- ADC analog input Channel2
+   AWDCH_CH3    : constant := 2#00011#; -- ADC analog input Channel3
+   AWDCH_CH4    : constant := 2#00100#; -- ADC analog input Channel4
+   AWDCH_CH5    : constant := 2#00101#; -- ADC analog input Channel5
+   AWDCH_CH6    : constant := 2#00110#; -- ADC analog input Channel6
+   AWDCH_CH7    : constant := 2#00111#; -- ADC analog input Channel7
+   AWDCH_CH8    : constant := 2#01000#; -- ADC analog input Channel8
+   AWDCH_CH9    : constant := 2#01001#; -- ADC analog input Channel9
+   AWDCH_CH10   : constant := 2#01010#; -- ADC analog input Channel10
+   AWDCH_CH11   : constant := 2#01011#; -- ADC analog input Channel11
+   AWDCH_CH12   : constant := 2#01100#; -- ADC analog input Channel12
+   AWDCH_CH13   : constant := 2#01101#; -- ADC analog input Channel13
+   AWDCH_CH14   : constant := 2#01110#; -- ADC analog input Channel14
+   AWDCH_CH15   : constant := 2#01111#; -- ADC analog input Channel15
+   AWDCH_CH16   : constant := 2#10000#; -- ADC analog input Channel16
+   AWDCH_CH17   : constant := 2#10001#; -- ADC analog input Channel17
+   AWDCH_CH18   : constant := 2#10010#; -- ADC analog input Channel18
+   AWDCH_RSVD1  : constant := 2#10011#; -- Other values reserved
+   AWDCH_RSVD2  : constant := 2#10100#; -- ''
+   AWDCH_RSVD3  : constant := 2#10101#; -- ''
+   AWDCH_RSVD4  : constant := 2#10110#; -- ''
+   AWDCH_RSVD5  : constant := 2#10111#; -- ''
+   AWDCH_RSVD6  : constant := 2#11000#; -- ''
+   AWDCH_RSVD7  : constant := 2#11001#; -- ''
+   AWDCH_RSVD8  : constant := 2#11010#; -- ''
+   AWDCH_RSVD9  : constant := 2#11011#; -- ''
+   AWDCH_RSVD10 : constant := 2#11100#; -- ''
+   AWDCH_RSVD11 : constant := 2#11101#; -- ''
+   AWDCH_RSVD12 : constant := 2#11110#; -- ''
+   AWDCH_RSVD13 : constant := 2#11111#; -- ''
+
+   DISCNUM_1 : constant := 2#000#; -- 1 channel
+   DISCNUM_2 : constant := 2#001#; -- 2 channels
+   DISCNUM_3 : constant := 2#010#; -- 3 channels
+   DISCNUM_4 : constant := 2#011#; -- 4 channels
+   DISCNUM_5 : constant := 2#100#; -- 5 channels
+   DISCNUM_6 : constant := 2#101#; -- 6 channels
+   DISCNUM_7 : constant := 2#110#; -- 6 channels
+   DISCNUM_8 : constant := 2#111#; -- 8 channels
+
+   RES_12BIT : constant := 2#00#; -- 12-bit (minimum 15 ADCCLK cycles)
+   RES_10BIT : constant := 2#01#; -- 10-bit (minimum 13 ADCCLK cycles)
+   RES_8BIT  : constant := 2#10#; -- 8-bit (minimum 11 ADCCLK cycles)
+   RES_6BIT  : constant := 2#11#; -- 6-bit (minimum 9 ADCCLK cycles)
+
+   type ADC_CR1_Type is record
+      AWDCH     : Bits_5  := AWDCH_CH0; -- Analog watchdog channel select bits
+      EOCIE     : Boolean := False;     -- Interrupt enable for EOC
+      AWDIE     : Boolean := False;     -- Analog watchdog interrupt enable
+      JEOCIE    : Boolean := False;     -- Interrupt enable for injected channels
+      SCAN      : Boolean := False;     -- Scan mode
+      AWDSGL    : Boolean := False;     -- Enable the watchdog on a single channel in scan mode
+      JAUTO     : Boolean := False;     -- Automatic injected group conversion
+      DISCEN    : Boolean := False;     -- Discontinuous mode on regular channels
+      JDISCEN   : Boolean := False;     -- Discontinuous mode on injected channels
+      DISCNUM   : Bits_3  := DISCNUM_1; -- Discontinuous mode channel count
+      Reserved1 : Bits_6  := 0;
+      JAWDEN    : Boolean := False;     -- Analog watchdog enable on injected channels
+      AWDEN     : Boolean := False;     -- Analog watchdog enable on regular channels
+      RES       : Bits_2  := RES_12BIT; -- Resolution
+      OVRIE     : Boolean := False;     -- Overrun interrupt enable
+      Reserved2 : Bits_5  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ADC_CR1_Type use record
+      AWDCH     at 0 range  0 ..  4;
+      EOCIE     at 0 range  5 ..  5;
+      AWDIE     at 0 range  6 ..  6;
+      JEOCIE    at 0 range  7 ..  7;
+      SCAN      at 0 range  8 ..  8;
+      AWDSGL    at 0 range  9 ..  9;
+      JAUTO     at 0 range 10 .. 10;
+      DISCEN    at 0 range 11 .. 11;
+      JDISCEN   at 0 range 12 .. 12;
+      DISCNUM   at 0 range 13 .. 15;
+      Reserved1 at 0 range 16 .. 21;
+      JAWDEN    at 0 range 22 .. 22;
+      AWDEN     at 0 range 23 .. 23;
+      RES       at 0 range 24 .. 25;
+      OVRIE     at 0 range 26 .. 26;
+      Reserved2 at 0 range 27 .. 31;
+   end record;
+
    -- 15.13.3 ADC control register 2 (ADC_CR2)
+
+   ALIGN_RIGHT : constant := 0; -- Right alignment
+   ALIGN_LEFT  : constant := 1; -- Left alignment
+
+   JEXTSEL_Timer1TRGO  : constant := 2#0000#; -- Timer 1 TRGO
+   JEXTSEL_Timer1CH4   : constant := 2#0001#; -- Timer 1 CH4
+   JEXTSEL_Timer2TRGO  : constant := 2#0010#; -- Timer 2 TRGO
+   JEXTSEL_Timer2CH1   : constant := 2#0011#; -- Timer 2 CH1
+   JEXTSEL_Timer3CH4   : constant := 2#0100#; -- Timer 3 CH4
+   JEXTSEL_Timer4TRGO  : constant := 2#0101#; -- Timer4 TRGO
+   JEXTSEL_RSVD1       : constant := 2#0110#; -- Reserved
+   JEXTSEL_Timer8CH4   : constant := 2#0111#; -- Timer 8 CH4
+   JEXTSEL_Timer1TRGO2 : constant := 2#1000#; -- Timer 1 TRGO(2)
+   JEXTSEL_Timer8TRGO  : constant := 2#1001#; -- Timer 8 TRGO
+   JEXTSEL_Timer8TRGO2 : constant := 2#1010#; -- Timer 8 TRGO(2)
+   JEXTSEL_Timer3CH3   : constant := 2#1011#; -- Timer 3 CH3
+   JEXTSEL_Timer5TRGO  : constant := 2#1100#; -- Timer 5 TRGO
+   JEXTSEL_Timer3CH1   : constant := 2#1101#; -- Timer 3 CH1
+   JEXTSEL_Timer6TRGO  : constant := 2#1110#; -- Timer 6 TRGO
+   JEXTSEL_RSVD2       : constant := 2#1111#; -- Reserved
+
+   JEXTEN_DISABLED : constant := 2#00#; -- Trigger detection disabled
+   JEXTEN_RISEDGE  : constant := 2#01#; -- Trigger detection on the rising edge
+   JEXTEN_FALLEDGE : constant := 2#10#; -- Trigger detection on the falling edge
+   JEXTEN_BOTHEDGE : constant := 2#11#; -- Trigger detection on both the rising and falling edges
+
+   EXTSEL_Timer1CH1   : constant := 2#0000#; -- Timer 1 CH1
+   EXTSEL_Timer1CH2   : constant := 2#0001#; -- Timer 1 CH2
+   EXTSEL_Timer1CH3   : constant := 2#0010#; -- Timer 1 CH3
+   EXTSEL_Timer2CH2   : constant := 2#0011#; -- Timer 2 CH2
+   EXTSEL_Timer5TRGO  : constant := 2#0100#; -- Timer 5 TRGO
+   EXTSEL_Timer4CH4   : constant := 2#0101#; -- Timer 4 CH4
+   EXTSEL_Timer3CH4   : constant := 2#0110#; -- Timer 3 CH4
+   EXTSEL_Timer8TRGO  : constant := 2#0111#; -- Timer 8 TRGO
+   EXTSEL_Timer8TRGO2 : constant := 2#1000#; -- Timer 8 TRGO(2)
+   EXTSEL_Timer1TRGO  : constant := 2#1001#; -- Timer 1 TRGO
+   EXTSEL_Timer1TRGO2 : constant := 2#1010#; -- Timer 1 TRGO(2)
+   EXTSEL_Timer2TRGO  : constant := 2#1011#; -- Timer 2 TRGO
+   EXTSEL_Timer4TRGO  : constant := 2#1100#; -- Timer 4 TRGO
+   EXTSEL_Timer6TRGO  : constant := 2#1101#; -- Timer 6 TRGO
+   EXTSEL_RSVD        : constant := 2#1110#; -- Reserved
+   EXTSEL_EXTIline11  : constant := 2#1111#; -- EXTI line11
+
+   EXTEN_DISABLED renames JEXTEN_DISABLED; -- Trigger detection disabled
+   EXTEN_RISEDGE  renames JEXTEN_RISEDGE;  -- Trigger detection on the rising edge
+   EXTEN_FALLEDGE renames JEXTEN_FALLEDGE; -- Trigger detection on the falling edge
+   EXTEN_BOTHEDGE renames JEXTEN_BOTHEDGE; -- Trigger detection on both the rising and falling edges
+
+   type ADC_CR2_Type is record
+      ADON      : Boolean := False;              -- A/D Converter ON / OFF
+      CONT      : Boolean := False;              -- Continuous conversion
+      Reserved1 : Bits_6  := 0;
+      DMA       : Boolean := False;              -- Direct memory access mode (for single ADC mode)
+      DDS       : Boolean := False;              -- DMA disable selection (for single ADC mode)
+      EOCS      : Boolean := False;              -- End of conversion selection
+      ALIGN     : Bits_1  := ALIGN_RIGHT;        -- Data alignment
+      Reserved2 : Bits_4  := 0;
+      JEXTSEL   : Bits_4  := JEXTSEL_Timer1TRGO; -- External event select for injected group
+      JEXTEN    : Bits_2  := JEXTEN_DISABLED;    -- External trigger enable for injected channels
+      JSWSTART  : Boolean := False;              -- Start conversion of injected channels
+      Reserved3 : Bits_1  := 0;
+      EXTSEL    : Bits_4  := EXTSEL_Timer1CH1;   -- External event select for regular group
+      EXTEN     : Bits_2  := EXTEN_DISABLED;     -- External trigger enable for regular channels
+      SWSTART   : Boolean := False;              -- Start conversion of regular channels
+      Reserved4 : Bits_1  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ADC_CR2_Type use record
+      ADON      at 0 range  0 ..  0;
+      CONT      at 0 range  1 ..  1;
+      Reserved1 at 0 range  2 ..  7;
+      DMA       at 0 range  8 ..  8;
+      DDS       at 0 range  9 ..  9;
+      EOCS      at 0 range 10 .. 10;
+      ALIGN     at 0 range 11 .. 11;
+      Reserved2 at 0 range 12 .. 15;
+      JEXTSEL   at 0 range 16 .. 19;
+      JEXTEN    at 0 range 20 .. 21;
+      JSWSTART  at 0 range 22 .. 22;
+      Reserved3 at 0 range 23 .. 23;
+      EXTSEL    at 0 range 24 .. 27;
+      EXTEN     at 0 range 28 .. 29;
+      SWSTART   at 0 range 30 .. 30;
+      Reserved4 at 0 range 31 .. 31;
+   end record;
+
    -- 15.13.4 ADC sample time register 1 (ADC_SMPR1)
    -- 15.13.5 ADC sample time register 2 (ADC_SMPR2)
+
+   type SMPx_Type is new Bits_3;
+   SMP_CYC3   : constant SMPx_Type := 2#000#; -- 3 cycles
+   SMP_CYC15  : constant SMPx_Type := 2#001#; -- 15 cycles
+   SMP_CYC28  : constant SMPx_Type := 2#010#; -- 28 cycles
+   SMP_CYC56  : constant SMPx_Type := 2#011#; -- 56 cycles
+   SMP_CYC84  : constant SMPx_Type := 2#100#; -- 84 cycles
+   SMP_CYC112 : constant SMPx_Type := 2#101#; -- 112 cycles
+   SMP_CYC144 : constant SMPx_Type := 2#110#; -- 144 cycles
+   SMP_CYC480 : constant SMPx_Type := 2#111#; -- 480 cycles
+
+   type ADC_SMPR1_Type is record
+      SMP10    : SMPx_Type := SMP_CYC3; -- Channel 10 sampling time selection
+      SMP11    : SMPx_Type := SMP_CYC3; -- Channel 11 sampling time selection
+      SMP12    : SMPx_Type := SMP_CYC3; -- Channel 12 sampling time selection
+      SMP13    : SMPx_Type := SMP_CYC3; -- Channel 13 sampling time selection
+      SMP14    : SMPx_Type := SMP_CYC3; -- Channel 14 sampling time selection
+      SMP15    : SMPx_Type := SMP_CYC3; -- Channel 15 sampling time selection
+      SMP16    : SMPx_Type := SMP_CYC3; -- Channel 16 sampling time selection
+      SMP17    : SMPx_Type := SMP_CYC3; -- Channel 17 sampling time selection
+      SMP18    : SMPx_Type := SMP_CYC3; -- Channel 18 sampling time selection
+      Reserved : Bits_5    := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ADC_SMPR1_Type use record
+      SMP10    at 0 range  0 ..  2;
+      SMP11    at 0 range  3 ..  5;
+      SMP12    at 0 range  6 ..  8;
+      SMP13    at 0 range  9 .. 11;
+      SMP14    at 0 range 12 .. 14;
+      SMP15    at 0 range 15 .. 17;
+      SMP16    at 0 range 18 .. 20;
+      SMP17    at 0 range 21 .. 23;
+      SMP18    at 0 range 24 .. 26;
+      Reserved at 0 range 27 .. 31;
+   end record;
+
+   type ADC_SMPR2_Type is record
+      SMP0     : SMPx_Type := SMP_CYC3; -- Channel 0 sampling time selection
+      SMP1     : SMPx_Type := SMP_CYC3; -- Channel 1 sampling time selection
+      SMP2     : SMPx_Type := SMP_CYC3; -- Channel 2 sampling time selection
+      SMP3     : SMPx_Type := SMP_CYC3; -- Channel 3 sampling time selection
+      SMP4     : SMPx_Type := SMP_CYC3; -- Channel 4 sampling time selection
+      SMP5     : SMPx_Type := SMP_CYC3; -- Channel 5 sampling time selection
+      SMP6     : SMPx_Type := SMP_CYC3; -- Channel 6 sampling time selection
+      SMP7     : SMPx_Type := SMP_CYC3; -- Channel 7 sampling time selection
+      SMP8     : SMPx_Type := SMP_CYC3; -- Channel 8 sampling time selection
+      SMP9     : SMPx_Type := SMP_CYC3; -- Channel 9 sampling time selection
+      Reserved : Bits_2    := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ADC_SMPR2_Type use record
+      SMP0     at 0 range  0 ..  2;
+      SMP1     at 0 range  3 ..  5;
+      SMP2     at 0 range  6 ..  8;
+      SMP3     at 0 range  9 .. 11;
+      SMP4     at 0 range 12 .. 14;
+      SMP5     at 0 range 15 .. 17;
+      SMP6     at 0 range 18 .. 20;
+      SMP7     at 0 range 21 .. 23;
+      SMP8     at 0 range 24 .. 26;
+      SMP9     at 0 range 27 .. 29;
+      Reserved at 0 range 30 .. 31;
+   end record;
+
    -- 15.13.6 ADC injected channel data offset register x (ADC_JOFRx) (x=1..4)
+
+   type ADC_JOFRx_Type is record
+      JOFFSET  : Bits_12 := 0; -- Data offset for injected channel x
+      Reserved : Bits_20 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ADC_JOFRx_Type use record
+      JOFFSET  at 0 range  0 .. 11;
+      Reserved at 0 range 12 .. 31;
+   end record;
+
    -- 15.13.7 ADC watchdog higher threshold register (ADC_HTR)
+
+   type ADC_HTR_Type is record
+      HT       : Bits_12 := 0; -- Analog watchdog higher threshold
+      Reserved : Bits_20 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ADC_HTR_Type use record
+      HT       at 0 range  0 .. 11;
+      Reserved at 0 range 12 .. 31;
+   end record;
+
    -- 15.13.8 ADC watchdog lower threshold register (ADC_LTR)
+
+   type ADC_LTR_Type is record
+      LT       : Bits_12 := 0; -- Analog watchdog lower threshold
+      Reserved : Bits_20 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ADC_LTR_Type use record
+      LT       at 0 range  0 .. 11;
+      Reserved at 0 range 12 .. 31;
+   end record;
+
    -- 15.13.9 ADC regular sequence register 1 (ADC_SQR1)
    -- 15.13.10 ADC regular sequence register 2 (ADC_SQR2)
    -- 15.13.11 ADC regular sequence register 3 (ADC_SQR3)
+
+   type SQx_Type is new Bits_4;
+   SQ_CONV1  : constant SQx_Type := 2#0000#; -- 1 conversion
+   SQ_CONV2  : constant SQx_Type := 2#0001#; -- 2 conversions
+   SQ_CONV3  : constant SQx_Type := 2#0010#; -- ...
+   SQ_CONV4  : constant SQx_Type := 2#0011#;
+   SQ_CONV5  : constant SQx_Type := 2#0100#;
+   SQ_CONV6  : constant SQx_Type := 2#0101#;
+   SQ_CONV7  : constant SQx_Type := 2#0110#;
+   SQ_CONV8  : constant SQx_Type := 2#0111#;
+   SQ_CONV9  : constant SQx_Type := 2#1000#;
+   SQ_CONV10 : constant SQx_Type := 2#1001#;
+   SQ_CONV11 : constant SQx_Type := 2#1010#;
+   SQ_CONV12 : constant SQx_Type := 2#1011#;
+   SQ_CONV13 : constant SQx_Type := 2#1100#;
+   SQ_CONV14 : constant SQx_Type := 2#1101#;
+   SQ_CONV15 : constant SQx_Type := 2#1110#;
+   SQ_CONV16 : constant SQx_Type := 2#1111#; -- 16 conversions
+
+   type ADC_SQR1_Type is record
+      SQ13     : SQx_Type := SQ_CONV1; -- 13th conversion in regular sequence
+      SQ14     : SQx_Type := SQ_CONV1; -- 13th conversion in regular sequence
+      SQ15     : SQx_Type := SQ_CONV1; -- 13th conversion in regular sequence
+      SQ16     : SQx_Type := SQ_CONV1; -- 13th conversion in regular sequence
+      L        : SQx_Type := SQ_CONV1; -- Regular channel sequence length
+      Reserved : Bits_8   := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ADC_SQR1_Type use record
+      SQ13     at 0 range  0 ..  4;
+      SQ14     at 0 range  5 ..  9;
+      SQ15     at 0 range 10 .. 14;
+      SQ16     at 0 range 15 .. 19;
+      L        at 0 range 20 .. 23;
+      Reserved at 0 range 24 .. 31;
+   end record;
+
+   type ADC_SQR2_Type is record
+      SQ7      : SQx_Type := SQ_CONV1; -- 7th conversion in regular sequence
+      SQ8      : SQx_Type := SQ_CONV1; -- 8th conversion in regular sequence
+      SQ9      : SQx_Type := SQ_CONV1; -- 9th conversion in regular sequence
+      SQ10     : SQx_Type := SQ_CONV1; -- 10th conversion in regular sequence
+      SQ11     : SQx_Type := SQ_CONV1; -- 11th conversion in regular sequence
+      SQ12     : SQx_Type := SQ_CONV1; -- 12th conversion in regular sequence
+      Reserved : Bits_2   := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ADC_SQR2_Type use record
+      SQ7      at 0 range  0 ..  4;
+      SQ8      at 0 range  5 ..  9;
+      SQ9      at 0 range 10 .. 14;
+      SQ10     at 0 range 15 .. 19;
+      SQ11     at 0 range 20 .. 24;
+      SQ12     at 0 range 25 .. 29;
+      Reserved at 0 range 30 .. 31;
+   end record;
+
+   type ADC_SQR3_Type is record
+      SQ1      : SQx_Type := SQ_CONV1; -- 1st conversion in regular sequence
+      SQ2      : SQx_Type := SQ_CONV1; -- 2nd conversion in regular sequence
+      SQ3      : SQx_Type := SQ_CONV1; -- 3rd conversion in regular sequence
+      SQ4      : SQx_Type := SQ_CONV1; -- 4th conversion in regular sequence
+      SQ5      : SQx_Type := SQ_CONV1; -- 5th conversion in regular sequence
+      SQ6      : SQx_Type := SQ_CONV1; -- 6th conversion in regular sequence
+      Reserved : Bits_2   := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ADC_SQR3_Type use record
+      SQ1      at 0 range  0 ..  4;
+      SQ2      at 0 range  5 ..  9;
+      SQ3      at 0 range 10 .. 14;
+      SQ4      at 0 range 15 .. 19;
+      SQ5      at 0 range 20 .. 24;
+      SQ6      at 0 range 25 .. 29;
+      Reserved at 0 range 30 .. 31;
+   end record;
+
    -- 15.13.12 ADC injected sequence register (ADC_JSQR)
+
+   JL_CONV1 : constant := 2#00#; -- 1 conversion
+   JL_CONV2 : constant := 2#01#; -- 2 conversions
+   JL_CONV3 : constant := 2#10#; -- 3 conversions
+   JL_CONV4 : constant := 2#11#; -- 4 conversions
+
+   type ADC_JSQR_Type is record
+      JSQ1     : SQx_Type := SQ_CONV1; -- 1st conversion in injected sequence
+      JSQ2     : SQx_Type := SQ_CONV1; -- 2nd conversion in injected sequence
+      JSQ3     : SQx_Type := SQ_CONV1; -- 3rd conversion in injected sequence
+      JSQ4     : SQx_Type := SQ_CONV1; -- 4th conversion in injected sequence
+      JL       : Bits_2   := JL_CONV1; -- Injected sequence length
+      Reserved : Bits_10  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ADC_JSQR_Type use record
+      JSQ1     at 0 range  0 ..  4;
+      JSQ2     at 0 range  5 ..  9;
+      JSQ3     at 0 range 10 .. 14;
+      JSQ4     at 0 range 15 .. 19;
+      JL       at 0 range 20 .. 21;
+      Reserved at 0 range 22 .. 31;
+   end record;
+
    -- 15.13.13 ADC injected data register x (ADC_JDRx) (x= 1..4)
+
+   type ADC_JDRx_Type is record
+      DATA     : Unsigned_16;      -- Injected data
+      Reserved : Bits_16     := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ADC_JDRx_Type use record
+      DATA     at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
    -- 15.13.14 ADC regular data register (ADC_DR)
+
+   type ADC_DR_Type is record
+      DATA     : Unsigned_16;      -- Regular data
+      Reserved : Bits_16     := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ADC_DR_Type use record
+      DATA     at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
    -- 15.13.15 ADC Common status register (ADC_CSR)
+
+   type ADC_CSR_Type is record
+      AWD1      : Boolean; -- Analog watchdog flag of ADC1
+      EOC1      : Boolean; -- End of conversion of ADC1
+      JEOC1     : Boolean; -- Injected channel end of conversion of ADC1
+      JSTRT1    : Boolean; -- Injected channel Start flag of ADC1
+      STRT1     : Boolean; -- Regular channel Start flag of ADC1
+      OVR1      : Boolean; -- Overrun flag of ADC1
+      Reserved1 : Bits_2;
+      AWD2      : Boolean; -- Analog watchdog flag of ADC2
+      EOC2      : Boolean; -- End of conversion of ADC2
+      JEOC2     : Boolean; -- Injected channel end of conversion of ADC2
+      JSTRT2    : Boolean; -- Injected channel Start flag of ADC2
+      STRT2     : Boolean; -- Regular channel Start flag of ADC2
+      OVR2      : Boolean; -- Overrun flag of ADC2
+      Reserved2 : Bits_2;
+      AWD3      : Boolean; -- Analog watchdog flag of ADC3
+      EOC3      : Boolean; -- End of conversion of ADC3
+      JEOC3     : Boolean; -- Injected channel end of conversion of ADC3
+      JSTRT3    : Boolean; -- Injected channel Start flag of ADC3
+      STRT3     : Boolean; -- Regular channel Start flag of ADC3
+      OVR3      : Boolean; -- Overrun flag of ADC3
+      Reserved3 : Bits_10;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ADC_CSR_Type use record
+      AWD1      at 0 range  0 ..  0;
+      EOC1      at 0 range  1 ..  1;
+      JEOC1     at 0 range  2 ..  2;
+      JSTRT1    at 0 range  3 ..  3;
+      STRT1     at 0 range  4 ..  4;
+      OVR1      at 0 range  5 ..  5;
+      Reserved1 at 0 range  6 ..  7;
+      AWD2      at 0 range  8 ..  8;
+      EOC2      at 0 range  9 ..  9;
+      JEOC2     at 0 range 10 .. 10;
+      JSTRT2    at 0 range 11 .. 11;
+      STRT2     at 0 range 12 .. 12;
+      OVR2      at 0 range 13 .. 13;
+      Reserved2 at 0 range 14 .. 15;
+      AWD3      at 0 range 16 .. 16;
+      EOC3      at 0 range 17 .. 17;
+      JEOC3     at 0 range 18 .. 18;
+      JSTRT3    at 0 range 19 .. 19;
+      STRT3     at 0 range 20 .. 20;
+      OVR3      at 0 range 21 .. 21;
+      Reserved3 at 0 range 22 .. 31;
+   end record;
+
    -- 15.13.16 ADC common control register (ADC_CCR)
+
+   -- All the ADCs independent:
+   MULTI_INDEPENDENT          : constant := 2#00000#; -- Independent mode
+   -- 00001 to 01001: Dual mode, ADC1 and ADC2 working together, ADC3 is independent
+   MULTI_ADC12_REGSIM_INJSIM  : constant := 2#00001#; -- Combined regular simultaneous + injected simultaneous mode
+   MULTI_ADC12_REGSIM_ALTTRG  : constant := 2#00010#; -- Combined regular simultaneous + alternate trigger mode
+   MULTI_RSVD1                : constant := 2#00011#; -- Reserved
+   MULTI_ADC12_INJSIM         : constant := 2#00101#; -- Injected simultaneous mode only
+   MULTI_ADC12_REGSIM         : constant := 2#00110#; -- Regular simultaneous mode only
+   MULTI_ADC12_INTERLEAVED    : constant := 2#00111#; -- interleaved mode only
+   MULTI_ADC12_ALTTRG         : constant := 2#01001#; -- Alternate trigger mode only
+   -- 10001 to 11001: Triple mode: ADC1, 2 and 3 working together
+   MULTI_ADC123_REGSIM_INJSIM : constant := 2#10001#; -- Combined regular simultaneous + injected simultaneous mode
+   MULTI_ADC123_REGSIM_ALTTRG : constant := 2#10010#; -- Combined regular simultaneous + alternate trigger mode
+   MULTI_RSVD2                : constant := 2#10011#; -- Reserved
+   MULTI_ADC123_INJSIM        : constant := 2#10101#; -- Injected simultaneous mode only
+   MULTI_ADC123_REGSIM        : constant := 2#10110#; -- Regular simultaneous mode only
+   MULTI_ADC123_INTERLEAVED   : constant := 2#10111#; -- interleaved mode only
+   MULTI_ADC123_ALTTRG        : constant := 2#11001#; -- Alternate trigger mode only
+   -- All other combinations are reserved and must not be programmed
+
+   -- __INF__ use "D3LAY" instead of "DELAY"
+   D3LAY_CLK5  : constant := 2#0000#; -- 5 * TADCCLK
+   D3LAY_CLK6  : constant := 2#0001#; -- 6 * TADCCLK
+   D3LAY_CLK7  : constant := 2#0010#; -- 7 * TADCCLK
+   D3LAY_CLK8  : constant := 2#0011#; -- ...
+   D3LAY_CLK9  : constant := 2#0100#;
+   D3LAY_CLK10 : constant := 2#0101#;
+   D3LAY_CLK11 : constant := 2#0110#;
+   D3LAY_CLK12 : constant := 2#0111#;
+   D3LAY_CLK13 : constant := 2#1000#;
+   D3LAY_CLK14 : constant := 2#1001#;
+   D3LAY_CLK15 : constant := 2#1010#;
+   D3LAY_CLK16 : constant := 2#1011#;
+   D3LAY_CLK17 : constant := 2#1100#;
+   D3LAY_CLK18 : constant := 2#1101#;
+   D3LAY_CLK19 : constant := 2#1110#;
+   D3LAY_CLK20 : constant := 2#1111#; -- 20 * TADCCLK
+
+   DMA_DISABLED : constant := 2#00#; -- DMA mode disabled
+   DMA_MODE1    : constant := 2#01#; -- DMA mode 1 enabled (2 / 3 half-words one by one - 1 then 2 then 3)
+   DMA_MODE2    : constant := 2#10#; -- DMA mode 2 enabled (2 / 3 half-words by pairs - 2&1 then 1&3 then 3&2)
+   DMA_MODE3    : constant := 2#11#; -- DMA mode 3 enabled (2 / 3 bytes by pairs - 2&1 then 1&3 then 3&2)
+
+   ADCPRE_DIV2 : constant := 2#00#; -- PCLK2 divided by 2
+   ADCPRE_DIV4 : constant := 2#01#; -- PCLK2 divided by 4
+   ADCPRE_DIV6 : constant := 2#10#; -- PCLK2 divided by 6
+   ADCPRE_DIV8 : constant := 2#11#; -- PCLK2 divided by 8
+
+   -- __INF__ use "D3LAY" instead of "DELAY"
+   type ADC_CCR_Type is record
+      MULTI     : Bits_5  := MULTI_INDEPENDENT; -- Multi ADC mode selection
+      Reserved1 : Bits_3  := 0;
+      D3LAY     : Bits_4  := D3LAY_CLK5;        -- Delay between 2 sampling phases
+      Reserved2 : Bits_1  := 0;
+      DDS       : Boolean := False;             -- DMA disable selection (for multi-ADC mode)
+      DMA       : Bits_2  := DMA_DISABLED;      -- Direct memory access mode for multi ADC mode
+      ADCPRE    : Bits_2  := ADCPRE_DIV2;       -- ADC prescaler
+      Reserved3 : Bits_4  := 0;
+      VBATE     : Boolean := False;             -- VBAT enable
+      TSVREFE   : Boolean := False;             -- Temperature sensor and VREFINT enable
+      Reserved4 : Bits_8  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ADC_CCR_Type use record
+      MULTI     at 0 range  0 ..  4;
+      Reserved1 at 0 range  5 ..  7;
+      D3LAY     at 0 range  8 .. 11;
+      Reserved2 at 0 range 12 .. 12;
+      DDS       at 0 range 13 .. 13;
+      DMA       at 0 range 14 .. 15;
+      ADCPRE    at 0 range 16 .. 17;
+      Reserved3 at 0 range 18 .. 21;
+      VBATE     at 0 range 22 .. 22;
+      TSVREFE   at 0 range 23 .. 23;
+      Reserved4 at 0 range 24 .. 31;
+   end record;
+
    -- 15.13.17 ADC common regular data register for dual and triple modes (ADC_CDR)
+
+   type ADC_CDR_Type is record
+      DATA1 : Unsigned_16; -- 1st data item of a pair of regular conversions
+      DATA2 : Unsigned_16; -- 2nd data item of a pair of regular conversions
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ADC_CDR_Type use record
+      DATA1 at 0 range  0 .. 15;
+      DATA2 at 0 range 16 .. 31;
+   end record;
+
+   -- 15.13 ADC registers
+
+   type ADC_Type is record
+      SR    : ADC_SR_Type    with Volatile_Full_Access => True;
+      CR1   : ADC_CR1_Type   with Volatile_Full_Access => True;
+      CR2   : ADC_CR2_Type   with Volatile_Full_Access => True;
+      SMPR1 : ADC_SMPR1_Type with Volatile_Full_Access => True;
+      SMPR2 : ADC_SMPR1_Type with Volatile_Full_Access => True;
+      JOFR1 : ADC_JOFRx_Type with Volatile_Full_Access => True;
+      JOFR2 : ADC_JOFRx_Type with Volatile_Full_Access => True;
+      JOFR3 : ADC_JOFRx_Type with Volatile_Full_Access => True;
+      JOFR4 : ADC_JOFRx_Type with Volatile_Full_Access => True;
+      HTR   : ADC_HTR_Type   with Volatile_Full_Access => True;
+      LTR   : ADC_LTR_Type   with Volatile_Full_Access => True;
+      SQR1  : ADC_SQR1_Type  with Volatile_Full_Access => True;
+      SQR2  : ADC_SQR2_Type  with Volatile_Full_Access => True;
+      SQR3  : ADC_SQR3_Type  with Volatile_Full_Access => True;
+      JSQR  : ADC_JSQR_Type  with Volatile_Full_Access => True;
+      JDQR1 : ADC_JDRx_Type  with Volatile_Full_Access => True;
+      JDQR2 : ADC_JDRx_Type  with Volatile_Full_Access => True;
+      JDQR3 : ADC_JDRx_Type  with Volatile_Full_Access => True;
+      JDQR4 : ADC_JDRx_Type  with Volatile_Full_Access => True;
+      DR    : ADC_DR_Type    with Volatile_Full_Access => True;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16#50# * 8;
+   for ADC_Type use record
+      SR    at 16#00# range 0 .. 31;
+      CR1   at 16#04# range 0 .. 31;
+      CR2   at 16#08# range 0 .. 31;
+      SMPR1 at 16#0C# range 0 .. 31;
+      SMPR2 at 16#10# range 0 .. 31;
+      JOFR1 at 16#14# range 0 .. 31;
+      JOFR2 at 16#18# range 0 .. 31;
+      JOFR3 at 16#1C# range 0 .. 31;
+      JOFR4 at 16#20# range 0 .. 31;
+      HTR   at 16#24# range 0 .. 31;
+      LTR   at 16#28# range 0 .. 31;
+      SQR1  at 16#2C# range 0 .. 31;
+      SQR2  at 16#30# range 0 .. 31;
+      SQR3  at 16#34# range 0 .. 31;
+      JSQR  at 16#38# range 0 .. 31;
+      JDQR1 at 16#3C# range 0 .. 31;
+      JDQR2 at 16#40# range 0 .. 31;
+      JDQR3 at 16#44# range 0 .. 31;
+      JDQR4 at 16#48# range 0 .. 31;
+      DR    at 16#4C# range 0 .. 31;
+   end record;
+
+   ADC1_BASEADDRESS : constant := 16#4001_2000#;
+
+   ADC1 : aliased ADC_Type
+      with Address    => System'To_Address (ADC1_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ADC2_BASEADDRESS : constant := 16#4001_2100#;
+
+   ADC2 : aliased ADC_Type
+      with Address    => System'To_Address (ADC2_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ADC3_BASEADDRESS : constant := 16#4001_2200#;
+
+   ADC3 : aliased ADC_Type
+      with Address    => System'To_Address (ADC3_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   ADC_CSR_ADDRESS : constant := 16#4001_2300#;
+
+   ADC_CSR : aliased ADC_CSR_Type
+      with Address              => System'To_Address (ADC_CSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADC_CCR_ADDRESS : constant := 16#4001_2304#;
+
+   ADC_CCR : aliased ADC_CCR_Type
+      with Address              => System'To_Address (ADC_CCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ADC_CDR_ADDRESS : constant := 16#4001_2308#;
+
+   ADC_CDR : aliased ADC_CDR_Type
+      with Address              => System'To_Address (ADC_CDR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
    ----------------------------------------------------------------------------
    -- 16 Digital-to-analog converter (DAC)
