@@ -11,6 +11,7 @@
 #define __ASSEMBLER__ 1
 
 #include <configure.h>
+#include <m68k.h>
 #include <mcf5373.h>
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -24,7 +25,7 @@ _start:
                 //
                 // Supervisor mode, disable interrupts.
                 //
-                move.w  #0x2700,%sr
+                move.w  #(SR_ILEVEL(ILEVEL7)|SR_S),%sr
 
                 //
                 // Disable the watchdog.
