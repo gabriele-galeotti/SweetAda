@@ -55,8 +55,8 @@ struct switch_descriptor {
 #define EXACT_MATCH     (1 << 1)
 #define HAS_ARGUMENT    (1 << 2)
 #define TRANSLATE_BS    (1 << 3)
-#define OUTPUT_FILENAME (1 << 4)
-#define GNAT_FLAG       (1 << 5)
+#define MODE_COMPILE    (1 << 4)
+#define OUTPUT_FILENAME (1 << 5)
 
 static struct switch_descriptor switches[] = {
         { "-RTS=",                                      TRANSLATE_BS    },
@@ -70,17 +70,17 @@ static struct switch_descriptor switches[] = {
         { "MT",            EXACT_MATCH | HAS_ARGUMENT                   },
         { "auxbase",       EXACT_MATCH | HAS_ARGUMENT                   },
         { "auxbase-strip", EXACT_MATCH | HAS_ARGUMENT                   },
-        { "c",             EXACT_MATCH                                  },
+        { "c",             EXACT_MATCH |                MODE_COMPILE    },
         { "dumpbase",      EXACT_MATCH | HAS_ARGUMENT                   },
         { "dumpbase-ext",  EXACT_MATCH | HAS_ARGUMENT                   },
         { "dumpdir",       EXACT_MATCH | HAS_ARGUMENT | TRANSLATE_BS    },
-        { "gnatG",         EXACT_MATCH                | GNAT_FLAG       },
         { "gnatO",         EXACT_MATCH | HAS_ARGUMENT                   },
         { "imultilib",     EXACT_MATCH | HAS_ARGUMENT                   },
         { "iprefix",       EXACT_MATCH | HAS_ARGUMENT                   },
         { "isystem",       EXACT_MATCH | HAS_ARGUMENT                   },
         { "o",             EXACT_MATCH | HAS_ARGUMENT | OUTPUT_FILENAME },
         { "plugin",        EXACT_MATCH | HAS_ARGUMENT                   },
+        { "wrapper",       EXACT_MATCH | HAS_ARGUMENT                   },
         { "x",             EXACT_MATCH | HAS_ARGUMENT                   },
         { NULL, 0 }
         };
@@ -130,6 +130,7 @@ main(int argc, char **argv)
         int         exit_status;
         char        program_name[PATH_MAX + 1];
         const char *input_filename;
+        bool        mode_compile;
         const char *output_filename;
         bool        error_flag;
         int         number_of_arguments; /* avoid modifying argc */
@@ -144,6 +145,8 @@ main(int argc, char **argv)
 
         exit_status = EXIT_FAILURE;
         input_filename = NULL;
+        mode_compile = false;
+        (void)mode_compile;
         output_filename = NULL;
         (void)output_filename;
         execute = NULL;
@@ -224,6 +227,10 @@ main(int argc, char **argv)
                                                         argv[idx][STRING_LENGTH(argv[idx]) - 1] = '\0';
                                                 }
 #endif
+                                        }
+                                        if ((flags & MODE_COMPILE) != 0)
+                                        {
+                                                mode_compile = true;
                                         }
                                         if ((flags & OUTPUT_FILENAME) != 0)
                                         {
