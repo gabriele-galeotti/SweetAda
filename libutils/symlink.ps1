@@ -18,6 +18,7 @@
 # every following pair is another symlink
 #
 # Environment variables:
+# USE_HARDLINK
 # VERBOSE
 #
 
@@ -226,6 +227,9 @@ if ($PSVersionTable.PSVersion.Major -eq "5")
   }
 }
 
+# use hard links
+$use_hardlink = $(GetEnvVar USE_HARDLINK)
+
 # check environment variable for verbosity
 $verbose = $(GetEnvVar VERBOSE)
 
@@ -309,11 +313,22 @@ while ($argsindex -lt $args.Length)
     {
       try
       {
-        New-Item                       `
-          -ItemType SymbolicLink       `
-          -Path $link_name             `
-          -Target $target              `
-          -ErrorAction Stop | Out-Null
+        if ($use_hardlink -eq "Y")
+        {
+          New-Item                                                `
+            -ItemType HardLink                                    `
+            -Name (Join-Path -Path $link_directory -ChildPath $f) `
+            -Value (Join-Path -Path $target -ChildPath $f)        `
+            -ErrorAction Stop | Out-Null
+        }
+        else
+        {
+          New-Item                                                `
+            -ItemType SymbolicLink                                `
+            -Path (Join-Path -Path $link_directory -ChildPath $f) `
+            -Target (Join-Path -Path $target -ChildPath $f)       `
+            -ErrorAction Stop | Out-Null
+        }
       }
       catch
       {
@@ -322,7 +337,10 @@ while ($argsindex -lt $args.Length)
       }
       if ($IsWindows)
       {
-        SetTimeOfSymlink $link_name $target
+        if ($use_hardlink -ne "Y")
+        {
+          SetTimeOfSymlink $link_name $target
+        }
       }
     }
     if ($verbose -eq "Y")
@@ -358,11 +376,22 @@ while ($argsindex -lt $args.Length)
       {
         try
         {
-          New-Item                                                `
-            -ItemType SymbolicLink                                `
-            -Path (Join-Path -Path $link_directory -ChildPath $f) `
-            -Target (Join-Path -Path $target -ChildPath $f)       `
-            -ErrorAction Stop | Out-Null
+          if ($use_hardlink -eq "Y")
+          {
+            New-Item                                                `
+              -ItemType HardLink                                    `
+              -Name (Join-Path -Path $link_directory -ChildPath $f) `
+              -Value (Join-Path -Path $target -ChildPath $f)        `
+              -ErrorAction Stop | Out-Null
+          }
+          else
+          {
+            New-Item                                                `
+              -ItemType SymbolicLink                                `
+              -Path (Join-Path -Path $link_directory -ChildPath $f) `
+              -Target (Join-Path -Path $target -ChildPath $f)       `
+              -ErrorAction Stop | Out-Null
+          }
         }
         catch
         {
@@ -371,7 +400,10 @@ while ($argsindex -lt $args.Length)
         }
         if ($IsWindows)
         {
-          SetTimeOfSymlink $link_name $target
+          if ($use_hardlink -ne "Y")
+          {
+            SetTimeOfSymlink $link_name $target
+          }
         }
       }
       if ($verbose -eq "Y")
