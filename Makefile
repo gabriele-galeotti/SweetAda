@@ -982,23 +982,16 @@ endif
 ifeq ($(USE_EXE_WRAPPER),Y)
 EXE_WRAPPER_TIMESTAMP_FILENAME := $(OBJECT_DIRECTORY)/exe_wrapper.tmp
 ifeq      ($(BUILD_MODE),GNATMAKE)
-GNATMAKE_WRAPPER := --GCC="$(EXE_WRAPPER)"                                              \
+GNATMAKE_WRAPPER := "--GCC=$(EXE_WRAPPER)"                                              \
                     "-D_exewrapperexecutable=$(firstword $(ADAC))"                      \
                     "-D_exewrappertmfname=$(EXE_WRAPPER_TIMESTAMP_FILENAME)"            \
                     "-D_exewrapperverbose=$(VERBOSE)"                                   \
                     "-D_exewrapperbrieftext=$(shell $(call brief-text,[EXE-WRAP],(+)))"
 else ifeq ($(BUILD_MODE),GPRbuild)
-ifeq ($(OSTYPE),cmd)
-GPRBUILD_WRAPPER := SET "USE_EXE_WRAPPER=$(USE_EXE_WRAPPER)"                               && \
-                    SET "EXE_WRAPPER_TIMESTAMP_FILENAME=$(EXE_WRAPPER_TIMESTAMP_FILENAME)" && \
-                    SET "EXE_WRAPPER_VERBOSE=$(VERBOSE)"                                   && \
-                    SET "EXE_WRAPPER_BRIEFTEXT="                                           &&
-else
-GPRBUILD_WRAPPER := USE_EXE_WRAPPER="$(USE_EXE_WRAPPER)"                               \
-                    EXE_WRAPPER_TIMESTAMP_FILENAME="$(EXE_WRAPPER_TIMESTAMP_FILENAME)" \
-                    EXE_WRAPPER_VERBOSE="$(VERBOSE)"                                   \
-                    EXE_WRAPPER_BRIEFTEXT=""
-endif
+GPRBUILD_WRAPPER := "-XUSE_EXE_WRAPPER=$(USE_EXE_WRAPPER)"                               \
+                    "-XEXE_WRAPPER_TIMESTAMP_FILENAME=$(EXE_WRAPPER_TIMESTAMP_FILENAME)" \
+                    "-XEXE_WRAPPER_VERBOSE=$(VERBOSE)"                                   \
+                    "-XEXE_WRAPPER_BRIEFTEXT="
 endif
 else
 ifeq      ($(BUILD_MODE),GNATMAKE)
@@ -1048,8 +1041,8 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
 else ifeq ($(BUILD_MODE),GPRbuild)
 	@$(REM) GPRbuild-driven procedure
 	$(call brief-command, \
-        $(GPRBUILD_WRAPPER)              \
         $(GPRBUILD)                      \
+                    $(GPRBUILD_WRAPPER)  \
                     -c -p                \
                     -P $(KERNEL_GPRFILE) \
         ,[GPRBUILD-C],$(KERNEL_GPRFILE))
