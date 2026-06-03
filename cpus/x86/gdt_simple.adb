@@ -30,8 +30,10 @@ package body GDT_Simple
 
    use System.Storage_Elements;
 
-   GDT_Descriptor : aliased GDT_Descriptor_Type;
-   GDT            : aliased GDT_Type (0 .. 2);
+   GDT_Descriptor : aliased GDT_Descriptor_Type
+      with Suppress_Initialization => True;
+   GDT            : aliased GDT_Type (0 .. 2)
+      with Suppress_Initialization => True;
 
    --========================================================================--
    --                                                                        --
