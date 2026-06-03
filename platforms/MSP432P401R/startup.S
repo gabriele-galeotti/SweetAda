@@ -30,13 +30,13 @@ _start:
                 //
                 // Disable Watchdog.
                 //
-#define WDT_A_BASEADDRESS 0x40004800
-#define WDTCTL_OFFSET     0x0C
-#define WDTIS_DIV2E15     0x04
-#define WDTHOLD           (1<<7)
-#define WDTPW_PASSWD      (0x5A<<8)
+#define WDT_A_BASEADDRESS    0x40004800
+#define WDTCTL_OFFSET        0x0C
+#define WDTCTL_WDTIS_DIV2E15 0x04
+#define WDTCTL_WDTHOLD       (1<<7)
+#define WDTCTL_WDTPW_PASSWD  (0x5A<<8)
                 ldr     r0,=WDT_A_BASEADDRESS
-                movw    r1,#(WDTPW_PASSWD|WDTHOLD|WDTIS_DIV2E15)
+                movw    r1,#(WDTCTL_WDTPW_PASSWD|WDTCTL_WDTHOLD|WDTCTL_WDTIS_DIV2E15)
                 strh    r1,[r0,#WDTCTL_OFFSET]
 
                 //
