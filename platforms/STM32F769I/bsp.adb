@@ -97,6 +97,7 @@ package body BSP
    ----------------------------------------------------------------------------
    procedure Setup
       is
+      Baud_Rate : constant := Baud_Rate_Type'Enum_Rep (BR_115200);
    begin
       -------------------------------------------------------------------------
       Exceptions.Init;
@@ -129,7 +130,7 @@ package body BSP
       RCC_APB2RSTR.USART1RST := False;
       RCC_DCKCFGR2.USART1SEL := USART1SEL_APB2;
       USART1.CR1.UE := False;
-      USART1.BRR.BRR := Unsigned_16 (Clocks.CLK_Peripherals / 115_200);
+      USART1.BRR.BRR := Unsigned_16 (Clocks.CLK_Peripherals / Baud_Rate);
       USART1.CR1 := (
          RE     => True,
          TE     => True,
