@@ -17,6 +17,7 @@
 # OSTYPE
 # PLATFORM_DIRECTORY
 # SHARE_DIRECTORY
+# MICROBLAZE_LITTLE_ENDIAN
 # KERNEL_OUTFILE
 # TERMINAL
 # GDB
@@ -74,7 +75,11 @@ fi
 . ${SHARE_DIRECTORY}/terminal.sh
 
 # QEMU executable and CPU model
-QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-microblaze"
+if [ "x${MICROBLAZE_LITTLE_ENDIAN}" = "xY" ] ; then
+  QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-microblazeel"
+else
+  QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-microblaze"
+fi
 
 # debug options
 if [ "x$1" = "x-debug" ] ; then

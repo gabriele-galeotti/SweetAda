@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with Bits;
 with XPS;
 
 package ML605
@@ -52,7 +53,12 @@ package ML605
            Import     => True,
            Convention => Ada;
 
-   TIMER_IRQ : constant := 29;
+   AXIDMA_IRQ1   : constant := (if Bits.BigEndian then 31 else 0);
+   AXIDMA_IRQ0   : constant := (if Bits.BigEndian then 30 else 1);
+   TIMER_IRQ     : constant := (if Bits.BigEndian then 29 else 2);
+   AXIENET_IRQ   : constant := (if Bits.BigEndian then 28 else 3);
+   SPI_IRQ       : constant := (if Bits.BigEndian then 27 else 4);
+   UART16550_IRQ : constant := (if Bits.BigEndian then 26 else 5);
 
    procedure Tclk_Init;
 

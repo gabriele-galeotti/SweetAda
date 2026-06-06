@@ -16,6 +16,7 @@ REM
 REM Environment variables:
 REM OSTYPE
 REM SHARE_DIRECTORY
+REM MICROBLAZE_LITTLE_ENDIAN
 REM TOOLCHAIN_PREFIX
 REM KERNEL_OUTFILE
 REM KERNEL_ROMFILE
@@ -32,7 +33,11 @@ REM ############################################################################
 SETLOCAL ENABLEDELAYEDEXPANSION
 
 REM QEMU executable and CPU model
-SET "QEMU_FILENAME=qemu-system-microblazew.exe"
+IF "%MICROBLAZE_LITTLE_ENDIAN%"=="Y"
+  SET "QEMU_FILENAME=qemu-system-microblazeelw.exe"
+  ) ELSE (
+  SET "QEMU_FILENAME=qemu-system-microblazew.exe"
+  )
 SET QEMU_EXECUTABLE="C:\Program Files\qemu\%QEMU_FILENAME%"
 
 REM debug options

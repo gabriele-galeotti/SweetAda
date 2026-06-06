@@ -22,6 +22,9 @@ USE_APPLICATION := test-qemu-ml605
 
 CPU := MicroBlaze
 
+MICROBLAZE_LITTLE_ENDIAN := Y
+export MICROBLAZE_LITTLE_ENDIAN
+
 ################################################################################
 # Build system parameters.                                                     #
 #                                                                              #
@@ -29,6 +32,10 @@ CPU := MicroBlaze
 
 GCC_SWITCHES_PLATFORM     := -mcpu=v8.10.a
 LD_SWITCHES_PLATFORM      := --undefined=vectors
+ifeq ($(MICROBLAZE_LITTLE_ENDIAN),Y)
+GCC_SWITCHES_PLATFORM     += -mlittle-endian
+LD_SWITCHES_PLATFORM      += -EL
+endif
 OBJDUMP_SWITCHES_PLATFORM :=
 OBJCOPY_SWITCHES_PLATFORM := -O binary --gap-fill=0x00
 POSTBUILD_ROMFILE         := Y
