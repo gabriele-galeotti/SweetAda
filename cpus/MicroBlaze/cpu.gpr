@@ -40,7 +40,14 @@ library project Cpu is
             "mulsi3.S",
             "udivsi3.S",
             "umodsi3.S",
-            "divsi3table.ads"
+            "divsi3table.ads",
+            "gcc.ads", "gcc-types.ads",
+            "libgcc.adb", "libgcc.ads",
+            "libgcc-bswapsi2.adb",
+            "libgcc-bswapdi2.adb",
+            "libgcc-udivmoddi4.adb",
+            "libgcc-divdi3.adb",
+            "libgcc-moddi3.adb"
             );
    end case;
 

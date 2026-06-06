@@ -42,7 +42,8 @@ OBJECTS += $(OBJ_DIRECTORY)/divsi3.o      \
            $(OBJ_DIRECTORY)/mulsi3.o      \
            $(OBJ_DIRECTORY)/udivsi3.o     \
            $(OBJ_DIRECTORY)/umodsi3.o     \
-           $(OBJ_DIRECTORY)/divsi3table.o
+           $(OBJ_DIRECTORY)/divsi3table.o \
+           $(OBJ_DIRECTORY)/libgcc.o
 endif
 
 .PHONY: all

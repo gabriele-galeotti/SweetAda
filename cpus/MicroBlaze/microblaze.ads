@@ -15,6 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
+with Interfaces;
+with Bits;
+
 package MicroBlaze
    is
 
@@ -26,26 +30,15 @@ package MicroBlaze
    --                                                                        --
    --========================================================================--
 
+   use System;
+   use Interfaces;
+   use Bits;
+
 pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
-   -- Generic definitions
-   ----------------------------------------------------------------------------
-
-   Opcode_BREAKPOINT      : constant := 16#B9CC_0060#; -- BRKI R14,0x60
-   Opcode_BREAKPOINT_Size : constant := 4;
-
-   BREAKPOINT_Asm_String : constant String := ".word   0xB9CC0060";
-
-   MSR_IE : constant := 2#10#;
-
-   procedure NOP
-      with Inline => True;
-   procedure BREAKPOINT
-      with Inline => True;
-
-   ----------------------------------------------------------------------------
-   -- MicroBlaze registers
+   -- MicroBlaze Processor Reference Guide
+   -- UG081 (v9.0)
    ----------------------------------------------------------------------------
 
    R0  : constant := 0;
@@ -95,6 +88,56 @@ pragma Style_Checks (Off);
 
    Maximum_Register_Size : constant := 4;
 
+   -- Machine Status Register (MSR)
+
+   type MSR_Type is record
+      CC        : Boolean; -- Arithmetic Carry Copy
+      Reserved1 : Bits_16;
+      VMS       : Boolean; -- Virtual Protected Mode Save
+      VM        : Boolean; -- Virtual Protected Mode
+      UMS       : Boolean; -- User Mode Save
+      UM        : Boolean; -- User Mode
+      PVR       : Boolean; -- Processor Version Register exists
+      EIP       : Boolean; -- Exception In Progress
+      EE        : Boolean; -- Exception Enable
+      DCE       : Boolean; -- Data Cache Enable
+      DZO       : Boolean; -- Division by Zero or Division Overflow
+      ICE       : Boolean; -- Instruction Cache Enable
+      FSL       : Boolean; -- AXI4-Stream Error
+      BIP       : Boolean; -- Break in Progress
+      C         : Boolean; -- Arithmetic Carry
+      IE        : Boolean; -- Interrupt Enable
+      Reserved2 : Bits_1;
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for MSR_Type use record
+      CC        at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 .. 16;
+      VMS       at 0 range 17 .. 17;
+      VM        at 0 range 18 .. 18;
+      UMS       at 0 range 19 .. 19;
+      UM        at 0 range 20 .. 20;
+      PVR       at 0 range 21 .. 21;
+      EIP       at 0 range 22 .. 22;
+      EE        at 0 range 23 .. 23;
+      DCE       at 0 range 24 .. 24;
+      DZO       at 0 range 25 .. 25;
+      ICE       at 0 range 26 .. 26;
+      FSL       at 0 range 27 .. 27;
+      BIP       at 0 range 28 .. 28;
+      C         at 0 range 29 .. 29;
+      IE        at 0 range 30 .. 30;
+      Reserved2 at 0 range 31 .. 31;
+   end record;
+
+   function MSR_IE   return MSR_Type with Inline => True;
+   function MSR_nIE  return MSR_Type with Inline => True;
+   function MSR_ICE  return MSR_Type with Inline => True;
+   function MSR_nICE return MSR_Type with Inline => True;
+   function MSR_DCE  return MSR_Type with Inline => True;
+   function MSR_nDCE return MSR_Type with Inline => True;
+
    ----------------------------------------------------------------------------
    -- Cache management
    ----------------------------------------------------------------------------
@@ -117,10 +160,24 @@ pragma Style_Checks (Off);
            External_Name => "dcache_enable";
 
    ----------------------------------------------------------------------------
+   -- Generic definitions
+   ----------------------------------------------------------------------------
+
+   Opcode_BREAKPOINT      : constant := 16#B9CC_0060#; -- BRKI R14,0x60
+   Opcode_BREAKPOINT_Size : constant := 4;
+
+   BREAKPOINT_Asm_String : constant String := ".word   0xB9CC0060";
+
+   procedure NOP
+      with Inline => True;
+   procedure BREAKPOINT
+      with Inline => True;
+
+   ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   subtype Intcontext_Type is Integer;
+   subtype Intcontext_Type is MSR_Type;
 
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)

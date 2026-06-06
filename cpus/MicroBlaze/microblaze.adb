@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
-with Interfaces;
+with Ada.Unchecked_Conversion;
 with Definitions;
 
 package body MicroBlaze
@@ -31,7 +31,6 @@ package body MicroBlaze
    --========================================================================--
 
    use System.Machine_Code;
-   use Interfaces;
 
    CRLF : String renames Definitions.CRLF;
 
@@ -42,6 +41,17 @@ package body MicroBlaze
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   -- constants-like-functions that return a single flag or its negated bitmask
+pragma Style_Checks (Off);
+   function To_MSR is new Ada.Unchecked_Conversion (Unsigned_32, MSR_Type);
+   function MSR_IE   return MSR_Type is begin return (To_MSR (0) with delta IE => True); end MSR_IE;
+   function MSR_nIE  return MSR_Type is begin return (To_MSR (16#FFFF_FFFF#) with delta IE => False); end MSR_nIE;
+   function MSR_ICE  return MSR_Type is begin return (To_MSR (0) with delta ICE => True); end MSR_ICE;
+   function MSR_nICE return MSR_Type is begin return (To_MSR (16#FFFF_FFFF#) with delta ICE => False); end MSR_nICE;
+   function MSR_DCE  return MSR_Type is begin return (To_MSR (0) with delta DCE => True); end MSR_DCE;
+   function MSR_nDCE return MSR_Type is begin return (To_MSR (16#FFFF_FFFF#) with delta DCE => False); end MSR_nDCE;
+pragma Style_Checks (On);
 
    ----------------------------------------------------------------------------
    -- NOP
@@ -162,7 +172,7 @@ package body MicroBlaze
       (Intcontext : out Intcontext_Type)
       is
    begin
-      Intcontext := 0; -- __TBD__
+      null; -- __TBD__
    end Intcontext_Get;
 
    ----------------------------------------------------------------------------
@@ -180,18 +190,22 @@ package body MicroBlaze
    ----------------------------------------------------------------------------
    procedure Irq_Enable
       is
-      RMSR_R : Unsigned_32;
+      IE    : constant MSR_Type := MSR_IE;
+      MSR_R : Unsigned_32;
    begin
       Asm (
            Template => ""                         & CRLF &
                        "        mfs     %0,rmsr " & CRLF &
                        "        nop             " & CRLF &
-                       "        ori     %0,%0,%1" & CRLF &
+                       "        or      %0,%0,%1" & CRLF &
                        "        mts     rmsr,%0 " & CRLF &
                        "        nop             " & CRLF &
                        "",
-           Outputs  => Unsigned_32'Asm_Output ("=r", RMSR_R),
-           Inputs   => Unsigned_32'Asm_Input ("i", MSR_IE),
+           Outputs  => No_Output_Operands,
+           Inputs   => [
+                        Unsigned_32'Asm_Input ("r", MSR_R),
+                        MSR_Type'Asm_Input ("r", IE)
+                       ],
            Clobber  => "memory",
            Volatile => True
           );
@@ -202,18 +216,22 @@ package body MicroBlaze
    ----------------------------------------------------------------------------
    procedure Irq_Disable
       is
-      RMSR_R : Unsigned_32;
+      nIE   : constant MSR_Type := MSR_nIE;
+      MSR_R : Unsigned_32;
    begin
       Asm (
            Template => ""                         & CRLF &
                        "        mfs     %0,rmsr " & CRLF &
                        "        nop             " & CRLF &
-                       "        andi    %0,%0,%1" & CRLF &
+                       "        and     %0,%0,%1" & CRLF &
                        "        mts     rmsr,%0 " & CRLF &
                        "        nop             " & CRLF &
                        "",
-           Outputs  => Unsigned_32'Asm_Output ("=r", RMSR_R),
-           Inputs   => Unsigned_32'Asm_Input ("i", not MSR_IE),
+           Outputs  => No_Output_Operands,
+           Inputs   => [
+                        Unsigned_32'Asm_Input ("r", MSR_R),
+                        MSR_Type'Asm_Input ("r", nIE)
+                       ],
            Clobber  => "memory",
            Volatile => True
           );
