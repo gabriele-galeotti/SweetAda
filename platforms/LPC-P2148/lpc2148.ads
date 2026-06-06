@@ -688,6 +688,206 @@ pragma Style_Checks (Off);
            Convention           => Ada;
 
    ----------------------------------------------------------------------------
+   -- Chapter 7: LPC214x VIC
+   ----------------------------------------------------------------------------
+
+   type Intsource_Type is new Bits_5;
+
+   type VICBitmap_Type is array (Intsource_Type) of Boolean
+      with Component_Size => 1,
+           Object_Size    => 32;
+
+   -- Table 63. Connection of interrupt sources to the Vectored Interrupt Controller (VIC)
+
+   WDT      : constant Intsource_Type := 0;  -- Watchdog Interrupt (WDINT)
+   Reserved : constant Intsource_Type := 1;  -- Reserved for Software Interrupts only
+   ARMCore0 : constant Intsource_Type := 2;  -- Embedded ICE, DbgCommRx
+   ARMCore1 : constant Intsource_Type := 3;  -- Embedded ICE, DbgCommTX
+   TIMER0   : constant Intsource_Type := 4;  -- Match 0 - 3 (MR0, MR1, MR2, MR3) Capture 0 - 3 (CR0, CR1, CR2, CR3)
+   TIMER1   : constant Intsource_Type := 5;  -- Match 0 - 3 (MR0, MR1, MR2, MR3) Capture 0 - 3 (CR0, CR1, CR2, CR3)
+   UART0    : constant Intsource_Type := 6;  -- Rx Line Status (RLS) Transmit Holding Register Empty (THRE) Rx Data Available (RDA) Character Time-out Indicator (CTI)
+   UART1    : constant Intsource_Type := 7;  -- Rx Line Status (RLS) Transmit Holding Register Empty (THRE) Rx Data Available (RDA) Character Time-out Indicator (CTI) Modem Status Interrupt (MSI)
+   PWM0     : constant Intsource_Type := 8;  -- Match 0 - 6 (MR0, MR1, MR2, MR3, MR4, MR5, MR6)
+   I2C0     : constant Intsource_Type := 9;  -- SI (state change)
+   SPI0     : constant Intsource_Type := 10; -- SPI Interrupt Flag (SPIF) Mode Fault (MODF)
+   SPI1_SSP : constant Intsource_Type := 11; -- TX FIFO at least half empty (TXRIS) Rx FIFO at least half full (RXRIS) Receive Timeout condition (RTRIS) Receive overrun (RORRIS)
+   PLL      : constant Intsource_Type := 12; -- PLL Lock (PLOCK)
+   RTC      : constant Intsource_Type := 13; -- Counter Increment (RTCCIF) Alarm (RTCALF)
+   EINT0    : constant Intsource_Type := 14; -- External Interrupt 0 (EINT0)
+   EINT1    : constant Intsource_Type := 15; -- External Interrupt 1 (EINT1)
+   EINT2    : constant Intsource_Type := 16; -- External Interrupt 2 (EINT2)
+   EINT3    : constant Intsource_Type := 17; -- External Interrupt 3 (EINT3)
+   AD0      : constant Intsource_Type := 18; -- A/D Converter 0 end of conversion
+   I2C1     : constant Intsource_Type := 19; -- SI (state change)
+   BOD      : constant Intsource_Type := 20; -- Brown Out detect
+   AD1      : constant Intsource_Type := 21; -- A/D Converter 1 end of conversion
+   USB      : constant Intsource_Type := 22; -- USB interrupts, DMA interrupt
+
+   -- 7.4.1 Software Interrupt register (VICSoftInt - 0xFFFF F018)
+
+   VICSoftInt_ADDRESS : constant := 16#FFFF_F018#;
+
+   VICSoftInt : aliased VICBitmap_Type
+      with Address              => System'To_Address (VICSoftInt_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 7.4.2 Software Interrupt Clear register (VICSoftIntClear - 0xFFFF F01C)
+
+   VICSoftIntClear_ADDRESS : constant := 16#FFFF_F01C#;
+
+   VICSoftIntClear : aliased VICBitmap_Type
+      with Address              => System'To_Address (VICSoftIntClear_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 7.4.3 Raw Interrupt status register (VICRawIntr - 0xFFFF F008)
+
+   VICRawIntr_ADDRESS : constant := 16#FFFF_F008#;
+
+   VICRawIntr : aliased VICBitmap_Type
+      with Address              => System'To_Address (VICRawIntr_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 7.4.4 Interrupt Enable register (VICIntEnable - 0xFFFF F010)
+
+   VICIntEnable_ADDRESS : constant := 16#FFFF_F010#;
+
+   VICIntEnable : aliased VICBitmap_Type
+      with Address              => System'To_Address (VICIntEnable_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 7.4.5 Interrupt Enable Clear register (VICIntEnClear - 0xFFFF F014)
+
+   VICIntEnClear_ADDRESS : constant := 16#FFFF_F014#;
+
+   VICIntEnClear : aliased VICBitmap_Type
+      with Address              => System'To_Address (VICIntEnClear_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 7.4.6 Interrupt Select register (VICIntSelect - 0xFFFF F00C)
+
+   VICIntSelect_ADDRESS : constant := 16#FFFF_F00C#;
+
+   VICIntSelect : aliased VICBitmap_Type
+      with Address              => System'To_Address (VICIntSelect_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 7.4.7 IRQ Status register (VICIRQStatus - 0xFFFF F000)
+
+   VICIRQStatus_ADDRESS : constant := 16#FFFF_F000#;
+
+   VICIRQStatus : aliased VICBitmap_Type
+      with Address              => System'To_Address (VICIRQStatus_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 7.4.8 FIQ Status register (VICFIQStatus - 0xFFFF F004)
+
+   VICFIQStatus_ADDRESS : constant := 16#FFFF_F004#;
+
+   VICFIQStatus : aliased VICBitmap_Type
+      with Address              => System'To_Address (VICFIQStatus_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 7.4.9 Vector Control registers 0-15 (VICVectCntl0-15 - 0xFFFF F200-23C)
+
+   type VICVectCntl_Type is record
+      int_request_sw_int_assig : Intsource_Type := 0;     -- The number of the interrupt request or software interrupt assigned to this vectored IRQ slot.
+      IRQslot_en               : Boolean        := False; -- When 1, this vectored IRQ slot is enabled, and can produce a unique ISR address when its assigned interrupt request or software interrupt is enabled, classified as IRQ, and asserted.
+      Reserved                 : Bits_26        := 0;
+   end record
+      with Bit_Order            => Low_Order_First,
+           Object_Size          => 32,
+           Volatile_Full_Access => True;
+   for VICVectCntl_Type use record
+      int_request_sw_int_assig at 0 range 0 ..  4;
+      IRQslot_en               at 0 range 5 ..  5;
+      Reserved                 at 0 range 6 .. 31;
+   end record;
+
+   type VICVectCntl_Array_Type is array (0 .. 15) of VICVectCntl_Type
+      with Object_Size => 16 * 32;
+
+   VICVectCntl_ADDRESS : constant := 16#FFFF_F200#;
+
+   VICVectCntl : aliased VICVectCntl_Array_Type
+      with Address    => System'To_Address (VICVectCntl_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   -- 7.4.10 Vector Address registers 0-15 (VICVectAddr0-15 - 0xFFFF F100-13C)
+
+   type VICVectAddr0_15_Type is array (0 .. 15) of Unsigned_32
+      with Object_Size => 16 * 32;
+
+   VICVectAddr16_ADDRESS : constant := 16#FFFF_F100#;
+
+   VICVectAddr16 : aliased VICVectAddr0_15_Type
+      with Address    => System'To_Address (VICVectAddr16_ADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
+
+   -- 7.4.11 Default Vector Address register (VICDefVectAddr - 0xFFFF F034)
+
+   VICDefVectAddr_ADDRESS : constant := 16#FFFF_F034#;
+
+   VICDefVectAddr : aliased Unsigned_32
+      with Address              => System'To_Address (VICDefVectAddr_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 7.4.12 Vector Address register (VICVectAddr - 0xFFFF F030)
+
+   VICVectAddr_ADDRESS : constant := 16#FFFF_F030#;
+
+   VICVectAddr : aliased Unsigned_32
+      with Address              => System'To_Address (VICVectAddr_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 7.4.13 Protection Enable register (VICProtection - 0xFFFF F020)
+
+   VIC_access_ALL  : constant := 0; -- VIC registers can be accessed in User or privileged mode.
+   VIC_access_PRIV : constant := 1; -- The VIC registers can only be accessed in privileged mode.
+
+   type VICProtection_Type is record
+      VIC_access : Bits_1  := VIC_access_ALL;
+      Reserved   : Bits_31 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for VICProtection_Type use record
+      VIC_access at 0 range 0 ..  0;
+      Reserved   at 0 range 1 .. 31;
+   end record;
+
+   VICProtection_ADDRESS : constant := 16#FFFF_F020#;
+
+   VICProtection : aliased VICProtection_Type
+      with Address              => System'To_Address (VICProtection_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   ----------------------------------------------------------------------------
    -- Chapter 8: LPC214x GPIO
    ----------------------------------------------------------------------------
 
