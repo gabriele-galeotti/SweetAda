@@ -179,7 +179,7 @@ pragma Style_Checks (Off);
       RMD3 : RMD3_Type;
    end record
       with Alignment   => 2**3,
-           Object_Size => 16 * 4;
+           Object_Size => 4 * 16;
    for Receive_Message_Descriptor_Type use record
       RMD0 at 0 range 0 .. 15;
       RMD1 at 2 range 0 .. 15;
@@ -270,7 +270,7 @@ pragma Style_Checks (Off);
       TMD3 : TMD3_Type;
    end record
       with Alignment   => 2**3,
-           Object_Size => 16 * 4;
+           Object_Size => 4 * 16;
    for Transmit_Message_Descriptor_Type use record
       TMD0 at 0 range 0 .. 15;
       TMD1 at 2 range 0 .. 15;
