@@ -221,11 +221,13 @@ pragma Warnings (Off, "types for unchecked conversion have different sizes");
       return Unsigned_8
       is
       Register_Address : Unsigned_8;
+      Value            : Unsigned_8;
       function To_U8 is new Ada.Unchecked_Conversion (Address, Unsigned_8);
    begin
       Register_Address := To_U8 (Port_Address - RTC_BASEADDRESS);
       CPU.IO.PortOut (RTC_BASEADDRESS + RTC_INDEX, Register_Address + RTC_NMI_DISABLE);
-      return CPU.IO.PortIn (RTC_BASEADDRESS + RTC_DATA);
+      Value := CPU.IO.PortIn (RTC_BASEADDRESS + RTC_DATA);
+      return Value;
    end RTC_Register_Read;
 
    ----------------------------------------------------------------------------
