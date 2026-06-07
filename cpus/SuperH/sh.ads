@@ -49,13 +49,6 @@ pragma Style_Checks (Off);
    -- Generic definitions
    ----------------------------------------------------------------------------
 
-   procedure NOP
-      with Inline => True;
-
-   ----------------------------------------------------------------------------
-   -- Exceptions and interrupts
-   ----------------------------------------------------------------------------
-
    function SR_Read
       return SR_Type
       with Inline => True;
@@ -66,6 +59,13 @@ pragma Style_Checks (Off);
    procedure VBR_Set
       (VBR : in Address)
       with Inline => True;
+
+   procedure NOP
+      with Inline => True;
+
+   ----------------------------------------------------------------------------
+   -- Exceptions and interrupts
+   ----------------------------------------------------------------------------
 
    subtype Intcontext_Type is SR_Type;
 
