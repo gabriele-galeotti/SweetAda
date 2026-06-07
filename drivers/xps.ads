@@ -35,7 +35,8 @@ package XPS
    use Bits;
 
    ----------------------------------------------------------------------------
-   -- XPS Timer
+   -- LogiCORE IP XPS Timer/Counter (v1.02a)
+   -- DS573 April 19, 2010
    ----------------------------------------------------------------------------
 
    -- Control/Status Register 0 (TCSR0) (12)
@@ -90,7 +91,8 @@ package XPS
    end record;
 
    ----------------------------------------------------------------------------
-   -- XPS Interrupt Controller
+   -- LogiCORE IP XPS Interrupt Controller (v2.01a)
+   -- DS572 April 19, 2010
    ----------------------------------------------------------------------------
 
    -- Master Enable Register (MER) (15)
