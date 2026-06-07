@@ -18,7 +18,6 @@
 with System;
 with Interfaces;
 with Bits;
-with MIPS;
 
 package MIPS32
    is
@@ -34,7 +33,6 @@ package MIPS32
    use System;
    use Interfaces;
    use Bits;
-   use MIPS;
 
 pragma Style_Checks (Off);
 
