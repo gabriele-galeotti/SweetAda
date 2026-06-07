@@ -38,8 +38,8 @@ package Gayle
       RESET      : Boolean;
       Unused2    : Bits_5;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
    for IDE_Devcon_Type use record
       Unused1    at 0 range 0 .. 0;
       IRQDISABLE at 0 range 1 .. 1;
