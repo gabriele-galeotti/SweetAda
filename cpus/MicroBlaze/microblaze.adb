@@ -17,6 +17,7 @@
 
 with System.Machine_Code;
 with Ada.Unchecked_Conversion;
+with Interfaces;
 with Definitions;
 
 package body MicroBlaze
@@ -31,6 +32,7 @@ package body MicroBlaze
    --========================================================================--
 
    use System.Machine_Code;
+   use Interfaces;
 
    CRLF : String renames Definitions.CRLF;
 
@@ -52,6 +54,27 @@ pragma Style_Checks (Off);
    function MSR_DCE  return MSR_Type is begin return (To_MSR (0) with delta DCE => True); end MSR_DCE;
    function MSR_nDCE return MSR_Type is begin return (To_MSR (16#FFFF_FFFF#) with delta DCE => False); end MSR_nDCE;
 pragma Style_Checks (On);
+
+   ----------------------------------------------------------------------------
+   -- MSR_Read
+   ----------------------------------------------------------------------------
+   function MSR_Read
+      return MSR_Type
+      is
+      MSR_Reg : MSR_Type;
+   begin
+      Asm (
+           Template => ""                        & CRLF &
+                       "        nop            " & CRLF &
+                       "        mfs     %0,rmsr" & CRLF &
+                       "",
+           Outputs  => MSR_Type'Asm_Output ("=r", MSR_Reg),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return MSR_Reg;
+   end MSR_Read;
 
    ----------------------------------------------------------------------------
    -- NOP
@@ -114,16 +137,22 @@ pragma Style_Checks (On);
 
    procedure ICache_Enable
       is
+      ICE     : constant MSR_Type := MSR_ICE;
+      MSR_Reg : MSR_Type;
    begin
       Asm (
-           Template => ""                           & CRLF &
-                       "        mfs     r8,rmsr   " & CRLF &
-                       "        ori     r8,r8,0x20" & CRLF &
-                       "        mts     rmsr,r8   " & CRLF &
+           Template => ""                         & CRLF &
+                       "        nop             " & CRLF &
+                       "        mfs     %0,rmsr " & CRLF &
+                       "        or      %0,%0,%1" & CRLF &
+                       "        mts     rmsr,%0 " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "r8",
+           Inputs   => [
+                        MSR_Type'Asm_Input ("r", MSR_Reg),
+                        MSR_Type'Asm_Input ("r", ICE)
+                       ],
+           Clobber  => "memory",
            Volatile => True
           );
    end ICache_Enable;
@@ -151,16 +180,22 @@ pragma Style_Checks (On);
 
    procedure DCache_Enable
       is
+      DCE     : constant MSR_Type := MSR_DCE;
+      MSR_Reg : MSR_Type;
    begin
       Asm (
-           Template => ""                           & CRLF &
-                       "        mfs     r8,rmsr   " & CRLF &
-                       "        ori     r8,r8,0x80" & CRLF &
-                       "        mts     rmsr,r8   " & CRLF &
+           Template => ""                         & CRLF &
+                       "        nop             " & CRLF &
+                       "        mfs     %0,rmsr " & CRLF &
+                       "        or      %0,%0,%1" & CRLF &
+                       "        mts     rmsr,%0 " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "r8",
+           Inputs   => [
+                        MSR_Type'Asm_Input ("r", MSR_Reg),
+                        MSR_Type'Asm_Input ("r", DCE)
+                       ],
+           Clobber  => "memory",
            Volatile => True
           );
    end DCache_Enable;
@@ -172,7 +207,7 @@ pragma Style_Checks (On);
       (Intcontext : out Intcontext_Type)
       is
    begin
-      null; -- __TBD__
+      Intcontext := MSR_Read;
    end Intcontext_Get;
 
    ----------------------------------------------------------------------------
@@ -181,8 +216,25 @@ pragma Style_Checks (On);
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       is
+      MSR_Reg : MSR_Type;
    begin
-      null; -- __TBD__
+      Asm (
+           Template => ""                         & CRLF &
+                       "        nop             " & CRLF &
+                       "        mfs     %0,rmsr " & CRLF &
+                       "        and     %1,%1,%2" & CRLF &
+                       "        or      %0,%0,%1" & CRLF &
+                       "        mts     rmsr,%0 " & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => [
+                        MSR_Type'Asm_Input ("r", MSR_Reg),
+                        MSR_Type'Asm_Input ("r", Intcontext),
+                        MSR_Type'Asm_Input ("r", MSR_IE)
+                       ],
+           Clobber  => "memory",
+           Volatile => True
+          );
    end Intcontext_Set;
 
    ----------------------------------------------------------------------------
@@ -190,20 +242,19 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
    procedure Irq_Enable
       is
-      IE    : constant MSR_Type := MSR_IE;
-      MSR_R : Unsigned_32;
+      IE      : constant MSR_Type := MSR_IE;
+      MSR_Reg : MSR_Type;
    begin
       Asm (
            Template => ""                         & CRLF &
-                       "        mfs     %0,rmsr " & CRLF &
                        "        nop             " & CRLF &
+                       "        mfs     %0,rmsr " & CRLF &
                        "        or      %0,%0,%1" & CRLF &
                        "        mts     rmsr,%0 " & CRLF &
-                       "        nop             " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => [
-                        Unsigned_32'Asm_Input ("r", MSR_R),
+                        MSR_Type'Asm_Input ("r", MSR_Reg),
                         MSR_Type'Asm_Input ("r", IE)
                        ],
            Clobber  => "memory",
@@ -216,20 +267,19 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
    procedure Irq_Disable
       is
-      nIE   : constant MSR_Type := MSR_nIE;
-      MSR_R : Unsigned_32;
+      nIE     : constant MSR_Type := MSR_nIE;
+      MSR_Reg : MSR_Type;
    begin
       Asm (
            Template => ""                         & CRLF &
-                       "        mfs     %0,rmsr " & CRLF &
                        "        nop             " & CRLF &
+                       "        mfs     %0,rmsr " & CRLF &
                        "        and     %0,%0,%1" & CRLF &
                        "        mts     rmsr,%0 " & CRLF &
-                       "        nop             " & CRLF &
                        "",
            Outputs  => No_Output_Operands,
            Inputs   => [
-                        Unsigned_32'Asm_Input ("r", MSR_R),
+                        MSR_Type'Asm_Input ("r", MSR_Reg),
                         MSR_Type'Asm_Input ("r", nIE)
                        ],
            Clobber  => "memory",

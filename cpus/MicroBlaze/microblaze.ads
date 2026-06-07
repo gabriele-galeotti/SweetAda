@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with Interfaces;
+-- with Interfaces;
 with Bits;
 
 package MicroBlaze
@@ -31,7 +31,7 @@ package MicroBlaze
    --========================================================================--
 
    use System;
-   use Interfaces;
+   -- use Interfaces;
    use Bits;
 
 pragma Style_Checks (Off);
@@ -137,6 +137,10 @@ pragma Style_Checks (Off);
    function MSR_nICE return MSR_Type with Inline => True;
    function MSR_DCE  return MSR_Type with Inline => True;
    function MSR_nDCE return MSR_Type with Inline => True;
+
+   function MSR_Read
+      return MSR_Type
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Cache management
