@@ -285,7 +285,7 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    generic
-      SPR : in SPR_Type;
+      SPR : SPR_Type;
       type Register_Type is private;
    function MFSPR
       return Register_Type
@@ -333,7 +333,7 @@ pragma Style_Checks (Off);
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   subtype Intcontext_Type is Integer;
+   subtype Intcontext_Type is Unsigned_32;
 
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
