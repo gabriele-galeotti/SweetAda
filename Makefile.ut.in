@@ -73,6 +73,12 @@ DOS2UNIX           := dos2unix$(SCREXT)
 endif
 endif
 
+ifeq ($(OSTYPE),darwin)
+SED_INPLACE := sed -i ''
+else
+SED_INPLACE := sed -i
+endif
+
 # needed by GPRbuild
 export EXE_WRAPPER
 # needed by RTS Makefile
