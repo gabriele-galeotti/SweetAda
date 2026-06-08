@@ -110,8 +110,8 @@ pragma Style_Checks (Off);
       PLLCNT    : Bits_4;
       Reserved2 : Bits_4;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for PLL_Control_Type use record
       Reserved1 at 0 range  0 .. 23;
       PLLCNT    at 0 range 24 .. 27;
@@ -176,8 +176,8 @@ pragma Style_Checks (Off);
       ADIR     : LEBitmap_8;
       AMODE    : LEBitmap_8;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for PORTA_Type use record
       ADATA    at 0 range  0 ..  7;
       Reserved at 0 range  8 .. 15;
@@ -199,8 +199,8 @@ pragma Style_Checks (Off);
       CDIR  : LEBitmap_8;
       CMODE : LEBitmap_8;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for PORTC_Type use record
       CDATA at 0 range  0 ..  7;
       CSF   at 0 range  8 .. 15;
@@ -317,8 +317,8 @@ pragma Style_Checks (Off);
       BRK      : Boolean; -- Send break
       CE       : Boolean; -- Channel enable
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SCCRA_Type use
    record
       ETXDMA  at 0 range  0 ..  0;
@@ -378,8 +378,8 @@ pragma Style_Checks (Off);
       RDM2      : Boolean; -- Enable receive data match 2
       RDM1      : Boolean; -- Enable receive data match 1
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SCCRB_Type use record
       Reserved1 at 0 range  0 .. 16;
       MAM2      at 0 range 17 .. 17;
@@ -435,8 +435,8 @@ pragma Style_Checks (Off);
       MATCH2   : Boolean;
       MATCH1   : Boolean;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SCSR_Type use record
       TXEMPTY  at 0 range  0 ..  0;
       TXBC     at 0 range  1 ..  1;
@@ -507,8 +507,8 @@ pragma Style_Checks (Off);
       TMODE     : Bits_1;
       EBIT      : Boolean;
    end record
-      with Bit_Order => Low_Order_First,
-           Size      => 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
    for SCBRGR_Type use record
       NREG      at 0 range  0 .. 10;
       Reserved1 at 0 range 11 .. 11;
@@ -544,7 +544,7 @@ pragma Style_Checks (Off);
    type SCFIFOR_Type is record
       DATA : U8_Array (0 .. 3);
    end record
-      with Size => 4 * 8;
+      with Object_Size => 4 * 8;
 
    SCFIFOR_ADDRESS : constant := SER_BASEADDRESS + 16#10#;
 
