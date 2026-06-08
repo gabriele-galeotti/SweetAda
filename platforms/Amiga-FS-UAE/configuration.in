@@ -37,6 +37,8 @@ FPU_MODEL := M68881
 #                                                                              #
 ################################################################################
 
+$(call list-insert,INCLUDE_DIRECTORIES,$(PLATFORM_DIRECTORY)/mmu/$(CPU_MODEL))
+
 GCC_SWITCHES_PLATFORM     := -mcpu=68010
 #GCC_SWITCHES_PLATFORM     := -mcpu=68020 -m68881
 #GCC_SWITCHES_PLATFORM     := -mcpu=68030 -m68881

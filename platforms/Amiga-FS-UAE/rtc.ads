@@ -34,6 +34,14 @@ package RTC
    use Bits;
    use Time;
 
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
+   -- MSM6242B
+   -- DIRECT BUS CONNECTED CMOS REAL TIME CLOCK/CALENDAR
+   -- FEDL6242B-02 Issue Date: Jun. 17, 2002
+   ----------------------------------------------------------------------------
+
    -- register type for S1, MI1, H1, D1, MO1, Y1, Y10
    type DATA4_Type is record
       DATA   : Bits_4;
@@ -98,10 +106,10 @@ package RTC
 
    -- register type for CD
    type CD_Type is record
-      HOLD     : Boolean;      -- inhibits the 1Hz clock to the S1 counter
-      BUSY     : Boolean;      -- shows the interface condition with microcontroller/microprocessors.
-      IRQ_FLAG : Boolean;      -- indicates that an interrupt has occurred to the microcomputer if IRQ = 1.
-      ADJ30    : Boolean;      -- 30-second adjustment
+      HOLD     : Boolean;      -- Setting this bit to a "1" inhibits the 1Hz clock to the S1 counter, at which time the Busy status bit can be read.
+      BUSY     : Boolean;      -- Status bit which shows the interface condition with microcontroller/microprocessors.
+      IRQ_FLAG : Boolean;      -- This status bit corresponds to the output level of the STD.P output.
+      ADJ30    : Boolean;      -- When 30-second adjustment is necessary, a "1" is written to bit D3 during which time the internal clock registers should not be read from or written to 125μs after bit D3 = 1 it will automatically return to a "0", and at that time reading or writing of registers can occur.
       Unused   : Bits_4  := 0;
    end record
       with Bit_Order   => Low_Order_First,
@@ -115,7 +123,7 @@ package RTC
    end record;
 
    -- constants for CE
-   ITRPT_STND_STD : constant := 0; -- fixed cycle wave-form with a low-level pulse width of 7.8125ms ...
+   ITRPT_STND_STD : constant := 0; -- a fixed cycle wave-form with a low-level pulse width of 7.8125 ms is present at the STD.P output.
    ITRPT_STND_INT : constant := 1; -- no fixed cycle
    T_2      : constant := 2#00#; -- Duty CYCLE of "0" level when ITRPT/STND bit is "0".
    T_128    : constant := 2#01#; -- ''
@@ -125,8 +133,8 @@ package RTC
    -- register type for CE
    type CE_Type is record
       MASK       : Boolean;      -- This bit controls the STD.P output.
-      ITRPT_STND : Bits_1;       -- used to switch the STD.P output between its two modes of operation
-      T          : Bits_2;       -- determine the period of the STD.P output in both interrupt and Fixed timing ...
+      ITRPT_STND : Bits_1;       -- The ITRPT/STND input is used to switch the STD.P output between its two modes of operation, interrupt and Standard timing waveforms.
+      T          : Bits_2;       -- These two bits determine the period of the STD.P output in both interrupt and Fixed timing waveform modes.
       Unused     : Bits_4  := 0;
    end record
       with Bit_Order   => Low_Order_First,
@@ -144,10 +152,10 @@ package RTC
 
    -- register type for CF
    type CF_Type is record
-      REST      : Boolean;      -- used to clear the clock's internal divider/counter of less than a second.
-      STOP      : Boolean;      -- inhibits carries into the 8192Hz divider stage.
-      HOUR_MODE : Bits_1;       -- selection of 24/12 hour time modes.
-      TEST      : Boolean;      -- the input to the SECONDS counter comes from the counter/divider stage instead of ...
+      REST      : Boolean;      -- This bit is used to clear the clock's internal divider/counter of less than a second.
+      STOP      : Boolean;      -- The STOP FLAG Only inhibits carries into the 8192Hz divider stage.
+      HOUR_MODE : Bits_1;       -- This bit is for selection of 24/12 hour time modes.
+      TEST      : Boolean;      -- When the TEST flag is a "1", the input to the SECONDS counter comes from the counter/divider stage instead of the 15th divider stage.
       Unused    : Bits_4  := 0;
    end record
       with Bit_Order   => Low_Order_First,
@@ -210,5 +218,7 @@ package RTC
 
    procedure Time_Read
       (T : out TM_Time);
+
+pragma Style_Checks (On);
 
 end RTC;

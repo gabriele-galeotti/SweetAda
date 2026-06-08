@@ -42,14 +42,8 @@ OBJECTS := $(foreach f,$(OBJECTS_XFORM_3),$(OBJ_DIRECTORY)/$(f))
 .PHONY: all
 all: $(CONFIGURE_FILES_PLATFORM) $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
-.PHONY: installfiles
-installfiles:
-
 .PHONY: configure
 configure: clean-configure-files $(CONFIGURE_FILES_PLATFORM) $(LD_SCRIPT)
-	@$(SYMLINK)                                                   \
-                    mmu/mmu-amiga-$(CPU_MODEL:M%=%).adb mmu-amiga.adb \
-                    mmu/mmu-amiga-$(CPU_MODEL:M%=%).ads mmu-amiga.ads
 
 ifneq ($(CONFIGURE_FILES_PLATFORM),)
 $(CONFIGURE_FILES_PLATFORM): % : %.in
@@ -85,8 +79,7 @@ clean:
 
 .PHONY: distclean
 distclean: clean-configure-files clean
-	$(RM) $(DISTCLEAN_OBJECTS_COMMON) \
-              mmu-amiga.adb mmu-amiga.ads
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 
