@@ -19,7 +19,7 @@ with System;
 with Interfaces;
 with Bits;
 
-package MPC83XX
+package MPC83xx
    is
 
    --========================================================================--
@@ -33,6 +33,15 @@ package MPC83XX
    use System;
    use Interfaces;
    use Bits;
+
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
+   -- MPC8306 PowerQUICC II Pro
+   -- Integrated Communications
+   -- Processor Family Reference Manual
+   -- MPC8306RM Rev. 2 10/2014
+   ----------------------------------------------------------------------------
 
    IMMRBAR : constant := 16#FF40_0000#;
 
@@ -268,4 +277,6 @@ package MPC83XX
            Import               => True,
            Convention           => Ada;
 
-end MPC83XX;
+pragma Style_Checks (On);
+
+end MPC83xx;
