@@ -43,7 +43,6 @@ package body BSP
    use Definitions;
    use Bits;
    use PowerPC;
-   use PPC405;
    use REF405EP;
 
    --========================================================================--
