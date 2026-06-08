@@ -38,15 +38,6 @@ package PowerPC
 pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
-   -- Generic definitions
-   ----------------------------------------------------------------------------
-
-   Opcode_BREAKPOINT      : constant := 16#7D82_1008#; -- twge r2,r2
-   Opcode_BREAKPOINT_Size : constant := 4;
-
-   BREAKPOINT_Asm_String : constant String := ".long   0x7D821008";
-
-   ----------------------------------------------------------------------------
    -- PowerPC registers
    ----------------------------------------------------------------------------
 
@@ -315,6 +306,15 @@ pragma Style_Checks (Off);
    function PVR_Read
       return PVR_Type
       with Inline => True;
+
+   ----------------------------------------------------------------------------
+   -- Generic definitions
+   ----------------------------------------------------------------------------
+
+   Opcode_BREAKPOINT      : constant := 16#7D82_1008#; -- twge r2,r2
+   Opcode_BREAKPOINT_Size : constant := 4;
+
+   BREAKPOINT_Asm_String : constant String := ".long   0x7D821008";
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
