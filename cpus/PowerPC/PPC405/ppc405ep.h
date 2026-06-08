@@ -59,12 +59,5 @@
 #define UIC0_VR  0x0C7  /* UIC Vector Register */
 #define UIC0_VCR 0x0C8  /* UIC Vector Configuration Register */
 
-/*
- * Instructions.
- */
-#define NOP_INSTRUCTION             0x60000000
-#define BREAKPOINT_INSTRUCTION      0x7D821008
-#define BREAKPOINT_INSTRUCTION_SIZE 4
-
 #endif /* _PPC405EP_H */
 
