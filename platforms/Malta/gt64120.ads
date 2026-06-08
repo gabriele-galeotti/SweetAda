@@ -36,6 +36,12 @@ package GT64120
 
 pragma Style_Checks (Off);
 
+   ----------------------------------------------------------------------------
+   -- GT–64120A
+   -- System Controller For RC4650/4700/5000 and RM526X/527X/7000 CPUs
+   -- Datasheet Revision 1.1 JAN 10, 2001
+   ----------------------------------------------------------------------------
+
    GT64120_DEFAULT_ISD_ADDRESS : constant := 16#1400_0000#;
 
    -- 20.3 CPU Configuration
@@ -161,7 +167,7 @@ pragma Style_Checks (Off);
    SyncMode_SYNC3   : constant := 2#110#; -- When the two clocks are synchronized and TCLK/2 > PCLK >= TCLK/3.
 
    DRAMtoPCIErr_ALWAYS : constant := 0; -- PAR is always driven by the GT–64120A with even parity matching the address/data
-   DRAMtoPCIErr_ECC    : constant := 1; -- In case of PCI read ... GT–64120A drives PAR with parity NOT matching the data
+   DRAMtoPCIErr_ECC    : constant := 1; -- In case of PCI read from SDRAM which results in ECC error detection, GT–64120A drives PAR with parity NOT matching the data
 
    type PCI_0_Command_Type is record
       MByteSwap    : Boolean := False; -- Master Byte Swap.
