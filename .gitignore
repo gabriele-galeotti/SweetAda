@@ -63,20 +63,14 @@ user/
 # libutils                                                                     #
 ################################################################################
 
-libutils/make.exe
-libutils/sed.exe
 libutils/elftool*
-libutils/gcc-wrapper*
-libutils/gnat-wrapper*
+libutils/exe-wrapper*
 libutils/src/ELFtool/*.o
 libutils/src/ELFtool/elftool
 libutils/src/ELFtool/elftool.exe
-libutils/src/GCC-wrapper/*.o
-libutils/src/GCC-wrapper/gcc-wrapper
-libutils/src/GCC-wrapper/gcc-wrapper.exe
-libutils/src/GNAT-wrapper/*.o
-libutils/src/GNAT-wrapper/gnat-wrapper
-libutils/src/GNAT-wrapper/gnat-wrapper.exe
+libutils/src/EXE-wrapper/*.o
+libutils/src/EXE-wrapper/exe-wrapper
+libutils/src/EXE-wrapper/exe-wrapper.exe
 
 ################################################################################
 # RTS                                                                          #
