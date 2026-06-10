@@ -17,7 +17,6 @@
 
 with System;
 with Definitions;
-with Configure;
 with Bits;
 with Core;
 with MMIO;

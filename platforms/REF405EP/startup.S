@@ -10,6 +10,7 @@
 
 #define __ASSEMBLER__ 1
 
+#include <powerpc.h>
 #include <ppc405ep.h>
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -18,7 +19,6 @@
 
                 //
                 // Reset entry point.
-                // __REF__ acroread /a "page=190" "PPC405EP_UM2003.pdf"
                 //
 
                 b       _start
@@ -26,10 +26,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
                 .sect   .startup,"ax"
-
-                //
-                // __REF__ acroread /a "page=190" "PPC405EP_UM2003.pdf"
-                //
 
                 .type   _start,@function
                 .global _start
@@ -55,40 +51,34 @@ _start:
                 // MSR setup.
                 //
                 // disable instruction and data address translation
-                // __REF__ acroread /a "page=119" "PPC405EP_UM2003.pdf"
-                // __REF__ acroread /a "page=123" "PPC405EP_UM2003.pdf"
                 mfmsr   r0
-                lis     r1,(IR|DR)@ha
-                ori     r1,r1,(IR|DR)@l
+                lis     r1,(MSR_IR|MSR_DR)@ha
+                ori     r1,r1,(MSR_IR|MSR_DR)@l
                 not     r1,r1
                 and     r0,r0,r1
                 mtmsr   r0
                 // enforce "guarded" storage and big-endian ordering
-                // __REF__ acroread /a "page=160" "PPC405EP_UM2003.pdf"
                 lis     r0,0xFFFFFFFF@ha
                 ori     r0,r0,0xFFFFFFFF@l
                 mtspr   SGR,r0
                 lis     r0,0@ha
                 ori     r0,r0,0@l
                 mtspr   SLER,r0
+                // Data Cache Cachability Register (DCCR)
+                dccci                                   // invalidate
+                lis     r0,0@ha
+                ori     r0,r0,0@l
+                mtspr   DCCR,r0
+                isync
                 // Instruction Cache Cachability Register (ICCR)
                 iccci                                   // invalidate
                 lis     r0,0@ha
                 ori     r0,r0,0@l
                 mtspr   ICCR,r0
                 isync
-                // Data Cache Cachability Register (DCCR)
-                // __REF__ acroread /a "page=123" "PPC405EP_UM2003.pdf"
-                dccci                                   // invalidate
-                lis     r0,0@ha
-                ori     r0,r0,0@l
-                mtspr   DCCR,r0
-                isync
 
                 //
                 // Initialize EVPR.
-                // PowerPC 405 Embedded Processor Core User?s Manual
-                // 5.4 Critical and Noncritical Interrupts
                 //
                 .extern ivtable
                 lis     r0,ivtable@ha                   // lower 15 bits of EVPR are always 0

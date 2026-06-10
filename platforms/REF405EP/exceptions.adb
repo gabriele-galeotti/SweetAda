@@ -18,6 +18,7 @@
 with System.Machine_Code;
 with Definitions;
 with Abort_Library;
+with PPC405;
 with BSP;
 with Console;
 
@@ -58,24 +59,25 @@ package body Exceptions
    procedure Exception_Process (Identifier : in Unsigned_32)
       is
    begin
-      if Identifier = PIT_IRQ_ID then
+      if    Identifier = PIT_IRQ_ID then
+         PPC405.TSR_Write (PPC405.TSR_PIS);
          BSP.Tick_Count := @ + 1;
-      end if;
-      -- if Identifier = FIT_IRQ_ID then
-      --    Console.Print ("FIT interrupt", NL => True);
-      -- end if;
-      -- if Identifier = UART0_IRQ_ID then
-      --    Console.Print ("UART0 external interrupt", NL => True);
-      -- end if;
-      -- if Identifier = GPT0_IRQ_ID then
-      --    Console.Print ("GPT0 external interrupt", NL => True);
-      -- end if;
-      if Identifier = 16#0000_0700# then
+      elsif Identifier = FIT_IRQ_ID then
+         PPC405.TSR_Write (PPC405.TSR_FIS);
+         Console.Print ("FIT interrupt", NL => True);
+      elsif Identifier = UART0_IRQ_ID then
+         Console.Print ("UART0 external interrupt", NL => True);
+         Abort_Library.System_Abort;
+      elsif Identifier = GPT0_IRQ_ID then
+         Console.Print ("GPT0 external interrupt", NL => True);
+         Abort_Library.System_Abort;
+      elsif Identifier = 16#0000_0700# then
          Console.Print ("BREAKPOINT", NL => True);
+         Abort_Library.System_Abort;
+      else
+         Console.Print (Identifier, Prefix => "Exception : ", NL => True);
+         Abort_Library.System_Abort;
       end if;
-      -- if Identifier >= 10 and then Identifier <= 19 then
-      --    Console.Print (Identifier, Prefix => "Exception : ", NL => True);
-      -- end if;
    end Exception_Process;
 
    ----------------------------------------------------------------------------

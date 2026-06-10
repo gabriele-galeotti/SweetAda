@@ -92,7 +92,7 @@ TILTIMEOUT=3
 
 # QEMU machine
 "${QEMU_EXECUTABLE}" \
-  -M ref405ep -cpu 405EP \
+  -M ref405ep -cpu 405ep \
   -bios ${KERNEL_ROMFILE} \
   -monitor "telnet:localhost:${MONITORPORT},server,nowait" \
   -chardev "socket,id=SERIALPORT0,port=${SERIALPORT0},host=localhost,ipv4=on,server=on,telnet=on,wait=on" \

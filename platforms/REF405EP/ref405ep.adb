@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Configure;
-with PowerPC;
 with PPC405;
 
 package body REF405EP
@@ -30,7 +29,6 @@ package body REF405EP
    --                                                                        --
    --========================================================================--
 
-   use PowerPC;
    use PPC405;
 
    --========================================================================--
@@ -46,14 +44,11 @@ package body REF405EP
    ----------------------------------------------------------------------------
    procedure Tclk_Init
       is
-      Period    : constant :=
-                     (Configure.TIMER_SYSCLK + Configure.TICK_FREQUENCY / 2) /
-                     Configure.TICK_FREQUENCY;
-      TCR_Value : TCR_Register_Type;
+      Period : constant :=
+                  (Configure.TIMER_SYSCLK + Configure.TICK_FREQUENCY / 2) /
+                   Configure.TICK_FREQUENCY;
    begin
-      TCR_Value.PIE := True;
-      TCR_Value.ARE := True;
-      TCR_Write (TCR_Value);
+      TCR_Write ((TCR_Read with delta PIE => True, ARE => True));
       PIT_Write (Period);
    end Tclk_Init;
 

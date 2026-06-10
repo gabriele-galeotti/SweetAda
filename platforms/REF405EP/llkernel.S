@@ -178,7 +178,7 @@ ivtable:
 
                 //////////////////////////////////////////////////////////////
                 //
-                // EXINT handler.
+                // EXTINT handler.
                 //
                 //////////////////////////////////////////////////////////////
 EXTINT_handler:
@@ -204,12 +204,6 @@ EXTINT_handler:
                 //////////////////////////////////////////////////////////////
 PIT_handler:
                 EXCEPTION_ENTRY
-                // clear TSR PIS flag __FIX__ is it necessary?
-                // 11.2 Programmable Interval Timer (PIT)
-                lis     r3,PIS@ha
-                ori     r3,r3,PIS@l
-                mtspr   TSR,r3 // __FIX__ test PIS timer
-                // set irq identifier
                 li      r3,PIT_IRQ_ID
                 b       irq_entry
 
@@ -220,12 +214,6 @@ PIT_handler:
                 //////////////////////////////////////////////////////////////
 FIT_handler:
                 EXCEPTION_ENTRY
-                // clear TSR PIS flag __FIX__ is it necessary?
-                // 11.2 Programmable Interval Timer (PIT)
-                lis     r3,FIS@ha
-                ori     r3,r3,FIS@l
-                mtspr   TSR,r3
-                // set irq identifier
                 li      r3,FIT_IRQ_ID
                 b       irq_entry
 
