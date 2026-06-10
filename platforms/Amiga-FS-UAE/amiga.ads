@@ -506,7 +506,8 @@ pragma Warnings (On);
       er_Reserved0d   : Unsigned_8;
       er_Reserved0e   : Unsigned_8;
       er_Reserved0f   : Unsigned_8;
-   end record;
+   end record
+      with Object_Size => 16 * 8;
    for ExpansionRom_Type use record
       er_Type         at 16#0# range 0 ..  7;
       er_Product      at 16#1# range 0 ..  7;
@@ -527,30 +528,31 @@ pragma Warnings (On);
    type DriverData_Type is array (0 .. 3) of Unsigned_32;
 
    type ConfigDev_Type is record
-     cd_Node      : Node_Type;         -- List Node Structure
-     cd_Flags     : Unsigned_8;        -- (read/write)
-     cd_Pad       : Unsigned_8;        -- reserved
-     cd_Rom       : ExpansionRom_Type; -- copy of board's expansion ROM
-     cd_BoardAddr : Integer_Address;   -- where in memory the board was placed
-     cd_BoardSize : Unsigned_32;       -- size of board in bytes
-     cd_SlotAddr  : Unsigned_16;       -- which slot number (PRIVATE)
-     cd_SlotSize  : Unsigned_16;       -- number of slots (PRIVATE)
-     cd_Driver    : Integer_Address;   -- pointer to node of driver
-     cd_NextCD    : ConfigDev_Ptr;     -- linked list of drivers to config
-     cd_Unused    : DriverData_Type;   -- for whatever the driver wants
-   end record;
+      cd_Node      : Node_Type;         -- List Node Structure
+      cd_Flags     : Unsigned_8;        -- (read/write)
+      cd_Pad       : Unsigned_8;        -- reserved
+      cd_Rom       : ExpansionRom_Type; -- copy of board's expansion ROM
+      cd_BoardAddr : Integer_Address;   -- where in memory the board was placed
+      cd_BoardSize : Unsigned_32;       -- size of board in bytes
+      cd_SlotAddr  : Unsigned_16;       -- which slot number (PRIVATE)
+      cd_SlotSize  : Unsigned_16;       -- number of slots (PRIVATE)
+      cd_Driver    : Integer_Address;   -- pointer to node of driver
+      cd_NextCD    : ConfigDev_Ptr;     -- linked list of drivers to config
+      cd_Unused    : DriverData_Type;   -- for whatever the driver wants
+   end record
+      with Object_Size => 68 * 8;
    for ConfigDev_Type use record
-     cd_Node      at 16#00# range 0 .. (16#0E# * 8) - 1;
-     cd_Flags     at 16#0E# range 0 ..  7;
-     cd_Pad       at 16#0F# range 0 ..  7;
-     cd_Rom       at 16#10# range 0 .. (16#10# * 8) - 1;
-     cd_BoardAddr at 16#20# range 0 .. 31;
-     cd_BoardSize at 16#24# range 0 .. 31;
-     cd_SlotAddr  at 16#28# range 0 .. 15;
-     cd_SlotSize  at 16#2A# range 0 .. 15;
-     cd_Driver    at 16#2C# range 0 .. 31;
-     cd_NextCD    at 16#30# range 0 .. 31;
-     cd_Unused    at 16#34# range 0 .. (4 * 32) - 1;
+      cd_Node      at 16#00# range 0 .. (16#0E# * 8) - 1;
+      cd_Flags     at 16#0E# range 0 ..  7;
+      cd_Pad       at 16#0F# range 0 ..  7;
+      cd_Rom       at 16#10# range 0 .. (16#10# * 8) - 1;
+      cd_BoardAddr at 16#20# range 0 .. 31;
+      cd_BoardSize at 16#24# range 0 .. 31;
+      cd_SlotAddr  at 16#28# range 0 .. 15;
+      cd_SlotSize  at 16#2A# range 0 .. 15;
+      cd_Driver    at 16#2C# range 0 .. 31;
+      cd_NextCD    at 16#30# range 0 .. 31;
+      cd_Unused    at 16#34# range 0 .. (4 * 32) - 1;
    end record;
 
    -- Subprograms
