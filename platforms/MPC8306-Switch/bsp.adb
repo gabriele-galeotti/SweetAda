@@ -21,7 +21,7 @@ with MMIO;
 with Bits;
 with PowerPC;
 with e300;
-with MPC83XX;
+with MPC83xx;
 with Switch;
 with Console;
 
@@ -77,17 +77,17 @@ package body BSP
       CPU_PVR          : PowerPC.PVR_Type;
    begin
       -- 6.3.2.5 System I/O Configuration Register 1 (SICR_1) -----------------
-      MPC83XX.SICR_1 := 16#0001_165F#; -- UART1 mapped on I/O pads
+      MPC83xx.SICR_1 := 16#0001_165F#; -- UART1 mapped on I/O pads
       -- 6.3.2.6 System I/O Configuration Register 2 (SICR_2) -----------------
-      MPC83XX.SICR_2 := 16#A005_0475#; -- GPIO22 function
+      MPC83xx.SICR_2 := 16#A005_0475#; -- GPIO22 function
       -- 21.3.1 GPIOn Direction Register (GP1DIR–GP2DIR) ----------------------
-      MPC83XX.GP1DIR := 16#0000_0200#; -- GPIO22 = output
+      MPC83xx.GP1DIR := 16#0000_0200#; -- GPIO22 = output
       -- 21.3.2 GPIOn Open Drain Register (GP1ODR–GP2ODR) ---------------------
-      MPC83XX.GP1ODR := 16#FFFF_FDFF#; -- GPIO22 = actively driven
+      MPC83xx.GP1ODR := 16#FFFF_FDFF#; -- GPIO22 = actively driven
       -- UARTs ----------------------------------------------------------------
       UART1_Descriptor := (
          Uart_Model    => UART16x50.UART16450,
-         Base_Address  => System'To_Address (MPC83XX.UART1_BASEADDRESS),
+         Base_Address  => System'To_Address (MPC83xx.UART1_BASEADDRESS),
          Scale_Address => 0,
          Baud_Clock    => Switch.SYSTEM_CLOCK,
          Flags         => (PC_UART => False),
@@ -99,7 +99,7 @@ package body BSP
       UART16x50.Baud_Rate_Set (UART1_Descriptor, Baud_Rate_Type'Enum_Rep (BR_115200));
       UART2_Descriptor := (
          Uart_Model    => UART16x50.UART16450,
-         Base_Address  => System'To_Address (MPC83XX.UART2_BASEADDRESS),
+         Base_Address  => System'To_Address (MPC83xx.UART2_BASEADDRESS),
          Scale_Address => 0,
          Baud_Clock    => Switch.SYSTEM_CLOCK,
          Flags         => (PC_UART => False),
@@ -122,8 +122,8 @@ package body BSP
       Console.Print (Prefix => "PVR (ver): ", Value => CPU_PVR.Version, NL => True);
       Console.Print (Prefix => "PVR (rev): ", Value => CPU_PVR.Revision, NL => True);
       Console.Print (Prefix => "SVR:       ", Value => e300.SVR_Read, NL => True);
-      Console.Print (Prefix => "RCWLR:     ", Value => MPC83XX.RCWLR, NL => True);
-      Console.Print (Prefix => "RCWHR:     ", Value => MPC83XX.RCWHR, NL => True);
+      Console.Print (Prefix => "RCWLR:     ", Value => MPC83xx.RCWLR, NL => True);
+      Console.Print (Prefix => "RCWHR:     ", Value => MPC83xx.RCWHR, NL => True);
       -------------------------------------------------------------------------
    end Setup;
 

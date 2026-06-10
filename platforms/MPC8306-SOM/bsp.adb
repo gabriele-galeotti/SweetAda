@@ -21,7 +21,7 @@ with Bits;
 with MMIO;
 with PowerPC;
 with e300;
-with MPC83XX;
+with MPC83xx;
 with SOM;
 with Console;
 
@@ -77,12 +77,12 @@ package body BSP
       CPU_PVR          : PowerPC.PVR_Type;
    begin
       -- 6.3.2.5 System I/O Configuration Register 1 (SICR_1) -----------------
-      -- MPC83XX.SICR_1 := 16#2A81_5657#; -- UART2 mapped on I/O pads
-      MPC83XX.SICR_1 := 16#0001_565F#; -- UART2 mapped on I/O pads
+      -- MPC83xx.SICR_1 := 16#2A81_5657#; -- UART2 mapped on I/O pads
+      MPC83xx.SICR_1 := 16#0001_565F#; -- UART2 mapped on I/O pads
       -- UARTs ----------------------------------------------------------------
       UART1_Descriptor := (
          Uart_Model    => UART16x50.UART16450,
-         Base_Address  => System'To_Address (MPC83XX.UART1_BASEADDRESS),
+         Base_Address  => System'To_Address (MPC83xx.UART1_BASEADDRESS),
          Scale_Address => 0,
          Baud_Clock    => SOM.SYSTEM_CLOCK,
          Flags         => (PC_UART => False),
@@ -94,7 +94,7 @@ package body BSP
       UART16x50.Baud_Rate_Set (UART1_Descriptor, Baud_Rate_Type'Enum_Rep (BR_115200));
       UART2_Descriptor := (
          Uart_Model    => UART16x50.UART16450,
-         Base_Address  => System'To_Address (MPC83XX.UART2_BASEADDRESS),
+         Base_Address  => System'To_Address (MPC83xx.UART2_BASEADDRESS),
          Scale_Address => 0,
          Baud_Clock    => SOM.SYSTEM_CLOCK,
          Flags         => (PC_UART => False),
@@ -117,8 +117,8 @@ package body BSP
       Console.Print (Prefix => "PVR (ver): ", Value => CPU_PVR.Version, NL => True);
       Console.Print (Prefix => "PVR (rev): ", Value => CPU_PVR.Revision, NL => True);
       Console.Print (Prefix => "SVR:       ", Value => e300.SVR_Read, NL => True);
-      Console.Print (Prefix => "RCWLR:     ", Value => MPC83XX.RCWLR, NL => True);
-      Console.Print (Prefix => "RCWHR:     ", Value => MPC83XX.RCWHR, NL => True);
+      Console.Print (Prefix => "RCWLR:     ", Value => MPC83xx.RCWLR, NL => True);
+      Console.Print (Prefix => "RCWHR:     ", Value => MPC83xx.RCWHR, NL => True);
       -------------------------------------------------------------------------
    end Setup;
 

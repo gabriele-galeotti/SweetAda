@@ -10,6 +10,7 @@
 
 #define __ASSEMBLER__ 1
 
+#include <powerpc.h>
 #include <e300.h>
 #include <mpc83xx.h>
 
