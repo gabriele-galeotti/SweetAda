@@ -17,7 +17,6 @@
 
 with Definitions;
 with Bits;
-with CPU;
 with P8;
 with Console;
 
@@ -32,8 +31,8 @@ package body BSP
    --                                                                        --
    --========================================================================--
 
-   use Definitions;
    use Interfaces;
+   use Definitions;
    use Bits;
    use P8;
 
