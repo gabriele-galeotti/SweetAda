@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Machine_Code;
+with Ada.Unchecked_Conversion;
 with Definitions;
 
 package body PPC440
@@ -85,33 +86,40 @@ package body PPC440
    ----------------------------------------------------------------------------
 
    function TSR_Read
-      return TSR_Register_Type
+      return TSR_Type
       is
-      function SPR_Read is new PowerPC.MFSPR (TSR, TSR_Register_Type);
+      function SPR_Read is new PowerPC.MFSPR (TSR, TSR_Type);
    begin
       return SPR_Read;
    end TSR_Read;
 
    procedure TSR_Write
-      (Value : in TSR_Register_Type)
+      (Value : in TSR_Type)
       is
-      procedure SPR_Write is new PowerPC.MTSPR (TSR, TSR_Register_Type);
+      procedure SPR_Write is new PowerPC.MTSPR (TSR, TSR_Type);
    begin
       SPR_Write (Value);
    end TSR_Write;
 
+   -- constants-like-functions that return a single flag or its negated bitmask
+pragma Style_Checks (Off);
+   function To_TSR is new Ada.Unchecked_Conversion (Unsigned_32, TSR_Type);
+   function TSR_DIS return TSR_Type is begin return (To_TSR (0) with delta DIS => True); end TSR_DIS;
+   function TSR_FIS return TSR_Type is begin return (To_TSR (0) with delta FIS => True); end TSR_FIS;
+pragma Style_Checks (On);
+
    function TCR_Read
-      return TCR_Register_Type
+      return TCR_Type
       is
-      function SPR_Read is new PowerPC.MFSPR (TCR, TCR_Register_Type);
+      function SPR_Read is new PowerPC.MFSPR (TCR, TCR_Type);
    begin
       return SPR_Read;
    end TCR_Read;
 
    procedure TCR_Write
-      (Value : in TCR_Register_Type)
+      (Value : in TCR_Type)
       is
-      procedure SPR_Write is new PowerPC.MTSPR (TCR, TCR_Register_Type);
+      procedure SPR_Write is new PowerPC.MTSPR (TCR, TCR_Type);
    begin
       SPR_Write (Value);
    end TCR_Write;

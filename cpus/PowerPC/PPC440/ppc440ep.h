@@ -11,11 +11,6 @@
 #ifndef _PPC440EP_H
 #define _PPC440EP_H 1
 
-/* MSR */
-#define DR (1 << 4)                     /* MSR Data Relocate */
-#define IR (1 << 5)                     /* MSR Instruction Relocate */
-#define EE (1 << 15)                    /* MSR enable interrupts */
-
 #define LR              0x008           /* Link Register */
 #define CPC0_PLLMR0     0x0F0           /* R/W PLL Mode Register 0 */
 #define CPC0_PLLMR1     0x0F4           /* R/W PLL Mode Register 1 */

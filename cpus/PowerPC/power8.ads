@@ -15,6 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with System;
+with Bits;
+
 package POWER8
    with Pure => True
    is
@@ -26,6 +29,17 @@ package POWER8
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use System;
+   use Bits;
+
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
+   -- POWER8 Processor User’s Manual for the
+   -- Single-Chip Module
+   -- Advance 16 March 2016 Version 1.3
+   ----------------------------------------------------------------------------
 
    -- 3.6.3.2 Processor ID Register (PIR)
 
@@ -44,4 +58,6 @@ package POWER8
       TID      at 0 range 29 .. 31;
    end record;
 
-end CPU;
+pragma Style_Checks (On);
+
+end POWER8;

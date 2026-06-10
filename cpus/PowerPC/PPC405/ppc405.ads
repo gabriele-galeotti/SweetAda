@@ -35,6 +35,15 @@ package PPC405
    use Interfaces;
    use Bits;
 
+pragma Style_Checks (Off);
+
+   ----------------------------------------------------------------------------
+   -- AMCC 405 PowerPC
+   -- – User’s Manual –
+   -- PPC405EP Embedded Processor
+   -- Document Issue 1.01 September 2004
+   ----------------------------------------------------------------------------
+
    subtype SPR_Type is PowerPC.SPR_Type;
 
    ----------------------------------------------------------------------------
@@ -97,101 +106,7 @@ package PPC405
       with Inline => True;
 
    ----------------------------------------------------------------------------
-   -- TSR Timer Status Register
-   ----------------------------------------------------------------------------
-
-   -- Watchdog Reset, common to both TSR and TCR
-   type TSR_TCR_WR_Type is new Bits_2;
-   TSR_NONE   : constant TSR_TCR_WR_Type := 2#00#;
-   TSR_CORE   : constant TSR_TCR_WR_Type := 2#01#;
-   TSR_CHIP   : constant TSR_TCR_WR_Type := 2#10#;
-   TSR_SYSTEM : constant TSR_TCR_WR_Type := 2#11#;
-
-   type TSR_Register_Type is record
-      ENW      : Boolean;
-      WIS      : Boolean;
-      WRS      : TSR_TCR_WR_Type;
-      PIS      : Boolean;
-      FIS      : Boolean;
-      Reserved : Bits_26;
-   end record
-      with Bit_Order => High_Order_First,
-           Size      => 32;
-   for TSR_Register_Type use record
-      ENW      at 0 range 0 ..  0;
-      WIS      at 0 range 1 ..  1;
-      WRS      at 0 range 2 ..  3;
-      PIS      at 0 range 4 ..  4;
-      FIS      at 0 range 5 ..  5;
-      Reserved at 0 range 6 .. 31;
-   end record;
-
-   function TSR_Read
-      return TSR_Register_Type
-      with Inline => True;
-   procedure TSR_Write
-      (Value : in TSR_Register_Type)
-      with Inline => True;
-
-   ----------------------------------------------------------------------------
-   -- TCR Timer Control Register
-   ----------------------------------------------------------------------------
-
-   type TCR_WP_Type is new Bits_2;
-   TCR_WP_17 : constant TCR_WP_Type := 2#00#; -- 2^17 clocks
-   TCR_WP_21 : constant TCR_WP_Type := 2#01#; -- 2^21 clocks
-   TCR_WP_25 : constant TCR_WP_Type := 2#10#; -- 2^25 clocks
-   TCR_WP_29 : constant TCR_WP_Type := 2#11#; -- 2^29 clocks
-
-   type FIT_Period_Type is new Bits_2;
-   FIT_P_9  : constant FIT_Period_Type := 2#00#; -- 2^9 clocks
-   FIT_P_13 : constant FIT_Period_Type := 2#01#; -- 2^13 clocks
-   FIT_P_17 : constant FIT_Period_Type := 2#10#; -- 2^17 clocks
-   FIT_P_21 : constant FIT_Period_Type := 2#11#; -- 2^21 clocks
-
-   type TCR_Register_Type is record
-      WP       : TCR_WP_Type;
-      WRC      : TSR_TCR_WR_Type;
-      WIE      : Boolean;
-      PIE      : Boolean;
-      FP       : FIT_Period_Type;
-      FIE      : Boolean;
-      ARE      : Boolean;
-      Reserved : Bits_22;
-   end record
-      with Bit_Order => High_Order_First,
-           Size      => 32;
-   for TCR_Register_Type use record
-      WP       at 0 range  0 ..  1;
-      WRC      at 0 range  2 ..  3;
-      WIE      at 0 range  4 ..  4;
-      PIE      at 0 range  5 ..  5;
-      FP       at 0 range  6 ..  7;
-      FIE      at 0 range  8 ..  8;
-      ARE      at 0 range  9 ..  9;
-      Reserved at 0 range 10 .. 31;
-   end record;
-
-   function TCR_Read
-      return TCR_Register_Type
-      with Inline => True;
-   procedure TCR_Write
-      (Value : in TCR_Register_Type)
-      with Inline => True;
-
-   ----------------------------------------------------------------------------
-   -- PIT Programmable Interval Timer
-   ----------------------------------------------------------------------------
-
-   function PIT_Read
-      return Unsigned_32
-      with Inline => True;
-   procedure PIT_Write
-      (Value : in Unsigned_32)
-      with Inline => True;
-
-   ----------------------------------------------------------------------------
-   -- UIC Universal Interrupt Controller
+   -- Chapter 10. Interrupt Controller Operations
    ----------------------------------------------------------------------------
 
    -- indexes into UIC0_SR/UIC0_ER arrays
@@ -252,6 +167,102 @@ package PPC405
       with Inline => True;
 
    ----------------------------------------------------------------------------
+   -- Chapter 11. Timer Facilities
+   ----------------------------------------------------------------------------
+
+   -- 11.2 Programmable Interval Timer (PIT)
+
+   function PIT_Read
+      return Unsigned_32
+      with Inline => True;
+   procedure PIT_Write
+      (Value : in Unsigned_32)
+      with Inline => True;
+
+   -- 11.4 Timer Status Register (TSR)
+
+   WRS_NONE   : constant := 2#00#; -- No Watchdog Timer reset has occurred.
+   WRS_CORE   : constant := 2#01#; -- Core reset was forced by the watchdog
+   WRS_CHIP   : constant := 2#10#; -- Chip reset was forced by the watchdog
+   WRS_SYSTEM : constant := 2#11#; -- System reset was forced by the watchdog
+
+   type TSR_Type is record
+      ENW      : Boolean := False;    -- Enable Next Watchdog
+      WIS      : Boolean := False;    -- Watchdog Interrupt Status
+      WRS      : Bits_2  := WRS_NONE; -- Watchdog Reset Status
+      PIS      : Boolean := False;    -- PIT Interrupt Status
+      FIS      : Boolean := False;    -- FIT Interrupt Status
+      Reserved : Bits_26 := 0;
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for TSR_Type use record
+      ENW      at 0 range 0 ..  0;
+      WIS      at 0 range 1 ..  1;
+      WRS      at 0 range 2 ..  3;
+      PIS      at 0 range 4 ..  4;
+      FIS      at 0 range 5 ..  5;
+      Reserved at 0 range 6 .. 31;
+   end record;
+
+   function TSR_Read
+      return TSR_Type
+      with Inline => True;
+   procedure TSR_Write
+      (Value : in TSR_Type)
+      with Inline => True;
+
+   function TSR_PIS return TSR_Type with Inline => True;
+   function TSR_FIS return TSR_Type with Inline => True;
+
+   -- 11.5 Timer Control Register (TCR)
+
+   WP_CLKS2E17 : constant := 2#00#; -- 2^17 clocks
+   WP_CLKS2E21 : constant := 2#01#; -- 2^21 clocks
+   WP_CLKS2E25 : constant := 2#10#; -- 2^25 clocks
+   WP_CLKS2E29 : constant := 2#11#; -- 2^29 clocks
+
+   WRC_NONE   renames WRS_NONE;   -- No Watchdog reset will occur.
+   WRC_CORE   renames WRS_CORE;   -- Core reset will be forced by the Watchdog.
+   WRC_CHIP   renames WRS_CHIP;   -- Chip reset will be forced by the Watchdog.
+   WRC_SYSTEM renames WRS_SYSTEM; -- System reset will be forced by the Watchdog.
+
+   FP_CLKS2E9  : constant := 2#00#; -- 2^9 clocks
+   FP_CLKS2E13 : constant := 2#01#; -- 2^13 clocks
+   FP_CLKS2E17 : constant := 2#10#; -- 2^17 clocks
+   FP_CLKS2E21 : constant := 2#11#; -- 2^21 clocks
+
+   type TCR_Type is record
+      WP       : Bits_2  := WP_CLKS2E17; -- Watchdog Period
+      WRC      : Bits_2  := WRC_NONE;    -- Watchdog Reset Control
+      WIE      : Boolean := False;       -- Watchdog Interrupt Enable
+      PIE      : Boolean := False;       -- PIT Interrupt Enable
+      FP       : Bits_2  := FP_CLKS2E9;  -- FIT Period
+      FIE      : Boolean := False;       -- FIT Interrupt Enable
+      ARE      : Boolean := False;       -- Auto Reload Enable
+      Reserved : Bits_22 := 0;
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for TCR_Type use record
+      WP       at 0 range  0 ..  1;
+      WRC      at 0 range  2 ..  3;
+      WIE      at 0 range  4 ..  4;
+      PIE      at 0 range  5 ..  5;
+      FP       at 0 range  6 ..  7;
+      FIE      at 0 range  8 ..  8;
+      ARE      at 0 range  9 ..  9;
+      Reserved at 0 range 10 .. 31;
+   end record;
+
+   function TCR_Read
+      return TCR_Type
+      with Inline => True;
+   procedure TCR_Write
+      (Value : in TCR_Type)
+      with Inline => True;
+
+   ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
@@ -259,5 +270,7 @@ package PPC405
       with Inline => True;
    procedure Irq_Disable
       with Inline => True;
+
+pragma Style_Checks (On);
 
 end PPC405;

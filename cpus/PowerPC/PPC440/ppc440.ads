@@ -107,31 +107,34 @@ package PPC440
    TSR_CHIP   : constant TSR_TCR_WR_Type := 2#10#;
    TSR_SYSTEM : constant TSR_TCR_WR_Type := 2#11#;
 
-   type TSR_Register_Type is record
+   type TSR_Type is record
       ENW      : Boolean;
       WIS      : Boolean;
       WRS      : TSR_TCR_WR_Type;
-      PIS      : Boolean;
+      DIS      : Boolean;
       FIS      : Boolean;
       Reserved : Bits_26;
    end record
       with Bit_Order => High_Order_First,
            Size      => 32;
-   for TSR_Register_Type use record
+   for TSR_Type use record
       ENW      at 0 range 0 ..  0;
       WIS      at 0 range 1 ..  1;
       WRS      at 0 range 2 ..  3;
-      PIS      at 0 range 4 ..  4;
+      DIS      at 0 range 4 ..  4;
       FIS      at 0 range 5 ..  5;
       Reserved at 0 range 6 .. 31;
    end record;
 
    function TSR_Read
-      return TSR_Register_Type
+      return TSR_Type
       with Inline => True;
    procedure TSR_Write
-      (Value : in TSR_Register_Type)
+      (Value : in TSR_Type)
       with Inline => True;
+
+   function TSR_DIS return TSR_Type with Inline => True;
+   function TSR_FIS return TSR_Type with Inline => True;
 
    ----------------------------------------------------------------------------
    -- TCR Timer Control Register
@@ -149,7 +152,7 @@ package PPC440
    FIT_P_17 : constant FIT_Period_Type := 2#10#; -- 2^17 clocks
    FIT_P_21 : constant FIT_Period_Type := 2#11#; -- 2^21 clocks
 
-   type TCR_Register_Type is record
+   type TCR_Type is record
       WP       : TCR_WP_Type;
       WRC      : TSR_TCR_WR_Type;
       WIE      : Boolean;
@@ -161,7 +164,7 @@ package PPC440
    end record
       with Bit_Order => High_Order_First,
            Size      => 32;
-   for TCR_Register_Type use record
+   for TCR_Type use record
       WP       at 0 range  0 ..  1;
       WRC      at 0 range  2 ..  3;
       WIE      at 0 range  4 ..  4;
@@ -173,10 +176,10 @@ package PPC440
    end record;
 
    function TCR_Read
-      return TCR_Register_Type
+      return TCR_Type
       with Inline => True;
    procedure TCR_Write
-      (Value : in TCR_Register_Type)
+      (Value : in TCR_Type)
       with Inline => True;
 
    ----------------------------------------------------------------------------

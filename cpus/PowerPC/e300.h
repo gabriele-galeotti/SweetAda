@@ -20,10 +20,6 @@
 #define r9 %r9
 #define r13 %r13
 
-#define MSR_DR 0x00000010
-#define MSR_IR 0x00000020
-#define MSR_IP 0x00000040
-
 #define IBAT0U 0x210    /* Instruction BAT 0 Upper Register */
 #define IBAT0L 0x211    /* Instruction BAT 0 Lower Register */
 #define IBAT1U 0x212    /* Instruction BAT 1 Upper Register */

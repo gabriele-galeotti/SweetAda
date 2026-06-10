@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System.Storage_Elements;
 with System.Machine_Code;
 with Definitions;
 
@@ -30,7 +29,6 @@ package body PowerPC
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use System.Machine_Code;
 
    CRLF : String renames Definitions.CRLF;
@@ -112,44 +110,6 @@ package body PowerPC
    end ISYNC;
 
    ----------------------------------------------------------------------------
-   -- MSR_Read
-   ----------------------------------------------------------------------------
-   function MSR_Read
-      return MSR_Type
-      is
-      Result : MSR_Type;
-   begin
-      Asm (
-           Template => ""                   & CRLF &
-                       "        mfmsr   %0" & CRLF &
-                       "",
-           Outputs  => MSR_Type'Asm_Output ("=r", Result),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Result;
-   end MSR_Read;
-
-   ----------------------------------------------------------------------------
-   -- MSR_Write
-   ----------------------------------------------------------------------------
-   procedure MSR_Write
-      (Value : in MSR_Type)
-      is
-   begin
-      Asm (
-           Template => ""                   & CRLF &
-                       "        mtmsr   %0" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => MSR_Type'Asm_Input ("r", Value),
-           Clobber  => "",
-           Volatile => True
-          );
-   end MSR_Write;
-
-   ----------------------------------------------------------------------------
    -- SPRs generics
    ----------------------------------------------------------------------------
 
@@ -189,9 +149,46 @@ package body PowerPC
    end MTSPR;
 
    ----------------------------------------------------------------------------
-   -- SPRs subprograms
+   -- MSR_Read
    ----------------------------------------------------------------------------
+   function MSR_Read
+      return MSR_Type
+      is
+      Result : MSR_Type;
+   begin
+      Asm (
+           Template => ""                   & CRLF &
+                       "        mfmsr   %0" & CRLF &
+                       "",
+           Outputs  => MSR_Type'Asm_Output ("=r", Result),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Result;
+   end MSR_Read;
 
+   ----------------------------------------------------------------------------
+   -- MSR_Write
+   ----------------------------------------------------------------------------
+   procedure MSR_Write
+      (Value : in MSR_Type)
+      is
+   begin
+      Asm (
+           Template => ""                   & CRLF &
+                       "        mtmsr   %0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => MSR_Type'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end MSR_Write;
+
+   ----------------------------------------------------------------------------
+   -- PVR_Read
+   ----------------------------------------------------------------------------
    function PVR_Read
       return PVR_Type
       is
@@ -199,6 +196,28 @@ package body PowerPC
    begin
       return SPR_Read;
    end PVR_Read;
+
+   ----------------------------------------------------------------------------
+   -- DEC_Read
+   ----------------------------------------------------------------------------
+   function DEC_Read
+      return Unsigned_32
+      is
+      function SPR_Read is new MFSPR (DEC, Unsigned_32);
+   begin
+      return SPR_Read;
+   end DEC_Read;
+
+   ----------------------------------------------------------------------------
+   -- DEC_Write
+   ----------------------------------------------------------------------------
+   procedure DEC_Write
+      (Value : in Unsigned_32)
+      is
+      procedure SPR_Write is new MTSPR (DEC, Unsigned_32);
+   begin
+      SPR_Write (Value);
+   end DEC_Write;
 
    ----------------------------------------------------------------------------
    -- Intcontext_Get

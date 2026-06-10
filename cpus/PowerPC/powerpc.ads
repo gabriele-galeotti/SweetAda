@@ -38,7 +38,14 @@ package PowerPC
 pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
-   -- PowerPC registers
+   -- PowerPC Microprocessor Family:
+   -- The Programmer’s Reference Guide
+   -- MPRPPCPRG-01 MPCPRG/D 10/95
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- 1.1 General-Purpose Registers (GPRs)
+   -- 1.2 Floating-Point Registers (FPRs)
    ----------------------------------------------------------------------------
 
    R0    : constant := 0;
@@ -73,6 +80,7 @@ pragma Style_Checks (Off);
    R29   : constant := 29;
    R30   : constant := 30;
    R31   : constant := 31;
+
    FP0   : constant := 32;
    FP1   : constant := 33;
    FP2   : constant := 34;
@@ -109,20 +117,28 @@ pragma Style_Checks (Off);
    subtype Register_Number_Type is Natural range R0 .. FP31;
 
    ----------------------------------------------------------------------------
-   -- MSR
+   -- 1.3 XER Register (XER)
    ----------------------------------------------------------------------------
 
-   subtype MSR_Type is PowerPC_Definitions.MSR_Type;
-
-   function MSR_Read
-      return MSR_Type
-      with Inline => True;
-   procedure MSR_Write
-      (Value : in MSR_Type)
-      with Inline => True;
+   type XER_Type is record
+      SO         : Boolean;                     -- Summary overflow.
+      OV         : Boolean;                     -- Overflow.
+      CA         : Boolean;                     -- Carry.
+      Reserved   : Bits_22 := 0;
+      Byte_count : Natural range 0 .. 2**7 - 1; -- # of bytes in lswx and stswx instructions
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for XER_Type use record
+      SO         at 0 range  0 ..  0;
+      OV         at 0 range  1 ..  1;
+      CA         at 0 range  2 ..  2;
+      Reserved   at 0 range  3 .. 24;
+      Byte_count at 0 range 25 .. 31;
+   end record;
 
    ----------------------------------------------------------------------------
-   -- FPSCR
+   -- 1.4 Floating-Point Status and Control Register (FPSCR)
    ----------------------------------------------------------------------------
 
    -- C  Floating-point result class descriptor (C).
@@ -209,25 +225,17 @@ pragma Style_Checks (Off);
    end record;
 
    ----------------------------------------------------------------------------
-   -- XER
+   -- 1.8 Machine State Register (MSR)
    ----------------------------------------------------------------------------
 
-   type XER_Type is record
-      SO         : Boolean;                     -- Summary overflow.
-      OV         : Boolean;                     -- Overflow.
-      CA         : Boolean;                     -- Carry.
-      Reserved   : Bits_22 := 0;
-      Byte_count : Natural range 0 .. 2**7 - 1; -- # of bytes in lswx and stswx instructions
-   end record
-      with Bit_Order => High_Order_First,
-           Size      => 32;
-   for XER_Type use record
-      SO         at 0 range  0 ..  0;
-      OV         at 0 range  1 ..  1;
-      CA         at 0 range  2 ..  2;
-      Reserved   at 0 range  3 .. 24;
-      Byte_count at 0 range 25 .. 31;
-   end record;
+   subtype MSR_Type is PowerPC_Definitions.MSR_Type;
+
+   function MSR_Read
+      return MSR_Type
+      with Inline => True;
+   procedure MSR_Write
+      (Value : in MSR_Type)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- SPRs
@@ -271,10 +279,6 @@ pragma Style_Checks (Off);
    DBAT3L : constant SPR_Type := 543;
    DABR   : constant SPR_Type := 1013; -- optional
 
-   ----------------------------------------------------------------------------
-   -- SPRs subprogram templates
-   ----------------------------------------------------------------------------
-
    generic
       SPR : SPR_Type;
       type Register_Type is private;
@@ -290,7 +294,7 @@ pragma Style_Checks (Off);
       with Inline => True;
 
    ----------------------------------------------------------------------------
-   -- SPRs types and access subprograms
+   -- 1.9 Processor Version Register (PVR)
    ----------------------------------------------------------------------------
 
    type PVR_Type is record
@@ -305,6 +309,17 @@ pragma Style_Checks (Off);
 
    function PVR_Read
       return PVR_Type
+      with Inline => True;
+
+   ----------------------------------------------------------------------------
+   -- 1.20 Decrementer Register (DEC)
+   ----------------------------------------------------------------------------
+
+   function DEC_Read
+      return Unsigned_32
+      with Inline => True;
+   procedure DEC_Write
+      (Value : in Unsigned_32)
       with Inline => True;
 
    ----------------------------------------------------------------------------
