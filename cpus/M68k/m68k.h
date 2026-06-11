@@ -13,7 +13,6 @@
 
 /*
  * Status register.
- *
  */
 
 #define SR_C  (1 << 0)
