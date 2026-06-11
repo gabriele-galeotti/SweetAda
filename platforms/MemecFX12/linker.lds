@@ -46,6 +46,8 @@ SECTIONS
                 _sbss = .;
                 *(.bss)
                 *(.bss.*)
+                *(.sbss)
+                *(.sbss.*)
                 *(COMMON)
                 . = ALIGN(0x10);
                 _ebss = .;
