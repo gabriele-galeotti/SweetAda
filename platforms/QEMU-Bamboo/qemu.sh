@@ -92,7 +92,7 @@ TILTIMEOUT=3
 
 # QEMU machine
 "${QEMU_EXECUTABLE}" \
-  -M bamboo -cpu 440EP \
+  -M bamboo -cpu 440ep \
   -kernel ${KERNEL_OUTFILE} \
   -monitor "telnet:localhost:${MONITORPORT},server,nowait" \
   -chardev "socket,id=SERIALPORT0,port=${SERIALPORT0},host=localhost,ipv4=on,server=on,telnet=on,wait=on" \

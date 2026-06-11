@@ -30,10 +30,8 @@ package Exceptions
 
    use Interfaces;
 
-   UART0_IRQ_ID : constant := 16#0500#;
-   GPT0_IRQ_ID  : constant := 16#0501#;
-   PIT_IRQ_ID   : constant := 16#1000#;
-   FIT_IRQ_ID   : constant := 16#1010#;
+   DEC_IRQ_ID : constant := 16#0B00#;
+   FIT_IRQ_ID : constant := 16#0C00#;
 
    procedure Exception_Fatal (Identifier : in Unsigned_32)
       with Export        => True,

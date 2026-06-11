@@ -18,8 +18,9 @@
 with System.Machine_Code;
 with Definitions;
 with Abort_Library;
+with PPC440;
+with Bamboo;
 with BSP;
-with Console;
 
 package body Exceptions
    is
@@ -58,7 +59,10 @@ package body Exceptions
    procedure Exception_Process (Identifier : in Unsigned_32)
       is
    begin
-      null;
+      if Identifier = DEC_IRQ_ID then
+         PPC440.TSR_Write (PPC440.TSR_DIS);
+         BSP.Tick_Count := @ + 1;
+      end if;
    end Exception_Process;
 
    ----------------------------------------------------------------------------

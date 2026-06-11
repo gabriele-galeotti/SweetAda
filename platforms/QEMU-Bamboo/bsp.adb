@@ -123,6 +123,11 @@ package body BSP
       Console.Print (Prefix => "PVR version:  ", Value => PVR_Read.Version, NL => True);
       Console.Print (Prefix => "PVR revision: ", Value => PVR_Read.Revision, NL => True);
       -------------------------------------------------------------------------
+      -- decrementer
+      PPC440.IVOR10_Write (16#0B00#);
+      Tclk_Init;
+      PowerPC.Irq_Enable;
+      -------------------------------------------------------------------------
    end Setup;
 
 end BSP;

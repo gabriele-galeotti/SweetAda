@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Configure;
-with PowerPC;
 with PPC440;
 
 package body Bamboo
@@ -29,9 +28,6 @@ package body Bamboo
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   use PowerPC;
-   use PPC440;
 
    --========================================================================--
    --                                                                        --
@@ -46,8 +42,13 @@ package body Bamboo
    ----------------------------------------------------------------------------
    procedure Tclk_Init
       is
+      Period : constant :=
+                  (Configure.TIMER_SYSCLK + Configure.TICK_FREQUENCY / 2) /
+                   Configure.TICK_FREQUENCY;
    begin
-      null;
+      PPC440.TCR_Write ((PPC440.TCR_Read with delta DIE => True, ARE => True));
+      PPC440.DECAR_Write (Period);
+      PPC440.DEC_Write (Period);
    end Tclk_Init;
 
 end Bamboo;

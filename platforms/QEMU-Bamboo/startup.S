@@ -10,6 +10,7 @@
 
 #define __ASSEMBLER__ 1
 
+#include <powerpc.h>
 #include <ppc440ep.h>
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -33,42 +34,20 @@ init:
                 mtesr   r4                              // clear Exception Syndrome Register
                 mttcr   r4                              // clear Timer Control Register
                 mtxer   r4                              // clear Fixed-Point Exception Register
-                mtevpr  r4                              // clear Exception Vector Prefix Register
+                mtivpr  r4                              // clear Interrupt Vector Prefix Register
                 li      r4,0x1000                       // set ME bit (Machine Exceptions)
                 oris    r4,r4,0x0002                    // set CE bit (Critical Exceptions)
-                mtmsr   r4
-                li      r4,0xFFFFFFFF                   // clear/reset DBSR
-                mtdbsr  r4
 
                 //
                 // MSR setup.
                 //
                 // disable instruction and data address translation
                 mfmsr   r0
-                lis     r1,(IR|DR)@ha
-                ori     r1,r1,(IR|DR)@l
+                lis     r1,(MSR_IR|MSR_DR)@ha
+                ori     r1,r1,(MSR_IR|MSR_DR)@l
                 not     r1,r1
                 and     r0,r0,r1
                 mtmsr   r0
-                // enforce "guarded" storage and big-endian ordering.
-                lis     r0,0xFFFFFFFF@ha
-                ori     r0,r0,0xFFFFFFFF@l
-                mtspr   SGR,r0
-                lis     r0,0@ha
-                ori     r0,r0,0@l
-                mtspr   SLER,r0
-                // Instruction Cache Cachability Register (ICCR)
-                iccci                                   // invalidate
-                lis     r0,0@ha
-                ori     r0,r0,0@l
-                mtspr   ICCR,r0
-                isync
-                // Data Cache Cachability Register (DCCR)
-                dccci                                   // invalidate
-                lis     r0,0@ha
-                ori     r0,r0,0@l
-                mtspr   DCCR,r0
-                isync
 
                 //
                 // Initialize .bss section.
@@ -80,9 +59,6 @@ init:
                 //
                 lis     r1,kernel_stack@ha
                 ori     r1,r1,kernel_stack@l
-                //li      r14,0
-                //stw     r14,0(r1)
-                //stwu    r1,-8(r1)
 
                 //
                 // EABI setup.
@@ -95,12 +71,12 @@ init:
                 ori     r2,r2,_sdata2@l
 
                 //
-                // Initialize EVPR.
+                // Initialize IVPR.
                 //
                 .extern ivtable
                 lis     r0,ivtable@ha                   // lower 15 bits of EVPR are always 0
                 ori     r0,r0,ivtable@l
-                mtspr   EVPR,r0
+                mtspr   IVPR,r0
 
                 //
                 // Jump to high-level code.

@@ -14,13 +14,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define UART0_IRQ_ID 0x0500
-#define GPT0_IRQ_ID  0x0501
-#define PIT_IRQ_ID   0x1000
-#define FIT_IRQ_ID   0x1010
-
-#define UART0_BASE 0xEF600300
-#define UART0_RHR  (UART0_BASE + 0)
+#define DEC_IRQ_ID 0x0B00
+#define FIT_IRQ_ID 0x0C00
 
 #define EXCEPTION(x, name) \
                 . = x    ; \
@@ -106,70 +101,109 @@ name:
 ivtable:
 
                 // Critical input interrupt
+                // IVOR0
                 EXCEPTION(0x0100, E_CriticalInputInterrupt)
-                li      r1,10
+                li      r1,0x100
                 b       exception_fatal
 
                 // Machine check
+                // IVOR1
                 EXCEPTION(0x0200, E_MachineCheck)
-                li      r0,11
+                li      r0,0x200
                 b       exception_fatal
 
                 // Data storage interrupt
+                // IVOR2
                 EXCEPTION(0x0300, E_DataStorageInterrupt)
-                li      r0,12
+                li      r0,0x300
                 b       exception_fatal
 
                 // Instruction storage interrupt
+                // IVOR3
                 EXCEPTION(0x0400, E_InstructionStorageInterrupt)
-                li      r0,13
+                li      r0,0x400
                 b       exception_fatal
 
-                // External interrupt
-                EXCEPTION(0x0500, E_ExternalInterrupt)
+                // External input
+                // IVOR4
+                EXCEPTION(0x0500, E_ExternalInput)
+                li      r0,0x500
                 b       exception_fatal
 
                 // Alignment
+                // IVOR5
                 EXCEPTION(0x0600, E_Alignment)
+                li      r0,0x600
                 b       exception_fatal
 
                 // Program
+                // IVOR6
                 EXCEPTION(0x0700, E_Program)
+                li      r0,0x700
                 b       exception_fatal
 
                 // FPU Unavailable
+                // IVOR7
                 EXCEPTION(0x0800, E_FPUUnavailable)
+                li      r0,0x800
                 b       exception_fatal
 
                 // System Call
-                EXCEPTION(0x0C00, E_SystemCall)
-
-                // DEC
-                EXCEPTION(0x1000, E_DEC)
+                // IVOR8
+                EXCEPTION(0x0900, E_SystemCall)
+                li      r0,0x900
                 b       exception_fatal
 
-                // FIT
-                EXCEPTION(0x1010, E_FIT)
+                // AP Unavailable
+                // IVOR9
+                EXCEPTION(0x0A00, E_APUnavailable)
+                li      r0,0xA00
+                b       exception_fatal
+
+                // Decrementer
+                // IVOR10
+                EXCEPTION(0x0B00, E_Decrementer)
+                b       DEC_handler
+
+                // Fixed Interval Timer
+                // IVOR11
+                EXCEPTION(0x0C00, E_FixedIntervalTimer)
+                li      r0,0xC00
                 b       exception_fatal
 
                 // Watchdog timer
-                EXCEPTION(0x1020, E_WatchdogTimer)
+                // IVOR12
+                EXCEPTION(0x0D00, E_WatchdogTimer)
+                li      r0,0xD00
                 b       exception_fatal
 
-                // Data TLB miss
-                EXCEPTION(0x1100, E_DTLBMiss)
-                li      r0,17
+                // Data TLB Error
+                // IVOR13
+                EXCEPTION(0x0E00, E_DataTLBError)
+                li      r0,0xE00
                 b       exception_fatal
 
-                // Instruction TLB miss
-                EXCEPTION(0x1200, E_ITLBMiss)
-                li      r0,18
+                // Instruction TLB Error
+                // IVOR14
+                EXCEPTION(0x0F00, E_InstructionTLBError)
+                li      r0,0xF00
                 b       exception_fatal
 
                 // Debug
-                EXCEPTION(0x2000, E_Debug)
-                li      r0,19
+                // IVOR15
+                EXCEPTION(0x1000, E_Debug)
+                li      r0,0x1000
                 b       exception_fatal
+
+                //////////////////////////////////////////////////////////////
+                //
+                // Decrementer handler.
+                //
+                //////////////////////////////////////////////////////////////
+DEC_handler:
+                EXCEPTION_ENTRY
+                li      r3,DEC_IRQ_ID
+                b       irq_entry
 
                 //////////////////////////////////////////////////////////////
                 //
