@@ -47,38 +47,38 @@ pragma Style_Checks (Off);
 
    -- Table 9-1. Special Purpose Registers Sorted by SPR Number
 
-   PID    : constant SPR_Type := 48;   -- 0x030
-   DECAR  : constant SPR_Type := 54;   -- 0x036
-   CSRR0  : constant SPR_Type := 58;   -- 0x03A
-   CSRR1  : constant SPR_Type := 59;   -- 0x03B
-   DEAR   : constant SPR_Type := 61;   -- 0x03D
-   ESR    : constant SPR_Type := 62;   -- 0x03E
-   IVPR   : constant SPR_Type := 63;   -- 0x03F
-   USPRG0 : constant SPR_Type := 256;  -- 0x100
-   SPRG4  : constant SPR_Type := 260;  -- 0x104
-   SPRG5  : constant SPR_Type := 261;  -- 0x105
-   SPRG6  : constant SPR_Type := 262;  -- 0x106
-   SPRG7  : constant SPR_Type := 263;  -- 0x107
-   TBL    : constant SPR_Type := 268;  -- 0x10C
-   TBU    : constant SPR_Type := 269;  -- 0x10D
-   TSR    : constant SPR_Type := 336;  -- 0x150
-   TCR    : constant SPR_Type := 340;  -- 0x154
-   IVOR0  : constant SPR_Type := 400;  -- 0x190
-   IVOR1  : constant SPR_Type := 401;  -- 0x191
-   IVOR2  : constant SPR_Type := 402;  -- 0x192
-   IVOR3  : constant SPR_Type := 403;  -- 0x193
-   IVOR4  : constant SPR_Type := 404;  -- 0x194
-   IVOR5  : constant SPR_Type := 405;  -- 0x195
-   IVOR6  : constant SPR_Type := 406;  -- 0x196
-   IVOR7  : constant SPR_Type := 407;  -- 0x197
-   IVOR8  : constant SPR_Type := 408;  -- 0x198
-   IVOR9  : constant SPR_Type := 409;  -- 0x199
-   IVOR10 : constant SPR_Type := 410;  -- 0x19A
-   IVOR11 : constant SPR_Type := 411;  -- 0x19B
-   IVOR12 : constant SPR_Type := 412;  -- 0x19C
-   IVOR13 : constant SPR_Type := 413;  -- 0x19D
-   IVOR14 : constant SPR_Type := 414;  -- 0x19E
-   IVOR15 : constant SPR_Type := 415;  -- 0x19F
+   PID    : constant SPR_Type := 48;  -- 0x030
+   DECAR  : constant SPR_Type := 54;  -- 0x036
+   CSRR0  : constant SPR_Type := 58;  -- 0x03A
+   CSRR1  : constant SPR_Type := 59;  -- 0x03B
+   DEAR   : constant SPR_Type := 61;  -- 0x03D
+   ESR    : constant SPR_Type := 62;  -- 0x03E
+   IVPR   : constant SPR_Type := 63;  -- 0x03F
+   USPRG0 : constant SPR_Type := 256; -- 0x100
+   SPRG4  : constant SPR_Type := 260; -- 0x104
+   SPRG5  : constant SPR_Type := 261; -- 0x105
+   SPRG6  : constant SPR_Type := 262; -- 0x106
+   SPRG7  : constant SPR_Type := 263; -- 0x107
+   TBL    : constant SPR_Type := 268; -- 0x10C
+   TBU    : constant SPR_Type := 269; -- 0x10D
+   TSR    : constant SPR_Type := 336; -- 0x150
+   TCR    : constant SPR_Type := 340; -- 0x154
+   IVOR0  : constant SPR_Type := 400; -- 0x190
+   IVOR1  : constant SPR_Type := 401; -- 0x191
+   IVOR2  : constant SPR_Type := 402; -- 0x192
+   IVOR3  : constant SPR_Type := 403; -- 0x193
+   IVOR4  : constant SPR_Type := 404; -- 0x194
+   IVOR5  : constant SPR_Type := 405; -- 0x195
+   IVOR6  : constant SPR_Type := 406; -- 0x196
+   IVOR7  : constant SPR_Type := 407; -- 0x197
+   IVOR8  : constant SPR_Type := 408; -- 0x198
+   IVOR9  : constant SPR_Type := 409; -- 0x199
+   IVOR10 : constant SPR_Type := 410; -- 0x19A
+   IVOR11 : constant SPR_Type := 411; -- 0x19B
+   IVOR12 : constant SPR_Type := 412; -- 0x19C
+   IVOR13 : constant SPR_Type := 413; -- 0x19D
+   IVOR14 : constant SPR_Type := 414; -- 0x19E
+   IVOR15 : constant SPR_Type := 415; -- 0x19F
 
    ----------------------------------------------------------------------------
    -- 5. Interrupts and Exceptions
