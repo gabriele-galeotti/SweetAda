@@ -8,8 +8,8 @@
  * Please consult the LICENSE.txt file located in the top-level directory.
  */
 
-#ifndef _E300_H
-#define _E300_H 1
+#ifndef _e300_H
+#define _e300_H 1
 
 #define r0 %r0
 #define r1 %r1
@@ -75,5 +75,5 @@
 #define HID2 0x03F3
 #define  HBE 0x00040000
 
-#endif /* _E300_H */
+#endif /* _e300_H */
 

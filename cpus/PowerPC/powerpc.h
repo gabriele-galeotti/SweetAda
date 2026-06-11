@@ -19,6 +19,9 @@
 #define MSR_IP (1 << 6)  /* Exception prefix */
 #define MSR_EE (1 << 15) /* External interrupt enable */
 
+/*
+ * SPRs
+ */
 #define LR  0x008 /* Link Register */
 #define TBL 0x11C /* Time Base Lower */
 #define TBU 0x11D /* Time Base Upper */

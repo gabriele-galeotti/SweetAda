@@ -243,41 +243,42 @@ pragma Style_Checks (Off);
 
    type SPR_Type is mod 2**10; -- 0 .. 1023
 
-   XER    : constant SPR_Type := 1;    -- Fixed-point exception register.
-   LR     : constant SPR_Type := 8;    -- Used as a branch target address or holds a return address.
-   CTR    : constant SPR_Type := 9;    -- Used for loop count decrement and branching.
-   DSISR  : constant SPR_Type := 18;
-   DAR    : constant SPR_Type := 19;
-   DEC    : constant SPR_Type := 22;
-   SDR1   : constant SPR_Type := 25;
-   SRR0   : constant SPR_Type := 26;
-   SRR1   : constant SPR_Type := 27;
-   SPRG0  : constant SPR_Type := 272;
-   SPRG1  : constant SPR_Type := 273;
-   SPRG2  : constant SPR_Type := 274;
-   SPRG3  : constant SPR_Type := 275;
-   ASR    : constant SPR_Type := 280;  -- 64-bit only
-   EAR    : constant SPR_Type := 282;  -- optional
-   TBL    : constant SPR_Type := 284;
-   TBU    : constant SPR_Type := 285;
+   XER    : constant SPR_Type := 1;    -- 0x001 Fixed-point exception register.
+   LR     : constant SPR_Type := 8;    -- 0x008 Used as a branch target address or holds a return address.
+   CTR    : constant SPR_Type := 9;    -- 0x009 Used for loop count decrement and branching.
+   DSISR  : constant SPR_Type := 18;   -- 0x012
+   DAR    : constant SPR_Type := 19;   -- 0x013
+   DEC    : constant SPR_Type := 22;   -- 0x016
+   SDR1   : constant SPR_Type := 25;   -- 0x019
+   SRR0   : constant SPR_Type := 26;   -- 0x01A
+   SRR1   : constant SPR_Type := 27;   -- 0x01B
+   SPRG0  : constant SPR_Type := 272;  -- 0x110
+   SPRG1  : constant SPR_Type := 273;  -- 0x111
+   SPRG2  : constant SPR_Type := 274;  -- 0x112
+   SPRG3  : constant SPR_Type := 275;  -- 0x113
+   ASR    : constant SPR_Type := 280;  -- 0x118 64-bit only
+   EAR    : constant SPR_Type := 282;  -- 0x11A optional
+   TBL    : constant SPR_Type := 284;  -- 0x11C
+   TBU    : constant SPR_Type := 285;  -- 0x11D
    PVR    : constant SPR_Type := 287;  -- 0x11F
-   IBAT0U : constant SPR_Type := 528;
-   IBAT0L : constant SPR_Type := 529;
-   IBAT1U : constant SPR_Type := 530;
-   IBAT1L : constant SPR_Type := 531;
-   IBAT2U : constant SPR_Type := 532;
-   IBAT2L : constant SPR_Type := 533;
-   IBAT3U : constant SPR_Type := 534;
-   IBAT3L : constant SPR_Type := 535;
-   DBAT0U : constant SPR_Type := 536;
-   DBAT0L : constant SPR_Type := 537;
-   DBAT1U : constant SPR_Type := 538;
-   DBAT1L : constant SPR_Type := 539;
-   DBAT2U : constant SPR_Type := 540;
-   DBAT2L : constant SPR_Type := 541;
-   DBAT3U : constant SPR_Type := 542;
-   DBAT3L : constant SPR_Type := 543;
-   DABR   : constant SPR_Type := 1013; -- optional
+
+   IBAT0U : constant SPR_Type := 528;  -- 0x210
+   IBAT0L : constant SPR_Type := 529;  -- 0x211
+   IBAT1U : constant SPR_Type := 530;  -- 0x212
+   IBAT1L : constant SPR_Type := 531;  -- 0x213
+   IBAT2U : constant SPR_Type := 532;  -- 0x214
+   IBAT2L : constant SPR_Type := 533;  -- 0x215
+   IBAT3U : constant SPR_Type := 534;  -- 0x216
+   IBAT3L : constant SPR_Type := 535;  -- 0x217
+   DBAT0U : constant SPR_Type := 536;  -- 0x218
+   DBAT0L : constant SPR_Type := 537;  -- 0x219
+   DBAT1U : constant SPR_Type := 538;  -- 0x21A
+   DBAT1L : constant SPR_Type := 539;  -- 0x21B
+   DBAT2U : constant SPR_Type := 540;  -- 0x21C
+   DBAT2L : constant SPR_Type := 541;  -- 0x21D
+   DBAT3U : constant SPR_Type := 542;  -- 0x21E
+   DBAT3L : constant SPR_Type := 543;  -- 0x21F
+   DABR   : constant SPR_Type := 1013; -- 0x3F5 optional
 
    generic
       SPR : SPR_Type;
