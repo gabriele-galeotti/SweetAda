@@ -107,13 +107,7 @@ package body BSP
          end case;
       end;
       -------------------------------------------------------------------------
-      declare
-         S : R3000.Status_Type;
-      begin
-         S := R3000.CP0_SR_Read;
-         S.IM7 := True; -- High-Resolution Clock
-         R3000.CP0_SR_Write (S);
-      end;
+      R3000.CP0_SR_Write ((R3000.CP0_SR_Read with delta IM7 => True)); -- High-Resolution Clock
       pragma Warnings (Off, "volatile actual passed by copy");
       declare
          DCT : VMIPS.Device_Control_Type;
