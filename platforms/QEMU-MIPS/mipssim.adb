@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
-with MIPS32;
+with MIPS;
 
 package body MIPSSIM
    is
@@ -45,7 +45,7 @@ package body MIPSSIM
    procedure Tclk_Init
       is
    begin
-      MIPS32.CP0_Compare_Write (MIPS32.CP0_Count_Read + CP0_TIMER_COUNT);
+      MIPS.CP0_Compare_Write (MIPS.CP0_Count_Read + CP0_TIMER_COUNT);
    end Tclk_Init;
 
 end MIPSSIM;

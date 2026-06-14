@@ -21,7 +21,7 @@ with Core;
 with Bits;
 with Secondary_Stack;
 with MMIO;
-with MIPS32;
+with MIPS;
 with MIPSSIM;
 with Exceptions;
 with Console;
@@ -104,8 +104,8 @@ package body BSP
          Console.Print ("Debug_Flag: ENABLED", NL => True);
       end if;
       -------------------------------------------------------------------------
-      MIPS32.Irq_Level_Set (16#20#); -- enable only CP0 timer
-      MIPS32.Irq_Enable;
+      MIPS.Irq_Level_Set (16#20#); -- enable only CP0 timer
+      MIPS.Irq_Enable;
       MIPSSIM.Tclk_Init;
       -------------------------------------------------------------------------
    end Setup;

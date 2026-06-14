@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
-with MIPS32;
+with MIPS;
 with MIPSSIM;
 with BSP;
 
@@ -49,8 +49,8 @@ package body Exceptions
       Count : Unsigned_32;
    begin
       BSP.Tick_Count := @ + 1;
-      Count := MIPS32.CP0_Count_Read;
-      MIPS32.CP0_Compare_Write (Count + MIPSSIM.CP0_TIMER_COUNT);
+      Count := MIPS.CP0_Count_Read;
+      MIPS.CP0_Compare_Write (Count + MIPSSIM.CP0_TIMER_COUNT);
    end Exception_Process;
 
    ----------------------------------------------------------------------------
