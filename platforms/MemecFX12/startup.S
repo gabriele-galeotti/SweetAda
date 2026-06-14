@@ -10,6 +10,7 @@
 
 #define __ASSEMBLER__ 1
 
+#include <powerpc.h>
 #include <ppc405ep.h>
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -40,8 +41,7 @@ _start:
                 // PowerPC 405 Embedded Processor Core User''s Manual
                 // 7.8.1.4 Storage Guarded Register (SGR)
                 //
-                // Setta il bit 29 a 1 per configurare la zona di memoria
-                // 0xE8000000-0xEFFFFFFF come I/O "guarded".
+                // 0xE8000000-0xEFFFFFFF memory is I/O "guarded".
                 //
                 lis     r0,(1 << 29)@ha
                 mtspr   SGR,r0
