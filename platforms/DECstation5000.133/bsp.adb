@@ -169,7 +169,7 @@ package body BSP
       end;
       -------------------------------------------------------------------------
       declare
-         S : R3000.Status_Type;
+         S : R3000.SR_Type;
       begin
          S := R3000.CP0_SR_Read;
          S.IM5 := True; -- I/O ASIC cascade
