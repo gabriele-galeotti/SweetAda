@@ -16,8 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
-with Bits;
-with MIPS32;
+with MIPS;
 with Malta;
 with BSP;
 
@@ -33,7 +32,6 @@ package body Exceptions
    --========================================================================--
 
    use Interfaces;
-   use Bits;
 
    --========================================================================--
    --                                                                        --
@@ -51,8 +49,8 @@ package body Exceptions
       Count : Unsigned_32;
    begin
       BSP.Tick_Count := @ + 1;
-      Count := MIPS32.CP0_Count_Read;
-      MIPS32.CP0_Compare_Write (Count + Malta.CP0_TIMER_COUNT);
+      Count := MIPS.CP0_Count_Read;
+      MIPS.CP0_Compare_Write (Count + Malta.CP0_TIMER_COUNT);
    end Exception_Process;
 
    ----------------------------------------------------------------------------

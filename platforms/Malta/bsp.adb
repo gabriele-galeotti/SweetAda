@@ -17,24 +17,19 @@
 
 with System;
 with System.Storage_Elements;
-with Configure;
 with Definitions;
 with Bits;
 with Secondary_Stack;
 with MIPS;
-with MIPS32;
 with Core;
+with MMIO;
 with Malta;
-with VGA;
 with Exceptions;
-with PCI;
+with VGA;
 with MC146818A;
 with UART16x50;
 with IDE;
-with FATFS;
-with MMIO;
 with Console;
-with SweetAda;
 
 package body BSP
    is
@@ -52,11 +47,7 @@ package body BSP
    use Definitions;
    use Bits;
    use MIPS;
-   use MIPS32;
    use Malta;
-   use PCI;
-   use IDE;
-   use FATFS;
 
    --========================================================================--
    --                                                                        --
@@ -91,8 +82,8 @@ package body BSP
    ----------------------------------------------------------------------------
    procedure Setup
       is
-      Status : Status_Type;
-      PRId   : PRId_Type;
+      -- SR   : SR_Type;
+      PRId : PRId_Type;
    begin
       -------------------------------------------------------------------------
       Secondary_Stack.Init;
@@ -146,40 +137,24 @@ package body BSP
       end if;
       -------------------------------------------------------------------------
       PRId := CP0_PRId_Read;
+      Console.Print (Prefix => "Revision       : ", Value => PRId.Revision, NL => True);
       Console.Print ("CPU ID         : ");
-      case PRId.CPU_ID is
-         when ID_5K  => Console.Print ("5K");
-         when ID_24K => Console.Print ("24K");
+      case PRId.Processor_ID is
+         when Processor_ID_5K  => Console.Print ("5K");
+         when Processor_ID_20K => Console.Print ("20K");
+         when Processor_ID_24K => Console.Print ("24K");
          when others => null;
       end case;
       Console.Print_NewLine;
-      Console.Print (Prefix => "Revision       : ", Value => PRId.Revision, NL => True);
       Console.Print ("Company ID     : ");
       case PRId.Company_ID is
-         when ID_COMPANY_LEGACY   => Console.Print ("LEGACY");
-         when ID_COMPANY_MIPS     => Console.Print ("MIPS");
-         when ID_COMPANY_BROADCOM => Console.Print ("Broadcom");
+         when Company_ID_LEGACY   => Console.Print ("LEGACY");
+         when Company_ID_MIPS     => Console.Print ("MIPS");
+         when Company_ID_BROADCOM => Console.Print ("Broadcom");
          when others              => null;
       end case;
       Console.Print_NewLine;
-      Console.Print (Prefix => "Company Options: ", Value => PRId.Company_Options, NL => True);
-      -------------------------------------------------------------------------
-      -- try to set coprocessor bits; if the bit can be set, the correspondent
-      -- coprocessor is present
-      -------------------------------------------------------------------------
-      Status := CP0_SR_Read;
-      Status.CU1 := True;
-      Status.CU2 := True;
-      CP0_SR_Write (Status);
-      declare
-         S : aliased Status_Type;
-         X : aliased Unsigned_32
-            with Address => S'Address;
-      begin
-         S := CP0_SR_Read;
-         Console.Print (Prefix => "Status: ", Value => X, NL => True);
-      end;
-      Console.Print (Prefix => "Config: ", Value => CP0_Config_Read, NL => True);
+      Console.Print (Prefix => "Company Option: ", Value => PRId.Company_Option, NL => True);
       -- CBUS UART ------------------------------------------------------------
       CBUS_UART_Descriptor := (
          Uart_Model    => UART16x50.UART16450,
@@ -207,8 +182,9 @@ package body BSP
       VGA.Init (MIPS.KSEG1_ADDRESS + 16#000A_0000#, MIPS.KSEG1_ADDRESS + 16#000B_8000#);
       VGA.Set_Mode (VGA.MODE12H);
       -------------------------------------------------------------------------
-      MIPS32.Irq_Level_Set (16#3F#);
-      MIPS32.Irq_Enable;
+      Exceptions.Init;
+      MIPS.Irq_Level_Set (16#3F#);
+      MIPS.Irq_Enable;
       Tclk_Init;
       -------------------------------------------------------------------------
    end Setup;
