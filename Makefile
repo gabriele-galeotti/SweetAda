@@ -989,6 +989,7 @@ GNATMAKE_WRAPPER := "--GCC=$(EXE_WRAPPER)"                                      
                     "-D_exewrapperbrieftext=$(shell $(call brief-text,[EXE-WRAP],(+)))"
 else ifeq ($(BUILD_MODE),GPRbuild)
 GPRBUILD_WRAPPER := "-XUSE_EXE_WRAPPER=$(USE_EXE_WRAPPER)"                               \
+                    "-XEXE_WRAPPER_EXECUTABLE=$(EXE_WRAPPER)"                            \
                     "-XEXE_WRAPPER_TIMESTAMP_FILENAME=$(EXE_WRAPPER_TIMESTAMP_FILENAME)" \
                     "-XEXE_WRAPPER_VERBOSE=$(VERBOSE)"                                   \
                     "-XEXE_WRAPPER_BRIEFTEXT="

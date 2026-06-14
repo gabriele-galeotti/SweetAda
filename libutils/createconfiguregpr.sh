@@ -19,7 +19,6 @@
 # TOOLCHAIN_PREFIX
 # GPRBUILD_PREFIX
 # TOOLCHAIN_NAME
-# EXE_WRAPPER
 # GCC_WRAPPER
 # GNATADC_FILENAME
 # GNATTDI_FILENAME
@@ -221,7 +220,6 @@ configuregpr=${configuregpr}$(print_I "SweetAda_Path                     := \"${
 configuregpr=${configuregpr}$(print_I "Toolchain_Prefix                  := \"${TOOLCHAIN_PREFIX}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Toolchain_Name                    := \"${TOOLCHAIN_NAME}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Gprbuild_Prefix                   := \"${GPRBUILD_PREFIX}\";")${NL}
-configuregpr=${configuregpr}$(print_I "EXE_Wrapper                       := \"${EXE_WRAPPER}\";")${NL}
 configuregpr=${configuregpr}$(print_I "GnatTDI_Filename                  := \"${GNATTDI_FILENAME}\";")${NL}
 configuregpr=${configuregpr}$(print_I "GnatAdc_Filename                  := \"${GNATADC_FILENAME}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Library_Directory                 := \"${LIBRARY_DIRECTORY}\";")${NL}
