@@ -17,12 +17,10 @@
 
 with System;
 with Definitions;
-with Configure;
 with Bits;
 with Core;
 with MMIO;
 with Secondary_Stack;
-with CPU;
 with PowerPC;
 with PPC440;
 with Exceptions;

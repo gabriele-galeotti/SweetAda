@@ -19,7 +19,6 @@ with System.Machine_Code;
 with Definitions;
 with Abort_Library;
 with PPC440;
-with Bamboo;
 with BSP;
 
 package body Exceptions
