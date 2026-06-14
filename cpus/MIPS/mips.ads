@@ -16,6 +16,9 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with Interfaces;
+with Definitions;
+with Bits;
 
 package MIPS
    is
@@ -29,39 +32,19 @@ package MIPS
    --========================================================================--
 
    use System;
+   use Interfaces;
+   use Bits;
 
 pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
-   -- MIPS PRId values
+   -- MIPS32® 24K® Processor Core Family
+   -- Software User’s Manual
+   -- Document Number: MD00343 Revision 03.11 December 19, 2008
    ----------------------------------------------------------------------------
 
-   -- Imp
-   ID_R2000      : constant := 1;
-   ID_R3000      : constant := 2;      -- IDT R3051, R3052, R3071, R3081, most early 32-bit MIPS CPUs
-   ID_R6000      : constant := 3;
-   ID_R4000      : constant := 4;      -- R4400
-   ID_LSI        : constant := 5;      -- LSI Logic 32-bit CPUs
-   ID_R6000A     : constant := 6;
-   ID_R3041      : constant := 7;
-   ID_R10000     : constant := 9;
-   ID_NEC_Vr4200 : constant := 10;
-   ID_NEC_Vr4300 : constant := 11;
-   ID_R8000      : constant := 16;
-   ID_R4600      : constant := 32;
-   ID_R4700      : constant := 33;
-   ID_R3900      : constant := 34;
-   ID_R5000      : constant := 35;
-   ID_QED_RM5230 : constant := 40;     -- RM5260
-   ID_5K         : constant := 16#81#;
-   ID_24K        : constant := 16#93#;
-
-   ID_COMPANY_LEGACY   : constant := 16#00#;
-   ID_COMPANY_MIPS     : constant := 16#01#;
-   ID_COMPANY_BROADCOM : constant := 16#02#;
-
    ----------------------------------------------------------------------------
-   -- MIPS registers
+   -- Registers
    ----------------------------------------------------------------------------
 
    R0   : constant := 0;   R1   : constant := 1;   R2   : constant := 2;   R3   : constant := 3;
@@ -92,14 +75,184 @@ pragma Style_Checks (Off);
 
    Maximum_Register_Size : constant := 4;
 
+   type CP0_Register_Type is range 16#00# .. 16#1F#;
+
+   CRLF : String renames Definitions.CRLF;
+
+   Asm_Register_Equates : constant String :=
+      "        .equ    CP0_INDEX,   $0 " & CRLF &
+      "        .equ    CP0_ENTRYLO, $2 " & CRLF &
+      "        .equ    CP0_CONTEXT, $4 " & CRLF &
+      "        .equ    CP0_BADVADDR,$8 " & CRLF &
+      "        .equ    CP0_COUNT,   $9 " & CRLF &
+      "        .equ    CP0_ENTRYHI, $10" & CRLF &
+      "        .equ    CP0_COMPARE, $11" & CRLF &
+      "        .equ    CP0_SR,      $12" & CRLF &
+      "        .equ    CP0_CAUSE,   $13" & CRLF &
+      "        .equ    CP0_EPC,     $14" & CRLF &
+      "        .equ    CP0_PRID,    $15" & CRLF &
+      "        .equ    CP0_CONFIG,  $16" & CRLF &
+      "        .equ    CP0_WATCHLO, $18" & CRLF &
+      "        .equ    CP0_WATCHHI, $19" & CRLF &
+      "        .equ    CP0_XCONTEXT,$20" & CRLF &
+      "        .equ    CP0_DEBUG,   $23" & CRLF;
+
    ----------------------------------------------------------------------------
-   -- KSEGs
+   -- Chapter 4 Memory Management of the 24K® Core
    ----------------------------------------------------------------------------
 
    KUSEG_ADDRESS : constant := 16#0000_0000#;
    KSEG0_ADDRESS : constant := 16#8000_0000#;
    KSEG1_ADDRESS : constant := 16#A000_0000#;
    KSEG2_ADDRESS : constant := 16#C000_0000#;
+
+   ----------------------------------------------------------------------------
+   -- Chapter 6 CP0 Registers of the 24K® Core
+   ----------------------------------------------------------------------------
+
+   -- 6.2.10 Count Register (CP0 Register 9, Select 0)
+
+   function CP0_Count_Read
+      return Unsigned_32
+      with Inline => True;
+   procedure CP0_Count_Write
+      (Value : in Unsigned_32)
+      with Inline => True;
+
+   -- 6.2.12 Compare Register (CP0 Register 11, Select 0)
+
+   function CP0_Compare_Read
+      return Unsigned_32
+      with Inline => True;
+   procedure CP0_Compare_Write
+      (Value : in Unsigned_32)
+      with Inline => True;
+
+   -- 6.2.13 Status Register (CP0 Register 12, Select 0)
+
+   KSU_Kernel     : constant := 2#00#; -- Base mode is Kernel Mode
+   KSU_Supervisor : constant := 2#01#; -- Base mode is Supervisor Mode
+   KSU_User       : constant := 2#10#; -- Base mode is User Mode
+   KSU_Reserved   : constant := 2#11#; -- Reserved
+
+   FR_32  : constant := 0; -- FP registers can contain any 32-bit datatype. 64-bit in even-odd pairs of registers
+   FR_ANY : constant := 1; -- FP registers can contain any datatype
+
+   type SR_Type is record
+      IE        : Boolean;      -- Interrupt Enable
+      EXL       : Boolean;      -- Exception Level
+      ERL       : Boolean;      -- Error Level
+      KSU       : Bits_2;       -- base operating mode of the processor
+      Reserved1 : Bits_1  := 0; -- UX
+      Reserved2 : Bits_1  := 0; -- SX
+      Reserved3 : Bits_1  := 0; -- KX
+      IM        : Bits_8;       -- Interrupt Mask (or IPL)
+      Reserved4 : Bits_1  := 0;
+      CEE       : Boolean;      -- CorExtend Enable
+      ZERO      : Bits_1  := 0; -- Reserved
+      NMI       : Boolean;      -- entry through the reset exception vector was due to an NMI
+      SR        : Boolean;      -- entry through the reset exception vector was due to a Soft Reset
+      TS        : Boolean;      -- TLB shutdown
+      BEV       : Boolean;      -- Controls the location of exception vectors
+      Reserved5 : Bits_1  := 0;
+      MX        : Boolean;      -- Enables access to DSP ASE resources
+      RE        : Boolean;      -- enable reverse-endian memory references while the processor is running in user mode
+      FR        : Bits_1;       -- control the floating point register mode for 64-bit floating point units
+      RP        : Boolean;      -- Enables reduced power mode
+      CU0       : Boolean;
+      CU1       : Boolean;
+      CU2       : Boolean;
+      CU3       : Boolean;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for SR_Type use record
+      IE        at 0 range  0 ..  0;
+      EXL       at 0 range  1 ..  1;
+      ERL       at 0 range  2 ..  2;
+      KSU       at 0 range  3 ..  4;
+      Reserved1 at 0 range  5 ..  5;
+      Reserved2 at 0 range  6 ..  6;
+      Reserved3 at 0 range  7 ..  7;
+      IM        at 0 range  8 .. 15;
+      Reserved4 at 0 range 16 .. 16;
+      CEE       at 0 range 17 .. 17;
+      ZERO      at 0 range 18 .. 18;
+      NMI       at 0 range 19 .. 19;
+      SR        at 0 range 20 .. 20;
+      TS        at 0 range 21 .. 21;
+      BEV       at 0 range 22 .. 22;
+      Reserved5 at 0 range 23 .. 23;
+      MX        at 0 range 24 .. 24;
+      RE        at 0 range 25 .. 25;
+      FR        at 0 range 26 .. 26;
+      RP        at 0 range 27 .. 27;
+      CU0       at 0 range 28 .. 28;
+      CU1       at 0 range 29 .. 29;
+      CU2       at 0 range 30 .. 30;
+      CU3       at 0 range 31 .. 31;
+   end record;
+
+   function CP0_SR_Read
+      return SR_Type
+      with Inline => True;
+   procedure CP0_SR_Write
+      (Value : in SR_Type)
+      with Inline => True;
+
+   -- 6.2.19 Processor Identification (CP0 Register 15, Select 0)
+
+   Processor_ID_R2000      : constant := 1;
+   Processor_ID_R3000      : constant := 2;      -- IDT R3051, R3052, R3071, R3081, most early 32-bit MIPS CPUs
+   Processor_ID_R6000      : constant := 3;
+   Processor_ID_R4000      : constant := 4;      -- R4400
+   Processor_ID_LSI        : constant := 5;      -- LSI Logic 32-bit CPUs
+   Processor_ID_R6000A     : constant := 6;
+   Processor_ID_R3041      : constant := 7;
+   Processor_ID_R10000     : constant := 9;
+   Processor_ID_NEC_Vr4200 : constant := 10;
+   Processor_ID_NEC_Vr4300 : constant := 11;
+   Processor_ID_R8000      : constant := 16;
+   Processor_ID_R4600      : constant := 32;
+   Processor_ID_R4700      : constant := 33;
+   Processor_ID_R3900      : constant := 34;
+   Processor_ID_R5000      : constant := 35;
+   Processor_ID_QED_RM5230 : constant := 40;     -- RM5260
+   Processor_ID_5K         : constant := 16#81#;
+   Processor_ID_20K        : constant := 16#82#;
+   Processor_ID_24K        : constant := 16#93#;
+
+   Company_ID_LEGACY   : constant := 16#00#;
+   Company_ID_MIPS     : constant := 16#01#;
+   Company_ID_BROADCOM : constant := 16#02#;
+
+   type PRId_Type is record
+      Revision       : Unsigned_8; -- Specifies the revision number of the processor.
+      Processor_ID   : Unsigned_8; -- Identifies the type of processor.
+      Company_ID     : Unsigned_8; -- Identifies the company that designed or manufactured the processor.
+      Company_Option : Unsigned_8; -- Implementation specific values
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for PRId_Type use record
+      Revision       at 0 range  0 ..  7;
+      Processor_ID   at 0 range  8 .. 15;
+      Company_ID     at 0 range 16 .. 23;
+      Company_Option at 0 range 24 .. 31;
+   end record;
+
+   function CP0_PRId_Read
+      return PRId_Type
+      with Inline => True;
+
+   -- 6.2.21 Config Register (CP0 Register 16, Select 0)
+
+   function CP0_Config_Read
+      return Unsigned_32
+      with Inline => True;
+   procedure CP0_Config_Write
+      (Value : in Unsigned_32)
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
@@ -111,6 +264,30 @@ pragma Style_Checks (Off);
       with Inline => True;
    procedure Asm_Call
       (Target_Address : in Address)
+      with Inline => True;
+
+   ----------------------------------------------------------------------------
+   -- Exceptions and interrupts
+   ----------------------------------------------------------------------------
+
+   subtype Intcontext_Type is Natural;
+   subtype Irq_Id_Type is Natural;
+   subtype Irq_Level_Type is Unsigned_16 range 0 .. 63;
+
+   procedure Irq_Level_Set
+      (Irq_Level : in Irq_Level_Type)
+      with Inline => True;
+
+   procedure Intcontext_Get
+      (Intcontext : out Intcontext_Type)
+      with Inline => True;
+   procedure Intcontext_Set
+      (Intcontext : in Intcontext_Type)
+      with Inline => True;
+
+   procedure Irq_Enable
+      with Inline => True;
+   procedure Irq_Disable
       with Inline => True;
 
 pragma Style_Checks (On);

@@ -17,7 +17,6 @@
 
 with System;
 with MIPS;
-with MIPS32;
 
 package CPU
    is
@@ -30,8 +29,6 @@ package CPU
    --                                                                        --
    --========================================================================--
 
-   use System;
-
    ----------------------------------------------------------------------------
    -- CPU helper subprograms
    ----------------------------------------------------------------------------
@@ -40,26 +37,26 @@ package CPU
       renames MIPS.NOP;
 
    procedure Asm_Call
-      (Target_Address : in Address)
+      (Target_Address : in System.Address)
       renames MIPS.Asm_Call;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   subtype Intcontext_Type is MIPS32.Intcontext_Type;
-   subtype Irq_Id_Type     is MIPS32.Irq_Id_Type;
+   subtype Intcontext_Type is MIPS.Intcontext_Type;
+   subtype Irq_Id_Type     is MIPS.Irq_Id_Type;
 
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
-      renames MIPS32.Intcontext_Get;
+      renames MIPS.Intcontext_Get;
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
-      renames MIPS32.Intcontext_Set;
+      renames MIPS.Intcontext_Set;
 
    procedure Irq_Enable
-      renames MIPS32.Irq_Enable;
+      renames MIPS.Irq_Enable;
    procedure Irq_Disable
-      renames MIPS32.Irq_Disable;
+      renames MIPS.Irq_Disable;
 
 end CPU;

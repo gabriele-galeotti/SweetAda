@@ -17,7 +17,7 @@
 
 with System.Machine_Code;
 with Ada.Unchecked_Conversion;
-with Definitions;
+with MIPS;
 
 package body R3000
    is
@@ -32,32 +32,14 @@ package body R3000
 
    use System.Machine_Code;
 
-   CRLF : String renames Definitions.CRLF;
-
-   Register_Equates : constant String :=
-      "        .equ    CP0_Index,   $0 " & CRLF &
-      "        .equ    CP0_EntryLo, $2 " & CRLF &
-      "        .equ    CP0_Context, $4 " & CRLF &
-      "        .equ    CP0_BadVAddr,$8 " & CRLF &
-      "        .equ    CP0_Count,   $9 " & CRLF &
-      "        .equ    CP0_EntryHi, $10" & CRLF &
-      "        .equ    CP0_Compare, $11" & CRLF &
-      "        .equ    CP0_SR,      $12" & CRLF &
-      "        .equ    CP0_Cause,   $13" & CRLF &
-      "        .equ    CP0_EPC,     $14" & CRLF &
-      "        .equ    CP0_PRId,    $15" & CRLF &
-      "        .equ    CP0_Config,  $16" & CRLF &
-      "        .equ    CP0_WatchLo, $18" & CRLF &
-      "        .equ    CP0_WatchHi, $19" & CRLF &
-      "        .equ    CP0_XContext,$20" & CRLF &
-      "        .equ    CP0_Debug,   $23" & CRLF;
+   subtype CP0_Register_Type is MIPS.CP0_Register_Type;
+   CRLF renames MIPS.CRLF;
+   Asm_Register_Equates renames MIPS.Asm_Register_Equates;
 
    NOP3 : constant String :=
       "        nop" & CRLF &
       "        nop" & CRLF &
       "        nop" & CRLF;
-
-   type CP0_Register_Type is range 0 .. 31; -- 32 CP0 registers
 
    --========================================================================--
    --                                                                        --
@@ -70,7 +52,7 @@ package body R3000
    ----------------------------------------------------------------------------
    -- CP0 access templates
    ----------------------------------------------------------------------------
-   -- MIPS R3000 has no register select
+   -- R3000 has no register select
    ----------------------------------------------------------------------------
 
    generic
@@ -128,39 +110,38 @@ package body R3000
    end MTC0;
 
    ----------------------------------------------------------------------------
-   -- Status Register (CP0 register 12)
+   -- CP0_PRId_Read
    ----------------------------------------------------------------------------
-
-   function CP0_SR_Read
-      return Status_Type
-      is
-      function U32_To_SRT is new Ada.Unchecked_Conversion (Unsigned_32, Status_Type);
-      function CP0_Read is new MFC0 (12);
-   begin
-      return U32_To_SRT (CP0_Read);
-   end CP0_SR_Read;
-
-   procedure CP0_SR_Write
-      (Value : in Status_Type)
-      is
-      function SRT_To_U32 is new Ada.Unchecked_Conversion (Status_Type, Unsigned_32);
-      procedure CP0_Write is new MTC0 (12);
-   begin
-      CP0_Write (SRT_To_U32 (Value));
-   end CP0_SR_Write;
-
-   ----------------------------------------------------------------------------
-   -- PRId register (CP0 register 15)
-   ----------------------------------------------------------------------------
-
    function CP0_PRId_Read
       return PRId_Type
       is
-      function U32_To_PRId is new Ada.Unchecked_Conversion (Unsigned_32, PRId_Type);
+      function To_PRId is new Ada.Unchecked_Conversion (Unsigned_32, PRId_Type);
       function CP0_Read is new MFC0 (15);
    begin
-      return U32_To_PRId (CP0_Read);
+      return To_PRId (CP0_Read);
    end CP0_PRId_Read;
+
+   ----------------------------------------------------------------------------
+   -- CP0_SR_Read/Write
+   ----------------------------------------------------------------------------
+
+   function CP0_SR_Read
+      return SR_Type
+      is
+      function To_SR is new Ada.Unchecked_Conversion (Unsigned_32, SR_Type);
+      function CP0_Read is new MFC0 (12);
+   begin
+      return To_SR (CP0_Read);
+   end CP0_SR_Read;
+
+   procedure CP0_SR_Write
+      (Value : in SR_Type)
+      is
+      function To_U32 is new Ada.Unchecked_Conversion (SR_Type, Unsigned_32);
+      procedure CP0_Write is new MTC0 (12);
+   begin
+      CP0_Write (To_U32 (Value));
+   end CP0_SR_Write;
 
    ----------------------------------------------------------------------------
    -- Cache_Size
@@ -208,7 +189,7 @@ package body R3000
    begin
       Asm (
            Template => ""                          & CRLF &
-                       Register_Equates                   &
+                       Asm_Register_Equates               &
                        "        .set    push     " & CRLF &
                        "        .set    reorder  " & CRLF &
                        "        mfc0    %0,CP0_SR" & CRLF &
@@ -231,7 +212,7 @@ package body R3000
    begin
       Asm (
            Template => ""                          & CRLF &
-                       Register_Equates                   &
+                       Asm_Register_Equates               &
                        "        .set    push     " & CRLF &
                        "        .set    noreorder" & CRLF &
                        "        .set    noat     " & CRLF &
@@ -259,7 +240,7 @@ package body R3000
    begin
       Asm (
            Template => ""                          & CRLF &
-                       Register_Equates                   &
+                       Asm_Register_Equates               &
                        "        .set    push     " & CRLF &
                        "        .set    reorder  " & CRLF &
                        "        .set    noat     " & CRLF &
@@ -285,7 +266,7 @@ package body R3000
    begin
       Asm (
            Template => ""                          & CRLF &
-                       Register_Equates                   &
+                       Asm_Register_Equates               &
                        "        .set    push     " & CRLF &
                        "        .set    reorder  " & CRLF &
                        "        .set    noat     " & CRLF &

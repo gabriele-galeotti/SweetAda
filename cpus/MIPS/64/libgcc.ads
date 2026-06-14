@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ libgcc.adb                                                                                                --
+-- __FLN__ libgcc.ads                                                                                                --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,44 +15,32 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package body LibGCC
+with GCC.Types;
+
+package LibGCC
+   with Pure => True
    is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                           Local declarations                           --
+   --                               Public part                              --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   use type GCC.Types.USI_Type;
-   use type GCC.Types.UDI_Type;
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                           Package subprograms                          --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   ----------------------------------------------------------------------------
-   -- BswapSI2
-   ----------------------------------------------------------------------------
    function BswapSI2
-      (V : GCC.Types.USI_Type)
-      return GCC.Types.USI_Type
-      is
-   separate;
+      (V : GCC.Types.SI_Type)
+      return GCC.Types.SI_Type
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__bswapsi2";
 
-   ----------------------------------------------------------------------------
-   -- BswapDI2
-   ----------------------------------------------------------------------------
    function BswapDI2
-      (V : GCC.Types.UDI_Type)
-      return GCC.Types.UDI_Type
-      is
-   separate;
+      (V : GCC.Types.DI_Type)
+      return GCC.Types.DI_Type
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__bswapdi2";
 
 end LibGCC;
