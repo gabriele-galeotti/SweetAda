@@ -44,7 +44,6 @@ all: $(CONFIGURE_FILES_PLATFORM) $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: configure
 configure: clean-configure-files $(CONFIGURE_FILES_PLATFORM) $(LD_SCRIPT)
-	@$(PYTHON) design_parser.py $(QSYS_FILE) Quartus $(QSYS_IO_LIST)
 
 ifneq ($(CONFIGURE_FILES_PLATFORM),)
 $(CONFIGURE_FILES_PLATFORM): % : %.in
@@ -80,8 +79,7 @@ clean:
 
 .PHONY: distclean
 distclean: clean-configure-files clean
-	$(RM) $(DISTCLEAN_OBJECTS_COMMON) \
-              quartus.ads
+	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in
 

@@ -18,8 +18,17 @@
 # ...
 #
 # Environment variables:
-# SWEETADA_PATH
-# LIBUTILS_DIRECTORY
+# none
+#
+
+#
+# Example:
+# $ python design_parser.py \
+#     <project_toplevel_directory>/de10lite.qsys \
+#     Quartus \
+#     timer_0.s1 \
+#     jtag_uart_0.avalon_jtag_slave \
+#     ...
 #
 
 ################################################################################
@@ -39,8 +48,6 @@ SCRIPT_FILENAME = os.path.basename(sys.argv[0])
 ################################################################################
 
 import subprocess
-sys.path.append(os.path.join(os.getenv('SWEETADA_PATH'), os.getenv('LIBUTILS_DIRECTORY')))
-import library
 import xml.etree.ElementTree as ET
 
 # helper function

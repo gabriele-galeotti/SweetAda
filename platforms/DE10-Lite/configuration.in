@@ -45,13 +45,8 @@ LOWLEVEL_FILES_PLATFORM  := startup.S llkernel.S
 
 export QUARTUS_ROOTDIR   := /opt/intelFPGA_lite/22.1std/quartus
 export QSYS_PROJECT_PATH := /root/workspace/devices/DE10-Lite/DE10-Lite_base_design
-export QSYS_FILE         := $(QSYS_PROJECT_PATH)/de10lite.qsys
 export QSYS_SOF_FILE     := $(QSYS_PROJECT_PATH)/output_files/DE10-Lite.sof
 export QSYS_JDI_FILE     := $(QSYS_PROJECT_PATH)/output_files/DE10-Lite.jdi
-export QSYS_IO_LIST      := timer_0.s1                    \
-                            leds.s1                       \
-                            switches.s1                   \
-                            jtag_uart_0.avalon_jtag_slave
 
 ################################################################################
 # Run/debug interface.                                                         #
@@ -62,13 +57,13 @@ export QSYS_IO_LIST      := timer_0.s1                    \
 SESSION_START_COMMAND := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.py -jtagd
 SESSION_END_COMMAND   :=
 RUN_COMMAND           := "$(PYTHON)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.py && \
-                         xterm -e "$(QUARTUS_PATH)"/quartus/bin/nios2-terminal &
+                         xterm -e "$(QUARTUS_ROOTDIR)"/bin/nios2-terminal &
 DEBUG_COMMAND         :=
 
 # Tcl front-end
 #SESSION_START_COMMAND := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl -jtagd
 #SESSION_END_COMMAND   :=
 #RUN_COMMAND           := "$(TCLSH)" "$(SWEETADA_PATH)"/$(PLATFORM_DIRECTORY)/programmer.tcl && \
-#                         xterm -e "$(QUARTUS_PATH)"/quartus/bin/nios2-terminal &
+#                         xterm -e "$(QUARTUS_ROOTDIR)"/bin/nios2-terminal &
 #DEBUG_COMMAND         :=
 
