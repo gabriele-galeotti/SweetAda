@@ -36,8 +36,7 @@ package POWER8
 pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
-   -- POWER8 Processor User’s Manual for the
-   -- Single-Chip Module
+   -- POWER8 Processor User’s Manual for the Single-Chip Module
    -- Advance 16 March 2016 Version 1.3
    ----------------------------------------------------------------------------
 

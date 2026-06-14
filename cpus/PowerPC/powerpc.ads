@@ -43,10 +43,8 @@ pragma Style_Checks (Off);
    -- MPRPPCPRG-01 MPCPRG/D 10/95
    ----------------------------------------------------------------------------
 
-   ----------------------------------------------------------------------------
    -- 1.1 General-Purpose Registers (GPRs)
    -- 1.2 Floating-Point Registers (FPRs)
-   ----------------------------------------------------------------------------
 
    R0    : constant := 0;
    R1    : constant := 1;
@@ -116,9 +114,7 @@ pragma Style_Checks (Off);
 
    subtype Register_Number_Type is Natural range R0 .. FP31;
 
-   ----------------------------------------------------------------------------
    -- 1.3 XER Register (XER)
-   ----------------------------------------------------------------------------
 
    type XER_Type is record
       SO         : Boolean;                     -- Summary overflow.
@@ -134,12 +130,10 @@ pragma Style_Checks (Off);
       OV         at 0 range  1 ..  1;
       CA         at 0 range  2 ..  2;
       Reserved   at 0 range  3 .. 24;
-      Byte_count at 0 range 25 .. 31;
+      Byte_Count at 0 range 25 .. 31;
    end record;
 
-   ----------------------------------------------------------------------------
    -- 1.4 Floating-Point Status and Control Register (FPSCR)
-   ----------------------------------------------------------------------------
 
    -- C  Floating-point result class descriptor (C).
    -- FL Floating-point less than or negative (FL or <)
@@ -224,9 +218,35 @@ pragma Style_Checks (Off);
       RN       at 0 range 30 .. 31;
    end record;
 
-   ----------------------------------------------------------------------------
+   -- 1.5 Condition Register (CR)
+
+   type CR_Type is record
+      CR0 : Bits_4;
+      CR1 : Bits_4;
+      CR2 : Bits_4;
+      CR3 : Bits_4;
+      CR4 : Bits_4;
+      CR5 : Bits_4;
+      CR6 : Bits_4;
+      CR7 : Bits_4;
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for CR_Type use record
+      CR0 at 0 range  0 ..  3;
+      CR1 at 0 range  4 ..  7;
+      CR2 at 0 range  8 .. 11;
+      CR3 at 0 range 12 .. 15;
+      CR4 at 0 range 16 .. 19;
+      CR5 at 0 range 20 .. 23;
+      CR6 at 0 range 24 .. 27;
+      CR7 at 0 range 28 .. 31;
+   end record;
+
+   -- 1.6 Link Register (LR)
+   -- 1.7 Count Register (CTR)
+
    -- 1.8 Machine State Register (MSR)
-   ----------------------------------------------------------------------------
 
    subtype MSR_Type is PowerPC_Definitions.MSR_Type;
 
@@ -235,6 +255,42 @@ pragma Style_Checks (Off);
       with Inline => True;
    procedure MSR_Write
       (Value : in MSR_Type)
+      with Inline => True;
+
+   -- 1.9 Processor Version Register (PVR)
+
+   type PVR_Type is record
+      Version  : Unsigned_16;
+      Revision : Unsigned_16;
+   end record
+      with Size => 32;
+   for PVR_Type use record
+      Version  at 0 range  0 .. 15;
+      Revision at 0 range 16 .. 31;
+   end record;
+
+   function PVR_Read
+      return PVR_Type
+      with Inline => True;
+
+   -- 1.10 BAT Registers
+   -- 1.11 SDR1
+   -- 1.12 Address Space Register (ASR)
+   -- 1.13 Segment Registers (SRs)
+   -- 1.14 Data Address Register (DAR)
+   -- 1.15 SPRG0–SPRG3
+   -- 1.16 DSISR
+   -- 1.17 Machine Status Save/Restore Register 0 (SRR0)
+   -- 1.18 Machine Status Save/Restore Register 1 (SRR1)
+   -- 1.19 Time Base Facility (TB)
+
+   -- 1.20 Decrementer Register (DEC)
+
+   function DEC_Read
+      return Unsigned_32
+      with Inline => True;
+   procedure DEC_Write
+      (Value : in Unsigned_32)
       with Inline => True;
 
    ----------------------------------------------------------------------------
@@ -295,35 +351,6 @@ pragma Style_Checks (Off);
       with Inline => True;
 
    ----------------------------------------------------------------------------
-   -- 1.9 Processor Version Register (PVR)
-   ----------------------------------------------------------------------------
-
-   type PVR_Type is record
-      Version  : Unsigned_16;
-      Revision : Unsigned_16;
-   end record
-      with Size => 32;
-   for PVR_Type use record
-      Version  at 0 range  0 .. 15;
-      Revision at 0 range 16 .. 31;
-   end record;
-
-   function PVR_Read
-      return PVR_Type
-      with Inline => True;
-
-   ----------------------------------------------------------------------------
-   -- 1.20 Decrementer Register (DEC)
-   ----------------------------------------------------------------------------
-
-   function DEC_Read
-      return Unsigned_32
-      with Inline => True;
-   procedure DEC_Write
-      (Value : in Unsigned_32)
-      with Inline => True;
-
-   ----------------------------------------------------------------------------
    -- Generic definitions
    ----------------------------------------------------------------------------
 
@@ -349,7 +376,7 @@ pragma Style_Checks (Off);
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   subtype Intcontext_Type is Unsigned_32;
+   subtype Intcontext_Type is MSR_Type;
 
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)

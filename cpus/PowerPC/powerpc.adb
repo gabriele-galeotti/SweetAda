@@ -226,7 +226,7 @@ package body PowerPC
       (Intcontext : out Intcontext_Type)
       is
    begin
-      Intcontext := 0; -- __TBD__
+      Intcontext := MSR_Read;
    end Intcontext_Get;
 
    ----------------------------------------------------------------------------
@@ -235,9 +235,8 @@ package body PowerPC
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       is
-      pragma Unreferenced (Intcontext);
    begin
-      null; -- __TBD__
+      MSR_Write ((MSR_Read with delta EE => Intcontext.EE));
    end Intcontext_Set;
 
    ----------------------------------------------------------------------------
