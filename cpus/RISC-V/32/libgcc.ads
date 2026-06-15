@@ -29,6 +29,14 @@ package LibGCC
    --                                                                        --
    --========================================================================--
 
+   function MulSI3
+      (M1 : GCC.Types.USI_Type;
+       M2 : GCC.Types.USI_Type)
+      return GCC.Types.USI_Type
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__mulsi3";
+
    function DivDI3
       (N : GCC.Types.DI_Type;
        D : GCC.Types.DI_Type)

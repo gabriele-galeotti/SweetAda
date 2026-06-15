@@ -48,6 +48,7 @@ library project Cpu is
                Ada_Files := Ada_Files & (
                   "gcc.ads", "gcc-types.ads",
                   "libgcc.adb", "libgcc.ads",
+                  "libgcc-mulsi3.adb",
                   "libgcc-udivmoddi4.adb",
                   "libgcc-divdi3.adb",
                   "libgcc-moddi3.adb",

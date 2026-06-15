@@ -162,6 +162,25 @@ pragma Style_Checks (On);
    end To_mcause;
 
    ----------------------------------------------------------------------------
+   -- mie_Set_Interrupt
+   ----------------------------------------------------------------------------
+   procedure mie_Set_Interrupt
+      (mie : in mie_Type)
+      is
+   begin
+      Asm (
+           Template => ""                          & CRLF &
+                       ZICSR_ZIFENCEI_ASM          & CRLF &
+                       "        csrrs   x0,mie,%0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => mie_Type'Asm_Input ("r", mie),
+           Clobber  => "memory",
+           Volatile => True
+          );
+   end mie_Set_Interrupt;
+
+   ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
@@ -235,25 +254,6 @@ pragma Style_Checks (On);
       mstatus.MIE := Intcontext;
       mstatus_Set (mstatus);
    end Intcontext_Set;
-
-   ----------------------------------------------------------------------------
-   -- mie_Set_Interrupt
-   ----------------------------------------------------------------------------
-   procedure mie_Set_Interrupt
-      (mie : in mie_Type)
-      is
-   begin
-      Asm (
-           Template => ""                          & CRLF &
-                       ZICSR_ZIFENCEI_ASM          & CRLF &
-                       "        csrrs   x0,mie,%0" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => mie_Type'Asm_Input ("r", mie),
-           Clobber  => "memory",
-           Volatile => True
-          );
-   end mie_Set_Interrupt;
 
    ----------------------------------------------------------------------------
    -- Irq_Enable
