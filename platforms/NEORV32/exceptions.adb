@@ -20,7 +20,7 @@ with Interfaces;
 with Bits;
 with LLutils;
 with RISCV;
-with MTIME;
+with NEORV32;
 with Console;
 with BSP;
 
@@ -38,7 +38,7 @@ package body Exceptions
    use Interfaces;
    use Bits;
    use RISCV;
-   use MTIME;
+   use NEORV32;
 
    --========================================================================--
    --                                                                        --
@@ -61,7 +61,7 @@ package body Exceptions
          Console.Print_NewLine;
          Console.Print ("*** TIMER interrupt", NL => True);
          BSP.Timer_Value := @ + BSP.Timer_Constant;
-         mtimecmp_Write (BSP.Timer_Value);
+         CLINT_MTIMECMP0_Write (BSP.Timer_Value);
       else
          declare
             function To_U32 is new Ada.Unchecked_Conversion (mcause_Type, Unsigned_32);

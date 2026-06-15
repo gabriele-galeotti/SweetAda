@@ -17,8 +17,8 @@
 
 with Definitions;
 with Bits;
+with Secondary_Stack;
 with RISCV;
-with MTIME;
 with NEORV32;
 with ULX3S;
 with Exceptions;
@@ -39,7 +39,6 @@ package body BSP
    use Definitions;
    use Bits;
    use RISCV;
-   use MTIME;
    use NEORV32;
 
    --========================================================================--
@@ -82,6 +81,8 @@ package body BSP
    procedure Setup
       is
    begin
+      -------------------------------------------------------------------------
+      Secondary_Stack.Init;
       -- UART -----------------------------------------------------------------
       pragma Warnings (Off);
       ULX3S.UART.EV_PENDING := ULX3S.UART.EV_PENDING;
@@ -102,8 +103,8 @@ package body BSP
       -------------------------------------------------------------------------
       Exceptions.Init;
       -------------------------------------------------------------------------
-      Timer_Value := mtime_Read + Timer_Constant;
-      mtimecmp_Write (Timer_Value);
+      Timer_Value := CLINT_MTIME_Read + Timer_Constant;
+      CLINT_MTIMECMP0_Write (Timer_Value);
       mie_Set_Interrupt ((MTIE => True, others => <>));
       Irq_Enable;
       -------------------------------------------------------------------------

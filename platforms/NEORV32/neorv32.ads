@@ -17,6 +17,7 @@
 
 with System;
 with Interfaces;
+with Configure;
 with Bits;
 
 package NEORV32
@@ -40,6 +41,10 @@ pragma Style_Checks (Off);
    -- The NEORV32 RISC-V Processor - Datasheet
    -- The NEORV32 Community and Stephan Nolting stnolting@gmail.com version v1.11.8-r78-gb29cc309
    ----------------------------------------------------------------------------
+
+   type HART_Type is range 0 .. 1;
+   HART0 : constant HART_Type := 0;
+   HART1 : constant HART_Type := 1;
 
    ----------------------------------------------------------------------------
    -- 2.8.6. Direct Memory Access Controller (DMA)
@@ -275,6 +280,62 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
    -- 2.8.11. Core Local Interruptor (CLINT)
    ----------------------------------------------------------------------------
+
+   type CLINT_MSWI_Type is record
+      TRIGGER  : Boolean := False; -- trigger machine software interrupt for hart x when set
+      Reserved : Bits_31 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for CLINT_MSWI_Type use record
+      TRIGGER  at 0 range 0 ..  0;
+      Reserved at 0 range 1 .. 31;
+   end record;
+
+   CLINT_MSWI0_ADDRESS : constant := 16#FFF4_0000#;
+
+   CLINT_MSWI0 : aliased CLINT_MSWI_Type
+      with Address              => System'To_Address (CLINT_MSWI0_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   CLINT_MSWI1_ADDRESS : constant := 16#FFF4_0004#;
+
+   CLINT_MSWI1 : aliased CLINT_MSWI_Type
+      with Address              => System'To_Address (CLINT_MSWI1_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- MTIMECMP[0] 64-bit time compare for hart 0
+   CLINT_MTIMECMP0_ADDRESS : constant := Configure.MTIMECMP_ADDRESS;
+
+   -- MTIMECMP[1] 64-bit time compare for hart 1
+   CLINT_MTIMECMP1_ADDRESS : constant := Configure.MTIMECMP_ADDRESS + 4;
+
+   -- MTIME 64-bit global machine timer
+   CLINT_MTIME_ADDRESS : constant := Configure.MTIME_ADDRESS;
+
+   function CLINT_MTIMECMP0_Read
+      return Unsigned_64
+      with Inline => True;
+
+   procedure CLINT_MTIMECMP0_Write
+      (Value : in Unsigned_64)
+      with Inline => True;
+
+   function CLINT_MTIMECMP1_Read
+      return Unsigned_64
+      with Inline => True;
+
+   procedure CLINT_MTIMECMP1_Write
+      (Value : in Unsigned_64)
+      with Inline => True;
+
+   function CLINT_MTIME_Read
+      return Unsigned_64
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- 2.8.12. Primary Universal Asynchronous Receiver and Transmitter (UART0)

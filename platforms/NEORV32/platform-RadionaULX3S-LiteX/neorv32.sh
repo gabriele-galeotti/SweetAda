@@ -41,15 +41,18 @@ ${OBJCOPY} \
 
 KERNEL_ENTRY_POINT=$(${ELFSYMBOL} ${KERNEL_ENTRY_POINT} ${KERNEL_OUTFILE})
 
-# upload SweetAda kernel through litex_term
+# upload SweetAda kernel via litex_term
 
 LITEX_PREFIX=/opt/LiteX
 export PYTHONPATH="${LITEX_PREFIX}/litex:${PYTHONPATH}"
 USB_DEVICE=/dev/ttyUSB0
+
 CWD=$(pwd)
 cd "${LITEX_PREFIX}"/litex/litex/tools
 
-printf "%s\n" "Press the 'F1' button to restart BIOS and upload the executable."
+printf "%s\n" "Program the ULX3S board (once) with a standard BIOS (e.g., LiteX),"
+printf "%s\n" "then press the 'F1' button to restart the BIOS menu and upload"
+printf "%s\n" "the SweetAda executable."
 
 ./litex_term.py \
   --speed 115200 \
