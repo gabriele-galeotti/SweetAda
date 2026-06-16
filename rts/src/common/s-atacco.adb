@@ -24,9 +24,6 @@
 -- see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see    --
 -- <http://www.gnu.org/licenses/>.                                          --
 --                                                                          --
--- GNAT was originally developed  by the GNAT team at  New York University. --
--- Extensive contributions were provided by Ada Core Technologies Inc.      --
---                                                                          --
 ------------------------------------------------------------------------------
 
 --  This package does not require a body. We provide a dummy file containing a
