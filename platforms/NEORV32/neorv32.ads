@@ -106,9 +106,36 @@ pragma Style_Checks (Off);
       DMA_CTRL_BUSY   at 0 range 31 .. 31;
    end record;
 
+   DMA_CONF_SRC_CONSTBYTE : constant := 2#00#; -- Constant byte - transfer data as byte (8-bit); do not alter address during transfer
+   DMA_CONF_SRC_CONSTWORD : constant := 2#01#; -- Constant word - transfer data as word (32-bit); do not alter address during transfer
+   DMA_CONF_SRC_INCBYTE   : constant := 2#10#; -- Incrementing byte - transfer data as byte (8-bit); increment the source address by 1
+   DMA_CONF_SRC_INCWORD   : constant := 2#11#; -- Incrementing word - transfer data as word (32-bit); increment the source address by 4
+
+   DMA_CONF_DST_CONSTBYTE renames DMA_CONF_SRC_CONSTBYTE;
+   DMA_CONF_DST_CONSTWORD renames DMA_CONF_SRC_CONSTWORD;
+   DMA_CONF_DST_INCBYTE   renames DMA_CONF_SRC_INCBYTE;
+   DMA_CONF_DST_INCWORD   renames DMA_CONF_SRC_INCWORD;
+
+   type DMA_DESC_Type is record
+      DMA_CONF_NUM   : Bits_24 := 0;                      -- Number of elements to transfer; must be greater than zero
+      Reserved       : Bits_3  := 0;
+      DMA_CONF_BSWAP : Boolean := False;                  -- Set to swap byte order ("Endianness" conversion)
+      DMA_CONF_SRC   : Bits_2  := DMA_CONF_SRC_CONSTBYTE; -- Source data configuration
+      DMA_CONF_DST   : Bits_2  := DMA_CONF_DST_CONSTBYTE; -- Destination data configuration
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for DMA_DESC_Type use record
+      DMA_CONF_NUM   at 0 range  0 .. 23;
+      Reserved       at 0 range 24 .. 26;
+      DMA_CONF_BSWAP at 0 range 27 .. 27;
+      DMA_CONF_SRC   at 0 range 28 .. 29;
+      DMA_CONF_DST   at 0 range 30 .. 31;
+   end record;
+
    type DMA_Type is record
       CTRL : DMA_CTRL_Type with Volatile_Full_Access => True;
-      DESC : Unsigned_32   with Volatile_Full_Access => True;
+      DESC : DMA_DESC_Type with Volatile_Full_Access => True;
    end record
       with Object_Size => 2 * 32;
    for DMA_Type use record
