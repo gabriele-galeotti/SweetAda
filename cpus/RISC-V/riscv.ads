@@ -38,6 +38,31 @@ pragma Style_Checks (Off);
    subtype MXLEN_Type is RISCV_Definitions.MXLEN_Type;
 
    ----------------------------------------------------------------------------
+   -- CSRs generics
+   ----------------------------------------------------------------------------
+
+   generic
+      CSR : in String;
+      type Register_Type is private;
+   function CSR_Read
+      return Register_Type
+      with Inline => True;
+
+   generic
+      CSR : in String;
+      type Register_Type is private;
+   procedure CSR_Write
+      (Value : in Register_Type)
+      with Inline => True;
+
+   generic
+      CSR : in String;
+      type Register_Type is private;
+   procedure CSR_Set
+      (Value : in Register_Type)
+      with Inline => True;
+
+   ----------------------------------------------------------------------------
    -- 3.1.5 Hart ID Register mhartid
    ----------------------------------------------------------------------------
 

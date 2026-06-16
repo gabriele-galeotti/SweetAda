@@ -47,13 +47,6 @@ package body RISCV
    -- CSRs generics
    ----------------------------------------------------------------------------
 
-   generic
-      CSR : in String;
-      type Register_Type is private;
-   function CSR_Read
-      return Register_Type
-      with Inline => True;
-
    function CSR_Read
       return Register_Type
       is
@@ -72,13 +65,6 @@ package body RISCV
       return Result;
    end CSR_Read;
 
-   generic
-      CSR : in String;
-      type Register_Type is private;
-   procedure CSR_Write
-      (Value : in Register_Type)
-      with Inline => True;
-
    procedure CSR_Write
       (Value : in Register_Type)
       is
@@ -94,13 +80,6 @@ package body RISCV
            Volatile => True
           );
    end CSR_Write;
-
-   generic
-      CSR : in String;
-      type Register_Type is private;
-   procedure CSR_Set
-      (Value : in Register_Type)
-      with Inline => True;
 
    procedure CSR_Set
       (Value : in Register_Type)
