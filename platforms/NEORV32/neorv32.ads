@@ -19,6 +19,7 @@ with System;
 with Interfaces;
 with Configure;
 with Bits;
+with RISCV;
 
 package NEORV32
    is
@@ -42,26 +43,52 @@ pragma Style_Checks (Off);
    -- The NEORV32 Community and Stephan Nolting stnolting@gmail.com version v1.11.8-r78-gb29cc309
    ----------------------------------------------------------------------------
 
-   type HART_Type is range 0 .. 1;
+   MXLEN renames RISCV.MXLEN;
+
+   subtype MXLEN_Type is RISCV.MXLEN_Type;
+
+   type HART_Type is range 0 .. 1
+      with Size => 1;
    HART0 : constant HART_Type := 0;
    HART1 : constant HART_Type := 1;
+
+   ----------------------------------------------------------------------------
+   -- 2.5.2. NEORV32-Specific Fast Interrupt Requests
+   ----------------------------------------------------------------------------
+
+   FIRQ_Reserved : constant := 0;  -- reserved
+   FIRQ_CFS      : constant := 1;  -- Custom Functions Subsystem (CFS)
+   FIRQ_UART0    : constant := 2;  -- Primary Universal Asynchronous Receiver and Transmitter (UART0)
+   FIRQ_UART1    : constant := 3;  -- Secondary Universal Asynchronous Receiver and Transmitter (UART1)
+   FIRQ_TWD      : constant := 4;  -- Two-Wire Serial Device Controller (TWD)
+   FIRQ_TRACER   : constant := 5;  -- Execution Trace Buffer (TRACER)
+   FIRQ_SPI      : constant := 6;  -- Serial Peripheral Interface Controller (SPI)
+   FIRQ_TWI      : constant := 7;  -- Two-Wire Serial Interface Controller (TWI)
+   FIRQ_GPIO     : constant := 8;  -- General Purpose Input and Output Port (GPIO)
+   FIRQ_NEOLED   : constant := 9;  -- Smart LED Interface (NEOLED)
+   FIRQ_DMA      : constant := 10; -- Direct Memory Access Controller (DMA)
+   FIRQ_SDI      : constant := 11; -- Serial Data Interface Controller (SDI)
+   FIRQ_GPTMR    : constant := 12; -- General Purpose Timer (GPTMR)
+   FIRQ_ONEWIRE  : constant := 13; -- One-Wire Serial Interface Controller (ONEWIRE)
+   FIRQ_SLINK    : constant := 14; -- Stream Link Interface (SLINK)
+   FIRQ_TRNG     : constant := 15; -- True Random-Number Generator (TRNG)
 
    ----------------------------------------------------------------------------
    -- 2.8.6. Direct Memory Access Controller (DMA)
    ----------------------------------------------------------------------------
 
    type DMA_CTRL_Type is record
-      DMA_CTRL_EN     : Boolean; -- DMA module enable; reset module when cleared
-      DMA_CTRL_START  : Boolean; -- Start programmed DMA transfer(s)
-      Reserved1       : Bits_14;
-      DMA_CTRL_DFIFO  : Bits_4;  -- Descriptor FIFO depth, log2(IO_DMA_DSC_FIFO)
-      Reserved2       : Bits_6;
-      DMA_CTRL_ACK    : Boolean; -- Write 1 to clear DMA interrupt (also clears DMA_CTRL_ERROR and DMA_CTRL_DONE)
-      DMA_CTRL_DEMPTY : Boolean; -- Descriptor FIFO is empty
-      DMA_CTRL_DFULL  : Boolean; -- Descriptor FIFO is full
-      DMA_CTRL_ERROR  : Boolean; -- Bus access error during transfer or incomplete descriptor data
-      DMA_CTRL_DONE   : Boolean; -- All transfers executed
-      DMA_CTRL_BUSY   : Boolean; -- DMA transfer(s) in progress
+      DMA_CTRL_EN     : Boolean := False; -- DMA module enable; reset module when cleared
+      DMA_CTRL_START  : Boolean := False; -- Start programmed DMA transfer(s)
+      Reserved1       : Bits_14 := 0;
+      DMA_CTRL_DFIFO  : Bits_4  := 0;     -- Descriptor FIFO depth, log2(IO_DMA_DSC_FIFO)
+      Reserved2       : Bits_6  := 0;
+      DMA_CTRL_ACK    : Boolean := False; -- Write 1 to clear DMA interrupt (also clears DMA_CTRL_ERROR and DMA_CTRL_DONE)
+      DMA_CTRL_DEMPTY : Boolean := False; -- Descriptor FIFO is empty
+      DMA_CTRL_DFULL  : Boolean := False; -- Descriptor FIFO is full
+      DMA_CTRL_ERROR  : Boolean := False; -- Bus access error during transfer or incomplete descriptor data
+      DMA_CTRL_DONE   : Boolean := False; -- All transfers executed
+      DMA_CTRL_BUSY   : Boolean := False; -- DMA transfer(s) in progress
    end record
       with Bit_Order   => Low_Order_First,
            Object_Size => 32;
@@ -352,27 +379,27 @@ pragma Style_Checks (Off);
    UART_CTRL_PRSC_DIV4096 : constant := 2#111#; -- Resulting clock_prescaler = 4096
 
    type UART_CTRL_Type is record
-      UART_CTRL_EN            : Boolean; -- UART enable
-      UART_CTRL_SIM_MODE      : Boolean; -- enable simulation mode
-      UART_CTRL_HWFC_EN       : Boolean; -- enable RTS/CTS hardware flow-control
-      UART_CTRL_PRSC          : Bits_3;  -- Baud rate clock prescaler select
-      UART_CTRL_BAUD          : Bits_10; -- 12-bit Baud value configuration value
-      UART_CTRL_RX_NEMPTY     : Boolean; -- RX FIFO not empty
-      UART_CTRL_RX_HALF       : Boolean; -- RX FIFO at least half-full
-      UART_CTRL_RX_FULL       : Boolean; -- RX FIFO full
-      UART_CTRL_TX_EMPTY      : Boolean; -- TX FIFO empty
-      UART_CTRL_TX_NHALF      : Boolean; -- TX FIFO not at least half-full
-      UART_CTRL_TX_NFULL      : Boolean; -- TX FIFO not full
-      UART_CTRL_IRQ_RX_NEMPTY : Boolean; -- fire RX-IRQ if RX FIFO not empty
-      UART_CTRL_IRQ_RX_HALF   : Boolean; -- fire RX-IRQ if RX FIFO at least half full
-      UART_CTRL_IRQ_RX_FULL   : Boolean; -- fire RX-IRQ if RX FIFO full
-      UART_CTRL_IRQ_TX_EMPTY  : Boolean; -- fire TX-IRQ if TX FIFO empty
-      UART_CTRL_IRQ_TX_NHALF  : Boolean; -- fire TX-IRQ if TX FIFO not at least half full
-      UART_CTRL_IRQ_TX_NFULL  : Boolean; -- fire TX-IRQ if TX not full
-      UART_CTRL_RX_CLR        : Boolean; -- Clear RX FIFO, flag auto-clears
-      UART_CTRL_TX_CLR        : Boolean; -- Clear TX FIFO, flag auto-clears
-      UART_CTRL_RX_OVER       : Boolean; -- RX FIFO overflow; cleared by disabling the module
-      UART_CTRL_TX_BUSY       : Boolean; -- TX busy or TX FIFO not empty
+      UART_CTRL_EN            : Boolean := False;               -- UART enable
+      UART_CTRL_SIM_MODE      : Boolean := False;               -- enable simulation mode
+      UART_CTRL_HWFC_EN       : Boolean := False;               -- enable RTS/CTS hardware flow-control
+      UART_CTRL_PRSC          : Bits_3  := UART_CTRL_PRSC_DIV2; -- Baud rate clock prescaler select
+      UART_CTRL_BAUD          : Bits_10 := 0;                   -- 12-bit Baud value configuration value
+      UART_CTRL_RX_NEMPTY     : Boolean := False;               -- RX FIFO not empty
+      UART_CTRL_RX_HALF       : Boolean := False;               -- RX FIFO at least half-full
+      UART_CTRL_RX_FULL       : Boolean := False;               -- RX FIFO full
+      UART_CTRL_TX_EMPTY      : Boolean := False;               -- TX FIFO empty
+      UART_CTRL_TX_NHALF      : Boolean := False;               -- TX FIFO not at least half-full
+      UART_CTRL_TX_NFULL      : Boolean := False;               -- TX FIFO not full
+      UART_CTRL_IRQ_RX_NEMPTY : Boolean := False;               -- fire RX-IRQ if RX FIFO not empty
+      UART_CTRL_IRQ_RX_HALF   : Boolean := False;               -- fire RX-IRQ if RX FIFO at least half full
+      UART_CTRL_IRQ_RX_FULL   : Boolean := False;               -- fire RX-IRQ if RX FIFO full
+      UART_CTRL_IRQ_TX_EMPTY  : Boolean := False;               -- fire TX-IRQ if TX FIFO empty
+      UART_CTRL_IRQ_TX_NHALF  : Boolean := False;               -- fire TX-IRQ if TX FIFO not at least half full
+      UART_CTRL_IRQ_TX_NFULL  : Boolean := False;               -- fire TX-IRQ if TX not full
+      UART_CTRL_RX_CLR        : Boolean := False;               -- Clear RX FIFO, flag auto-clears
+      UART_CTRL_TX_CLR        : Boolean := False;               -- Clear TX FIFO, flag auto-clears
+      UART_CTRL_RX_OVER       : Boolean := False;               -- RX FIFO overflow; cleared by disabling the module
+      UART_CTRL_TX_BUSY       : Boolean := False;               -- TX busy or TX FIFO not empty
    end record
       with Bit_Order   => Low_Order_First,
            Object_Size => 32;
@@ -451,20 +478,20 @@ pragma Style_Checks (Off);
    SPI_CTRL_CPOL_LOW  : constant := 0; -- clock inactive is logic LOW
    SPI_CTRL_CPOL_HIGH : constant := 1; -- clock inactive is logic HIGH
 
-   SPI_CTRL_PRSC_2    : constant := 2#000#; -- Resulting clock_prescaler = 2
-   SPI_CTRL_PRSC_4    : constant := 2#001#; -- Resulting clock_prescaler = 4
-   SPI_CTRL_PRSC_8    : constant := 2#010#; -- Resulting clock_prescaler = 8
-   SPI_CTRL_PRSC_64   : constant := 2#011#; -- Resulting clock_prescaler = 64
-   SPI_CTRL_PRSC_128  : constant := 2#100#; -- Resulting clock_prescaler = 128
-   SPI_CTRL_PRSC_1024 : constant := 2#101#; -- Resulting clock_prescaler = 1024
-   SPI_CTRL_PRSC_2048 : constant := 2#110#; -- Resulting clock_prescaler = 2048
-   SPI_CTRL_PRSC_4096 : constant := 2#111#; -- Resulting clock_prescaler = 4096
+   SPI_CTRL_PRSC_DIV2    : constant := 2#000#; -- Resulting clock_prescaler = 2
+   SPI_CTRL_PRSC_DIV4    : constant := 2#001#; -- Resulting clock_prescaler = 4
+   SPI_CTRL_PRSC_DIV8    : constant := 2#010#; -- Resulting clock_prescaler = 8
+   SPI_CTRL_PRSC_DIV64   : constant := 2#011#; -- Resulting clock_prescaler = 64
+   SPI_CTRL_PRSC_DIV128  : constant := 2#100#; -- Resulting clock_prescaler = 128
+   SPI_CTRL_PRSC_DIV1024 : constant := 2#101#; -- Resulting clock_prescaler = 1024
+   SPI_CTRL_PRSC_DIV2048 : constant := 2#110#; -- Resulting clock_prescaler = 2048
+   SPI_CTRL_PRSC_DIV4096 : constant := 2#111#; -- Resulting clock_prescaler = 4096
 
    type SPI_CTRL_Type is record
       SPI_CTRL_EN       : Boolean := False;              -- SPI module enable
       SPI_CTRL_CPHA     : Bits_1  := SPI_CTRL_CPHA_LEAD; -- clock phase
       SPI_CTRL_CPOL     : Bits_1  := SPI_CTRL_CPOL_LOW;  -- clock polarity
-      SPI_CTRL_PRSC     : Bits_3  := SPI_CTRL_PRSC_2;    -- 3-bit clock prescaler select
+      SPI_CTRL_PRSC     : Bits_3  := SPI_CTRL_PRSC_DIV2; -- 3-bit clock prescaler select
       SPI_CTRL_CDIV     : Bits_4  := 0;                  -- 4-bit clock divider for fine-tuning
       Reserved1         : Bits_6  := 0;
       SPI_CTRL_RX_AVAIL : Boolean := False;              -- RX FIFO data available (RX FIFO not empty)
@@ -623,28 +650,28 @@ pragma Style_Checks (Off);
    -- 2.8.16. Two-Wire Serial Interface Controller (TWI)
    ----------------------------------------------------------------------------
 
-   TWI_CTRL_PRSC_2    : constant := 2#000#; -- Resulting clock_prescaler = 2
-   TWI_CTRL_PRSC_4    : constant := 2#001#; -- Resulting clock_prescaler = 4
-   TWI_CTRL_PRSC_8    : constant := 2#010#; -- Resulting clock_prescaler = 8
-   TWI_CTRL_PRSC_64   : constant := 2#011#; -- Resulting clock_prescaler = 64
-   TWI_CTRL_PRSC_128  : constant := 2#100#; -- Resulting clock_prescaler = 128
-   TWI_CTRL_PRSC_1024 : constant := 2#101#; -- Resulting clock_prescaler = 1024
-   TWI_CTRL_PRSC_2048 : constant := 2#110#; -- Resulting clock_prescaler = 2048
-   TWI_CTRL_PRSC_4096 : constant := 2#111#; -- Resulting clock_prescaler = 4096
+   TWI_CTRL_PRSC_DIV2    : constant := 2#000#; -- Resulting clock_prescaler = 2
+   TWI_CTRL_PRSC_DIV4    : constant := 2#001#; -- Resulting clock_prescaler = 4
+   TWI_CTRL_PRSC_DIV8    : constant := 2#010#; -- Resulting clock_prescaler = 8
+   TWI_CTRL_PRSC_DIV64   : constant := 2#011#; -- Resulting clock_prescaler = 64
+   TWI_CTRL_PRSC_DIV128  : constant := 2#100#; -- Resulting clock_prescaler = 128
+   TWI_CTRL_PRSC_DIV1024 : constant := 2#101#; -- Resulting clock_prescaler = 1024
+   TWI_CTRL_PRSC_DIV2048 : constant := 2#110#; -- Resulting clock_prescaler = 2048
+   TWI_CTRL_PRSC_DIV4096 : constant := 2#111#; -- Resulting clock_prescaler = 4096
 
    type TWI_CTRL_Type is record
-      TWI_CTRL_EN        : Boolean := False;           -- TWI enable, reset if cleared
-      TWI_CTRL_PRSC      : Bits_3  := TWI_CTRL_PRSC_2; -- 3-bit clock prescaler select
-      TWI_CTRL_CDIV      : Bits_4  := 0;               -- 4-bit clock divider
-      TWI_CTRL_CLKSTR    : Boolean := False;           -- Enable (allow) clock stretching
+      TWI_CTRL_EN        : Boolean := False;              -- TWI enable, reset if cleared
+      TWI_CTRL_PRSC      : Bits_3  := TWI_CTRL_PRSC_DIV2; -- 3-bit clock prescaler select
+      TWI_CTRL_CDIV      : Bits_4  := 0;                  -- 4-bit clock divider
+      TWI_CTRL_CLKSTR    : Boolean := False;              -- Enable (allow) clock stretching
       Reserved1          : Bits_6  := 0;
-      TWI_CTRL_FIFO      : Bits_4  := 0;               -- FIFO depth; log2(IO_TWI_FIFO)
+      TWI_CTRL_FIFO      : Bits_4  := 0;                  -- FIFO depth; log2(IO_TWI_FIFO)
       Reserved2          : Bits_8  := 0;
-      TWI_CTRL_SENSE_SCL : Boolean := False;           -- current state of the SCL bus line
-      TWI_CTRL_SENSE_SDA : Boolean := False;           -- current state of the SDA bus line
-      TWI_CTRL_TX_FULL   : Boolean := False;           -- set if the TWI bus is claimed by any controller
-      TWI_CTRL_RX_AVAIL  : Boolean := False;           -- RX FIFO data available
-      TWI_CTRL_BUSY      : Boolean := False;           -- TWI bus engine busy or TX FIFO not empty
+      TWI_CTRL_SENSE_SCL : Boolean := False;              -- current state of the SCL bus line
+      TWI_CTRL_SENSE_SDA : Boolean := False;              -- current state of the SDA bus line
+      TWI_CTRL_TX_FULL   : Boolean := False;              -- set if the TWI bus is claimed by any controller
+      TWI_CTRL_RX_AVAIL  : Boolean := False;              -- RX FIFO data available
+      TWI_CTRL_BUSY      : Boolean := False;              -- TWI bus engine busy or TX FIFO not empty
    end record
       with Bit_Order   => Low_Order_First,
            Object_Size => 32;
@@ -874,17 +901,17 @@ pragma Style_Checks (Off);
       with Component_Size => 1,
            Object_Size    => 32;
 
-   CLKPRSC_2    : constant := 2#000#; -- Resulting clock_prescaler = 2
-   CLKPRSC_4    : constant := 2#001#; -- Resulting clock_prescaler = 4
-   CLKPRSC_8    : constant := 2#010#; -- Resulting clock_prescaler = 8
-   CLKPRSC_64   : constant := 2#011#; -- Resulting clock_prescaler = 64
-   CLKPRSC_128  : constant := 2#100#; -- Resulting clock_prescaler = 128
-   CLKPRSC_1024 : constant := 2#101#; -- Resulting clock_prescaler = 1024
-   CLKPRSC_2048 : constant := 2#110#; -- Resulting clock_prescaler = 2048
-   CLKPRSC_4096 : constant := 2#111#; -- Resulting clock_prescaler = 4096
+   CLKPRSC_DIV2    : constant := 2#000#; -- Resulting clock_prescaler = 2
+   CLKPRSC_DIV4    : constant := 2#001#; -- Resulting clock_prescaler = 4
+   CLKPRSC_DIV8    : constant := 2#010#; -- Resulting clock_prescaler = 8
+   CLKPRSC_DIV64   : constant := 2#011#; -- Resulting clock_prescaler = 64
+   CLKPRSC_DIV128  : constant := 2#100#; -- Resulting clock_prescaler = 128
+   CLKPRSC_DIV1024 : constant := 2#101#; -- Resulting clock_prescaler = 1024
+   CLKPRSC_DIV2048 : constant := 2#110#; -- Resulting clock_prescaler = 2048
+   CLKPRSC_DIV4096 : constant := 2#111#; -- Resulting clock_prescaler = 4096
 
    type PWM_CLKPRSC_Type is record
-      CLKPRSC : Bits_3;
+      CLKPRSC : Bits_3  := CLKPRSC_DIV2;
       Unused  : Bits_29 := 0;
    end record
       with Bit_Order   => Low_Order_First,
@@ -1002,14 +1029,54 @@ pragma Style_Checks (Off);
    -- 2.8.22. Smart LED Interface (NEOLED)
    ----------------------------------------------------------------------------
 
-   type NEOLED_Type is record
-      CTRL : Unsigned_32 with Volatile_Full_Access => True;
-      DATA : Unsigned_32 with Volatile_Full_Access => True;
+   NEOLED_CTRL_PRSC_DIV2    : constant := 2#000#; -- Resulting clock_prescaler = 2
+   NEOLED_CTRL_PRSC_DIV4    : constant := 2#001#; -- Resulting clock_prescaler = 4
+   NEOLED_CTRL_PRSC_DIV8    : constant := 2#010#; -- Resulting clock_prescaler = 8
+   NEOLED_CTRL_PRSC_DIV64   : constant := 2#011#; -- Resulting clock_prescaler = 64
+   NEOLED_CTRL_PRSC_DIV128  : constant := 2#100#; -- Resulting clock_prescaler = 128
+   NEOLED_CTRL_PRSC_DIV1024 : constant := 2#101#; -- Resulting clock_prescaler = 1024
+   NEOLED_CTRL_PRSC_DIV2048 : constant := 2#110#; -- Resulting clock_prescaler = 2048
+   NEOLED_CTRL_PRSC_DIV4096 : constant := 2#111#; -- Resulting clock_prescaler = 4096
+
+   type NEOLED_CTRL_Type is record
+      NEOLED_CTRL_EN       : Boolean := False;                 -- module enable
+      NEOLED_CTRL_PRSC     : Bits_3  := NEOLED_CTRL_PRSC_DIV2; -- clock prescaler select
+      NEOLED_CTRL_T_TOT    : Bits_5  := 0;                     -- pre-scaled clock ticks per total single-bit period (Ttotal)
+      NEOLED_CTRL_T_0H     : Bits_5  := 0;                     -- pre-scaled clock ticks per high-time for sending a zero-bit (T0H)
+      NEOLED_CTRL_T_1H     : Bits_5  := 0;                     -- pre-scaled clock ticks per high-time for sending a one-bit (T1H)
+      Reserved             : Bits_6  := 0;
+      NEOLED_CTRL_FIFO     : Bits_4  := 0;                     -- log(FIFO size)
+      NEOLED_CTRL_TX_EMPTY : Boolean := False;                 -- TX FIFO is empty
+      NEOLED_CTRL_TX_FULL  : Boolean := False;                 -- TX FIFO is full
+      NEOLED_CTRL_TX_BUSY  : Boolean := False;                 -- TX serial engine is busy when set
    end record
-      with Object_Size => 2 * 32;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for NEOLED_CTRL_Type use record
+      NEOLED_CTRL_EN       at 0 range  0 ..  0;
+      NEOLED_CTRL_PRSC     at 0 range  1 ..  3;
+      NEOLED_CTRL_T_TOT    at 0 range  4 ..  8;
+      NEOLED_CTRL_T_0H     at 0 range  9 .. 13;
+      NEOLED_CTRL_T_1H     at 0 range 14 .. 18;
+      Reserved             at 0 range 19 .. 24;
+      NEOLED_CTRL_FIFO     at 0 range 25 .. 28;
+      NEOLED_CTRL_TX_EMPTY at 0 range 29 .. 29;
+      NEOLED_CTRL_TX_FULL  at 0 range 30 .. 30;
+      NEOLED_CTRL_TX_BUSY  at 0 range 31 .. 31;
+   end record;
+
+   type NEOLED_Type is record
+      CTRL   : NEOLED_CTRL_Type with Volatile_Full_Access => True;
+      DATA24 : Bits_32          with Volatile_Full_Access => True;
+      DATA32 : Bits_32          with Volatile_Full_Access => True;
+      STROBE : Bits_32          with Volatile_Full_Access => True;
+   end record
+      with Object_Size => 4 * 32;
    for NEOLED_Type use record
-      CTRL at 0 range 0 .. 31;
-      DATA at 4 range 0 .. 31;
+      CTRL   at 16#0# range 0 .. 31;
+      DATA24 at 16#4# range 0 .. 31;
+      DATA32 at 16#8# range 0 .. 31;
+      STROBE at 16#C# range 0 .. 31;
    end record;
 
    NEOLED_BASEADDRESS : constant := 16#FFFD_0000#;
@@ -1038,17 +1105,17 @@ pragma Style_Checks (Off);
       MODE   at 2 range 0 .. 15;
    end record;
 
-   PRSC_2    : constant := 2#000#; -- Resulting prescaler = 2
-   PRSC_4    : constant := 2#001#; -- Resulting prescaler = 4
-   PRSC_8    : constant := 2#010#; -- Resulting prescaler = 8
-   PRSC_64   : constant := 2#011#; -- Resulting prescaler = 64
-   PRSC_128  : constant := 2#100#; -- Resulting prescaler = 128
-   PRSC_1024 : constant := 2#101#; -- Resulting prescaler = 1024
-   PRSC_2048 : constant := 2#110#; -- Resulting prescaler = 2048
-   PRSC_4096 : constant := 2#111#; -- Resulting prescaler = 4096
+   PRSC_DIV2    : constant := 2#000#; -- Resulting prescaler = 2
+   PRSC_DIV4    : constant := 2#001#; -- Resulting prescaler = 4
+   PRSC_DIV8    : constant := 2#010#; -- Resulting prescaler = 8
+   PRSC_DIV64   : constant := 2#011#; -- Resulting prescaler = 64
+   PRSC_DIV128  : constant := 2#100#; -- Resulting prescaler = 128
+   PRSC_DIV1024 : constant := 2#101#; -- Resulting prescaler = 1024
+   PRSC_DIV2048 : constant := 2#110#; -- Resulting prescaler = 2048
+   PRSC_DIV4096 : constant := 2#111#; -- Resulting prescaler = 4096
 
    type CSR1_PRSC_Type is record
-      PRSC   : Bits_3;       -- Global clock prescaler select.
+      PRSC   : Bits_3  := PRSC_DIV2; -- Global clock prescaler select.
       Unused : Bits_13 := 0;
    end record
       with Bit_Order   => Low_Order_First,
@@ -1107,11 +1174,58 @@ pragma Style_Checks (Off);
    -- 2.8.24. Execution Trace Buffer (TRACER)
    ----------------------------------------------------------------------------
 
+   type TRACER_CTRL_Type is record
+      TRACER_CTRL_EN      : Boolean   := False; -- TRACER enable, reset module when 0
+      TRACER_CTRL_HSEL    : HART_Type := HART0; -- Hart select for tracing (0 = CPU0, 1 = CPU1)
+      TRACER_CTRL_START   : Boolean   := False; -- Start tracing, flag always reads as zero
+      TRACER_CTRL_STOP    : Boolean   := False; -- Manually stop tracing, flag always reads as zero
+      TRACER_CTRL_RUN     : Boolean   := False; -- Tracing in progress when set
+      TRACER_CTRL_AVAIL   : Boolean   := False; -- Trace data available when set
+      TRACER_CTRL_IRQ_CLR : Boolean   := False; -- Clear pending interrupt when writing 1, flag always reads as zero
+      TRACER_CTRL_TBM     : Bits_4    := 0;     -- log2(IO_TRACER_BUFFER): trace buffer depth
+      Reserved            : Bits_21   := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for TRACER_CTRL_Type use record
+      TRACER_CTRL_EN      at 0 range  0 ..  0;
+      TRACER_CTRL_HSEL    at 0 range  1 ..  1;
+      TRACER_CTRL_START   at 0 range  2 ..  2;
+      TRACER_CTRL_STOP    at 0 range  3 ..  3;
+      TRACER_CTRL_RUN     at 0 range  4 ..  4;
+      TRACER_CTRL_AVAIL   at 0 range  5 ..  5;
+      TRACER_CTRL_IRQ_CLR at 0 range  6 ..  6;
+      TRACER_CTRL_TBM     at 0 range  7 .. 10;
+      Reserved            at 0 range 11 .. 31;
+   end record;
+
+   type TRACER_DELTA_SRC_Type is record
+      INSTR_1ST      : Boolean; -- 1 = very first instruction delta in current trace; 0 = any further instruction delta
+      BRANCH_ADDRESS : Bits_31; -- Branch source address, set to -1 to disable automatic stopping
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for TRACER_DELTA_SRC_Type use record
+      INSTR_1ST      at 0 range 0 ..  0;
+      BRANCH_ADDRESS at 0 range 1 .. 31;
+   end record;
+
+   type TRACER_DELTA_DST_Type is record
+      TRAP_ENTRY     : Boolean; -- branch due trap entry (interrupt or synchronous exception); 0 = branch due to jump/call/branch instruction
+      BRANCH_ADDRESS : Bits_31; -- Branch destination address
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for TRACER_DELTA_DST_Type use record
+      TRAP_ENTRY     at 0 range 0 ..  0;
+      BRANCH_ADDRESS at 0 range 1 .. 31;
+   end record;
+
    type TRACER_Type is record
-      CTRL      : Unsigned_32 with Volatile_Full_Access => True;
-      STOP_ADDR : Unsigned_32 with Volatile_Full_Access => True;
-      DELTA_SRC : Unsigned_32 with Volatile_Full_Access => True;
-      DELTA_DST : Unsigned_32 with Volatile_Full_Access => True;
+      CTRL      : TRACER_CTRL_Type      with Volatile_Full_Access => True;
+      STOP_ADDR : Unsigned_32           with Volatile_Full_Access => True;
+      DELTA_SRC : TRACER_DELTA_SRC_Type with Volatile_Full_Access => True;
+      DELTA_DST : TRACER_DELTA_DST_Type with Volatile_Full_Access => True;
    end record
       with Object_Size => 4 * 32;
    for TRACER_Type use record
@@ -1275,6 +1389,71 @@ pragma Style_Checks (Off);
            Volatile   => True,
            Import     => True,
            Convention => Ada;
+
+   ----------------------------------------------------------------------------
+   -- 3.7. Control and Status Registers (CSRs)
+   ----------------------------------------------------------------------------
+
+   -- mie Machine interrupt-enable register
+
+   type mie_Type is record
+      Reserved1 : Bits_3    := 0;
+      MSIE      : Boolean;        -- Machine software interrupt enable (from Core-Local Interruptor (CLINT))
+      Reserved2 : Bits_3    := 0;
+      MTIE      : Boolean;        -- Machine timer interrupt enable (from Core-Local Interruptor (CLINT))
+      Reserved3 : Bits_3    := 0;
+      MEIE      : Boolean;        -- Machine external interrupt enable
+      Reserved4 : Bits_4    := 0;
+      FIRQ      : Bitmap_16;      -- Fast interrupt channel 15..0 enable
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for mie_Type use record
+      Reserved1 at 0 range  0 ..  2;
+      MSIE      at 0 range  3 ..  3;
+      Reserved2 at 0 range  4 ..  6;
+      MTIE      at 0 range  7 ..  7;
+      Reserved3 at 0 range  8 .. 10;
+      MEIE      at 0 range 11 .. 11;
+      Reserved4 at 0 range 12 .. 15;
+      FIRQ      at 0 range 16 .. 31;
+   end record;
+
+   function mie_Read
+      return mie_Type
+      with Inline => True;
+   procedure mie_Write
+      (mie : in mie_Type)
+      with Inline => True;
+
+   -- mip Machine interrupt pending
+
+   type mip_Type is record
+      Reserved1 : Bits_3    := 0;
+      MSIP      : Boolean;        -- Machine software interrupt pending, triggered by msi_i top port (see CPU Top Entity - Signals); cleared by source-specific mechanism
+      Reserved2 : Bits_3    := 0;
+      MTIP      : Boolean;        -- Machine timer interrupt pending, triggered by mei_i top port (see CPU Top Entity - Signals) or by the processor-internal Core-Local Interruptor (CLINT); cleared by source-specific mechanism
+      Reserved3 : Bits_3    := 0;
+      MEIP      : Boolean;        -- Machine external interrupt pending, triggered by mti_i top port (see CPU Top Entity - Signals) or by the processor-internal Core-Local Interruptor (CLINT); cleared by source-specific mechanism
+      Reserved4 : Bits_4    := 0;
+      FIRQ      : Bitmap_16;      -- Fast interrupt channel 15..0 pending, see NEORV32-Specific Fast Interrupt Requests; cleared by source-specific mechanism
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for mip_Type use record
+      Reserved1 at 0 range  0 ..  2;
+      MSIP      at 0 range  3 ..  3;
+      Reserved2 at 0 range  4 ..  6;
+      MTIP      at 0 range  7 ..  7;
+      Reserved3 at 0 range  8 .. 10;
+      MEIP      at 0 range 11 .. 11;
+      Reserved4 at 0 range 12 .. 15;
+      FIRQ      at 0 range 16 .. 31;
+   end record;
+
+   function mip_Read
+      return mip_Type
+      with Inline => True;
 
 pragma Style_Checks (On);
 

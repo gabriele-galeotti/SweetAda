@@ -15,8 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with RISCV_Definitions;
-
 package body NEORV32
    is
 
@@ -60,7 +58,7 @@ package body NEORV32
          when HART1 => Register_Address := Hart_Address_1;
       end case;
       declare
-         mtime_mmap : aliased RISCV_Definitions.mtime_Type
+         mtime_mmap : aliased RISCV.mtime_Type
             with Address    => Register_Address,
                  Import     => True,
                  Convention => Ada;
@@ -92,7 +90,7 @@ package body NEORV32
          when HART1 => Register_Address := Hart_Address_1;
       end case;
       declare
-         mtimecmp_mmap : aliased RISCV_Definitions.mtime_Type
+         mtimecmp_mmap : aliased RISCV.mtime_Type
             with Address    => Register_Address,
                  Import     => True,
                  Convention => Ada;
@@ -149,7 +147,7 @@ package body NEORV32
    function CLINT_MTIME_Read
       return Unsigned_64
       is
-      mtime_mmap : aliased RISCV_Definitions.mtime_Type
+      mtime_mmap : aliased RISCV.mtime_Type
          with Address    => System'To_Address (CLINT_MTIME_ADDRESS),
               Import     => True,
               Convention => Ada;
@@ -175,5 +173,38 @@ package body NEORV32
    begin
       return CS or (if Enable then 2#1000# else 0);
    end SPI_CS;
+
+   ----------------------------------------------------------------------------
+   -- mie_Read
+   ----------------------------------------------------------------------------
+   function mie_Read
+      return mie_Type
+      is
+      function CSRR is new RISCV.CSR_Read ("mie", mie_Type);
+   begin
+      return CSRR;
+   end mie_Read;
+
+   ----------------------------------------------------------------------------
+   -- mie_Write
+   ----------------------------------------------------------------------------
+   procedure mie_Write
+      (mie : in mie_Type)
+      is
+      procedure CSRW is new RISCV.CSR_Write ("mie", mie_Type);
+   begin
+      CSRW (mie);
+   end mie_Write;
+
+   ----------------------------------------------------------------------------
+   -- mip_Read
+   ----------------------------------------------------------------------------
+   function mip_Read
+      return mip_Type
+      is
+      function CSRR is new RISCV.CSR_Read ("mip", mip_Type);
+   begin
+      return CSRR;
+   end mip_Read;
 
 end NEORV32;
