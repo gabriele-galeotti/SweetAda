@@ -62,8 +62,8 @@ pragma Style_Checks (Off);
       RSIE     : Boolean;      -- RSIE is the register set interrupt-enable bit.
       Reserved : Bits_8  := 0;
    end record
-      with Bit_Order   => Low_Order_First,
-           Object_Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for status_Type use record
       PIE      at 0 range  0 ..  0;
       U        at 0 range  1 ..  1;
@@ -157,8 +157,8 @@ pragma Style_Checks (Off);
       Reserved2 : Bits_24;
       ECCFTL    : Boolean; -- The Nios II processor writes to ECCFTL when it detects a potentially fatal ECC error.
    end record
-      with Bit_Order   => Low_Order_First,
-           Object_Size => 32;
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
    for exception_Control_Type use record
       Reserved1 at 0 range  0 ..  1;
       Cause     at 0 range  2 ..  6;

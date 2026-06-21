@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System.Machine_Code;
 with Definitions;
 
@@ -286,11 +288,8 @@ package body NiosII
    procedure PIE_Set
       (PIE : in Boolean)
       is
-      status : status_Type;
    begin
-      status := status_Read;
-      status.PIE := PIE;
-      status_Write (status);
+      status_Write ((status_Read with delta PIE => PIE));
    end PIE_Set;
 
    ----------------------------------------------------------------------------
