@@ -18,7 +18,6 @@
 with Definitions;
 with Bits;
 with Console;
-with CPU;
 with DE10Lite;
 
 package body BSP

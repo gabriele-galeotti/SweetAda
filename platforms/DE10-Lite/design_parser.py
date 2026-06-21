@@ -64,6 +64,7 @@ def errprintf(format, *args):
 
 if len(sys.argv) < 4:
     errprintf('%s: *** Error: wrong number of arguments.\n', SCRIPT_FILENAME)
+    printf('Usage: %s <QSYS_design> <Ada_package> <module> ...\n', SCRIPT_FILENAME)
     exit(1)
 
 qsys_filename = sys.argv[1]
@@ -102,26 +103,21 @@ for e in end_list:
         exit(1)
 
 ads_filename = package_name.lower() + '.ads'
+indent = '   '
 
 fdout = open(ads_filename, 'w')
 sys.stdout = fdout
-
-indent = '   '
-
 print('')
 print('package {0:s}'.format(package_name))
 print(indent + 'with Pure => True')
 print(indent + 'is')
 print('')
-
 for i in items:
     padstring = ' ' * (max_name_length - len(i['name']))
     print(indent + '{0:s}_ADDRESS {1:s}: constant := 16#{2:s}#;'.format(i['name'], padstring, i['address']))
 if len(items) > 0:
     print('')
-
 print('end {0:s};'.format(package_name))
-
 fdout.close()
 
 exit(0)
