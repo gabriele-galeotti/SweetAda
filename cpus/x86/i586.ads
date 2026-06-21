@@ -43,18 +43,28 @@ package i586
 
    subtype CR4_Type is i486.CR4_Type;
 
-   function CR4_Read return CR4_Type         renames i486.CR4_Read;
-   procedure CR4_Write (Value : in CR4_Type) renames i486.CR4_Write;
+   function CR4_Read
+      return CR4_Type
+      renames i486.CR4_Read;
+   procedure CR4_Write
+      (Value : in CR4_Type)
+      renames i486.CR4_Write;
 
-   function CPUID_Enabled return Boolean renames i486.CPUID_Enabled;
+   function CPUID_Enabled
+      return Boolean
+      renames i486.CPUID_Enabled;
 
    subtype CPUID_VendorID_String_Type is i486.CPUID_VendorID_String_Type;
 
-   function CPU_VendorID_Read return CPUID_VendorID_String_Type renames i486.CPU_VendorID_Read;
+   function CPU_VendorID_Read
+      return CPUID_VendorID_String_Type
+      renames i486.CPU_VendorID_Read;
 
    subtype CPU_Features_Type is i486.CPU_Features_Type;
 
-   function CPU_Features_Read return CPU_Features_Type renames i486.CPU_Features_Read;
+   function CPU_Features_Read
+      return CPU_Features_Type
+      renames i486.CPU_Features_Read;
 
    ----------------------------------------------------------------------------
    -- Page directory (4M)
