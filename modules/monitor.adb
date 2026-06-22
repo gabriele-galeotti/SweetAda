@@ -132,6 +132,7 @@ package body Monitor
       is
    begin
       Console.Print (Banner, NL => True);
+      Console.Print ("type 'help' for available commands", NL => True);
       loop
          Console.Print ("# ");
          Getline;
