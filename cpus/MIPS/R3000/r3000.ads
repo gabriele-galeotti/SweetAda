@@ -153,8 +153,7 @@ pragma Style_Checks (Off);
    -- Interrupts
    ----------------------------------------------------------------------------
 
-   subtype Intcontext_Type is Unsigned_32;
-   subtype Irq_Id_Type is Natural;
+   subtype Intcontext_Type is SR_Type;
 
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)

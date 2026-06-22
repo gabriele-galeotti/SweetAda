@@ -45,7 +45,7 @@ package CPU
    ----------------------------------------------------------------------------
 
    subtype Intcontext_Type is MIPS.Intcontext_Type;
-   subtype Irq_Id_Type     is MIPS.Irq_Id_Type;
+   subtype Irq_Id_Type is Natural;
 
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)

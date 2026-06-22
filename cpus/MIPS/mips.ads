@@ -262,6 +262,8 @@ pragma Style_Checks (Off);
       with Inline => True;
    procedure BREAK
       with Inline => True;
+   procedure SYNC
+      with Inline => True;
    procedure Asm_Call
       (Target_Address : in Address)
       with Inline => True;
@@ -270,9 +272,10 @@ pragma Style_Checks (Off);
    -- Exceptions and interrupts
    ----------------------------------------------------------------------------
 
-   subtype Intcontext_Type is Natural;
-   subtype Irq_Id_Type is Natural;
-   subtype Irq_Level_Type is Unsigned_16 range 0 .. 63;
+   subtype Intcontext_Type is SR_Type;
+
+   -- subtype Irq_Level_Type is Unsigned_16 range 0 .. 63;
+   subtype Irq_Level_Type is Bits_8;
 
    procedure Irq_Level_Set
       (Irq_Level : in Irq_Level_Type)

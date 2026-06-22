@@ -17,6 +17,7 @@
 
 with System.Machine_Code;
 with Ada.Unchecked_Conversion;
+with GCC.Defines;
 
 package body MIPS
    is
@@ -222,6 +223,25 @@ package body MIPS
    end BREAK;
 
    ----------------------------------------------------------------------------
+   -- SYNC
+   ----------------------------------------------------------------------------
+   procedure SYNC
+      is
+   begin
+      if GCC.Defines.MIPS_ISA > GCC.Defines.MIPS_ISA_MIPS32 then
+         Asm (
+              Template => ""             & CRLF &
+                          "        sync" & CRLF &
+                          "",
+              Outputs  => No_Output_Operands,
+              Inputs   => No_Input_Operands,
+              Clobber  => "memory",
+              Volatile => True
+             );
+      end if;
+   end SYNC;
+
+   ----------------------------------------------------------------------------
    -- Asm_Call
    ----------------------------------------------------------------------------
    procedure Asm_Call
@@ -248,24 +268,7 @@ package body MIPS
       (Irq_Level : in Irq_Level_Type)
       is
    begin
-      Asm (
-           Template => ""                            & CRLF &
-                       Asm_Register_Equates                 &
-                       "        mfc0    $t0,CP0_SR " & CRLF &
-                       "        nop                " & CRLF &
-                       "        li      $t1,0xFC   " & CRLF &
-                       "        not     $t1,$t1    " & CRLF &
-                       "        and     $t0,$t0,$t1" & CRLF &
-                       "        sll     $t1,%0,10  " & CRLF &
-                       "        or      $t0,$t0,$t1" & CRLF &
-                       "        mtc0    $t0,CP0_SR " & CRLF &
-                       "        nop                " & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => Irq_Level_Type'Asm_Input ("r", Irq_Level),
-           Clobber  => "$t0,$t1",
-           Volatile => True
-          );
+      CP0_SR_Write ((CP0_SR_Read with delta IM => Irq_Level));
    end Irq_Level_Set;
 
    ----------------------------------------------------------------------------
@@ -275,7 +278,7 @@ package body MIPS
       (Intcontext : out Intcontext_Type)
       is
    begin
-      Intcontext := 0; -- __TBD__
+      Intcontext := CP0_SR_Read;
    end Intcontext_Get;
 
    ----------------------------------------------------------------------------
@@ -285,7 +288,11 @@ package body MIPS
       (Intcontext : in Intcontext_Type)
       is
    begin
-      null; -- __TBD__
+      CP0_SR_Write ((CP0_SR_Read with delta IE  => Intcontext.IE,
+                                            EXL => Intcontext.EXL,
+                                            ERL => Intcontext.ERL,
+                                            KSU => Intcontext.KSU,
+                                            IM  => Intcontext.IM));
    end Intcontext_Set;
 
    ----------------------------------------------------------------------------
@@ -294,20 +301,7 @@ package body MIPS
    procedure Irq_Enable
       is
    begin
-      Asm (
-           Template => ""                           & CRLF &
-                       Asm_Register_Equates                &
-                       "        mfc0    $t0,CP0_SR" & CRLF &
-                       "        nop               " & CRLF &
-                       "        ori     $t0,$t0,1 " & CRLF &
-                       "        mtc0    $t0,CP0_SR" & CRLF &
-                       "        nop               " & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "$t0",
-           Volatile => True
-          );
+      CP0_SR_Write ((CP0_SR_Read with delta IE => True));
    end Irq_Enable;
 
    ----------------------------------------------------------------------------
@@ -316,22 +310,7 @@ package body MIPS
    procedure Irq_Disable
       is
    begin
-      Asm (
-           Template => ""                            & CRLF &
-                       Asm_Register_Equates                 &
-                       "        mfc0    $t0,CP0_SR " & CRLF &
-                       "        nop                " & CRLF &
-                       "        li      $t1,1      " & CRLF &
-                       "        not     $t1,$t1    " & CRLF &
-                       "        and     $t0,$t0,$t1" & CRLF &
-                       "        mtc0    $t0,CP0_SR " & CRLF &
-                       "        nop                " & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => No_Input_Operands,
-           Clobber  => "$t0,$t1",
-           Volatile => True
-          );
+      CP0_SR_Write ((CP0_SR_Read with delta IE => False));
    end Irq_Disable;
 
 end MIPS;

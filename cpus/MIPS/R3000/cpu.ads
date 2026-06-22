@@ -41,7 +41,6 @@ package CPU
    ----------------------------------------------------------------------------
 
    subtype Intcontext_Type is R3000.Intcontext_Type;
-   subtype Irq_Id_Type     is R3000.Irq_Id_Type;
 
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
