@@ -49,6 +49,7 @@ pragma Style_Checks (Off);
 
    type HART_Type is range 0 .. 1
       with Size => 1;
+
    HART0 : constant HART_Type := 0;
    HART1 : constant HART_Type := 1;
 
