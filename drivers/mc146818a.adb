@@ -327,8 +327,9 @@ pragma Warnings (Off, "* is not referenced");
       (D : in Descriptor_Type;
        T : in Time.TM_Time)
       is
-      RB      : RegisterB_Type;
-      RTC_BCD : Boolean;
+      Intcontext : CPU.Intcontext_Type;
+      RB         : RegisterB_Type;
+      RTC_BCD    : Boolean;
       function Adjust_BCD
          (V   : Unsigned_8;
           BCD : Boolean)
@@ -343,6 +344,8 @@ pragma Warnings (Off, "* is not referenced");
          return (if BCD then Unsigned_8 (To_BCD (V)) else V);
       end Adjust_BCD;
    begin
+      CPU.Intcontext_Get (Intcontext);
+      CPU.Irq_Disable;
       RB := To_RB (Register_Read (D, RegisterB));
       RB.SET := True;
       RTC_BCD := RB.DM = DM_BCD;
@@ -359,6 +362,7 @@ pragma Warnings (Off, "* is not referenced");
       RB.DSE := T.IsDST > 0;
       RB.SET := False;
       Register_Write (D, RegisterB, To_U8 (RB));
+      CPU.Intcontext_Set (Intcontext);
    end Time_Set;
 
    ----------------------------------------------------------------------------
