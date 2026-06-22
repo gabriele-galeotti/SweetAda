@@ -34,3 +34,5 @@ endif
 
 GPR_CORE_CPU += cpu.ads
 
+GCCDEFINES_CPU += _MIPS_ISA:MIPS_ISA:Integer:P
+
