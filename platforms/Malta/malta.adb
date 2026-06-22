@@ -171,7 +171,10 @@ package body Malta
    procedure PIIX4_PIC_Init
       is
    begin
-      PC.PIC_Init (0, 8);
+      PC.PIC_Init (
+         Vector_Offset_Master => 0,
+         Vector_Offset_Slave  => 8
+         );
    end PIIX4_PIC_Init;
 
 pragma Warnings (Off, "types for unchecked conversion have different sizes");

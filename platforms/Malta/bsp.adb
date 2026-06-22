@@ -82,8 +82,6 @@ package body BSP
    ----------------------------------------------------------------------------
    procedure Setup
       is
-      -- SR   : SR_Type;
-      PRId : PRId_Type;
    begin
       -------------------------------------------------------------------------
       Secondary_Stack.Init;
@@ -136,25 +134,29 @@ package body BSP
          Console.Print ("Debug_Flag: ENABLED", NL => True);
       end if;
       -------------------------------------------------------------------------
-      PRId := CP0_PRId_Read;
-      Console.Print (Prefix => "Revision       : ", Value => PRId.Revision, NL => True);
-      Console.Print ("CPU ID         : ");
-      case PRId.Processor_ID is
-         when Processor_ID_5K  => Console.Print ("5K");
-         when Processor_ID_20K => Console.Print ("20K");
-         when Processor_ID_24K => Console.Print ("24K");
-         when others => null;
-      end case;
-      Console.Print_NewLine;
-      Console.Print ("Company ID     : ");
-      case PRId.Company_ID is
-         when Company_ID_LEGACY   => Console.Print ("LEGACY");
-         when Company_ID_MIPS     => Console.Print ("MIPS");
-         when Company_ID_BROADCOM => Console.Print ("Broadcom");
-         when others              => null;
-      end case;
-      Console.Print_NewLine;
-      Console.Print (Prefix => "Company Option: ", Value => PRId.Company_Option, NL => True);
+      declare
+         PRId : PRId_Type;
+      begin
+         PRId := CP0_PRId_Read;
+         Console.Print (Prefix => "Revision       : ", Value => PRId.Revision, NL => True);
+         Console.Print ("CPU ID         : ");
+         case PRId.Processor_ID is
+            when Processor_ID_5K  => Console.Print ("5K");
+            when Processor_ID_20K => Console.Print ("20K");
+            when Processor_ID_24K => Console.Print ("24K");
+            when others => null;
+         end case;
+         Console.Print_NewLine;
+         Console.Print ("Company ID     : ");
+         case PRId.Company_ID is
+            when Company_ID_LEGACY   => Console.Print ("LEGACY");
+            when Company_ID_MIPS     => Console.Print ("MIPS");
+            when Company_ID_BROADCOM => Console.Print ("Broadcom");
+            when others              => null;
+         end case;
+         Console.Print_NewLine;
+         Console.Print (Prefix => "Company Option: ", Value => PRId.Company_Option, NL => True);
+      end;
       -- CBUS UART ------------------------------------------------------------
       CBUS_UART_Descriptor := (
          Uart_Model    => UART16x50.UART16450,
@@ -183,7 +185,7 @@ package body BSP
       VGA.Set_Mode (VGA.MODE12H);
       -------------------------------------------------------------------------
       Exceptions.Init;
-      MIPS.Irq_Level_Set (16#3F#);
+      MIPS.Irq_Level_Set (16#80#);
       MIPS.Irq_Enable;
       Tclk_Init;
       -------------------------------------------------------------------------

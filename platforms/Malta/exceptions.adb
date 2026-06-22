@@ -46,11 +46,9 @@ package body Exceptions
    ----------------------------------------------------------------------------
    procedure Exception_Process
       is
-      Count : Unsigned_32;
    begin
+      MIPS.CP0_Compare_Write (MIPS.CP0_Count_Read + Malta.CP0_TIMER_COUNT);
       BSP.Tick_Count := @ + 1;
-      Count := MIPS.CP0_Count_Read;
-      MIPS.CP0_Compare_Write (Count + Malta.CP0_TIMER_COUNT);
    end Exception_Process;
 
    ----------------------------------------------------------------------------
