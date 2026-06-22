@@ -108,7 +108,8 @@ package PC
    end record;
 
    ----------------------------------------------------------------------------
-   -- i8259 PIC
+   -- 8259A
+   -- PROGRAMMABLE INTERRUPT CONTROLLER
    ----------------------------------------------------------------------------
 
    PIC1_IRR  : constant := PIC1_BASEADDRESS + 16#00#;
@@ -165,7 +166,7 @@ package PC
       with Inline => True;
 
    ----------------------------------------------------------------------------
-   -- i8254 PIT
+   -- 8254 PROGRAMMABLE INTERVAL TIMER
    ----------------------------------------------------------------------------
 
    COUNTER0     : constant := PIT_BASEADDRESS + 16#00#;
@@ -182,62 +183,104 @@ package PC
 
    PIT_Interrupt : constant CPU.Irq_Id_Type := PIC_Irq0;
 
+   -- M: MODE or counter # in LATCH
+   M_MODE0                  : constant := 2#000#; -- interrupt on terminal count
+   M_MODE1                  : constant := 2#001#; -- programmable monoflop
+   M_MODE2                  : constant := 2#010#; -- rate generator
+   M_MODE3                  : constant := 2#011#; -- square-wave generator
+   M_MODE4                  : constant := 2#100#; -- software triggered pulse
+   M_MODE5                  : constant := 2#101#; -- hardware triggered pulse
+   M_READBACK_COUNTER0      : constant := 2#001#;
+   M_READBACK_COUNTER1      : constant := 2#010#;
+   M_READBACK_COUNTER2      : constant := 2#100#;
+   -- RW: Counter Latch, Read/Write or Read-Back
+   RW_COUNTER_LATCH         : constant := 2#00#;
+   RW_LOW_BYTE              : constant := 2#01#;
+   RW_HIGH_BYTE             : constant := 2#10#;
+   RW_BOTH_BYTE             : constant := 2#11#;
+   RW_READBACK_LATCH_BOTH   : constant := 2#00#;
+   RW_READBACK_LATCH_COUNT  : constant := 2#01#;
+   RW_READBACK_LATCH_STATUS : constant := 2#10#;
+   -- SC: select counter or Read-Back
+   SC_COUNTER0              : constant := 2#00#;
+   SC_COUNTER1              : constant := 2#01#;
+   SC_COUNTER2              : constant := 2#10#;
+   SC_READBACK              : constant := 2#11#;
+
    -- Control Word Format
 
-   -- D1 .. D3 MODE or counter # in LATCH
-   MODE0                 : constant := 2#000#; -- interrupt on terminal count
-   MODE1                 : constant := 2#001#; -- programmable monoflop
-   MODE2                 : constant := 2#010#; -- rate generator
-   MODE3                 : constant := 2#011#; -- square-wave generator
-   MODE4                 : constant := 2#100#; -- software triggered pulse
-   MODE5                 : constant := 2#101#; -- hardware triggered pulse
-   READBACK_COUNTER0     : constant := 2#001#;
-   READBACK_COUNTER1     : constant := 2#010#;
-   READBACK_COUNTER2     : constant := 2#100#;
-   -- D4 .. D5 LATCH, Read/Write or Read-Back
-   LATCH                 : constant := 2#00#;
-   RW_LOW_BYTE           : constant := 2#01#;
-   RW_HIGH_BYTE          : constant := 2#10#;
-   RW_BOTH_BYTE          : constant := 2#11#;
-   READBACK_LATCH_BOTH   : constant := 2#00#;
-   READBACK_LATCH_COUNT  : constant := 2#01#;
-   READBACK_LATCH_STATUS : constant := 2#10#;
-   -- D6 .. D7 SC select counter or Read-Back
-   SELECT_COUNTER0       : constant := 2#00#;
-   SELECT_COUNTER1       : constant := 2#01#;
-   SELECT_COUNTER2       : constant := 2#10#;
-   READBACK              : constant := 2#11#;
-
    type PIT_Control_Word_Type is record
-      BCD  : Boolean;
-      MODE : Bits_3;
-      RW   : Bits_2;
-      SC   : Bits_2;
+      BCD : Boolean; -- Binary Coded Decimal (BCD) Counter (4 Decades)
+      M   : Bits_3;  -- Mode
+      RW  : Bits_2;  -- Read/Write
+      SC  : Bits_2;  -- Select Counter
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
    for PIT_Control_Word_Type use record
-      BCD  at 0 range 0 .. 0;
-      MODE at 0 range 1 .. 3;
-      RW   at 0 range 4 .. 5;
-      SC   at 0 range 6 .. 7;
+      BCD at 0 range 0 .. 0;
+      M   at 0 range 1 .. 3;
+      RW  at 0 range 4 .. 5;
+      SC  at 0 range 6 .. 7;
    end record;
 
-   type PIT_Status_Type is record
-      BCD        : Boolean;
-      MODE       : Bits_3;
-      RW         : Bits_2;
-      Null_Count : Boolean;
-      OUT_Pin    : Boolean;
+   -- Counter Latching Command Format
+
+   type PIT_Counter_Latching_Command_Type is record
+      DontCare : Bits_4 := 0;
+      RW       : Bits_2 := RW_COUNTER_LATCH;
+      SC       : Bits_2;                     -- Select Counter
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
-   for PIT_Status_Type use record
+   for PIT_Counter_Latching_Command_Type use record
+      DontCare at 0 range 0 .. 3;
+      RW       at 0 range 4 .. 5;
+      SC       at 0 range 6 .. 7;
+   end record;
+
+   -- Read-Back Command Format
+
+   type PIT_ReadBack_Command_Type is record
+      Reserved : Bits_1   := 0;
+      CNT0     : Boolean;       -- Select Counter 0
+      CNT1     : Boolean;       -- Select Counter 1
+      CNT2     : Boolean;       -- Select Counter 2
+      nSTATUS  : NBoolean;      -- Latch status of selected counters(s)
+      nCOUNT   : NBoolean;      -- Latch count of selected counter(s)
+      D6       : Bits_1   := 1;
+      D7       : Bits_1   := 1;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PIT_ReadBack_Command_Type use record
+      Reserved at 0 range 0 .. 0;
+      CNT0     at 0 range 1 .. 1;
+      CNT1     at 0 range 2 .. 2;
+      CNT2     at 0 range 3 .. 3;
+      nSTATUS  at 0 range 4 .. 4;
+      nCOUNT   at 0 range 5 .. 5;
+      D6       at 0 range 6 .. 6;
+      D7       at 0 range 7 .. 7;
+   end record;
+
+   -- Status Byte Format
+
+   type PIT_Status_Byte_Type is record
+      BCD        : Boolean; -- Binary Coded Decimal (BCD) Counter (4 Decades)
+      M          : Bits_3;  -- Mode
+      RW         : Bits_2;  -- Read/Write
+      Null_Count : Boolean; -- 1 = Null Count, 0 = Count available for reading
+      Output     : Boolean; -- 1 = OUT Pin is 1, 0 = OUT Pin is 0
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PIT_Status_Byte_Type use record
       BCD        at 0 range 0 .. 0;
-      MODE       at 0 range 1 .. 3;
+      M          at 0 range 1 .. 3;
       RW         at 0 range 4 .. 5;
       Null_Count at 0 range 6 .. 6;
-      OUT_Pin    at 0 range 7 .. 7;
+      Output     at 0 range 7 .. 7;
    end record;
 
    procedure PIT_Counter0_Init
@@ -263,7 +306,7 @@ package PC
        Value        : in Unsigned_8);
 
    ----------------------------------------------------------------------------
-   -- Parallel Port Interface PPI
+   -- PPI Parallel Port Interface
    ----------------------------------------------------------------------------
 
    PPI_DATA    : constant := PPI_BASEADDRESS + 16#00#;

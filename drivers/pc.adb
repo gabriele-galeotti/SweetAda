@@ -161,10 +161,10 @@ package body PC
    begin
       -- MODE2 = Rate Generator
       CPU.IO.PortOut (CONTROL_WORD, To_U8 (PIT_Control_Word_Type'(
-         BCD  => False,
-         MODE => MODE2,
-         RW   => RW_BOTH_BYTE,
-         SC   => SELECT_COUNTER0
+         BCD => False,
+         M   => M_MODE2,
+         RW  => RW_BOTH_BYTE,
+         SC  => SC_COUNTER0
          )));
       CPU.IO.PortOut (COUNTER0, LByte (Count));
       CPU.IO.PortOut (COUNTER0, HByte (Count));
@@ -183,29 +183,29 @@ package body PC
       is
       US100_count : constant := ((((PIT_CLK * 100) + (1_000_000 / 2)) / 1_000_000) - 1);
       function To_U8 is new Ada.Unchecked_Conversion (PIT_Control_Word_Type, Unsigned_8);
-      function To_PIT_Status is new Ada.Unchecked_Conversion (Unsigned_8, PIT_Status_Type);
+      function To_PITSB is new Ada.Unchecked_Conversion (Unsigned_8, PIT_Status_Byte_Type);
    begin
       Mutex.Acquire (PIT_Lock);
       for Index in 1 .. Delay100us_Units loop
-         -- MODE0: INTERRUPT ON TERMINAL COUNT, two bytes of counting,
+         -- MODE0: INTERRUPT ON TERMINAL COUNT, two bytes of counting
          CPU.IO.PortOut (CONTROL_WORD, To_U8 (PIT_Control_Word_Type'(
-            BCD  => False,
-            MODE => MODE0,
-            RW   => RW_BOTH_BYTE,
-            SC   => SELECT_COUNTER1
+            BCD => False,
+            M   => M_MODE0,
+            RW  => RW_BOTH_BYTE,
+            SC  => SC_COUNTER1
             )));
          CPU.IO.PortOut (COUNTER1, LByte (Unsigned_16 (US100_count)));
          CPU.IO.PortOut (COUNTER1, HByte (Unsigned_16 (US100_count)));
          loop
             -- latch STATUS
             CPU.IO.PortOut (CONTROL_WORD, To_U8 (PIT_Control_Word_Type'(
-               BCD  => False,
-               MODE => READBACK_COUNTER1,
-               RW   => READBACK_LATCH_STATUS,
-               SC   => READBACK
+               BCD => False,
+               M   => M_READBACK_COUNTER1,
+               RW  => RW_READBACK_LATCH_STATUS,
+               SC  => SC_READBACK
                )));
-            -- read STATUS from COUNTER1 and test if OUT is high
-            exit when To_PIT_Status (Unsigned_8'(CPU.IO.PortIn (COUNTER1))).OUT_Pin;
+            -- read STATUS from COUNTER1 and test if Output is high
+            exit when To_PITSB (Unsigned_8'(CPU.IO.PortIn (COUNTER1))).Output;
          end loop;
       end loop;
       Mutex.Release (PIT_Lock);
