@@ -104,7 +104,7 @@ package body BSP
          Console.Print ("Debug_Flag: ENABLED", NL => True);
       end if;
       -------------------------------------------------------------------------
-      MIPS.Irq_Level_Set (16#20#); -- enable only CP0 timer
+      MIPS.Irq_Level_Set (16#80#); -- enable only CP0 timer
       MIPS.Irq_Enable;
       MIPSSIM.Tclk_Init;
       -------------------------------------------------------------------------
