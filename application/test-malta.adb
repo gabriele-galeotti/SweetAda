@@ -1,12 +1,9 @@
 
-with System.Storage_Elements;
 with Interfaces;
 with Bits;
-with Core;
 with MIPS;
-with MIPS32;
 with Malta;
-with IDE;
+with BSP;
 with BlockDevices;
 with MBR;
 with FATFS;
@@ -28,10 +25,8 @@ package body Application
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
    use Interfaces;
    use Bits;
-   use MIPS;
    use Malta;
 
    Fatfs_Object : FATFS.Descriptor_Type;
@@ -100,16 +95,15 @@ package body Application
       -------------------------------------------------------------------------
       if True then
          declare
-            Delay_Count : constant := 100_000_000;
-            Value       : Unsigned_8;
+            Delay_Count : constant := 300_000_000;
          begin
-            Value := 0;
             loop
-               LEDBAR := Byte_Reverse (Value);
-               Value := @ + 1;
+               -- output the LSB of tick count on LEDBAR (visible in QEMU by
+               -- activating the built-in screen with CTRL-ALT-3)
+               LEDBAR := Unsigned_8 (BSP.Tick_Count and 16#FF#);
+               Console.Print ("hello, SweetAda", NL => True);
                for Delay_Loop_Count in 1 .. Delay_Count loop MIPS.NOP; end loop;
             end loop;
-
          end;
       end if;
       -------------------------------------------------------------------------
