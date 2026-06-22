@@ -228,7 +228,7 @@ package body MIPS
    procedure SYNC
       is
    begin
-      if GCC.Defines.MIPS_ISA > GCC.Defines.MIPS_ISA_MIPS32 then
+      if GCC.Defines.MIPS_ISA >= GCC.Defines.MIPS_ISA_MIPS32 then
          Asm (
               Template => ""             & CRLF &
                           "        sync" & CRLF &
