@@ -167,21 +167,56 @@ gcc_output=$(                                                                   
 
 NL=$(printf "\n%s" "_") ; NL=${NL%_}
 
-gccdefines=""
+gcc_defines=""
 
-gccdefines=${gccdefines}${NL}
-gccdefines=${gccdefines}$(printf "%s\n" "package ${PACKAGE_NAME}")${NL}
-gccdefines=${gccdefines}$(printf "%s%s\n" "${indent}" "with Pure       => True,")${NL}
-gccdefines=${gccdefines}$(printf "%s%s\n" "${indent}" "     SPARK_Mode => On")${NL}
-gccdefines=${gccdefines}$(printf "%s%s\n" "${indent}" "is")${NL}
-gccdefines=${gccdefines}${NL}
+gcc_defines=${gcc_defines}${NL}
+gcc_defines=${gcc_defines}$(printf "%s\n" "package ${PACKAGE_NAME}")${NL}
+gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "with Pure       => True,")${NL}
+gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "     SPARK_Mode => On")${NL}
+gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "is")${NL}
+gcc_defines=${gcc_defines}${NL}
 
 # special handling for ARM
 if [ "x${CPU}" = "xARM" ] ; then
-  gccdefines=${gccdefines}$(printf "%s%s\n" "${indent}" "ARM_ARCH_PROFILE_A : constant := 65;")${NL}
-  gccdefines=${gccdefines}$(printf "%s%s\n" "${indent}" "ARM_ARCH_PROFILE_M : constant := 77;")${NL}
-  gccdefines=${gccdefines}$(printf "%s%s\n" "${indent}" "ARM_ARCH_PROFILE_R : constant := 82;")${NL}
-  gccdefines=${gccdefines}${NL}
+  gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "ARM_ARCH_PROFILE_A : constant := 65;")${NL}
+  gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "ARM_ARCH_PROFILE_M : constant := 77;")${NL}
+  gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "ARM_ARCH_PROFILE_R : constant := 82;")${NL}
+  gcc_defines=${gcc_defines}${NL}
+fi
+# special handling for MIPS
+if [ "x${CPU}" = "xMIPS" ] ; then
+  gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "MIPS_ISA_MIPS1    : constant := 1;")${NL}
+  gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "MIPS_ISA_MIPS2    : constant := 2;")${NL}
+  gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "MIPS_ISA_MIPS3    : constant := 3;")${NL}
+  gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "MIPS_ISA_MIPS4    : constant := 4;")${NL}
+  gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "MIPS_ISA_MIPS32   : constant := 32;")${NL}
+  gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "MIPS_ISA_MIPS32R2 : constant := 33;")${NL}
+  gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "MIPS_ISA_MIPS32R3 : constant := 34;")${NL}
+  gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "MIPS_ISA_MIPS32R5 : constant := 36;")${NL}
+  gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "MIPS_ISA_MIPS32R6 : constant := 37;")${NL}
+  gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "MIPS_ISA_MIPS64   : constant := 64;")${NL}
+  gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "MIPS_ISA_MIPS64R2 : constant := 65;")${NL}
+  gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "MIPS_ISA_MIPS64R3 : constant := 66;")${NL}
+  gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "MIPS_ISA_MIPS64R5 : constant := 68;")${NL}
+  gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "MIPS_ISA_MIPS64R6 : constant := 69;")${NL}
+  gcc_defines=${gcc_defines}${NL}
+  gcc_output=$(
+               printf "%s" "${gcc_output}"       | \
+               sed -e "s|_MIPS_ISA_MIPS1|1|"       \
+                   -e "s|_MIPS_ISA_MIPS2|2|"       \
+                   -e "s|_MIPS_ISA_MIPS3|3|"       \
+                   -e "s|_MIPS_ISA_MIPS4|4|"       \
+                   -e "s|_MIPS_ISA_MIPS32|32|"     \
+                   -e "s|_MIPS_ISA_MIPS32R2|33|"   \
+                   -e "s|_MIPS_ISA_MIPS32R3|34|"   \
+                   -e "s|_MIPS_ISA_MIPS32R5|36|"   \
+                   -e "s|_MIPS_ISA_MIPS32R6|37|"   \
+                   -e "s|_MIPS_ISA_MIPS64|64|"     \
+                   -e "s|_MIPS_ISA_MIPS64R2|65|"   \
+                   -e "s|_MIPS_ISA_MIPS64R3|66|"   \
+                   -e "s|_MIPS_ISA_MIPS64R5|68|"   \
+                   -e "s|_MIPS_ISA_MIPS64R6|69|"   \
+              )
 fi
 
 for i in "$@" ; do
@@ -223,13 +258,13 @@ EOF
         ;;
     esac
   fi
-  gccdefines=${gccdefines}$(printf "%s${format_string}\n" "$indent" "${i_tmacro}" "${i_type}" "${value}")${NL}
+  gcc_defines=${gcc_defines}$(printf "%s${format_string}\n" "$indent" "${i_tmacro}" "${i_type}" "${value}")${NL}
 done
 
-gccdefines=${gccdefines}${NL}
-gccdefines=${gccdefines}$(printf "%s\n" "end ${PACKAGE_NAME};")${NL}
+gcc_defines=${gcc_defines}${NL}
+gcc_defines=${gcc_defines}$(printf "%s\n" "end ${PACKAGE_NAME};")${NL}
 
-printf "%s" "${gccdefines}" > ${OUTPUT_FILENAME}
+printf "%s" "${gcc_defines}" > ${OUTPUT_FILENAME}
 
 log_print "${SCRIPT_FILENAME}: ${OUTPUT_FILENAME}: done."
 

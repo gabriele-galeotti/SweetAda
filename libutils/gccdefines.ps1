@@ -256,8 +256,9 @@ catch
   Write-Stderr "$($scriptname): *** Error: executing $($gcc)."
   ExitWithCode 1
 }
+$gcc_output = $stdout
 
-$lines = $stdout.Split($nl, [StringSplitOptions]::RemoveEmptyEntries)
+$gcc_output = $gcc_output.Split($nl, [StringSplitOptions]::RemoveEmptyEntries)
 
 $gcc_defines = ""
 
@@ -276,6 +277,40 @@ if ($(GetEnvVar "CPU") -eq "ARM")
   $gcc_defines += "$($indent)ARM_ARCH_PROFILE_R : constant := 82;" + $nl
   $gcc_defines += $nl
 }
+# special handling for MIPS
+if ($(GetEnvVar "CPU") -eq "MIPS")
+{
+  $gcc_defines += "$($indent)MIPS_ISA_MIPS1    : constant := 1;" + $nl
+  $gcc_defines += "$($indent)MIPS_ISA_MIPS2    : constant := 2;" + $nl
+  $gcc_defines += "$($indent)MIPS_ISA_MIPS3    : constant := 3;" + $nl
+  $gcc_defines += "$($indent)MIPS_ISA_MIPS4    : constant := 4;" + $nl
+  $gcc_defines += "$($indent)MIPS_ISA_MIPS32   : constant := 32;" + $nl
+  $gcc_defines += "$($indent)MIPS_ISA_MIPS32R2 : constant := 33;" + $nl
+  $gcc_defines += "$($indent)MIPS_ISA_MIPS32R3 : constant := 34;" + $nl
+  $gcc_defines += "$($indent)MIPS_ISA_MIPS32R5 : constant := 36;" + $nl
+  $gcc_defines += "$($indent)MIPS_ISA_MIPS32R6 : constant := 37;" + $nl
+  $gcc_defines += "$($indent)MIPS_ISA_MIPS64   : constant := 64;" + $nl
+  $gcc_defines += "$($indent)MIPS_ISA_MIPS64R2 : constant := 65;" + $nl
+  $gcc_defines += "$($indent)MIPS_ISA_MIPS64R3 : constant := 66;" + $nl
+  $gcc_defines += "$($indent)MIPS_ISA_MIPS64R5 : constant := 68;" + $nl
+  $gcc_defines += "$($indent)MIPS_ISA_MIPS64R6 : constant := 69;" + $nl
+  $gcc_defines += $nl
+  $gcc_output = $gcc_output                          `
+                  -Replace "_MIPS_ISA_MIPS1","1"     `
+                  -Replace "_MIPS_ISA_MIPS2","2"     `
+                  -Replace "_MIPS_ISA_MIPS3","3"     `
+                  -Replace "_MIPS_ISA_MIPS4","4"     `
+                  -Replace "_MIPS_ISA_MIPS32","32"   `
+                  -Replace "_MIPS_ISA_MIPS32R2","33" `
+                  -Replace "_MIPS_ISA_MIPS32R3","34" `
+                  -Replace "_MIPS_ISA_MIPS32R5","36" `
+                  -Replace "_MIPS_ISA_MIPS32R6","37" `
+                  -Replace "_MIPS_ISA_MIPS64","64"   `
+                  -Replace "_MIPS_ISA_MIPS64R2","65" `
+                  -Replace "_MIPS_ISA_MIPS64R3","66" `
+                  -Replace "_MIPS_ISA_MIPS64R5","68" `
+                  -Replace "_MIPS_ISA_MIPS64R6","69" `
+}
 
 foreach ($i in $items)
 {
@@ -287,7 +322,7 @@ foreach ($i in $items)
   $mseparator = " " * ($max_tmacro_length - $i_tmacro.Length)
   $tseparator = " " * ($max_type_length - $i_type.Length)
   $found = ""
-  foreach ($line in $lines)
+  foreach ($line in $gcc_output)
   {
     $define = $line.Split(" ", 3)
     $macro = $define[1]
