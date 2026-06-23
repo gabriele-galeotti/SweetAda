@@ -153,6 +153,161 @@ package PC
    PIC_Irq14 : constant CPU.Irq_Id_Type := 16#2E#;
    PIC_Irq15 : constant CPU.Irq_Id_Type := 16#2F#;
 
+   -- Initialization Command Words 1 and 2 (ICW1, ICW2)
+
+   ADI_4 : constant := 1; -- INTERVAL OF 4
+   ADI_8 : constant := 0; -- INTERVAL OF 8
+
+   LTIM_LEVEL : constant := 1; -- LEVEL TRIGGERED MODE
+   LTIM_EDGE  : constant := 0; -- EDGE TRIGGERED MODE
+
+   type PIC_ICW1_Type is record
+      IC4      : Boolean := False;     -- 1 = ICW4 NEEDED 0 = NO ICW4 NEEDED
+      SNGL     : Boolean := False;     -- 1 = SINGLE 0 = CASCADE MODE
+      ADI      : Bits_1  := ADI_8;     -- CALL ADDRESS INTERVAL
+      LTIM     : Bits_1  := LTIM_EDGE; -- 1 = LEVEL TRIGGERED MODE 0 = EDGE TRIGGERED MODE
+      Reserved : Bits_1  := 1;
+      Unused   : Bits_3  := 0;         -- A7-A5 of INTERRUPT VECTOR ADDRESS (MCS80-85 MODE ONLY)
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PIC_ICW1_Type use record
+      IC4      at 0 range 0 .. 0;
+      SNGL     at 0 range 1 .. 1;
+      ADI      at 0 range 2 .. 2;
+      LTIM     at 0 range 3 .. 3;
+      Reserved at 0 range 4 .. 4;
+      Unused   at 0 range 5 .. 7;
+   end record;
+
+   type PIC_ICW2_Type is record
+      Unused : Bits_3 := 0; -- A10-A8 of INTERRUPT VECTOR ADDRESS (MCS80-85 MODE)
+      T      : Bits_5 := 0; -- T7-T3 of INTERRUPT VECTOR ADDRESS (8086/8088 MODE)
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PIC_ICW2_Type use record
+      Unused at 0 range 0 .. 2;
+      T      at 0 range 3 .. 7;
+   end record;
+
+   -- Initialization Command Word 3 (ICW3)
+
+   type PIC_ICW3_MASTER_Type is record
+      S : Bitmap_8 := [others => False]; -- 1 = IR INPUT HAS A SLAVE 0 = IR INPUT DOES NOT HAVE A SLAVE
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PIC_ICW3_MASTER_Type use record
+      S at 0 range 0 .. 7;
+   end record;
+
+   type PIC_ICW3_SLAVE_Type is record
+      ID       : Bits_3 := 0; -- SLAVE ID
+      Reserved : Bits_5 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PIC_ICW3_SLAVE_Type use record
+      ID       at 0 range 0 .. 2;
+      Reserved at 0 range 3 .. 7;
+   end record;
+
+   -- Initialization Command Word 4 (ICW4)
+
+   uPM_8086  : constant := 1; -- 8086/8088 MODE
+   uPM_MCS80 : constant := 0; -- MCS80/85 MODE
+
+   MS_SLAVE  : constant := 0; -- SLAVE
+   MS_MASTER : constant := 1; -- MASTER
+
+   type PIC_ICW4_Type is record
+      uPM      : Bits_1  := uPM_MCS80; -- 1 = 8086/8088 MODE 0 = MCS80/85 MODE
+      AEOI     : Boolean := False;     -- 1 = AUTO EOI 0 = NORMAL EOI
+      MS       : Bits_1  := MS_SLAVE;  -- 1 = MASTER 0 = SLAVE
+      BUF      : Boolean := False;     -- BUFFERED MODE
+      SFNM     : Boolean := False;     -- SPECIAL FULLY NESTED MODE
+      Reserved : Bits_3  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PIC_ICW4_Type use record
+      uPM      at 0 range 0 .. 0;
+      AEOI     at 0 range 1 .. 1;
+      MS       at 0 range 2 .. 2;
+      BUF      at 0 range 3 .. 3;
+      SFNM     at 0 range 4 .. 4;
+      Reserved at 0 range 5 .. 7;
+   end record;
+
+   -- Operation Control Word 1 (OCW1)
+
+   type PIC_OCW1_Type is record
+      M : Bitmap_8 := [others => False]; -- INTERRUPT MASK
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PIC_OCW1_Type use record
+      M at 0 range 0 .. 7;
+   end record;
+
+   -- Operation Control Word 2 (OCW2)
+
+   EOISLR_EOI         : constant := 2#001#; -- NON-SPECIFIC EOI COMMAND
+   EOISLR_SPEOI       : constant := 2#011#; -- SPECIFIC EOI COMMAND
+   EOISLR_ROTEOI      : constant := 2#101#; -- ROTATE ON NON-SPECIFIC EOI COMMAND
+   EOISLR_ROTAEOI_SET : constant := 2#100#; -- ROTATE IN AUTOMATIC EOI MODE (SET)
+   EOISLR_ROTAEOI_CLR : constant := 2#100#; -- ROTATE IN AUTOMATIC EOI MODE (CLEAR)
+   EOISLR_ROTSPEOI    : constant := 2#111#; -- ROTATE ON SPECIFIC EOI COMMAND
+   EOISLR_SETPRIO     : constant := 2#110#; -- SET PRIORITY COMMAND
+   EOISLR_NOP         : constant := 2#110#; -- NO OPERATION
+
+   type PIC_OCW2_Type is record
+      L        : Bits_3 := 0;          -- IR LEVEL TO BE ACTED UPON
+      Reserved : Bits_2 := 0;
+      EOISLR   : Bits_3 := EOISLR_NOP; -- END OF INTERRUPT - AUTOMATIC ROTATION - SPECIFIC ROTATION
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PIC_OCW2_Type use record
+      L        at 0 range 0 .. 2;
+      Reserved at 0 range 3 .. 4;
+      EOISLR   at 0 range 5 .. 7;
+   end record;
+
+   -- Operation Control Word 3 (OCW3)
+
+   RISRR_NONE1  : constant := 2#00#; -- NO ACTION
+   RISRR_NONE2  : constant := 2#01#; -- NO ACTION
+   RISRR_READIR : constant := 2#10#; -- READ IR REG ON NEXT /RD PULSE
+   RISRR_READIS : constant := 2#11#; -- READ IS REG ON NEXT /RD PULSE
+
+   SMMESMM_NONE1   : constant := 2#00#; -- NO ACTION
+   SMMESMM_NONE2   : constant := 2#01#; -- NO ACTION
+   SMMESMM_RESETSM : constant := 2#10#; -- RESET SPECIAL MASK
+   SMMESMM_SETSM   : constant := 2#11#; -- SET SPECIAL MASK
+
+   type PIC_OCW3_Type is record
+      RISRR     : Bits_2  := RISRR_NONE1;   -- READ REGISTER COMMAND
+      P         : Boolean := False;         -- POLL COMMAND
+      Reserved1 : Bits_1  := 1;
+      Reserved2 : Bits_1  := 0;
+      SMMESMM   : Bits_2  := SMMESMM_NONE1; -- SPECIAL MASK MODE
+      Reserved3 : Bits_1  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for PIC_OCW3_Type use record
+      RISRR     at 0 range 0 .. 1;
+      P         at 0 range 2 .. 2;
+      Reserved1 at 0 range 3 .. 3;
+      Reserved2 at 0 range 4 .. 4;
+      SMMESMM   at 0 range 5 .. 6;
+      Reserved3 at 0 range 7 .. 7;
+   end record;
+
+   -- PIC subprograms
+
    procedure PIC_Init
       (Vector_Offset_Master : in Unsigned_8;
        Vector_Offset_Slave  : in Unsigned_8);
@@ -283,6 +438,8 @@ package PC
       Output     at 0 range 7 .. 7;
    end record;
 
+   -- PIT subprograms
+
    procedure PIT_Counter0_Init
       (Count : in Unsigned_16);
    procedure PIT_Counter1_Delay
@@ -354,6 +511,8 @@ package PC
       BIDIR     at 0 range 5 .. 5;
       Unused    at 0 range 6 .. 7;
    end record;
+
+   -- PPI subprograms
 
    procedure PPI_DataIn
       (Value : out Unsigned_8);
