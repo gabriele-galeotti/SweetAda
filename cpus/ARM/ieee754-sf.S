@@ -1,6 +1,6 @@
 /* ieee754-sf.S single-precision floating point support for ARM
 
-   Copyright (C) 2003-2024 Free Software Foundation, Inc.
+   Copyright (C) 2003-2025 Free Software Foundation, Inc.
    Contributed by Nicolas Pitre (nico@fluxnic.net)
 
    This file is free software; you can redistribute it and/or modify it
@@ -23,7 +23,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 /* SweetAda version, reformatted and cleaned                   */
-/* __INF__ original: gcc-14.2.0/libgcc/config/arm/ieee754-sf.S */
+/* __INF__ original: gcc-15.3.0/libgcc/config/arm/ieee754-sf.S */
 
 /*
  * Notes:
