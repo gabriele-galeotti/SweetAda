@@ -25,9 +25,9 @@ complex and hard to make available for every possible user.
 Current versions of GNU packages are hardwired (but changeable) in the
 scripts. Download:
 
-- https://ftp.gnu.org/pub/gnu/binutils/binutils-2.46.tar.[bz2|gz|lz|xz]
-- https://ftp.gnu.org/pub/gnu/gcc/gcc-14.2.0/gcc-14.2.0.tar.[gz|xz]
-- https://ftp.gnu.org/pub/gnu/gdb/gdb-16.2.tar.[gz|xz]
+- https://ftp.gnu.org/pub/gnu/binutils/binutils-2.46.1.tar.[bz2|gz|lz|xz]
+- https://ftp.gnu.org/pub/gnu/gcc/gcc-15.3.0/gcc-15.3.0.tar.[gz|xz]
+- https://ftp.gnu.org/pub/gnu/gdb/gdb-17.2.tar.[gz|xz]
 
 and have them uncompressed in the directory stated by the PACKAGE_PARENT_PATH
 variable, which defaults to /usr/local/src.
@@ -75,15 +75,15 @@ You can check if toolchain executables run fine (/opt/toolchains is the prefix
 and arm-eabi is the toolchain name of this example installation):
 
 $ /opt/toolchains/bin/arm-eabi-as --version
-GNU assembler (SweetAda GNU toolchain 1.0) 2.44
+GNU assembler (SweetAda GNU toolchain 1.0) 2.46.1
 Copyright (C) 2025 Free Software Foundation, Inc.
 ...
 $ /opt/toolchains/bin/arm-eabi-gcc --version
-arm-eabi-gcc (SweetAda GNU toolchain 1.0) 14.2.0
+arm-eabi-gcc (SweetAda GNU toolchain 1.0) 15.3.0
 Copyright (C) 2024 Free Software Foundation, Inc.
 ...
 $ /opt/toolchains/bin/arm-eabi-gdb --version
-GNU gdb (SweetAda GNU toolchain 1.0) 16.2
+GNU gdb (SweetAda GNU toolchain 1.0) 17.2
 Copyright (C) 2025 Free Software Foundation, Inc.
 ...
 
@@ -130,13 +130,13 @@ It is highly advised to integrate ISL and libiconv source libraries into the
 source tree of GCC. Download:
 
 - https://libisl.sourceforge.io/isl-0.27.tar.[bz2|gz|xz]
-- https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.17.tar.gz
+- https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.19.tar.gz
 
 and have them uncompressed so that the following layout exists:
 
 /usr/local/src
   |
-  +- gcc-14.2.0
+  +- gcc-15.3.0
   |   |
   |   +-- INSTALL
   |   +-- c++tools
