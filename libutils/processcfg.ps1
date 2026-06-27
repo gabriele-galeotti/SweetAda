@@ -193,13 +193,16 @@ $textlines | ForEach-Object `
     }
     $textline = $textline -Replace "$symbol","$value"
   }
-  if ($count -lt $textlines.Count)
+  if ($value -ne "<>")
   {
-    $stdout = "$($stdout)$($textline)$($nl)"
-  }
-  else
-  {
-    $stdout = "$($stdout)$($textline)"
+    if ($count -lt $textlines.Count)
+    {
+      $stdout = "$($stdout)$($textline)$($nl)"
+    }
+    else
+    {
+      $stdout = "$($stdout)$($textline)"
+    }
   }
 }
 

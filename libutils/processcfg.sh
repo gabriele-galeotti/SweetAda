@@ -96,10 +96,15 @@ fi
 # Perform variable substitution.
 #
 DATETIME=$(date "+%FT%T%z" 2> /dev/null)
-if [ "x${SYMBOLS}" != "x" ] ; then
-  sed_command_string=""
+printf "%s" "" > "${OUTPUT_FILENAME}" 2> /dev/null
+if [ $? -ne 0 ] ; then
+  log_print_error "${SCRIPT_FILENAME}: *** Error: in processing output file \"${OUTPUT_FILENAME}\"."
+  exit 1
+fi
+while IFS= read -r textline ; do
+  outputline="${textline}"
   for symbol in ${SYMBOLS} ; do
-    variable=$(printf "%s" "${symbol}" | sed -e "s|^\(.*@\)\(.*\)\(@.*\)\$|\2|")
+    variable=$(expr "${symbol}" : '@\(.*\)@')
     optional=
     case ${variable} in
       -*)
@@ -127,16 +132,16 @@ if [ "x${SYMBOLS}" != "x" ] ; then
       *)
         ;;
     esac
-    sed_command_string="${sed_command_string} -e \"s|${symbol}|${value}|\""
+    outputline=$(printf "%s" "${outputline}" | sed -e "s|${symbol}|${value}|")
   done
-  printf "%s" "${sed_command_string} \"${INPUT_FILENAME}\"" | xargs sed > "${OUTPUT_FILENAME}" 2> /dev/null
-  if [ $? -ne 0 ] ; then
-    log_print_error "${SCRIPT_FILENAME}: *** Error: in processing input file \"${INPUT_FILENAME}\"."
-    exit 1
+  if [ "${outputline}" != "<>" ] ; then
+    printf "%s\n" "${outputline}" >> "${OUTPUT_FILENAME}" 2> /dev/null
+    if [ $? -ne 0 ] ; then
+      log_print_error "${SCRIPT_FILENAME}: *** Error: in processing output file \"${OUTPUT_FILENAME}\"."
+      exit 1
+    fi
   fi
-else
-  cp -f "${INPUT_FILENAME}" "${OUTPUT_FILENAME}"
-fi
+done < "${INPUT_FILENAME}"
 
 log_print "${SCRIPT_FILENAME}: ${OUTPUT_FILENAME}: done."
 
