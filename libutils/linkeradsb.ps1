@@ -131,6 +131,8 @@ $linkerads += $indent + "is" + $nl
 $linkerads += $nl
 
 $linkeradb += $nl
+$linkeradb += "pragma Restrictions (No_Elaboration_Code);" + $nl
+$linkeradb += $nl
 $linkeradb += "with Bits;" + $nl
 $linkeradb += $nl
 $linkeradb += "package body $PACKAGE" + $nl
