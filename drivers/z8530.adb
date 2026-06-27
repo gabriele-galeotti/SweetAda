@@ -101,19 +101,21 @@ pragma Warnings (Off, "* is not referenced");
    -- 5.2.2 Write Register 1 (Transmit/Receive Interrupt and Data Transfer Mode Definition)
    ----------------------------------------------------------------------------
 
-   RxINT_DISAB : constant := 2#00#; -- Receive Interrupts Disabled
-   RxINT_FCERR : constant := 2#01#; -- Receive Interrupt on First Character or Special Condition
-   INT_ALL_Rx  : constant := 2#10#; -- Interrupt on All Receive Characters or Special Condition
-   INT_ERR_Rx  : constant := 2#11#; -- Receive Interrupt on Special Condition
+   type RxINTMode_Type is new Bits_2;
+
+   RxINT_DISAB : constant RxINTMode_Type := 2#00#; -- Receive Interrupts Disabled
+   RxINT_FCERR : constant RxINTMode_Type := 2#01#; -- Receive Interrupt on First Character or Special Condition
+   INT_ALL_Rx  : constant RxINTMode_Type := 2#10#; -- Interrupt on All Receive Characters or Special Condition
+   INT_ERR_Rx  : constant RxINTMode_Type := 2#11#; -- Receive Interrupt on Special Condition
 
    type WR1_Type is record
-      EXT_INT_ENAB : Boolean; -- External/Status Master Interrupt Enable
-      Tx_INT_ENAB  : Boolean; -- Transmitter Interrupt Enable
-      PAR_SPEC     : Boolean; -- Parity is special condition
-      Rx_INT_Modes : Bits_2;  -- Receive Interrupt Modes
-      WT_RDY_RT    : Boolean; -- /WAIT//REQUEST on Transmit or Receive
-      WT_FN_RDYFN  : Boolean; -- WAIT/DMA Request Function
-      WT_RDY_ENAB  : Boolean; -- WAIT/DMA Request Enable
+      EXT_INT_ENAB : Boolean;        -- External/Status Master Interrupt Enable
+      Tx_INT_ENAB  : Boolean;        -- Transmitter Interrupt Enable
+      PAR_SPEC     : Boolean;        -- Parity is special condition
+      Rx_INT_Modes : RxINTMode_Type; -- Receive Interrupt Modes
+      WT_RDY_RT    : Boolean;        -- /WAIT//REQUEST on Transmit or Receive
+      WT_FN_RDYFN  : Boolean;        -- WAIT/DMA Request Function
+      WT_RDY_ENAB  : Boolean;        -- WAIT/DMA Request Enable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
@@ -887,6 +889,25 @@ pragma Warnings (Off, "* is not referenced");
       end loop;
       Data := Descriptor.Read_8 (Descriptor.Data_Port (Channel));
    end RX;
+
+   ----------------------------------------------------------------------------
+   -- RxINT_Enable
+   ----------------------------------------------------------------------------
+   procedure RxINT_Enable
+      (Descriptor : in Descriptor_Type;
+       Channel    : in Channel_Type;
+       Enable     : in Boolean)
+      is
+      R : WR1_Type;
+      I : RxINTMode_Type;
+   begin
+      I := (if Enable then INT_ALL_Rx else RxINT_DISAB);
+      R := (
+         To_WR1 (Register_Read (Descriptor, Channel, WR1))
+         with delta Rx_INT_Modes => I
+         );
+      Register_Write (Descriptor, Channel, WR1, To_U8 (R));
+   end RxINT_Enable;
 
 pragma Warnings (On, "* is not referenced");
 

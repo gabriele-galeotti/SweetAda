@@ -63,16 +63,15 @@ package Z8530
       Data_Port      : Data_Ports_Type    := [Null_Address, Null_Address];
    end record;
 
-   DESCRIPTOR_INVALID : constant Descriptor_Type :=
-      (
-       Base_Address   => Null_Address,
-       AB_Address_Bit => 0,
-       CD_Address_Bit => 0,
-       Baud_Clock     => 1,
-       Flags          => (others => False),
-       Read_8         => null,
-       Write_8        => null,
-       others         => <>
+   DESCRIPTOR_INVALID : constant Descriptor_Type := (
+      Base_Address   => Null_Address,
+      AB_Address_Bit => 0,
+      CD_Address_Bit => 0,
+      Baud_Clock     => 1,
+      Flags          => (others => False),
+      Read_8         => null,
+      Write_8        => null,
+      others         => <>
       );
 
    procedure Baud_Rate_Set
@@ -90,5 +89,9 @@ package Z8530
       (Descriptor : in     Descriptor_Type;
        Channel    : in     Channel_Type;
        Data       :    out Unsigned_8);
+   procedure RxINT_Enable
+      (Descriptor : in Descriptor_Type;
+       Channel    : in Channel_Type;
+       Enable     : in Boolean);
 
 end Z8530;
