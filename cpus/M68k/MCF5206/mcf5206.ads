@@ -241,46 +241,18 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    type UART_Register_Type is
-      (
-       UMR1,
-       UMR2,
-       USR,
-       UCSR,
-       UCR,
-       URB,
-       UTB,
-       UIPCR,
-       UACR,
-       UISR,
-       UIMR,
-       UBG1,
-       UBG2,
-       UIVR,
-       UIP,
-       UOP1,
-       UOP0
-      );
+      (UMR1, UMR2, USR,  UCSR,
+       UCR,  URB,  UTB,  UIPCR,
+       UACR, UISR, UIMR, UBG1,
+       UBG2, UIVR, UIP,  UOP1,
+       UOP0);
 
    UART_Register_Offset : constant array (UART_Register_Type) of Storage_Offset :=
-      [
-       UMR1  => 16#0140#,
-       UMR2  => 16#0140#,
-       USR   => 16#0144#,
-       UCSR  => 16#0144#,
-       UCR   => 16#0148#,
-       URB   => 16#014C#,
-       UTB   => 16#014C#,
-       UIPCR => 16#0150#,
-       UACR  => 16#0150#,
-       UISR  => 16#0154#,
-       UIMR  => 16#0154#,
-       UBG1  => 16#0158#,
-       UBG2  => 16#015C#,
-       UIVR  => 16#0170#,
-       UIP   => 16#0174#,
-       UOP1  => 16#0178#,
-       UOP0  => 16#017C#
-      ];
+      [UMR1  => 16#0140#, UMR2  => 16#0140#, USR   => 16#0144#, UCSR  => 16#0144#,
+       UCR   => 16#0148#, URB   => 16#014C#, UTB   => 16#014C#, UIPCR => 16#0150#,
+       UACR  => 16#0150#, UISR  => 16#0154#, UIMR  => 16#0154#, UBG1  => 16#0158#,
+       UBG2  => 16#015C#, UIVR  => 16#0170#, UIP   => 16#0174#, UOP1  => 16#0178#,
+       UOP0  => 16#017C#];
 
    -- 11.4.1.1 MODE REGISTER 1 (UMR1).
 

@@ -1,5 +1,5 @@
 /* libgcc routines for 68000 w/o floating-point hardware.
-   Copyright (C) 1994-2024 Free Software Foundation, Inc.
+   Copyright (C) 1994-2025 Free Software Foundation, Inc.
 
 This file is part of GCC.
 
@@ -23,7 +23,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 <http://www.gnu.org/licenses/>.  */
 
 /* SweetAda version, reformatted and cleaned                 */
-/* __INF__ original: gcc-14.2.0/libgcc/config/m68k/lb1sf68.S */
+/* __INF__ original: gcc-15.3.0/libgcc/config/m68k/lb1sf68.S */
 
 /* Use this one for any 680x0; assumes no floating point hardware.
    The trailing " '" appearing on some lines is for ANSI preprocessors.  Yuk.
@@ -703,9 +703,10 @@ Ld$overflow:
                 PICJUMP $_exception_handler
 
 Ld$underflow:
-                | Return 0 and set the exception flags
+                | Return a properly signed 0 and set the exception flags
                 movel   IMM (0),d0
                 movel   d0,d1
+	        orl	d7,d0
                 movew   IMM (INEXACT_RESULT+UNDERFLOW),d7
                 moveq   IMM (DOUBLE_FLOAT),d6
                 PICJUMP $_exception_handler
@@ -714,6 +715,7 @@ Ld$inop:
                 | Return a quiet NaN and set the exception flags
                 movel   IMM (QUIET_NaN),d0
                 movel   d0,d1
+	        bset	IMM (31),d1
                 movew   IMM (INEXACT_RESULT+INVALID_OPERATION),d7
                 moveq   IMM (DOUBLE_FLOAT),d6
                 PICJUMP $_exception_handler
@@ -2084,6 +2086,7 @@ Ldivdf$b$nf:
 | If d2 == 0x7ff00000 we have to check d3.
                 tstl    d3                              |
                 bne     Ld$inop                         | if d3 <> 0, b is NaN
+	        movel	a0,d7		                | put a's sign
                 bra     Ld$underflow                    | else b is +/-INFINITY, so signal underflow
 
 Ldivdf$a$nf:
@@ -2189,6 +2192,7 @@ Lround$exit:
 #endif
                 beq     2f                              | if not loop back
                 bra     1b                              |
+	        movel	a0,d7		                | get back sign bit into d7
                 bra     Ld$underflow                    | safety check, shouldn't execute '
 2:              orl     d6,d2                           | this is a trick so we don't lose '
                 orl     d7,d3                           | the bits which were flushed right
@@ -2551,7 +2555,7 @@ Lround$to$minus:
                 .globl  SYM (_fpCCR)
                 .globl  $_exception_handler
 
-QUIET_NaN = 0xffffffff
+QUIET_NaN = 0x7fffffff
 SIGNL_NaN = 0x7f800001
 INFINITY  = 0x7f800000
 
@@ -2617,8 +2621,9 @@ Lf$overflow:
                 PICJUMP $_exception_handler
 
 Lf$underflow:
-| Return 0 and set the exception flags
+| Return a properly signed 0 and set the exception flags
                 moveq   IMM (0),d0
+	        orl	d7,d0
                 moveq   IMM (INEXACT_RESULT+UNDERFLOW),d7
                 moveq   IMM (SINGLE_FLOAT),d6
                 PICJUMP $_exception_handler
@@ -2939,7 +2944,7 @@ Laddsf$4:
 #else
                 cmpl    IMM (0xff),d2
 #endif
-                bhi     1f
+	        bge	1f
                 bclr    IMM (FLT_MANT_DIG-1),d0
 #if !defined(__mcoldfire__)
                 lslw    IMM (7),d2
@@ -4123,7 +4128,7 @@ SYM (__lesf2):
 #endif /* L_lesf2 */
 
 #if defined(__ELF__) && defined(__linux__)
-                /* make stack non-executable for ELF linux targets */
+                /* Make stack non-executable for ELF linux targets */
                 .sect   .note.GNU-stack,"",@progbits
 #endif
 
