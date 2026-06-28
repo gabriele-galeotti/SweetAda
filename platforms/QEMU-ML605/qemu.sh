@@ -75,11 +75,7 @@ fi
 . ${SHARE_DIRECTORY}/terminal.sh
 
 # QEMU executable and CPU model
-if [ "x${MICROBLAZE_LITTLE_ENDIAN}" = "xY" ] ; then
-  QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-microblazeel"
-else
-  QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-microblaze"
-fi
+QEMU_EXECUTABLE="/opt/QEMU/bin/qemu-system-microblaze"
 
 # debug options
 if [ "x$1" = "x-debug" ] ; then
@@ -96,7 +92,7 @@ TILTIMEOUT=3
 
 # QEMU machine
 "${QEMU_EXECUTABLE}" \
-  -M petalogix-ml605 -cpu 10.0 -m 128 \
+  -M petalogix-ml605 -cpu 8.10.a -m 128 \
   -kernel ${KERNEL_ROMFILE} \
   -monitor "telnet:localhost:${MONITORPORT},server,nowait" \
   -chardev "socket,id=SERIALPORT0,port=${SERIALPORT0},host=localhost,ipv4=on,server=on,telnet=on,wait=on" \
