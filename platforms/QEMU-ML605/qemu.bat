@@ -33,11 +33,7 @@ REM ############################################################################
 SETLOCAL ENABLEDELAYEDEXPANSION
 
 REM QEMU executable and CPU model
-IF "%MICROBLAZE_LITTLE_ENDIAN%"=="Y"
-  SET "QEMU_FILENAME=qemu-system-microblazeelw.exe"
-  ) ELSE (
-  SET "QEMU_FILENAME=qemu-system-microblazew.exe"
-  )
+SET "QEMU_FILENAME=qemu-system-microblazew.exe"
 SET QEMU_EXECUTABLE="C:\Program Files\qemu\%QEMU_FILENAME%"
 
 REM debug options
@@ -55,7 +51,7 @@ SET TILTIMEOUT=3
 
 REM QEMU machine
 START "QEMU" %QEMU_EXECUTABLE% ^
-  -M petalogix-ml605 -cpu 10.0 -m 128 ^
+  -M petalogix-ml605 -cpu 8.10.a -m 128 ^
   -kernel %KERNEL_ROMFILE% ^
   -monitor telnet:localhost:%MONITORPORT%,server,nowait ^
   -chardev socket,id=SERIALPORT0,port=%SERIALPORT0%,host=localhost,ipv4=on,server=on,telnet=on,wait=on ^
