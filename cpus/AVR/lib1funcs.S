@@ -1,5 +1,5 @@
 /*  -*- Mode: Asm -*-  */
-/* Copyright (C) 1998-2024 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2025 Free Software Foundation, Inc.
    Contributed by Denis Chertykov <chertykov@gmail.com>
 
 This file is free software; you can redistribute it and/or modify it
@@ -22,7 +22,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 <http://www.gnu.org/licenses/>.  */
 
 /* SweetAda version, reformatted and cleaned                  */
-/* __INF__ original: gcc-14.2.0/libgcc/config/avr/lib1funcs.S */
+/* __INF__ original: gcc-15.3.0/libgcc/config/avr/lib1funcs.S */
 
 #if defined(__AVR_TINY__)
 # define __zero_reg__ r17
@@ -103,6 +103,20 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 # define XICALL icall
 # define XIJMP ijmp
 #endif
+
+;;; [R]JMP to label \labl when \reg is positive (\reg.7 = 0).
+;;; Otherwise, fallthrough.
+                .macro  .branch_plus reg, labl
+#ifdef __AVR_ERRATA_SKIP_JMP_CALL__
+                ;; Some cores have a problem skipping 2-word instructions
+                tst     \reg
+                brmi    .L..\@
+#else
+                sbrs    \reg, 7
+#endif /* skip erratum */
+                XJMP    \labl
+.L..\@:
+                .endm ; .branch_plus
 
 ;; Prologue stuff
 
@@ -381,45 +395,57 @@ ENDF  __mulhi3
 
 #if defined(L_umulhisi3)
 DEFUN __umulhisi3
+#if defined(__AVR_TINY__)
+                ;; Save callee saved regs.
+                push    B0
+                push    B1
+#endif /* AVR_TINY */
                 wmov    B0,24
                 ;; Zero-extend B
                 clr     B2
                 clr     B3
                 ;; Zero-extend A
                 wmov    A2,B2
+#if defined(__AVR_TINY__)
+                ;; Clear hi16 of the result so we can use __mulsi3_helper.
+                wmov    CC2, B2
+                XJMP    __mulsi3_helper
+#else
                 XJMP    __mulsi3
+#endif /* AVR_TINY? */
 ENDF __umulhisi3
 #endif /* L_umulhisi3 */
 
 #if defined(L_mulhisi3)
 DEFUN __mulhisi3
+#if defined(__AVR_TINY__)
+                ;; Save callee saved regs.
+                push    B0
+                push    B1
+#endif /* AVR_TINY */
                 wmov    B0,24
                 ;; Sign-extend B
                 lsl     r25
                 sbc     B2,B2
                 mov     B3,B2
-#if defined(__AVR_ERRATA_SKIP_JMP_CALL__)
-                ;; Sign-extend A
-                clr     A2
-                sbrc    A1,7
-                com     A2
-                mov     A3,A2
-                XJMP    __mulsi3
-#else /*  no __AVR_ERRATA_SKIP_JMP_CALL__ */
                 ;; Zero-extend A and __mulsi3 will run at least twice as fast
                 ;; compared to a sign-extended A.
                 clr     A2
                 clr     A3
+                ;; Clear hi16 of the result so we can use __mulsi3_helper.
+                wmov    CC2, A2
                 sbrs    A1,7
-                XJMP    __mulsi3
+#if defined(__AVR_ERRATA_SKIP_JMP_CALL__)
+                rjmp    1f
+#else
+                XJMP    __mulsi3_helper
+#endif /* ERRATA_SKIP */
                 ;; If A < 0  then perform the  B * 0xffff.... before the
                 ;; very multiplication by initializing the high part of the
                 ;; result CC with -B.
-                wmov    CC2,A2
                 sub     CC2,B0
                 sbc     CC3,B1
-                XJMP    __mulsi3_helper
-#endif /* __AVR_ERRATA_SKIP_JMP_CALL__ */
+1:              XJMP    __mulsi3_helper
 ENDF __mulhisi3
 #endif /* L_mulhisi3 */
 
@@ -566,19 +592,12 @@ DEFUN __umulhisi3
                 mul     A1,B1
                 movw    C2,r0
                 mul     A0,B1
-#if defined(__AVR_HAVE_JMP_CALL__)
-                ;; This function is used by many other routines, often multiple times.
-                ;; Therefore, if the flash size is not too limited, avoid the RCALL
-                ;; and inverst 6 Bytes to speed things up.
                 add     C1,r0
                 adc     C2,r1
                 clr     __zero_reg__
                 adc     C3,__zero_reg__
-#else
-                rcall   1f
-#endif
                 mul     A1,B0
-1:              add     C1,r0
+                add     C1,r0
                 adc     C2,r1
                 clr     __zero_reg__
                 adc     C3,__zero_reg__
@@ -2590,34 +2609,6 @@ ENDF __load_4
 
 #define HHI8 21
 
-                .macro  .xload dest,n
-#if defined(__AVR_HAVE_ELPMX__)
-                elpm    \dest,Z+
-#elif defined(__AVR_HAVE_ELPM__)
-                elpm
-                mov     \dest,r0
-                .if     \dest != D0+\n-1
-                adiw    r30,1
-                adc     HHI8,__zero_reg__
-                out     __RAMPZ__,HHI8
-                .endif
-#elif defined(__AVR_HAVE_LPMX__)
-                lpm     \dest,Z+
-#else
-                lpm
-                mov     \dest,r0
-                .if     \dest != D0+\n-1
-                adiw    r30,1
-                .endif
-#endif
-#if defined(__AVR_HAVE_ELPM__) && defined(__AVR_HAVE_RAMPD__)
-                .if     \dest == D0+\n-1
-                ;; Reset RAMPZ to 0 so that EBI devices don't read garbage from RAM
-                out     __RAMPZ__,__zero_reg__
-                .endif
-#endif
-                .endm ; .xload
-
 #if defined(L_xload_1)
 DEFUN __xload_1
 #if defined(__AVR_HAVE_LPMX__) && !defined(__AVR_HAVE_ELPM__)
@@ -2627,14 +2618,8 @@ DEFUN __xload_1
                 lpm     D0,Z
                 ret
 #else
-                sbrc    HHI8,7
-                rjmp    1f
-#if defined(__AVR_HAVE_ELPM__)
-                out     __RAMPZ__,HHI8
-#endif /* __AVR_HAVE_ELPM__ */
-                .xload  D0,1
-                ret
-1:              ld      D0,Z
+                .branch_plus HHI8,__fload_1
+                ld      D0, Z
                 ret
 #endif /* LPMx && ! ELPM */
 ENDF __xload_1
@@ -2642,15 +2627,8 @@ ENDF __xload_1
 
 #if defined(L_xload_2)
 DEFUN __xload_2
-                sbrc    HHI8,7
-                rjmp    1f
-#if defined(__AVR_HAVE_ELPM__)
-                out     __RAMPZ__,HHI8
-#endif /* __AVR_HAVE_ELPM__ */
-                .xload  D0,2
-                .xload  D1,2
-                ret
-1:              ld      D0,Z+
+                .branch_plus HHI8,__fload_2
+                ld      D0,Z+
                 ld      D1,Z+
                 ret
 ENDF __xload_2
@@ -2658,16 +2636,8 @@ ENDF __xload_2
 
 #if defined(L_xload_3)
 DEFUN __xload_3
-                sbrc    HHI8,7
-                rjmp    1f
-#if defined(__AVR_HAVE_ELPM__)
-                out     __RAMPZ__,HHI8
-#endif /* __AVR_HAVE_ELPM__ */
-                .xload  D0,3
-                .xload  D1,3
-                .xload  D2,3
-                ret
-1:              ld      D0,Z+
+                .branch_plus HHI8,__fload_3
+                ld      D0,Z+
                 ld      D1,Z+
                 ld      D2,Z+
                 ret
@@ -2676,17 +2646,8 @@ ENDF __xload_3
 
 #if defined(L_xload_4)
 DEFUN __xload_4
-                sbrc    HHI8,7
-                rjmp    1f
-#if defined(__AVR_HAVE_ELPM__)
-                out     __RAMPZ__,HHI8
-#endif /* __AVR_HAVE_ELPM__ */
-                .xload  D0,4
-                .xload  D1,4
-                .xload  D2,4
-                .xload  D3,4
-                ret
-1:              ld      D0,Z+
+                .branch_plus HHI8,__fload_4
+                ld      D0,Z+
                 ld      D1,Z+
                 ld      D2,Z+
                 ld      D3,Z+
@@ -2699,7 +2660,121 @@ ENDF __xload_4
 
 #if !defined(__AVR_TINY__)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; memcopy from Address Space __pgmx to RAM
+;; Loading n bytes from Flash;  n = 1,2,3,4
+;; R22... = Flash[R21:Z]
+;; Clobbers: __tmp_reg__, R21, R30, R31
+
+#if (defined(L_fload_1)            \
+     || defined(L_fload_2)         \
+     || defined(L_fload_3)         \
+     || defined(L_fload_4))
+
+;; Destination
+#define D0  22
+#define D1  D0+1
+#define D2  D0+2
+#define D3  D0+3
+
+;; Register containing bits 16+ of the address
+
+#define HHI8  21
+
+.macro  .fload dest, n
+#if defined (__AVR_HAVE_ELPM__)
+.if \dest == D0
+    out     __RAMPZ__, HHI8
+.endif
+#endif /* __AVR_HAVE_ELPM__ */
+#if defined (__AVR_HAVE_ELPMX__)
+    elpm    \dest, Z+
+#elif defined (__AVR_HAVE_ELPM__)
+    elpm
+    mov     \dest, r0
+.if \dest != D0+\n-1
+    adiw    r30, 1
+    adc     HHI8, __zero_reg__
+    out     __RAMPZ__, HHI8
+.endif
+#elif defined (__AVR_HAVE_LPMX__)
+    lpm     \dest, Z+
+#else
+    lpm
+    mov     \dest, r0
+.if \dest != D0+\n-1
+    adiw    r30, 1
+.endif
+#endif
+#if defined (__AVR_HAVE_ELPM__) && defined (__AVR_HAVE_RAMPD__)
+.if \dest == D0+\n-1
+    ;; Reset RAMPZ to 0 so that EBI devices don't read garbage from RAM
+    out     __RAMPZ__, __zero_reg__
+.endif
+#endif
+.endm ; .fload
+
+#if defined (L_fload_1)
+DEFUN __fload_1
+#if defined (__AVR_HAVE_LPMX__) && !defined (__AVR_HAVE_ELPM__)
+    lpm     D0, Z
+    ret
+#else
+    .fload  D0, 1
+    ret
+#endif /* LPMx && ! ELPM */
+ENDF __fload_1
+#endif /* L_fload_1 */
+
+#if defined (L_fload_2)
+DEFUN __fload_2
+    .fload  D0, 2
+    .fload  D1, 2
+    ret
+ENDF __fload_2
+#endif /* L_fload_2 */
+
+#if defined (L_fload_3)
+DEFUN __fload_3
+    .fload  D0, 3
+    .fload  D1, 3
+    .fload  D2, 3
+    ret
+ENDF __fload_3
+#endif /* L_fload_3 */
+
+#if defined (L_fload_4)
+DEFUN __fload_4
+    .fload  D0, 4
+    .fload  D1, 4
+    .fload  D2, 4
+    .fload  D3, 4
+    ret
+ENDF __fload_4
+#endif /* L_fload_4 */
+
+#endif /* L_fload_{1|2|3|4} */
+#endif /* if !defined (__AVR_TINY__) */
+
+
+#if !defined (__AVR_TINY__)
+#if defined (L_strlen_memx)
+DEFUN __strlen_memx
+#ifdef __AVR_ERRATA_SKIP_JMP_CALL__
+    tst     r24
+    brmi 1f
+#else
+    sbrs    r24, 7
+#endif
+    XJMP    strlen_PF           ; AVR-LibC
+1:  wmov    24, 22
+    XJMP    strlen              ; AVR-LibC
+ENDF __strlen_memx
+#endif /* L_strlen_memx */
+#endif /* if !defined (__AVR_TINY__) */
+
+
+#if !defined (__AVR_TINY__)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; memcopy from Address Space __memx to RAM
 ;; R23:Z = Source Address
 ;; X     = Destination Address
 ;; Clobbers: __tmp_reg__, R23, R24, R25, X, Z
@@ -2710,7 +2785,7 @@ ENDF __xload_4
 #define LOOP 24
 
 DEFUN __movmemx_qi
-                ;; #Bytes to copy fity in 8 Bits (1..255)
+                ;; #Bytes to copy fits in 8 Bits (1..255)
                 ;; Zero-extend Loop Counter
                 clr     LOOP+1
                 ;; FALLTHRU
@@ -2718,9 +2793,41 @@ ENDF __movmemx_qi
 
 DEFUN __movmemx_hi
 
-;; Read from where?
-                sbrc    HHI8,7
-                rjmp    1f
+                .branch_plus HHI8,__movmemf_hi
+
+                ;; Read 1 Byte from RAM...
+1:              ld      r0,Z+
+                ;; and store that Byte to RAM Destination
+                st      X+,r0
+                sbiw    LOOP,1
+                brne    1b
+                ret
+ENDF __movmemx_hi
+
+#undef HHI8
+#undef LOOP
+
+#endif /* L_movmemx */
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; memcopy from Address Space __flashx to RAM
+;; R23:Z = Source Address
+;; X     = Destination Address
+;; Clobbers: __tmp_reg__, R23, R24, R25, X, Z
+
+#if defined (L_movmemf)
+
+#define HHI8  23
+#define LOOP  24
+
+DEFUN __movmemf_qi
+    ;; #Bytes to copy fits in 8 Bits (1..255)
+    ;; Zero-extend Loop Counter
+    clr     LOOP+1
+    ;; FALLTHRU
+ENDF __movmemf_qi
+
+DEFUN __movmemf_hi
 
 ;; Read from Flash
 
@@ -2753,22 +2860,12 @@ DEFUN __movmemx_hi
                 out     __RAMPZ__,__zero_reg__
 #endif /* ELPM && RAMPD */
                 ret
-
-;; Read from RAM
-
-1:              ;; Read 1 Byte from RAM...
-                ld      r0,Z+
-                ;; and store that Byte to RAM Destination
-                st      X+,r0
-                sbiw    LOOP,1
-                brne    1b
-                ret
-ENDF __movmemx_hi
+ENDF __movmemf_hi
 
 #undef HHI8
 #undef LOOP
 
-#endif /* L_movmemx */
+#endif /* L_movmemf */
 #endif /* !defined (__AVR_TINY__) */
 
                 .sect   .text.libgcc.builtins,"ax",@progbits
@@ -3044,21 +3141,21 @@ ENDF __popcountdi2
 ;; r24 = popcount8 (r24)
 ;; clobbers: __tmp_reg__
 DEFUN __popcountqi2
-                mov     __tmp_reg__,r24
-                andi    r24,1
-                lsr     __tmp_reg__
-                lsr     __tmp_reg__
-                adc     r24,__zero_reg__
-                lsr     __tmp_reg__
-                adc     r24,__zero_reg__
-                lsr     __tmp_reg__
-                adc     r24,__zero_reg__
-                lsr     __tmp_reg__
-                adc     r24,__zero_reg__
-                lsr     __tmp_reg__
-                adc     r24,__zero_reg__
-                lsr     __tmp_reg__
-                adc     r24,__tmp_reg__
+                mov     __tmp_reg__,r24     ; oeoeoeoe
+                andi    r24,0xAA            ; o0o0o0o0
+                lsr     r24                 ; 0o0o0o0o
+                ;; Four values 0, 1 or 2: # bits set o+e
+                sub     __tmp_reg__,r24     ; 44332211
+                mov     r24,__tmp_reg__     ; 44332211
+                andi    r24,0x33            ; 00330011
+                eor     __tmp_reg__,r24     ; 44002200
+                lsr     __tmp_reg__         ; 04400220
+                lsr     __tmp_reg__         ; 00440022
+                add     r24,__tmp_reg__     ; 04210421
+                mov     __tmp_reg__,r24     ; h421l421
+                swap    __tmp_reg__         ; l421h421
+                add     r24,__tmp_reg__     ; 84218421
+                andi    r24,0xf             ; 00008421 /17
                 ret
 ENDF __popcountqi2
 #endif /* defined(L_popcountqi2) */
