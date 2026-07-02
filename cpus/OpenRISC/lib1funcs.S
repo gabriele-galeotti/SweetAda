@@ -1,4 +1,4 @@
-/* Copyright (C) 2018-2024 Free Software Foundation, Inc.
+/* Copyright (C) 2018-2025 Free Software Foundation, Inc.
 
 This file is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -20,7 +20,13 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 <http://www.gnu.org/licenses/>.  */
 
 /* SweetAda version, reformatted and cleaned                   */
-/* __INF__ original: gcc-14.2.0/libgcc/config/or1k/lib1funcs.S */
+/* __INF__ original: gcc-15.3.0/libgcc/config/or1k/lib1funcs.S */
+
+/* An executable stack is *not* required for these functions.  */
+#if defined(__linux__)
+                .sect   .note.GNU-stack,"",%progbits
+.previous
+#endif
 
 #if defined(L__mulsi3)
                 .balign 4
