@@ -104,7 +104,7 @@ fi
 while IFS= read -r textline ; do
   outputline="${textline}"
   for symbol in ${SYMBOLS} ; do
-    if [ "${outputline#*"${symbol}"}" = "${outputline}" ] ; then
+    if [ "${outputline#*${symbol}}" = "${outputline}" ] ; then
       continue
     fi
     variable=$(expr "${symbol}" : '@\(.*\)@')
