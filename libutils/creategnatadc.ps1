@@ -11,7 +11,8 @@
 #
 # Arguments:
 # $1 = PROFILE
-# $2 = GNATADC_FILENAME
+# $2 = input GNATADC_FILENAME template
+# $3 = output GNATADC_FILENAME
 #
 # Environment variables:
 # none
@@ -71,28 +72,24 @@ function Write-Stderr
 #
 # Basic input parameters check.
 #
-if ($args[0] -eq $null)
+if ($args.length -lt 3)
 {
-  Write-Stderr "$($scriptname): *** Error: no PROFILE specified."
+  Write-Stderr "$($scriptname): *** Error: insufficient number of arguments specified."
   ExitWithCode 1
 }
 $profile = $args[0]
-$gnatadc_filename = $args[1]
-if ([string]::IsNullOrEmpty($gnatadc_filename))
+$gnatadc_filename_template = $args[1]
+$gnatadc_filename = $args[2]
+if (-not (Test-Path -Path "$($gnatadc_filename_template)"))
 {
-  Write-Stderr "$($scriptname): *** Error: no GNATADC_FILENAME specified."
-  ExitWithCode 1
-}
-
-if (-not (Test-Path -Path "$($gnatadc_filename).in"))
-{
-  Write-Stderr "$($scriptname): *** Error: $($gnatadc_filename).in not found."
+  Write-Stderr "$($scriptname): *** Error: $($gnatadc_filename_template) not found."
   ExitWithCode 1
 }
 
 $gnatadc = ""
 
-foreach ($textline in Get-Content "$($gnatadc_filename).in")
+$pragma_seen = $false
+foreach ($textline in Get-Content "$($gnatadc_filename_template)")
 {
   $textlinearray = $textline -Split "--"
   $pragma = $textlinearray[0].Trim(" ")
@@ -107,9 +104,14 @@ foreach ($textline in Get-Content "$($gnatadc_filename).in")
     if ($p -eq $profile)
     {
       $gnatadc += "$($pragma)" + $nl
+      $pragma_seen = $true
       break
     }
   }
+}
+if (-not $pragma_seen)
+{
+  Write-Stderr "$($scriptname): *** Warning: no pragma processed."
 }
 
 try

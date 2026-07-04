@@ -125,12 +125,15 @@ function GetEnvVar
 # use hard links
 $use_hardlink = $(GetEnvVar USE_HARDLINK)
 
-# parse command line arguments
-$argsindex = 0
 $destinationindex = 0
 $targetindex = 0
 $ndestination = 0
 $ntarget = 0
+
+#
+# Parse command line arguments.
+#
+$argsindex = 0
 while ($argsindex -lt $args.Length)
 {
   if ($args[$argsindex] -eq "-o")

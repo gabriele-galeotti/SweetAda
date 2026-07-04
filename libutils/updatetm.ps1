@@ -72,7 +72,9 @@ function Write-Stderr
 [bool]$createfile = $true
 [bool]$reffile = $false
 
-# parse command line arguments
+#
+# Parse command line arguments.
+#
 $argsindex = 0
 while ($argsindex -lt $args.length)
 {

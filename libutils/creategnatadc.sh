@@ -12,7 +12,8 @@
 #
 # Arguments:
 # $1 = PROFILE
-# $2 = GNATADC_FILENAME
+# $2 = input GNATADC_FILENAME template
+# $3 = output GNATADC_FILENAME
 #
 # Environment variables:
 # every variable referenced
@@ -68,19 +69,16 @@ return 0
 #
 # Basic input parameters check.
 #
-if [ $# -lt 1 ] ; then
-  log_print_error "${SCRIPT_FILENAME}: *** Error: no PROFILE specified."
+if [ $# -lt 3 ] ; then
+  log_print_error "${SCRIPT_FILENAME}: *** Error: insufficient number of arguments specified."
   exit 1
 fi
 PROFILE="$1"
-GNATADC_FILENAME="$2"
-if [ "x${GNATADC_FILENAME}" = "x" ] ; then
-  log_print_error "${SCRIPT_FILENAME}: *** Error: no GNATADC_FILENAME specified."
-  exit 1
-fi
+GNATADC_FILENAME_TEMPLATE="$2"
+GNATADC_FILENAME="$3"
 
-if [ ! -e "./${GNATADC_FILENAME}.in" ] ; then
-  log_print_error "${SCRIPT_FILENAME}: *** Error: ${GNATADC_FILENAME}.in not found."
+if [ ! -e "./${GNATADC_FILENAME_TEMPLATE}" ] ; then
+  log_print_error "${SCRIPT_FILENAME}: *** Error: ${GNATADC_FILENAME_TEMPLATE} not found."
   exit 1
 fi
 
@@ -88,6 +86,7 @@ NL=$(printf "\n%s" "_") ; NL=${NL%_}
 
 gnatadc=""
 
+pragma_seen=N
 while IFS= read -r textline ; do
   # "woc" = without comments
   textline_woc=$(printf "%s" "${textline}" | sed -e "s|^ *--.*\$||")
@@ -98,12 +97,20 @@ while IFS= read -r textline ; do
       profile_check=$(printf "%s" "${profiles}" | grep -c -w -e "${PROFILE}" 2> /dev/null)
       if [ "x${profile_check}" != "x0" ] ; then
         gnatadc=${gnatadc}$(printf "%s" "${pragma}")${NL}
+        pragma_seen=Y
       fi
     fi
   fi
-done < "${GNATADC_FILENAME}.in"
+done < "${GNATADC_FILENAME_TEMPLATE}"
+if [ "x${pragma_seen}" = "xN" ] ; then
+  log_print_error "${SCRIPT_FILENAME}: *** Warning: no pragma processed."
+fi
 
 printf "%s" "${gnatadc}" > ${GNATADC_FILENAME}
+if [ $? -ne 0 ] ; then
+  log_print_error "${SCRIPT_FILENAME}: *** Error: in processing \"${GNATADC_FILENAME}\"."
+  exit 1
+fi
 
 log_print "${SCRIPT_FILENAME}: ${GNATADC_FILENAME}: done."
 

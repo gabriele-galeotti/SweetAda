@@ -75,7 +75,9 @@ return 0
 
 FILELIST_FILENAME=
 
-# parse command line arguments
+#
+# Parse command line arguments.
+#
 while [ $# -gt 0 ] ; do
   argument="$1"
   if [ $(printf "%.1s" "${argument}") = "-" ] ; then

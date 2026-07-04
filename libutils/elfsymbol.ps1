@@ -116,7 +116,9 @@ function GetEnvVar
 
 $prefix_string = ""
 
-# parse command line arguments
+#
+# Parse command line arguments.
+#
 $argsindex = 0
 if ($args[$argsindex] -eq "-p")
 {

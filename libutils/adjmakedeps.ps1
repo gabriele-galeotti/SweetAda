@@ -70,10 +70,13 @@ function Write-Stderr
 #                                                                              #
 ################################################################################
 
-# parse command line arguments
 $kernel_parent_path = ""
 $target_obj_path = ""
 $depfile_filename = ""
+
+#
+# Parse command line arguments.
+#
 $argsindex = 0
 while ($argsindex -lt $args.Length)
 {

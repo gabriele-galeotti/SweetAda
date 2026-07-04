@@ -233,7 +233,9 @@ $use_hardlink = $(GetEnvVar USE_HARDLINK)
 # check environment variable for verbosity
 $verbose = $(GetEnvVar VERBOSE)
 
-# parse command line arguments
+#
+# Parse command line arguments.
+#
 $argsindex = 0
 while ($argsindex -lt $args.Length)
 {

@@ -74,6 +74,9 @@ function Write-Stderr
 
 $textlinestoprint = 10
 
+#
+# Parse command line arguments.
+#
 $argsindex = 0
 while ($argsindex -lt $args.Length)
 {
