@@ -288,19 +288,17 @@ pragma Style_Checks (Off);
    -- 2.8.10. Watchdog Timer (WDT)
    ----------------------------------------------------------------------------
 
-    type WDT_CTRL_RCAUSE_Type is new Bits_2;
-
-    WDT_RCAUSE_EXT : constant WDT_CTRL_RCAUSE_Type := 2#00#; -- Reset caused by external reset signal pin
-    WDT_RCAUSE_OCD : constant WDT_CTRL_RCAUSE_Type := 2#01#; -- Reset caused by on-chip debugger
-    WDT_RCAUSE_TMO : constant WDT_CTRL_RCAUSE_Type := 2#10#; -- Reset caused by watchdog timeout
-    WDT_RCAUSE_ACC : constant WDT_CTRL_RCAUSE_Type := 2#11#; -- Reset caused by illegal watchdog access
+    WDT_CTRL_RCAUSE_EXT : constant := 2#00#; -- Reset caused by external reset signal pin
+    WDT_CTRL_RCAUSE_OCD : constant := 2#01#; -- Reset caused by on-chip debugger
+    WDT_CTRL_RCAUSE_TMO : constant := 2#10#; -- Reset caused by watchdog timeout
+    WDT_CTRL_RCAUSE_ACC : constant := 2#11#; -- Reset caused by illegal watchdog access
 
    type WDT_CTRL_Type is record
-      WDT_CTRL_EN      : Boolean              := False;          -- Watchdog enable
-      WDT_CTRL_LOCK    : Boolean              := False;          -- Lock configuration when set, clears only on system reset, can only be set if enable bit is set already
-      WDT_CTRL_RCAUSE  : WDT_CTRL_RCAUSE_Type := WDT_RCAUSE_EXT; -- Cause of last system reset
-      Reserved         : Bits_4               := 0;
-      WDT_CTRL_TIMEOUT : Bits_24              := 0;              -- Timeout value (24-bit)
+      WDT_CTRL_EN      : Boolean := False;               -- Watchdog enable
+      WDT_CTRL_LOCK    : Boolean := False;               -- Lock configuration when set, clears only on system reset, can only be set if enable bit is set already
+      WDT_CTRL_RCAUSE  : Bits_2  := WDT_CTRL_RCAUSE_EXT; -- Cause of last system reset
+      Reserved         : Bits_4  := 0;
+      WDT_CTRL_TIMEOUT : Bits_24 := 0;                   -- Timeout value (24-bit)
    end record
       with Bit_Order   => Low_Order_First,
            Object_Size => 32;
