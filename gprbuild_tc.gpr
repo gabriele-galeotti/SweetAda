@@ -167,7 +167,7 @@ abstract project Gprbuild_Tc is
          "-gnatf",
          "-gnatU",
          "-gnatn",
-         "-gnato1",
+         "-gnato13",
          -- "-gnatp"
          -- "-fstack-check",
          "-gnatVa",

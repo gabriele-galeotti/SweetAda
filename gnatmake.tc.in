@@ -101,7 +101,7 @@ ADAC_SWITCHES_DEFAULT += -gnatdV
 # minimum check settings: -gnato1=OFF -gnatp=ON  -fstack-check=OFF
 #
 #ADAC_SWITCHES_DEFAULT += -gnata        # pragma Assert enabled (requires s-assert.ads).
-ADAC_SWITCHES_DEFAULT += -gnato1       # Enable "STRICT" numeric overflow checking.
+ADAC_SWITCHES_DEFAULT += -gnato13       # Enable "STRICT" numeric overflow checking.
 #ADAC_SWITCHES_DEFAULT += -gnatp        # pragma Suppress (All_Checks)
 #ADAC_SWITCHES_DEFAULT += -fstack-check # Activates stack overflow checking.
 
