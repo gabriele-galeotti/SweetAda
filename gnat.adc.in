@@ -14,6 +14,7 @@ pragma Restrictions (No_Dynamic_Priorities);                                    
 pragma Restrictions (No_Elaboration_Code);                                         --
 pragma Restrictions (No_Exceptions);                                               --
 pragma Restrictions (No_Exception_Propagation);                                    -- zfp
+pragma Restrictions (No_Exception_Registration);                                   -- zfp
 pragma Restrictions (No_Implicit_Aliasing);                                        --
 pragma Restrictions (No_Implicit_Conditionals);                                    --
 pragma Restrictions (No_Implicit_Dynamic_Code);                                    -- zfp sfp mfp
