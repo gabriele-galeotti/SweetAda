@@ -178,7 +178,7 @@ $textlines | ForEach-Object `
     {
       if (-not $optional)
       {
-        Write-Stderr "*** Warning: variable `"$variable`" has no value."
+        Write-Stderr "$($scriptname): *** Warning: variable `"$($variable)`" has no value."
       }
     }
     if ($value.StartsWith("`"") -and $value.EndsWith("`""))
