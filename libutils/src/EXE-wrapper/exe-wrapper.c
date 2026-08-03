@@ -58,7 +58,7 @@ struct switch_descriptor {
 #define MODE_COMPILE    (1 << 4)
 #define OUTPUT_FILENAME (1 << 5)
 
-static struct switch_descriptor switches[] = {
+static const struct switch_descriptor switches[] = {
         { "-RTS=",                                      TRANSLATE_BS    },
         { "D",             EXACT_MATCH | HAS_ARGUMENT                   },
         { "D_exewrapper",                               EXE_WRAPPER     },
