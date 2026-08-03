@@ -22,7 +22,7 @@ pragma Restrictions (No_Implicit_Heap_Allocations);                             
 pragma Restrictions (No_Implicit_Loops);                                           --
 pragma Restrictions (No_Local_Protected_Objects);                                  -- zfp sfp mfp rvn jrv
 pragma Restrictions (No_Local_Timing_Events);                                      -- zfp sfp mfp rvn jrv
-pragma Restrictions (No_Obsolescent_Features);                                     -- zfp sfp mfp
+pragma Restrictions (No_Obsolescent_Features);                                     --
 pragma Restrictions (No_Protected_Type_Allocators);                                -- zfp sfp mfp rvn jrv
 pragma Restrictions (No_Recursion);                                                -- zfp sfp mfp
 pragma Restrictions (No_Relative_Delay);                                           -- zfp sfp mfp rvn
