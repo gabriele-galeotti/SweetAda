@@ -48,8 +48,8 @@ endif
 # override core MMIO
 CPU_INCLUDE_DIRECTORIES += $(CPU_DIRECTORY)/mmio
 
-GPR_CORE_CPU += cpu.ads                   \
-                cpu-mmio.adb cpu-mmio.ads
+GPR_CORE_CPU += cpu.ads                 \
+                armmmio.adb armmmio.ads
 
 GCCDEFINES_CPU += __APCS_32__:APCS_32:Boolean:H                     \
                   __ARM_ARCH:ARM_ARCH:Integer:P                     \

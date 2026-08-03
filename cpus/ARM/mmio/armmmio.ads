@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ cpu-mmio.ads                                                                                              --
+-- __FLN__ armmmio.ads                                                                                               --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -18,7 +18,7 @@
 with System;
 with Interfaces;
 
-package CPU.MMIO
+package ARMmmio
    is
 
    --========================================================================--
@@ -59,4 +59,4 @@ package CPU.MMIO
        Value          : in Interfaces.Unsigned_32)
       with Inline_Always => True;
 
-end CPU.MMIO;
+end ARMmmio;

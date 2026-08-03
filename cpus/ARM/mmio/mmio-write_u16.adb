@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with CPU.MMIO;
+with ARMmmio;
 
 separate (MMIO)
 procedure Write_U16
@@ -23,5 +23,5 @@ procedure Write_U16
     Value          : in Interfaces.Unsigned_16)
    is
 begin
-   CPU.MMIO.Write_U16 (Memory_Address, Value);
+   ARMmmio.Write_U16 (Memory_Address, Value);
 end Write_U16;

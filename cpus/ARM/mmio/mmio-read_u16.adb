@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with CPU.MMIO;
+with ARMmmio;
 
 separate (MMIO)
 function Read_U16
@@ -23,5 +23,5 @@ function Read_U16
    return Interfaces.Unsigned_16
    is
 begin
-   return CPU.MMIO.Read_U16 (Memory_Address);
+   return ARMmmio.Read_U16 (Memory_Address);
 end Read_U16;
