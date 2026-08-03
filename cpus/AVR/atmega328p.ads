@@ -74,10 +74,11 @@ pragma Style_Checks (Off);
    SREG_ADDRESS : constant := 16#5F#;
 
    SREG : aliased SREG_Type
-      with Address              => System'To_Address (SREG_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (SREG_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    ----------------------------------------------------------------------------
    -- 7. AVR Memories
@@ -107,68 +108,75 @@ pragma Style_Checks (Off);
    EECR_ADDRESS : constant := 16#3F#;
 
    EECR : aliased EECR_Type
-      with Address              => System'To_Address (EECR_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (EECR_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 7.6.2 EEDR - The EEPROM Data Register
 
    EEDR_ADDRESS : constant := 16#40#;
 
    EEDR : aliased Unsigned_8
-      with Address              => System'To_Address (EEDR_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (EEDR_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 7.6.1 EEARH and EEARL - The EEPROM Address Register
 
    EEARL_ADDRESS : constant := 16#41#;
 
    EEARL : aliased Unsigned_8
-      with Address              => System'To_Address (EEARL_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (EEARL_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    EEARH_ADDRESS : constant := 16#42#;
 
    EEARH : aliased Unsigned_8
-      with Address              => System'To_Address (EEARH_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (EEARH_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 7.6.6 GPIOR0 – General Purpose I/O Register 0
 
    GPIOR0_ADDRESS : constant := 16#3E#;
 
    GPIOR0 : aliased Unsigned_8
-      with Address              => System'To_Address (GPIOR0_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (GPIOR0_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 7.6.5 GPIOR1 – General Purpose I/O Register 1
 
    GPIOR1_ADDRESS : constant := 16#4A#;
 
    GPIOR1 : aliased Unsigned_8
-      with Address              => System'To_Address (GPIOR1_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (GPIOR1_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 7.6.4 GPIOR2 – General Purpose I/O Register 2
 
    GPIOR2_ADDRESS : constant := 16#4B#;
 
    GPIOR2 : aliased Unsigned_8
-      with Address              => System'To_Address (GPIOR2_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (GPIOR2_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    ----------------------------------------------------------------------------
    -- 8. System Clock and Clock Options
@@ -179,10 +187,11 @@ pragma Style_Checks (Off);
    OSCCAL_ADDRESS : constant := 16#66#;
 
    OSCCAL : Unsigned_8
-      with Address              => System'To_Address (OSCCAL_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (OSCCAL_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 8.12.2 CLKPR – Clock Prescale Register
 
@@ -212,10 +221,11 @@ pragma Style_Checks (Off);
    CLKPR_ADDRESS : constant := 16#61#;
 
    CLKPR : aliased CLKPR_Type
-      with Address              => System'To_Address (CLKPR_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (CLKPR_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    ----------------------------------------------------------------------------
    -- 9. Power Management and Sleep Modes
@@ -246,10 +256,11 @@ pragma Style_Checks (Off);
    SMCR_ADDRESS : constant := 16#53#;
 
    SMCR : aliased SMCR_Type
-      with Address              => System'To_Address (SMCR_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (SMCR_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 9.11.2 MCUCR – MCU Control Register
    -- 11.5.2 MCUCR – MCU Control Register
@@ -278,10 +289,11 @@ pragma Style_Checks (Off);
    MCUCR_ADDRESS : constant := 16#55#;
 
    MCUCR : aliased MCUCR_Type
-      with Address              => System'To_Address (MCUCR_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (MCUCR_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 9.11.3 PRR – Power Reduction Register
 
@@ -311,10 +323,11 @@ pragma Style_Checks (Off);
    PRR_ADDRESS : constant := 16#64#;
 
    PRR : aliased PRR_Type
-      with Address              => System'To_Address (PRR_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (PRR_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    ----------------------------------------------------------------------------
    -- 10. System Control and Reset
@@ -342,10 +355,11 @@ pragma Style_Checks (Off);
    MCUSR_ADDRESS : constant := 16#54#;
 
    MCUSR : aliased MCUSR_Type
-      with Address              => System'To_Address (MCUSR_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (MCUSR_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 10.9.2 WDTCSR – Watchdog Timer Control Register
 
@@ -387,10 +401,11 @@ pragma Style_Checks (Off);
    WDTCSR_ADDRESS : constant := 16#60#;
 
    WDTCSR : aliased WDTCSR_Type
-      with Address              => System'To_Address (WDTCSR_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (WDTCSR_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    ----------------------------------------------------------------------------
    -- 13. I/O-Ports
@@ -401,90 +416,99 @@ pragma Style_Checks (Off);
    PORTB_ADDRESS : constant := 16#25#;
 
    PORTB : aliased Bitmap_8
-      with Address              => System'To_Address (PORTB_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (PORTB_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 13.4.3 DDRB – The Port B Data Direction Register
 
    DDRB_ADDRESS : constant := 16#24#;
 
    DDRB : aliased Bitmap_8
-      with Address              => System'To_Address (DDRB_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (DDRB_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 13.4.4 PINB – The Port B Input Pins Address
 
    PINB_ADDRESS : constant := 16#23#;
 
    PINB : aliased Bitmap_8
-      with Address              => System'To_Address (PINB_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (PINB_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 13.4.5 PORTC – The Port C Data Register
 
    PORTC_ADDRESS : constant := 16#28#;
 
    PORTC : aliased Bitmap_8
-      with Address              => System'To_Address (PORTC_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (PORTC_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 13.4.6 DDRC – The Port C Data Direction Register
 
    DDRC_ADDRESS : constant := 16#27#;
 
    DDRC : aliased Bitmap_8
-      with Address              => System'To_Address (DDRC_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (DDRC_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 13.4.7 PINC – The Port C Input Pins Address
 
    PINC_ADDRESS : constant := 16#26#;
 
    PINC : aliased Bitmap_8
-      with Address              => System'To_Address (PINC_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (PINC_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 13.4.8 PORTD – The Port D Data Register
 
    PORTD_ADDRESS : constant := 16#2B#;
 
    PORTD : aliased Bitmap_8
-      with Address              => System'To_Address (PORTD_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (PORTD_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 13.4.9 DDRD – The Port D Data Direction Register
 
    DDRD_ADDRESS : constant := 16#2A#;
 
    DDRD : aliased Bitmap_8
-      with Address              => System'To_Address (DDRD_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (DDRD_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 13.4.10 PIND – The Port D Input Pins Address
 
    PIND_ADDRESS : constant := 16#29#;
 
    PIND : aliased Bitmap_8
-      with Address              => System'To_Address (PIND_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (PIND_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    ----------------------------------------------------------------------------
    -- 14. 8-bit Timer/Counter0 with PWM
@@ -526,10 +550,11 @@ pragma Style_Checks (Off);
    TCCR0A_ADDRESS : constant := 16#44#;
 
    TCCR0A : aliased TCCR0A_Type
-      with Address              => System'To_Address (TCCR0A_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (TCCR0A_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 14.9.2 TCCR0B – Timer/Counter Control Register B
 
@@ -562,40 +587,44 @@ pragma Style_Checks (Off);
    TCCR0B_ADDRESS : constant := 16#45#;
 
    TCCR0B : aliased TCCR0B_Type
-      with Address              => System'To_Address (TCCR0B_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (TCCR0B_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 14.9.3 TCNT0 – Timer/Counter Register
 
    TCNT0_ADDRESS : constant := 16#46#;
 
    TCNT0 : aliased Unsigned_8
-      with Address              => System'To_Address (TCNT0_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (TCNT0_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 14.9.4 OCR0A – Output Compare Register A
 
    OCR0A_ADDRESS : constant := 16#47#;
 
    OCR0A : aliased Unsigned_8
-      with Address              => System'To_Address (OCR0A_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (OCR0A_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 14.9.5 OCR0B – Output Compare Register B
 
    OCR0B_ADDRESS : constant := 16#48#;
 
    OCR0B : aliased Unsigned_8
-      with Address              => System'To_Address (OCR0B_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (OCR0B_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 14.9.6 TIMSK0 – Timer/Counter Interrupt Mask Register
 
@@ -617,10 +646,11 @@ pragma Style_Checks (Off);
    TIMSK0_ADDRESS : constant := 16#6E#;
 
    TIMSK0 : aliased TIMSK0_Type
-      with Address              => System'To_Address (TIMSK0_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (TIMSK0_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 14.9.7 TIFR0 - Timer/Counter0 Interrupt Flag Register
 
@@ -642,10 +672,11 @@ pragma Style_Checks (Off);
    TIFR0_ADDRESS : constant := 16#35#;
 
    TIFR0 : aliased TIFR0_Type
-      with Address              => System'To_Address (TIFR0_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (TIFR0_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    ----------------------------------------------------------------------------
    -- 15. 16-bit Timer/Counter1 with PWM
@@ -696,10 +727,11 @@ pragma Style_Checks (Off);
    TCCR1A_ADDRESS : constant := 16#80#;
 
    TCCR1A : aliased TCCR1A_Type
-      with Address              => System'To_Address (TCCR1A_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (TCCR1A_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 15.11.2 TCCR1B – Timer/Counter1 Control Register B
 
@@ -732,10 +764,11 @@ pragma Style_Checks (Off);
    TCCR1B_ADDRESS : constant := 16#81#;
 
    TCCR1B : aliased TCCR1B_Type
-      with Address              => System'To_Address (TCCR1B_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (TCCR1B_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 15.11.3 TCCR1C - Timer/Counter1 Control Register C
 
@@ -755,82 +788,91 @@ pragma Style_Checks (Off);
    TCCR1C_ADDRESS : constant := 16#82#;
 
    TCCR1C : aliased TCCR1C_Type
-      with Address              => System'To_Address (TCCR1C_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (TCCR1C_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 15.11.4 TCNT1H and TCNT1L – Timer/Counter1
 
    TCNT1L_ADDRESS : constant := 16#84#;
 
    TCNT1L : aliased Unsigned_8
-      with Address              => System'To_Address (TCNT1L_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (TCNT1L_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    TCNT1H_ADDRESS : constant := 16#85#;
 
    TCNT1H : aliased Unsigned_8
-      with Address              => System'To_Address (TCNT1H_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (TCNT1H_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 15.11.5 OCR1AH and OCR1AL – Output Compare Register 1 A
 
    OCR1AL_ADDRESS : constant := 16#88#;
 
    OCR1AL : aliased Unsigned_8
-      with Address              => System'To_Address (OCR1AL_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (OCR1AL_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    OCR1AH_ADDRESS : constant := 16#89#;
 
    OCR1AH : aliased Unsigned_8
-      with Address              => System'To_Address (OCR1AH_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (OCR1AH_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 15.11.6 OCR1BH and OCR1BL – Output Compare Register 1 B
 
    OCR1BL_ADDRESS : constant := 16#8A#;
 
    OCR1BL : aliased Unsigned_8
-      with Address              => System'To_Address (OCR1BL_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (OCR1BL_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    OCR1BH_ADDRESS : constant := 16#8B#;
 
    OCR1BH : aliased Unsigned_8
-      with Address              => System'To_Address (OCR1BH_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (OCR1BH_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 15.11.7 ICR1H and ICR1L – Input Capture Register 1
 
    ICR1L_ADDRESS : constant := 16#86#;
 
    ICR1L : aliased Unsigned_8
-      with Address              => System'To_Address (ICR1L_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (ICR1L_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    ICR1H_ADDRESS : constant := 16#87#;
 
    ICR1H : aliased Unsigned_8
-      with Address              => System'To_Address (ICR1H_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (ICR1H_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 15.11.8 TIMSK1 - Timer/Counter1 Interrupt Mask Register
 
@@ -856,10 +898,11 @@ pragma Style_Checks (Off);
    TIMSK1_ADDRESS : constant := 16#6F#;
 
    TIMSK1 : aliased TIMSK1_Type
-      with Address              => System'To_Address (TIMSK1_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (TIMSK1_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 15.11.9 TIFR1 – Timer/Counter1 Interrupt Flag Register
 
@@ -885,10 +928,11 @@ pragma Style_Checks (Off);
    TIFR1_ADDRESS : constant := 16#36#;
 
    TIFR1 : aliased TIFR1_Type
-      with Address              => System'To_Address (TIFR1_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (TIFR1_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    ----------------------------------------------------------------------------
    -- 17. 8-bit Timer/Counter2 with PWM and Asynchronous Operation
@@ -930,10 +974,11 @@ pragma Style_Checks (Off);
    TCCR2A_ADDRESS : constant := 16#B0#;
 
    TCCR2A : aliased TCCR2A_Type
-      with Address              => System'To_Address (TCCR2A_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (TCCR2A_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 17.11.2 TCCR2B – Timer/Counter Control Register B
 
@@ -966,40 +1011,44 @@ pragma Style_Checks (Off);
    TCCR2B_ADDRESS : constant := 16#B1#;
 
    TCCR2B : aliased TCCR2B_Type
-      with Address              => System'To_Address (TCCR2B_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (TCCR2B_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 17.11.3 TCNT2 – Timer/Counter Register
 
    TCNT2_ADDRESS : constant := 16#B2#;
 
    TCNT2 : aliased Unsigned_8
-      with Address              => System'To_Address (TCNT2_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (TCNT2_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 17.11.4 OCR2A – Output Compare Register A
 
    OCR2A_ADDRESS : constant := 16#B3#;
 
    OCR2A : aliased Unsigned_8
-      with Address              => System'To_Address (OCR2A_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (OCR2A_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 17.11.5 OCR2B – Output Compare Register B
 
    OCR2B_ADDRESS : constant := 16#B4#;
 
    OCR2B : aliased Unsigned_8
-      with Address              => System'To_Address (OCR2B_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (OCR2B_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 17.11.6 TIMSK2 – Timer/Counter2 Interrupt Mask Register
 
@@ -1021,10 +1070,11 @@ pragma Style_Checks (Off);
    TIMSK2_ADDRESS : constant := 16#70#;
 
    TIMSK2 : aliased TIMSK2_Type
-      with Address              => System'To_Address (TIMSK2_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (TIMSK2_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 17.11.7 TIFR2 – Timer/Counter2 Interrupt Flag Register
 
@@ -1046,10 +1096,11 @@ pragma Style_Checks (Off);
    TIFR2_ADDRESS : constant := 16#37#;
 
    TIFR2 : aliased TIFR2_Type
-      with Address              => System'To_Address (TIFR2_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (TIFR2_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 17.11.8 ASSR – Asynchronous Status Register
 
@@ -1079,10 +1130,11 @@ pragma Style_Checks (Off);
    ASSR_ADDRESS : constant := 16#B6#;
 
    ASSR : aliased ASSR_Type
-      with Address              => System'To_Address (ASSR_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (ASSR_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 17.11.9 GTCCR – General Timer/Counter Control Register
 
@@ -1104,10 +1156,11 @@ pragma Style_Checks (Off);
    GTCCR_ADDRESS : constant := 16#43#;
 
    GTCCR : aliased GTCCR_Type
-      with Address              => System'To_Address (GTCCR_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (GTCCR_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    ----------------------------------------------------------------------------
    -- 18. SPI – Serial Peripheral Interface
@@ -1156,10 +1209,11 @@ pragma Style_Checks (Off);
    SPCR_ADDRESS : constant := 16#4C#;
 
    SPCR : aliased SPCR_Type
-      with Address              => System'To_Address (SPCR_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (SPCR_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 18.5.2 SPSR – SPI Status Register
 
@@ -1181,10 +1235,11 @@ pragma Style_Checks (Off);
    SPSR_ADDRESS : constant := 16#4D#;
 
    SPSR : aliased SPSR_Type
-      with Address              => System'To_Address (SPSR_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (SPSR_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 18.5.3 SPDR – SPI Data Register
 
@@ -1192,7 +1247,8 @@ pragma Style_Checks (Off);
 
    SPDR : aliased Unsigned_8
       with Address              => System'To_Address (SPDR_ADDRESS),
-           Volatile_Full_Access => True,
+           Full_Access_Only => True,
+           Volatile         => True,
            Import               => True,
            Convention           => Ada;
 
@@ -1255,10 +1311,11 @@ pragma Style_Checks (Off);
    UCSR0A_ADDRESS : constant := 16#C0#;
 
    UCSR0A : aliased UCSR0A_Type
-      with Address              => System'To_Address (UCSR0A_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (UCSR0A_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 19.10.3 UCSRnB – USART Control and Status Register n B
 
@@ -1288,10 +1345,11 @@ pragma Style_Checks (Off);
    UCSR0B_ADDRESS : constant := 16#C1#;
 
    UCSR0B : aliased UCSR0B_Type
-      with Address              => System'To_Address (UCSR0B_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (UCSR0B_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 19.10.4 UCSRnC - USART Control and Status Register n C
 
@@ -1315,38 +1373,42 @@ pragma Style_Checks (Off);
    UCSR0C_ADDRESS : constant := 16#C2#;
 
    UCSR0C : aliased UCSR0C_Type
-      with Address              => System'To_Address (UCSR0C_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (UCSR0C_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 19.10.5 UBRRnL and UBRRnH – USART Baud Rate Registers
 
    UBRR0L_ADDRESS : constant := 16#C4#;
 
    UBRR0L : aliased Unsigned_8
-      with Address              => System'To_Address (UBRR0L_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (UBRR0L_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    UBRR0H_ADDRESS : constant := 16#C5#;
 
    UBRR0H : aliased Unsigned_8
-      with Address              => System'To_Address (UBRR0H_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (UBRR0H_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 19.10.1 UDRn – USART I/O Data Register n
 
    UDR0_ADDRESS : constant := 16#C6#;
 
    UDR0 : aliased Unsigned_8
-      with Address              => System'To_Address (UDR0_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (UDR0_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
 pragma Style_Checks (On);
 

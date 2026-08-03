@@ -137,10 +137,11 @@ pragma Style_Checks (Off);
    SREG_ADDRESS : constant := 16#5F#;
 
    SREG : aliased SREG_Type
-      with Address              => System'To_Address (SREG_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (SREG_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    ----------------------------------------------------------------------------
    -- MCUCR
@@ -176,10 +177,11 @@ pragma Style_Checks (Off);
    MCUCR_ADDRESS : constant := 16#55#;
 
    MCUCR : aliased MCUCR_Type
-      with Address              => System'To_Address (MCUCR_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (MCUCR_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    ----------------------------------------------------------------------------
    -- 12. AVR Memories
@@ -190,30 +192,33 @@ pragma Style_Checks (Off);
    EEARL_ADDRESS : constant := 16#3E#;
 
    EEARL : aliased Unsigned_8
-      with Address              => System'To_Address (EEARL_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (EEARL_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 12.7.2. EEARH – The EEPROM Address Register High
 
    EEARH_ADDRESS : constant := 16#3F#;
 
    EEARH : aliased Unsigned_8
-      with Address              => System'To_Address (EEARH_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (EEARH_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 12.7.3. EEDR – The EEPROM Data Register
 
    EEDR_ADDRESS : constant := 16#3D#;
 
    EEDR : aliased Unsigned_8
-      with Address              => System'To_Address (EEDR_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (EEDR_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 12.7.4. EECR – The EEPROM Control Register
 
@@ -237,10 +242,11 @@ pragma Style_Checks (Off);
    EECR_ADDRESS : constant := 16#3C#;
 
    EECR : aliased EECR_Type
-      with Address              => System'To_Address (EECR_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (EECR_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 12.7.6. XMCRA – External Memory Control Register A
 
@@ -266,10 +272,11 @@ pragma Style_Checks (Off);
    XMCRA_ADDRESS : constant := 16#6D#;
 
    XMCRA : aliased XMCRA_Type
-      with Address              => System'To_Address (XMCRA_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (XMCRA_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 12.7.7. XMCRB – External Memory Control Register B
 
@@ -289,10 +296,11 @@ pragma Style_Checks (Off);
    XMCRB_ADDRESS : constant := 16#6C#;
 
    XMCRB : aliased XMCRB_Type
-      with Address              => System'To_Address (XMCRB_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (XMCRB_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    ----------------------------------------------------------------------------
    -- 13. System Clock and Clock Options
@@ -314,20 +322,22 @@ pragma Style_Checks (Off);
    XDIV_ADDRESS : constant := 16#5C#;
 
    XDIV : aliased XDIV_Type
-      with Address              => System'To_Address (XDIV_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (XDIV_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 13.10.2. OSCCAL – Oscillator Calibration Register
 
    OSCCAL_ADDRESS : constant := 16#51#;
 
    OSCCAL : aliased Unsigned_8
-      with Address              => System'To_Address (OSCCAL_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (OSCCAL_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    ----------------------------------------------------------------------------
    -- 15. System Control and Reset
@@ -357,10 +367,11 @@ pragma Style_Checks (Off);
    MCUCSR_ADDRESS : constant := 16#54#;
 
    MCUCSR : aliased MCUCSR_Type
-      with Address              => System'To_Address (MCUCSR_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (MCUCSR_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 15.6.2. WDTCR – Watchdog Timer Control Register
 
@@ -391,10 +402,11 @@ pragma Style_Checks (Off);
    WDTCR_ADDRESS : constant := 16#41#;
 
    WDTCR : aliased WDTCR_Type
-      with Address              => System'To_Address (WDTCR_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (WDTCR_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    ----------------------------------------------------------------------------
    -- 18. I/O Ports
@@ -405,120 +417,132 @@ pragma Style_Checks (Off);
    PORTA_ADDRESS : constant := 16#3B#;
 
    PORTA : aliased Bitmap_8
-      with Address              => System'To_Address (PORTA_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (PORTA_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 18.4.3. DDRA – Port A Data Direction Register
 
    DDRA_ADDRESS : constant := 16#3A#;
 
    DDRA : aliased Bitmap_8
-      with Address              => System'To_Address (DDRA_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (DDRA_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 18.4.4. PINA – Port A Input Pins Address
 
    PINA_ADDRESS : constant := 16#39#;
 
    PINA : aliased Bitmap_8
-      with Address              => System'To_Address (PINA_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (PINA_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 18.4.5. PORTB – The Port B Data Register
 
    PORTB_ADDRESS : constant := 16#38#;
 
    PORTB : aliased Bitmap_8
-      with Address              => System'To_Address (PORTB_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (PORTB_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 18.4.6. DDRB – The Port B Data Direction Register
 
    DDRB_ADDRESS : constant := 16#37#;
 
    DDRB : aliased Bitmap_8
-      with Address              => System'To_Address (DDRB_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (DDRB_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 18.4.7. PINB – The Port B Input Pins Address
 
    PINB_ADDRESS : constant := 16#36#;
 
    PINB : aliased Bitmap_8
-      with Address              => System'To_Address (PINB_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (PINB_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 18.4.8. PORTC – The Port C Data Register
 
    PORTC_ADDRESS : constant := 16#35#;
 
    PORTC : aliased Bitmap_8
-      with Address              => System'To_Address (PORTC_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (PORTC_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 18.4.9. DDRC – The Port C Data Direction Register
 
    DDRC_ADDRESS : constant := 16#34#;
 
    DDRC : aliased Bitmap_8
-      with Address              => System'To_Address (DDRC_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (DDRC_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 18.4.10. PINC – The Port C Input Pins Address
 
    PINC_ADDRESS : constant := 16#33#;
 
    PINC : aliased Bitmap_8
-      with Address              => System'To_Address (PINC_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (PINC_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 18.4.11. PORTD – The Port D Data Register
 
    PORTD_ADDRESS : constant := 16#32#;
 
    PORTD : aliased Bitmap_8
-      with Address              => System'To_Address (PORTD_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (PORTD_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 18.4.12. DDRD – The Port D Data Direction Register
 
    DDRD_ADDRESS : constant := 16#31#;
 
    DDRD : aliased Bitmap_8
-      with Address              => System'To_Address (DDRD_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (DDRD_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
    -- 18.4.13. PIND – The Port D Input Pins Address
 
    PIND_ADDRESS : constant := 16#30#;
 
    PIND : aliased Bitmap_8
-      with Address              => System'To_Address (PIND_ADDRESS),
-           Volatile_Full_Access => True,
-           Import               => True,
-           Convention           => Ada;
+      with Address          => System'To_Address (PIND_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
 
 pragma Style_Checks (On);
 
