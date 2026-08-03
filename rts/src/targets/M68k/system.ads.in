@@ -31,6 +31,13 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+-- RTS-wide pragma section start
+@RESTRICTIONS_NO_EXCEPTION_PROPAGATION@
+@RESTRICTIONS_NO_EXCEPTION_REGISTRATION@
+@RESTRICTIONS_NO_IMPLICIT_DYNAMIC_CODE@
+@RESTRICTIONS_NO_IMPLICIT_HEAP_ALLOCATIONS@
+-- RTS-wide pragma section end
+
 package System is
    pragma Pure;
    --  Note that we take advantage of the implementation permission to make
