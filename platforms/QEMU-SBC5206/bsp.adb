@@ -87,6 +87,7 @@ package body BSP
       -------------------------------------------------------------------------
       Console.Print ("Arnewsh SBC5206 (QEMU emulator)", NL => True);
       -------------------------------------------------------------------------
+      Tick_Count := 0;
       MCF5206.TIMER1.TRR := 16#1000#;
       MCF5206.TIMER1.TMR := (
          RST => True,
