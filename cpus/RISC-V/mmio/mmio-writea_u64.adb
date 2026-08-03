@@ -22,13 +22,20 @@ procedure WriteA_U64
    (Memory_Address : in System.Address;
     Value          : in Interfaces.Unsigned_64)
    is
-   procedure Atomic_Store
-      (Object_Address : System.Address;
-       Data           : Interfaces.Unsigned_64;
-       Memory_Order   : Integer)
-      with Import        => True,
-           Convention    => Intrinsic,
-           External_Name => "__atomic_store_8";
 begin
-   Atomic_Store (Memory_Address, Value, GCC.Defines.ATOMIC_SEQ_CST);
+   if System.Word_Size = 64 then
+      declare
+         procedure Atomic_Store
+            (Object_Address : System.Address;
+             Data           : Interfaces.Unsigned_64;
+             Memory_Order   : Integer)
+            with Import        => True,
+                 Convention    => Intrinsic,
+                 External_Name => "__atomic_store_8";
+      begin
+         Atomic_Store (Memory_Address, Value, GCC.Defines.ATOMIC_SEQ_CST);
+      end;
+   else
+      raise Program_Error;
+   end if;
 end WriteA_U64;

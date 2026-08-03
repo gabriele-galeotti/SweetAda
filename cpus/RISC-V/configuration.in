@@ -14,13 +14,8 @@ endif
 
 export RISCV
 
-MMIO_FUNCTIONS := mmio-reada_u8.adb  mmio-writea_u8.adb  \
-                  mmio-reada_u16.adb mmio-writea_u16.adb \
-                  mmio-reada_u32.adb mmio-writea_u32.adb
-ifeq ($(RISCV),RV64)
-  MMIO_FUNCTIONS += mmio-reada_u64.adb mmio-writea_u64.adb
-endif
-export MMIO_FUNCTIONS
+# override core MMIO
+CPU_INCLUDE_DIRECTORIES += $(CPU_DIRECTORY)/mmio
 
 GPR_CORE_CPU += cpu.ads               \
                 riscv.adb riscv.ads   \

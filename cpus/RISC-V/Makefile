@@ -44,32 +44,18 @@ OBJECTS        += $(OBJ_DIRECTORY)/libgcc.o
 endif
 endif
 
--include Makefile.if.in
-
 .PHONY: all
 all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: configure
-configure: clean-installed-files
-ifneq ($(MMIO_FUNCTIONS),)
-	@$(SYMLINK) -v -c -m Makefile.if.in $(foreach f,$(MMIO_FUNCTIONS),./mmio/$(f) $(f))
-endif
-
-.PHONY: clean-installed-files
-clean-installed-files:
-ifneq ($(filter cmd msys,$(OSTYPE)),)
-	$(RMSYMLINK) $(INSTALLED_FILENAMES) -o $(ORIGIN_FILENAMES)
-else
-	$(RM) $(INSTALLED_FILENAMES)
-endif
-	$(RM) Makefile.if.in
+configure:
 
 .PHONY: clean
 clean:
 	$(RM) $(CLEAN_OBJECTS_COMMON)
 
 .PHONY: distclean
-distclean: clean-installed-files clean
+distclean: clean
 	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in

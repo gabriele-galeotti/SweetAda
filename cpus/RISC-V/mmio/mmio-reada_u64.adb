@@ -22,13 +22,21 @@ function ReadA_U64
    (Memory_Address : System.Address)
    return Interfaces.Unsigned_64
    is
-   function Atomic_Load
-      (Object_Address : System.Address;
-       Memory_Order   : Integer)
-      return Interfaces.Unsigned_64
-      with Import        => True,
-           Convention    => Intrinsic,
-           External_Name => "__atomic_load_8";
 begin
-   return Atomic_Load (Memory_Address, GCC.Defines.ATOMIC_SEQ_CST);
+   if System.Word_Size = 64 then
+      declare
+         function Atomic_Load
+            (Object_Address : System.Address;
+             Memory_Order   : Integer)
+            return Interfaces.Unsigned_64
+            with Import        => True,
+                 Convention    => Intrinsic,
+                 External_Name => "__atomic_load_8";
+      begin
+         return Atomic_Load (Memory_Address, GCC.Defines.ATOMIC_SEQ_CST);
+      end;
+   else
+      raise Program_Error;
+      return 0;
+   end if;
 end ReadA_U64;
