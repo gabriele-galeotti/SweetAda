@@ -102,8 +102,6 @@ package body BSP
       -- PORTx clock gate control ---------------------------------------------
       SIM_SCGC5.PORTE := True;
       SIM_SCGC5.PORTF := True;
-      -------------------------------------------------------------------------
-      Exceptions.Init;
       -- UART5 ----------------------------------------------------------------
       SIM_SCGC1.UART5 := True;
       PORTE_MUXCTRL.PCR (8).MUX := MUX_ALT3;
@@ -119,12 +117,20 @@ package body BSP
          );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
+      Exceptions.Init;
+      ARMv7M.CCR := (@ with delta
+         UNALIGN_TRP => True, -- unaligned word and halfword accesses generate a HardFault exception
+         DC          => True, -- Cache enable bit.
+         IC          => True, -- Instruction cache enable bit.
+         BP          => True  -- Branch prediction enable bit.
+         );
+      ARMv7M.Fault_Irq_Enable;
+      -------------------------------------------------------------------------
       Console.Print ("Kinetis K61", NL => True);
       -------------------------------------------------------------------------
       DDR.Init;
       -------------------------------------------------------------------------
       ARMv7M.Irq_Enable;
-      ARMv7M.Fault_Irq_Enable;
       SysTick_Init;
       -------------------------------------------------------------------------
    end Setup;
