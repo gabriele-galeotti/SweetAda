@@ -98,14 +98,21 @@ package body BSP
    procedure Setup
       is
    begin
-      -------------------------------------------------------------------------
-      Exceptions.Init;
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor := (
          Write => Console_Putchar'Access,
          Read  => Console_Getchar'Access
          );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
+      -------------------------------------------------------------------------
+      Exceptions.Init;
+      ARMv7M.CCR := (@ with delta
+         UNALIGN_TRP => True, -- unaligned word and halfword accesses generate a HardFault exception
+         DC          => True, -- Cache enable bit.
+         IC          => True, -- Instruction cache enable bit.
+         BP          => True  -- Branch prediction enable bit.
+         );
+      ARMv7M.Fault_Irq_Enable;
       -------------------------------------------------------------------------
       Console.Print ("STM32VLDISCOVERY (QEMU emulator)", NL => True);
       -------------------------------------------------------------------------
@@ -114,7 +121,6 @@ package body BSP
       end if;
       -------------------------------------------------------------------------
       ARMv7M.Irq_Enable;
-      ARMv7M.Fault_Irq_Enable;
       SysTick_Init;
       -------------------------------------------------------------------------
    end Setup;
