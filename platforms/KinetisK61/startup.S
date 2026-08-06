@@ -54,8 +54,7 @@ _start:
                 //
                 // Setup stack pointer.
                 //
-                ldr     r0,=kernel_stack
-                mov     sp,r0
+                ldr     sp,=kernel_stack
 
                 //
                 // Initialize .bss section.
