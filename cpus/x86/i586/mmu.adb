@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System;
 with System.Storage_Elements;
 with x86;
@@ -37,7 +39,8 @@ package body MMU
    use i586;
 
    PD : aliased PD4M_Type
-      with Volatile => True;
+      with Volatile                => True,
+           Suppress_Initialization => True;
 
    --========================================================================--
    --                                                                        --

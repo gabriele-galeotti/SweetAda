@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System;
 with System.Storage_Elements;
 with Bits;
@@ -39,11 +41,13 @@ package body MMU
    use x86;
 
    PD : aliased PD4k_Type
-      with Volatile => True;
+      with Volatile                => True,
+           Suppress_Initialization => True;
 
    -- first page table
    PTE0 : aliased PT_Type
-      with Volatile => True;
+      with Volatile                => True,
+           Suppress_Initialization => True;
 
    --========================================================================--
    --                                                                        --
