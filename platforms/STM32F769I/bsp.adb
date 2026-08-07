@@ -99,23 +99,8 @@ package body BSP
       is
       Baud_Rate : constant := Baud_Rate_Type'Enum_Rep (BR_115200);
    begin
-      -------------------------------------------------------------------------
-      Exceptions.Init;
       -- clock initialization -------------------------------------------------
       Clocks.Init;
-      -- PWR ------------------------------------------------------------------
-      RCC_APB1ENR.PWREN := True;
-      RCC_APB1RSTR.PWRRST := True;
-      RCC_APB1RSTR.PWRRST := False;
-      -- GPIOJ (LEDs) ---------------------------------------------------------
-      -- LD1: RED PJ13 (B9)
-      -- LD2: GRN PJ5 (M14)
-      RCC_AHB1ENR.GPIOJEN := True;
-      RCC_AHB1RSTR.GPIOJRST := True;
-      RCC_AHB1RSTR.GPIOJRST := False;
-      GPIOJ.MODER  := (@ with delta 5 | 13 => GPIO_OUT);
-      GPIOJ.OTYPER := (@ with delta 5 | 13 => GPIO_PP);
-      GPIOJ.PUPDR  := (@ with delta 5 | 13 => GPIO_NOPUPD);
       -- GPIOA (USART1) -------------------------------------------------------
       -- USART1_TX PA9 (E15) Virtual COM port
       -- USART1_RX PA10 (D15) Virtual COM port
@@ -148,10 +133,32 @@ package body BSP
          );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
+      Exceptions.Init;
+      ARMv7M.Fault_Irq_Enable;
+      -- FPU ------------------------------------------------------------------
+      ARMv7M.CPACR := (@ with delta
+         CP10 => ARMv7M.CP_FULLACCESS, -- Access privileges for coprocessor 10
+         CP11 => ARMv7M.CP_FULLACCESS  -- Access privileges for coprocessor 11
+         );
+      ARMv7M.DSB;
+      ARMv7M.ISB;
+      -- PWR ------------------------------------------------------------------
+      RCC_APB1ENR.PWREN := True;
+      RCC_APB1RSTR.PWRRST := True;
+      RCC_APB1RSTR.PWRRST := False;
+      -- GPIOJ (LEDs) ---------------------------------------------------------
+      -- LD1: RED PJ13 (B9)
+      -- LD2: GRN PJ5 (M14)
+      RCC_AHB1ENR.GPIOJEN := True;
+      RCC_AHB1RSTR.GPIOJRST := True;
+      RCC_AHB1RSTR.GPIOJRST := False;
+      GPIOJ.MODER  := (@ with delta 5 | 13 => GPIO_OUT);
+      GPIOJ.OTYPER := (@ with delta 5 | 13 => GPIO_PP);
+      GPIOJ.PUPDR  := (@ with delta 5 | 13 => GPIO_NOPUPD);
+      -------------------------------------------------------------------------
       Console.Print ("STM32F769I", NL => True);
       -------------------------------------------------------------------------
       ARMv7M.Irq_Enable;
-      ARMv7M.Fault_Irq_Enable;
       SysTick_Init;
       -------------------------------------------------------------------------
    end Setup;

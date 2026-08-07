@@ -24,8 +24,7 @@ _start:
                 //
                 // Setup stack pointer.
                 //
-                ldr     r0,=kernel_stack
-                mov     sp,r0
+                ldr     sp,=kernel_stack
 
                 //
                 // Initialize .bss section.
@@ -39,18 +38,6 @@ _start:
 1:              stm     r1!,{r0}
 2:              cmp     r1,r2
                 bne     1b
-
-#if defined(FPU_ENABLE)
-#define CPACR                 0xE000ED88
-#define CPACR_CP10_FULLACCESS (3<<20)
-#define CPACR_CP11_FULLACCESS (3<<22)
-                ldr     r0,=CPACR
-                ldr     r1,[r0]
-                orr     r1,r1,#(CPACR_CP10_FULLACCESS|CPACR_CP11_FULLACCESS)
-                str     r1,[r0]
-                dsb
-                isb
-#endif
 
                 //
                 // Jump to high-level code.
