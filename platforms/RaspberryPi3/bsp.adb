@@ -157,6 +157,7 @@ package body BSP
          end;
       end if;
       -- Timer IRQ ------------------------------------------------------------
+      Tick_Count := 0;
       RPI3.Enable_IRQs_1 (RPI3.system_timer_match_1) := True;
       Timer_Reload;
       -------------------------------------------------------------------------
