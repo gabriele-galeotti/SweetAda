@@ -16,9 +16,10 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Interfaces;
+with Abort_Library;
 with SH7032;
-with GEMI;
 with BSP;
+with Console;
 
 package body Exceptions
    is
@@ -34,6 +35,14 @@ package body Exceptions
    use Interfaces;
    use SH7032;
 
+   procedure Exception_Process
+      (Code : in Unsigned_32;
+       PC   : in Unsigned_32;
+       SR   : in Unsigned_32)
+      with Export        => True,
+           Convention    => Asm,
+           External_Name => "exception_process";
+
    procedure IRQ_Timer_Process
       with Export        => True,
            Convention    => Asm,
@@ -47,6 +56,32 @@ package body Exceptions
    --                                                                        --
    --========================================================================--
 
+   ----------------------------------------------------------------------------
+   -- Exception_Process
+   ----------------------------------------------------------------------------
+   procedure Exception_Process
+      (Code : in Unsigned_32;
+       PC   : in Unsigned_32;
+       SR   : in Unsigned_32)
+      is
+   begin
+      case Code is
+         when 4      => Console.Print ("General illegal instruction", NL => True);
+         when 6      => Console.Print ("Illegal slot instruction", NL => True);
+         when 9      => Console.Print ("CPU address error", NL => True);
+         when 10     => Console.Print ("DMA address error", NL => True);
+         when 11     => Console.Print ("NMI", NL => True);
+         when 12     => Console.Print ("User break", NL => True);
+         when others => Console.Print ("UNKNOWN", NL => True);
+      end case;
+      Console.Print (Prefix => "PC: ", Value => PC, NL => True);
+      Console.Print (Prefix => "SR: ", Value => SR, NL => True);
+      Abort_Library.System_Abort;
+   end Exception_Process;
+
+   ----------------------------------------------------------------------------
+   -- IRQ_Timer_Process
+   ----------------------------------------------------------------------------
    procedure IRQ_Timer_Process
       is
    begin

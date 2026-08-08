@@ -143,12 +143,64 @@ vector_table:
                 .sect   .text,"ax"
 
 gen_ill_instr:
+                mov.l   r4,@-r15
+                mov     #4,r4
+                bra     1f
+                nop
 ill_slot_instr:
+                mov.l   r4,@-r15
+                mov     #6,r4
+                bra     1f
+                nop
 cpu_addr_err:
+                mov.l   r4,@-r15
+                mov     #9,r4
+                bra     1f
+                nop
 dma_addr_err:
+                mov.l   r4,@-r15
+                mov     #10,r4
+                bra     1f
+                nop
 nmi:
+                mov.l   r4,@-r15
+                mov     #11,r4
+                bra     1f
+                nop
 user_break:
-                bra     .
+                mov.l   r4,@-r15
+                mov     #12,r4
+                bra     1f
+                nop
+
+1:
+                mov.l   r0,@-r15
+                mov.l   r1,@-r15
+                mov.l   r2,@-r15
+                mov.l   r3,@-r15
+                mov.l   r5,@-r15
+                mov.l   r6,@-r15
+                mov.l   r7,@-r15
+                sts.l   pr,@-r15
+                sts.l   mach,@-r15
+                sts.l   macl,@-r15
+                mov.l   @(4*11,r15),r5                  // PC
+                mov.l   @(4*12,r15),r6                  // SR
+                mov.l   REF(exception_process),r0
+                jsr     @r0
+                nop
+                lds.l   @r15+,macl
+                lds.l   @r15+,mach
+                lds.l   @r15+,pr
+                mov.l   @r15+,r7
+                mov.l   @r15+,r6
+                mov.l   @r15+,r5
+                mov.l   @r15+,r3
+                mov.l   @r15+,r2
+                mov.l   @r15+,r1
+                mov.l   @r15+,r0
+                mov.l   @r15+,r4
+                rte
                 nop
 
 irq_itu2_imia2:
@@ -161,9 +213,13 @@ irq_itu2_imia2:
                 mov.l   r6,@-r15
                 mov.l   r7,@-r15
                 sts.l   pr,@-r15
+                sts.l   mach,@-r15
+                sts.l   macl,@-r15
                 mov.l   REF(irq_timer_process),r0
                 jsr     @r0
                 nop
+                lds.l   @r15+,macl
+                lds.l   @r15+,mach
                 lds.l   @r15+,pr
                 mov.l   @r15+,r7
                 mov.l   @r15+,r6
@@ -176,5 +232,6 @@ irq_itu2_imia2:
                 rte
                 nop
 
+DEF_EREFL(exception_process)
 DEF_EREFL(irq_timer_process)
 

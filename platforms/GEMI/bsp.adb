@@ -89,24 +89,22 @@ package body BSP
       is
    begin
       -- use ITU Channel 2, up-counter, compare with GRA
-      TMDR := (
-         PWM2   => False,
-         MDF    => False,
-         others => <>
+      TMDR := (@ with delta
+         PWM2 => False,
+         MDF  => False
          );
       TIOR2.IOA := IOA_OUTDISABLE;
       -- internal clock scaled by a factor of 8
-      TCR2 := (
-         TPSC   => TPSC_ICLK_DIV8,
-         CCLR   => CCLR_GRA,
-         others => <>
+      TCR2 := (@ with delta
+         TPSC => TPSC_ICLK_DIV8,
+         CCLR => CCLR_GRA
          );
       -- timer tick @ 1 kHz
       TGRA2 := Unsigned_16 ((Configure.CLK_FREQUENCY / 8) / kHz1);
-      TCNT2 := 0;
       -- enable interrupt
       TIER2.IMIEA := True;
       -- start timer
+      TCNT2 := 0;
       TSTR.STR2 := True;
    end Tclk_Init;
 
@@ -228,9 +226,9 @@ package body BSP
             )
          );
       -------------------------------------------------------------------------
-      Tclk_Init;
-      -------------------------------------------------------------------------
       SH.Irq_Enable;
+      -------------------------------------------------------------------------
+      Tclk_Init;
       -------------------------------------------------------------------------
    end Setup;
 
