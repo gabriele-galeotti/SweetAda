@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with CPU.MMIO;
+with SHmmio;
 
 separate (MMIO)
 function Read_U8
@@ -23,5 +23,5 @@ function Read_U8
    return Interfaces.Unsigned_8
    is
 begin
-   return CPU.MMIO.Read_U8 (Memory_Address);
+   return SHmmio.Read_U8 (Memory_Address);
 end Read_U8;

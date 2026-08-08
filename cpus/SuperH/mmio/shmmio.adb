@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ cpu-mmio.adb                                                                                              --
+-- __FLN__ shmmio.adb                                                                                                --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -18,7 +18,7 @@
 with System.Machine_Code;
 with Definitions;
 
-package body CPU.MMIO
+package body SHmmio
    is
 
    --========================================================================--
@@ -152,4 +152,4 @@ package body CPU.MMIO
           );
    end Write_U32;
 
-end CPU.MMIO;
+end SHmmio;

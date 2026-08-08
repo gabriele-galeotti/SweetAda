@@ -15,7 +15,8 @@ endif
 # override core MMIO
 CPU_INCLUDE_DIRECTORIES := $(CPU_DIRECTORY)/mmio
 
-GPR_CORE_CPU += cpu.ads                   \
-                sh.adb sh.ads             \
-                cpu-mmio.adb cpu-mmio.ads
+GPR_CORE_CPU += cpu.ads               \
+                sh.adb sh.ads         \
+                sh_definitions.ads    \
+                shmmio.adb shmmio.ads
 

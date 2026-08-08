@@ -15,7 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with CPU.MMIO;
+with SHmmio;
 
 separate (MMIO)
 procedure Write_U32
@@ -23,5 +23,5 @@ procedure Write_U32
     Value          : in Interfaces.Unsigned_32)
    is
 begin
-   CPU.MMIO.Write_U32 (Memory_Address, Value);
+   SHmmio.Write_U32 (Memory_Address, Value);
 end Write_U32;
