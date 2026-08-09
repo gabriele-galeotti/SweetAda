@@ -52,38 +52,38 @@ vector_table:
                 .long   0                       //  29 ''
                 .long   0                       //  30 ''
                 .long   0                       //  31 ''
-                .long   0                       //  32 Trap instruction (user vectors)
-                .long   0                       //  33 ''
-                .long   0                       //  34 ''
-                .long   0                       //  35 ''
-                .long   0                       //  36 ''
-                .long   0                       //  37 ''
-                .long   0                       //  38 ''
-                .long   0                       //  39 ''
-                .long   0                       //  40 ''
-                .long   0                       //  41 ''
-                .long   0                       //  42 ''
-                .long   0                       //  43 ''
-                .long   0                       //  44 ''
-                .long   0                       //  45 ''
-                .long   0                       //  46 ''
-                .long   0                       //  47 ''
-                .long   0                       //  48 ''
-                .long   0                       //  49 ''
-                .long   0                       //  50 ''
-                .long   0                       //  51 ''
-                .long   0                       //  52 ''
-                .long   0                       //  53 ''
-                .long   0                       //  54 ''
-                .long   0                       //  55 ''
-                .long   0                       //  56 ''
-                .long   0                       //  57 ''
-                .long   0                       //  58 ''
-                .long   0                       //  59 ''
-                .long   0                       //  60 ''
-                .long   0                       //  61 ''
-                .long   0                       //  62 ''
-                .long   0                       //  63 ''
+                .long   trap_instr              //  32 Trap instruction (user vectors)
+                .long   trap_instr              //  33 ''
+                .long   trap_instr              //  34 ''
+                .long   trap_instr              //  35 ''
+                .long   trap_instr              //  36 ''
+                .long   trap_instr              //  37 ''
+                .long   trap_instr              //  38 ''
+                .long   trap_instr              //  39 ''
+                .long   trap_instr              //  40 ''
+                .long   trap_instr              //  41 ''
+                .long   trap_instr              //  42 ''
+                .long   trap_instr              //  43 ''
+                .long   trap_instr              //  44 ''
+                .long   trap_instr              //  45 ''
+                .long   trap_instr              //  46 ''
+                .long   trap_instr              //  47 ''
+                .long   trap_instr              //  48 ''
+                .long   trap_instr              //  49 ''
+                .long   trap_instr              //  50 ''
+                .long   trap_instr              //  51 ''
+                .long   trap_instr              //  52 ''
+                .long   trap_instr              //  53 ''
+                .long   trap_instr              //  54 ''
+                .long   trap_instr              //  55 ''
+                .long   trap_instr              //  56 ''
+                .long   trap_instr              //  57 ''
+                .long   trap_instr              //  58 ''
+                .long   trap_instr              //  59 ''
+                .long   trap_instr              //  60 ''
+                .long   trap_instr              //  61 ''
+                .long   trap_instr              //  62 ''
+                .long   trap_instr              //  63 ''
                 .long   0                       //  64 IRQ0
                 .long   0                       //  65 IRQ1
                 .long   0                       //  66 IRQ2
@@ -170,6 +170,11 @@ nmi:
 user_break:
                 mov.l   r4,@-r15
                 mov     #12,r4
+                bra     1f
+                nop
+trap_instr:
+                mov.l   r4,@-r15
+                mov     #32,r4
                 bra     1f
                 nop
 

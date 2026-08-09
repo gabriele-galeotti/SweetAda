@@ -72,7 +72,8 @@ package body Exceptions
          when 10     => Console.Print ("DMA address error", NL => True);
          when 11     => Console.Print ("NMI", NL => True);
          when 12     => Console.Print ("User break", NL => True);
-         when others => Console.Print ("UNKNOWN", NL => True);
+         when 32     => Console.Print ("Trap instruction", NL => True);
+         when others => Console.Print ("UNKNOWN EXCEPTION", NL => True);
       end case;
       Console.Print (Prefix => "PC: ", Value => PC, NL => True);
       Console.Print (Prefix => "SR: ", Value => SR, NL => True);
