@@ -49,28 +49,73 @@ package body PC
    ----------------------------------------------------------------------------
    -- NOTE: PIC1 = master and PIC2 = slave are set at the hardware level:
    -- pin 16 (SP/EN) is HIGH for PIC1 and LOW for PIC2
-   -- ICW1 = 0x19 for level triggered mode
    ----------------------------------------------------------------------------
    procedure PIC_Init
       (Vector_Offset_Master : in Unsigned_8;
        Vector_Offset_Slave  : in Unsigned_8)
       is
+      SLAVE_ID : constant := 2;
+      function To_U8 is new Ada.Unchecked_Conversion (PIC_ICW1_Type, Unsigned_8);
+      function To_U8 is new Ada.Unchecked_Conversion (PIC_ICW2_Type, Unsigned_8);
+      function To_U8 is new Ada.Unchecked_Conversion (PIC_ICW3_MASTER_Type, Unsigned_8);
+      function To_U8 is new Ada.Unchecked_Conversion (PIC_ICW3_SLAVE_Type, Unsigned_8);
+      function To_U8 is new Ada.Unchecked_Conversion (PIC_ICW4_Type, Unsigned_8);
+      function To_U8 is new Ada.Unchecked_Conversion (PIC_OCW1_Type, Unsigned_8);
    begin
       Mutex.Acquire (PIC_Lock);
       -- PIC2 (slave)
-      CPU.IO.PortOut (PIC2_ICW1, Unsigned_8'(16#11#));  -- edge triggered, cascade mode, ICW4 required
-      CPU.IO.PortOut (PIC2_ICW2, Vector_Offset_Slave);  -- vector offset, for an x86 PC = 0x28 (40 .. 47)
-      CPU.IO.PortOut (PIC2_ICW3, Unsigned_8'(16#02#));  -- slave PIC id (is connected to IR 2)
-      CPU.IO.PortOut (PIC2_ICW4, Unsigned_8'(16#01#));  -- no SFNM, non-buffered, manual EOI, 8086 mode
+      CPU.IO.PortOut (PIC2_ICW1, To_U8 (PIC_ICW1_Type'(
+         IC4    => True,      -- ICW4 NEEDED
+         SNGL   => False,     -- CASCADE MODE
+         ADI    => ADI_8,     -- CALL ADDRESS INTERVAL
+         LTIM   => LTIM_EDGE, -- EDGE TRIGGERED MODE
+         others => <>
+         )));
+      CPU.IO.PortOut (PIC2_ICW2, To_U8 (PIC_ICW2_Type'(
+         T      => Bits_5 (ShR (Vector_Offset_Slave, 3)),
+         others => <>
+         )));
+      CPU.IO.PortOut (PIC2_ICW3, To_U8 (PIC_ICW3_SLAVE_Type'(
+         ID     => SLAVE_ID, -- slave PIC id
+         others => <>
+         )));
+      CPU.IO.PortOut (PIC2_ICW4, To_U8 (PIC_ICW4_Type'(
+         uPM    => uPM_8086, -- 8086/8088 MODE
+         AEOI   => False,    -- NORMAL EOI
+         BUF    => False,    -- BUFFERED MODE
+         SFNM   => False,    -- SPECIAL FULLY NESTED MODE
+         others => <>
+         )));
       -- PIC1 (master)
-      CPU.IO.PortOut (PIC1_ICW1, Unsigned_8'(16#11#));  -- edge triggered, cascade mode, ICW4 required
-      CPU.IO.PortOut (PIC1_ICW2, Vector_Offset_Master); -- vector offset, for an x86 PC = 0x20 (32 .. 39)
-      CPU.IO.PortOut (PIC1_ICW3, Unsigned_8'(16#04#));  -- (1 << 2): IR line 2 is connected to a slave PIC
-      CPU.IO.PortOut (PIC1_ICW4, Unsigned_8'(16#01#));  -- no SFNM, non-buffered, manual EOI, 8086 mode
+      CPU.IO.PortOut (PIC1_ICW1, To_U8 (PIC_ICW1_Type'(
+         IC4    => True,      -- ICW4 NEEDED
+         SNGL   => False,     -- CASCADE MODE
+         ADI    => ADI_8,     -- CALL ADDRESS INTERVAL
+         LTIM   => LTIM_EDGE, -- EDGE TRIGGERED MODE
+         others => <>
+         )));
+      CPU.IO.PortOut (PIC1_ICW2, To_U8 (PIC_ICW2_Type'(
+         T      => Bits_5 (ShR (Vector_Offset_Master, 3)),
+         others => <>
+         )));
+      CPU.IO.PortOut (PIC1_ICW3, To_U8 (PIC_ICW3_MASTER_Type'(
+         S => [SLAVE_ID => True, others => False] -- slave PIC id
+         )));
+      CPU.IO.PortOut (PIC1_ICW4, To_U8 (PIC_ICW4_Type'(
+         uPM    => uPM_8086, -- 8086/8088 MODE
+         AEOI   => False,    -- NORMAL EOI
+         BUF    => False,    -- BUFFERED MODE
+         SFNM   => False,    -- SPECIAL FULLY NESTED MODE
+         others => <>
+         )));
       -- after initialization sequence, all IRQ lines default to enabled,
       -- so disable them
-      CPU.IO.PortOut (PIC2_OCW1, Unsigned_8'(16#FF#));  -- PIC2: all masked
-      CPU.IO.PortOut (PIC1_OCW1, Unsigned_8'(16#FB#));  -- PIC1: all masked except IR line 2
+      CPU.IO.PortOut (PIC2_OCW1, To_U8 (PIC_OCW1_Type'(
+         M => [others => True] -- PIC2: all masked
+         )));
+      CPU.IO.PortOut (PIC1_OCW1, To_U8 (PIC_OCW1_Type'(
+         M => [SLAVE_ID => False, others => True] -- PIC1: except IR2
+         )));
       --
       Mutex.Release (PIC_Lock);
    end PIC_Init;
@@ -85,7 +130,9 @@ package body PC
       is
       Irq_Line : Natural range 0 .. 7;
       Port     : Unsigned_16;
-      Data     : Unsigned_8;
+      Irqs     : PIC_OCW1_Type;
+      function To_U8 is new Ada.Unchecked_Conversion (PIC_OCW1_Type, Unsigned_8);
+      function To_OCW1 is new Ada.Unchecked_Conversion (Unsigned_8, PIC_OCW1_Type);
    begin
       if Irq > PIC_Irq7 then
          Irq_Line := Natural (Irq - PIC_Irq8);
@@ -95,8 +142,9 @@ package body PC
          Port := PIC1_OCW1;
       end if;
       Mutex.Acquire (PIC_Lock);
-      Data := CPU.IO.PortIn (Port);
-      CPU.IO.PortOut (Port, Data and not Shift_Left (1, Irq_Line));
+      Irqs := To_OCW1 (CPU.IO.PortIn (Port));
+      Irqs.M (Irq_Line) := False;
+      CPU.IO.PortOut (Port, To_U8 (Irqs));
       Mutex.Release (PIC_Lock);
    end PIC_Irq_Enable;
 
@@ -110,7 +158,9 @@ package body PC
       is
       Irq_Line : Natural range 0 .. 7;
       Port     : Unsigned_16;
-      Data     : Unsigned_8;
+      Irqs     : PIC_OCW1_Type;
+      function To_U8 is new Ada.Unchecked_Conversion (PIC_OCW1_Type, Unsigned_8);
+      function To_OCW1 is new Ada.Unchecked_Conversion (Unsigned_8, PIC_OCW1_Type);
    begin
       -- prevent disabling all PIC2 IRs at once
       if Irq /= PIC_Irq2 then
@@ -122,8 +172,9 @@ package body PC
             Port := PIC1_OCW1;
          end if;
          Mutex.Acquire (PIC_Lock);
-         Data := CPU.IO.PortIn (Port);
-         CPU.IO.PortOut (Port, Data or Shift_Left (1, Irq_Line));
+         Irqs := To_OCW1 (CPU.IO.PortIn (Port));
+         Irqs.M (Irq_Line) := True;
+         CPU.IO.PortOut (Port, To_U8 (Irqs));
          Mutex.Release (PIC_Lock);
       end if;
    end PIC_Irq_Disable;
@@ -133,8 +184,13 @@ package body PC
    ----------------------------------------------------------------------------
    procedure PIC1_EOI
       is
+      function To_U8 is new Ada.Unchecked_Conversion (PIC_OCW2_Type, Unsigned_8);
    begin
-      CPU.IO.PortOut (PIC1_OCW2, Unsigned_8'(16#20#));
+      CPU.IO.PortOut (PIC1_OCW2, To_U8 (PIC_OCW2_Type'(
+         L      => 0,          -- IR LEVEL TO BE ACTED UPON
+         EOISLR => EOISLR_EOI, -- END OF INTERRUPT
+         others => <>
+         )));
    end PIC1_EOI;
 
    ----------------------------------------------------------------------------
@@ -144,10 +200,21 @@ package body PC
    ----------------------------------------------------------------------------
    procedure PIC2_EOI
       is
+      function To_U8 is new Ada.Unchecked_Conversion (PIC_OCW2_Type, Unsigned_8);
    begin
       Mutex.Acquire (PIC_Lock);
-      CPU.IO.PortOut (PIC1_OCW2, Unsigned_8'(16#20#));
-      CPU.IO.PortOut (PIC2_OCW2, Unsigned_8'(16#20#));
+      -- PIC1 (master)
+      CPU.IO.PortOut (PIC1_OCW2, To_U8 (PIC_OCW2_Type'(
+         L      => 0,          -- IR LEVEL TO BE ACTED UPON
+         EOISLR => EOISLR_EOI, -- END OF INTERRUPT
+         others => <>
+         )));
+      -- PIC2 (slave)
+      CPU.IO.PortOut (PIC2_OCW2, To_U8 (PIC_OCW2_Type'(
+         L      => 0,          -- IR LEVEL TO BE ACTED UPON
+         EOISLR => EOISLR_EOI, -- END OF INTERRUPT
+         others => <>
+         )));
       Mutex.Release (PIC_Lock);
    end PIC2_EOI;
 
