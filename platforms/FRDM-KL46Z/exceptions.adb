@@ -47,8 +47,8 @@ package body Exceptions
    -- Exception_Process
    ----------------------------------------------------------------------------
    procedure Exception_Process
-      (VectorN : in Unsigned_32;
-       LR      : in Unsigned_32)
+      (VectorN       : in Unsigned_32;
+       ReturnAddress : in Unsigned_32)
       is
    begin
       Console.Print ("*** EXCEPTION", NL => True);
@@ -64,7 +64,7 @@ package body Exceptions
          when others             =>
             Console.Print ("UNKNOWN", NL => True);
       end case;
-      Console.Print (LR, NL => True);
+      Console.Print (ReturnAddress, NL => True);
       Abort_Library.System_Abort;
    end Exception_Process;
 
