@@ -52,7 +52,7 @@ package body Clocks
       pllcfg := (
          --
          pllr      => pllr_div2,        -- divide by 2, PLL drive = 8 MHz
-         -- Note: the reference manual is ambiguouos in that it specifies no
+         -- Note: the reference manual is ambiguous in that it specifies no
          -- clear maximum value for the PLL frequency; it reports a VCO output
          -- range 384..768 MHz (Figure 3: "Controlling the FE310-G002 PLL
          -- output frequency."), but a previous diagram (Figure 2: "FE310-G002
