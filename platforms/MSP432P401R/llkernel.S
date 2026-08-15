@@ -20,7 +20,7 @@
                 .global \handler
 \handler:       push    {lr}
                 movs    r0,#\number
-                mov     r1,lr
+                ldr     r1,[sp,#0x18 + 4] 
                 bl      exception_process
                 pop     {pc}
                 .endm
@@ -34,7 +34,7 @@
                 .global vectors
 vectors:
 
-SP_Main:        .long   0
+SP_main:        .long   0
                 .extern _start
 Reset:          .long   _start                  //   1
 NMI:            .long   NMI_handler             //   2

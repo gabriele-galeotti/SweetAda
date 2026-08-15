@@ -50,8 +50,8 @@ package Exceptions
    SysTick      : aliased Asm_Entry_Point with Import => True, External_Name => "SysTick";
 
    procedure Exception_Process
-      (VectorN : in Unsigned_32;
-       LR      : in Unsigned_32)
+      (VectorN       : in Unsigned_32;
+       ReturnAddress : in Unsigned_32)
       with Export        => True,
            Convention    => Asm,
            External_Name => "exception_process";

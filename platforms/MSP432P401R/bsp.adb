@@ -146,6 +146,7 @@ package body BSP
       -------------------------------------------------------------------------
       Console.Print ("MSP432P401R", NL => True);
       -------------------------------------------------------------------------
+      Tick_Count := 0;
       ARMv7M.Irq_Enable;
       ARMv7M.Fault_Irq_Enable;
       SysTick_Init;
