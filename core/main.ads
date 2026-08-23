@@ -17,4 +17,5 @@
 
 pragma Restrictions (No_Elaboration_Code);
 
-procedure Main;
+procedure Main
+   with SPARK_Mode => On;

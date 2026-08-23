@@ -22,7 +22,7 @@ function CmpDI2
    (A : GCC.Types.DI_Type;
     B : GCC.Types.DI_Type)
    return GCC.Types.SI_Type
-   is
+is
    function To_USI_2 is new Ada.Unchecked_Conversion (GCC.Types.DI_Type, USI_2);
    function To_SI is new Ada.Unchecked_Conversion (GCC.Types.USI_Type, GCC.Types.SI_Type);
    T_A    : constant USI_2 := To_USI_2 (A);

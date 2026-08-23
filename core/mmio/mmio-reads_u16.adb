@@ -21,7 +21,7 @@ separate (MMIO)
 function ReadS_U16
    (Memory_Address : System.Address)
    return Interfaces.Unsigned_16
-   is
+is
    Content : aliased Interfaces.Unsigned_16
       with Address    => Memory_Address,
            Volatile   => True,

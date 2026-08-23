@@ -18,7 +18,7 @@
 separate (LLutils)
 procedure Byte_Swap_64
    (Object_Address : in System.Address)
-   is
+is
    Object : aliased Bits.Byte_Array (0 .. 7)
       with Address    => Object_Address,
            Import     => True,

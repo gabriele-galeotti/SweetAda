@@ -21,7 +21,7 @@ procedure Print_Unsigned64
     NL     : in Boolean := False;
     Prefix : in String := "";
     Suffix : in String := "")
-   is
+is
 begin
    if Prefix'Length /= 0 then
       Print (Prefix);

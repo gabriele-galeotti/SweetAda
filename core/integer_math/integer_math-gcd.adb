@@ -20,7 +20,7 @@ function GCD
    (Value1 : Integer;
     Value2 : Integer)
    return Natural
-   is
+is
    V1 : Integer := Value1;
    V2 : Integer := Value2;
    T  : Integer;

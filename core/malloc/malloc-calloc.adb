@@ -22,7 +22,7 @@ function Calloc
    (Nmemb : Interfaces.C.size_t;
     Size  : Interfaces.C.size_t)
    return Interfaces.C.Extensions.void_ptr
-   is
+is
    use Interfaces.C;
    use Interfaces.C.Extensions;
    Nbytes         : size_t;

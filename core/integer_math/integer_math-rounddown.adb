@@ -20,7 +20,7 @@ function Rounddown
    (Value  : Natural;
     Modulo : Positive)
    return Natural
-   is
+is
    Remainder : Natural;
    Result    : Natural;
 begin

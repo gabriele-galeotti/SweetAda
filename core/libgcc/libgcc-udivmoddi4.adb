@@ -21,7 +21,7 @@ function UDivModDI4
     D : in     GCC.Types.UDI_Type;
     R : in out GCC.Types.UDI_Type)
    return GCC.Types.UDI_Type
-   is
+is
    Num   : GCC.Types.UDI_Type := N;
    Den   : GCC.Types.UDI_Type := D;
    Q     : GCC.Types.UDI_Type;
@@ -29,7 +29,7 @@ function UDivModDI4
    function Is_Negative
       (Value : GCC.Types.UDI_Type)
       return Boolean
-      is
+   is
       ((Value and 16#8000_0000_0000_0000#) /= 0)
       with Inline => True;
 begin

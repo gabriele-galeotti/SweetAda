@@ -21,7 +21,7 @@ separate (LibGCC)
 function BswapSI2
    (V : GCC.Types.SI_Type)
    return GCC.Types.SI_Type
-   is
+is
    function To_USI is new Ada.Unchecked_Conversion (GCC.Types.SI_Type, GCC.Types.USI_Type);
    function To_SI is new Ada.Unchecked_Conversion (GCC.Types.USI_Type, GCC.Types.SI_Type);
    UV : constant GCC.Types.USI_Type := To_USI (V);

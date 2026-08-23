@@ -21,7 +21,7 @@ separate (Last_Chance_Handler)
 procedure Last_Chance_Handler
    (Source_Location : in System.Address;
     Line            : in Integer)
-   is
+is
 begin
    Abort_Library.System_Abort (System.Null_Address, Line, 0, Source_Location);
 end Last_Chance_Handler;

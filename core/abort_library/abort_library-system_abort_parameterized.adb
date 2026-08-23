@@ -23,7 +23,7 @@ procedure System_Abort_Parameterized
     Line    : in Integer;
     Column  : in Integer;
     Message : in System.Address)
-   is
+is
    use type System.Address;
 begin
    Console.Print_NewLine;

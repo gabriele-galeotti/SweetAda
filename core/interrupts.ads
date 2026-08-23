@@ -19,6 +19,7 @@ with System;
 with CPU;
 
 package Interrupts
+   with SPARK_Mode => On
    is
 
    --========================================================================--

@@ -20,7 +20,7 @@ procedure Print_Memory
    (Start_Address : in System.Address;
     Data_Size     : in Bits.Bytesize;
     Row_Size      : in Row_Size_Type := 16)
-   is
+is
    use type SSE.Integer_Address;
    use type Interfaces.C.size_t;
    IAddress   : SSE.Integer_Address;

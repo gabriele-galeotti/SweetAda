@@ -20,7 +20,7 @@ function LCM
    (Value1 : Integer;
     Value2 : Integer)
    return Natural
-   is
+is
    Result : Natural;
 begin
    if Value1 = 0 or else Value2 = 0 then

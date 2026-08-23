@@ -18,7 +18,7 @@
 pragma Restrictions (No_Elaboration_Code);
 
 package body Mutex
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -33,7 +33,7 @@ package body Mutex
    ----------------------------------------------------------------------------
    procedure Acquire
       (S : in out Semaphore_Binary)
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -41,7 +41,7 @@ package body Mutex
    ----------------------------------------------------------------------------
    procedure Release
       (S : in out Semaphore_Binary)
-      is
+   is
    separate;
 
 end Mutex;

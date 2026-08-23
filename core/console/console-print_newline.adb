@@ -17,10 +17,10 @@
 
 separate (Console)
 procedure Print_NewLine
-   is
+is
    use Definitions;
 begin
-   for Index in CRLF'Range loop
-      Print (CRLF (Index));
+   for Idx in CRLF'Range loop
+      Print (CRLF (Idx));
    end loop;
 end Print_NewLine;

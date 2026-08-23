@@ -18,13 +18,13 @@
 separate (Console)
 procedure Print
    (c : in Interfaces.C.char)
-   is
+is
    use Interfaces.C;
    -- borrowed from i-c.adb, avoid using a non-ZFP unit
    function To_Ada
       (Item : char)
       return Character
-      is
+   is
       (Character'Val (char'Pos (Item)))
       with Inline => True;
 begin

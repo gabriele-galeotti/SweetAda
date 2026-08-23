@@ -21,7 +21,7 @@ function Address_Displacement
     Object_Address : System.Address;
     Scale_Factor   : Bits.Address_Shift)
    return SSE.Storage_Offset
-   is
+is
    use type SSE.Integer_Address;
 begin
    return SSE.Storage_Offset (

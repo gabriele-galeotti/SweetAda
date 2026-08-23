@@ -19,7 +19,7 @@ separate (MMIO)
 procedure WriteS_U8
    (Memory_Address : in System.Address;
     Value          : in Interfaces.Unsigned_8)
-   is
+is
 begin
    Write_U8 (Memory_Address, Value);
 end WriteS_U8;

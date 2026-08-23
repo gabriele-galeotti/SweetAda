@@ -21,7 +21,7 @@ with LLutils;
 
 package Mutex
    with SPARK_Mode => On
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -32,8 +32,9 @@ package Mutex
    --========================================================================--
 
    type Semaphore_Binary is record
-      Lock : aliased LLutils.Atomic_Type with Volatile => True;
-   end record;
+      Lock : aliased LLutils.Atomic_Type;
+   end record
+      with Volatile => True;
 
    SEMAPHORE_UNLOCKED : constant Semaphore_Binary := (Lock => 0);
 

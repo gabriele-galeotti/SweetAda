@@ -21,7 +21,7 @@ function EMemcmp
     S2 : Interfaces.C.Extensions.void_ptr;
     N  : Interfaces.C.size_t)
    return Interfaces.C.int
-   is
+is
    use Interfaces.C;
    P_S1   : constant MAP.Object_Pointer := MAP.To_Pointer (S1);
    P_S2   : constant MAP.Object_Pointer := MAP.To_Pointer (S2);
@@ -29,11 +29,11 @@ function EMemcmp
 begin
    -- avoid underflow since size_t is a modular type
    if N > 0 then
-      for Index in 0 .. N - 1 loop
-         if    char'Pos (P_S1.all (Index)) < char'Pos (P_S2.all (Index)) then
+      for Idx in 0 .. N - 1 loop
+         if    char'Pos (P_S1.all (Idx)) < char'Pos (P_S2.all (Idx)) then
             Result := -1;
             exit;
-         elsif char'Pos (P_S1.all (Index)) > char'Pos (P_S2.all (Index)) then
+         elsif char'Pos (P_S1.all (Idx)) > char'Pos (P_S2.all (Idx)) then
             Result := 1;
             exit;
          end if;

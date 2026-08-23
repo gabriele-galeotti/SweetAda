@@ -20,7 +20,7 @@ function Atomic_Test_And_Set
    (Object_Address : System.Address;
     Memory_Order   : Integer)
    return Boolean
-   is
+is
    function ATAS
       (OA : System.Address;
        MO : Integer)

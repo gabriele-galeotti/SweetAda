@@ -22,20 +22,20 @@ procedure Print_Byte_Array
     NL        : in Boolean := False;
     Prefix    : in String := "";
     Separator : in Character := ' ')
-   is
-   Index_Upper : Natural range ByteArray'First .. ByteArray'Last;
+is
+   Idx_Upper : Natural range ByteArray'First .. ByteArray'Last;
 begin
    if Prefix'Length /= 0 then
       Print (Prefix);
    end if;
    if Limit = 0 then
-      Index_Upper := ByteArray'Last;
+      Idx_Upper := ByteArray'Last;
    else
-      Index_Upper := Limit;
+      Idx_Upper := Limit;
    end if;
-   for Index in ByteArray'First .. Index_Upper loop
-      Print_UnsignedHex8 (ByteArray (Index));
-      if Index /= Index_Upper then
+   for Idx in ByteArray'First .. Idx_Upper loop
+      Print_UnsignedHex8 (ByteArray (Idx));
+      if Idx /= Idx_Upper then
          Print (Separator);
       end if;
    end loop;

@@ -22,7 +22,7 @@ function Select_Address_Bits
     MSBit           : Bits.Address_Bit_Number;
     BE_Layout       : Boolean := False)
    return SSE.Integer_Address
-   is
+is
    use type SSE.Integer_Address;
    Bit_Mask : SSE.Integer_Address;
    Result   : SSE.Integer_Address;

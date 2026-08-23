@@ -21,7 +21,7 @@ function UDivModSI4
     D : GCC.Types.USI_Type;
     M : Boolean)
    return GCC.Types.USI_Type
-   is
+is
    Num    : GCC.Types.USI_Type := N;
    Den    : GCC.Types.USI_Type := D;
    Bit    : GCC.Types.USI_Type;
@@ -29,7 +29,7 @@ function UDivModSI4
    function Is_Negative
       (Value : GCC.Types.USI_Type)
       return Boolean
-      is
+   is
       ((Value and 16#8000_0000#) /= 0)
       with Inline => True;
 begin

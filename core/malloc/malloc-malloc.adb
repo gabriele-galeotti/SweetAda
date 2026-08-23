@@ -19,7 +19,7 @@ separate (Malloc)
 function Malloc
    (Size : Interfaces.C.size_t)
    return Interfaces.C.Extensions.void_ptr
-   is
+is
    use Interfaces.C;
    RSize : size_t;
    P     : Memory_Block_Ptr;

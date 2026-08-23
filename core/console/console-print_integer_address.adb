@@ -23,7 +23,7 @@ procedure Print_Integer_Address
     NL     : in Boolean := False;
     Prefix : in String := "";
     Suffix : in String := "")
-   is
+is
    use type SSE.Integer_Address;
    IAddress        : SSE.Integer_Address := Value;
    MDigits         : constant Natural := (SSE.Integer_Address'Size + 3) / 4;
@@ -33,9 +33,9 @@ begin
    if Prefix'Length /= 0 then
       Print (Prefix);
    end if;
-   for Index in reverse 1 .. MDigits loop
+   for Idx in reverse 1 .. MDigits loop
       Address_Digit := Interfaces.Unsigned_8 (IAddress mod 2**4);
-      Address_Literal (Index) := LLutils.To_HexDigit (
+      Address_Literal (Idx) := LLutils.To_HexDigit (
          Value => Address_Digit,
          MSD   => False,
          LCase => False

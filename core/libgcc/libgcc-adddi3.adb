@@ -22,7 +22,7 @@ function AddDI3
    (A1 : GCC.Types.UDI_Type;
     A2 : GCC.Types.UDI_Type)
    return GCC.Types.UDI_Type
-   is
+is
    function To_USI_2 is new Ada.Unchecked_Conversion (GCC.Types.UDI_Type, USI_2);
    function To_UDI is new Ada.Unchecked_Conversion (USI_2, GCC.Types.UDI_Type);
    T_A1    : constant USI_2 := To_USI_2 (A1);

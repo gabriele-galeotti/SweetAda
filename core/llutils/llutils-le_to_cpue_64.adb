@@ -19,7 +19,7 @@ separate (LLutils)
 function LE_To_CPUE_64
    (Object_Address : System.Address)
    return Interfaces.Unsigned_64
-   is
+is
    Value  : aliased Interfaces.Unsigned_64
       with Address    => Object_Address,
            Import     => True,

@@ -20,7 +20,7 @@ function UDivDI3
    (N : GCC.Types.UDI_Type;
     D : GCC.Types.UDI_Type)
    return GCC.Types.UDI_Type
-   is
+is
    R : GCC.Types.UDI_Type;
 begin
    R := 0;

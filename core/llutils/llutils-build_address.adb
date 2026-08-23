@@ -21,7 +21,7 @@ function Build_Address
     Offset       : SSE.Storage_Offset;
     Scale_Factor : Bits.Address_Shift)
    return System.Address
-   is
+is
 begin
    return Base_Address + (Offset * 2**Scale_Factor);
 end Build_Address;

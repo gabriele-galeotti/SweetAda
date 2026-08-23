@@ -22,7 +22,7 @@ function ModSI3
    (N : GCC.Types.SI_Type;
     D : GCC.Types.SI_Type)
    return GCC.Types.SI_Type
-   is
+is
    Num      : GCC.Types.SI_Type := N;
    Den      : GCC.Types.SI_Type := D;
    Negative : Boolean;

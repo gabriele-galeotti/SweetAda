@@ -21,15 +21,15 @@ function EMemcpy
     S2 : Interfaces.C.Extensions.void_ptr;
     N  : Interfaces.C.size_t)
    return Interfaces.C.Extensions.void_ptr
-   is
+is
    use Interfaces.C;
    P_S1 : constant MAP.Object_Pointer := MAP.To_Pointer (S1);
    P_S2 : constant MAP.Object_Pointer := MAP.To_Pointer (S2);
 begin
    -- avoid underflow since size_t is a modular type
    if N > 0 then
-      for Index in 0 .. N - 1 loop
-         P_S1.all (Index) := P_S2.all (Index);
+      for Idx in 0 .. N - 1 loop
+         P_S1.all (Idx) := P_S2.all (Idx);
       end loop;
    end if;
    return S1;

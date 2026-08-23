@@ -20,7 +20,7 @@ function MulSI3
    (M1 : GCC.Types.USI_Type;
     M2 : GCC.Types.USI_Type)
    return GCC.Types.USI_Type
-   is
+is
    T_M1 : GCC.Types.USI_Type := M1;
    T_M2 : GCC.Types.USI_Type := M2;
    R    : GCC.Types.USI_Type := 0;

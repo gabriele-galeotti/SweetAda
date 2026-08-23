@@ -23,19 +23,19 @@ procedure Print_Integer64
     NL     : in Boolean := False;
     Prefix : in String := "";
     Suffix : in String := "")
-   is
+is
    use type Interfaces.Integer_64;
    subtype Negative_64 is Interfaces.Integer_64 range Interfaces.Integer_64'First .. -1;
    subtype Positive_64 is Interfaces.Integer_64 range 0 .. Interfaces.Integer_64'Last;
    Negative_Sign  : Boolean := False;
    Number         : Positive_64;
    Number_Literal : String (1 .. 32) := [others => ' '];
-   Literal_Index  : Natural;
+   Literal_Idx    : Natural;
 begin
    if Prefix'Length /= 0 then
       Console.Print (Prefix);
    end if;
-   Literal_Index := Number_Literal'Last;
+   Literal_Idx := Number_Literal'Last;
    if Value < 0 then
       Negative_Sign := True;
       declare
@@ -44,8 +44,8 @@ begin
          -- handle 2's complement off-range asymmetric negative numbers
          -- by prescaling their values
          while NNumber < -Interfaces.Integer_64'Last loop
-            Number_Literal (Literal_Index) := LLutils.To_Ch (Integer (-(NNumber rem 10)));
-            Literal_Index := @ - 1;
+            Number_Literal (Literal_Idx) := LLutils.To_Ch (Integer (-(NNumber rem 10)));
+            Literal_Idx := @ - 1;
             NNumber := @ / 10;
          end loop;
          -- now conversion to positive value is safe
@@ -55,20 +55,20 @@ begin
       Number := Value;
    end if;
    -- build literal string
-   for Index in reverse 2 .. Literal_Index loop
-      Number_Literal (Index) := LLutils.To_Ch (Integer (Number rem 10));
+   for Idx in reverse 2 .. Literal_Idx loop
+      Number_Literal (Idx) := LLutils.To_Ch (Integer (Number rem 10));
       Number := @ / 10;
       if Number = 0 then
-         Literal_Index := Index;
+         Literal_Idx := Idx;
          exit;
       end if;
    end loop;
    -- add negative sign
    if Negative_Sign then
-      Literal_Index := @ - 1;
-      Number_Literal (Literal_Index) := '-';
+      Literal_Idx := @ - 1;
+      Number_Literal (Literal_Idx) := '-';
    end if;
-   Console.Print (Number_Literal (Literal_Index .. Number_Literal'Last));
+   Console.Print (Number_Literal (Literal_Idx .. Number_Literal'Last));
    if Suffix'Length /= 0 then
       Console.Print (Suffix);
    end if;

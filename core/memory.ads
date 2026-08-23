@@ -19,6 +19,7 @@ with System;
 with System.Storage_Elements;
 
 package Memory
+   with SPARK_Mode => On
    is
 
    --========================================================================--

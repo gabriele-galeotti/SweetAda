@@ -20,7 +20,7 @@ function UDivSI3
    (N : GCC.Types.USI_Type;
     D : GCC.Types.USI_Type)
    return GCC.Types.USI_Type
-   is
+is
 begin
    return UDivModSI4 (N, D, False);
 end UDivSI3;

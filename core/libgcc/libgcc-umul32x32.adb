@@ -21,7 +21,7 @@ procedure UMul32x32
     M2 : in     GCC.Types.USI_Type;
     RH :    out GCC.Types.USI_Type;
     RL :    out GCC.Types.USI_Type)
-   is
+is
    M1_LOW  : constant GCC.Types.USI_Type := M1 mod 2**16;
    M1_HIGH : constant GCC.Types.USI_Type := M1 / 2**16;
    M2_LOW  : constant GCC.Types.USI_Type := M2 mod 2**16;

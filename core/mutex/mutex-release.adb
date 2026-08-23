@@ -20,7 +20,7 @@ with GCC.Defines;
 separate (Mutex)
 procedure Release
    (S : in out Semaphore_Binary)
-   is
+is
    use GCC.Defines;
    use LLutils;
 begin

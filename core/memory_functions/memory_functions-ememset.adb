@@ -23,7 +23,7 @@ function EMemset
     C : Interfaces.C.int;
     N : Interfaces.C.size_t)
    return Interfaces.C.Extensions.void_ptr
-   is
+is
    use Interfaces.C;
    type int_mod is mod 2**int'Size;
    P  : constant MAP.Object_Pointer := MAP.To_Pointer (S);
@@ -37,8 +37,8 @@ begin
       -- when applying the mod operation which restricts output range to
       -- char type values
       Ic := char'Val (To_im (C) mod 2**char'Size);
-      for Index in 0 .. N - 1 loop
-         P.all (Index) := Ic;
+      for Idx in 0 .. N - 1 loop
+         P.all (Idx) := Ic;
       end loop;
    end if;
    return S;

@@ -19,7 +19,7 @@ separate (Bits)
 function Byte_Reverse
    (Value : Interfaces.Unsigned_8)
    return Interfaces.Unsigned_8
-   is
+is
    Result : Interfaces.Unsigned_8 := Value;
 begin
    Result := ShR (@ and 16#AA#, 1) or ShL (@ and 16#55#, 1);

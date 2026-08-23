@@ -20,7 +20,7 @@ with LLutils;
 separate (Console)
 procedure Print_UnsignedHex8
    (Value : in Interfaces.Unsigned_8)
-   is
+is
    MSD : Boolean := True;
    C   : Character;
 begin

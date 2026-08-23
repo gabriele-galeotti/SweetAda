@@ -20,7 +20,7 @@ function UModDI3
    (N : GCC.Types.UDI_Type;
     D : GCC.Types.UDI_Type)
    return GCC.Types.UDI_Type
-   is
+is
    Q : GCC.Types.UDI_Type with Unreferenced => True;
    R : GCC.Types.UDI_Type;
 begin

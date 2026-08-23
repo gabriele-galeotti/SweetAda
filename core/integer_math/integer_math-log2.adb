@@ -19,7 +19,7 @@ separate (Integer_Math)
 function Log2
    (Value : Positive)
    return Log_Integer
-   is
+is
    subtype Small_Integer is Integer range 0 .. 7;
    -- table of floor(Log2(x))
    Log2Table : constant array (0 .. 255) of Small_Integer :=

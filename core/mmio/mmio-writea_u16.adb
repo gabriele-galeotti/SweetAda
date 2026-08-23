@@ -19,7 +19,7 @@ separate (MMIO)
 procedure WriteA_U16
    (Memory_Address : in System.Address;
     Value          : in Interfaces.Unsigned_16)
-   is
+is
    Content : aliased Interfaces.Unsigned_16
       with Address    => Memory_Address,
            Atomic     => True,

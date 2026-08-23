@@ -19,7 +19,7 @@ separate (MMIO)
 function ReadS_U8
    (Memory_Address : System.Address)
    return Interfaces.Unsigned_8
-   is
+is
    Content : aliased Interfaces.Unsigned_8
       with Address    => Memory_Address,
            Volatile   => True,

@@ -22,7 +22,7 @@ procedure Print_String
     NL     : in Boolean := False;
     Prefix : in String := "";
     Suffix : in String := "")
-   is
+is
 begin
    if Prefix'Length /= 0 then
       Print_StringSimple (Prefix);

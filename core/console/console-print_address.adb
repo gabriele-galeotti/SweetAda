@@ -21,7 +21,7 @@ procedure Print_Address
     NL     : in Boolean := False;
     Prefix : in String := "";
     Suffix : in String := "")
-   is
+is
 begin
    Print (SSE.To_Integer (Value), NL, Prefix, Suffix);
 end Print_Address;

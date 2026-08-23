@@ -19,7 +19,7 @@ separate (MMIO)
 function ReadN_U16
    (Memory_Address : System.Address)
    return Interfaces.Unsigned_16
-   is
+is
    pragma Unreferenced (Memory_Address);
 begin
    return 0;

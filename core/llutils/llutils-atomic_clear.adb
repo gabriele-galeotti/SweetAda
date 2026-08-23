@@ -19,7 +19,7 @@ separate (LLutils)
 procedure Atomic_Clear
    (Object_Address : in System.Address;
     Memory_Order   : in Integer)
-   is
+is
    procedure AC
       (OA : in System.Address;
        MO : in Integer)

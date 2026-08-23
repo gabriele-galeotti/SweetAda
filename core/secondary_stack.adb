@@ -21,7 +21,7 @@ with System.Parameters;
 with System.Secondary_Stack;
 
 package body Secondary_Stack
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -52,7 +52,7 @@ package body Secondary_Stack
    ----------------------------------------------------------------------------
    function Get
       return System.Secondary_Stack.SS_Stack_Ptr
-      is
+   is
    begin
       return Stack;
    end Get;
@@ -61,7 +61,7 @@ package body Secondary_Stack
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
    begin
       System.Secondary_Stack.SS_Init (Stack, System.Parameters.Unspecified_Size);
    end Init;

@@ -23,24 +23,24 @@ procedure Print_sizet
     NL     : in Boolean := False;
     Prefix : in String := "";
     Suffix : in String := "")
-   is
+is
    use Interfaces.C;
    Number         : size_t := Value;
    Number_Literal : String (1 .. 16);
-   Literal_Index  : Natural := 0;
+   Literal_Idx    : Natural := 0;
 begin
    if Prefix'Length /= 0 then
       Print (Prefix);
    end if;
-   for Index in reverse Number_Literal'Range loop
-      Number_Literal (Index) := LLutils.To_Ch (LLutils.Decimal_Digit_Type (Number mod 10));
+   for Idx in reverse Number_Literal'Range loop
+      Number_Literal (Idx) := LLutils.To_Ch (LLutils.Decimal_Digit_Type (Number mod 10));
       Number := @ / 10;
       if Number = 0 then
-         Literal_Index := Index;
+         Literal_Idx := Idx;
          exit;
       end if;
    end loop;
-   Print (Number_Literal (Literal_Index .. Number_Literal'Last));
+   Print (Number_Literal (Literal_Idx .. Number_Literal'Last));
    if Suffix'Length /= 0 then
       Print (Suffix);
    end if;

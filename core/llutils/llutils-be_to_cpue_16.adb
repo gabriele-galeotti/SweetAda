@@ -19,7 +19,7 @@ separate (LLutils)
 function BE_To_CPUE_16
    (Object_Address : System.Address)
    return Interfaces.Unsigned_16
-   is
+is
    Value  : aliased Interfaces.Unsigned_16
       with Address    => Object_Address,
            Import     => True,

@@ -18,7 +18,7 @@
 separate (Malloc)
 procedure Free
    (Memory_Address : in Interfaces.C.Extensions.void_ptr)
-   is
+is
    use Interfaces.C;
    P            : aliased Memory_Block_Ptr;
    Q            : aliased Memory_Block_Ptr;

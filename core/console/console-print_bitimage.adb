@@ -21,14 +21,14 @@ procedure Print_BitImage
     NL     : in Boolean := False;
     Prefix : in String := "";
     Suffix : in String := "")
-   is
+is
    use type Interfaces.Unsigned_8;
 begin
    if Prefix'Length /= 0 then
       Print (Prefix);
    end if;
-   for Index in reverse 0 .. Interfaces.Unsigned_8'Size - 1 loop
-      if (Value and Interfaces.Shift_Left (1, Index)) /= 0 then
+   for Idx in reverse 0 .. Interfaces.Unsigned_8'Size - 1 loop
+      if (Value and Interfaces.Shift_Left (1, Idx)) /= 0 then
          Print (Character'('1'));
       else
          Print (Character'('0'));

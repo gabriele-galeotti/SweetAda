@@ -19,7 +19,7 @@ separate (MMIO)
 function ReadAS_U8
    (Memory_Address : System.Address)
    return Interfaces.Unsigned_8
-   is
+is
 begin
    return ReadA_U8 (Memory_Address);
 end ReadAS_U8;

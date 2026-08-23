@@ -19,7 +19,7 @@ separate (LibGCC)
 function NegDI2
    (Value : GCC.Types.UDI_Type)
    return GCC.Types.UDI_Type
-   is
+is
 begin
    return SubDI3 (0, Value);
 end NegDI2;

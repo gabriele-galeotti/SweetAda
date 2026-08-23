@@ -22,7 +22,7 @@ function UCmpDI2
    (A : GCC.Types.UDI_Type;
     B : GCC.Types.UDI_Type)
    return GCC.Types.SI_Type
-   is
+is
    function To_USI_2 is new Ada.Unchecked_Conversion (GCC.Types.UDI_Type, USI_2);
    T_A    : constant USI_2 := To_USI_2 (A);
    T_B    : constant USI_2 := To_USI_2 (B);

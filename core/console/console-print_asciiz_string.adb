@@ -22,7 +22,7 @@ procedure Print_ASCIIZ_String
     NL             : in Boolean := False;
     Prefix         : in String := "";
     Suffix         : in String := "")
-   is
+is
    use type System.Address;
    use type SSE.Storage_Offset;
    use Interfaces.C;
@@ -32,7 +32,7 @@ begin
       Print (Prefix);
    end if;
    if SA /= System.Null_Address then
-      for Index in size_t range 0 .. Limit - 1 loop
+      for Idx in size_t range 0 .. Limit - 1 loop
          declare
             c : aliased char
                with Address    => SA,

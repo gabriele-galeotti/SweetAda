@@ -19,7 +19,7 @@ separate (Bits)
 function Byte_Swap_64
    (Value : Interfaces.Unsigned_64)
    return Interfaces.Unsigned_64
-   is
+is
    function BS64
       (V : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_64

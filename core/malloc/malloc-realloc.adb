@@ -22,7 +22,7 @@ function Realloc
    (Memory_Address : Interfaces.C.Extensions.void_ptr;
     Size           : Interfaces.C.size_t)
    return Address
-   is
+is
    use Interfaces.C;
    use Interfaces.C.Extensions;
    Memory_Block         : aliased Memory_Block_Type

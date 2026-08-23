@@ -18,7 +18,7 @@
 with CPU;
 
 package body Timers
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -45,7 +45,7 @@ package body Timers
    ----------------------------------------------------------------------------
    procedure Add
       (T : in Timer_Ptr)
-      is
+   is
       PTPtr      : Timer_PPtr := Timer_List'Access;
       P          : Timer_Ptr renames PTPtr.all;
       Intcontext : CPU.Intcontext_Type;
@@ -71,7 +71,7 @@ package body Timers
    function Delete
       (T : in Timer_Ptr)
       return Boolean
-      is
+   is
       Intcontext : CPU.Intcontext_Type;
       PTPtr      : Timer_PPtr := Timer_List'Access;
       P          : Timer_Ptr renames PTPtr.all;
@@ -101,7 +101,7 @@ package body Timers
    -- Process
    ----------------------------------------------------------------------------
    procedure Process
-      is
+   is
    begin
       if Timer_List /= null then
          if Timer_List.all.Expire /= 0 then

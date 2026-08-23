@@ -17,7 +17,7 @@
 
 separate (Abort_Library)
 procedure System_Abort_Parameterless
-   is
+is
 begin
    loop null; end loop;
 end System_Abort_Parameterless;

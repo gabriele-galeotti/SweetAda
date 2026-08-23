@@ -20,7 +20,7 @@ function Atomic_Load
    (Object_Address : System.Address;
     Memory_Order   : Integer)
    return Atomic_Type
-   is
+is
    function AL
       (OA : System.Address;
        MO : Integer)

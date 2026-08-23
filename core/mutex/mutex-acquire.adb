@@ -21,7 +21,7 @@ with GCC.Defines;
 separate (Mutex)
 procedure Acquire
    (S : in out Semaphore_Binary)
-   is
+is
    use GCC.Defines;
    use LLutils;
    use type Atomic_Type'Base;
@@ -30,7 +30,7 @@ procedure Acquire
       with Inline => True;
    procedure Wait
       (Object_Address : in System.Address)
-      is
+   is
    begin
       loop
          exit when Atomic_Load (Object_Address, ATOMIC_SEQ_CST) = 0;

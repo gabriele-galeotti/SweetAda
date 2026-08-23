@@ -19,7 +19,8 @@ with System;
 with Interfaces;
 
 package Timers
-   is
+   with SPARK_Mode => On
+is
 
    --========================================================================--
    --                                                                        --

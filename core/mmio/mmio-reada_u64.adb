@@ -19,7 +19,7 @@ separate (MMIO)
 function ReadA_U64
    (Memory_Address : System.Address)
    return Interfaces.Unsigned_64
-   is
+is
 begin
    if System.Word_Size = 64 then
       declare

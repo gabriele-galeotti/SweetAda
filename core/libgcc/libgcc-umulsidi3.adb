@@ -22,7 +22,7 @@ function UMulSIDI3
    (M1 : GCC.Types.USI_Type;
     M2 : GCC.Types.USI_Type)
    return GCC.Types.UDI_Type
-   is
+is
    R      : USI_2;
    R_HIGH : GCC.Types.USI_Type renames R (HI64);
    R_LOW  : GCC.Types.USI_Type renames R (LO64);

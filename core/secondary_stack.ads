@@ -19,7 +19,7 @@ pragma Restrictions (No_Elaboration_Code);
 
 package Secondary_Stack
    with SPARK_Mode => On
-   is
+is
 
    --========================================================================--
    --                                                                        --

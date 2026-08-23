@@ -21,7 +21,7 @@ procedure Print_Integer16
     NL     : in Boolean := False;
     Prefix : in String := "";
     Suffix : in String := "")
-   is
+is
 begin
    Print (Interfaces.Integer_64 (Value), NL, Prefix, Suffix);
 end Print_Integer16;

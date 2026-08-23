@@ -17,19 +17,19 @@
 
 separate (Console)
 procedure Print_StringSimple
-   (S      : in String;
-    Limit  : in Natural := Maximum_String_Length;
-    NL     : in Boolean := False)
-   is
-   String_Index_Limit : Integer;
+   (S     : in String;
+    Limit : in Natural := Maximum_String_Length;
+    NL    : in Boolean := False)
+is
+   String_Idx_Limit : Integer;
 begin
    if S'Length > Limit then
-      String_Index_Limit := S'First + Limit;
+      String_Idx_Limit := S'First + Limit;
    else
-      String_Index_Limit := S'Last;
+      String_Idx_Limit := S'Last;
    end if;
-   for Index in S'First .. String_Index_Limit loop
-      Print (S (Index));
+   for Idx in S'First .. String_Idx_Limit loop
+      Print (S (Idx));
    end loop;
    if NL then
       Print_NewLine;

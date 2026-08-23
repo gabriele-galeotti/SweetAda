@@ -21,7 +21,7 @@ procedure Print_Bits1
     NL     : in Boolean := False;
     Prefix : in String := "";
     Suffix : in String := "")
-   is
+is
    use type Bits.Bits_1;
 begin
    if Prefix'Length /= 0 then

@@ -19,7 +19,7 @@ separate (Bits)
 function Byte_Swap_8
    (Value : Interfaces.Unsigned_8)
    return Interfaces.Unsigned_8
-   is
+is
 begin
    return Value;
 end Byte_Swap_8;

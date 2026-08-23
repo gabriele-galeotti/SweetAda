@@ -19,7 +19,7 @@ separate (MMIO)
 function ReadN_U8
    (Memory_Address : System.Address)
    return Interfaces.Unsigned_8
-   is
+is
    pragma Unreferenced (Memory_Address);
 begin
    return 0;

@@ -22,7 +22,7 @@ function DivDI3
    (N : GCC.Types.DI_Type;
     D : GCC.Types.DI_Type)
    return GCC.Types.DI_Type
-   is
+is
    Num      : GCC.Types.DI_Type := N;
    Den      : GCC.Types.DI_Type := D;
    Negative : Boolean;
