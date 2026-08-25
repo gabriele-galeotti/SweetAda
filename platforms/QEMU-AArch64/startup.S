@@ -32,15 +32,17 @@ startcode:
                 //
                 // CPACR_EL1/FPEN Advanced SIMD and floating-point registers.
                 //
+#define CPACR_EL1_FPEN_NOTRAP (3<<20)
                 mrs     x1,cpacr_el1
-                orr     x0,x1,#(3<<20)
+                orr     x0,x1,#CPACR_EL1_FPEN_NOTRAP
                 msr     cpacr_el1,x0
 
                 //
                 // Enable CPUECTLR_EL1.SMPEN.
                 //
+#define CPUECTLR_EL1_SMPEN (1<<6)
                 mrs     x0,s3_1_c15_c2_1
-                orr     x0,x0,#0x40
+                orr     x0,x0,#CPUECTLR_EL1_SMPEN
                 msr     s3_1_c15_c2_1,x0
 
                 //
