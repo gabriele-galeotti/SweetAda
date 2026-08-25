@@ -53,7 +53,7 @@ dead:           b       .
 
                 .sect   .bss
 
-                .align  8
+                .balign 8
                 .space  1024
 kernel_stack:
 
