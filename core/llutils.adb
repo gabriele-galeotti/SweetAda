@@ -124,11 +124,11 @@ package body LLutils
    begin
       Byte_Swap (Object_Address, Size);
       case Size is
-         when Bits.BIT8    => Object_Address := @ + 1; -- 8-bit no-swap
-         when Bits.BIT16   => Object_Address := @ + 2; -- 16-bit swap
-         when Bits.BIT32   => Object_Address := @ + 4; -- 32-bit swap
-         when Bits.BIT64   => Object_Address := @ + 8; -- 64-bit swap
-         when Bits.BITNONE => null;                    -- undefined swap
+         when Bits.BIT8    => Object_Address := @ + SSE.Storage_Offset'(1); -- 8-bit no-swap
+         when Bits.BIT16   => Object_Address := @ + SSE.Storage_Offset'(2); -- 16-bit swap
+         when Bits.BIT32   => Object_Address := @ + SSE.Storage_Offset'(4); -- 32-bit swap
+         when Bits.BIT64   => Object_Address := @ + SSE.Storage_Offset'(8); -- 64-bit swap
+         when Bits.BITNONE => null;                                         -- undefined swap
       end case;
    end Byte_Swap_Next;
 
