@@ -15,14 +15,12 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-pragma Restrictions (No_Elaboration_Code);
-
 with Interfaces.C;
 with Interfaces.C.Extensions;
 
 package C_Wrappers
    with SPARK_Mode => On
-   is
+is
 
    --========================================================================--
    --                                                                        --
