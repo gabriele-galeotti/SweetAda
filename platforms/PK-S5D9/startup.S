@@ -32,8 +32,7 @@ _start:
                 //
                 // Setup stack pointer.
                 //
-                ldr     r0,=kernel_stack
-                mov     sp,r0
+                ldr     sp,=kernel_stack
 
                 //
                 // Initialize .bss section.
@@ -62,7 +61,7 @@ dead:           b       .
 
                 .sect   .bss
 
-                .align  8
+                .balign 8
                 .space  4096
 kernel_stack:
 

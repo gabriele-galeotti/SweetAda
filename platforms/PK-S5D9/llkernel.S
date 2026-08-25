@@ -34,7 +34,7 @@
                 .global vectors
 vectors:
 
-SP_Main:        .long   0
+SP_main:        .long   0
                 .extern _start
 Reset:          .long   _start                  //   1
 NMI:            .long   NMI_handler             //   2
