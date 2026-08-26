@@ -18,7 +18,7 @@
 pragma Restrictions (No_Elaboration_Code);
 
 package body LibGCC
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -53,7 +53,7 @@ package body LibGCC
    function BswapSI2
       (V : GCC.Types.SI_Type)
       return GCC.Types.SI_Type
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -62,7 +62,7 @@ package body LibGCC
    function BswapDI2
       (V : GCC.Types.DI_Type)
       return GCC.Types.DI_Type
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -73,7 +73,7 @@ package body LibGCC
        D : in     GCC.Types.UDI_Type;
        R : in out GCC.Types.UDI_Type)
       return GCC.Types.UDI_Type
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -83,7 +83,7 @@ package body LibGCC
       (N : GCC.Types.DI_Type;
        D : GCC.Types.DI_Type)
       return GCC.Types.DI_Type
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -93,7 +93,7 @@ package body LibGCC
       (N : GCC.Types.DI_Type;
        D : GCC.Types.DI_Type)
       return GCC.Types.DI_Type
-      is
+   is
    separate;
 
 end LibGCC;

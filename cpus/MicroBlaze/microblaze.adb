@@ -23,7 +23,7 @@ with Interfaces;
 with Definitions;
 
 package body MicroBlaze
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -62,7 +62,7 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
    function MSR_Read
       return MSR_Type
-      is
+   is
       MSR_Reg : MSR_Type;
    begin
       Asm (
@@ -82,7 +82,7 @@ pragma Style_Checks (On);
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -99,7 +99,7 @@ pragma Style_Checks (On);
    -- BREAKPOINT
    ----------------------------------------------------------------------------
    procedure BREAKPOINT
-      is
+   is
    begin
       Asm (
            Template => ""                                 & CRLF &
@@ -117,7 +117,7 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
 
    procedure ICache_Invalidate
-      is
+   is
    begin
       Asm (
            Template => ""                          & CRLF &
@@ -138,7 +138,7 @@ pragma Style_Checks (On);
    end ICache_Invalidate;
 
    procedure ICache_Enable
-      is
+   is
       ICE     : constant MSR_Type := MSR_ICE;
       MSR_Reg : MSR_Type;
    begin
@@ -160,7 +160,7 @@ pragma Style_Checks (On);
    end ICache_Enable;
 
    procedure DCache_Invalidate
-      is
+   is
    begin
       Asm (
            Template => ""                          & CRLF &
@@ -181,7 +181,7 @@ pragma Style_Checks (On);
    end DCache_Invalidate;
 
    procedure DCache_Enable
-      is
+   is
       DCE     : constant MSR_Type := MSR_DCE;
       MSR_Reg : MSR_Type;
    begin
@@ -207,7 +207,7 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
-      is
+   is
    begin
       Intcontext := MSR_Read;
    end Intcontext_Get;
@@ -217,7 +217,7 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
-      is
+   is
       MSR_Reg : MSR_Type;
    begin
       Asm (
@@ -243,7 +243,7 @@ pragma Style_Checks (On);
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
-      is
+   is
       IE      : constant MSR_Type := MSR_IE;
       MSR_Reg : MSR_Type;
    begin
@@ -268,7 +268,7 @@ pragma Style_Checks (On);
    -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable
-      is
+   is
       nIE     : constant MSR_Type := MSR_nIE;
       MSR_Reg : MSR_Type;
    begin
