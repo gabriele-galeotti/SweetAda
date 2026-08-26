@@ -110,7 +110,7 @@ linkerads=${linkerads}${NL}
 linkerads=${linkerads}"package ${PACKAGE}"${NL}
 linkerads=${linkerads}"${indent}with Pure       => True,"${NL}
 linkerads=${linkerads}"${indent}     SPARK_Mode => On"${NL}
-linkerads=${linkerads}"${indent}is"${NL}
+linkerads=${linkerads}"is"${NL}
 linkerads=${linkerads}${NL}
 linkeradb=${linkeradb}${NL}
 linkeradb=${linkeradb}"pragma Restrictions (No_Elaboration_Code);"${NL}
@@ -118,7 +118,7 @@ linkeradb=${linkeradb}${NL}
 linkeradb=${linkeradb}"with Bits;"${NL}
 linkeradb=${linkeradb}${NL}
 linkeradb=${linkeradb}"package body ${PACKAGE}"${NL}
-linkeradb=${linkeradb}"${indent}is"${NL}
+linkeradb=${linkeradb}"is"${NL}
 linkeradb=${linkeradb}${NL}
 linkeradb=${linkeradb}"${indent}type Symbol_Type is new Bits.Null_Object"${NL}
 linkeradb=${linkeradb}"${indent}   with Convention => Asm;"${NL}
@@ -133,7 +133,7 @@ EOF
   linkerads=${linkerads}${NL}
   linkeradb=${linkeradb}"${indent}function ${Ada_identifier}"${NL}
   linkeradb=${linkeradb}"${indent}   return System.Storage_Elements.Integer_Address"${NL}
-  linkeradb=${linkeradb}"${indent}   is"${NL}
+  linkeradb=${linkeradb}"${indent}is"${NL}
   linkeradb=${linkeradb}"${indent}   Symbol : aliased constant Symbol_Type"${NL}
   linkeradb=${linkeradb}"${indent}      with Import    => True,"${NL}
   linkeradb=${linkeradb}"${indent}           Link_Name => \"${symbol_name}\";"${NL}

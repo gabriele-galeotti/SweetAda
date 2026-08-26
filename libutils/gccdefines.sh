@@ -173,7 +173,7 @@ gcc_defines=${gcc_defines}${NL}
 gcc_defines=${gcc_defines}$(printf "%s\n" "package ${PACKAGE_NAME}")${NL}
 gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "with Pure       => True,")${NL}
 gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "     SPARK_Mode => On")${NL}
-gcc_defines=${gcc_defines}$(printf "%s%s\n" "${indent}" "is")${NL}
+gcc_defines=${gcc_defines}$(printf "%s\n" "is")${NL}
 gcc_defines=${gcc_defines}${NL}
 
 # special handling for ARM

@@ -266,7 +266,7 @@ $gcc_defines += $nl
 $gcc_defines += "package $($package_name)" + $nl
 $gcc_defines += "$($indent)with Pure       => True," + $nl
 $gcc_defines += "$($indent)     SPARK_Mode => On" + $nl
-$gcc_defines += "$($indent)is" + $nl
+$gcc_defines += "is" + $nl
 $gcc_defines += $nl
 
 # special handling for ARM

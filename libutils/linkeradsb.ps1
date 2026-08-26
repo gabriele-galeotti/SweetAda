@@ -127,7 +127,7 @@ $linkerads += $nl
 $linkerads += "package $PACKAGE" + $nl
 $linkerads += $indent + "with Pure       => True," + $nl
 $linkerads += $indent + "     SPARK_Mode => On" + $nl
-$linkerads += $indent + "is" + $nl
+$linkerads += "is" + $nl
 $linkerads += $nl
 
 $linkeradb += $nl
@@ -136,7 +136,7 @@ $linkeradb += $nl
 $linkeradb += "with Bits;" + $nl
 $linkeradb += $nl
 $linkeradb += "package body $PACKAGE" + $nl
-$linkeradb += $indent + "is" + $nl
+$linkeradb += "is" + $nl
 $linkeradb += $nl
 $linkeradb += $indent + "type Symbol_Type is new Bits.Null_Object" + $nl
 $linkeradb += $indent + "   with Convention => Asm;" + $nl
@@ -152,7 +152,7 @@ foreach ($symbol in $linker_symbols)
   $linkerads += $nl
   $linkeradb += $indent + "function $Ada_identifier" + $nl
   $linkeradb += $indent + "   return System.Storage_Elements.Integer_Address" + $nl
-  $linkeradb += $indent + "   is" + $nl
+  $linkeradb += $indent + "is" + $nl
   $linkeradb += $indent + "   Symbol : aliased constant Symbol_Type" + $nl
   $linkeradb += $indent + "      with Import    => True," + $nl
   $linkeradb += $indent + "           Link_Name => `"$symbol_name`";" + $nl
