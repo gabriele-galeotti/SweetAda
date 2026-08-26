@@ -23,7 +23,7 @@ with Interfaces.C;
 package Bits
    with Pure       => True,
         SPARK_Mode => On
-   is
+is
 
    --========================================================================--
    --                                                                        --

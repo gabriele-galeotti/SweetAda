@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 package body Interrupts
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -52,7 +52,7 @@ package body Interrupts
       (Irq          : in CPU.Irq_Id_Type;
        Irq_Handler  : in Interrupt_Handler_Ptr;
        Data_Address : in System.Address)
-      is
+   is
    begin
       Interrupt_Handlers (Irq).Irq_Handler  := Irq_Handler;
       Interrupt_Handlers (Irq).Data_Address := Data_Address;
@@ -63,7 +63,7 @@ package body Interrupts
    ----------------------------------------------------------------------------
    procedure Handler
       (Irq : in CPU.Irq_Id_Type)
-      is
+   is
    begin
       if Interrupt_Handlers (Irq).Irq_Handler /= null then
          Interrupt_Handlers (Irq).Irq_Handler (Interrupt_Handlers (Irq).Data_Address);

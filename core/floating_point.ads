@@ -19,7 +19,7 @@ pragma Restrictions (No_Elaboration_Code);
 
 package Floating_Point
    with SPARK_Mode => On
-   is
+is
 
    --========================================================================--
    --                                                                        --

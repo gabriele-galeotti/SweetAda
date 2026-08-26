@@ -18,7 +18,7 @@
 pragma Restrictions (No_Elaboration_Code);
 
 package body Integer_Math
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -35,7 +35,7 @@ package body Integer_Math
       (Value1 : Integer;
        Value2 : Integer)
       return Natural
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -45,7 +45,7 @@ package body Integer_Math
       (Value1 : Integer;
        Value2 : Integer)
       return Natural
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -54,7 +54,7 @@ package body Integer_Math
    function Log2
       (Value : Positive)
       return Log_Integer
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -64,7 +64,7 @@ package body Integer_Math
       (Value  : Natural;
        Modulo : Positive)
       return Natural
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -74,7 +74,7 @@ package body Integer_Math
       (Value  : Natural;
        Modulo : Positive)
       return Natural
-      is
+   is
    separate;
 
 end Integer_Math;

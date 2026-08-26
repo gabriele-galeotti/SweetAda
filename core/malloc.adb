@@ -23,7 +23,7 @@ with Mutex;
 with Console;
 
 package body Malloc
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -84,7 +84,7 @@ package body Malloc
       (Size      : Interfaces.C.size_t;
        Alignment : Natural)
       return Interfaces.C.size_t
-      is
+   is
    begin
       return Interfaces.C.size_t (Roundup (Natural (Size), Alignment));
    end Round_Size;
@@ -96,7 +96,7 @@ package body Malloc
       (Memory_Address : in Address;
        Size           : in Bytesize;
        Debug_Flag     : in Boolean)
-      is
+   is
       Heap_Block : aliased Memory_Block_Type
          with Address    => Memory_Address,
               Import     => True,
@@ -127,7 +127,7 @@ package body Malloc
    function Malloc
       (Size : Interfaces.C.size_t)
       return Address
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -135,7 +135,7 @@ package body Malloc
    ----------------------------------------------------------------------------
    procedure Free
       (Memory_Address : in Interfaces.C.Extensions.void_ptr)
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -145,7 +145,7 @@ package body Malloc
       (Nmemb : Interfaces.C.size_t;
        Size  : Interfaces.C.size_t)
       return Address
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -155,7 +155,7 @@ package body Malloc
       (Memory_Address : Interfaces.C.Extensions.void_ptr;
        Size           : Interfaces.C.size_t)
       return Address
-      is
+   is
    separate;
 
 end Malloc;

@@ -22,7 +22,7 @@ with Interfaces;
 
 package MMIO
    with SPARK_Mode => On
-   is
+is
 
    --========================================================================--
    --                                                                        --

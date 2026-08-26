@@ -18,7 +18,7 @@
 pragma Restrictions (No_Elaboration_Code);
 
 package body Abort_Library
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -53,7 +53,7 @@ package body Abort_Library
    -- System_Abort_Parameterless
    ----------------------------------------------------------------------------
    procedure System_Abort_Parameterless
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -64,7 +64,7 @@ package body Abort_Library
        Line    : in Integer;
        Column  : in Integer;
        Message : in System.Address)
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------

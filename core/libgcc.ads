@@ -20,7 +20,7 @@ with GCC.Types;
 package LibGCC
    with Pure       => True,
         SPARK_Mode => On
-   is
+is
 
    --========================================================================--
    --                                                                        --

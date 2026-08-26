@@ -21,7 +21,7 @@ with System;
 
 package Abort_Library
    with SPARK_Mode => On
-   is
+is
 
    --========================================================================--
    --                                                                        --

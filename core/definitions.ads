@@ -20,7 +20,7 @@ with Ada.Characters.Latin_1;
 package Definitions
    with Pure       => True,
         SPARK_Mode => On
-   is
+is
 
    --========================================================================--
    --                                                                        --

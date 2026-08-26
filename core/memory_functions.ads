@@ -24,7 +24,7 @@ with Bits;
 
 package Memory_Functions
    with SPARK_Mode => On
-   is
+is
 
    --========================================================================--
    --                                                                        --

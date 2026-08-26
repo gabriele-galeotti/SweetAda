@@ -22,7 +22,7 @@ with System.Address_To_Access_Conversions;
 with Interfaces.C.Extensions;
 
 package body Memory_Functions
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -94,7 +94,7 @@ package body Memory_Functions
        S2 : Interfaces.C.Extensions.void_ptr;
        N  : Interfaces.C.size_t)
       return Interfaces.C.int
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -105,7 +105,7 @@ package body Memory_Functions
        S2 : Interfaces.C.Extensions.void_ptr;
        N  : Interfaces.C.size_t)
       return Interfaces.C.Extensions.void_ptr
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -116,7 +116,7 @@ package body Memory_Functions
        S2 : Interfaces.C.Extensions.void_ptr;
        N  : Interfaces.C.size_t)
       return Interfaces.C.Extensions.void_ptr
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -127,7 +127,7 @@ package body Memory_Functions
        C : Interfaces.C.int;
        N : Interfaces.C.size_t)
       return Interfaces.C.Extensions.void_ptr
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -142,7 +142,7 @@ package body Memory_Functions
        S2 : System.Address;
        N  : Interfaces.C.size_t)
       return Interfaces.C.int
-      is
+   is
       function MC
          (A1 : Interfaces.C.Extensions.void_ptr;
           A2 : Interfaces.C.Extensions.void_ptr;
@@ -163,7 +163,7 @@ package body Memory_Functions
        S2 : System.Address;
        N  : Interfaces.C.size_t)
       return System.Address
-      is
+   is
       function MC
          (A1 : Interfaces.C.Extensions.void_ptr;
           A2 : Interfaces.C.Extensions.void_ptr;
@@ -184,7 +184,7 @@ package body Memory_Functions
        S2 : System.Address;
        N  : Interfaces.C.size_t)
       return System.Address
-      is
+   is
       function MM
          (A1 : Interfaces.C.Extensions.void_ptr;
           A2 : Interfaces.C.Extensions.void_ptr;
@@ -205,7 +205,7 @@ package body Memory_Functions
        C : Interfaces.C.int;
        N : Interfaces.C.size_t)
       return System.Address
-      is
+   is
       function MS
          (A : System.Address;
           X : Interfaces.C.int;
@@ -228,7 +228,7 @@ package body Memory_Functions
        S2 : in     System.Address;
        N  : in     Bits.Bytesize;
        R  : in out Integer)
-      is
+   is
       Src  : constant System.Address := S1;
       Dest : constant System.Address := S2;
    begin
@@ -244,7 +244,7 @@ package body Memory_Functions
       (S1 : in System.Address;
        S2 : in System.Address;
        N  : in Bits.Bytesize)
-      is
+   is
       Src    : constant System.Address := S1;
       Dest   : constant System.Address := S2;
       Unused : System.Address with Unreferenced => True;
@@ -261,7 +261,7 @@ package body Memory_Functions
       (S1 : in System.Address;
        S2 : in System.Address;
        N  : in Bits.Bytesize)
-      is
+   is
       Src    : constant System.Address := S1;
       Dest   : constant System.Address := S2;
       Unused : System.Address with Unreferenced => True;
@@ -278,7 +278,7 @@ package body Memory_Functions
       (S : in System.Address;
        V : in Interfaces.Unsigned_8;
        N : in Bits.Bytesize)
-      is
+   is
       Unused : System.Address with Unreferenced => True;
    begin
       Unused := Memset (S, Interfaces.C.int (V), Interfaces.C.size_t (N));

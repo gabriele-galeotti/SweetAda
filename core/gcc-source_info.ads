@@ -19,7 +19,7 @@ pragma Restrictions (No_Elaboration_Code);
 
 package GCC.Source_Info
    with SPARK_Mode => On
-   is
+is
 
    ----------------------------------------------------------------------------
    -- Return the basename of the current input source file.

@@ -21,7 +21,7 @@ with System;
 
 package Core.Base
    with SPARK_Mode => On
-   is
+is
 
    --========================================================================--
    --                                                                        --

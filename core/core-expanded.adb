@@ -20,7 +20,7 @@ pragma Restrictions (No_Elaboration_Code);
 with Interfaces.C;
 
 package body Core.Expanded
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -48,7 +48,7 @@ package body Core.Expanded
    ----------------------------------------------------------------------------
    procedure Runtime_Initialize
       (Install_Handler : in Integer with Unreferenced => True)
-      is
+   is
    begin
       GNAT_RT_Init_Count := @ + 1;
       if not (GNAT_RT_Init_Count > 1) then
@@ -65,7 +65,7 @@ package body Core.Expanded
       (Name   : in System.Address with Unreferenced => True;
        Length : in System.Address;
        Ptr    : in System.Address with Unreferenced => True)
-      is
+   is
       use Interfaces.C;
       GNAT_INIT_SCALARS_String : constant char_array :=
          "GNAT_INIT_SCALARS" & nul

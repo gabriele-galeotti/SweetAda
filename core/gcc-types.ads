@@ -21,7 +21,7 @@ with Interfaces;
 package GCC.Types
    with Pure       => True,
         SPARK_Mode => On
-   is
+is
 
    --========================================================================--
    --                                                                        --

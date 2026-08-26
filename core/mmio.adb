@@ -18,7 +18,7 @@
 pragma Restrictions (No_Elaboration_Code);
 
 package body MMIO
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -36,48 +36,48 @@ package body MMIO
    function Read_U8
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_8
-      is
+   is
    separate;
    procedure Write_U8
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_8)
-      is
+   is
    separate;
 
    -- Unsigned_16
    function Read_U16
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_16
-      is
+   is
    separate;
    procedure Write_U16
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_16)
-      is
+   is
    separate;
 
    -- Unsigned_32
    function Read_U32
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_32
-      is
+   is
    separate;
    procedure Write_U32
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_32)
-      is
+   is
    separate;
 
    -- Unsigned_64
    function Read_U64
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_64
-      is
+   is
    separate;
    procedure Write_U64
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_64)
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -88,48 +88,48 @@ package body MMIO
    function ReadN_U8
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_8
-      is
+   is
    separate;
    procedure WriteN_U8
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_8)
-      is
+   is
    separate;
 
    -- Unsigned_16
    function ReadN_U16
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_16
-      is
+   is
    separate;
    procedure WriteN_U16
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_16)
-      is
+   is
    separate;
 
    -- Unsigned_32
    function ReadN_U32
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_32
-      is
+   is
    separate;
    procedure WriteN_U32
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_32)
-      is
+   is
    separate;
 
    -- Unsigned_64
    function ReadN_U64
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_64
-      is
+   is
    separate;
    procedure WriteN_U64
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_64)
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -140,48 +140,48 @@ package body MMIO
    function ReadA_U8
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_8
-      is
+   is
    separate;
    procedure WriteA_U8
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_8)
-      is
+   is
    separate;
 
    -- Unsigned_16
    function ReadA_U16
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_16
-      is
+   is
    separate;
    procedure WriteA_U16
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_16)
-      is
+   is
    separate;
 
    -- Unsigned_32
    function ReadA_U32
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_32
-      is
+   is
    separate;
    procedure WriteA_U32
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_32)
-      is
+   is
    separate;
 
    -- Unsigned_64
    function ReadA_U64
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_64
-      is
+   is
    separate;
    procedure WriteA_U64
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_64)
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -192,48 +192,48 @@ package body MMIO
    function ReadS_U8
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_8
-      is
+   is
    separate;
    procedure WriteS_U8
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_8)
-      is
+   is
    separate;
 
    -- Unsigned_16
    function ReadS_U16
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_16
-      is
+   is
    separate;
    procedure WriteS_U16
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_16)
-      is
+   is
    separate;
 
    -- Unsigned_32
    function ReadS_U32
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_32
-      is
+   is
    separate;
    procedure WriteS_U32
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_32)
-      is
+   is
    separate;
 
    -- Unsigned_64
    function ReadS_U64
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_64
-      is
+   is
    separate;
    procedure WriteS_U64
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_64)
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -244,48 +244,48 @@ package body MMIO
    function ReadAS_U8
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_8
-      is
+   is
    separate;
    procedure WriteAS_U8
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_8)
-      is
+   is
    separate;
 
    -- Unsigned_16
    function ReadAS_U16
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_16
-      is
+   is
    separate;
    procedure WriteAS_U16
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_16)
-      is
+   is
    separate;
 
    -- Unsigned_32
    function ReadAS_U32
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_32
-      is
+   is
    separate;
    procedure WriteAS_U32
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_32)
-      is
+   is
    separate;
 
    -- Unsigned_64
    function ReadAS_U64
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_64
-      is
+   is
    separate;
    procedure WriteAS_U64
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_64)
-      is
+   is
    separate;
 
 end MMIO;

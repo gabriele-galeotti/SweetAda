@@ -29,7 +29,7 @@ with Application;
 --===========================================================================--
 
 procedure Main
-   is
+is
    procedure Ada_Init
       with Import        => True,
            Convention    => C,

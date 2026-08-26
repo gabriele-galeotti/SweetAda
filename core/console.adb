@@ -20,7 +20,7 @@ pragma Restrictions (No_Elaboration_Code);
 with Definitions;
 
 package body Console
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -48,14 +48,14 @@ package body Console
 
    procedure Console_Null_Write
       (C : in Character with Unreferenced => True)
-      is
+   is
    begin
       null;
    end Console_Null_Write;
 
    procedure Console_Null_Read
       (C : out Character)
-      is
+   is
       use Definitions;
    begin
       C := ISO88591.NUL;
@@ -66,7 +66,7 @@ package body Console
    ----------------------------------------------------------------------------
    procedure Print
       (C : in Character)
-      is
+   is
    begin
       Console_Descriptor.Write (C);
    end Print;
@@ -76,14 +76,14 @@ package body Console
    ----------------------------------------------------------------------------
    procedure Print
       (c : in Interfaces.C.char)
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
    -- Print_NewLine
    ----------------------------------------------------------------------------
    procedure Print_NewLine
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -93,7 +93,7 @@ package body Console
       (S     : in String;
        Limit : in Natural := Maximum_String_Length;
        NL    : in Boolean := False)
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -105,7 +105,7 @@ package body Console
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -116,7 +116,7 @@ package body Console
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -127,7 +127,7 @@ package body Console
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -135,7 +135,7 @@ package body Console
    ----------------------------------------------------------------------------
    procedure Print_UnsignedHex8
       (Value : in Interfaces.Unsigned_8)
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -146,7 +146,7 @@ package body Console
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -157,7 +157,7 @@ package body Console
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -168,7 +168,7 @@ package body Console
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -179,7 +179,7 @@ package body Console
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -190,7 +190,7 @@ package body Console
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -201,7 +201,7 @@ package body Console
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -212,7 +212,7 @@ package body Console
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -223,7 +223,7 @@ package body Console
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -234,7 +234,7 @@ package body Console
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -245,7 +245,7 @@ package body Console
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -256,7 +256,7 @@ package body Console
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -267,7 +267,7 @@ package body Console
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -278,7 +278,7 @@ package body Console
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -289,7 +289,7 @@ package body Console
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -301,7 +301,7 @@ package body Console
        NL        : in Boolean := False;
        Prefix    : in String := "";
        Separator : in Character := ' ')
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -313,7 +313,7 @@ package body Console
        NL             : in Boolean := False;
        Prefix         : in String := "";
        Suffix         : in String := "")
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -323,7 +323,7 @@ package body Console
       (Start_Address : in System.Address;
        Data_Size     : in Bits.Bytesize;
        Row_Size      : in Row_Size_Type := 16)
-      is
+   is
    separate;
 
 end Console;

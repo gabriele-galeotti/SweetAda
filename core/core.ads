@@ -19,7 +19,7 @@ pragma Restrictions (No_Elaboration_Code);
 
 package Core
    with SPARK_Mode => On
-   is
+is
 
    --========================================================================--
    --                                                                        --

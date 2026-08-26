@@ -18,7 +18,7 @@
 pragma Restrictions (No_Elaboration_Code);
 
 package body LLutils
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -46,15 +46,15 @@ package body LLutils
 
    procedure Byte_Swap_16
       (Object_Address : in System.Address)
-      is
+   is
    separate;
    procedure Byte_Swap_32
       (Object_Address : in System.Address)
-      is
+   is
    separate;
    procedure Byte_Swap_64
       (Object_Address : in System.Address)
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -64,17 +64,17 @@ package body LLutils
    function BE_To_CPUE_16
       (Object_Address : System.Address)
       return Interfaces.Unsigned_16
-      is
+   is
    separate;
    function BE_To_CPUE_32
       (Object_Address : System.Address)
       return Interfaces.Unsigned_32
-      is
+   is
    separate;
    function BE_To_CPUE_64
       (Object_Address : System.Address)
       return Interfaces.Unsigned_64
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -84,17 +84,17 @@ package body LLutils
    function LE_To_CPUE_16
       (Object_Address : System.Address)
       return Interfaces.Unsigned_16
-      is
+   is
    separate;
    function LE_To_CPUE_32
       (Object_Address : System.Address)
       return Interfaces.Unsigned_32
-      is
+   is
    separate;
    function LE_To_CPUE_64
       (Object_Address : System.Address)
       return Interfaces.Unsigned_64
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -103,7 +103,7 @@ package body LLutils
    procedure Byte_Swap
       (Object_Address : in System.Address;
        Size           : in Bits.Bitsize)
-      is
+   is
    begin
       case Size is
          when Bits.BIT8    => null;                          -- 8-bit no-swap
@@ -120,7 +120,7 @@ package body LLutils
    procedure Byte_Swap_Next
       (Object_Address : in out System.Address;
        Size           : in     Bits.Bitsize)
-      is
+   is
    begin
       Byte_Swap (Object_Address, Size);
       case Size is
@@ -141,7 +141,7 @@ package body LLutils
        MSBit           : Bits.Address_Bit_Number;
        BE_Layout       : Boolean := False)
       return SSE.Integer_Address
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -152,7 +152,7 @@ package body LLutils
        Object_Address : System.Address;
        Scale_Factor   : Bits.Address_Shift)
       return SSE.Storage_Offset
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -163,7 +163,7 @@ package body LLutils
        Offset       : System.Storage_Elements.Storage_Offset;
        Scale_Factor : Bits.Address_Shift)
       return System.Address
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -172,7 +172,7 @@ package body LLutils
    function To_U8
       (Value : BCD_Type)
       return Interfaces.Unsigned_8
-      is
+   is
       V : Interfaces.Unsigned_8;
    begin
       V := Interfaces.Unsigned_8 (Value);
@@ -185,7 +185,7 @@ package body LLutils
    function To_BCD
       (Value : Interfaces.Unsigned_8)
       return BCD_Type
-      is
+   is
       L : Interfaces.Unsigned_8;
       H : Interfaces.Unsigned_8;
    begin
@@ -203,7 +203,7 @@ package body LLutils
    function To_Ch
       (Digit : Decimal_Digit_Type)
       return Character
-      is
+   is
    begin
       return Character'Val (Character'Pos ('0') + Digit);
    end To_Ch;
@@ -216,7 +216,7 @@ package body LLutils
        MSD   : Boolean;
        LCase : Boolean)
       return Character
-      is
+   is
       Digit : Interfaces.Unsigned_8;
       C     : Character;
    begin
@@ -246,7 +246,7 @@ package body LLutils
        MSD     : in     Boolean;
        Value   : in out Interfaces.Unsigned_8;
        Success :    out Boolean)
-      is
+   is
       Digit : Interfaces.Unsigned_8;
    begin
       Success := True;
@@ -270,7 +270,7 @@ package body LLutils
    procedure Atomic_Clear
       (Object_Address : in System.Address;
        Memory_Order   : in Integer)
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -280,7 +280,7 @@ package body LLutils
       (Object_Address : System.Address;
        Memory_Order   : Integer)
       return Atomic_Type
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -290,7 +290,7 @@ package body LLutils
       (Object_Address : System.Address;
        Memory_Order   : Integer)
       return Boolean
-      is
+   is
    separate;
 
 end LLutils;

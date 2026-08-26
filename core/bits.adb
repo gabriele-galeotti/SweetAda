@@ -20,7 +20,7 @@ pragma Restrictions (No_Elaboration_Code);
 with Ada.Unchecked_Conversion;
 
 package body Bits
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -50,7 +50,7 @@ package body Bits
       (A : Boolean;
        B : Boolean)
       return Boolean
-      is
+   is
    begin
       return (A and then not B) or else (not A and then B);
    end exor;
@@ -62,7 +62,7 @@ package body Bits
    function To_B
       (Value : PBoolean)
       return Boolean
-      is
+   is
    begin
       return Value = PTrue;
    end To_B;
@@ -70,7 +70,7 @@ package body Bits
    function To_P
       (Value : Boolean)
       return PBoolean
-      is
+   is
    begin
       return (if Value then PTrue else PFalse);
    end To_P;
@@ -78,7 +78,7 @@ package body Bits
    function To_B
       (Value : NBoolean)
       return Boolean
-      is
+   is
    begin
       return Value = NTrue;
    end To_B;
@@ -86,7 +86,7 @@ package body Bits
    function To_N
       (Value : Boolean)
       return NBoolean
-      is
+   is
    begin
       return (if Value then NTrue else NFalse);
    end To_N;
@@ -97,7 +97,7 @@ package body Bits
    function Map_Bitsize
       (Size : Positive)
       return Bitsize
-      is
+   is
       Result : Bitsize;
    begin
       case Size is
@@ -117,7 +117,7 @@ package body Bits
    function To_B
       (Value : Bits_1)
       return Boolean
-      is
+   is
    begin
       return Value /= 0;
    end To_B;
@@ -125,7 +125,7 @@ package body Bits
    function To_B1
       (Value : Boolean)
       return Bits_1
-      is
+   is
       Result : Bits_1;
    begin
       if Value then
@@ -143,7 +143,7 @@ package body Bits
    function Inv
       (Value : Bits_1)
       return Bits_1
-      is
+   is
    begin
       return Value xor 1;
    end Inv;
@@ -155,7 +155,7 @@ package body Bits
    function To_B8
       (Value : Bitmap_8)
       return Bits_8
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (Bitmap_8, Bits_8);
    begin
       return Convert (Value);
@@ -164,7 +164,7 @@ package body Bits
    function To_BM8
       (Value : Bits_8)
       return Bitmap_8
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (Bits_8, Bitmap_8);
    begin
       return Convert (Value);
@@ -173,7 +173,7 @@ package body Bits
    function To_B16
       (Value : Bitmap_16)
       return Bits_16
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (Bitmap_16, Bits_16);
    begin
       return Convert (Value);
@@ -182,7 +182,7 @@ package body Bits
    function To_BM16
       (Value : Bits_16)
       return Bitmap_16
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (Bits_16, Bitmap_16);
    begin
       return Convert (Value);
@@ -191,7 +191,7 @@ package body Bits
    function To_B32
       (Value : Bitmap_32)
       return Bits_32
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (Bitmap_32, Bits_32);
    begin
       return Convert (Value);
@@ -200,7 +200,7 @@ package body Bits
    function To_BM32
       (Value : Bits_32)
       return Bitmap_32
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (Bits_32, Bitmap_32);
    begin
       return Convert (Value);
@@ -209,7 +209,7 @@ package body Bits
    function To_B64
       (Value : Bitmap_64)
       return Bits_64
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (Bitmap_64, Bits_64);
    begin
       return Convert (Value);
@@ -218,7 +218,7 @@ package body Bits
    function To_BM64
       (Value : Bits_64)
       return Bitmap_64
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (Bits_64, Bitmap_64);
    begin
       return Convert (Value);
@@ -231,7 +231,7 @@ package body Bits
    function To_U8
       (Value : SSE.Storage_Element)
       return Interfaces.Unsigned_8
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (SSE.Storage_Element, Interfaces.Unsigned_8);
    begin
       return Convert (Value);
@@ -240,7 +240,7 @@ package body Bits
    function To_SE
       (Value : Interfaces.Unsigned_8)
       return SSE.Storage_Element
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (Interfaces.Unsigned_8, SSE.Storage_Element);
    begin
       return Convert (Value);
@@ -253,7 +253,7 @@ package body Bits
    function To_U8
       (C : Character)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Character'Pos (C);
    end To_U8;
@@ -261,7 +261,7 @@ package body Bits
    function To_Ch
       (Value : Interfaces.Unsigned_8)
       return Character
-      is
+   is
    begin
       return Character'Val (Value);
    end To_Ch;
@@ -273,7 +273,7 @@ package body Bits
    function To_Mod
       (Value : Integer)
       return Mod_Integer
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (Integer, Mod_Integer);
    begin
       return Convert (Value);
@@ -282,7 +282,7 @@ package body Bits
    function To_Integer
       (Value : Mod_Integer)
       return Integer
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (Mod_Integer, Integer);
    begin
       return Convert (Value);
@@ -300,7 +300,7 @@ package body Bits
    function g_LSBitOn
       (V : Modular_Type)
       return Boolean
-      is
+   is
    begin
       return (V and 1) /= 0;
    end g_LSBitOn;
@@ -317,7 +317,7 @@ package body Bits
    function g_MSBitOn
       (V : Modular_Type)
       return Boolean
-      is
+   is
    begin
       return (V and 2**(Modular_Type'Size - 1)) /= 0;
    end g_MSBitOn;
@@ -329,7 +329,7 @@ package body Bits
    function LSBitOn
       (Value : Interfaces.Unsigned_8)
       return Boolean
-      is
+   is
       function U8_LSBitOn is new g_LSBitOn (Interfaces.Unsigned_8);
    begin
       return U8_LSBitOn (Value);
@@ -338,7 +338,7 @@ package body Bits
    function LSBitOn
       (Value : Interfaces.Unsigned_16)
       return Boolean
-      is
+   is
       function U16_LSBitOn is new g_LSBitOn (Interfaces.Unsigned_16);
    begin
       return U16_LSBitOn (Value);
@@ -347,7 +347,7 @@ package body Bits
    function LSBitOn
       (Value : Interfaces.Unsigned_32)
       return Boolean
-      is
+   is
       function U32_LSBitOn is new g_LSBitOn (Interfaces.Unsigned_32);
    begin
       return U32_LSBitOn (Value);
@@ -356,7 +356,7 @@ package body Bits
    function LSBitOn
       (Value : Interfaces.Unsigned_64)
       return Boolean
-      is
+   is
       function U64_LSBitOn is new g_LSBitOn (Interfaces.Unsigned_64);
    begin
       return U64_LSBitOn (Value);
@@ -365,7 +365,7 @@ package body Bits
    function MSBitOn
       (Value : Interfaces.Unsigned_8)
       return Boolean
-      is
+   is
       function U8_MSBitOn is new g_MSBitOn (Interfaces.Unsigned_8);
    begin
       return U8_MSBitOn (Value);
@@ -374,7 +374,7 @@ package body Bits
    function MSBitOn
       (Value : Interfaces.Unsigned_16)
       return Boolean
-      is
+   is
       function U16_MSBitOn is new g_MSBitOn (Interfaces.Unsigned_16);
    begin
       return U16_MSBitOn (Value);
@@ -383,7 +383,7 @@ package body Bits
    function MSBitOn
       (Value : Interfaces.Unsigned_32)
       return Boolean
-      is
+   is
       function U32_MSBitOn is new g_MSBitOn (Interfaces.Unsigned_32);
    begin
       return U32_MSBitOn (Value);
@@ -392,7 +392,7 @@ package body Bits
    function MSBitOn
       (Value : Interfaces.Unsigned_64)
       return Boolean
-      is
+   is
       function U64_MSBitOn is new g_MSBitOn (Interfaces.Unsigned_64);
    begin
       return U64_MSBitOn (Value);
@@ -407,7 +407,7 @@ package body Bits
    function Bit0
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Value and 16#01#;
    end Bit0;
@@ -415,7 +415,7 @@ package body Bits
    function Bit7
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Value and 16#80#;
    end Bit7;
@@ -423,7 +423,7 @@ package body Bits
    function BitN
       (Value : Interfaces.Unsigned_8; NBit : Natural)
       return Boolean
-      is
+   is
    begin
       return (Value and 2**NBit) /= 0;
    end BitN;
@@ -433,7 +433,7 @@ package body Bits
        NBit  : Natural;
        Bit   : Boolean)
       return Interfaces.Unsigned_8
-      is
+   is
       Result : Interfaces.Unsigned_8;
    begin
       if Bit then
@@ -449,7 +449,7 @@ package body Bits
    function Bit0
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_16
-      is
+   is
    begin
       return Interfaces.Unsigned_16 (Value and 16#01#);
    end Bit0;
@@ -457,7 +457,7 @@ package body Bits
    function Bit7
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_16
-      is
+   is
    begin
       return Interfaces.Unsigned_16 (Value and 16#80#);
    end Bit7;
@@ -465,7 +465,7 @@ package body Bits
    function BitN
       (Value : Interfaces.Unsigned_16; NBit : Natural)
       return Boolean
-      is
+   is
       Result : Boolean;
    begin
       if BigEndian then
@@ -481,7 +481,7 @@ package body Bits
    function Bit0
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_32
-      is
+   is
    begin
       return Interfaces.Unsigned_32 (Value and 16#01#);
    end Bit0;
@@ -489,7 +489,7 @@ package body Bits
    function Bit7
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_32
-      is
+   is
    begin
       return Interfaces.Unsigned_32 (Value and 16#80#);
    end Bit7;
@@ -497,7 +497,7 @@ package body Bits
    function BitN
       (Value : Interfaces.Unsigned_32; NBit : Natural)
       return Boolean
-      is
+   is
       Result : Boolean;
    begin
       if BigEndian then
@@ -513,7 +513,7 @@ package body Bits
    function Bit0
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_64
-      is
+   is
    begin
       return Interfaces.Unsigned_64 (Value and 16#01#);
    end Bit0;
@@ -521,7 +521,7 @@ package body Bits
    function Bit7
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_64
-      is
+   is
    begin
       return Interfaces.Unsigned_64 (Value and 16#80#);
    end Bit7;
@@ -529,7 +529,7 @@ package body Bits
    function BitN
       (Value : Interfaces.Unsigned_64; NBit : Natural)
       return Boolean
-      is
+   is
       Result : Boolean;
    begin
       if BigEndian then
@@ -549,7 +549,7 @@ package body Bits
    function LByte
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Interfaces.Unsigned_8 (Value and Unsigned_8_Mask);
    end LByte;
@@ -557,7 +557,7 @@ package body Bits
    function HByte
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 8) and Unsigned_8_Mask);
    end HByte;
@@ -567,7 +567,7 @@ package body Bits
    function LByte
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Interfaces.Unsigned_8 (Value and Unsigned_8_Mask);
    end LByte;
@@ -575,7 +575,7 @@ package body Bits
    function MByte
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 8) and Unsigned_8_Mask);
    end MByte;
@@ -583,7 +583,7 @@ package body Bits
    function NByte
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 16) and Unsigned_8_Mask);
    end NByte;
@@ -591,7 +591,7 @@ package body Bits
    function HByte
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 24) and Unsigned_8_Mask);
    end HByte;
@@ -601,7 +601,7 @@ package body Bits
    function LByte
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Interfaces.Unsigned_8 (Value and Unsigned_8_Mask);
    end LByte;
@@ -609,7 +609,7 @@ package body Bits
    function MByte
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 8) and Unsigned_8_Mask);
    end MByte;
@@ -617,7 +617,7 @@ package body Bits
    function NByte
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 16) and Unsigned_8_Mask);
    end NByte;
@@ -625,7 +625,7 @@ package body Bits
    function OByte
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 24) and Unsigned_8_Mask);
    end OByte;
@@ -633,7 +633,7 @@ package body Bits
    function PByte
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 32) and Unsigned_8_Mask);
    end PByte;
@@ -641,7 +641,7 @@ package body Bits
    function QByte
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 40) and Unsigned_8_Mask);
    end QByte;
@@ -649,7 +649,7 @@ package body Bits
    function RByte
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 48) and Unsigned_8_Mask);
    end RByte;
@@ -657,7 +657,7 @@ package body Bits
    function HByte
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 56) and Unsigned_8_Mask);
    end HByte;
@@ -671,7 +671,7 @@ package body Bits
    function LWord
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Interfaces.Unsigned_8 (Value and Unsigned_8_Mask);
    end LWord;
@@ -679,7 +679,7 @@ package body Bits
    function HWord
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Interfaces.Unsigned_8 (ShR (Value, 8) and Unsigned_8_Mask);
    end HWord;
@@ -689,7 +689,7 @@ package body Bits
    function LWord
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_16
-      is
+   is
    begin
       return Interfaces.Unsigned_16 (Value and Unsigned_16_Mask);
    end LWord;
@@ -697,7 +697,7 @@ package body Bits
    function HWord
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_16
-      is
+   is
    begin
       return Interfaces.Unsigned_16 (ShR (Value, 16) and Unsigned_16_Mask);
    end HWord;
@@ -707,7 +707,7 @@ package body Bits
    function LWord
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_32
-      is
+   is
    begin
       return Interfaces.Unsigned_32 (Value and Unsigned_32_Mask);
    end LWord;
@@ -715,7 +715,7 @@ package body Bits
    function HWord
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_32
-      is
+   is
    begin
       return Interfaces.Unsigned_32 (ShR (Value, 32) and Unsigned_32_Mask);
    end HWord;
@@ -728,7 +728,7 @@ package body Bits
       (Value_H : Interfaces.Unsigned_8;
        Value_L : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_16
-      is
+   is
    begin
       return ShL (Interfaces.Unsigned_16 (Value_H), 8) or Interfaces.Unsigned_16 (Value_L);
    end Make_Word;
@@ -739,7 +739,7 @@ package body Bits
        Value_M : Interfaces.Unsigned_8;
        Value_L : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_32
-      is
+   is
    begin
       return ShL (Interfaces.Unsigned_32 (Value_H), 24) or
              ShL (Interfaces.Unsigned_32 (Value_N), 16) or
@@ -751,7 +751,7 @@ package body Bits
       (Value_H : Interfaces.Unsigned_16;
        Value_L : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_32
-      is
+   is
    begin
       return ShL (Interfaces.Unsigned_32 (Value_H), 16) or Interfaces.Unsigned_32 (Value_L);
    end Make_Word;
@@ -760,7 +760,7 @@ package body Bits
       (Value_H : Interfaces.Unsigned_32;
        Value_L : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_64
-      is
+   is
    begin
       return ShL (Interfaces.Unsigned_64 (Value_H), 32) or Interfaces.Unsigned_64 (Value_L);
    end Make_Word;
@@ -774,7 +774,7 @@ package body Bits
        LSb    : Bits_3;
        Negate : Boolean := False)
       return Interfaces.Unsigned_8
-      is
+   is
       Value : Interfaces.Unsigned_8;
       M     : Natural := Natural (MSb);
       L     : Natural := Natural (LSb);
@@ -792,7 +792,7 @@ package body Bits
        LSb    : Bits_4;
        Negate : Boolean := False)
       return Interfaces.Unsigned_16
-      is
+   is
       Value : Interfaces.Unsigned_16;
       M     : Natural := Natural (MSb);
       L     : Natural := Natural (LSb);
@@ -810,7 +810,7 @@ package body Bits
        LSb    : Bits_5;
        Negate : Boolean := False)
       return Interfaces.Unsigned_32
-      is
+   is
       Value : Interfaces.Unsigned_32;
       M     : Natural := Natural (MSb);
       L     : Natural := Natural (LSb);
@@ -828,7 +828,7 @@ package body Bits
        LSb    : Bits_6;
        Negate : Boolean := False)
       return Interfaces.Unsigned_64
-      is
+   is
       Value : Interfaces.Unsigned_64;
       M     : Natural := Natural (MSb);
       L     : Natural := Natural (LSb);
@@ -848,13 +848,13 @@ package body Bits
    function Byte_Swap_8
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8
-      is
+   is
    separate;
 
    function Byte_Swap_16
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
-      is
+   is
    separate;
 
    function Byte_Swap_32
@@ -865,7 +865,7 @@ package body Bits
    function Byte_Swap_64
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_64
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -875,7 +875,7 @@ package body Bits
    function Word_Swap
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8
-      is
+   is
    begin
       return Value;
    end Word_Swap;
@@ -883,7 +883,7 @@ package body Bits
    function Word_Swap
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
-      is
+   is
    begin
       return Byte_Swap (Value);
    end Word_Swap;
@@ -891,7 +891,7 @@ package body Bits
    function Word_Swap
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
-      is
+   is
    begin
       return ShR (Value and 16#FFFF_0000#, 16) or
              ShL (Value and 16#0000_FFFF#, 16);
@@ -900,7 +900,7 @@ package body Bits
    function Word_Swap
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_64
-      is
+   is
    begin
       return ShR (Value and 16#FFFF_FFFF_0000_0000#, 32) or
              ShL (Value and 16#0000_0000_FFFF_FFFF#, 32);
@@ -915,7 +915,7 @@ package body Bits
    function CPUE_To_BE
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
-      is
+   is
       Result : Interfaces.Unsigned_16;
    begin
       if BigEndian then
@@ -929,7 +929,7 @@ package body Bits
    function BE_To_CPUE
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
-      is
+   is
       Result : Interfaces.Unsigned_16;
    begin
       if BigEndian then
@@ -943,7 +943,7 @@ package body Bits
    function CPUE_To_LE
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
-      is
+   is
       Result : Interfaces.Unsigned_16;
    begin
       if LittleEndian then
@@ -957,7 +957,7 @@ package body Bits
    function LE_To_CPUE
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
-      is
+   is
       Result : Interfaces.Unsigned_16;
    begin
       if LittleEndian then
@@ -973,7 +973,7 @@ package body Bits
    function CPUE_To_BE
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
-      is
+   is
       Result : Interfaces.Unsigned_32;
    begin
       if BigEndian then
@@ -987,7 +987,7 @@ package body Bits
    function BE_To_CPUE
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
-      is
+   is
       Result : Interfaces.Unsigned_32;
    begin
       if BigEndian then
@@ -1001,7 +1001,7 @@ package body Bits
    function CPUE_To_LE
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
-      is
+   is
       Result : Interfaces.Unsigned_32;
    begin
       if LittleEndian then
@@ -1015,7 +1015,7 @@ package body Bits
    function LE_To_CPUE
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
-      is
+   is
       Result : Interfaces.Unsigned_32;
    begin
       if LittleEndian then
@@ -1031,7 +1031,7 @@ package body Bits
    function CPUE_To_BE
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_64
-      is
+   is
       Result : Interfaces.Unsigned_64;
    begin
       if BigEndian then
@@ -1045,7 +1045,7 @@ package body Bits
    function BE_To_CPUE
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_64
-      is
+   is
       Result : Interfaces.Unsigned_64;
    begin
       if BigEndian then
@@ -1059,7 +1059,7 @@ package body Bits
    function CPUE_To_LE
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_64
-      is
+   is
       Result : Interfaces.Unsigned_64;
    begin
       if LittleEndian then
@@ -1073,7 +1073,7 @@ package body Bits
    function LE_To_CPUE
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_64
-      is
+   is
       Result : Interfaces.Unsigned_64;
    begin
       if LittleEndian then
@@ -1090,7 +1090,7 @@ package body Bits
    function Byte_Reverse
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8
-      is
+   is
    separate;
 
 end Bits;

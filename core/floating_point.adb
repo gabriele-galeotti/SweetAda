@@ -21,7 +21,7 @@ with LLutils;
 with Console;
 
 package body Floating_Point
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -58,7 +58,7 @@ package body Floating_Point
    function Exp10
       (N : Integer)
       return Float
-      is
+   is
       E : Integer := N;
       V : Float := 1.0;
    begin
@@ -91,7 +91,7 @@ package body Floating_Point
    function Log10
       (F : Float)
       return Integer
-      is
+   is
       V : Float := F;
       L : Integer := 0;
    begin
@@ -125,7 +125,7 @@ package body Floating_Point
        NL        : in Boolean := False;
        Prefix    : in String := "";
        Suffix    : in String := "")
-      is
+   is
       F     : Float := Value;
       S     : Character;
       E     : Integer := 0;

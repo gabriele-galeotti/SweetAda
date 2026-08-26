@@ -21,7 +21,7 @@ with System;
 
 package Last_Chance_Handler
    with SPARK_Mode => On
-   is
+is
 
    --========================================================================--
    --                                                                        --

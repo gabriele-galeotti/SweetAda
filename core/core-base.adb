@@ -18,7 +18,7 @@
 pragma Restrictions (No_Elaboration_Code);
 
 package body Core.Base
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -34,7 +34,7 @@ package body Core.Base
    function Stack_Check
       (Stack_Address : System.Address with Unreferenced => True)
       return Stack_Access
-      is
+   is
    begin
       return null;
    end Stack_Check;

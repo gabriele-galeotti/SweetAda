@@ -18,7 +18,7 @@
 pragma Restrictions (No_Elaboration_Code);
 
 package body Last_Chance_Handler
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -34,7 +34,7 @@ package body Last_Chance_Handler
    procedure Last_Chance_Handler
       (Source_Location : in System.Address;
        Line            : in Integer)
-      is
+   is
    separate;
 
 end Last_Chance_Handler;

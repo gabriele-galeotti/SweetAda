@@ -21,7 +21,7 @@ with Ada.Characters.Latin_1;
 with Abort_Library;
 
 package body GNAT_Exceptions
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -49,7 +49,7 @@ package body GNAT_Exceptions
    procedure Rcheck_CE_Access_Check
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          CONSTRAINT_ERROR_PREFIX &
          "access check"          &
@@ -62,7 +62,7 @@ package body GNAT_Exceptions
    procedure Rcheck_CE_Null_Access_Parameter
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          CONSTRAINT_ERROR_PREFIX &
          "null access parameter" &
@@ -75,7 +75,7 @@ package body GNAT_Exceptions
    procedure Rcheck_CE_Discriminant_Check
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          CONSTRAINT_ERROR_PREFIX &
          "discriminant check"    &
@@ -88,7 +88,7 @@ package body GNAT_Exceptions
    procedure Rcheck_CE_Divide_By_Zero
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          CONSTRAINT_ERROR_PREFIX &
          "divide by 0"           &
@@ -101,7 +101,7 @@ package body GNAT_Exceptions
    procedure Rcheck_CE_Explicit_Raise
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          CONSTRAINT_ERROR_PREFIX &
          "explicit raise"        &
@@ -114,7 +114,7 @@ package body GNAT_Exceptions
    procedure Rcheck_CE_Index_Check
       (File : in System.Address;
       Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          CONSTRAINT_ERROR_PREFIX &
          "index check"           &
@@ -127,7 +127,7 @@ package body GNAT_Exceptions
    procedure Rcheck_CE_Invalid_Data
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          CONSTRAINT_ERROR_PREFIX &
          "invalid data"          &
@@ -140,7 +140,7 @@ package body GNAT_Exceptions
    procedure Rcheck_CE_Length_Check
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          CONSTRAINT_ERROR_PREFIX &
          "length check"          &
@@ -153,7 +153,7 @@ package body GNAT_Exceptions
    procedure Rcheck_CE_Null_Exception_Id
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          CONSTRAINT_ERROR_PREFIX &
          "null exception id"     &
@@ -166,7 +166,7 @@ package body GNAT_Exceptions
    procedure Rcheck_CE_Null_Not_Allowed
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          CONSTRAINT_ERROR_PREFIX &
          "null not allowed"      &
@@ -179,7 +179,7 @@ package body GNAT_Exceptions
    procedure Rcheck_CE_Overflow_Check
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          CONSTRAINT_ERROR_PREFIX &
          "overflow check"        &
@@ -192,7 +192,7 @@ package body GNAT_Exceptions
    procedure Rcheck_CE_Partition_Check
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          CONSTRAINT_ERROR_PREFIX &
          "partition check"       &
@@ -205,7 +205,7 @@ package body GNAT_Exceptions
    procedure Rcheck_CE_Range_Check
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          CONSTRAINT_ERROR_PREFIX &
          "range check"           &
@@ -218,7 +218,7 @@ package body GNAT_Exceptions
    procedure Rcheck_CE_Tag_Check
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          CONSTRAINT_ERROR_PREFIX &
          "tag check"             &
@@ -231,7 +231,7 @@ package body GNAT_Exceptions
    procedure Rcheck_PE_Access_Before_Elaboration
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          PROGRAM_ERROR_PREFIX        &
          "access before elaboration" &
@@ -244,7 +244,7 @@ package body GNAT_Exceptions
    procedure Rcheck_PE_Accessibility_Check
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          PROGRAM_ERROR_PREFIX  &
          "accessibility check" &
@@ -257,7 +257,7 @@ package body GNAT_Exceptions
    procedure Rcheck_PE_Address_Of_Intrinsic
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          PROGRAM_ERROR_PREFIX   &
          "address of intrinsic" &
@@ -270,7 +270,7 @@ package body GNAT_Exceptions
    procedure Rcheck_PE_Aliased_Parameters
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          PROGRAM_ERROR_PREFIX &
          "aliased parameters" &
@@ -283,7 +283,7 @@ package body GNAT_Exceptions
    procedure Rcheck_PE_All_Guards_Closed
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          PROGRAM_ERROR_PREFIX &
          "all guards closed"  &
@@ -296,7 +296,7 @@ package body GNAT_Exceptions
    procedure Rcheck_PE_Bad_Predicated_Generic_Type
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          PROGRAM_ERROR_PREFIX          &
          "bad predicated generic type" &
@@ -309,7 +309,7 @@ package body GNAT_Exceptions
    procedure Rcheck_PE_Current_Task_In_Entry_Body
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          PROGRAM_ERROR_PREFIX         &
          "current task in entry body" &
@@ -322,7 +322,7 @@ package body GNAT_Exceptions
    procedure Rcheck_PE_Duplicated_Entry_Address
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          PROGRAM_ERROR_PREFIX       &
          "duplicated entry address" &
@@ -335,7 +335,7 @@ package body GNAT_Exceptions
    procedure Rcheck_PE_Explicit_Raise
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          PROGRAM_ERROR_PREFIX &
          "explicit raise"     &
@@ -348,7 +348,7 @@ package body GNAT_Exceptions
    procedure Rcheck_PE_Finalize_Raised_Exception
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          PROGRAM_ERROR_PREFIX               &
          "finalize/adjust raised exception" &
@@ -361,7 +361,7 @@ package body GNAT_Exceptions
    procedure Rcheck_PE_Implicit_Return
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          PROGRAM_ERROR_PREFIX             &
          "implicit return with No_Return" &
@@ -374,7 +374,7 @@ package body GNAT_Exceptions
    procedure Rcheck_PE_Misaligned_Address_Value
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          PROGRAM_ERROR_PREFIX       &
          "misaligned address value" &
@@ -387,7 +387,7 @@ package body GNAT_Exceptions
    procedure Rcheck_PE_Missing_Return
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          PROGRAM_ERROR_PREFIX &
          "missing return"     &
@@ -400,7 +400,7 @@ package body GNAT_Exceptions
    procedure Rcheck_PE_Overlaid_Controlled_Object
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          PROGRAM_ERROR_PREFIX         &
          "overlaid controlled object" &
@@ -413,7 +413,7 @@ package body GNAT_Exceptions
    procedure Rcheck_PE_Potentially_Blocking_Operation
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          PROGRAM_ERROR_PREFIX             &
          "potentially blocking operation" &
@@ -426,7 +426,7 @@ package body GNAT_Exceptions
    procedure Rcheck_PE_Stubbed_Subprogram_Called
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          PROGRAM_ERROR_PREFIX        &
          "stubbed subprogram called" &
@@ -439,7 +439,7 @@ package body GNAT_Exceptions
    procedure Rcheck_PE_Unchecked_Union_Restriction
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          PROGRAM_ERROR_PREFIX          &
          "unchecked union restriction" &
@@ -452,7 +452,7 @@ package body GNAT_Exceptions
    procedure Rcheck_PE_Non_Transportable_Actual
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          PROGRAM_ERROR_PREFIX                                 &
          "actual/returned class-wide value not transportable" &
@@ -465,7 +465,7 @@ package body GNAT_Exceptions
    procedure Rcheck_SE_Empty_Storage_Pool
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          STORAGE_ERROR_PREFIX &
          "empty storage pool" &
@@ -478,7 +478,7 @@ package body GNAT_Exceptions
    procedure Rcheck_SE_Explicit_Raise
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          STORAGE_ERROR_PREFIX &
          "explicit raise"     &
@@ -491,7 +491,7 @@ package body GNAT_Exceptions
    procedure Rcheck_SE_Infinite_Recursion
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          STORAGE_ERROR_PREFIX &
          "infinite recursion" &
@@ -504,7 +504,7 @@ package body GNAT_Exceptions
    procedure Rcheck_SE_Object_Too_Large
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          STORAGE_ERROR_PREFIX &
          "object too large"   &
@@ -517,7 +517,7 @@ package body GNAT_Exceptions
    procedure Rcheck_PE_Stream_Operation_Not_Allowed
       (File : in System.Address;
        Line : in Integer)
-      is
+   is
       Message : aliased constant String :=
          PROGRAM_ERROR_PREFIX           &
          "stream operation not allowed" &
@@ -532,7 +532,7 @@ package body GNAT_Exceptions
       (File   : in System.Address;
        Line   : in Integer;
        Column : in Integer)
-      is
+   is
       pragma Unreferenced (Column);
       Message : aliased constant String :=
          CONSTRAINT_ERROR_PREFIX &
@@ -549,7 +549,7 @@ package body GNAT_Exceptions
        Index  : in Integer;
        First  : in Integer;
        Last   : in Integer)
-      is
+   is
       pragma Unreferenced (Column);
       pragma Unreferenced (Index);
       pragma Unreferenced (First);
@@ -569,7 +569,7 @@ package body GNAT_Exceptions
        Index  : in Integer;
        First  : in Integer;
        Last   : in Integer)
-      is
+   is
       pragma Unreferenced (Column);
       pragma Unreferenced (Index);
       pragma Unreferenced (First);
@@ -589,7 +589,7 @@ package body GNAT_Exceptions
        Index  : in Integer;
        First  : in Integer;
        Last   : in Integer)
-      is
+   is
       pragma Unreferenced (Column);
       pragma Unreferenced (Index);
       pragma Unreferenced (First);

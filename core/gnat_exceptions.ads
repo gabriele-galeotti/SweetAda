@@ -21,7 +21,7 @@ with System;
 
 package GNAT_Exceptions
    with SPARK_Mode => On
-   is
+is
 
    --========================================================================--
    --                                                                        --
