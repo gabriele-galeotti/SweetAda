@@ -22,7 +22,7 @@ with Ada.Unchecked_Conversion;
 with GCC.Defines;
 
 package body MIPS
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -54,7 +54,7 @@ package body MIPS
 
    function MFC0
       return Unsigned_32
-      is
+   is
       Result : Unsigned_32;
    begin
       Asm (
@@ -78,7 +78,7 @@ package body MIPS
 
    procedure MTC0
       (Register_Value : in Unsigned_32)
-      is
+   is
    begin
       Asm (
            Template => ""                       & CRLF &
@@ -101,7 +101,7 @@ package body MIPS
 
    function CP0_Count_Read
       return Unsigned_32
-      is
+   is
       function CP0_Read is new MFC0 (9);
    begin
       return CP0_Read;
@@ -109,7 +109,7 @@ package body MIPS
 
    procedure CP0_Count_Write
       (Value : in Unsigned_32)
-      is
+   is
       procedure CP0_Write is new MTC0 (9);
    begin
       CP0_Write (Value);
@@ -121,7 +121,7 @@ package body MIPS
 
    function CP0_Compare_Read
       return Unsigned_32
-      is
+   is
       function CP0_Read is new MFC0 (11);
    begin
       return CP0_Read;
@@ -129,7 +129,7 @@ package body MIPS
 
    procedure CP0_Compare_Write
       (Value : in Unsigned_32)
-      is
+   is
       procedure CP0_Write is new MTC0 (11);
    begin
       CP0_Write (Value);
@@ -141,7 +141,7 @@ package body MIPS
 
    function CP0_SR_Read
       return SR_Type
-      is
+   is
       function To_SR is new Ada.Unchecked_Conversion (Unsigned_32, SR_Type);
       function CP0_Read is new MFC0 (12);
    begin
@@ -150,7 +150,7 @@ package body MIPS
 
    procedure CP0_SR_Write
       (Value : in SR_Type)
-      is
+   is
       function To_U32 is new Ada.Unchecked_Conversion (SR_Type, Unsigned_32);
       procedure CP0_Write is new MTC0 (12);
    begin
@@ -163,7 +163,7 @@ package body MIPS
 
    function CP0_PRId_Read
       return PRId_Type
-      is
+   is
       function To_PRId is new Ada.Unchecked_Conversion (Unsigned_32, PRId_Type);
       function CP0_Read is new MFC0 (15);
    begin
@@ -176,7 +176,7 @@ package body MIPS
 
    function CP0_Config_Read
       return Unsigned_32
-      is
+   is
       function CP0_Read is new MFC0 (16);
    begin
       return CP0_Read;
@@ -184,7 +184,7 @@ package body MIPS
 
    procedure CP0_Config_Write
       (Value : in Unsigned_32)
-      is
+   is
       procedure CP0_Write is new MTC0 (16);
    begin
       CP0_Write (Value);
@@ -194,7 +194,7 @@ package body MIPS
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -211,7 +211,7 @@ package body MIPS
    -- BREAK
    ----------------------------------------------------------------------------
    procedure BREAK
-      is
+   is
    begin
       Asm (
            Template => ""              & CRLF &
@@ -228,7 +228,7 @@ package body MIPS
    -- SYNC
    ----------------------------------------------------------------------------
    procedure SYNC
-      is
+   is
    begin
       if GCC.Defines.MIPS_ISA >= GCC.Defines.MIPS_ISA_MIPS32 then
          Asm (
@@ -248,7 +248,7 @@ package body MIPS
    ----------------------------------------------------------------------------
    procedure Asm_Call
       (Target_Address : in Address)
-      is
+   is
    begin
       Asm (
            Template => ""                          & CRLF &
@@ -270,7 +270,7 @@ package body MIPS
    ----------------------------------------------------------------------------
    procedure Irq_Level_Set
       (Irq_Level : in Irq_Level_Type)
-      is
+   is
    begin
       CP0_SR_Write ((CP0_SR_Read with delta IM => Irq_Level));
    end Irq_Level_Set;
@@ -280,7 +280,7 @@ package body MIPS
    ----------------------------------------------------------------------------
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
-      is
+   is
    begin
       Intcontext := CP0_SR_Read;
    end Intcontext_Get;
@@ -290,20 +290,22 @@ package body MIPS
    ----------------------------------------------------------------------------
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
-      is
+   is
    begin
-      CP0_SR_Write ((CP0_SR_Read with delta IE  => Intcontext.IE,
-                                            EXL => Intcontext.EXL,
-                                            ERL => Intcontext.ERL,
-                                            KSU => Intcontext.KSU,
-                                            IM  => Intcontext.IM));
+      CP0_SR_Write ((CP0_SR_Read with delta
+         IE  => Intcontext.IE,
+         EXL => Intcontext.EXL,
+         ERL => Intcontext.ERL,
+         KSU => Intcontext.KSU,
+         IM  => Intcontext.IM
+         ));
    end Intcontext_Set;
 
    ----------------------------------------------------------------------------
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
-      is
+   is
    begin
       CP0_SR_Write ((CP0_SR_Read with delta IE => True));
    end Irq_Enable;
@@ -312,7 +314,7 @@ package body MIPS
    -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable
-      is
+   is
    begin
       CP0_SR_Write ((CP0_SR_Read with delta IE => False));
    end Irq_Disable;

@@ -22,7 +22,7 @@ with Ada.Unchecked_Conversion;
 with MIPS;
 
 package body R3000
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -65,7 +65,7 @@ package body R3000
 
    function MFC0
       return Unsigned_32
-      is
+   is
       Result : Unsigned_32;
    begin
       Asm (
@@ -91,7 +91,7 @@ package body R3000
 
    procedure MTC0
       (Register_Value : in Unsigned_32)
-      is
+   is
    begin
       Asm (
            Template => ""                          & CRLF &
@@ -116,7 +116,7 @@ package body R3000
    ----------------------------------------------------------------------------
    function CP0_PRId_Read
       return PRId_Type
-      is
+   is
       function To_PRId is new Ada.Unchecked_Conversion (Unsigned_32, PRId_Type);
       function CP0_Read is new MFC0 (15);
    begin
@@ -129,7 +129,7 @@ package body R3000
 
    function CP0_SR_Read
       return SR_Type
-      is
+   is
       function To_SR is new Ada.Unchecked_Conversion (Unsigned_32, SR_Type);
       function CP0_Read is new MFC0 (12);
    begin
@@ -138,7 +138,7 @@ package body R3000
 
    procedure CP0_SR_Write
       (Value : in SR_Type)
-      is
+   is
       function To_U32 is new Ada.Unchecked_Conversion (SR_Type, Unsigned_32);
       procedure CP0_Write is new MTC0 (12);
    begin
@@ -151,7 +151,7 @@ package body R3000
    function Cache_Size
       (ICache : Boolean)
       return Unsigned_32
-      is
+   is
       SwC  : Unsigned_32;
       Size : Unsigned_32;
    begin
@@ -187,7 +187,7 @@ package body R3000
    ----------------------------------------------------------------------------
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                          & CRLF &
@@ -209,7 +209,7 @@ package body R3000
    ----------------------------------------------------------------------------
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
-      is
+   is
       CP0R12_R : Unsigned_32;
    begin
       Asm (
@@ -237,7 +237,8 @@ package body R3000
    ----------------------------------------------------------------------------
    -- Irq_Enable
    ----------------------------------------------------------------------------
-   procedure Irq_Enable is
+   procedure Irq_Enable
+   is
       R : Unsigned_32;
    begin
       Asm (
@@ -263,7 +264,8 @@ package body R3000
    ----------------------------------------------------------------------------
    -- Irq_Disable
    ----------------------------------------------------------------------------
-   procedure Irq_Disable is
+   procedure Irq_Disable
+   is
       R : Unsigned_32;
    begin
       Asm (
