@@ -20,7 +20,7 @@ pragma Restrictions (No_Elaboration_Code);
 with ARMv4;
 
 package ARMv5TE
-   is
+is
 
    --========================================================================--
    --                                                                        --

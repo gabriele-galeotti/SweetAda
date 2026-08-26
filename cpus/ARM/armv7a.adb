@@ -21,7 +21,7 @@ with System.Machine_Code;
 with Definitions;
 
 package body ARMv7A
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -47,7 +47,7 @@ package body ARMv7A
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -64,7 +64,7 @@ package body ARMv7A
    -- BREAKPOINT
    ----------------------------------------------------------------------------
    procedure BREAKPOINT
-      is
+   is
    begin
       Asm (
            Template => ""             & CRLF &
@@ -81,7 +81,7 @@ package body ARMv7A
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
-      is
+   is
    begin
       Asm (
            Template => ""                  & CRLF &
@@ -98,7 +98,7 @@ package body ARMv7A
    -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable
-      is
+   is
    begin
       Asm (
            Template => ""                  & CRLF &
@@ -115,7 +115,7 @@ package body ARMv7A
    -- Fiq_Enable
    ----------------------------------------------------------------------------
    procedure Fiq_Enable
-      is
+   is
    begin
       Asm (
            Template => ""                  & CRLF &
@@ -132,7 +132,7 @@ package body ARMv7A
    -- Fiq_Disable
    ----------------------------------------------------------------------------
    procedure Fiq_Disable
-      is
+   is
    begin
       Asm (
            Template => ""                  & CRLF &

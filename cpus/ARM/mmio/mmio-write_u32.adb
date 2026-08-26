@@ -21,7 +21,7 @@ separate (MMIO)
 procedure Write_U32
    (Memory_Address : in System.Address;
     Value          : in Interfaces.Unsigned_32)
-   is
+is
 begin
    ARMmmio.Write_U32 (Memory_Address, Value);
 end Write_U32;

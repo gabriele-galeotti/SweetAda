@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 package body Unwind
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -39,7 +39,7 @@ package body Unwind
    ----------------------------------------------------------------------------
    -- procedure Unwind_Resume
    --    (Exception_Object_Address : in Address)
-   --    is
+   -- is
    --    pragma Unreferenced (Exception_Object_Address);
    -- begin
    --    null;
@@ -51,7 +51,7 @@ package body Unwind
 
    function EABI_unwind_cpp_pr0
       return Unwind_Reason_Code
-      is
+   is
    begin
       -- return __gnu_unwind_pr_common (state, ucbp, context, 0);
       return URC_NO_REASON;
@@ -59,7 +59,7 @@ package body Unwind
 
    function EABI_unwind_cpp_pr1
       return Unwind_Reason_Code
-      is
+   is
    begin
       -- return __gnu_unwind_pr_common (state, ucbp, context, 1);
       return URC_NO_REASON;
@@ -67,7 +67,7 @@ package body Unwind
 
    function EABI_unwind_cpp_pr2
       return Unwind_Reason_Code
-      is
+   is
    begin
       -- return __gnu_unwind_pr_common (state, ucbp, context, 2);
       return URC_NO_REASON;

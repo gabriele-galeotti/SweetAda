@@ -21,7 +21,7 @@ with System.Machine_Code;
 with Definitions;
 
 package body ARMv4
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -47,7 +47,7 @@ package body ARMv4
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -64,7 +64,7 @@ package body ARMv4
    -- BREAKPOINT
    ----------------------------------------------------------------------------
    procedure BREAKPOINT
-      is
+   is
    begin
       Asm (
            Template => ""                                 & CRLF &
@@ -82,7 +82,7 @@ package body ARMv4
    ----------------------------------------------------------------------------
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                        & CRLF &
@@ -100,7 +100,7 @@ package body ARMv4
    ----------------------------------------------------------------------------
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                          & CRLF &
@@ -117,7 +117,7 @@ package body ARMv4
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
-      is
+   is
       CPSR_R : CPSR_Type;
    begin
       Asm (
@@ -137,7 +137,7 @@ package body ARMv4
    -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable
-      is
+   is
       CPSR_R : CPSR_Type;
    begin
       Asm (
@@ -157,7 +157,7 @@ package body ARMv4
    -- Fiq_Enable
    ----------------------------------------------------------------------------
    procedure Fiq_Enable
-      is
+   is
       CPSR_R : CPSR_Type;
    begin
       Asm (
@@ -177,7 +177,7 @@ package body ARMv4
    -- Fiq_Disable
    ----------------------------------------------------------------------------
    procedure Fiq_Disable
-      is
+   is
       CPSR_R : CPSR_Type;
    begin
       Asm (

@@ -21,7 +21,7 @@ with System.Machine_Code;
 with Definitions;
 
 package body ARMv7M.FPU
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -49,7 +49,7 @@ package body ARMv7M.FPU
 
    function FPSCR_Read
       return FPSCR_Type
-      is
+   is
       Value : FPSCR_Type;
    begin
       Asm (
@@ -66,7 +66,7 @@ package body ARMv7M.FPU
 
    procedure FPSCR_Write
       (Value : in FPSCR_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                         & CRLF &

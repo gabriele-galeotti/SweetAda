@@ -21,7 +21,7 @@ with System.Machine_Code;
 with Definitions;
 
 package body ARMv7M
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -49,7 +49,7 @@ package body ARMv7M
 
    function APSR_Read
       return APSR_Type
-      is
+   is
       Value : APSR_Type;
    begin
       Asm (
@@ -66,7 +66,7 @@ package body ARMv7M
 
    procedure APSR_Write
       (Value : in APSR_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                              & CRLF &
@@ -85,7 +85,7 @@ package body ARMv7M
 
    function IPSR_Read
       return IPSR_Type
-      is
+   is
       Value : IPSR_Type;
    begin
       Asm (
@@ -102,7 +102,7 @@ package body ARMv7M
 
    procedure IPSR_Write
       (Value : in IPSR_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                        & CRLF &
@@ -121,7 +121,7 @@ package body ARMv7M
 
    function EPSR_Read
       return EPSR_Type
-      is
+   is
       Value : EPSR_Type;
    begin
       Asm (
@@ -138,7 +138,7 @@ package body ARMv7M
 
    procedure EPSR_Write
       (Value : in EPSR_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                        & CRLF &
@@ -157,7 +157,7 @@ package body ARMv7M
 
    function BASEPRI_Read
       return BASEPRI_Type
-      is
+   is
       Value : BASEPRI_Type;
    begin
       Asm (
@@ -174,7 +174,7 @@ package body ARMv7M
 
    procedure BASEPRI_Write
       (Value : in BASEPRI_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                           & CRLF &
@@ -193,7 +193,7 @@ package body ARMv7M
 
    function FAULTMASK_Read
       return FAULTMASK_Type
-      is
+   is
       Value : FAULTMASK_Type;
    begin
       Asm (
@@ -210,7 +210,7 @@ package body ARMv7M
 
    procedure FAULTMASK_Write
       (Value : in FAULTMASK_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                             & CRLF &
@@ -229,7 +229,7 @@ package body ARMv7M
 
    function CONTROL_Read
       return CONTROL_Type
-      is
+   is
       Value : CONTROL_Type;
    begin
       Asm (
@@ -246,7 +246,7 @@ package body ARMv7M
 
    procedure CONTROL_Write
       (Value : in CONTROL_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                           & CRLF &
