@@ -21,7 +21,7 @@ separate (MMIO)
 procedure WriteAS_U64
    (Memory_Address : in System.Address;
     Value          : in Interfaces.Unsigned_64)
-   is
+is
 begin
    raise Program_Error;
 end WriteAS_U64;

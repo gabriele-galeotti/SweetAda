@@ -21,7 +21,7 @@ separate (MMIO)
 procedure WriteAS_U16
    (Memory_Address : in System.Address;
     Value          : in Interfaces.Unsigned_16)
-   is
+is
 begin
    raise Program_Error;
 end WriteAS_U16;

@@ -21,7 +21,7 @@ with System.Machine_Code;
 with Definitions;
 
 package body AVR
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -47,7 +47,7 @@ package body AVR
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -64,7 +64,7 @@ package body AVR
    -- RET
    ----------------------------------------------------------------------------
    procedure RET
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -82,7 +82,7 @@ package body AVR
    ----------------------------------------------------------------------------
    procedure Asm_Call
       (Target_Address : in Address)
-      is
+   is
    begin
       Asm (
            Template => ""              & CRLF &
@@ -99,7 +99,7 @@ package body AVR
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -116,7 +116,7 @@ package body AVR
    -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
