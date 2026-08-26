@@ -23,7 +23,7 @@ with Bits;
 with LLutils;
 
 package body MMU
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -52,7 +52,7 @@ package body MMU
    procedure Page_Setup
       (P  : in Page4k_Ptr;
        BA : in Address)
-      is
+   is
       Page         : P4DSC_Type;
       Base_Address : Address := BA;
    begin
@@ -80,7 +80,7 @@ package body MMU
    -- Enable
    ----------------------------------------------------------------------------
    procedure Enable
-      is
+   is
    begin
       -- URP_Set (Root_Table (0)'Address);
       SRP_Set (Root_Table (0)'Address);
@@ -96,7 +96,7 @@ package body MMU
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
       Page_Address : Integer_Address;
    begin
       for Idx in Root_Table'Range loop

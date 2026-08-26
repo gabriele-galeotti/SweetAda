@@ -21,7 +21,7 @@ with System.Machine_Code;
 with Definitions;
 
 package body CFv2
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -47,7 +47,7 @@ package body CFv2
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -64,7 +64,7 @@ package body CFv2
    -- STOP
    ----------------------------------------------------------------------------
    procedure STOP
-      is
+   is
    begin
       Asm (
            Template => ""                        & CRLF &
@@ -81,7 +81,7 @@ package body CFv2
    -- BREAKPOINT
    ----------------------------------------------------------------------------
    procedure BREAKPOINT
-      is
+   is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -99,7 +99,7 @@ package body CFv2
    ----------------------------------------------------------------------------
    procedure VBR_Set
       (VBR_Address : in Address)
-      is
+   is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -116,7 +116,7 @@ package body CFv2
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
-      is
+   is
    begin
       Asm (
            Template => ""                          & CRLF &
@@ -135,7 +135,7 @@ package body CFv2
    -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable
-      is
+   is
    begin
       Asm (
            Template => ""                          & CRLF &

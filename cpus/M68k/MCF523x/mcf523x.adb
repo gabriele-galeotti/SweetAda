@@ -20,7 +20,7 @@ pragma Restrictions (No_Elaboration_Code);
 with Ada.Unchecked_Conversion;
 
 package body MCF523x
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -57,7 +57,7 @@ pragma Style_Checks (On);
       (IRQ       : INTC0_Source_Type;
        VTHandler : Boolean)
       return Natural
-      is
+   is
       Index : Natural;
    begin
       Index := 63 - IRQ'Enum_Rep;
@@ -71,7 +71,7 @@ pragma Style_Checks (On);
       (IRQ       : INTC1_Source_Type;
        VTHandler : Boolean)
       return Natural
-      is
+   is
       Index : Natural;
    begin
       Index := 63 - IRQ'Enum_Rep;

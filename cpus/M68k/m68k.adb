@@ -22,7 +22,7 @@ with Definitions;
 with GCC.Defines;
 
 package body M68k
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -50,7 +50,7 @@ package body M68k
 
    function SR_Read
       return SR_Type
-      is
+   is
       Value : SR_Type;
    begin
       Asm (
@@ -67,7 +67,7 @@ package body M68k
 
    procedure SR_Write
       (Value : in SR_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                        & CRLF &
@@ -85,7 +85,7 @@ package body M68k
    ----------------------------------------------------------------------------
    procedure VBR_Set
       (VBR_Address : in Address)
-      is
+   is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -105,7 +105,7 @@ package body M68k
    function MoveSByte
       (A : Address)
       return Unsigned_8
-      is
+   is
       B : Unsigned_8;
    begin
       if GCC.Defines.MCOLDFIRE then
@@ -127,7 +127,7 @@ package body M68k
    procedure MoveSByte
       (A : in Address;
        B : in Unsigned_8)
-      is
+   is
    begin
       if GCC.Defines.MCOLDFIRE then
          raise Program_Error;
@@ -154,7 +154,7 @@ package body M68k
    function MoveSWord
       (A : in Address)
       return Unsigned_16
-      is
+   is
       W : Unsigned_16;
    begin
       if GCC.Defines.MCOLDFIRE then
@@ -176,7 +176,7 @@ package body M68k
    procedure MoveSWord
       (A : in Address;
        W : in Unsigned_16)
-      is
+   is
    begin
       if GCC.Defines.MCOLDFIRE then
          raise Program_Error;
@@ -203,7 +203,7 @@ package body M68k
    function MoveSLong
       (A : in Address)
       return Unsigned_32
-      is
+   is
       L : Unsigned_32;
    begin
       if GCC.Defines.MCOLDFIRE then
@@ -225,7 +225,7 @@ package body M68k
    procedure MoveSLong
       (A : in Address;
        L : in Unsigned_32)
-      is
+   is
    begin
       if GCC.Defines.MCOLDFIRE then
          raise Program_Error;
@@ -249,7 +249,7 @@ package body M68k
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -266,7 +266,7 @@ package body M68k
    -- RESET
    ----------------------------------------------------------------------------
    procedure RESET
-      is
+   is
    begin
       if GCC.Defines.MCOLDFIRE then
          raise Program_Error;
@@ -287,7 +287,7 @@ package body M68k
    -- BREAKPOINT
    ----------------------------------------------------------------------------
    procedure BREAKPOINT
-      is
+   is
    begin
       Asm (
            Template => ""                                 & CRLF &
@@ -305,7 +305,7 @@ package body M68k
    ----------------------------------------------------------------------------
    procedure Asm_Call
       (Target_Address : in Address)
-      is
+   is
    begin
       Asm (
            Template => ""                    & CRLF &
@@ -323,7 +323,7 @@ package body M68k
    ----------------------------------------------------------------------------
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                        & CRLF &
@@ -341,7 +341,7 @@ package body M68k
    ----------------------------------------------------------------------------
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                        & CRLF &
@@ -358,7 +358,7 @@ package body M68k
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
-      is
+   is
    begin
       if not GCC.Defines.MCOLDFIRE then
          Asm (
@@ -377,7 +377,7 @@ package body M68k
    -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable
-      is
+   is
    begin
       if not GCC.Defines.MCOLDFIRE then
          Asm (

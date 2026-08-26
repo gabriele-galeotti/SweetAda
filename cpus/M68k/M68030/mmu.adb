@@ -22,7 +22,7 @@ with System.Storage_Elements;
 with Bits;
 
 package body MMU
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -61,7 +61,7 @@ package body MMU
       (Idx : in Natural;
        DT  : in DT_Type;
        BA  : in Unsigned_32)
-      is
+   is
    begin
       -- the right shift is equivalent to mask off the first 8 bits of the
       -- address, which are occupied by the flags; this way the address
@@ -81,7 +81,7 @@ package body MMU
    -- Enable
    ----------------------------------------------------------------------------
    procedure Enable
-      is
+   is
       TA  : Unsigned_32;
       TCR : TCR_Type;
    begin
@@ -114,7 +114,7 @@ package body MMU
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
    begin
       for Idx in Table_1'Range loop
          Page_Setup (Idx, DT_INVALID, 0);

@@ -21,7 +21,7 @@ with System.Machine_Code;
 with Definitions;
 
 package body M68030
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -48,7 +48,7 @@ package body M68030
    ----------------------------------------------------------------------------
    procedure CRP_Set
       (CRP_Address : in Address)
-      is
+   is
    begin
       Asm (
            Template => ""                          & CRLF &
@@ -66,7 +66,7 @@ package body M68030
    ----------------------------------------------------------------------------
    procedure SRP_Set
       (SRP_Address : in Address)
-      is
+   is
    begin
       Asm (
            Template => ""                          & CRLF &
@@ -84,7 +84,7 @@ package body M68030
    ----------------------------------------------------------------------------
    procedure TCR_Set
       (Value : in TCR_Type)
-      is
+   is
       TCR : aliased TCR_Type := Value;
    begin
       Asm (

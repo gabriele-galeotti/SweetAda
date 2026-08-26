@@ -18,8 +18,8 @@
 with System;
 with Bits;
 
-package Gdbstub.CPU
-   is
+package GDBstub.CPU
+is
 
    --========================================================================--
    --                                                                        --
@@ -51,4 +51,4 @@ package Gdbstub.CPU
       return Boolean;
    procedure Step_Resume;
 
-end Gdbstub.CPU;
+end GDBstub.CPU;

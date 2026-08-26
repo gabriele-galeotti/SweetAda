@@ -18,7 +18,7 @@
 pragma Restrictions (No_Elaboration_Code);
 
 package body MMU
-   is
+is
 
    --========================================================================--
    --                                                                        --
