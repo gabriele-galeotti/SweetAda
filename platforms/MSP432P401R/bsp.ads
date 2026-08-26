@@ -29,7 +29,8 @@ package BSP
    --========================================================================--
 
    Tick_Count : aliased Interfaces.Unsigned_32
-      with Export        => True,
+      with Atomic        => True,
+           Export        => True,
            Convention    => Asm,
            External_Name => "tick_count";
 
