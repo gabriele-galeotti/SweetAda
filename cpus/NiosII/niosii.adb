@@ -21,7 +21,7 @@ with System.Machine_Code;
 with Definitions;
 
 package body NiosII
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -49,7 +49,7 @@ package body NiosII
 
    function status_Read
       return status_Type
-      is
+   is
       Value : status_Type;
    begin
       Asm (
@@ -66,7 +66,7 @@ package body NiosII
 
    procedure status_Write
       (Value : in status_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                          & CRLF &
@@ -85,7 +85,7 @@ package body NiosII
 
    function estatus_Read
       return status_Type
-      is
+   is
       Value : status_Type;
    begin
       Asm (
@@ -102,7 +102,7 @@ package body NiosII
 
    procedure estatus_Write
       (Value : in status_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                           & CRLF &
@@ -121,7 +121,7 @@ package body NiosII
 
    function bstatus_Read
       return status_Type
-      is
+   is
       Value : status_Type;
    begin
       Asm (
@@ -138,7 +138,7 @@ package body NiosII
 
    procedure bstatus_Write
       (Value : in status_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                           & CRLF &
@@ -157,7 +157,7 @@ package body NiosII
 
    function ienable_Read
       return Bitmap_32
-      is
+   is
       Value : Bitmap_32;
    begin
       Asm (
@@ -174,7 +174,7 @@ package body NiosII
 
    procedure ienable_Write
       (Value : in Bitmap_32)
-      is
+   is
    begin
       Asm (
            Template => ""                           & CRLF &
@@ -192,7 +192,7 @@ package body NiosII
    ----------------------------------------------------------------------------
    function ipending_Read
       return Bitmap_32
-      is
+   is
       Value : Bitmap_32;
    begin
       Asm (
@@ -212,7 +212,7 @@ package body NiosII
    ----------------------------------------------------------------------------
    function exception_Control_Read
       return exception_Control_Type
-      is
+   is
       Value : exception_Control_Type;
    begin
       Asm (
@@ -232,7 +232,7 @@ package body NiosII
    ----------------------------------------------------------------------------
    function cpuid_Read
       return Unsigned_32
-      is
+   is
       Value : Unsigned_32;
    begin
       Asm (
@@ -251,7 +251,7 @@ package body NiosII
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -269,7 +269,7 @@ package body NiosII
    ----------------------------------------------------------------------------
    procedure Asm_Call
       (Target_Address : in Address)
-      is
+   is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -287,7 +287,7 @@ package body NiosII
    ----------------------------------------------------------------------------
    procedure PIE_Set
       (PIE : in Boolean)
-      is
+   is
    begin
       status_Write ((status_Read with delta PIE => PIE));
    end PIE_Set;
@@ -297,7 +297,7 @@ package body NiosII
    ----------------------------------------------------------------------------
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
-      is
+   is
    begin
       Intcontext := status_Read.PIE;
    end Intcontext_Get;
@@ -307,7 +307,7 @@ package body NiosII
    ----------------------------------------------------------------------------
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
-      is
+   is
    begin
       PIE_Set (Intcontext);
    end Intcontext_Set;
@@ -316,7 +316,7 @@ package body NiosII
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
-      is
+   is
    begin
       PIE_Set (True);
    end Irq_Enable;
@@ -325,7 +325,7 @@ package body NiosII
    -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable
-      is
+   is
    begin
       PIE_Set (False);
    end Irq_Disable;

@@ -19,7 +19,7 @@ with Interfaces;
 
 package DivSI3Table
    with Pure => True
-   is
+is
 
    --========================================================================--
    --                                                                        --
