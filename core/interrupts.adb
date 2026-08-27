@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 package body Interrupts
 is
 
@@ -27,7 +29,7 @@ is
    --========================================================================--
 
    Interrupt_Handlers : array (CPU.Irq_Id_Type) of Interrupt_Descriptor_Type :=
-      [others => INTERRUPT_DESCRIPTOR_INVALID];
+      [others => (null, System.Null_Address)];
 
    --========================================================================--
    --                                                                        --
