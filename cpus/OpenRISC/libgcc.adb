@@ -18,7 +18,7 @@
 with System;
 
 package body LibGCC
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -81,7 +81,7 @@ package body LibGCC
        M2 : in     GCC.Types.USI_Type;
        RH :    out GCC.Types.USI_Type;
        RL :    out GCC.Types.USI_Type)
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -91,7 +91,7 @@ package body LibGCC
       (M1 : GCC.Types.USI_Type;
        M2 : GCC.Types.USI_Type)
       return GCC.Types.UDI_Type
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -101,7 +101,7 @@ package body LibGCC
       (M1 : GCC.Types.UDI_Type;
        M2 : GCC.Types.UDI_Type)
       return GCC.Types.UDI_Type
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -112,7 +112,7 @@ package body LibGCC
        D : in     GCC.Types.UDI_Type;
        R : in out GCC.Types.UDI_Type)
       return GCC.Types.UDI_Type
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -122,7 +122,7 @@ package body LibGCC
       (N : GCC.Types.DI_Type;
        D : GCC.Types.DI_Type)
       return GCC.Types.DI_Type
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -132,7 +132,7 @@ package body LibGCC
       (N : GCC.Types.DI_Type;
        D : GCC.Types.DI_Type)
       return GCC.Types.DI_Type
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -142,7 +142,7 @@ package body LibGCC
       (N : GCC.Types.UDI_Type;
        D : GCC.Types.UDI_Type)
       return GCC.Types.UDI_Type
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -152,7 +152,7 @@ package body LibGCC
       (N : GCC.Types.UDI_Type;
        D : GCC.Types.UDI_Type)
       return GCC.Types.UDI_Type
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -162,7 +162,7 @@ package body LibGCC
       (A : GCC.Types.DI_Type;
        B : GCC.Types.DI_Type)
       return GCC.Types.SI_Type
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -172,7 +172,7 @@ package body LibGCC
       (A : GCC.Types.UDI_Type;
        B : GCC.Types.UDI_Type)
       return GCC.Types.SI_Type
-      is
+   is
    separate;
 
 end LibGCC;

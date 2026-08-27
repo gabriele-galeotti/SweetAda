@@ -19,7 +19,7 @@ with System.Machine_Code;
 with Definitions;
 
 package body OpenRISC
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -46,7 +46,7 @@ package body OpenRISC
 
    function MFSPR
       return Register_Type
-      is
+   is
       Result : Register_Type;
    begin
       Asm (
@@ -70,7 +70,7 @@ package body OpenRISC
 
    procedure MTSPR
       (Value : in Register_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -88,32 +88,23 @@ package body OpenRISC
 
 pragma Style_Checks (Off);
 
-   function SR_Read return SR_Type
-      is function SPR_Read is new MFSPR (SR_REGNO, SR_Type); begin return SPR_Read; end SR_Read;
+   function SR_Read return SR_Type is function SPR_Read is new MFSPR (SR_REGNO, SR_Type); begin return SPR_Read; end SR_Read;
 
-   procedure SR_Write (Value : in SR_Type)
-      is procedure SPR_Write is new MTSPR (SR_REGNO, SR_Type); begin SPR_Write (Value); end SR_Write;
+   procedure SR_Write (Value : in SR_Type) is procedure SPR_Write is new MTSPR (SR_REGNO, SR_Type); begin SPR_Write (Value); end SR_Write;
 
-   function TTMR_Read return TTMR_Type
-      is function SPR_Read is new MFSPR (TTMR_REGNO, TTMR_Type); begin return SPR_Read; end TTMR_Read;
+   function TTMR_Read return TTMR_Type is function SPR_Read is new MFSPR (TTMR_REGNO, TTMR_Type); begin return SPR_Read; end TTMR_Read;
 
-   procedure TTMR_Write (Value : in TTMR_Type)
-      is procedure SPR_Write is new MTSPR (TTMR_REGNO, TTMR_Type); begin SPR_Write (Value); end TTMR_Write;
+   procedure TTMR_Write (Value : in TTMR_Type) is procedure SPR_Write is new MTSPR (TTMR_REGNO, TTMR_Type); begin SPR_Write (Value); end TTMR_Write;
 
-   function TTCR_Read return Unsigned_32
-      is function SPR_Read is new MFSPR (TTCR_REGNO, Unsigned_32); begin return SPR_Read; end TTCR_Read;
+   function TTCR_Read return Unsigned_32 is function SPR_Read is new MFSPR (TTCR_REGNO, Unsigned_32); begin return SPR_Read; end TTCR_Read;
 
-   procedure TTCR_Write (Value : in Unsigned_32)
-      is procedure SPR_Write is new MTSPR (TTCR_REGNO, Unsigned_32); begin SPR_Write (Value); end TTCR_Write;
+   procedure TTCR_Write (Value : in Unsigned_32) is procedure SPR_Write is new MTSPR (TTCR_REGNO, Unsigned_32); begin SPR_Write (Value); end TTCR_Write;
 
-   function VR_Read return VR_Type
-      is function SPR_Read is new MFSPR (VR_REGNO, VR_Type); begin return SPR_Read; end VR_Read;
+   function VR_Read return VR_Type is function SPR_Read is new MFSPR (VR_REGNO, VR_Type); begin return SPR_Read; end VR_Read;
 
-   function VR2_Read return VR2_Type
-      is function SPR_Read is new MFSPR (VR2_REGNO, VR2_Type); begin return SPR_Read; end VR2_Read;
+   function VR2_Read return VR2_Type is function SPR_Read is new MFSPR (VR2_REGNO, VR2_Type); begin return SPR_Read; end VR2_Read;
 
-   function AVR_Read return AVR_Type
-      is function SPR_Read is new MFSPR (AVR_REGNO, AVR_Type); begin return SPR_Read; end AVR_Read;
+   function AVR_Read return AVR_Type is function SPR_Read is new MFSPR (AVR_REGNO, AVR_Type); begin return SPR_Read; end AVR_Read;
 
 pragma Style_Checks (On);
 
@@ -121,7 +112,7 @@ pragma Style_Checks (On);
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
-      is
+   is
    begin
       Asm (
            Template => ""              & CRLF &
@@ -139,7 +130,7 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
    procedure TEE_Enable
       (Enable : in Boolean)
-      is
+   is
    begin
       SR_Write ((SR_Read with delta TEE => Enable));
    end TEE_Enable;
@@ -149,7 +140,7 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
    procedure IEE_Enable
       (Enable : in Boolean)
-      is
+   is
    begin
       SR_Write ((SR_Read with delta IEE => Enable));
    end IEE_Enable;
@@ -159,7 +150,7 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
-      is
+   is
    begin
       Intcontext := SR_Read;
    end Intcontext_Get;
@@ -169,7 +160,7 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
-      is
+   is
    begin
       SR_Write ((SR_Read with delta TEE => Intcontext.TEE,
                                     IEE => Intcontext.IEE));
@@ -179,7 +170,7 @@ pragma Style_Checks (On);
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
-      is
+   is
    begin
       SR_Write ((SR_Read with delta TEE => True, IEE => True));
    end Irq_Enable;
@@ -188,7 +179,7 @@ pragma Style_Checks (On);
    -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable
-      is
+   is
    begin
       SR_Write ((SR_Read with delta TEE => False, IEE => False));
    end Irq_Disable;
