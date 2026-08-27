@@ -22,7 +22,7 @@ with RISCV;
 separate (MTIME)
 procedure mtimecmp_Write
    (Value : in Unsigned_64)
-   is
+is
    mtimecmp_mmap : aliased RISCV.mtime_Type
       with Address    => System'To_Address (Configure.MTIMECMP_ADDRESS),
            Import     => True,

@@ -18,7 +18,7 @@
 pragma Restrictions (No_Elaboration_Code);
 
 package body MTIME
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -30,12 +30,12 @@ package body MTIME
 
    function mtime_Read
       return Unsigned_64
-      is
+   is
    separate;
 
    procedure mtimecmp_Write
       (Value : in Unsigned_64)
-      is
+   is
    separate;
 
 end MTIME;

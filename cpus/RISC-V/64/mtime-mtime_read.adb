@@ -22,7 +22,7 @@ with RISCV;
 separate (MTIME)
 function mtime_Read
    return Unsigned_64
-   is
+is
    mtime_mmap : aliased RISCV.mtime_Type
       with Address    => System'To_Address (Configure.MTIME_ADDRESS),
            Import     => True,

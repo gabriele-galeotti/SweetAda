@@ -19,7 +19,7 @@ with System;
 with RISCV_Definitions;
 
 package RISCV
-   is
+is
 
    --========================================================================--
    --                                                                        --

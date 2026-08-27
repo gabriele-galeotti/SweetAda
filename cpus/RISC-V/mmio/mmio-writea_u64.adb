@@ -21,7 +21,7 @@ separate (MMIO)
 procedure WriteA_U64
    (Memory_Address : in System.Address;
     Value          : in Interfaces.Unsigned_64)
-   is
+is
 begin
    if System.Word_Size = 64 then
       declare

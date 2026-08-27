@@ -21,7 +21,7 @@ separate (MMIO)
 function ReadA_U16
    (Memory_Address : System.Address)
    return Interfaces.Unsigned_16
-   is
+is
    function Atomic_Load
       (Object_Address : System.Address;
        Memory_Order   : Integer)

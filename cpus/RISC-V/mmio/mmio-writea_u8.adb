@@ -21,7 +21,7 @@ separate (MMIO)
 procedure WriteA_U8
    (Memory_Address : in System.Address;
     Value          : in Interfaces.Unsigned_8)
-   is
+is
    procedure Atomic_Store
       (Object_Address : System.Address;
        Data           : Interfaces.Unsigned_8;

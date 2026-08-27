@@ -18,7 +18,7 @@
 pragma Restrictions (No_Elaboration_Code);
 
 package body LibGCC
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -53,7 +53,7 @@ package body LibGCC
       (M1 : GCC.Types.USI_Type;
        M2 : GCC.Types.USI_Type)
       return GCC.Types.USI_Type
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -64,7 +64,7 @@ package body LibGCC
        D : in     GCC.Types.UDI_Type;
        R : in out GCC.Types.UDI_Type)
       return GCC.Types.UDI_Type
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -74,7 +74,7 @@ package body LibGCC
       (N : GCC.Types.DI_Type;
        D : GCC.Types.DI_Type)
       return GCC.Types.DI_Type
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -84,7 +84,7 @@ package body LibGCC
       (N : GCC.Types.DI_Type;
        D : GCC.Types.DI_Type)
       return GCC.Types.DI_Type
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -94,7 +94,7 @@ package body LibGCC
       (N : GCC.Types.UDI_Type;
        D : GCC.Types.UDI_Type)
       return GCC.Types.UDI_Type
-      is
+   is
    separate;
 
    ----------------------------------------------------------------------------
@@ -104,7 +104,7 @@ package body LibGCC
       (N : GCC.Types.UDI_Type;
        D : GCC.Types.UDI_Type)
       return GCC.Types.UDI_Type
-      is
+   is
    separate;
 
 end LibGCC;

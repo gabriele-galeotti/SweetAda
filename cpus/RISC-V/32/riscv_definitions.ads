@@ -21,7 +21,7 @@ with Bits;
 
 package RISCV_Definitions
    with Pure => True
-   is
+is
 
    --========================================================================--
    --                                                                        --

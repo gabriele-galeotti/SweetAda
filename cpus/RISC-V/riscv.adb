@@ -22,7 +22,7 @@ with Ada.Unchecked_Conversion;
 with Definitions;
 
 package body RISCV
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -51,7 +51,7 @@ package body RISCV
 
    function CSR_Read
       return Register_Type
-      is
+   is
       Result : Register_Type;
    begin
       Asm (
@@ -69,7 +69,7 @@ package body RISCV
 
    procedure CSR_Write
       (Value : in Register_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                               & CRLF &
@@ -85,7 +85,7 @@ package body RISCV
 
    procedure CSR_Set
       (Value : in Register_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                               & CRLF &
@@ -101,33 +101,26 @@ package body RISCV
 
 pragma Style_Checks (Off);
 
-   function mhartid_Read return MXLEN_Type
-      is function CSRR is new CSR_Read ("mhartid", MXLEN_Type); begin return CSRR; end mhartid_Read;
+   function mhartid_Read return MXLEN_Type is function CSRR is new CSR_Read ("mhartid", MXLEN_Type); begin return CSRR; end mhartid_Read;
 
-   function mstatus_Read return mstatus_Type
-      is function CSRR is new CSR_Read ("mstatus", mstatus_Type); begin return CSRR; end mstatus_Read;
+   function mstatus_Read return mstatus_Type is function CSRR is new CSR_Read ("mstatus", mstatus_Type); begin return CSRR; end mstatus_Read;
 
-   procedure mstatus_Write (mstatus : in mstatus_Type)
-      is procedure CSRW is new CSR_Write ("mstatus", mstatus_Type); begin CSRW (mstatus); end mstatus_Write;
+   procedure mstatus_Write (mstatus : in mstatus_Type) is procedure CSRW is new CSR_Write ("mstatus", mstatus_Type); begin CSRW (mstatus); end mstatus_Write;
 
-   procedure mstatus_Set (mstatus : in mstatus_Type)
-      is procedure CSRS is new CSR_Set ("mstatus", mstatus_Type); begin CSRS (mstatus); end mstatus_Set;
+   procedure mstatus_Set (mstatus : in mstatus_Type) is procedure CSRS is new CSR_Set ("mstatus", mstatus_Type); begin CSRS (mstatus); end mstatus_Set;
 
-   procedure mtvec_Write (mtvec : in mtvec_Type)
-      is procedure CSRW is new CSR_Write ("mtvec", mtvec_Type); begin CSRW (mtvec); end mtvec_Write;
+   procedure mtvec_Write (mtvec : in mtvec_Type) is procedure CSRW is new CSR_Write ("mtvec", mtvec_Type); begin CSRW (mtvec); end mtvec_Write;
 
-   function mepc_Read return MXLEN_Type
-      is function CSRR is new CSR_Read ("mepc", MXLEN_Type); begin return CSRR; end mepc_Read;
+   function mepc_Read return MXLEN_Type is function CSRR is new CSR_Read ("mepc", MXLEN_Type); begin return CSRR; end mepc_Read;
 
-   function mcause_Read return mcause_Type
-      is function CSRR is new CSR_Read ("mcause", mcause_Type); begin return CSRR; end mcause_Read;
+   function mcause_Read return mcause_Type is function CSRR is new CSR_Read ("mcause", mcause_Type); begin return CSRR; end mcause_Read;
 
 pragma Style_Checks (On);
 
    function To_MXLEN
       (Value : mcause_Type)
       return MXLEN_Type
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (mcause_Type, MXLEN_Type);
    begin
       return Convert (Value);
@@ -136,7 +129,7 @@ pragma Style_Checks (On);
    function To_mcause
       (Value : MXLEN_Type)
       return mcause_Type
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (MXLEN_Type, mcause_Type);
    begin
       return Convert (Value);
@@ -147,7 +140,7 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
    procedure mie_Set_Interrupt
       (mie : in mie_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                          & CRLF &
@@ -165,7 +158,7 @@ pragma Style_Checks (On);
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -182,7 +175,7 @@ pragma Style_Checks (On);
    -- FENCE
    ----------------------------------------------------------------------------
    procedure FENCE
-      is
+   is
    begin
       Asm (
            Template => ""              & CRLF &
@@ -200,7 +193,7 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
    procedure Asm_Call
       (Target_Address : in Address)
-      is
+   is
    begin
       Asm (
            Template => ""                        & CRLF &
@@ -218,7 +211,7 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
-      is
+   is
    begin
       Intcontext := mstatus_Read.MIE;
    end Intcontext_Get;
@@ -228,7 +221,7 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
-      is
+   is
       function To_mstatus is new Ada.Unchecked_Conversion (MXLEN_Type, mstatus_Type);
       mstatus : mstatus_Type := To_mstatus (0);
    begin
@@ -240,7 +233,7 @@ pragma Style_Checks (On);
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
-      is
+   is
       function To_mstatus is new Ada.Unchecked_Conversion (MXLEN_Type, mstatus_Type);
       mstatus : mstatus_Type := To_mstatus (0);
    begin
@@ -261,7 +254,7 @@ pragma Style_Checks (On);
    -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable
-      is
+   is
       function To_mstatus is new Ada.Unchecked_Conversion (MXLEN_Type, mstatus_Type);
       mstatus : mstatus_Type := To_mstatus (0);
    begin
