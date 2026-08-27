@@ -114,6 +114,12 @@ abstract project Gprbuild_Tc is
       when others    => null;
    end case;
 
+   Suppress_All_Checks_Switches := ();
+   case Configure.Suppress_All_Checks is
+      when "Y"    => Suppress_All_Checks_Switches := ("-gnatp");
+      when others => null;
+   end case;
+
    No_DOS_LT_Switch := "";
    case Ostype is
       when "cmd" | "msys" => null;
@@ -141,7 +147,7 @@ abstract project Gprbuild_Tc is
          "-fverbose-asm",
          "-ffunction-sections",
          "-fdata-sections",
-         "-g3", "-gdwarf-5"
+         "-gdwarf-5"
          )                               &
          Configure.CC_Switches_RTS       &
          Configure.GCC_Switches_Platform &
@@ -162,13 +168,12 @@ abstract project Gprbuild_Tc is
          "-fverbose-asm",
          "-ffunction-sections",
          "-fdata-sections",
-         "-g3", "-gdwarf-5",
+         "-gdwarf-5",
          "-gnatef",
          "-gnatf",
          "-gnatU",
          "-gnatn",
          "-gnato13",
-         -- "-gnatp"
          -- "-fstack-check",
          "-gnatVa",
          "-gnatX",
@@ -177,6 +182,7 @@ abstract project Gprbuild_Tc is
          )                                 &
          EXE_Wrapper_Switches              &
          Elaboration_Model_Switches        &
+         Suppress_All_Checks_Switches      &
          Configure.ADAC_Switches_RTS       &
          Configure.GCC_Switches_Platform   &
          Gprbuild_Wr.ADAC_Switches_Warning &

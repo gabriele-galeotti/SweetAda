@@ -256,25 +256,26 @@ RTS_BUILD := $(RTS)
 endif
 
 # default system parameters
-TOOLCHAIN_PREFIX   :=
-GPRBUILD_PREFIX    :=
-BUILD_MODE         := GNATMAKE
-RTS                :=
-PROFILE            :=
-ADA_MODE           := ADA22
-USE_LIBGCC         :=
-USE_LIBM           :=
-USE_CLIBRARY       :=
-USE_APPLICATION    := dummy
-ELABORATION_MODEL  :=
-OPTIMIZATION_LEVEL :=
-STACK_LIMIT        := 4096
-POSTBUILD_ROMFILE  :=
-LD_SCRIPT          := linker.lds
-KERNEL_ENTRY_POINT := _start
-IMPLICIT_ALI_UNITS :=
-EXTERNAL_OBJECTS   :=
-EXTERNAL_ALIS      :=
+TOOLCHAIN_PREFIX    :=
+GPRBUILD_PREFIX     :=
+BUILD_MODE          := GNATMAKE
+RTS                 :=
+PROFILE             :=
+ADA_MODE            := ADA22
+USE_LIBGCC          :=
+USE_LIBM            :=
+USE_CLIBRARY        :=
+USE_APPLICATION     := dummy
+ELABORATION_MODEL   :=
+OPTIMIZATION_LEVEL  :=
+SUPPRESS_ALL_CHECKS :=
+STACK_LIMIT         := 4096
+POSTBUILD_ROMFILE   :=
+LD_SCRIPT           := linker.lds
+KERNEL_ENTRY_POINT  := _start
+IMPLICIT_ALI_UNITS  :=
+EXTERNAL_OBJECTS    :=
+EXTERNAL_ALIS       :=
 
 # read the master configuration file
 include configuration.in
@@ -775,6 +776,7 @@ export                                \
        BUILD_MODE                     \
        ELABORATION_MODEL              \
        OPTIMIZATION_LEVEL             \
+       SUPPRESS_ALL_CHECKS            \
        RTS                            \
        PROFILE                        \
        ADA_MODE                       \

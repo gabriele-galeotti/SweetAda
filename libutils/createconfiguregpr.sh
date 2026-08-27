@@ -33,6 +33,7 @@
 # ADA_MODE
 # ELABORATION_MODEL
 # OPTIMIZATION_LEVEL
+# SUPPRESS_ALL_CHECKS
 # STACK_LIMIT
 # GNATBIND_SECSTACK
 # USE_LIBGCC
@@ -234,6 +235,7 @@ configuregpr=${configuregpr}$(print_I "Use_Libm                          := \"${
 configuregpr=${configuregpr}$(print_I "Use_CLibrary                      := \"${USE_CLIBRARY}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Elaboration_Model                 := \"${ELABORATION_MODEL}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Optimization_Level                := \"${OPTIMIZATION_LEVEL}\";")${NL}
+configuregpr=${configuregpr}$(print_I "Suppress_All_Checks               := \"${SUPPRESS_ALL_CHECKS}\";")${NL}
 INDENTL="                                      "
 configuregpr=${configuregpr}$(print_I "ADAC_Switches_RTS                 := (")${NL}
 string=$(print_list "${ADAC_SWITCHES_RTS}" "${INDENTATION_LEVEL}" "${INDENTL}")

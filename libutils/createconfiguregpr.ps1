@@ -32,6 +32,7 @@
 # ADA_MODE
 # ELABORATION_MODEL
 # OPTIMIZATION_LEVEL
+# SUPPRESS_ALL_CHECKS
 # STACK_LIMIT
 # GNATBIND_SECSTACK
 # USE_LIBGCC
@@ -305,6 +306,7 @@ $configuregpr += $(print_I "Use_Libm                          := `"$(GetEnvVar U
 $configuregpr += $(print_I "Use_CLibrary                      := `"$(GetEnvVar USE_CLIBRARY)`";") + $nl
 $configuregpr += $(print_I "Elaboration_Model                 := `"$(GetEnvVar ELABORATION_MODEL)`";") + $nl
 $configuregpr += $(print_I "Optimization_Level                := `"$(GetEnvVar OPTIMIZATION_LEVEL)`";") + $nl
+$configuregpr += $(print_I "Suppress_All_Checks               := `"$(GetEnvVar SUPPRESS_ALL_CHECKS)`";") + $nl
 $indentl =                  "                                      "
 $configuregpr += $(print_I "ADAC_Switches_RTS                 := (") + $nl
 $configuregpr += $(print_list $(GetEnvVar ADAC_SWITCHES_RTS).Trim(" ") $indentation_level $indentl)
