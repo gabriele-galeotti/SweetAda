@@ -19,7 +19,7 @@ with System.Machine_Code;
 with Definitions;
 
 package body PowerPC
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -45,7 +45,7 @@ package body PowerPC
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -62,7 +62,7 @@ package body PowerPC
    -- BREAKPOINT
    ----------------------------------------------------------------------------
    procedure BREAKPOINT
-      is
+   is
    begin
       Asm (
            Template => ""                                 & CRLF &
@@ -79,7 +79,7 @@ package body PowerPC
    -- SYNC
    ----------------------------------------------------------------------------
    procedure SYNC
-      is
+   is
    begin
       Asm (
            Template => ""             & CRLF &
@@ -96,7 +96,7 @@ package body PowerPC
    -- ISYNC
    ----------------------------------------------------------------------------
    procedure ISYNC
-      is
+   is
    begin
       Asm (
            Template => ""              & CRLF &
@@ -115,7 +115,7 @@ package body PowerPC
 
    function MFSPR
       return Register_Type
-      is
+   is
       Result : Register_Type;
    begin
       Asm (
@@ -132,7 +132,7 @@ package body PowerPC
 
    procedure MTSPR
       (Value : in Register_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                      & CRLF &
@@ -153,7 +153,7 @@ package body PowerPC
    ----------------------------------------------------------------------------
    function MSR_Read
       return MSR_Type
-      is
+   is
       Result : MSR_Type;
    begin
       Asm (
@@ -173,7 +173,7 @@ package body PowerPC
    ----------------------------------------------------------------------------
    procedure MSR_Write
       (Value : in MSR_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -191,7 +191,7 @@ package body PowerPC
    ----------------------------------------------------------------------------
    function PVR_Read
       return PVR_Type
-      is
+   is
       function SPR_Read is new MFSPR (PVR, PVR_Type);
    begin
       return SPR_Read;
@@ -202,7 +202,7 @@ package body PowerPC
    ----------------------------------------------------------------------------
    function DEC_Read
       return Unsigned_32
-      is
+   is
       function SPR_Read is new MFSPR (DEC, Unsigned_32);
    begin
       return SPR_Read;
@@ -213,7 +213,7 @@ package body PowerPC
    ----------------------------------------------------------------------------
    procedure DEC_Write
       (Value : in Unsigned_32)
-      is
+   is
       procedure SPR_Write is new MTSPR (DEC, Unsigned_32);
    begin
       SPR_Write (Value);
@@ -224,7 +224,7 @@ package body PowerPC
    ----------------------------------------------------------------------------
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
-      is
+   is
    begin
       Intcontext := MSR_Read;
    end Intcontext_Get;
@@ -234,7 +234,7 @@ package body PowerPC
    ----------------------------------------------------------------------------
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
-      is
+   is
    begin
       MSR_Write ((MSR_Read with delta EE => Intcontext.EE));
    end Intcontext_Set;
@@ -243,7 +243,7 @@ package body PowerPC
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
-      is
+   is
       MSR : MSR_Type;
    begin
       MSR := MSR_Read;
@@ -256,7 +256,7 @@ package body PowerPC
    -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable
-      is
+   is
       MSR : MSR_Type;
    begin
       MSR := MSR_Read;

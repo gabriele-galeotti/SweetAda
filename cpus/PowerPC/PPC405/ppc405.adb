@@ -20,7 +20,7 @@ with Ada.Unchecked_Conversion;
 with Definitions;
 
 package body PPC405
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -48,7 +48,7 @@ package body PPC405
 
    function TSR_Read
       return TSR_Type
-      is
+   is
       function SPR_Read is new PowerPC.MFSPR (TSR, TSR_Type);
    begin
       return SPR_Read;
@@ -56,7 +56,7 @@ package body PPC405
 
    procedure TSR_Write
       (Value : in TSR_Type)
-      is
+   is
       procedure SPR_Write is new PowerPC.MTSPR (TSR, TSR_Type);
    begin
       SPR_Write (Value);
@@ -71,7 +71,7 @@ pragma Style_Checks (On);
 
    function TCR_Read
       return TCR_Type
-      is
+   is
       function SPR_Read is new PowerPC.MFSPR (TCR, TCR_Type);
    begin
       return SPR_Read;
@@ -79,7 +79,7 @@ pragma Style_Checks (On);
 
    procedure TCR_Write
       (Value : in TCR_Type)
-      is
+   is
       procedure SPR_Write is new PowerPC.MTSPR (TCR, TCR_Type);
    begin
       SPR_Write (Value);
@@ -87,7 +87,7 @@ pragma Style_Checks (On);
 
    function PIT_Read
       return Unsigned_32
-      is
+   is
       function SPR_Read is new PowerPC.MFSPR (PIT, Unsigned_32);
    begin
       return SPR_Read;
@@ -95,7 +95,7 @@ pragma Style_Checks (On);
 
    procedure PIT_Write
       (Value : in Unsigned_32)
-      is
+   is
       procedure SPR_Write is new PowerPC.MTSPR (PIT, Unsigned_32);
    begin
       SPR_Write (Value);
@@ -107,7 +107,7 @@ pragma Style_Checks (On);
 
    function MFDCR
       return DCR_Value_Type
-      is
+   is
       DCR_Value : DCR_Value_Type;
    begin
       Asm (
@@ -124,7 +124,7 @@ pragma Style_Checks (On);
 
    procedure MTDCR
       (DCR_Value : in DCR_Value_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                      & CRLF &
@@ -142,7 +142,7 @@ pragma Style_Checks (On);
 
    function UIC0_SR_Read
       return UIC0_SR_Type
-      is
+   is
       function DCR_Read is new MFDCR (UIC0_SR, UIC0_SR_Type);
    begin
       return DCR_Read;
@@ -150,7 +150,7 @@ pragma Style_Checks (On);
 
    procedure UIC0_SR_Write
       (Value : in UIC0_SR_Type)
-      is
+   is
       procedure DCR_Write is new MTDCR (UIC0_SR, UIC0_SR_Type);
    begin
       DCR_Write (Value);
@@ -158,7 +158,7 @@ pragma Style_Checks (On);
 
    function UIC0_ER_Read
       return Bitmap_32
-      is
+   is
       function DCR_Read is new MFDCR (UIC0_ER, Bitmap_32);
    begin
       return DCR_Read;
@@ -166,7 +166,7 @@ pragma Style_Checks (On);
 
    procedure UIC0_ER_Write
       (Value : in Bitmap_32)
-      is
+   is
       procedure DCR_Write is new MTDCR (UIC0_ER, Bitmap_32);
    begin
       DCR_Write (Value);
@@ -176,7 +176,7 @@ pragma Style_Checks (On);
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
-      is
+   is
    begin
       Asm (
            Template => ""                  & CRLF &
@@ -193,7 +193,7 @@ pragma Style_Checks (On);
    -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable
-      is
+   is
    begin
       Asm (
            Template => ""                  & CRLF &

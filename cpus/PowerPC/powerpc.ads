@@ -21,7 +21,7 @@ with Bits;
 with PowerPC_Definitions;
 
 package PowerPC
-   is
+is
 
    --========================================================================--
    --                                                                        --

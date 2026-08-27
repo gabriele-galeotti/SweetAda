@@ -20,7 +20,7 @@ with Ada.Unchecked_Conversion;
 with Definitions;
 
 package body PPC440
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -48,7 +48,7 @@ package body PPC440
 
    procedure IVOR10_Write
       (Value : in Unsigned_32)
-      is
+   is
       procedure SPR_Write is new PowerPC.MTSPR (IVOR10, Unsigned_32);
    begin
       SPR_Write (Value);
@@ -56,7 +56,7 @@ package body PPC440
 
    function DEC_Read
       return Unsigned_32
-      is
+   is
       function SPR_Read is new PowerPC.MFSPR (PowerPC.DEC, Unsigned_32);
    begin
       return SPR_Read;
@@ -64,7 +64,7 @@ package body PPC440
 
    procedure DEC_Write
       (Value : in Unsigned_32)
-      is
+   is
       procedure SPR_Write is new PowerPC.MTSPR (PowerPC.DEC, Unsigned_32);
    begin
       SPR_Write (Value);
@@ -72,7 +72,7 @@ package body PPC440
 
    procedure DECAR_Write
       (Value : in Unsigned_32)
-      is
+   is
       procedure SPR_Write is new PowerPC.MTSPR (DECAR, Unsigned_32);
    begin
       SPR_Write (Value);
@@ -80,7 +80,7 @@ package body PPC440
 
    function TCR_Read
       return TCR_Type
-      is
+   is
       function SPR_Read is new PowerPC.MFSPR (TCR, TCR_Type);
    begin
       return SPR_Read;
@@ -88,7 +88,7 @@ package body PPC440
 
    procedure TCR_Write
       (Value : in TCR_Type)
-      is
+   is
       procedure SPR_Write is new PowerPC.MTSPR (TCR, TCR_Type);
    begin
       SPR_Write (Value);
@@ -96,7 +96,7 @@ package body PPC440
 
    function TSR_Read
       return TSR_Type
-      is
+   is
       function SPR_Read is new PowerPC.MFSPR (TSR, TSR_Type);
    begin
       return SPR_Read;
@@ -104,7 +104,7 @@ package body PPC440
 
    procedure TSR_Write
       (Value : in TSR_Type)
-      is
+   is
       procedure SPR_Write is new PowerPC.MTSPR (TSR, TSR_Type);
    begin
       SPR_Write (Value);
@@ -121,7 +121,7 @@ pragma Style_Checks (On);
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
-      is
+   is
    begin
       Asm (
            Template => ""                  & CRLF &
@@ -138,7 +138,7 @@ pragma Style_Checks (On);
    -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable
-      is
+   is
    begin
       Asm (
            Template => ""                  & CRLF &

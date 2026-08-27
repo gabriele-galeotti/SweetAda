@@ -20,7 +20,7 @@ with Bits;
 
 package PowerPC_Definitions
    with Pure => True
-   is
+is
 
    --========================================================================--
    --                                                                        --
