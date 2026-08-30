@@ -22,7 +22,7 @@ with Definitions;
 with Bits;
 
 package x86
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -543,6 +543,92 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
    -- TSS
    ----------------------------------------------------------------------------
+
+   type TSS_Entry_Type is record
+      BACK_LINK   : Unsigned_16 := 0;     -- The selector of the TSS of the previously executing task (updated only when a return is expected).
+      Unused1     : Unsigned_16 := 0;
+      ESP0        : Unsigned_32 := 0;
+      SS0         : Unsigned_16 := 0;
+      Unused2     : Unsigned_16 := 0;
+      ESP1        : Unsigned_32 := 0;
+      SS1         : Unsigned_16 := 0;
+      Unused3     : Unsigned_16 := 0;
+      ESP2        : Unsigned_32 := 0;
+      SS2         : Unsigned_16 := 0;
+      Unused4     : Unsigned_16 := 0;
+      CR3         : Unsigned_32 := 0;     -- The register (PDBR) that contains the base address of the task's page directory (read only when paging is enabled).
+      EIP         : Unsigned_32 := 0;
+      EFLAGS      : Unsigned_32 := 0;
+      EAX         : Unsigned_32 := 0;
+      ECX         : Unsigned_32 := 0;
+      EDX         : Unsigned_32 := 0;
+      EBX         : Unsigned_32 := 0;
+      ESP         : Unsigned_32 := 0;
+      EBP         : Unsigned_32 := 0;
+      ESI         : Unsigned_32 := 0;
+      EDI         : Unsigned_32 := 0;
+      ES          : Unsigned_16 := 0;
+      Unused5     : Unsigned_16 := 0;
+      CS          : Unsigned_16 := 0;
+      Unused6     : Unsigned_16 := 0;
+      SS          : Unsigned_16 := 0;
+      Unused7     : Unsigned_16 := 0;
+      DS          : Unsigned_16 := 0;
+      Unused8     : Unsigned_16 := 0;
+      FS          : Unsigned_16 := 0;
+      Unused9     : Unsigned_16 := 0;
+      GS          : Unsigned_16 := 0;
+      Unused10    : Unsigned_16 := 0;
+      LDT         : Unsigned_16 := 0;     -- The selector of the task's LDT.
+      Unused11    : Unsigned_16 := 0;
+      T           : Boolean     := False; -- The T-bit (debug trap bit) which causes the processor to raise a debug exception when a task switch occurs.
+      Unused12    : Bits_15     := 0;
+      IO_MAP_BASE : Unsigned_16 := 0;     -- The I/O map base.
+   end record
+      with Alignment   => 2,
+           Bit_Order   => Low_Order_First,
+           Object_Size => 16#68# * 8;
+   for TSS_Entry_Type use record
+      BACK_LINK   at 16#00# range 0 .. 15;
+      Unused1     at 16#02# range 0 .. 15;
+      ESP0        at 16#04# range 0 .. 31;
+      SS0         at 16#08# range 0 .. 15;
+      Unused2     at 16#0A# range 0 .. 15;
+      ESP1        at 16#0C# range 0 .. 31;
+      SS1         at 16#10# range 0 .. 15;
+      Unused3     at 16#12# range 0 .. 15;
+      ESP2        at 16#14# range 0 .. 31;
+      SS2         at 16#18# range 0 .. 15;
+      Unused4     at 16#1A# range 0 .. 15;
+      CR3         at 16#1C# range 0 .. 31;
+      EIP         at 16#20# range 0 .. 31;
+      EFLAGS      at 16#24# range 0 .. 31;
+      EAX         at 16#28# range 0 .. 31;
+      ECX         at 16#2C# range 0 .. 31;
+      EDX         at 16#30# range 0 .. 31;
+      EBX         at 16#34# range 0 .. 31;
+      ESP         at 16#38# range 0 .. 31;
+      EBP         at 16#3C# range 0 .. 31;
+      ESI         at 16#40# range 0 .. 31;
+      EDI         at 16#44# range 0 .. 31;
+      ES          at 16#48# range 0 .. 15;
+      Unused5     at 16#4A# range 0 .. 15;
+      CS          at 16#4C# range 0 .. 15;
+      Unused6     at 16#4E# range 0 .. 15;
+      SS          at 16#50# range 0 .. 15;
+      Unused7     at 16#52# range 0 .. 15;
+      DS          at 16#54# range 0 .. 15;
+      Unused8     at 16#56# range 0 .. 15;
+      FS          at 16#58# range 0 .. 15;
+      Unused9     at 16#5A# range 0 .. 15;
+      GS          at 16#5C# range 0 .. 15;
+      Unused10    at 16#5E# range 0 .. 15;
+      LDT         at 16#60# range 0 .. 15;
+      Unused11    at 16#62# range 0 .. 15;
+      T           at 16#64# range 0 ..  0;
+      Unused12    at 16#64# range 1 .. 15;
+      IO_MAP_BASE at 16#66# range 0 .. 15;
+   end record;
 
    procedure LTR
       (Selector : in Selector_Type)
