@@ -1,6 +1,9 @@
 
 debug_level 1
 
+puts stdout "reset or power-cycle the board, then press <ENTER>: "
+gets stdin
+
 puts stdout ""
 puts stdout "********************"
 puts stdout "* starting OpenOCD *"
