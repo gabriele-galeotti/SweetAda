@@ -20,7 +20,7 @@ with Interfaces;
 with Bits;
 
 package ARMv8A
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -3433,6 +3433,10 @@ pragma Style_Checks (Off);
 
    -- D19.12.19 CNTPCTSS_EL0, Counter-timer Self-Synchronized Physical Count register
 
+   function CNTPCTSS_EL0_Read
+      return Unsigned_64
+      with Inline => True;
+
    -- D19.12.20 CNTPCT_EL0, Counter-timer Physical Count register
 
    function CNTPCT_EL0_Read
@@ -3440,6 +3444,29 @@ pragma Style_Checks (Off);
       with Inline => True;
 
    -- D19.12.21 CNTPS_CTL_EL1, Counter-timer Physical Secure Timer Control register
+
+   type CNTPS_CTL_EL1_Type is record
+      ENABLE   : Boolean;      -- Enables the timer.
+      IMASK    : Boolean;      -- Timer interrupt mask bit.
+      ISTATUS  : Boolean;      -- The status of the timer.
+      Reserved : Bits_61 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 64;
+   for CNTPS_CTL_EL1_Type use record
+      ENABLE   at 0 range 0 ..  0;
+      IMASK    at 0 range 1 ..  1;
+      ISTATUS  at 0 range 2 ..  2;
+      Reserved at 0 range 3 .. 63;
+   end record;
+
+   function CNTPS_CTL_EL1_Read
+      return CNTPS_CTL_EL1_Type
+      with Inline => True;
+   procedure CNTPS_CTL_EL1_Write
+      (Value : in CNTPS_CTL_EL1_Type)
+      with Inline => True;
+
    -- D19.12.22 CNTPOFF_EL2, Counter-timer Physical Offset register
    -- D19.12.23 CNTPS_CVAL_EL1, Counter-timer Physical Secure Timer CompareValue register
    -- D19.12.24 CNTPS_TVAL_EL1, Counter-timer Physical Secure Timer TimerValue register

@@ -22,7 +22,7 @@ with Ada.Unchecked_Conversion;
 with Definitions;
 
 package body ARMv8A
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -64,9 +64,9 @@ pragma Warnings (Off, "* is not referenced");
       (Value : in Register_Type)
       with Inline => True;
 
-   function MRS return
-      Register_Type
-      is
+   function MRS
+      return Register_Type
+   is
       Result : Register_Type;
    begin
       Asm (
@@ -83,7 +83,7 @@ pragma Warnings (Off, "* is not referenced");
 
    procedure MSR
       (Value : in Register_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                                         & CRLF &
@@ -104,7 +104,7 @@ pragma Warnings (Off, "* is not referenced");
       (Device : Device_Attribute_Type;
        XS     : Boolean)
       return Memory_Attribute_Type
-      is
+   is
       type MA_Device_Type is record
          XS   : Bits_2;
          dd   : Bits_2;
@@ -140,7 +140,7 @@ pragma Warnings (Off, "* is not referenced");
        Outer_R_Policy : Bits_1;
        Outer_W_Policy : Bits_1)
       return Memory_Attribute_Type
-      is
+   is
       type MA_Memory_Type is record
          Inner_W : Bits_1;
          Inner_R : Bits_1;
@@ -166,7 +166,7 @@ pragma Warnings (Off, "* is not referenced");
       function To_Bits
          (P : Normal_Memory_Policy_Type)
          return Bits_2
-         is
+      is
          B : Bits_2;
       begin
          case P is
@@ -421,7 +421,12 @@ pragma Style_Checks (Off);
    function CNTP_TVAL_EL0_Read return CNTP_TVAL_EL0_Type is function MRS_Read is new MRS ("cntp_tval_el0", CNTP_TVAL_EL0_Type); begin return MRS_Read; end CNTP_TVAL_EL0_Read;
    procedure CNTP_TVAL_EL0_Write (Value : CNTP_TVAL_EL0_Type) is procedure MSR_Write is new MSR ("cntp_tval_el0", CNTP_TVAL_EL0_Type); begin MSR_Write (Value); end CNTP_TVAL_EL0_Write;
 
+   function CNTPCTSS_EL0_Read return Unsigned_64 is function MRS_Read is new MRS ("cntpctss_el0", Unsigned_64); begin return MRS_Read; end CNTPCTSS_EL0_Read;
+
    function CNTPCT_EL0_Read return Unsigned_64 is function MRS_Read is new MRS ("cntfrq_el0", Unsigned_64); begin return MRS_Read; end CNTPCT_EL0_Read;
+
+   function CNTPS_CTL_EL1_Read return CNTPS_CTL_EL1_Type is function MRS_Read is new MRS ("cntps_ctl_el1", CNTPS_CTL_EL1_Type); begin return MRS_Read; end CNTPS_CTL_EL1_Read;
+   procedure CNTPS_CTL_EL1_Write (Value : CNTPS_CTL_EL1_Type) is procedure MSR_Write is new MSR ("cntps_ctl_el1", CNTPS_CTL_EL1_Type); begin MSR_Write (Value); end CNTPS_CTL_EL1_Write;
 
 pragma Style_Checks (On);
 
@@ -429,7 +434,7 @@ pragma Style_Checks (On);
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -446,7 +451,7 @@ pragma Style_Checks (On);
    -- BREAKPOINT
    ----------------------------------------------------------------------------
    procedure BREAKPOINT
-      is
+   is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -464,7 +469,7 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
    procedure Asm_Call
       (Target_Address : in Address)
-      is
+   is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -481,7 +486,7 @@ pragma Style_Checks (On);
    -- WFE
    ----------------------------------------------------------------------------
    procedure WFE
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -498,7 +503,7 @@ pragma Style_Checks (On);
    -- WFI
    ----------------------------------------------------------------------------
    procedure WFI
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -515,7 +520,7 @@ pragma Style_Checks (On);
    -- DSB
    ----------------------------------------------------------------------------
    procedure DSB
-      is
+   is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -532,7 +537,7 @@ pragma Style_Checks (On);
    -- ISB
    ----------------------------------------------------------------------------
    procedure ISB
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -549,7 +554,7 @@ pragma Style_Checks (On);
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
-      is
+   is
    begin
       Asm (
            Template => ""                           & CRLF &
@@ -566,7 +571,7 @@ pragma Style_Checks (On);
    -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable
-      is
+   is
    begin
       Asm (
            Template => ""                           & CRLF &
