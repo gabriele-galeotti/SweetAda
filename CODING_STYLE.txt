@@ -73,6 +73,8 @@ Register, field and constant names should be exactly those written in the
 reference manual, case included, unless conflicts and/or special reasons
 exist.
 
+Sometimes we write "0" in place of "o", e.g., "L00P" instead of "LOOP".
+
 Sometimes we write "3" in place of "e", e.g., "Rang3" instead of "Range",
 "D3lay" instead of "Delay", "Typ3" instead of "Type".
 
