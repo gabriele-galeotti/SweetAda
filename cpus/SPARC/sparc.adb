@@ -15,13 +15,15 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System.Machine_Code;
 with System.Storage_Elements;
 with Interfaces;
 with Definitions;
 
 package body SPARC
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -49,7 +51,7 @@ package body SPARC
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -67,7 +69,7 @@ package body SPARC
    ----------------------------------------------------------------------------
    procedure Asm_Call
       (Target_Address : in Address)
-      is
+   is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -87,7 +89,7 @@ package body SPARC
 
    function PSR_Read
       return PSR_Type
-      is
+   is
       PSR : PSR_Type;
    begin
       Asm (
@@ -104,7 +106,7 @@ package body SPARC
 
    procedure PSR_Write
       (PSR : in PSR_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -124,7 +126,7 @@ package body SPARC
 
    procedure TBR_Set
       (TBR_Address : in Address)
-      is
+   is
    begin
       Asm (
            Template => ""                           & CRLF &
@@ -142,7 +144,7 @@ package body SPARC
 
    procedure Traps_Enable
       (Enable : in Boolean)
-      is
+   is
       PSR : PSR_Type;
    begin
       PSR := PSR_Read;
@@ -155,7 +157,7 @@ package body SPARC
    ----------------------------------------------------------------------------
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
-      is
+   is
    begin
       Intcontext := 0; -- __TBD__
    end Intcontext_Get;
@@ -165,7 +167,7 @@ package body SPARC
    ----------------------------------------------------------------------------
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
-      is
+   is
    begin
       null; -- __TBD__
    end Intcontext_Set;
@@ -174,7 +176,7 @@ package body SPARC
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
-      is
+   is
       PSR_R : Unsigned_32;
    begin
       Asm (
@@ -196,7 +198,7 @@ package body SPARC
    -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable
-      is
+   is
       PSR_R : Unsigned_32;
    begin
       Asm (
