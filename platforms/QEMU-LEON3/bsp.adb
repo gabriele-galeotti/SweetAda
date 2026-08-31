@@ -97,6 +97,7 @@ package body BSP
       INTC_LEVEL.IL (10) := True;
       INTC_PROCMASK0.IM (10) := True;
       SPARC.Irq_Enable;
+      Tick_Count := 0;
       Tclk_Init;
       -------------------------------------------------------------------------
    end Setup;

@@ -34,7 +34,7 @@ package BSP
            Convention    => Asm,
            External_Name => "nwindows";
 
-   Tick_Count : aliased Interfaces.Unsigned_32 := 0
+   Tick_Count : aliased Interfaces.Unsigned_32
       with Atomic        => True,
            Export        => True,
            Convention    => Asm,
