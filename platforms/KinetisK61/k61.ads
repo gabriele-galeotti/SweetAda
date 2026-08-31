@@ -7696,14 +7696,111 @@ pragma Style_Checks (Off);
    end record;
 
    ENET_EIR : aliased ENET_EIR_Type
-      with Address              => System'To_Address (ENET_BASEADDRESS + 16#04#),
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#004#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    -- 48.4.2 Interrupt Mask Register (ENET_EIMR)
+
+   type ENET_EIMR_Type is record
+      Reserved1 : Bits_8  := 0;
+      Reserved2 : Bits_1  := 0;
+      Reserved3 : Bits_3  := 0;
+      Reserved4 : Bits_1  := 0;
+      Reserved5 : Bits_2  := 0;
+      TS_TIMER  : Boolean := False; -- TS_TIMER Interrupt Mask
+      TS_AVAIL  : Boolean := False; -- TS_AVAIL Interrupt Mask
+      WAKEUP    : Boolean := False; -- WAKEUP Interrupt Mask
+      PLR       : Boolean := False; -- PLR Interrupt Mask
+      UN        : Boolean := False; -- UN Interrupt Mask
+      RL        : Boolean := False; -- RL Interrupt Mask
+      LC        : Boolean := False; -- LC Interrupt Mask
+      EBERR     : Boolean := False; -- EBERR Interrupt Mask
+      MII       : Boolean := False; -- MII Interrupt Mask
+      RXB       : Boolean := False; -- RXB Interrupt Mask
+      RXF       : Boolean := False; -- RXF Interrupt Mask
+      TXB       : Boolean := False; -- TXB Interrupt Mask
+      TXF       : Boolean := False; -- TXF Interrupt Mask
+      GRA       : Boolean := False; -- GRA Interrupt Mask
+      BABT      : Boolean := False; -- BABT Interrupt Mask
+      BABR      : Boolean := False; -- BABR Interrupt Mask
+      Reserved6 : Bits_1  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_EIMR_Type use record
+      Reserved1 at 0 range  0 ..  7;
+      Reserved2 at 0 range  8 ..  8;
+      Reserved3 at 0 range  9 .. 11;
+      Reserved4 at 0 range 12 .. 12;
+      Reserved5 at 0 range 13 .. 14;
+      TS_TIMER  at 0 range 15 .. 15;
+      TS_AVAIL  at 0 range 16 .. 16;
+      WAKEUP    at 0 range 17 .. 17;
+      PLR       at 0 range 18 .. 18;
+      UN        at 0 range 19 .. 19;
+      RL        at 0 range 20 .. 20;
+      LC        at 0 range 21 .. 21;
+      EBERR     at 0 range 22 .. 22;
+      MII       at 0 range 23 .. 23;
+      RXB       at 0 range 24 .. 24;
+      RXF       at 0 range 25 .. 25;
+      TXB       at 0 range 26 .. 26;
+      TXF       at 0 range 27 .. 27;
+      GRA       at 0 range 28 .. 28;
+      BABT      at 0 range 29 .. 29;
+      BABR      at 0 range 30 .. 30;
+      Reserved6 at 0 range 31 .. 31;
+   end record;
+
+   ENET_EIMR : aliased ENET_EIMR_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#008#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.3 Receive Descriptor Active Register (ENET_RDAR)
+
+   type ENET_RDAR_Type is record
+      Reserved1 : Bits_24 := 0;
+      RDAR      : Boolean := False; -- Receive Descriptor Active
+      Reserved2 : Bits_7  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_RDAR_Type use record
+      Reserved1 at 0 range  0 .. 23;
+      RDAR      at 0 range 24 .. 24;
+      Reserved2 at 0 range 25 .. 31;
+   end record;
+
+   ENET_RDAR : aliased ENET_RDAR_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#010#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.4 Transmit Descriptor Active Register (ENET_TDAR)
+
+   type ENET_TDAR_Type is record
+      Reserved1 : Bits_24 := 0;
+      TDAR      : Boolean := False; -- Transmit Descriptor Active
+      Reserved2 : Bits_7  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_TDAR_Type use record
+      Reserved1 at 0 range  0 .. 23;
+      TDAR      at 0 range 24 .. 24;
+      Reserved2 at 0 range 25 .. 31;
+   end record;
+
+   ENET_TDAR : aliased ENET_TDAR_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#014#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
    -- 48.4.5 Ethernet Control Register (ENET_ECR)
 
    type ENET_ECR_Type is record
@@ -7740,7 +7837,7 @@ pragma Style_Checks (Off);
    end record;
 
    ENET_ECR : aliased ENET_ECR_Type
-      with Address              => System'To_Address (ENET_BASEADDRESS + 16#24#),
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#024#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -7781,7 +7878,7 @@ pragma Style_Checks (Off);
    end record;
 
    ENET_MMFR : aliased ENET_MMFR_Type
-      with Address              => System'To_Address (ENET_BASEADDRESS + 16#40#),
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#040#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -7828,7 +7925,7 @@ pragma Style_Checks (Off);
    end record;
 
    ENET_MSCR : aliased ENET_MSCR_Type
-      with Address              => System'To_Address (ENET_BASEADDRESS + 16#44#),
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#044#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
@@ -7851,35 +7948,551 @@ pragma Style_Checks (Off);
    end record;
 
    ENET_MIBC : aliased ENET_MIBC_Type
-      with Address              => System'To_Address (ENET_BASEADDRESS + 16#64#),
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#064#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
 
    -- 48.4.9 Receive Control Register (ENET_RCR)
+
+   MII_MODE_RSVD : constant := 0;
+   MII_MODE_MII  : constant := 1;
+
+   PAUFWD_DISCARD : constant := 0; -- Pause frames are terminated and discarded in the MAC.
+   PAUFWD_FORWARD : constant := 1; -- Pause frames are forwarded to the user application.
+
+   CRCFWD_RXTOUSER : constant := 0; -- The CRC field of received frames is transmitted to the user application.
+   CRCFWD_RXSTRIP  : constant := 1; -- The CRC field is stripped from the frame.
+
+   type ENET_RCR_Type is record
+      L00P      : Boolean := True;            -- Internal Loopback
+      DRT       : Boolean := False;           -- Disable Receive On Transmit
+      MII_MODE  : Bits_1  := MII_MODE_RSVD;   -- Media Independent Interface Mode
+      PROM      : Boolean := False;           -- Promiscuous Mode
+      BC_REJ    : Boolean := False;           -- Broadcast Frame Reject
+      FCE       : Boolean := False;           -- Flow Control Enable
+      Reserved1 : Bits_1  := 0;
+      Reserved2 : Bits_1  := 0;
+      RMII_MODE : Boolean := False;           -- RMII Mode Enable
+      RMII_10T  : Boolean := False;           -- Enables 10-Mbps mode of the RMII .
+      Reserved3 : Bits_2  := 0;
+      PADEN     : Boolean := False;           -- Enable Frame Padding Remove On Receive
+      PAUFWD    : Bits_1  := PAUFWD_DISCARD;  -- Terminate/Forward Pause Frames
+      CRCFWD    : Bits_1  := CRCFWD_RXTOUSER; -- Terminate/Forward Received CRC
+      CFEN      : Boolean := False;           -- MAC Control Frame Enable
+      MAX_FL    : Bits_14 := 1518;            -- Maximum Frame Length
+      NLC       : Boolean := False;           -- Payload Length Check Disable
+      GRS       : Boolean := False;           -- Graceful Receive Stopped
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_RCR_Type use record
+      L00P      at 0 range  0 ..  0;
+      DRT       at 0 range  1 ..  1;
+      MII_MODE  at 0 range  2 ..  2;
+      PROM      at 0 range  3 ..  3;
+      BC_REJ    at 0 range  4 ..  4;
+      FCE       at 0 range  5 ..  5;
+      Reserved1 at 0 range  6 ..  6;
+      Reserved2 at 0 range  7 ..  7;
+      RMII_MODE at 0 range  8 ..  8;
+      RMII_10T  at 0 range  9 ..  9;
+      Reserved3 at 0 range 10 .. 11;
+      PADEN     at 0 range 12 .. 12;
+      PAUFWD    at 0 range 13 .. 13;
+      CRCFWD    at 0 range 14 .. 14;
+      CFEN      at 0 range 15 .. 15;
+      MAX_FL    at 0 range 16 .. 29;
+      NLC       at 0 range 30 .. 30;
+      GRS       at 0 range 31 .. 31;
+   end record;
+
+   ENET_RCR : aliased ENET_RCR_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#084#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.10 Transmit Control Register (ENET_TCR)
+
+   CRCFWD_TXBDTC  : constant := 0; -- TxBD[TC] controls whether the frame has a CRC from the application.
+   CRCFWD_TXSTRIP : constant := 1; -- The CRC field is stripped from the frame.
+
+   ADDSEL_PADDR12 : constant := 2#000#; -- Node MAC address programmed on PADDR1/2 registers.
+   ADDSEL_RSVD1   : constant := 2#100#; -- Reserved.
+   ADDSEL_RSVD2   : constant := 2#101#; -- Reserved.
+   ADDSEL_RSVD3   : constant := 2#110#; -- Reserved.
+
+   type ENET_TCR_Type is record
+      GTS       : Boolean := False;          -- Graceful Transmit Stop
+      Reserved1 : Bits_1  := 0;
+      FDEN      : Boolean := False;          -- Full-Duplex Enable
+      TFC_PAUSE : Boolean := False;          -- Transmit Frame Control Pause
+      RFC_PAUSE : Boolean := False;          -- Receive Frame Control Pause
+      ADDSEL    : Bits_3  := ADDSEL_PADDR12; -- Source MAC Address Select On Transmit
+      ADDINS    : Boolean := False;          -- Set MAC Address On Transmit
+      CRCFWD    : Bits_1  := CRCFWD_TXBDTC;  -- Forward Frame From Application With CRC
+      Reserved2 : Bits_1  := 0;
+      Reserved3 : Bits_21 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_TCR_Type use record
+      GTS       at 0 range  0 ..  0;
+      Reserved1 at 0 range  1 ..  1;
+      FDEN      at 0 range  2 ..  2;
+      TFC_PAUSE at 0 range  3 ..  3;
+      RFC_PAUSE at 0 range  4 ..  4;
+      ADDSEL    at 0 range  5 ..  7;
+      ADDINS    at 0 range  8 ..  8;
+      CRCFWD    at 0 range  9 ..  9;
+      Reserved2 at 0 range 10 .. 10;
+      Reserved3 at 0 range 11 .. 31;
+   end record;
+
+   ENET_TCR : aliased ENET_TCR_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#0C4#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
    -- 48.4.11 Physical Address Lower Register (ENET_PALR)
+
+   type ENET_PALR_Type is record
+      PADDR1 : Unsigned_32 := 0; -- Pause Address
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_PALR_Type use record
+      PADDR1 at 0 range 0 .. 31;
+   end record;
+
+   ENET_PALR : aliased ENET_PALR_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#0E4#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.12 Physical Address Upper Register (ENET_PAUR)
+
+   type ENET_PAUR_Type is record
+      TYP3   : Unsigned_16 := 16#8808#; -- Type Field In PAUSE Frames
+      PADDR2 : Unsigned_16 := 0;        -- Bytes 4 (bits 31:24) and 5 (bits 23:16) of the 6-byte individual address used for exact match, and the source address field in PAUSE frames.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_PAUR_Type use record
+      TYP3   at 0 range  0 .. 15;
+      PADDR2 at 0 range 16 .. 31;
+   end record;
+
+   ENET_PAUR : aliased ENET_PAUR_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#0E8#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.13 Opcode/Pause Duration Register (ENET_OPD)
+
+   type ENET_OPD_Type is record
+      PAUSE_DUR : Unsigned_16 := 0;        -- Pause Duration
+      OPCODE    : Unsigned_16 := 16#0001#; -- Opcode Field In PAUSE Frames
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_OPD_Type use record
+      PAUSE_DUR at 0 range  0 .. 15;
+      OPCODE    at 0 range 16 .. 31;
+   end record;
+
+   ENET_OPD : aliased ENET_OPD_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#0EC#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.14 Descriptor Individual Upper Address Register (ENET_IAUR)
+
+   type ENET_IAUR_Type is record
+      IADDR1 : Unsigned_32 := 0; -- Contains the upper 32 bits of the 64-bit hash table used in the address recognition process for receive frames with a unicast address.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_IAUR_Type use record
+      IADDR1 at 0 range 0 .. 31;
+   end record;
+
+   ENET_IAUR : aliased ENET_IAUR_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#118#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.15 Descriptor Individual Lower Address Register (ENET_IALR)
+
+   type ENET_IALR_Type is record
+      IADDR2 : Unsigned_32 := 0; -- Contains the lower 32 bits of the 64-bit hash table used in the address recognition process for receive frames with a unicast address.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_IALR_Type use record
+      IADDR2 at 0 range 0 .. 31;
+   end record;
+
+   ENET_IALR : aliased ENET_IALR_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#11C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.16 Descriptor Group Upper Address Register (ENET_GAUR)
+
+   type ENET_GAUR_Type is record
+      GADDR1 : Unsigned_32 := 0; -- Contains the upper 32 bits of the 64-bit hash table used in the address recognition process for receive frames with a multicast address.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_GAUR_Type use record
+      GADDR1 at 0 range 0 .. 31;
+   end record;
+
+   ENET_GAUR : aliased ENET_GAUR_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#120#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.17 Descriptor Group Lower Address Register (ENET_GALR)
+
+   type ENET_GALR_Type is record
+      GADDR2 : Unsigned_32 := 0; -- Contains the lower 32 bits of the 64-bit hash table used in the address recognition process for receive frames with a multicast address.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_GALR_Type use record
+      GADDR2 at 0 range 0 .. 31;
+   end record;
+
+   ENET_GALR : aliased ENET_IALR_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#124#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.18 Transmit FIFO Watermark Register (ENET_TFWR)
+
+   type ENET_TFWR_Type is record
+      TFWR      : Bits_6  := 0;     -- Transmit FIFO Write
+      Reserved1 : Bits_2  := 0;
+      STRFWD    : Boolean := False; -- Store And Forward Enable
+      Reserved2 : Bits_23 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_TFWR_Type use record
+      TFWR      at 0 range 0 ..  5;
+      Reserved1 at 0 range 6 ..  7;
+      STRFWD    at 0 range 8 ..  8;
+      Reserved2 at 0 range 9 .. 31;
+   end record;
+
+   ENET_TFWR : aliased ENET_TFWR_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#144#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.19 Receive Descriptor Ring Start Register (ENET_RDSR)
+
+   type ENET_RDSR_Type is record
+      Reserved1   : Bits_2  := 0;
+      Reserved2   : Bits_1  := 0;
+      R_DES_START : Bits_29 := 0; -- Pointer to the beginning of the receive buffer descriptor queue.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_RDSR_Type use record
+      Reserved1   at 0 range 0 ..  1;
+      Reserved2   at 0 range 2 ..  2;
+      R_DES_START at 0 range 3 .. 31;
+   end record;
+
+   ENET_RDSR : aliased ENET_RDSR_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#180#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.20 Transmit Buffer Descriptor Ring Start Register (ENET_TDSR)
+
+   type ENET_TDSR_Type is record
+      Reserved1   : Bits_2  := 0;
+      Reserved2   : Bits_1  := 0;
+      X_DES_START : Bits_29 := 0; -- Pointer to the beginning of the transmit buffer descriptor queue.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_TDSR_Type use record
+      Reserved1   at 0 range 0 ..  1;
+      Reserved2   at 0 range 2 ..  2;
+      X_DES_START at 0 range 3 .. 31;
+   end record;
+
+   ENET_TDSR : aliased ENET_TDSR_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#184#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.21 Maximum Receive Buffer Size Register (ENET_MRBR)
+
+   type ENET_MRBR_Type is record
+      Reserved1  : Bits_4  := 0;
+      R_BUF_SIZE : Bits_7  := 0; -- Receive buffer size in bytes.
+      Reserved2  : Bits_21 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_MRBR_Type use record
+      Reserved1  at 0 range  0 ..  3;
+      R_BUF_SIZE at 0 range  4 .. 10;
+      Reserved2  at 0 range 11 .. 31;
+   end record;
+
+   ENET_MRBR : aliased ENET_MRBR_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#188#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.22 Receive FIFO Section Full Threshold (ENET_RSFL)
+
+   type ENET_RSFL_Type is record
+      RX_SECTION_FULL : Unsigned_8 := 0; -- Value Of Receive FIFO Section Full Threshold
+      Reserved        : Bits_24    := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_RSFL_Type use record
+      RX_SECTION_FULL at 0 range 0 ..  7;
+      Reserved        at 0 range 8 .. 31;
+   end record;
+
+   ENET_RSFL : aliased ENET_RSFL_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#190#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.23 Receive FIFO Section Empty Threshold (ENET_RSEM)
+
+   type ENET_RSEM_Type is record
+      RX_SECTION_EMPTY : Unsigned_8 := 0; -- Value Of The Receive FIFO Section Empty Threshold
+      Reserved1        : Bits_8     := 0;
+      Reserved2        : Bits_5     := 0;
+      Reserved3        : Bits_11    := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_RSEM_Type use record
+      RX_SECTION_EMPTY at 0 range  0 ..  7;
+      Reserved1        at 0 range  8 .. 15;
+      Reserved2        at 0 range 16 .. 20;
+      Reserved3        at 0 range 21 .. 31;
+   end record;
+
+   ENET_RSEM : aliased ENET_RSEM_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#194#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.24 Receive FIFO Almost Empty Threshold (ENET_RAEM)
+
+   type ENET_RAEM_Type is record
+      RX_ALMOST_EMPTY : Unsigned_8 := 4; -- Value Of The Receive FIFO Almost Empty Threshold
+      Reserved        : Bits_24    := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_RAEM_Type use record
+      RX_ALMOST_EMPTY at 0 range 0 ..  7;
+      Reserved        at 0 range 8 .. 31;
+   end record;
+
+   ENET_RAEM : aliased ENET_RAEM_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#198#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.25 Receive FIFO Almost Full Threshold (ENET_RAFL)
+
+   type ENET_RAFL_Type is record
+      RX_ALMOST_FULL : Unsigned_8 := 4; -- Value Of The Receive FIFO Almost Full Threshold
+      Reserved       : Bits_24    := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_RAFL_Type use record
+      RX_ALMOST_FULL at 0 range 0 ..  7;
+      Reserved       at 0 range 8 .. 31;
+   end record;
+
+   ENET_RAFL : aliased ENET_RAFL_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#19C#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.26 Transmit FIFO Section Empty Threshold (ENET_TSEM)
+
+   type ENET_TSEM_Type is record
+      TX_SECTION_EMPTY : Unsigned_8 := 0; -- Value Of The Transmit FIFO Section Empty Threshold
+      Reserved         : Bits_24    := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_TSEM_Type use record
+      TX_SECTION_EMPTY at 0 range 0 ..  7;
+      Reserved         at 0 range 8 .. 31;
+   end record;
+
+   ENET_TSEM : aliased ENET_TSEM_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#1A0#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.27 Transmit FIFO Almost Empty Threshold (ENET_TAEM)
+
+   type ENET_TAEM_Type is record
+      TX_ALMOST_EMPTY : Unsigned_8 := 4; -- Value of Transmit FIFO Almost Empty Threshold
+      Reserved        : Bits_24    := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_TAEM_Type use record
+      TX_ALMOST_EMPTY at 0 range 0 ..  7;
+      Reserved        at 0 range 8 .. 31;
+   end record;
+
+   ENET_TAEM : aliased ENET_TAEM_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#1A4#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.28 Transmit FIFO Almost Full Threshold (ENET_TAFL)
+
+   type ENET_TAFL_Type is record
+      TX_ALMOST_FULL : Unsigned_8 := 8; -- Value Of The Transmit FIFO Almost Full Threshold
+      Reserved       : Bits_24    := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_TAFL_Type use record
+      TX_ALMOST_FULL at 0 range 0 ..  7;
+      Reserved       at 0 range 8 .. 31;
+   end record;
+
+   ENET_TAFL : aliased ENET_TAFL_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#1A8#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.29 Transmit Inter-Packet Gap (ENET_TIPG)
+
+   type ENET_TIPG_Type is record
+      IPG      : Bits_5  := 12; -- Transmit Inter-Packet Gap
+      Reserved : Bits_27 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_TIPG_Type use record
+      IPG      at 0 range 0 ..  4;
+      Reserved at 0 range 5 .. 31;
+   end record;
+
+   ENET_TIPG : aliased ENET_TIPG_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#1AC#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.30 Frame Truncation Length (ENET_FTRL)
+
+   type ENET_FTRL_Type is record
+      TRUNC_FL : Bits_14 := 127; -- Frame Truncation Length
+      Reserved : Bits_18 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_FTRL_Type use record
+      TRUNC_FL at 0 range  0 .. 13;
+      Reserved at 0 range 14 .. 31;
+   end record;
+
+   ENET_FTRL : aliased ENET_FTRL_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#1B0#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.31 Transmit Accelerator Function Configuration (ENET_TACC)
+
+   type ENET_TACC_Type is record
+      SHIFT16   : Boolean := False; -- TX FIFO Shift-16
+      Reserved1 : Bits_2  := 0;
+      IPCHK     : Boolean := False; -- Enables insertion of IP header checksum.
+      PROCHK    : Boolean := False; -- Enables insertion of protocol checksum.
+      Reserved2 : Bits_27 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_TACC_Type use record
+      SHIFT16   at 0 range 0 ..  0;
+      Reserved1 at 0 range 1 ..  2;
+      IPCHK     at 0 range 3 ..  3;
+      PROCHK    at 0 range 4 ..  4;
+      Reserved2 at 0 range 5 .. 31;
+   end record;
+
+   ENET_TACC : aliased ENET_TACC_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#1C0#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.32 Receive Accelerator Function Configuration (ENET_RACC)
+
+   type ENET_RACC_Type is record
+      PADREM    : Boolean := False; -- Enable Padding Removal For Short IP Frames
+      IPDIS     : Boolean := False; -- Enable Discard Of Frames With Wrong IPv4 Header Checksum
+      PRODIS    : Boolean := False; -- Enable Discard Of Frames With Wrong Protocol Checksum
+      Reserved1 : Bits_3  := 0;
+      LINEDIS   : Boolean := False; -- Enable Discard Of Frames With MAC Layer Errors
+      SHIFT16   : Boolean := False; -- RX FIFO Shift-16
+      Reserved2 : Bits_24 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for ENET_RACC_Type use record
+      PADREM    at 0 range 0 ..  0;
+      IPDIS     at 0 range 1 ..  1;
+      PRODIS    at 0 range 2 ..  2;
+      Reserved1 at 0 range 3 ..  5;
+      LINEDIS   at 0 range 6 ..  6;
+      SHIFT16   at 0 range 7 ..  7;
+      Reserved2 at 0 range 8 .. 31;
+   end record;
+
+   ENET_RACC : aliased ENET_RACC_Type
+      with Address              => System'To_Address (ENET_BASEADDRESS + 16#1C4#),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
    -- 48.4.33 Reserved Statistic Register (ENET_RMON_T_DROP)
    -- 48.4.34 Tx Packet Count Statistic Register (ENET_RMON_T_PACKETS)
    -- 48.4.35 Tx Broadcast Packets Statistic Register (ENET_RMON_T_BC_PKT)
