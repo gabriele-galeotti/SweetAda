@@ -240,6 +240,21 @@ is
       renames Print_Storage_Offset;
 
    ----------------------------------------------------------------------------
+   -- Print[_Integer64]
+   ----------------------------------------------------------------------------
+   procedure Print_Integer64
+      (Value  : in Interfaces.Integer_64;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "");
+   procedure Print
+      (Value  : in Interfaces.Integer_64;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+      renames Print_Integer64;
+
+   ----------------------------------------------------------------------------
    -- Print[_Integer8]
    ----------------------------------------------------------------------------
    procedure Print_Integer8
@@ -283,21 +298,6 @@ is
        Prefix : in String := "";
        Suffix : in String := "")
       renames Print_Integer32;
-
-   ----------------------------------------------------------------------------
-   -- Print[_Integer64]
-   ----------------------------------------------------------------------------
-   procedure Print_Integer64
-      (Value  : in Interfaces.Integer_64;
-       NL     : in Boolean := False;
-       Prefix : in String := "";
-       Suffix : in String := "");
-   procedure Print
-      (Value  : in Interfaces.Integer_64;
-       NL     : in Boolean := False;
-       Prefix : in String := "";
-       Suffix : in String := "")
-      renames Print_Integer64;
 
    ----------------------------------------------------------------------------
    -- Print[_Integer]

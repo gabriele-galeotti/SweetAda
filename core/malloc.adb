@@ -90,6 +90,43 @@ is
    end Round_Size;
 
    ----------------------------------------------------------------------------
+   -- Malloc
+   ----------------------------------------------------------------------------
+   function Malloc
+      (Size : Interfaces.C.size_t)
+      return Interfaces.C.Extensions.void_ptr
+   is
+   separate;
+
+   ----------------------------------------------------------------------------
+   -- Free
+   ----------------------------------------------------------------------------
+   procedure Free
+      (Memory_Address : in Interfaces.C.Extensions.void_ptr)
+   is
+   separate;
+
+   ----------------------------------------------------------------------------
+   -- Calloc
+   ----------------------------------------------------------------------------
+   function Calloc
+      (Nmemb : Interfaces.C.size_t;
+       Size  : Interfaces.C.size_t)
+      return Interfaces.C.Extensions.void_ptr
+   is
+   separate;
+
+   ----------------------------------------------------------------------------
+   -- Realloc
+   ----------------------------------------------------------------------------
+   function Realloc
+      (Memory_Address : Interfaces.C.Extensions.void_ptr;
+       Size           : Interfaces.C.size_t)
+      return Interfaces.C.Extensions.void_ptr
+   is
+   separate;
+
+   ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
@@ -120,42 +157,5 @@ is
       end if;
       Free (Heap_Block'Address + MEMORYBLOCKTYPE_SIZE);
    end Init;
-
-   ----------------------------------------------------------------------------
-   -- Malloc
-   ----------------------------------------------------------------------------
-   function Malloc
-      (Size : Interfaces.C.size_t)
-      return Address
-   is
-   separate;
-
-   ----------------------------------------------------------------------------
-   -- Free
-   ----------------------------------------------------------------------------
-   procedure Free
-      (Memory_Address : in Interfaces.C.Extensions.void_ptr)
-   is
-   separate;
-
-   ----------------------------------------------------------------------------
-   -- Calloc
-   ----------------------------------------------------------------------------
-   function Calloc
-      (Nmemb : Interfaces.C.size_t;
-       Size  : Interfaces.C.size_t)
-      return Address
-   is
-   separate;
-
-   ----------------------------------------------------------------------------
-   -- Realloc
-   ----------------------------------------------------------------------------
-   function Realloc
-      (Memory_Address : Interfaces.C.Extensions.void_ptr;
-       Size           : Interfaces.C.size_t)
-      return Address
-   is
-   separate;
 
 end Malloc;

@@ -57,6 +57,12 @@ is
    separate;
 
    ----------------------------------------------------------------------------
+   -- System_Abort (parameterless)
+   ----------------------------------------------------------------------------
+   procedure System_Abort
+      renames System_Abort_Parameterless;
+
+   ----------------------------------------------------------------------------
    -- System_Abort_Parameterized
    ----------------------------------------------------------------------------
    procedure System_Abort_Parameterized
@@ -66,12 +72,6 @@ is
        Message : in System.Address)
    is
    separate;
-
-   ----------------------------------------------------------------------------
-   -- System_Abort (parameterless)
-   ----------------------------------------------------------------------------
-   procedure System_Abort
-      renames System_Abort_Parameterless;
 
    ----------------------------------------------------------------------------
    -- System_Abort (parameterized)

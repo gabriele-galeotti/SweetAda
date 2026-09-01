@@ -216,6 +216,17 @@ is
    separate;
 
    ----------------------------------------------------------------------------
+   -- Print_Integer64
+   ----------------------------------------------------------------------------
+   procedure Print_Integer64
+      (Value  : in Interfaces.Integer_64;
+       NL     : in Boolean := False;
+       Prefix : in String := "";
+       Suffix : in String := "")
+   is
+   separate;
+
+   ----------------------------------------------------------------------------
    -- Print_Integer8
    ----------------------------------------------------------------------------
    procedure Print_Integer8
@@ -242,17 +253,6 @@ is
    ----------------------------------------------------------------------------
    procedure Print_Integer32
       (Value  : in Interfaces.Integer_32;
-       NL     : in Boolean := False;
-       Prefix : in String := "";
-       Suffix : in String := "")
-   is
-   separate;
-
-   ----------------------------------------------------------------------------
-   -- Print_Integer64
-   ----------------------------------------------------------------------------
-   procedure Print_Integer64
-      (Value  : in Interfaces.Integer_64;
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
