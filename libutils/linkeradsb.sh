@@ -113,8 +113,6 @@ linkerads=${linkerads}"${indent}     SPARK_Mode => On"${NL}
 linkerads=${linkerads}"is"${NL}
 linkerads=${linkerads}${NL}
 linkeradb=${linkeradb}${NL}
-linkeradb=${linkeradb}"pragma Restrictions (No_Elaboration_Code);"${NL}
-linkeradb=${linkeradb}${NL}
 linkeradb=${linkeradb}"with Bits;"${NL}
 linkeradb=${linkeradb}${NL}
 linkeradb=${linkeradb}"package body ${PACKAGE}"${NL}
