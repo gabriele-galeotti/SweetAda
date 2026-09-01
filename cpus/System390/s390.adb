@@ -19,7 +19,7 @@ with System.Machine_Code;
 with Definitions;
 
 package body S390
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -45,7 +45,7 @@ package body S390
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
-      is
+   is
    begin
       Asm (
            Template => ""             & CRLF &
@@ -63,13 +63,13 @@ package body S390
    ----------------------------------------------------------------------------
 
    procedure Irq_Enable
-      is
+   is
    begin
       null;
    end Irq_Enable;
 
    procedure Irq_Disable
-      is
+   is
    begin
       null;
    end Irq_Disable;
