@@ -19,7 +19,7 @@ with System.Machine_Code;
 with Definitions;
 
 package body SH
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -46,7 +46,7 @@ package body SH
    ----------------------------------------------------------------------------
    function SR_Read
       return SR_Type
-      is
+   is
       SR : SR_Type;
    begin
       Asm (
@@ -66,7 +66,7 @@ package body SH
    ----------------------------------------------------------------------------
    procedure SR_Write
       (SR : in SR_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                      & CRLF &
@@ -84,7 +84,7 @@ package body SH
    ----------------------------------------------------------------------------
    procedure VBR_Set
       (VBR : in Address)
-      is
+   is
    begin
       Asm (
            Template => ""                       & CRLF &
@@ -101,7 +101,7 @@ package body SH
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -119,7 +119,7 @@ package body SH
    ----------------------------------------------------------------------------
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
-      is
+   is
    begin
       Intcontext := SR_Read;
    end Intcontext_Get;
@@ -129,7 +129,7 @@ package body SH
    ----------------------------------------------------------------------------
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
-      is
+   is
    begin
       SR_Write ((SR_Read with delta IMASK => Intcontext.IMASK));
    end Intcontext_Set;
@@ -138,7 +138,7 @@ package body SH
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
-      is
+   is
    begin
       SR_Write ((SR_Read with delta IMASK => IMASK0));
    end Irq_Enable;
@@ -147,7 +147,7 @@ package body SH
    -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable
-      is
+   is
    begin
       SR_Write ((SR_Read with delta IMASK => IMASK7));
    end Irq_Disable;

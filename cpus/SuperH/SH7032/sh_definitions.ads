@@ -20,7 +20,7 @@ with Bits;
 
 package SH_Definitions
    with Pure => True
-   is
+is
 
    --========================================================================--
    --                                                                        --

@@ -19,7 +19,7 @@ with Ada.Unchecked_Conversion;
 with MMIO;
 
 package body SH7032
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -34,7 +34,7 @@ package body SH7032
    ----------------------------------------------------------------------------
    function TCNT_Read
       return Unsigned_8
-      is
+   is
    begin
       return MMIO.ReadA (System'To_Address (TCNT_READ_ADDRESS));
    end TCNT_Read;
@@ -44,7 +44,7 @@ package body SH7032
    ----------------------------------------------------------------------------
    procedure TCNT_Write
       (Value : in Unsigned_8)
-      is
+   is
    begin
       MMIO.WriteA (
          System'To_Address (TCNT_WRITE_ADDRESS),
@@ -57,7 +57,7 @@ package body SH7032
    ----------------------------------------------------------------------------
    function TCSR_Read
       return TCSR_Type
-      is
+   is
       function To_TCSR is new Ada.Unchecked_Conversion (Unsigned_8, TCSR_Type);
    begin
       return To_TCSR (MMIO.ReadA (System'To_Address (TCSR_READ_ADDRESS)));
@@ -68,7 +68,7 @@ package body SH7032
    ----------------------------------------------------------------------------
    procedure TCSR_Write
       (Value : in TCSR_Type)
-      is
+   is
       function To_U8 is new Ada.Unchecked_Conversion (TCSR_Type, Unsigned_8);
    begin
       MMIO.WriteA (
@@ -82,7 +82,7 @@ package body SH7032
    ----------------------------------------------------------------------------
    function RSTCSR_Read
       return RSTCSR_Type
-      is
+   is
       function To_RSTCSR is new Ada.Unchecked_Conversion (Unsigned_8, RSTCSR_Type);
    begin
       return To_RSTCSR (MMIO.ReadA (System'To_Address (RSTCSR_READ_ADDRESS)));
@@ -92,7 +92,7 @@ package body SH7032
    -- Clear the WOVF flag in RSTCSR register
    ----------------------------------------------------------------------------
    procedure RSTCSR_WOVF_Clear
-      is
+   is
    begin
       MMIO.WriteA (
          System'To_Address (RSTCSR_WRITE_ADDRESS),
@@ -106,7 +106,7 @@ package body SH7032
    procedure RSTCSR_Write
       (RSTS : in Bits_1;
        RSTE : in Boolean)
-      is
+   is
       RSTCSR : constant RSTCSR_Type := (
          RSTS   => RSTS,
          RSTE   => RSTE,

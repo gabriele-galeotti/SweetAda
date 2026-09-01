@@ -21,7 +21,7 @@ separate (MMIO)
 function Read_U32
    (Memory_Address : System.Address)
    return Interfaces.Unsigned_32
-   is
+is
 begin
    return SHmmio.Read_U32 (Memory_Address);
 end Read_U32;

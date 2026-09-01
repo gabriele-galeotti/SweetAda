@@ -19,7 +19,7 @@ with System.Machine_Code;
 with Definitions;
 
 package body SH7750
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -45,7 +45,7 @@ package body SH7750
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -62,7 +62,7 @@ package body SH7750
    -- BREAKPOINT
    ----------------------------------------------------------------------------
    procedure BREAKPOINT
-      is
+   is
    begin
       Asm (
            Template => ""                                 & CRLF &
@@ -80,7 +80,7 @@ package body SH7750
    ----------------------------------------------------------------------------
    procedure Asm_Call
       (Target_Address : in Address)
-      is
+   is
    begin
       Asm (
            Template => ""                    & CRLF &
@@ -100,7 +100,7 @@ package body SH7750
 
    function SR_Read
       return SR_Type
-      is
+   is
       SR : SR_Type;
    begin
       Asm (
@@ -117,7 +117,7 @@ package body SH7750
 
    procedure SR_Write
       (SR : in SR_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                      & CRLF &
