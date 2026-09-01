@@ -19,7 +19,7 @@ with System.Machine_Code;
 with Definitions;
 
 package body CPU.MMIO
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -44,7 +44,7 @@ package body CPU.MMIO
    function Read_U8
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_8
-      is
+   is
       Result : Interfaces.Unsigned_8;
    begin
       Asm (
@@ -62,7 +62,7 @@ package body CPU.MMIO
    function Read_U16
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_16
-      is
+   is
       Result : Interfaces.Unsigned_16;
    begin
       Asm (
@@ -80,7 +80,7 @@ package body CPU.MMIO
    function Read_U32
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_32
-      is
+   is
       Result : Interfaces.Unsigned_32;
    begin
       Asm (
@@ -98,7 +98,7 @@ package body CPU.MMIO
    procedure Write_U8
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_8)
-      is
+   is
    begin
       Asm (
            Template => ""                        & CRLF &
@@ -117,7 +117,7 @@ package body CPU.MMIO
    procedure Write_U16
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_16)
-      is
+   is
    begin
       Asm (
            Template => ""                        & CRLF &
@@ -136,7 +136,7 @@ package body CPU.MMIO
    procedure Write_U32
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_32)
-      is
+   is
    begin
       Asm (
            Template => ""                        & CRLF &

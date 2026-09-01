@@ -21,7 +21,7 @@ separate (MMIO)
 procedure Write_U8
    (Memory_Address : in System.Address;
     Value          : in Interfaces.Unsigned_8)
-   is
+is
 begin
    CPU.MMIO.Write_U8 (Memory_Address, Value);
 end Write_U8;
