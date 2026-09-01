@@ -8172,7 +8172,7 @@ pragma Style_Checks (Off);
       GADDR2 at 0 range 0 .. 31;
    end record;
 
-   ENET_GALR : aliased ENET_IALR_Type
+   ENET_GALR : aliased ENET_GALR_Type
       with Address              => System'To_Address (ENET_BASEADDRESS + 16#124#),
            Volatile_Full_Access => True,
            Import               => True,
