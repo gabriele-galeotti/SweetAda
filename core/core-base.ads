@@ -45,4 +45,12 @@ is
            Convention    => C,
            External_Name => "__gnat_stack_check";
 
+   procedure Get_Env
+      (Name   : in System.Address;
+       Length : in System.Address;
+       Ptr    : in System.Address)
+      with Export        => True,
+           Convention    => C,
+           External_Name => "__gnat_getenv";
+
 end Core.Base;

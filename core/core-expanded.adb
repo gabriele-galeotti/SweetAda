@@ -17,8 +17,6 @@
 
 pragma Restrictions (No_Elaboration_Code);
 
-with Interfaces.C;
-
 package body Core.Expanded
 is
 
@@ -57,24 +55,5 @@ is
          pragma Warnings (On);
       end if;
    end Runtime_Initialize;
-
-   ----------------------------------------------------------------------------
-   -- Get_Env
-   ----------------------------------------------------------------------------
-   procedure Get_Env
-      (Name   : in System.Address with Unreferenced => True;
-       Length : in System.Address;
-       Ptr    : in System.Address with Unreferenced => True)
-   is
-      use Interfaces.C;
-      GNAT_INIT_SCALARS_String : constant char_array :=
-         "GNAT_INIT_SCALARS" & nul
-         with Unreferenced => True;
-      L                        : aliased size_t
-         with Address => Length,
-              Import  => True;
-   begin
-      L := 0;
-   end Get_Env;
 
 end Core.Expanded;
