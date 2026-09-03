@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with Interfaces;
 with Bits;
 
 package PowerPC_Definitions
@@ -31,13 +32,32 @@ is
    --========================================================================--
 
    use System;
+   use Interfaces;
    use Bits;
 
-   ----------------------------------------------------------------------------
-   -- MSR
-   ----------------------------------------------------------------------------
+   -- 1.6 Link Register (LR)
 
-   -- 2.3.1 Machine State Register (MSR)
+   type LR_Type is record
+      Branch_Address : Unsigned_32;
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for LR_Type use record
+      Branch_Address at 0 range 0 .. 31;
+   end record;
+
+   -- 1.7 Count Register (CTR)
+
+   type CTR_Type is record
+      CTR : Unsigned_32;
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for CTR_Type use record
+      CTR at 0 range 0 .. 31;
+   end record;
+
+   -- 1.8 Machine State Register (MSR)
 
    PR_US : constant := 0; -- The processor can execute both user- and supervisor-level instructions.
    PR_U  : constant := 1; -- The processor can only execute user-level instructions.
@@ -98,6 +118,21 @@ is
       Reserved4 at 0 range 28 .. 29;
       RI        at 0 range 30 .. 30;
       LE        at 0 range 31 .. 31;
+   end record;
+
+   -- 1.11 (2.3.3) SDR1
+
+   type SDR1_Type is record
+      HTABORG  : Bits_16 := 0; -- Physical base address of page table
+      Reserved : Bits_7  := 0;
+      HTABMASK : Bits_9  := 0; -- Encoded size of page table (used to generate mask)
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for SDR1_Type use record
+      HTABORG  at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 22;
+      HTABMASK at 0 range 23 .. 31;
    end record;
 
 end PowerPC_Definitions;

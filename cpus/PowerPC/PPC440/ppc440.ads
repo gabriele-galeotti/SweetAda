@@ -96,14 +96,17 @@ pragma Style_Checks (Off);
 
    -- 6.2 Decrementer (DEC)
 
-   function DEC_Read
-      return Unsigned_32
-      with Inline => True;
-   procedure DEC_Write
-      (Value : in Unsigned_32)
-      with Inline => True;
+   type DECAR_Type is record
+      Auto_Reload : Unsigned_32; -- Decrementer auto-reload value
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for DECAR_Type use record
+      Auto_Reload at 0 range 0 .. 31;
+   end record;
+
    procedure DECAR_Write
-      (Value : in Unsigned_32)
+      (Value : in DECAR_Type)
       with Inline => True;
 
    -- 6.5 Timer Control Register (TCR)

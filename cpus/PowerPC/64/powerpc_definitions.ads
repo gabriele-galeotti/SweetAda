@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
+with Interfaces;
 with Bits;
 
 package PowerPC_Definitions
@@ -31,13 +32,36 @@ is
    --========================================================================--
 
    use System;
+   use Interfaces;
    use Bits;
 
    ----------------------------------------------------------------------------
    -- MSR
    ----------------------------------------------------------------------------
 
-   -- 2.3.1 Machine State Register (MSR)
+   -- 1.6 Link Register (LR)
+
+   type LR_Type is record
+      Branch_Address : Unsigned_64;
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 64;
+   for LR_Type use record
+      Branch_Address at 0 range 0 .. 63;
+   end record;
+
+   -- 1.7 Count Register (CTR)
+
+   type CTR_Type is record
+      CTR : Unsigned_64;
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 64;
+   for CTR_Type use record
+      CTR at 0 range 0 .. 63;
+   end record;
+
+   -- 1.8 Machine State Register (MSR)
 
    SF_32 : constant := 0; -- The 64-bit processor runs in 32-bit mode.
    SF_64 : constant := 1; -- The 64-bit processor runs in 64-bit mode.
@@ -103,6 +127,21 @@ is
       Reserved4 at 0 range 60 .. 61;
       RI        at 0 range 62 .. 62;
       LE        at 0 range 63 .. 63;
+   end record;
+
+   -- 1.11 (2.3.3) SDR1
+
+   type SDR1_Type is record
+      HTABORG  : Bits_46 := 0; -- Physical base address of page table
+      Reserved : Bits_13 := 0;
+      HTABSIZE : Bits_5  := 0; -- Encoded size of page table (used to generate mask)
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 64;
+   for SDR1_Type use record
+      HTABORG  at 0 range  0 .. 45;
+      Reserved at 0 range 46 .. 58;
+      HTABSIZE at 0 range 59 .. 63;
    end record;
 
 end PowerPC_Definitions;

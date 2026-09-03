@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System.Machine_Code;
 with Definitions;
 
@@ -31,6 +33,8 @@ is
 
    use System.Machine_Code;
 
+pragma Style_Checks (Off);
+
    CRLF : String renames Definitions.CRLF;
 
    --========================================================================--
@@ -40,6 +44,113 @@ is
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+
+   ----------------------------------------------------------------------------
+   -- SPRs generics
+   ----------------------------------------------------------------------------
+
+   function MFSPR
+      return Register_Type
+   is
+      Result : Register_Type;
+   begin
+      Asm (
+           Template => ""                      & CRLF &
+                       "        mfspr   %0,%1" & CRLF &
+                       "",
+           Outputs  => Register_Type'Asm_Output ("=r", Result),
+           Inputs   => SPR_Type'Asm_Input ("i", SPR),
+           Clobber  => "",
+           Volatile => True
+          );
+      return Result;
+   end MFSPR;
+
+   procedure MTSPR
+      (Value : in Register_Type)
+   is
+   begin
+      Asm (
+           Template => ""                      & CRLF &
+                       "        mtspr   %0,%1" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => [
+                        SPR_Type'Asm_Input ("i", SPR),
+                        Register_Type'Asm_Input ("r", Value)
+                       ],
+           Clobber  => "",
+           Volatile => True
+          );
+   end MTSPR;
+
+   ----------------------------------------------------------------------------
+   -- LR_Read/Write
+   ----------------------------------------------------------------------------
+   function LR_Read return LR_Type is function SPR_Read is new MFSPR (LR, LR_Type); begin return SPR_Read; end LR_Read;
+   procedure LR_Write (Value : in LR_Type) is procedure SPR_Write is new MTSPR (LR, LR_Type); begin SPR_Write (Value); end LR_Write;
+
+   ----------------------------------------------------------------------------
+   -- CTR_Read/Write
+   ----------------------------------------------------------------------------
+   function CTR_Read return CTR_Type is function SPR_Read is new MFSPR (CTR, CTR_Type); begin return SPR_Read; end CTR_Read;
+   procedure CTR_Write (Value : in CTR_Type) is procedure SPR_Write is new MTSPR (CTR, CTR_Type); begin SPR_Write (Value); end CTR_Write;
+
+   ----------------------------------------------------------------------------
+   -- MSR_Read
+   ----------------------------------------------------------------------------
+   function MSR_Read
+      return MSR_Type
+   is
+      Result : MSR_Type;
+   begin
+      Asm (
+           Template => ""                   & CRLF &
+                       "        mfmsr   %0" & CRLF &
+                       "",
+           Outputs  => MSR_Type'Asm_Output ("=r", Result),
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+      return Result;
+   end MSR_Read;
+
+   ----------------------------------------------------------------------------
+   -- MSR_Write
+   ----------------------------------------------------------------------------
+   procedure MSR_Write
+      (Value : in MSR_Type)
+   is
+   begin
+      Asm (
+           Template => ""                   & CRLF &
+                       "        mtmsr   %0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => MSR_Type'Asm_Input ("r", Value),
+           Clobber  => "",
+           Volatile => True
+          );
+   end MSR_Write;
+
+   ----------------------------------------------------------------------------
+   -- PVR_Read
+   ----------------------------------------------------------------------------
+   function PVR_Read return PVR_Type is function SPR_Read is new MFSPR (PVR, PVR_Type); begin return SPR_Read; end PVR_Read;
+
+   ----------------------------------------------------------------------------
+   -- SDR1_Read/Write
+   ----------------------------------------------------------------------------
+   function SDR1_Read return SDR1_Type is function SPR_Read is new MFSPR (SDR1, SDR1_Type); begin return SPR_Read; end SDR1_Read;
+   procedure SDR1_Write (Value : in SDR1_Type) is procedure SPR_Write is new MTSPR (SDR1, SDR1_Type); begin SPR_Write (Value); end SDR1_Write;
+
+   ----------------------------------------------------------------------------
+   -- DEC_Read/Write
+   ----------------------------------------------------------------------------
+   function DEC_Read return DEC_Type is function SPR_Read is new MFSPR (DEC, DEC_Type); begin return SPR_Read; end DEC_Read;
+   procedure DEC_Write (Value : in DEC_Type) is procedure SPR_Write is new MTSPR (DEC, DEC_Type); begin SPR_Write (Value); end DEC_Write;
 
    ----------------------------------------------------------------------------
    -- NOP
@@ -110,116 +221,6 @@ is
    end ISYNC;
 
    ----------------------------------------------------------------------------
-   -- SPRs generics
-   ----------------------------------------------------------------------------
-
-   function MFSPR
-      return Register_Type
-   is
-      Result : Register_Type;
-   begin
-      Asm (
-           Template => ""                      & CRLF &
-                       "        mfspr   %0,%1" & CRLF &
-                       "",
-           Outputs  => Register_Type'Asm_Output ("=r", Result),
-           Inputs   => SPR_Type'Asm_Input ("i", SPR),
-           Clobber  => "",
-           Volatile => True
-          );
-      return Result;
-   end MFSPR;
-
-   procedure MTSPR
-      (Value : in Register_Type)
-   is
-   begin
-      Asm (
-           Template => ""                      & CRLF &
-                       "        mtspr   %0,%1" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => [
-                        SPR_Type'Asm_Input ("i", SPR),
-                        Register_Type'Asm_Input ("r", Value)
-                       ],
-           Clobber  => "",
-           Volatile => True
-          );
-   end MTSPR;
-
-   ----------------------------------------------------------------------------
-   -- MSR_Read
-   ----------------------------------------------------------------------------
-   function MSR_Read
-      return MSR_Type
-   is
-      Result : MSR_Type;
-   begin
-      Asm (
-           Template => ""                   & CRLF &
-                       "        mfmsr   %0" & CRLF &
-                       "",
-           Outputs  => MSR_Type'Asm_Output ("=r", Result),
-           Inputs   => No_Input_Operands,
-           Clobber  => "",
-           Volatile => True
-          );
-      return Result;
-   end MSR_Read;
-
-   ----------------------------------------------------------------------------
-   -- MSR_Write
-   ----------------------------------------------------------------------------
-   procedure MSR_Write
-      (Value : in MSR_Type)
-   is
-   begin
-      Asm (
-           Template => ""                   & CRLF &
-                       "        mtmsr   %0" & CRLF &
-                       "",
-           Outputs  => No_Output_Operands,
-           Inputs   => MSR_Type'Asm_Input ("r", Value),
-           Clobber  => "",
-           Volatile => True
-          );
-   end MSR_Write;
-
-   ----------------------------------------------------------------------------
-   -- PVR_Read
-   ----------------------------------------------------------------------------
-   function PVR_Read
-      return PVR_Type
-   is
-      function SPR_Read is new MFSPR (PVR, PVR_Type);
-   begin
-      return SPR_Read;
-   end PVR_Read;
-
-   ----------------------------------------------------------------------------
-   -- DEC_Read
-   ----------------------------------------------------------------------------
-   function DEC_Read
-      return Unsigned_32
-   is
-      function SPR_Read is new MFSPR (DEC, Unsigned_32);
-   begin
-      return SPR_Read;
-   end DEC_Read;
-
-   ----------------------------------------------------------------------------
-   -- DEC_Write
-   ----------------------------------------------------------------------------
-   procedure DEC_Write
-      (Value : in Unsigned_32)
-   is
-      procedure SPR_Write is new MTSPR (DEC, Unsigned_32);
-   begin
-      SPR_Write (Value);
-   end DEC_Write;
-
-   ----------------------------------------------------------------------------
    -- Intcontext_Get
    ----------------------------------------------------------------------------
    procedure Intcontext_Get
@@ -264,5 +265,7 @@ is
       SYNC;
       MSR_Write (MSR);
    end Irq_Disable;
+
+pragma Style_Checks (On);
 
 end PowerPC;

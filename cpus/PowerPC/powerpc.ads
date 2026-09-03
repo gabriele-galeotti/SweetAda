@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System;
 with Interfaces;
 with Bits;
@@ -42,6 +44,63 @@ pragma Style_Checks (Off);
    -- The Programmer’s Reference Guide
    -- MPRPPCPRG-01 MPCPRG/D 10/95
    ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   -- SPRs
+   ----------------------------------------------------------------------------
+
+   type SPR_Type is mod 2**10; -- 0 .. 1023
+
+   XER    : constant SPR_Type := 1;    -- 0x001 Fixed-point exception register.
+   LR     : constant SPR_Type := 8;    -- 0x008 Used as a branch target address or holds a return address.
+   CTR    : constant SPR_Type := 9;    -- 0x009 Used for loop count decrement and branching.
+   DSISR  : constant SPR_Type := 18;   -- 0x012
+   DAR    : constant SPR_Type := 19;   -- 0x013
+   DEC    : constant SPR_Type := 22;   -- 0x016
+   SDR1   : constant SPR_Type := 25;   -- 0x019
+   SRR0   : constant SPR_Type := 26;   -- 0x01A
+   SRR1   : constant SPR_Type := 27;   -- 0x01B
+   SPRG0  : constant SPR_Type := 272;  -- 0x110
+   SPRG1  : constant SPR_Type := 273;  -- 0x111
+   SPRG2  : constant SPR_Type := 274;  -- 0x112
+   SPRG3  : constant SPR_Type := 275;  -- 0x113
+   ASR    : constant SPR_Type := 280;  -- 0x118 64-bit only
+   EAR    : constant SPR_Type := 282;  -- 0x11A optional
+   TBL    : constant SPR_Type := 284;  -- 0x11C
+   TBU    : constant SPR_Type := 285;  -- 0x11D
+   PVR    : constant SPR_Type := 287;  -- 0x11F
+
+   IBAT0U : constant SPR_Type := 528;  -- 0x210
+   IBAT0L : constant SPR_Type := 529;  -- 0x211
+   IBAT1U : constant SPR_Type := 530;  -- 0x212
+   IBAT1L : constant SPR_Type := 531;  -- 0x213
+   IBAT2U : constant SPR_Type := 532;  -- 0x214
+   IBAT2L : constant SPR_Type := 533;  -- 0x215
+   IBAT3U : constant SPR_Type := 534;  -- 0x216
+   IBAT3L : constant SPR_Type := 535;  -- 0x217
+   DBAT0U : constant SPR_Type := 536;  -- 0x218
+   DBAT0L : constant SPR_Type := 537;  -- 0x219
+   DBAT1U : constant SPR_Type := 538;  -- 0x21A
+   DBAT1L : constant SPR_Type := 539;  -- 0x21B
+   DBAT2U : constant SPR_Type := 540;  -- 0x21C
+   DBAT2L : constant SPR_Type := 541;  -- 0x21D
+   DBAT3U : constant SPR_Type := 542;  -- 0x21E
+   DBAT3L : constant SPR_Type := 543;  -- 0x21F
+   DABR   : constant SPR_Type := 1013; -- 0x3F5 optional
+
+   generic
+      SPR : SPR_Type;
+      type Register_Type is private;
+   function MFSPR
+      return Register_Type
+      with Inline => True;
+
+   generic
+      SPR : in SPR_Type;
+      type Register_Type is private;
+   procedure MTSPR
+      (Value : in Register_Type)
+      with Inline => True;
 
    -- 1.1 General-Purpose Registers (GPRs)
    -- 1.2 Floating-Point Registers (FPRs)
@@ -244,7 +303,26 @@ pragma Style_Checks (Off);
    end record;
 
    -- 1.6 Link Register (LR)
+
+   subtype LR_Type is PowerPC_Definitions.LR_Type;
+
+   function LR_Read
+      return LR_Type
+      with Inline => True;
+   procedure LR_Write
+      (Value : in LR_Type)
+      with Inline => True;
+
    -- 1.7 Count Register (CTR)
+
+   subtype CTR_Type is PowerPC_Definitions.CTR_Type;
+
+   function CTR_Read
+      return CTR_Type
+      with Inline => True;
+   procedure CTR_Write
+      (Value : in CTR_Type)
+      with Inline => True;
 
    -- 1.8 Machine State Register (MSR)
 
@@ -263,7 +341,8 @@ pragma Style_Checks (Off);
       Version  : Unsigned_16;
       Revision : Unsigned_16;
    end record
-      with Size => 32;
+      with Bit_Order => High_Order_First,
+           Size      => 32;
    for PVR_Type use record
       Version  at 0 range  0 .. 15;
       Revision at 0 range 16 .. 31;
@@ -274,7 +353,18 @@ pragma Style_Checks (Off);
       with Inline => True;
 
    -- 1.10 BAT Registers
-   -- 1.11 SDR1
+
+   -- 1.11 (2.3.3) SDR1
+
+   subtype SDR1_Type is PowerPC_Definitions.SDR1_Type;
+
+   function SDR1_Read
+      return SDR1_Type
+      with Inline => True;
+   procedure SDR1_Write
+      (Value : in SDR1_Type)
+      with Inline => True;
+
    -- 1.12 Address Space Register (ASR)
    -- 1.13 Segment Registers (SRs)
    -- 1.14 Data Address Register (DAR)
@@ -286,69 +376,24 @@ pragma Style_Checks (Off);
 
    -- 1.20 Decrementer Register (DEC)
 
+   type DEC_Type is record
+      DEC : Unsigned_32;
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for DEC_Type use record
+      DEC at 0 range 0 .. 31;
+   end record;
+
    function DEC_Read
-      return Unsigned_32
+      return DEC_Type
       with Inline => True;
    procedure DEC_Write
-      (Value : in Unsigned_32)
+      (Value : in DEC_Type)
       with Inline => True;
 
-   ----------------------------------------------------------------------------
-   -- SPRs
-   ----------------------------------------------------------------------------
-
-   type SPR_Type is mod 2**10; -- 0 .. 1023
-
-   XER    : constant SPR_Type := 1;    -- 0x001 Fixed-point exception register.
-   LR     : constant SPR_Type := 8;    -- 0x008 Used as a branch target address or holds a return address.
-   CTR    : constant SPR_Type := 9;    -- 0x009 Used for loop count decrement and branching.
-   DSISR  : constant SPR_Type := 18;   -- 0x012
-   DAR    : constant SPR_Type := 19;   -- 0x013
-   DEC    : constant SPR_Type := 22;   -- 0x016
-   SDR1   : constant SPR_Type := 25;   -- 0x019
-   SRR0   : constant SPR_Type := 26;   -- 0x01A
-   SRR1   : constant SPR_Type := 27;   -- 0x01B
-   SPRG0  : constant SPR_Type := 272;  -- 0x110
-   SPRG1  : constant SPR_Type := 273;  -- 0x111
-   SPRG2  : constant SPR_Type := 274;  -- 0x112
-   SPRG3  : constant SPR_Type := 275;  -- 0x113
-   ASR    : constant SPR_Type := 280;  -- 0x118 64-bit only
-   EAR    : constant SPR_Type := 282;  -- 0x11A optional
-   TBL    : constant SPR_Type := 284;  -- 0x11C
-   TBU    : constant SPR_Type := 285;  -- 0x11D
-   PVR    : constant SPR_Type := 287;  -- 0x11F
-
-   IBAT0U : constant SPR_Type := 528;  -- 0x210
-   IBAT0L : constant SPR_Type := 529;  -- 0x211
-   IBAT1U : constant SPR_Type := 530;  -- 0x212
-   IBAT1L : constant SPR_Type := 531;  -- 0x213
-   IBAT2U : constant SPR_Type := 532;  -- 0x214
-   IBAT2L : constant SPR_Type := 533;  -- 0x215
-   IBAT3U : constant SPR_Type := 534;  -- 0x216
-   IBAT3L : constant SPR_Type := 535;  -- 0x217
-   DBAT0U : constant SPR_Type := 536;  -- 0x218
-   DBAT0L : constant SPR_Type := 537;  -- 0x219
-   DBAT1U : constant SPR_Type := 538;  -- 0x21A
-   DBAT1L : constant SPR_Type := 539;  -- 0x21B
-   DBAT2U : constant SPR_Type := 540;  -- 0x21C
-   DBAT2L : constant SPR_Type := 541;  -- 0x21D
-   DBAT3U : constant SPR_Type := 542;  -- 0x21E
-   DBAT3L : constant SPR_Type := 543;  -- 0x21F
-   DABR   : constant SPR_Type := 1013; -- 0x3F5 optional
-
-   generic
-      SPR : SPR_Type;
-      type Register_Type is private;
-   function MFSPR
-      return Register_Type
-      with Inline => True;
-
-   generic
-      SPR : in SPR_Type;
-      type Register_Type is private;
-   procedure MTSPR
-      (Value : in Register_Type)
-      with Inline => True;
+   -- 1.21 Data Address Breakpoint Register (DABR)
+   -- 1.22 External Access Register (EAR)
 
    ----------------------------------------------------------------------------
    -- Generic definitions
