@@ -32,19 +32,16 @@ is
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use Interfaces;
-
    type Timer_Type;
    type Timer_Ptr is access all Timer_Type;
 
-   type Timer_Proc is access procedure (A : in Address);
+   type Timer_Proc is access procedure (A : in System.Address);
 
    type Timer_Type is record
-      Expire : Unsigned_32;
+      Expire : Interfaces.Unsigned_32;
       Next   : aliased Timer_Ptr;
       Proc   : Timer_Proc;
-      Data   : Address;
+      Data   : System.Address;
    end record;
 
    procedure Add

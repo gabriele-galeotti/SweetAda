@@ -30,6 +30,8 @@ is
    --                                                                        --
    --========================================================================--
 
+   use Interfaces;
+
    type Timer_PPtr is access all Timer_Ptr;
 
    Timer_List : aliased Timer_Ptr;
