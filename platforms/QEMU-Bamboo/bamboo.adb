@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with Configure;
+with PowerPC;
 with PPC440;
 
 package body Bamboo
@@ -28,6 +29,9 @@ package body Bamboo
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   use PowerPC;
+   use PPC440;
 
    --========================================================================--
    --                                                                        --
@@ -46,9 +50,9 @@ package body Bamboo
                   (Configure.TIMER_SYSCLK + Configure.TICK_FREQUENCY / 2) /
                    Configure.TICK_FREQUENCY;
    begin
-      PPC440.TCR_Write ((PPC440.TCR_Read with delta DIE => True, ARE => True));
-      PPC440.DECAR_Write (Period);
-      PPC440.DEC_Write (Period);
+      TCR_Write ((TCR_Read with delta DIE => True, ARE => True));
+      DECAR_Write ((Auto_Reload => Period));
+      DEC_Write ((DEC => Period));
    end Tclk_Init;
 
 end Bamboo;
