@@ -30,7 +30,7 @@ is
    --                                                                        --
    --========================================================================--
 
-   use Interfaces;
+   use type Interfaces.Unsigned_32;
 
    type Timer_PPtr is access all Timer_Ptr;
 
@@ -79,7 +79,7 @@ is
       Intcontext : CPU.Intcontext_Type;
       PTPtr      : Timer_PPtr := Timer_List'Access;
       P          : Timer_Ptr renames PTPtr.all;
-      E          : Unsigned_32 := 0;
+      E          : Interfaces.Unsigned_32 := 0;
       Result     : Boolean := False;
    begin
       CPU.Intcontext_Get (Intcontext);
