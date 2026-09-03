@@ -621,7 +621,7 @@ CONFIGURE_DEPS += Makefile.lb.in
 
 # GPRbuild configuration dependencies
 ifeq ($(BUILD_MODE),GPRbuild)
-ifneq ($(filter $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
+ifneq ($(filter $(PLATFORM_GOALS) $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(OSTYPE),cmd)
 GPRBUILD_DEPS += $(sort $(shell                                      \
                    SET "PATH=$(PATH)"                             && \
