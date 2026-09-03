@@ -183,6 +183,7 @@ library project Core is
       "malloc.adb", "malloc.ads",
       "malloc-calloc.adb",
       "malloc-free.adb",
+      "malloc-init.adb",
       "malloc-malloc.adb",
       "malloc-realloc.adb"
       );

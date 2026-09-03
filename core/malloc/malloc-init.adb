@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ malloc-calloc.adb                                                                                         --
+-- __FLN__ malloc-init.adb                                                                                           --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,27 +15,35 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with Memory_Functions;
-
 separate (Malloc)
-function Calloc
-   (Nmemb : Interfaces.C.size_t;
-    Size  : Interfaces.C.size_t)
-   return Interfaces.C.Extensions.void_ptr
+procedure Init
+   (Memory_Address : in System.Address;
+    Size           : in Bits.Bytesize;
+    Debug_Flag     : in Boolean)
 is
    use System;
-   use Interfaces.C;
-   use Interfaces.C.Extensions;
-   Nbytes         : size_t;
-   Memory_Address : void_ptr;
+   use System.Storage_Elements;
+   Heap_Block : aliased Memory_Block_Type
+      with Address    => Memory_Address,
+           Import     => True,
+           Convention => Ada;
 begin
-   if not Init_Flag then
-      raise Program_Error;
+   Debug := Debug_Flag;
+   -- simulate a request to sbrk()
+   Heap_Block.Size     := Size;
+   Heap_Block.Next_Ptr := null;
+   if Debug then
+      Console.Print (
+         Prefix => "[MALLOC] Size:                 ",
+         Value  => Size,
+         NL     => True
+         );
+      Console.Print (
+         Prefix => "[MALLOC] MEMORYBLOCKTYPE_SIZE: ",
+         Value  => Integer'(MEMORYBLOCKTYPE_SIZE),
+         NL     => True
+         );
    end if;
-   Nbytes := Nmemb * Size;
-   Memory_Address := Malloc (Nbytes);
-   if Memory_Address /= Null_Address then
-      Memory_Address := Memory_Functions.Memset (@, 0, Nbytes);
-   end if;
-   return Memory_Address;
-end Calloc;
+   Init_Flag := True;
+   Free (Heap_Block'Address + MEMORYBLOCKTYPE_SIZE);
+end Init;

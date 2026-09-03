@@ -21,8 +21,10 @@ separate (Malloc)
 function Realloc
    (Memory_Address : Interfaces.C.Extensions.void_ptr;
     Size           : Interfaces.C.size_t)
-   return Address
+   return Interfaces.C.Extensions.void_ptr
 is
+   use System;
+   use System.Storage_Elements;
    use Interfaces.C;
    use Interfaces.C.Extensions;
    Memory_Block         : aliased Memory_Block_Type
@@ -34,6 +36,9 @@ is
    P                    : Memory_Block_Ptr;
    Q                    : Memory_Block_Ptr;
 begin
+   if not Init_Flag then
+      raise Program_Error;
+   end if;
    if Memory_Address = Null_Address then
       return Malloc (Size);
    end if;

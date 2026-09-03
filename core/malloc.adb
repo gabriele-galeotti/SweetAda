@@ -33,16 +33,11 @@ is
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use System.Storage_Elements;
-   use Bits;
-   use Integer_Math;
-
    DEFAULT_ALIGNMENT    : constant := 16;
    -- Size includes Memory_Block tag
    MEMORYBLOCKTYPE_SIZE : constant :=
       DEFAULT_ALIGNMENT * ((
-         ((Interfaces.C.size_t'Size + Standard'Address_Size) / Storage_Unit)
+         ((Interfaces.C.size_t'Size + Standard'Address_Size) / System.Storage_Unit)
          + DEFAULT_ALIGNMENT - 1
          ) / DEFAULT_ALIGNMENT);
 
@@ -55,7 +50,7 @@ is
    end record
       with Pack      => True,
            Alignment => DEFAULT_ALIGNMENT,
-           Size      => MEMORYBLOCKTYPE_SIZE * Storage_Unit;
+           Size      => MEMORYBLOCKTYPE_SIZE * System.Storage_Unit;
 
    Heap_Descriptor : aliased Memory_Block_Type := (Size => 0, Next_Ptr => null);
 
@@ -86,7 +81,7 @@ is
       return Interfaces.C.size_t
    is
    begin
-      return Interfaces.C.size_t (Roundup (Natural (Size), Alignment));
+      return Interfaces.C.size_t (Integer_Math.Roundup (Natural (Size), Alignment));
    end Round_Size;
 
    ----------------------------------------------------------------------------
@@ -130,32 +125,10 @@ is
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      (Memory_Address : in Address;
-       Size           : in Bytesize;
+      (Memory_Address : in System.Address;
+       Size           : in Bits.Bytesize;
        Debug_Flag     : in Boolean)
    is
-      Heap_Block : aliased Memory_Block_Type
-         with Address    => Memory_Address,
-              Import     => True,
-              Convention => Ada;
-   begin
-      Debug := Debug_Flag;
-      -- simulate a request to sbrk()
-      Heap_Block.Size     := Size;
-      Heap_Block.Next_Ptr := null;
-      if Debug then
-         Console.Print (
-            Prefix => "Initializing:         ",
-            Value  => Heap_Block.Size,
-            NL     => True
-            );
-         Console.Print (
-            Prefix => "MEMORYBLOCKTYPE_SIZE: ",
-            Value  => Integer'(MEMORYBLOCKTYPE_SIZE),
-            NL     => True
-            );
-      end if;
-      Free (Heap_Block'Address + MEMORYBLOCKTYPE_SIZE);
-   end Init;
+   separate;
 
 end Malloc;

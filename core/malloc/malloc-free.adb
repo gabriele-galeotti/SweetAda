@@ -19,6 +19,8 @@ separate (Malloc)
 procedure Free
    (Memory_Address : in Interfaces.C.Extensions.void_ptr)
 is
+   use System;
+   use System.Storage_Elements;
    use Interfaces.C;
    P            : aliased Memory_Block_Ptr;
    Q            : aliased Memory_Block_Ptr;
@@ -27,6 +29,9 @@ is
            Import     => True,
            Convention => Ada;
 begin
+   if not Init_Flag then
+      raise Program_Error;
+   end if;
    if Memory_Address = Null_Address then
       raise Storage_Error;
    end if;

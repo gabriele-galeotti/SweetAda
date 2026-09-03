@@ -20,11 +20,16 @@ function Malloc
    (Size : Interfaces.C.size_t)
    return Interfaces.C.Extensions.void_ptr
 is
+   use System;
+   use System.Storage_Elements;
    use Interfaces.C;
    RSize : size_t;
    P     : Memory_Block_Ptr;
    Q     : Memory_Block_Ptr;
 begin
+   if not Init_Flag then
+      raise Program_Error;
+   end if;
    if Debug then
       Console.Print (Prefix => "Requesting: ", Value => Size, NL => True);
    end if;
