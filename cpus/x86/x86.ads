@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System;
 with System.Storage_Elements;
 with Interfaces;
@@ -541,10 +543,12 @@ pragma Style_Checks (Off);
        SegType           : in     Segment_Gate_Type);
 
    ----------------------------------------------------------------------------
-   -- TSS
+   -- Task State Segment
    ----------------------------------------------------------------------------
 
-   type TSS_Entry_Type is record
+   TSS_ALIGNMENT : constant := 4;
+
+   type TSS_Type is record
       BACK_LINK   : Unsigned_16 := 0;     -- The selector of the TSS of the previously executing task (updated only when a return is expected).
       Unused1     : Unsigned_16 := 0;
       ESP0        : Unsigned_32 := 0;
@@ -585,10 +589,10 @@ pragma Style_Checks (Off);
       Unused12    : Bits_15     := 0;
       IO_MAP_BASE : Unsigned_16 := 0;     -- The I/O map base.
    end record
-      with Alignment   => 2,
+      with Alignment   => TSS_ALIGNMENT,
            Bit_Order   => Low_Order_First,
            Object_Size => 16#68# * 8;
-   for TSS_Entry_Type use record
+   for TSS_Type use record
       BACK_LINK   at 16#00# range 0 .. 15;
       Unused1     at 16#02# range 0 .. 15;
       ESP0        at 16#04# range 0 .. 31;
