@@ -281,7 +281,7 @@ pragma Style_Checks (Off);
       GICD_CPENDSGIR  : GICD_CPENDSGIRn_Type (0 .. 1);
       GICD_SPENDSGIR  : GICD_SPENDSGIRn_Type (0 .. 1);
       GICD_ICPIDR2    : GICD_ICPIDR2_Type               with Volatile_Full_Access => True;
-      Unused          : Pad_B20;
+      Unused          : Pad_Bytes_20;
    end record
       with Object_Size => 16#1000# * 8;
    for GICD_Type use record
