@@ -34,7 +34,7 @@ is
    ----------------------------------------------------------------------------
    -- System_Abort (parameterless)
    ----------------------------------------------------------------------------
-   -- This subprogram may be called by the C Library.
+   -- This subprogram may be called also by the C Library.
    ----------------------------------------------------------------------------
    procedure System_Abort
       with No_Return => True;
