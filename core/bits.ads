@@ -35,6 +35,8 @@ is
 
    use type System.Bit_Order;
 
+pragma Style_Checks (Off);
+
    package SSE renames System.Storage_Elements;
 
    ----------------------------------------------------------------------------
@@ -67,11 +69,13 @@ is
 
    -- CPU_Integer is a signed type holding generic CPU register values
    type CPU_Integer is range -2**(System.Word_Size - 1) .. +2**(System.Word_Size - 1) - 1
-      with Size => System.Word_Size;
+      with Alignment   => System.Word_Size / System.Storage_Unit,
+           Object_Size => System.Word_Size;
 
    -- CPU_Unsigned is a modular type holding generic CPU register values
    type CPU_Unsigned is mod 2**System.Word_Size
-      with Size => System.Word_Size;
+      with Alignment   => System.Word_Size / System.Storage_Unit,
+           Object_Size => System.Word_Size;
 
    -- Mod_Integer is a modular type same size as the base Integer type
    type Mod_Integer is mod 2**Integer'Size
@@ -90,134 +94,70 @@ is
    -- the unsigned ones in package Interfaces.C.Extensions.
    ----------------------------------------------------------------------------
 
-   type Bits_1  is mod 2**1
-      with Size => 1;
-   type Bits_2  is mod 2**2
-      with Size => 2;
-   type Bits_3  is mod 2**3
-      with Size => 3;
-   type Bits_4  is mod 2**4
-      with Size => 4;
-   type Bits_5  is mod 2**5
-      with Size => 5;
-   type Bits_6  is mod 2**6
-      with Size => 6;
-   type Bits_7  is mod 2**7
-      with Size => 7;
-   type Bits_8  is mod 2**8
-      with Size => 8;
-   type Bits_9  is mod 2**9
-      with Size => 9;
-   type Bits_10 is mod 2**10
-      with Size => 10;
-   type Bits_11 is mod 2**11
-      with Size => 11;
-   type Bits_12 is mod 2**12
-      with Size => 12;
-   type Bits_13 is mod 2**13
-      with Size => 13;
-   type Bits_14 is mod 2**14
-      with Size => 14;
-   type Bits_15 is mod 2**15
-      with Size => 15;
-   type Bits_16 is mod 2**16
-      with Size => 16;
-   type Bits_17 is mod 2**17
-      with Size => 17;
-   type Bits_18 is mod 2**18
-      with Size => 18;
-   type Bits_19 is mod 2**19
-      with Size => 19;
-   type Bits_20 is mod 2**20
-      with Size => 20;
-   type Bits_21 is mod 2**21
-      with Size => 21;
-   type Bits_22 is mod 2**22
-      with Size => 22;
-   type Bits_23 is mod 2**23
-      with Size => 23;
-   type Bits_24 is mod 2**24
-      with Size => 24;
-   type Bits_25 is mod 2**25
-      with Size => 25;
-   type Bits_26 is mod 2**26
-      with Size => 26;
-   type Bits_27 is mod 2**27
-      with Size => 27;
-   type Bits_28 is mod 2**28
-      with Size => 28;
-   type Bits_29 is mod 2**29
-      with Size => 29;
-   type Bits_30 is mod 2**30
-      with Size => 30;
-   type Bits_31 is mod 2**31
-      with Size => 31;
-   type Bits_32 is mod 2**32
-      with Size => 32;
-   type Bits_33 is mod 2**33
-      with Size => 33;
-   type Bits_34 is mod 2**34
-      with Size => 34;
-   type Bits_35 is mod 2**35
-      with Size => 35;
-   type Bits_36 is mod 2**36
-      with Size => 36;
-   type Bits_37 is mod 2**37
-      with Size => 37;
-   type Bits_38 is mod 2**38
-      with Size => 38;
-   type Bits_39 is mod 2**39
-      with Size => 39;
-   type Bits_40 is mod 2**40
-      with Size => 40;
-   type Bits_41 is mod 2**41
-      with Size => 41;
-   type Bits_42 is mod 2**42
-      with Size => 42;
-   type Bits_43 is mod 2**43
-      with Size => 43;
-   type Bits_44 is mod 2**44
-      with Size => 44;
-   type Bits_45 is mod 2**45
-      with Size => 45;
-   type Bits_46 is mod 2**46
-      with Size => 46;
-   type Bits_47 is mod 2**47
-      with Size => 47;
-   type Bits_48 is mod 2**48
-      with Size => 48;
-   type Bits_49 is mod 2**49
-      with Size => 49;
-   type Bits_50 is mod 2**50
-      with Size => 50;
-   type Bits_51 is mod 2**51
-      with Size => 51;
-   type Bits_52 is mod 2**52
-      with Size => 52;
-   type Bits_53 is mod 2**53
-      with Size => 53;
-   type Bits_54 is mod 2**54
-      with Size => 54;
-   type Bits_55 is mod 2**55
-      with Size => 55;
-   type Bits_56 is mod 2**56
-      with Size => 56;
-   type Bits_57 is mod 2**57
-      with Size => 57;
-   type Bits_58 is mod 2**58
-      with Size => 58;
-   type Bits_59 is mod 2**59
-      with Size => 59;
-   type Bits_60 is mod 2**60
-      with Size => 60;
-   type Bits_61 is mod 2**61
-      with Size => 61;
-   type Bits_62 is mod 2**62
-      with Size => 62;
-   type Bits_63 is mod 2**63
-      with Size => 63;
-   type Bits_64 is mod 2**64
-      with Size => 64;
+   type Bits_1  is mod 2**1  with Size => 1;
+   type Bits_2  is mod 2**2  with Size => 2;
+   type Bits_3  is mod 2**3  with Size => 3;
+   type Bits_4  is mod 2**4  with Size => 4;
+   type Bits_5  is mod 2**5  with Size => 5;
+   type Bits_6  is mod 2**6  with Size => 6;
+   type Bits_7  is mod 2**7  with Size => 7;
+   type Bits_8  is mod 2**8  with Size => 8;
+   type Bits_9  is mod 2**9  with Size => 9;
+   type Bits_10 is mod 2**10 with Size => 10;
+   type Bits_11 is mod 2**11 with Size => 11;
+   type Bits_12 is mod 2**12 with Size => 12;
+   type Bits_13 is mod 2**13 with Size => 13;
+   type Bits_14 is mod 2**14 with Size => 14;
+   type Bits_15 is mod 2**15 with Size => 15;
+   type Bits_16 is mod 2**16 with Size => 16;
+   type Bits_17 is mod 2**17 with Size => 17;
+   type Bits_18 is mod 2**18 with Size => 18;
+   type Bits_19 is mod 2**19 with Size => 19;
+   type Bits_20 is mod 2**20 with Size => 20;
+   type Bits_21 is mod 2**21 with Size => 21;
+   type Bits_22 is mod 2**22 with Size => 22;
+   type Bits_23 is mod 2**23 with Size => 23;
+   type Bits_24 is mod 2**24 with Size => 24;
+   type Bits_25 is mod 2**25 with Size => 25;
+   type Bits_26 is mod 2**26 with Size => 26;
+   type Bits_27 is mod 2**27 with Size => 27;
+   type Bits_28 is mod 2**28 with Size => 28;
+   type Bits_29 is mod 2**29 with Size => 29;
+   type Bits_30 is mod 2**30 with Size => 30;
+   type Bits_31 is mod 2**31 with Size => 31;
+   type Bits_32 is mod 2**32 with Size => 32;
+   type Bits_33 is mod 2**33 with Size => 33;
+   type Bits_34 is mod 2**34 with Size => 34;
+   type Bits_35 is mod 2**35 with Size => 35;
+   type Bits_36 is mod 2**36 with Size => 36;
+   type Bits_37 is mod 2**37 with Size => 37;
+   type Bits_38 is mod 2**38 with Size => 38;
+   type Bits_39 is mod 2**39 with Size => 39;
+   type Bits_40 is mod 2**40 with Size => 40;
+   type Bits_41 is mod 2**41 with Size => 41;
+   type Bits_42 is mod 2**42 with Size => 42;
+   type Bits_43 is mod 2**43 with Size => 43;
+   type Bits_44 is mod 2**44 with Size => 44;
+   type Bits_45 is mod 2**45 with Size => 45;
+   type Bits_46 is mod 2**46 with Size => 46;
+   type Bits_47 is mod 2**47 with Size => 47;
+   type Bits_48 is mod 2**48 with Size => 48;
+   type Bits_49 is mod 2**49 with Size => 49;
+   type Bits_50 is mod 2**50 with Size => 50;
+   type Bits_51 is mod 2**51 with Size => 51;
+   type Bits_52 is mod 2**52 with Size => 52;
+   type Bits_53 is mod 2**53 with Size => 53;
+   type Bits_54 is mod 2**54 with Size => 54;
+   type Bits_55 is mod 2**55 with Size => 55;
+   type Bits_56 is mod 2**56 with Size => 56;
+   type Bits_57 is mod 2**57 with Size => 57;
+   type Bits_58 is mod 2**58 with Size => 58;
+   type Bits_59 is mod 2**59 with Size => 59;
+   type Bits_60 is mod 2**60 with Size => 60;
+   type Bits_61 is mod 2**61 with Size => 61;
+   type Bits_62 is mod 2**62 with Size => 62;
+   type Bits_63 is mod 2**63 with Size => 63;
+   type Bits_64 is mod 2**64 with Size => 64;
 
    Bits_1_Mask  : constant := 2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0001#;
    Bits_2_Mask  : constant := 2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0011#;
@@ -350,232 +290,87 @@ is
    Bits_64_NMask : constant := 2#0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000#;
 
    -- Bitmaps
-   type Bitmap_1  is array (0 .. 0) of Boolean
-      with Component_Size => 1,
-           Size           => 1;
-   type Bitmap_2  is array (0 .. 1) of Boolean
-      with Component_Size => 1,
-           Size           => 2;
-   type Bitmap_3  is array (0 .. 2) of Boolean
-      with Component_Size => 1,
-           Size           => 3;
-   type Bitmap_4  is array (0 .. 3) of Boolean
-      with Component_Size => 1,
-           Size           => 4;
-   type Bitmap_5  is array (0 .. 4) of Boolean
-      with Component_Size => 1,
-           Size           => 5;
-   type Bitmap_6  is array (0 .. 5) of Boolean
-      with Component_Size => 1,
-           Size           => 6;
-   type Bitmap_7  is array (0 .. 6) of Boolean
-      with Component_Size => 1,
-           Size           => 7;
-   type Bitmap_8  is array (0 .. 7) of Boolean
-      with Component_Size => 1,
-           Size           => 8;
-   type Bitmap_9  is array (0 .. 8) of Boolean
-      with Component_Size => 1,
-           Size           => 9;
-   type Bitmap_10 is array (0 .. 9) of Boolean
-      with Component_Size => 1,
-           Size           => 10;
-   type Bitmap_11 is array (0 .. 10) of Boolean
-      with Component_Size => 1,
-           Size           => 11;
-   type Bitmap_12 is array (0 .. 11) of Boolean
-      with Component_Size => 1,
-           Size           => 12;
-   type Bitmap_13 is array (0 .. 12) of Boolean
-      with Component_Size => 1,
-           Size           => 13;
-   type Bitmap_14 is array (0 .. 13) of Boolean
-      with Component_Size => 1,
-           Size           => 14;
-   type Bitmap_15 is array (0 .. 14) of Boolean
-      with Component_Size => 1,
-           Size           => 15;
-   type Bitmap_16 is array (0 .. 15) of Boolean
-      with Component_Size => 1,
-           Size           => 16;
-   type Bitmap_17 is array (0 .. 16) of Boolean
-      with Component_Size => 1,
-           Size           => 17;
-   type Bitmap_18 is array (0 .. 17) of Boolean
-      with Component_Size => 1,
-           Size           => 18;
-   type Bitmap_19 is array (0 .. 18) of Boolean
-      with Component_Size => 1,
-           Size           => 19;
-   type Bitmap_20 is array (0 .. 19) of Boolean
-      with Component_Size => 1,
-           Size           => 20;
-   type Bitmap_21 is array (0 .. 20) of Boolean
-      with Component_Size => 1,
-           Size           => 21;
-   type Bitmap_22 is array (0 .. 21) of Boolean
-      with Component_Size => 1,
-           Size           => 22;
-   type Bitmap_23 is array (0 .. 22) of Boolean
-      with Component_Size => 1,
-           Size           => 23;
-   type Bitmap_24 is array (0 .. 23) of Boolean
-      with Component_Size => 1,
-           Size           => 24;
-   type Bitmap_25 is array (0 .. 24) of Boolean
-      with Component_Size => 1,
-           Size           => 25;
-   type Bitmap_26 is array (0 .. 25) of Boolean
-      with Component_Size => 1,
-           Size           => 26;
-   type Bitmap_27 is array (0 .. 26) of Boolean
-      with Component_Size => 1,
-           Size           => 27;
-   type Bitmap_28 is array (0 .. 27) of Boolean
-      with Component_Size => 1,
-           Size           => 28;
-   type Bitmap_29 is array (0 .. 28) of Boolean
-      with Component_Size => 1,
-           Size           => 29;
-   type Bitmap_30 is array (0 .. 29) of Boolean
-      with Component_Size => 1,
-           Size           => 30;
-   type Bitmap_31 is array (0 .. 30) of Boolean
-      with Component_Size => 1,
-           Size           => 31;
-   type Bitmap_32 is array (0 .. 31) of Boolean
-      with Component_Size => 1,
-           Size           => 32;
-   type Bitmap_33 is array (0 .. 32) of Boolean
-      with Component_Size => 1,
-           Size           => 33;
-   type Bitmap_34 is array (0 .. 33) of Boolean
-      with Component_Size => 1,
-           Size           => 34;
-   type Bitmap_35 is array (0 .. 34) of Boolean
-      with Component_Size => 1,
-           Size           => 35;
-   type Bitmap_36 is array (0 .. 35) of Boolean
-      with Component_Size => 1,
-           Size           => 36;
-   type Bitmap_37 is array (0 .. 36) of Boolean
-      with Component_Size => 1,
-           Size           => 37;
-   type Bitmap_38 is array (0 .. 37) of Boolean
-      with Component_Size => 1,
-           Size           => 38;
-   type Bitmap_39 is array (0 .. 38) of Boolean
-      with Component_Size => 1,
-           Size           => 39;
-   type Bitmap_40 is array (0 .. 39) of Boolean
-      with Component_Size => 1,
-           Size           => 40;
-   type Bitmap_41 is array (0 .. 40) of Boolean
-      with Component_Size => 1,
-           Size           => 41;
-   type Bitmap_42 is array (0 .. 41) of Boolean
-      with Component_Size => 1,
-           Size           => 42;
-   type Bitmap_43 is array (0 .. 42) of Boolean
-      with Component_Size => 1,
-           Size           => 43;
-   type Bitmap_44 is array (0 .. 43) of Boolean
-      with Component_Size => 1,
-           Size           => 44;
-   type Bitmap_45 is array (0 .. 44) of Boolean
-      with Component_Size => 1,
-           Size           => 45;
-   type Bitmap_46 is array (0 .. 45) of Boolean
-      with Component_Size => 1,
-           Size           => 46;
-   type Bitmap_47 is array (0 .. 46) of Boolean
-      with Component_Size => 1,
-           Size           => 47;
-   type Bitmap_48 is array (0 .. 47) of Boolean
-      with Component_Size => 1,
-           Size           => 48;
-   type Bitmap_49 is array (0 .. 48) of Boolean
-      with Component_Size => 1,
-           Size           => 49;
-   type Bitmap_50 is array (0 .. 49) of Boolean
-      with Component_Size => 1,
-           Size           => 50;
-   type Bitmap_51 is array (0 .. 50) of Boolean
-      with Component_Size => 1,
-           Size           => 51;
-   type Bitmap_52 is array (0 .. 51) of Boolean
-      with Component_Size => 1,
-           Size           => 52;
-   type Bitmap_53 is array (0 .. 52) of Boolean
-      with Component_Size => 1,
-           Size           => 53;
-   type Bitmap_54 is array (0 .. 53) of Boolean
-      with Component_Size => 1,
-           Size           => 54;
-   type Bitmap_55 is array (0 .. 54) of Boolean
-      with Component_Size => 1,
-           Size           => 55;
-   type Bitmap_56 is array (0 .. 55) of Boolean
-      with Component_Size => 1,
-           Size           => 56;
-   type Bitmap_57 is array (0 .. 56) of Boolean
-      with Component_Size => 1,
-           Size           => 57;
-   type Bitmap_58 is array (0 .. 57) of Boolean
-      with Component_Size => 1,
-           Size           => 58;
-   type Bitmap_59 is array (0 .. 58) of Boolean
-      with Component_Size => 1,
-           Size           => 59;
-   type Bitmap_60 is array (0 .. 59) of Boolean
-      with Component_Size => 1,
-           Size           => 60;
-   type Bitmap_61 is array (0 .. 60) of Boolean
-      with Component_Size => 1,
-           Size           => 61;
-   type Bitmap_62 is array (0 .. 61) of Boolean
-      with Component_Size => 1,
-           Size           => 62;
-   type Bitmap_63 is array (0 .. 62) of Boolean
-      with Component_Size => 1,
-           Size           => 63;
-   type Bitmap_64 is array (0 .. 63) of Boolean
-      with Component_Size => 1,
-           Size           => 64;
+   type Bitmap_1  is array (0 ..  0) of Boolean with Component_Size => 1, Size => 1;
+   type Bitmap_2  is array (0 ..  1) of Boolean with Component_Size => 1, Size => 2;
+   type Bitmap_3  is array (0 ..  2) of Boolean with Component_Size => 1, Size => 3;
+   type Bitmap_4  is array (0 ..  3) of Boolean with Component_Size => 1, Size => 4;
+   type Bitmap_5  is array (0 ..  4) of Boolean with Component_Size => 1, Size => 5;
+   type Bitmap_6  is array (0 ..  5) of Boolean with Component_Size => 1, Size => 6;
+   type Bitmap_7  is array (0 ..  6) of Boolean with Component_Size => 1, Size => 7;
+   type Bitmap_8  is array (0 ..  7) of Boolean with Component_Size => 1, Size => 8;
+   type Bitmap_9  is array (0 ..  8) of Boolean with Component_Size => 1, Size => 9;
+   type Bitmap_10 is array (0 ..  9) of Boolean with Component_Size => 1, Size => 10;
+   type Bitmap_11 is array (0 .. 10) of Boolean with Component_Size => 1, Size => 11;
+   type Bitmap_12 is array (0 .. 11) of Boolean with Component_Size => 1, Size => 12;
+   type Bitmap_13 is array (0 .. 12) of Boolean with Component_Size => 1, Size => 13;
+   type Bitmap_14 is array (0 .. 13) of Boolean with Component_Size => 1, Size => 14;
+   type Bitmap_15 is array (0 .. 14) of Boolean with Component_Size => 1, Size => 15;
+   type Bitmap_16 is array (0 .. 15) of Boolean with Component_Size => 1, Size => 16;
+   type Bitmap_17 is array (0 .. 16) of Boolean with Component_Size => 1, Size => 17;
+   type Bitmap_18 is array (0 .. 17) of Boolean with Component_Size => 1, Size => 18;
+   type Bitmap_19 is array (0 .. 18) of Boolean with Component_Size => 1, Size => 19;
+   type Bitmap_20 is array (0 .. 19) of Boolean with Component_Size => 1, Size => 20;
+   type Bitmap_21 is array (0 .. 20) of Boolean with Component_Size => 1, Size => 21;
+   type Bitmap_22 is array (0 .. 21) of Boolean with Component_Size => 1, Size => 22;
+   type Bitmap_23 is array (0 .. 22) of Boolean with Component_Size => 1, Size => 23;
+   type Bitmap_24 is array (0 .. 23) of Boolean with Component_Size => 1, Size => 24;
+   type Bitmap_25 is array (0 .. 24) of Boolean with Component_Size => 1, Size => 25;
+   type Bitmap_26 is array (0 .. 25) of Boolean with Component_Size => 1, Size => 26;
+   type Bitmap_27 is array (0 .. 26) of Boolean with Component_Size => 1, Size => 27;
+   type Bitmap_28 is array (0 .. 27) of Boolean with Component_Size => 1, Size => 28;
+   type Bitmap_29 is array (0 .. 28) of Boolean with Component_Size => 1, Size => 29;
+   type Bitmap_30 is array (0 .. 29) of Boolean with Component_Size => 1, Size => 30;
+   type Bitmap_31 is array (0 .. 30) of Boolean with Component_Size => 1, Size => 31;
+   type Bitmap_32 is array (0 .. 31) of Boolean with Component_Size => 1, Size => 32;
+   type Bitmap_33 is array (0 .. 32) of Boolean with Component_Size => 1, Size => 33;
+   type Bitmap_34 is array (0 .. 33) of Boolean with Component_Size => 1, Size => 34;
+   type Bitmap_35 is array (0 .. 34) of Boolean with Component_Size => 1, Size => 35;
+   type Bitmap_36 is array (0 .. 35) of Boolean with Component_Size => 1, Size => 36;
+   type Bitmap_37 is array (0 .. 36) of Boolean with Component_Size => 1, Size => 37;
+   type Bitmap_38 is array (0 .. 37) of Boolean with Component_Size => 1, Size => 38;
+   type Bitmap_39 is array (0 .. 38) of Boolean with Component_Size => 1, Size => 39;
+   type Bitmap_40 is array (0 .. 39) of Boolean with Component_Size => 1, Size => 40;
+   type Bitmap_41 is array (0 .. 40) of Boolean with Component_Size => 1, Size => 41;
+   type Bitmap_42 is array (0 .. 41) of Boolean with Component_Size => 1, Size => 42;
+   type Bitmap_43 is array (0 .. 42) of Boolean with Component_Size => 1, Size => 43;
+   type Bitmap_44 is array (0 .. 43) of Boolean with Component_Size => 1, Size => 44;
+   type Bitmap_45 is array (0 .. 44) of Boolean with Component_Size => 1, Size => 45;
+   type Bitmap_46 is array (0 .. 45) of Boolean with Component_Size => 1, Size => 46;
+   type Bitmap_47 is array (0 .. 46) of Boolean with Component_Size => 1, Size => 47;
+   type Bitmap_48 is array (0 .. 47) of Boolean with Component_Size => 1, Size => 48;
+   type Bitmap_49 is array (0 .. 48) of Boolean with Component_Size => 1, Size => 49;
+   type Bitmap_50 is array (0 .. 49) of Boolean with Component_Size => 1, Size => 50;
+   type Bitmap_51 is array (0 .. 50) of Boolean with Component_Size => 1, Size => 51;
+   type Bitmap_52 is array (0 .. 51) of Boolean with Component_Size => 1, Size => 52;
+   type Bitmap_53 is array (0 .. 52) of Boolean with Component_Size => 1, Size => 53;
+   type Bitmap_54 is array (0 .. 53) of Boolean with Component_Size => 1, Size => 54;
+   type Bitmap_55 is array (0 .. 54) of Boolean with Component_Size => 1, Size => 55;
+   type Bitmap_56 is array (0 .. 55) of Boolean with Component_Size => 1, Size => 56;
+   type Bitmap_57 is array (0 .. 56) of Boolean with Component_Size => 1, Size => 57;
+   type Bitmap_58 is array (0 .. 57) of Boolean with Component_Size => 1, Size => 58;
+   type Bitmap_59 is array (0 .. 58) of Boolean with Component_Size => 1, Size => 59;
+   type Bitmap_60 is array (0 .. 59) of Boolean with Component_Size => 1, Size => 60;
+   type Bitmap_61 is array (0 .. 60) of Boolean with Component_Size => 1, Size => 61;
+   type Bitmap_62 is array (0 .. 61) of Boolean with Component_Size => 1, Size => 62;
+   type Bitmap_63 is array (0 .. 62) of Boolean with Component_Size => 1, Size => 63;
+   type Bitmap_64 is array (0 .. 63) of Boolean with Component_Size => 1, Size => 64;
 
    ----------------------------------------------------------------------------
    -- Array types.
    ----------------------------------------------------------------------------
 
-   type U8_Array is array (Natural range <>) of Interfaces.Unsigned_8
-      with Alignment      => 1,
-           Component_Size => 8;
-
-   type U16_Array is array (Natural range <>) of Interfaces.Unsigned_16
-      with Alignment      => 2,
-           Component_Size => 16;
-
-   type U32_Array is array (Natural range <>) of Interfaces.Unsigned_32
-      with Alignment      => 4,
-           Component_Size => 32;
-
-   type U64_Array is array (Natural range <>) of Interfaces.Unsigned_64
-      with Alignment      => 8,
-           Component_Size => 64;
+   type U8_Array  is array (Natural range <>) of Interfaces.Unsigned_8  with Alignment => 1, Component_Size => 8;
+   type U16_Array is array (Natural range <>) of Interfaces.Unsigned_16 with Alignment => 2, Component_Size => 16;
+   type U32_Array is array (Natural range <>) of Interfaces.Unsigned_32 with Alignment => 4, Component_Size => 32;
+   type U64_Array is array (Natural range <>) of Interfaces.Unsigned_64 with Alignment => 8, Component_Size => 64;
 
    -- useful alias
    subtype Byte_Array is U8_Array;
 
    -- special versions of U8_Array with high-order alignment
-   type Byte_A2Array is array (Natural range <>) of Interfaces.Unsigned_8
-      with Alignment      => 2,
-           Component_Size => 8;
-   type Byte_A4Array is array (Natural range <>) of Interfaces.Unsigned_8
-      with Alignment      => 4,
-           Component_Size => 8;
-   type Byte_A8Array is array (Natural range <>) of Interfaces.Unsigned_8
-      with Alignment      => 8,
-           Component_Size => 8;
+   type Byte_A2Array is array (Natural range <>) of Interfaces.Unsigned_8 with Alignment => 2, Component_Size => 8;
+   type Byte_A4Array is array (Natural range <>) of Interfaces.Unsigned_8 with Alignment => 4, Component_Size => 8;
+   type Byte_A8Array is array (Natural range <>) of Interfaces.Unsigned_8 with Alignment => 8, Component_Size => 8;
 
    -- 16-bit value converted to an array of components
    -- index offsets of 8-bit vector values
@@ -1597,5 +1392,7 @@ private
 
    type Asm_Entry_Point is new Null_Object
       with Convention => Asm;
+
+pragma Style_Checks (On);
 
 end Bits;
