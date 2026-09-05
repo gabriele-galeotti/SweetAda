@@ -15,13 +15,15 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System;
 with System.Storage_Elements;
 with Interfaces;
 with Bits;
 
 package APIC
-   is
+is
 
    --========================================================================--
    --                                                                        --

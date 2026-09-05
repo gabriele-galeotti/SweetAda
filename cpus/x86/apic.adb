@@ -15,10 +15,12 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with MMIO;
 
 package body APIC
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -36,7 +38,7 @@ package body APIC
    -- LAPIC_Init
    ----------------------------------------------------------------------------
    procedure LAPIC_Init
-      is
+   is
    begin
       LAPIC.TPR   := (
          SubClass => 0,
@@ -72,7 +74,7 @@ package body APIC
    function IOAPIC_Read
       (Register_Number : Natural)
       return Unsigned_32
-      is
+   is
    begin
       MMIO.Write (To_Address (IOAPIC_BASEADDRESS) + IOREGSEL, Unsigned_32 (Register_Number));
       return MMIO.Read (To_Address (IOAPIC_BASEADDRESS) + IOWIN);
@@ -84,7 +86,7 @@ package body APIC
    procedure IOAPIC_Write
       (Register_Number : in Natural;
        Value           : in Unsigned_32)
-      is
+   is
    begin
       MMIO.Write (To_Address (IOAPIC_BASEADDRESS) + IOREGSEL, Unsigned_32 (Register_Number));
       MMIO.Write (To_Address (IOAPIC_BASEADDRESS) + IOWIN, Value);
