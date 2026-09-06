@@ -7964,6 +7964,7 @@ pragma Style_Checks (Off);
    CRCFWD_RXTOUSER : constant := 0; -- The CRC field of received frames is transmitted to the user application.
    CRCFWD_RXSTRIP  : constant := 1; -- The CRC field is stripped from the frame.
 
+   -- __INF__ use "L00P" instead of "LOOP"
    type ENET_RCR_Type is record
       L00P      : Boolean := True;            -- Internal Loopback
       DRT       : Boolean := False;           -- Disable Receive On Transmit
