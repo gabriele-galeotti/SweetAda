@@ -141,11 +141,13 @@ is
    CLK_NTSCx2   : constant :=  7_159_090; -- CLK_NTSC * 2
    CLK_UART7M3  : constant :=  7_372_800; -- CLK_UART1M8 * 4
    CLK_8M       : constant :=   8 * MHz1; -- standard value
+   CLK_RTC8M    : constant :=  8_388_608; -- 2**23
    CLK_10M      : constant :=  10 * MHz1; -- standard value
    CLK_12M      : constant :=  12 * MHz1; -- USB
    CLK_NTSCx4   : constant := 14_318_182; -- CLK_NTSC * 4
    CLK_UART14M  : constant := 14_745_600; -- CLK_UART1M8 * 8
    CLK_16M      : constant :=  16 * MHz1; -- standard value
+   CLK_RTC16M   : constant := 16_777_216; -- 2**24
    CLK_UART18M  : constant := 18_432_000; -- CLK_UART1M8 * 10
    CLK_20M      : constant :=  20 * MHz1; -- standard value
    CLK_25M      : constant :=  25 * MHz1; -- MII PHY
