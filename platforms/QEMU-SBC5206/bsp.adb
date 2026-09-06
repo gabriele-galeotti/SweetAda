@@ -39,6 +39,8 @@ package body BSP
    use Definitions;
    use Bits;
 
+   procedure Tclk_Init;
+
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -46,6 +48,36 @@ package body BSP
    --                                                                        --
    --                                                                        --
    --========================================================================--
+
+   ----------------------------------------------------------------------------
+   -- Tclk_Init
+   ----------------------------------------------------------------------------
+   procedure Tclk_Init
+   is
+   begin
+      MCF5206.TIMER1.TRR := 16#1000#;
+      MCF5206.TIMER1.TMR := (
+         RST => True,
+         CLK => MCF5206.CLK_MSTCLK,
+         FRR => MCF5206.FRR_RESTART,
+         ORI => True,
+         OM  => MCF5206.OM_TOGGLE,
+         CE  => MCF5206.CE_ANYEDGE,
+         PS  => 16
+         );
+      MCF5206.TIMER1.TER := (
+         CAP    => False,
+         REF    => True,
+         others => <>
+         );
+      MCF5206.IMR.TIMER1 := False;
+      MCF5206.ICR9 := (
+         IP     => 2,
+         IL     => 2,
+         AVEC   => True,
+         others => <>
+         );
+   end Tclk_Init;
 
    ----------------------------------------------------------------------------
    -- Console wrappers
@@ -88,28 +120,7 @@ package body BSP
       Console.Print ("Arnewsh SBC5206 (QEMU emulator)", NL => True);
       -------------------------------------------------------------------------
       Tick_Count := 0;
-      MCF5206.TIMER1.TRR := 16#1000#;
-      MCF5206.TIMER1.TMR := (
-         RST => True,
-         CLK => MCF5206.CLK_MSTCLK,
-         FRR => MCF5206.FRR_RESTART,
-         ORI => True,
-         OM  => MCF5206.OM_TOGGLE,
-         CE  => MCF5206.CE_ANYEDGE,
-         PS  => 16
-         );
-      MCF5206.TIMER1.TER := (
-         CAP    => False,
-         REF    => True,
-         others => <>
-         );
-      MCF5206.IMR.TIMER1 := False;
-      MCF5206.ICR9 := (
-         IP     => 2,
-         IL     => 2,
-         AVEC   => True,
-         others => <>
-         );
+      Tclk_Init;
       CPU.Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;
