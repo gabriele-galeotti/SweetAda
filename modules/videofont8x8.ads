@@ -19,7 +19,7 @@ with System.Storage_Elements;
 
 package Videofont8x8
    with Pure => True
-   is
+is
 
    --========================================================================--
    --                                                                        --
