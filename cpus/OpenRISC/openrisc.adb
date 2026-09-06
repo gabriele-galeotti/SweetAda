@@ -126,6 +126,23 @@ pragma Style_Checks (On);
    end NOP;
 
    ----------------------------------------------------------------------------
+   -- BREAKPOINT
+   ----------------------------------------------------------------------------
+   procedure BREAKPOINT
+   is
+   begin
+      Asm (
+           Template => ""                  & CRLF &
+                       "        l.trap  1" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => No_Input_Operands,
+           Clobber  => "",
+           Volatile => True
+          );
+   end BREAKPOINT;
+
+   ----------------------------------------------------------------------------
    -- TEE_Enable
    ----------------------------------------------------------------------------
    procedure TEE_Enable

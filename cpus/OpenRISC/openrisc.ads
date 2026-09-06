@@ -228,6 +228,9 @@ pragma Style_Checks (Off);
    procedure NOP
       with Inline => True;
 
+   procedure BREAKPOINT
+      with Inline => True;
+
    procedure TEE_Enable
       (Enable : in Boolean)
       with Inline => True;
