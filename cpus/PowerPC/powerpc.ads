@@ -66,10 +66,9 @@ pragma Style_Checks (Off);
    SPRG3  : constant SPR_Type := 275;  -- 0x113
    ASR    : constant SPR_Type := 280;  -- 0x118 64-bit only
    EAR    : constant SPR_Type := 282;  -- 0x11A optional
-   TBL    : constant SPR_Type := 284;  -- 0x11C
-   TBU    : constant SPR_Type := 285;  -- 0x11D
+   TBL    : constant SPR_Type := 284;  -- 0x11C write-only
+   TBU    : constant SPR_Type := 285;  -- 0x11D write-only
    PVR    : constant SPR_Type := 287;  -- 0x11F
-
    IBAT0U : constant SPR_Type := 528;  -- 0x210
    IBAT0L : constant SPR_Type := 529;  -- 0x211
    IBAT1U : constant SPR_Type := 530;  -- 0x212
@@ -88,6 +87,10 @@ pragma Style_Checks (Off);
    DBAT3L : constant SPR_Type := 543;  -- 0x21F
    DABR   : constant SPR_Type := 1013; -- 0x3F5 optional
 
+   -- user mode TBR
+   UTBL : constant := 268; -- read-only
+   UTBU : constant := 269; -- read-only
+
    generic
       SPR : SPR_Type;
       type Register_Type is private;
@@ -103,7 +106,6 @@ pragma Style_Checks (Off);
       with Inline => True;
 
    -- 1.1 General-Purpose Registers (GPRs)
-   -- 1.2 Floating-Point Registers (FPRs)
 
    R0    : constant := 0;
    R1    : constant := 1;
@@ -137,6 +139,8 @@ pragma Style_Checks (Off);
    R29   : constant := 29;
    R30   : constant := 30;
    R31   : constant := 31;
+
+   -- 1.2 Floating-Point Registers (FPRs)
 
    FP0   : constant := 32;
    FP1   : constant := 33;
@@ -354,6 +358,9 @@ pragma Style_Checks (Off);
 
    -- 1.10 BAT Registers
 
+   subtype UBAT_Type is PowerPC_Definitions.UBAT_Type;
+   subtype LBAT_Type is PowerPC_Definitions.LBAT_Type;
+
    -- 1.11 (2.3.3) SDR1
 
    subtype SDR1_Type is PowerPC_Definitions.SDR1_Type;
@@ -365,14 +372,71 @@ pragma Style_Checks (Off);
       (Value : in SDR1_Type)
       with Inline => True;
 
-   -- 1.12 Address Space Register (ASR)
+   -- 1.12 (2.2.1.1) Address Space Register (ASR)
+
+   subtype ASR_Type is PowerPC_Definitions.ASR_Type;
+
    -- 1.13 Segment Registers (SRs)
+
+   subtype SR0_Type  is PowerPC_Definitions.SRx_Type;
+   subtype SR1_Type  is PowerPC_Definitions.SRx_Type;
+   subtype SR2_Type  is PowerPC_Definitions.SRx_Type;
+   subtype SR3_Type  is PowerPC_Definitions.SRx_Type;
+   subtype SR4_Type  is PowerPC_Definitions.SRx_Type;
+   subtype SR5_Type  is PowerPC_Definitions.SRx_Type;
+   subtype SR6_Type  is PowerPC_Definitions.SRx_Type;
+   subtype SR7_Type  is PowerPC_Definitions.SRx_Type;
+   subtype SR8_Type  is PowerPC_Definitions.SRx_Type;
+   subtype SR9_Type  is PowerPC_Definitions.SRx_Type;
+   subtype SR10_Type is PowerPC_Definitions.SRx_Type;
+   subtype SR11_Type is PowerPC_Definitions.SRx_Type;
+   subtype SR12_Type is PowerPC_Definitions.SRx_Type;
+   subtype SR13_Type is PowerPC_Definitions.SRx_Type;
+   subtype SR14_Type is PowerPC_Definitions.SRx_Type;
+   subtype SR15_Type is PowerPC_Definitions.SRx_Type;
+
    -- 1.14 Data Address Register (DAR)
+
+   subtype DAR_Type is PowerPC_Definitions.DAR_Type;
+
    -- 1.15 SPRG0–SPRG3
+
+   subtype SPRG0_Type is PowerPC_Definitions.SPRGx_Type; -- Software may load a unique physical address in this register to identify an area of memory reserved for use by the first-level exception handler.
+   subtype SPRG1_Type is PowerPC_Definitions.SPRGx_Type; -- This register may be used as a scratch register by the first-level exception handler to save the content of a GPR.
+   subtype SPRG2_Type is PowerPC_Definitions.SPRGx_Type; -- This register may be used by the operating system as needed.
+   subtype SPRG3_Type is PowerPC_Definitions.SPRGx_Type; -- This register may be used by the operating system as needed.
+
    -- 1.16 DSISR
+
+   type DSISR_Type is record
+      DSISR : Unsigned_32; -- identifies the cause of DSI and alignment exceptions.
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for DSISR_Type use record
+      DSISR at 0 range 0 .. 31;
+   end record;
+
    -- 1.17 Machine Status Save/Restore Register 0 (SRR0)
+
+   subtype SRR0_Type is PowerPC_Definitions.SRR0_Type;
+
    -- 1.18 Machine Status Save/Restore Register 1 (SRR1)
+
+   subtype SSR1_Type is PowerPC_Definitions.SRR1_Type;
+
    -- 1.19 Time Base Facility (TB)
+
+   type TB_Type is record
+      TBU : Unsigned_32; -- Upper 32 bits of time base
+      TBL : Unsigned_32; -- Lower 32 bits of time base
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 64;
+   for TB_Type use record
+      TBU at 0 range  0 .. 31;
+      TBL at 0 range 32 .. 63;
+   end record;
 
    -- 1.20 Decrementer Register (DEC)
 
@@ -393,7 +457,23 @@ pragma Style_Checks (Off);
       with Inline => True;
 
    -- 1.21 Data Address Breakpoint Register (DABR)
+
+   subtype DABR_Type is PowerPC_Definitions.DABR_Type;
+
    -- 1.22 External Access Register (EAR)
+
+   type EAR_Type is record
+      E        : Boolean := False; -- Enable bit
+      Reserved : Bits_25 := 0;
+      RID      : Bits_6  := 0;     -- Resource ID
+   end record
+      with Bit_Order => High_Order_First,
+           Size      => 32;
+   for EAR_Type use record
+      E        at 0 range  0 ..  0;
+      Reserved at 0 range  1 .. 25;
+      RID      at 0 range 26 .. 31;
+   end record;
 
    ----------------------------------------------------------------------------
    -- Generic definitions
