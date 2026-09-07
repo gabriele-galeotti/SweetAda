@@ -5745,19 +5745,344 @@ pragma Warnings (On);
    ----------------------------------------------------------------------------
 
    -- 16.5.1 DAC control register (DAC_CR)
+
+   TSEL1_Timer6TRGO : constant := 2#000#; -- Timer 6 TRGO event
+   TSEL1_Timer8TRGO : constant := 2#001#; -- Timer 8 TRGO event
+   TSEL1_Timer7TRGO : constant := 2#010#; -- Timer 7 TRGO event
+   TSEL1_Timer5TRGO : constant := 2#011#; -- Timer 5 TRGO event
+   TSEL1_Timer2TRGO : constant := 2#100#; -- Timer 2 TRGO event
+   TSEL1_Timer4TRGO : constant := 2#101#; -- Timer 4 TRGO event
+   TSEL1_Extline9   : constant := 2#110#; -- External line9
+   TSEL1_Software   : constant := 2#111#; -- Software trigger
+   TSEL2_Timer6TRGO renames TSEL1_Timer6TRGO;
+   TSEL2_Timer8TRGO renames TSEL1_Timer8TRGO;
+   TSEL2_Timer7TRGO renames TSEL1_Timer7TRGO;
+   TSEL2_Timer5TRGO renames TSEL1_Timer5TRGO;
+   TSEL2_Timer2TRGO renames TSEL1_Timer2TRGO;
+   TSEL2_Timer4TRGO renames TSEL1_Timer4TRGO;
+   TSEL2_Extline9   renames TSEL1_Extline9;
+   TSEL2_Software   renames TSEL1_Software;
+
+   WAVE1_DISABLED   : constant := 2#00#; -- wave generation disabled
+   WAVE1_NOISE      : constant := 2#01#; -- Noise wave generation enabled
+   WAVE1_TRIANGLE   : constant := 2#10#; -- Triangle wave generation enabled
+   WAVE1_TRIANGLE_2 : constant := 2#11#; -- ''
+   WAVE2_DISABLED   renames WAVE1_DISABLED;
+   WAVE2_NOISE      renames WAVE1_NOISE;
+   WAVE2_TRIANGLE   renames WAVE1_TRIANGLE;
+   WAVE2_TRIANGLE_2 renames WAVE1_TRIANGLE_2;
+
+   MAMP1_1      : constant := 2#0000#; -- Unmask bit0 of LFSR/ triangle amplitude equal to 1
+   MAMP1_3      : constant := 2#0001#; -- Unmask bits[1:0] of LFSR/ triangle amplitude equal to 3
+   MAMP1_7      : constant := 2#0010#; -- Unmask bits[2:0] of LFSR/ triangle amplitude equal to 7
+   MAMP1_15     : constant := 2#0011#; -- Unmask bits[3:0] of LFSR/ triangle amplitude equal to 15
+   MAMP1_31     : constant := 2#0100#; -- Unmask bits[4:0] of LFSR/ triangle amplitude equal to 31
+   MAMP1_63     : constant := 2#0101#; -- Unmask bits[5:0] of LFSR/ triangle amplitude equal to 63
+   MAMP1_127    : constant := 2#0110#; -- Unmask bits[6:0] of LFSR/ triangle amplitude equal to 127
+   MAMP1_255    : constant := 2#0111#; -- Unmask bits[7:0] of LFSR/ triangle amplitude equal to 255
+   MAMP1_511    : constant := 2#1000#; -- Unmask bits[8:0] of LFSR/ triangle amplitude equal to 511
+   MAMP1_1023   : constant := 2#1001#; -- Unmask bits[9:0] of LFSR/ triangle amplitude equal to 1023
+   MAMP1_2047   : constant := 2#1010#; -- Unmask bits[10:0] of LFSR/ triangle amplitude equal to 2047
+   MAMP1_4095   : constant := 2#1011#; -- Unmask bits[11:0] of LFSR/ triangle amplitude equal to 4095
+   MAMP1_4095_2 : constant := 2#1100#; -- ''
+   MAMP1_4095_3 : constant := 2#1101#; -- ''
+   MAMP1_4095_4 : constant := 2#1110#; -- ''
+   MAMP1_4095_5 : constant := 2#1111#; -- ''
+   MAMP2_1      renames MAMP1_1;
+   MAMP2_3      renames MAMP1_3;
+   MAMP2_7      renames MAMP1_7;
+   MAMP2_15     renames MAMP1_15;
+   MAMP2_31     renames MAMP1_31;
+   MAMP2_63     renames MAMP1_63;
+   MAMP2_127    renames MAMP1_127;
+   MAMP2_255    renames MAMP1_255;
+   MAMP2_511    renames MAMP1_511;
+   MAMP2_1023   renames MAMP1_1023;
+   MAMP2_2047   renames MAMP1_2047;
+   MAMP2_4095   renames MAMP1_4095;
+   MAMP2_4095_2 renames MAMP1_4095_2;
+   MAMP2_4095_3 renames MAMP1_4095_3;
+   MAMP2_4095_4 renames MAMP1_4095_4;
+   MAMP2_4095_5 renames MAMP1_4095_5;
+
+   type DAC_CR_Type is record
+      EN1       : Boolean := False;            -- DAC channel1 enable
+      BOFF1     : Boolean := False;            -- DAC channel1 output buffer disable
+      TEN1      : Boolean := False;            -- DAC channel1 trigger enable
+      TSEL1     : Bits_3  := TSEL1_Timer6TRGO; -- DAC channel1 trigger selection
+      WAVE1     : Bits_2  := WAVE1_DISABLED;   -- DAC channel1 noise/triangle wave generation enable
+      MAMP1     : Bits_4  := MAMP1_1;          -- DAC channel1 mask/amplitude selector
+      DMAEN1    : Boolean := False;            -- DAC channel1 DMA enable
+      DMAUDRIE1 : Boolean := False;            -- DAC channel1 DMA Underrun Interrupt enable
+      Reserved1 : Bits_2  := 0;
+      EN2       : Boolean := False;            -- DAC channel2 enable
+      BOFF2     : Boolean := False;            -- DAC channel2 output buffer disable
+      TEN2      : Boolean := False;            -- DAC channel2 trigger enable
+      TSEL2     : Bits_3  := TSEL2_Timer6TRGO; -- DAC channel2 trigger selection
+      WAVE2     : Bits_2  := WAVE2_DISABLED;   -- DAC channel2 noise/triangle wave generation enable
+      MAMP2     : Bits_4  := MAMP2_1;          -- DAC channel2 mask/amplitude selector
+      DMAEN2    : Boolean := False;            -- DAC channel2 DMA enable
+      DMAUDRIE2 : Boolean := False;            -- DAC channel2 DMA underrun interrupt enable
+      Reserved2 : Bits_2  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for DAC_CR_Type use record
+      EN1       at 0 range  0 ..  0;
+      BOFF1     at 0 range  1 ..  1;
+      TEN1      at 0 range  2 ..  2;
+      TSEL1     at 0 range  3 ..  5;
+      WAVE1     at 0 range  6 ..  7;
+      MAMP1     at 0 range  8 .. 11;
+      DMAEN1    at 0 range 12 .. 12;
+      DMAUDRIE1 at 0 range 13 .. 13;
+      Reserved1 at 0 range 14 .. 15;
+      EN2       at 0 range 16 .. 16;
+      BOFF2     at 0 range 17 .. 17;
+      TEN2      at 0 range 18 .. 18;
+      TSEL2     at 0 range 19 .. 21;
+      WAVE2     at 0 range 22 .. 23;
+      MAMP2     at 0 range 24 .. 27;
+      DMAEN2    at 0 range 28 .. 28;
+      DMAUDRIE2 at 0 range 29 .. 29;
+      Reserved2 at 0 range 30 .. 31;
+   end record;
+
    -- 16.5.2 DAC software trigger register (DAC_SWTRIGR)
+
+   type DAC_SWTRIGR_Type is record
+      SWTRIG1  : Boolean := False; -- DAC channel1 software trigger
+      SWTRIG2  : Boolean := False; -- DAC channel2 software trigger
+      Reserved : Bits_30 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for DAC_SWTRIGR_Type use record
+      SWTRIG1  at 0 range 0 ..  0;
+      SWTRIG2  at 0 range 1 ..  1;
+      Reserved at 0 range 2 .. 31;
+   end record;
+
    -- 16.5.3 DAC channel1 12-bit right-aligned data holding register (DAC_DHR12R1)
+
+   type DAC_DHR12R1_Type is record
+      DACC1DHR : Bits_12 := 0; -- DAC channel1 12-bit right-aligned data
+      Reserved : Bits_20 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for DAC_DHR12R1_Type use record
+      DACC1DHR at 0 range  0 .. 11;
+      Reserved at 0 range 12 .. 31;
+   end record;
+
    -- 16.5.4 DAC channel1 12-bit left aligned data holding register (DAC_DHR12L1)
+
+   type DAC_DHR12L1_Type is record
+      Reserved1 : Bits_4  := 0;
+      DACC1DHR  : Bits_12 := 0; -- DAC channel1 12-bit left-aligned data
+      Reserved2 : Bits_16 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for DAC_DHR12L1_Type use record
+      Reserved1 at 0 range  0 ..  3;
+      DACC1DHR  at 0 range  4 .. 15;
+      Reserved2 at 0 range 16 .. 31;
+   end record;
+
    -- 16.5.5 DAC channel1 8-bit right aligned data holding register (DAC_DHR8R1)
+
+   type DAC_DHR8R1_Type is record
+      DACC1DHR : Bits_8  := 0; -- DAC channel1 8-bit right-aligned data
+      Reserved : Bits_24 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for DAC_DHR8R1_Type use record
+      DACC1DHR at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
    -- 16.5.6 DAC channel2 12-bit right aligned data holding register (DAC_DHR12R2)
+
+   type DAC_DHR12R2_Type is record
+      DACC2DHR : Bits_12 := 0; -- DAC channel2 12-bit right-aligned data
+      Reserved : Bits_20 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for DAC_DHR12R2_Type use record
+      DACC2DHR at 0 range  0 .. 11;
+      Reserved at 0 range 12 .. 31;
+   end record;
+
    -- 16.5.7 DAC channel2 12-bit left aligned data holding register (DAC_DHR12L2)
+
+   type DAC_DHR12L2_Type is record
+      Reserved1 : Bits_4  := 0;
+      DACC2DHR  : Bits_12 := 0; -- DAC channel2 12-bit left-aligned data
+      Reserved2 : Bits_16 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for DAC_DHR12L2_Type use record
+      Reserved1 at 0 range  0 ..  3;
+      DACC2DHR  at 0 range  4 .. 15;
+      Reserved2 at 0 range 16 .. 31;
+   end record;
+
    -- 16.5.8 DAC channel2 8-bit right-aligned data holding register (DAC_DHR8R2)
+
+   type DAC_DHR8R2_Type is record
+      DACC2DHR : Bits_8  := 0; -- DAC channel2 8-bit right-aligned data
+      Reserved : Bits_24 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for DAC_DHR8R2_Type use record
+      DACC2DHR at 0 range 0 ..  7;
+      Reserved at 0 range 8 .. 31;
+   end record;
+
    -- 16.5.9 Dual DAC 12-bit right-aligned data holding register (DAC_DHR12RD)
+
+   type DAC_DHR12RD_Type is record
+      DACC1DHR  : Bits_12 := 0; -- DAC channel1 12-bit right-aligned data
+      Reserved1 : Bits_4  := 0;
+      DACC2DHR  : Bits_12 := 0; -- DAC channel2 12-bit right-aligned data
+      Reserved2 : Bits_4  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for DAC_DHR12RD_Type use record
+      DACC1DHR  at 0 range  0 .. 11;
+      Reserved1 at 0 range 12 .. 15;
+      DACC2DHR  at 0 range 16 .. 27;
+      Reserved2 at 0 range 28 .. 31;
+   end record;
+
    -- 16.5.10 DUAL DAC 12-bit left aligned data holding register (DAC_DHR12LD)
+
+   type DAC_DHR12LD_Type is record
+      Reserved1 : Bits_4  := 0;
+      DACC1DHR  : Bits_12 := 0; -- DAC channel1 12-bit left-aligned data
+      Reserved2 : Bits_4  := 0;
+      DACC2DHR  : Bits_12 := 0; -- DAC channel2 12-bit left-aligned data
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for DAC_DHR12LD_Type use record
+      Reserved1 at 0 range  0 ..  3;
+      DACC1DHR  at 0 range  4 .. 15;
+      Reserved2 at 0 range 16 .. 19;
+      DACC2DHR  at 0 range 20 .. 31;
+   end record;
+
    -- 16.5.11 DUAL DAC 8-bit right aligned data holding register (DAC_DHR8RD)
+
+   type DAC_DHR8RD_Type is record
+      DACC1DHR : Bits_8  := 0; -- DAC channel1 8-bit right-aligned data
+      DACC2DHR : Bits_8  := 0; -- DAC channel2 8-bit right-aligned data
+      Reserved : Bits_16 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for DAC_DHR8RD_Type use record
+      DACC1DHR at 0 range  0 ..  7;
+      DACC2DHR at 0 range  8 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
+
    -- 16.5.12 DAC channel1 data output register (DAC_DOR1)
+
+   type DAC_DOR1_Type is record
+      DACC1DOR : Bits_12; -- DAC channel1 data output
+      Reserved : Bits_20;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for DAC_DOR1_Type use record
+      DACC1DOR at 0 range  0 .. 11;
+      Reserved at 0 range 12 .. 31;
+   end record;
+
    -- 16.5.13 DAC channel2 data output register (DAC_DOR2)
+
+   type DAC_DOR2_Type is record
+      DACC2DOR : Bits_12; -- DAC channel2 data output
+      Reserved : Bits_20;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for DAC_DOR2_Type use record
+      DACC2DOR at 0 range  0 .. 11;
+      Reserved at 0 range 12 .. 31;
+   end record;
+
    -- 16.5.14 DAC status register (DAC_SR)
+
+   type DAC_SR_Type is record
+      Reserved1 : Bits_13 := 0;
+      DMAUDR1   : Boolean := False; -- DAC channel1 DMA underrun flag
+      Reserved2 : Bits_15 := 0;
+      DMAUDR2   : Boolean := False; -- DAC channel2 DMA underrun flag
+      Reserved3 : Bits_2  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for DAC_SR_Type use record
+      Reserved1 at 0 range  0 .. 12;
+      DMAUDR1   at 0 range 13 .. 13;
+      Reserved2 at 0 range 14 .. 28;
+      DMAUDR2   at 0 range 29 .. 29;
+      Reserved3 at 0 range 30 .. 31;
+   end record;
+
+   -- 16.5 DAC registers
+
+   type DAC_Type is record
+      CR      : DAC_CR_Type      with Volatile_Full_Access => True;
+      SWTRIGR : DAC_SWTRIGR_Type with Volatile_Full_Access => True;
+      DHR12R1 : DAC_DHR12R1_Type with Volatile_Full_Access => True;
+      DHR12L1 : DAC_DHR12L1_Type with Volatile_Full_Access => True;
+      DHR8R1  : DAC_DHR8R1_Type  with Volatile_Full_Access => True;
+      DHR12R2 : DAC_DHR12R2_Type with Volatile_Full_Access => True;
+      DHR12L2 : DAC_DHR12L2_Type with Volatile_Full_Access => True;
+      DHR8R2  : DAC_DHR8R2_Type  with Volatile_Full_Access => True;
+      DHR12RD : DAC_DHR12RD_Type with Volatile_Full_Access => True;
+      DHR12LD : DAC_DHR12LD_Type with Volatile_Full_Access => True;
+      DHR8RD  : DAC_DHR8RD_Type  with Volatile_Full_Access => True;
+      DOR1    : DAC_DOR1_Type    with Volatile_Full_Access => True;
+      DOR2    : DAC_DOR2_Type    with Volatile_Full_Access => True;
+      SR      : DAC_SR_Type      with Volatile_Full_Access => True;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16#38# * 8;
+   for DAC_Type use record
+      CR      at 16#00# range 0 .. 31;
+      SWTRIGR at 16#04# range 0 .. 31;
+      DHR12R1 at 16#08# range 0 .. 31;
+      DHR12L1 at 16#0C# range 0 .. 31;
+      DHR8R1  at 16#10# range 0 .. 31;
+      DHR12R2 at 16#14# range 0 .. 31;
+      DHR12L2 at 16#18# range 0 .. 31;
+      DHR8R2  at 16#1C# range 0 .. 31;
+      DHR12RD at 16#20# range 0 .. 31;
+      DHR12LD at 16#24# range 0 .. 31;
+      DHR8RD  at 16#28# range 0 .. 31;
+      DOR1    at 16#2C# range 0 .. 31;
+      DOR2    at 16#30# range 0 .. 31;
+      SR      at 16#34# range 0 .. 31;
+   end record;
+
+   DAC_BASEADDRESS : constant := 16#4000_7400#;
+
+   DAC : aliased DAC_Type
+      with Address    => System'To_Address (DAC_BASEADDRESS),
+           Volatile   => True,
+           Import     => True,
+           Convention => Ada;
 
    ----------------------------------------------------------------------------
    -- 17 Digital filter for sigma delta modulators (DFSDM)
