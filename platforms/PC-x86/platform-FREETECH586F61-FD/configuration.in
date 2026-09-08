@@ -36,9 +36,6 @@ CPU_MODEL := i586
 #                                                                              #
 ################################################################################
 
-# add super_io directory
-INCLUDE_DIRECTORIES := $(PLATFORM_DIRECTORY)/super_io $(INCLUDE_DIRECTORIES)
-
 GCC_SWITCHES_PLATFORM     := -march=i586
 LD_SWITCHES_PLATFORM      :=
 OBJDUMP_SWITCHES_PLATFORM :=
@@ -49,6 +46,8 @@ POSTBUILD_COMMAND         := $(SHELL_EXEC) postbuild-fd$(SCREXT)
 CONFIGURE_FILES_PLATFORM       := configure.ads configure.h
 LOWLEVEL_FILES_PLATFORM        := startup.S llkernel.S startupc.c
 GCC_SWITCHES_LOWLEVEL_PLATFORM := -DMODE32 -DENABLE_A20 -DDATA_RELOC
+
+EXTRA_INCLUDE_DIRECTORIES += $(PLATFORM_DIRECTORY)/mmu4M $(PLATFORM_DIRECTORY)/super_io
 
 ################################################################################
 # User parameters.                                                             #

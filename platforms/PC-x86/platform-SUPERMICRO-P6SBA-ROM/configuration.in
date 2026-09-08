@@ -32,9 +32,6 @@ CPU_MODEL := i686
 #                                                                              #
 ################################################################################
 
-# add super_io directory
-INCLUDE_DIRECTORIES := $(PLATFORM_DIRECTORY)/super_io $(INCLUDE_DIRECTORIES)
-
 GCC_SWITCHES_PLATFORM     := -march=i586
 LD_SWITCHES_PLATFORM      :=
 OBJDUMP_SWITCHES_PLATFORM :=
@@ -45,6 +42,8 @@ CONFIGURE_FILES_PLATFORM       := configure.ads configure.h
 LOWLEVEL_FILES_PLATFORM        := startup.S llkernel.S startupc.c
 GCC_SWITCHES_LOWLEVEL_PLATFORM := -DMODE32 -DENABLE_A20 -DSTARTUP_MEMORY -DDATA_RELOC
 #GCC_SWITCHES_LOWLEVEL_PLATFORM := -DMODE32 -DSTARTUP_MEMORY -DDATA_RELOC
+
+EXTRA_INCLUDE_DIRECTORIES += $(PLATFORM_DIRECTORY)/mmu4M $(PLATFORM_DIRECTORY)/super_io
 
 ################################################################################
 # User parameters.                                                             #

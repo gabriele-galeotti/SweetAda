@@ -41,6 +41,8 @@ GCC_SWITCHES_LOWLEVEL_PLATFORM := -DMODE32 -DENABLE_A20 -DDATA_RELOC
 
 CLEAN_OBJECTS_COMMON += pcbootusbkey.dsk
 
+EXTRA_INCLUDE_DIRECTORIES += $(PLATFORM_DIRECTORY)/mmu4M
+
 ################################################################################
 # User parameters.                                                             #
 #                                                                              #
