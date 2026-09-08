@@ -27,8 +27,9 @@ _start16:
                 //
                 // Protected mode driver.
                 //
-                pushl   $0                      // EFLAGS = all 0
-                popfl
+                cli
+                clc
+                cld
                 movw    %cs,%ax                 // DS = CS
                 movw    %ax,%ds
                 movl    %cr0,%eax
