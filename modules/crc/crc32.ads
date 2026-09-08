@@ -20,7 +20,7 @@ with Bits;
 
 package CRC32
    with Pure => True
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -33,16 +33,19 @@ package CRC32
    function Initialize
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function Update
       (Value : Interfaces.Unsigned_32;
        Item  : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function Compute
       (Value : Interfaces.Unsigned_32;
        Data  : Bits.Byte_Array)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function Finalize
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32

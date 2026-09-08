@@ -20,7 +20,7 @@ with Bits;
 
 package CRC16
    with Pure => True
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -33,16 +33,19 @@ package CRC16
    function Initialize
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function Update
       (Value : Interfaces.Unsigned_16;
        Item  : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function Compute
       (Value : Interfaces.Unsigned_16;
        Data  : Bits.Byte_Array)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function Finalize
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16

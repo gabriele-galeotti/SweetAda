@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 package body CRC32
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -124,7 +124,7 @@ package body CRC32
    ----------------------------------------------------------------------------
    function Initialize
       return Unsigned_32
-      is
+   is
    begin
       return Value_Init;
    end Initialize;
@@ -136,7 +136,7 @@ package body CRC32
       (Value : Unsigned_32;
        Item  : Unsigned_8)
       return Unsigned_32
-      is
+   is
    begin
       return Shift_Right (Value, 8) xor Table (Unsigned_8 (Value and 16#0000_00FF#) xor Item);
    end Update;
@@ -148,7 +148,7 @@ package body CRC32
       (Value : Unsigned_32;
        Data  : Bits.Byte_Array)
       return Unsigned_32
-      is
+   is
       Crc : Unsigned_32 := Value;
    begin
       for Index in Data'Range loop
@@ -163,7 +163,7 @@ package body CRC32
    function Finalize
       (Value : Unsigned_32)
       return Unsigned_32
-      is
+   is
    begin
       return Value xor Value_XorOut;
    end Finalize;
