@@ -203,14 +203,14 @@ package body PC
       function To_U8 is new Ada.Unchecked_Conversion (PIC_OCW2_Type, Unsigned_8);
    begin
       Mutex.Acquire (PIC_Lock);
-      -- PIC1 (master)
-      CPU.IO.PortOut (PIC1_OCW2, To_U8 (PIC_OCW2_Type'(
+      -- PIC2 (slave)
+      CPU.IO.PortOut (PIC2_OCW2, To_U8 (PIC_OCW2_Type'(
          L      => 0,          -- IR LEVEL TO BE ACTED UPON
          EOISLR => EOISLR_EOI, -- END OF INTERRUPT
          others => <>
          )));
-      -- PIC2 (slave)
-      CPU.IO.PortOut (PIC2_OCW2, To_U8 (PIC_OCW2_Type'(
+      -- PIC1 (master)
+      CPU.IO.PortOut (PIC1_OCW2, To_U8 (PIC_OCW2_Type'(
          L      => 0,          -- IR LEVEL TO BE ACTED UPON
          EOISLR => EOISLR_EOI, -- END OF INTERRUPT
          others => <>
