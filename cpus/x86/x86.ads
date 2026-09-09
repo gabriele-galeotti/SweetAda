@@ -90,7 +90,7 @@ pragma Style_Checks (Off);
       (Value : Selector_Type)
       return Unsigned_16
       with Inline => True;
-   function To_Selector
+   function To_SEL
       (Value : Unsigned_16)
       return Selector_Type
       with Inline => True;
@@ -364,7 +364,8 @@ pragma Style_Checks (Off);
       Offset   : Address;
       Selector : Selector_Type;
    end record
-      with Size => 6 * 8;
+      with Bit_Order => Low_Order_First,
+           Size      => 6 * 8;
    for Selector_Address_Target_Type use record
       Offset   at 0 range 0 .. 31;
       Selector at 4 range 0 .. 15;
@@ -636,6 +637,9 @@ pragma Style_Checks (Off);
 
    procedure LTR
       (Selector : in Selector_Type)
+      with Inline => True;
+   procedure STR
+      (Destination : in Address)
       with Inline => True;
 
    ----------------------------------------------------------------------------
@@ -909,7 +913,8 @@ pragma Style_Checks (Off);
       Unused : Bits_16;
       EFLAGS : EFLAGS_Type;
    end record
-      with Object_Size => 12 * 8;
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 12 * 8;
    for Exception_Stack_Frame_Type use record
       EIP    at 0 range  0 .. 31;
       CS     at 4 range  0 .. 15;

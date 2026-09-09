@@ -22,7 +22,7 @@ with Ada.Unchecked_Conversion;
 with LLutils;
 
 package body x86
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -48,26 +48,26 @@ package body x86
    function To_U16
       (Value : Selector_Type)
       return Unsigned_16
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (Selector_Type, Unsigned_16);
    begin
       return Convert (Value);
    end To_U16;
 
-   function To_Selector
+   function To_SEL
       (Value : Unsigned_16)
       return Selector_Type
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (Unsigned_16, Selector_Type);
    begin
       return Convert (Value);
-   end To_Selector;
+   end To_SEL;
 
    ----------------------------------------------------------------------------
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -84,7 +84,7 @@ package body x86
    -- HLT
    ----------------------------------------------------------------------------
    procedure HLT
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -101,7 +101,7 @@ package body x86
    -- BREAKPOINT
    ----------------------------------------------------------------------------
    procedure BREAKPOINT
-      is
+   is
    begin
       Asm (
            Template => ""                                 & CRLF &
@@ -119,7 +119,7 @@ package body x86
    ----------------------------------------------------------------------------
    function ESP_Read
       return Address
-      is
+   is
       Result : Address;
    begin
       Asm (
@@ -140,7 +140,7 @@ package body x86
 
    function CR0_Read
       return CR0_Type
-      is
+   is
       Result : CR0_Type;
    begin
       Asm (
@@ -157,7 +157,7 @@ package body x86
 
    procedure CR0_Write
       (Value : in CR0_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -172,7 +172,7 @@ package body x86
 
    function CR2_Read
       return CR2_Type
-      is
+   is
       Result : CR2_Type;
    begin
       Asm (
@@ -189,7 +189,7 @@ package body x86
 
    procedure CR2_Write
       (Value : in CR2_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -204,7 +204,7 @@ package body x86
 
    function CR3_Read
       return CR3_Type
-      is
+   is
       Result : CR3_Type;
    begin
       Asm (
@@ -221,7 +221,7 @@ package body x86
 
    procedure CR3_Write
       (Value : in CR3_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -240,7 +240,7 @@ package body x86
    procedure LGDTR
       (GDT_Descriptor          : in GDT_Descriptor_Type;
        GDT_Code_Selector_Index : in GDT_Index_Type)
-      is
+   is
       Selector_Address_Target : aliased Selector_Address_Target_Type;
    begin
       Selector_Address_Target.Selector := (
@@ -271,7 +271,7 @@ package body x86
    ----------------------------------------------------------------------------
    procedure LIDTR
       (IDT_Descriptor : in IDT_Descriptor_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -297,15 +297,12 @@ package body x86
        GDT_Address             : in     Address;
        GDT_Length              : in     GDT_Index_Type;
        GDT_Code_Selector_Index : in     GDT_Index_Type)
-      is
-      Intcontext : Intcontext_Type;
+   is
    begin
       GDT_Descriptor.Base_LO := Unsigned_16 (Select_Address_Bits (GDT_Address, 0, 15));
       GDT_Descriptor.Base_HI := Unsigned_16 (Select_Address_Bits (GDT_Address, 16, 31));
       GDT_Descriptor.Limit   := Unsigned_16 (GDT_Length * (GDT_Descriptor'Size / Storage_Unit) - 1);
-      Intcontext_Get (Intcontext);
       LGDTR (GDT_Descriptor, GDT_Code_Selector_Index);
-      Intcontext_Set (Intcontext);
    end GDT_Set;
 
    ----------------------------------------------------------------------------
@@ -321,7 +318,7 @@ package body x86
        P         : in     Boolean;
        D_B       : in     Default_OpSize_Type;
        G         : in     Granularity_Type)
-      is
+   is
    begin
       GDT_Entry.Limit_LO := Unsigned_16 (Unsigned_32 (Limit) and Unsigned_16_Mask);
       GDT_Entry.Base_LO  := Unsigned_16 (Select_Address_Bits (Base, 0, 15));
@@ -349,15 +346,12 @@ package body x86
       (IDT_Descriptor : in out IDT_Descriptor_Type;
        IDT_Address    : in     Address;
        IDT_Length     : in     IDT_Length_Type)
-      is
-      Intcontext : Intcontext_Type;
+   is
    begin
       IDT_Descriptor.Base_LO := Unsigned_16 (Select_Address_Bits (IDT_Address, 0, 15));
       IDT_Descriptor.Base_HI := Unsigned_16 (Select_Address_Bits (IDT_Address, 16, 31));
       IDT_Descriptor.Limit   := Unsigned_16 (IDT_Length * (Exception_Descriptor_Type'Size / Storage_Unit) - 1);
-      Intcontext_Get (Intcontext);
       LIDTR (IDT_Descriptor);
-      Intcontext_Set (Intcontext);
    end IDT_Set;
 
    ----------------------------------------------------------------------------
@@ -368,7 +362,7 @@ package body x86
        Exception_Handler : in     Address;
        Selector          : in     Selector_Type;
        SegType           : in     Segment_Gate_Type)
-      is
+   is
    begin
       IDT_Entry.Offset_LO := Unsigned_16 (Select_Address_Bits (Exception_Handler, 0, 15));
       IDT_Entry.Selector  := Selector;
@@ -383,7 +377,7 @@ package body x86
    ----------------------------------------------------------------------------
    procedure LTR
       (Selector : in Selector_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -397,6 +391,24 @@ package body x86
    end LTR;
 
    ----------------------------------------------------------------------------
+   -- STR
+   ----------------------------------------------------------------------------
+   procedure STR
+      (Destination : in Address)
+   is
+   begin
+      Asm (
+           Template => ""                   & CRLF &
+                       "        str     %0" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Address'Asm_Input ("m", Destination),
+           Clobber  => "",
+           Volatile => True
+          );
+   end STR;
+
+   ----------------------------------------------------------------------------
    -- Select Address Bits
    ----------------------------------------------------------------------------
 
@@ -404,7 +416,7 @@ package body x86
    function Select_Address_Bits_OFS
       (CPU_Address : Address)
       return Bits_12
-      is
+   is
    begin
       return Bits_12 (Select_Address_Bits (CPU_Address, 0, 11));
    end Select_Address_Bits_OFS;
@@ -413,7 +425,7 @@ package body x86
    function Select_Address_Bits_PFA
       (CPU_Address : Address)
       return Bits_20
-      is
+   is
    begin
       return Bits_20 (Select_Address_Bits (CPU_Address, 12, 31));
    end Select_Address_Bits_PFA;
@@ -422,7 +434,7 @@ package body x86
    function Select_Address_Bits_PTE
       (CPU_Address : Address)
       return Bits_10
-      is
+   is
    begin
       return Bits_10 (Select_Address_Bits (CPU_Address, 12, 21));
    end Select_Address_Bits_PTE;
@@ -431,7 +443,7 @@ package body x86
    function Select_Address_Bits_PDE
       (CPU_Address : Address)
       return Bits_10
-      is
+   is
    begin
       return Bits_10 (Select_Address_Bits (CPU_Address, 22, 31));
    end Select_Address_Bits_PDE;
@@ -441,7 +453,7 @@ package body x86
    ----------------------------------------------------------------------------
    procedure Asm_Call
       (Target_Address : in Address)
-      is
+   is
    begin
       Asm (
            Template => ""                    & CRLF &
@@ -459,7 +471,7 @@ package body x86
    ----------------------------------------------------------------------------
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -478,7 +490,7 @@ package body x86
    ----------------------------------------------------------------------------
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -496,7 +508,7 @@ package body x86
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -513,7 +525,7 @@ package body x86
    -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
