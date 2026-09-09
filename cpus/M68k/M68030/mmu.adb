@@ -44,7 +44,8 @@ is
       with Volatile                => True,
            Suppress_Initialization => True;
 
-   Root_Pointer : aliased RPDSC_Type;
+   Root_Pointer : aliased RPDSC_Type
+      with Suppress_Initialization => True;
 
    --========================================================================--
    --                                                                        --

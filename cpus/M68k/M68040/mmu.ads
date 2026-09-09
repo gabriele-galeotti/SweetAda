@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System;
 with M68040;
 
@@ -65,7 +67,9 @@ pragma Warnings (On, "pragma Pack affects convention ""C"" components");
    procedure Page_Setup
       (P  : in Page4k_Ptr;
        BA : in Address);
+
    procedure Enable;
+
    procedure Init;
 
 end MMU;
