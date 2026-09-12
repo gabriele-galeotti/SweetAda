@@ -15,13 +15,15 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with CPU.IO;
 with Mutex;
 
 package body PC
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -53,7 +55,7 @@ package body PC
    procedure PIC_Init
       (Vector_Offset_Master : in Unsigned_8;
        Vector_Offset_Slave  : in Unsigned_8)
-      is
+   is
       SLAVE_ID : constant := 2;
       function To_U8 is new Ada.Unchecked_Conversion (PIC_ICW1_Type, Unsigned_8);
       function To_U8 is new Ada.Unchecked_Conversion (PIC_ICW2_Type, Unsigned_8);
@@ -127,7 +129,7 @@ package body PC
    ----------------------------------------------------------------------------
    procedure PIC_Irq_Enable
       (Irq : in CPU.Irq_Id_Type)
-      is
+   is
       Irq_Line : Natural range 0 .. 7;
       Port     : Unsigned_16;
       Irqs     : PIC_OCW1_Type;
@@ -155,7 +157,7 @@ package body PC
    ----------------------------------------------------------------------------
    procedure PIC_Irq_Disable
       (Irq : in CPU.Irq_Id_Type)
-      is
+   is
       Irq_Line : Natural range 0 .. 7;
       Port     : Unsigned_16;
       Irqs     : PIC_OCW1_Type;
@@ -183,7 +185,7 @@ package body PC
    -- PIC1_EOI
    ----------------------------------------------------------------------------
    procedure PIC1_EOI
-      is
+   is
       function To_U8 is new Ada.Unchecked_Conversion (PIC_OCW2_Type, Unsigned_8);
    begin
       CPU.IO.PortOut (PIC1_OCW2, To_U8 (PIC_OCW2_Type'(
@@ -199,7 +201,7 @@ package body PC
    -- For a slave PIC interrupt, an EOI should be sent also to the master.
    ----------------------------------------------------------------------------
    procedure PIC2_EOI
-      is
+   is
       function To_U8 is new Ada.Unchecked_Conversion (PIC_OCW2_Type, Unsigned_8);
    begin
       Mutex.Acquire (PIC_Lock);
@@ -223,7 +225,7 @@ package body PC
    ----------------------------------------------------------------------------
    procedure PIT_Counter0_Init
       (Count : in Unsigned_16)
-      is
+   is
       function To_U8 is new Ada.Unchecked_Conversion (PIT_Control_Word_Type, Unsigned_8);
    begin
       -- MODE2 = Rate Generator
@@ -247,7 +249,7 @@ package body PC
    ----------------------------------------------------------------------------
    procedure PIT_Counter1_Delay
       (Delay100us_Units : in Positive)
-      is
+   is
       US100_count : constant := ((((PIT_CLK * 100) + (1_000_000 / 2)) / 1_000_000) - 1);
       function To_U8 is new Ada.Unchecked_Conversion (PIT_Control_Word_Type, Unsigned_8);
       function To_PITSB is new Ada.Unchecked_Conversion (Unsigned_8, PIT_Status_Byte_Type);
@@ -286,7 +288,7 @@ pragma Warnings (Off, "types for unchecked conversion have different sizes");
    function RTC_Register_Read
       (Port_Address : Address)
       return Unsigned_8
-      is
+   is
       Register_Address : Unsigned_8;
       Value            : Unsigned_8;
       function To_U8 is new Ada.Unchecked_Conversion (Address, Unsigned_8);
@@ -303,7 +305,7 @@ pragma Warnings (Off, "types for unchecked conversion have different sizes");
    procedure RTC_Register_Write
       (Port_Address : in Address;
        Value        : in Unsigned_8)
-      is
+   is
       Register_Address : Unsigned_8;
       function To_U8 is new Ada.Unchecked_Conversion (Address, Unsigned_8);
    begin
@@ -319,7 +321,7 @@ pragma Warnings (On, "types for unchecked conversion have different sizes");
    ----------------------------------------------------------------------------
    procedure PPI_DataIn
       (Value : out Unsigned_8)
-      is
+   is
    begin
       Value := CPU.IO.PortIn (PPI_DATA);
    end PPI_DataIn;
@@ -329,7 +331,7 @@ pragma Warnings (On, "types for unchecked conversion have different sizes");
    ----------------------------------------------------------------------------
    procedure PPI_DataOut
       (Value : in Unsigned_8)
-      is
+   is
    begin
       CPU.IO.PortOut (PPI_DATA, Value);
    end PPI_DataOut;
@@ -339,7 +341,7 @@ pragma Warnings (On, "types for unchecked conversion have different sizes");
    ----------------------------------------------------------------------------
    procedure PPI_StatusIn
       (Value : out PPI_Status_Type)
-      is
+   is
       function To_PPI_Status is new Ada.Unchecked_Conversion (Unsigned_8, PPI_Status_Type);
    begin
       Value := To_PPI_Status (CPU.IO.PortIn (PPI_STATUS));
@@ -350,7 +352,7 @@ pragma Warnings (On, "types for unchecked conversion have different sizes");
    ----------------------------------------------------------------------------
    procedure PPI_ControlIn
       (Value : out PPI_Control_Type)
-      is
+   is
       function To_PPI_Control is new Ada.Unchecked_Conversion (Unsigned_8, PPI_Control_Type);
    begin
       Value := To_PPI_Control (CPU.IO.PortIn (PPI_CONTROL));
@@ -361,7 +363,7 @@ pragma Warnings (On, "types for unchecked conversion have different sizes");
    ----------------------------------------------------------------------------
    procedure PPI_ControlOut
       (Value : in PPI_Control_Type)
-      is
+   is
       function To_U8 is new Ada.Unchecked_Conversion (PPI_Control_Type, Unsigned_8);
    begin
       CPU.IO.PortOut (PPI_CONTROL, To_U8 (Value));
@@ -371,7 +373,7 @@ pragma Warnings (On, "types for unchecked conversion have different sizes");
    -- PPI_Init
    ----------------------------------------------------------------------------
    procedure PPI_Init
-      is
+   is
    begin
       PPI_ControlOut ((
          Strobe    => NFalse,
