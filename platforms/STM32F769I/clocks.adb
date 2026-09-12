@@ -19,7 +19,7 @@ with Definitions;
 with STM32F769I;
 
 package body Clocks
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -77,7 +77,7 @@ package body Clocks
    -- 3) switch to PLL
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
    begin
       -- activate HSI
       RCC_CR.HSION := True;

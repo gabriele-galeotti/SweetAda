@@ -25,7 +25,7 @@ with Exceptions;
 with Console;
 
 package body BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -54,7 +54,7 @@ package body BSP
    -- SysTick_Init
    ----------------------------------------------------------------------------
    procedure SysTick_Init
-      is
+   is
    begin
       ARMv7M.SYST_RVR.RELOAD := Bits_24 (Clocks.CLK_Core / Configure.TICK_FREQUENCY);
       ARMv7M.SHPR3.PRI_15 := 16#FF#;
@@ -74,7 +74,7 @@ package body BSP
 
    procedure Console_Putchar
       (C : in Character)
-      is
+   is
    begin
       -- wait for transmitter available
       loop exit when USART1.ISR.TXE; end loop;
@@ -83,7 +83,7 @@ package body BSP
 
    procedure Console_Getchar
       (C : out Character)
-      is
+   is
       Data : Unsigned_8;
    begin
       -- wait for receiver available
@@ -96,7 +96,7 @@ package body BSP
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup
-      is
+   is
       Baud_Rate : constant := Baud_Rate_Type'Enum_Rep (BR_115200);
    begin
       -- clock initialization -------------------------------------------------
@@ -107,8 +107,8 @@ package body BSP
       RCC_AHB1ENR.GPIOAEN := True;
       RCC_AHB1RSTR.GPIOARST := True;
       RCC_AHB1RSTR.GPIOARST := False;
-      GPIOA.AFRH := (@ with delta 9 | 10 => AF7_USART1);
-      GPIOA.MODER := (@ with delta 9 | 10 => GPIO_ALT);
+      GPIOA.AFRH.AFR := (@ with delta 9 | 10 => AFR7_USART1);
+      GPIOA.MODER.MODER := (@ with delta 9 | 10 => MODER_ALT);
       -- USART1 setup ---------------------------------------------------------
       RCC_APB2ENR.USART1EN := True;
       RCC_APB2RSTR.USART1RST := True;
@@ -152,13 +152,14 @@ package body BSP
       RCC_AHB1ENR.GPIOJEN := True;
       RCC_AHB1RSTR.GPIOJRST := True;
       RCC_AHB1RSTR.GPIOJRST := False;
-      GPIOJ.MODER  := (@ with delta 5 | 13 => GPIO_OUT);
-      GPIOJ.OTYPER := (@ with delta 5 | 13 => GPIO_PP);
-      GPIOJ.PUPDR  := (@ with delta 5 | 13 => GPIO_NOPUPD);
+      GPIOJ.MODER.MODER  := (@ with delta 5 | 13 => MODER_OUT);
+      GPIOJ.OTYPER.OTYPER := (@ with delta 5 | 13 => OTYPER_PP);
+      GPIOJ.PUPDR.PUPDR  := (@ with delta 5 | 13 => PUPDR_NOPUPD);
       -------------------------------------------------------------------------
       Console.Print ("STM32F769I", NL => True);
       -------------------------------------------------------------------------
       ARMv7M.Irq_Enable;
+      Tick_Count := 0;
       SysTick_Init;
       -------------------------------------------------------------------------
    end Setup;

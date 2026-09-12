@@ -20,7 +20,7 @@ with Interfaces;
 with Bits;
 
 package STM32F769I
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -2130,98 +2130,132 @@ pragma Style_Checks (Off);
    -- 6 General-purpose I/Os (GPIO)
    ----------------------------------------------------------------------------
 
+   type Bits1_Array16 is array (0 .. 15) of Bits_1  with Pack => True, Object_Size => 16;
+   type Bits2_Array16 is array (0 .. 15) of Bits_2  with Pack => True, Object_Size => 32;
+   type Bits4_Array8L is array (0 ..  7) of Bits_4  with Pack => True, Object_Size => 32;
+   type Bits4_Array8H is array (8 .. 15) of Bits_4  with Pack => True, Object_Size => 32;
+   type Bool_Array16  is array (0 .. 15) of Boolean with Pack => True, Object_Size => 16;
+
    -- 6.4.1 GPIO port mode register (GPIOx_MODER) (x =A..K)
 
-   GPIO_IN  : constant := 2#00#; -- Input mode (reset state)
-   GPIO_OUT : constant := 2#01#; -- General purpose output mode
-   GPIO_ALT : constant := 2#10#; -- Alternate function mode
-   GPIO_ANL : constant := 2#11#; -- Analog mode
+   MODER_IN  : constant := 2#00#; -- Input mode (reset state)
+   MODER_OUT : constant := 2#01#; -- General purpose output mode
+   MODER_ALT : constant := 2#10#; -- Alternate function mode
+   MODER_ANL : constant := 2#11#; -- Analog mode
 
-   type GPIOx_MODER_Type is array (0 .. 15) of Bits_2
-      with Object_Size => 32,
-           Pack        => True;
+   -- __INF__ Reset values:
+   -- __INF__ 0xA800 0000 for port A
+   -- __INF__ 0x0000 0280 for port B
+   -- __INF__ 0x0000 0000 for other ports
+   type GPIOx_MODER_Type is record
+      MODER : Bits2_Array16 := [others => MODER_IN]; -- Port x configuration bits
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for GPIOx_MODER_Type use record
+      MODER at 0 range 0 .. 31;
+   end record;
 
    -- 6.4.2 GPIO port output type register (GPIOx_OTYPER) (x = A..K)
 
-   GPIO_PP : constant := 0; -- Output push-pull (reset state)
-   GPIO_OD : constant := 1; -- Output open-drain
+   OTYPER_PP : constant := 0; -- Output push-pull (reset state)
+   OTYPER_OD : constant := 1; -- Output open-drain
 
-pragma Warnings (Off);
-   type GPIOx_OTYPER_Type is array (0 .. 15) of Bits_1
-      with Size        => 32,
-           Object_Size => 32,
-           Pack        => True;
-pragma Warnings (On);
+   type GPIOx_OTYPER_Type is record
+      OTYPER   : Bits1_Array16 := [others => OTYPER_PP]; -- Port x configuration bits
+      Reserved : Bits_16       := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for GPIOx_OTYPER_Type use record
+      OTYPER   at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
 
    -- 6.4.3 GPIO port output speed register (GPIOx_OSPEEDR) (x = A..K)
 
-   GPIO_LO : constant := 2#00#; -- Low speed
-   GPIO_MS : constant := 2#01#; -- Medium speed
-   GPIO_HI : constant := 2#10#; -- High speed
-   GPIO_VH : constant := 2#11#; -- Very high speed
+   OSPEEDR_LO : constant := 2#00#; -- Low speed
+   OSPEEDR_MS : constant := 2#01#; -- Medium speed
+   OSPEEDR_HI : constant := 2#10#; -- High speed
+   OSPEEDR_VH : constant := 2#11#; -- Very high speed
 
-   type GPIOx_OSPEEDR_Type is array (0 .. 15) of Bits_2
-      with Object_Size => 32,
-           Pack        => True;
+   -- __INF__ Reset value:
+   -- __INF__ 0x0C00 0000 for port A
+   -- __INF__ 0x0000 00C0 for port B
+   -- __INF__ 0x0000 0000 for other ports
+   type GPIOx_OSPEEDR_Type is record
+      OSPEEDR : Bits2_Array16 := [others => OSPEEDR_LO]; -- Port x configuration bits
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for GPIOx_OSPEEDR_Type use record
+      OSPEEDR at 0 range 0 .. 31;
+   end record;
 
    -- 6.4.4 GPIO port pull-up/pull-down register (GPIOx_PUPDR)(x = A..K)
 
-   GPIO_NOPUPD : constant := 2#00#; -- No pull-up, pull-down
-   GPIO_PU     : constant := 2#01#; -- Pull-up
-   GPIO_PD     : constant := 2#10#; -- Pull-down
+   PUPDR_NOPUPD : constant := 2#00#; -- No pull-up, pull-down
+   PUPDR_PU     : constant := 2#01#; -- Pull-up
+   PUPDR_PD     : constant := 2#10#; -- Pull-down
 
-   type GPIOx_PUPDR_Type is array (0 .. 15) of Bits_2
-      with Object_Size => 32,
-           Pack        => True;
+   -- __INF__ Reset values:
+   -- __INF__ 0x6400 0000 for port A
+   -- __INF__ 0x0000 0100 for port B
+   -- __INF__ 0x0000 0000 for other ports
+   type GPIOx_PUPDR_Type is record
+      PUPDR : Bits2_Array16 := [others => PUPDR_NOPUPD]; -- Port x configuration bits
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for GPIOx_PUPDR_Type use record
+      PUPDR at 0 range 0 .. 31;
+   end record;
 
    -- 6.4.5 GPIO port input data register (GPIOx_IDR) (x = A..K)
 
-pragma Warnings (Off);
-   type GPIOx_IDR_Type is array (0 .. 15) of Bits_1
-      with Size        => 32,
-           Object_Size => 32,
-           Pack        => True;
-pragma Warnings (On);
+   type GPIOx_IDR_Type is record
+      IDR      : Bits1_Array16; -- Port input data bit
+      Reserved : Bits_16;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for GPIOx_IDR_Type use record
+      IDR      at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
 
    -- 6.4.6 GPIO port output data register (GPIOx_ODR) (x = A..K)
 
-pragma Warnings (Off);
-   type GPIOx_ODR_Type is array (0 .. 15) of Bits_1
-      with Size        => 32,
-           Object_Size => 32,
-           Pack        => True;
-pragma Warnings (On);
+   type GPIOx_ODR_Type is record
+      ODR      : Bits1_Array16 := [others => 0]; -- Port output data bit
+      Reserved : Bits_16       := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for GPIOx_ODR_Type use record
+      ODR      at 0 range  0 .. 15;
+      Reserved at 0 range 16 .. 31;
+   end record;
 
    -- 6.4.7 GPIO port bit set/reset register (GPIOx_BSRR) (x = A..K)
 
-   type BSRR_SET_Type is array (0 .. 15) of Boolean
-      with Object_Size => 16,
-           Pack        => True;
-   type BSRR_RST_Type is array (0 .. 15) of Boolean
-      with Object_Size => 16,
-           Pack        => True;
-
    type GPIOx_BSRR_Type is record
-      SET : BSRR_SET_Type;
-      RST : BSRR_RST_Type;
+      BS : Bool_Array16 := [others => False]; -- Port x set bit
+      BR : Bool_Array16 := [others => False]; -- Port x reset bit
    end record
       with Bit_Order   => Low_Order_First,
            Object_Size => 32;
    for GPIOx_BSRR_Type use record
-      SET at 0 range  0 .. 15;
-      RST at 0 range 16 .. 31;
+      BS at 0 range  0 .. 15;
+      BR at 0 range 16 .. 31;
    end record;
 
    -- 6.4.8 GPIO port configuration lock register (GPIOx_LCKR) (x = A..K)
 
-   type LCKy_Type is array (0 .. 15) of Boolean
-      with Object_Size => 16,
-           Pack        => True;
-
    type GPIOx_LCKR_Type is record
-      LCK      : LCKy_Type;      -- Port x lock bit y (y= 0..15)
-      LCKK     : Boolean;        -- Lock key
-      Reserved : Bits_15   := 0;
+      LCK      : Bool_Array16 := [others => False]; -- Port x lock bit y (y= 0..15)
+      LCKK     : Boolean      := False;             -- Lock key
+      Reserved : Bits_15      := 0;
    end record
       with Bit_Order   => Low_Order_First,
            Object_Size => 32;
@@ -2234,158 +2268,159 @@ pragma Warnings (On);
    -- 6.4.9 GPIO alternate function low register (GPIOx_AFRL) (x = A..K)
    -- 6.4.10 GPIO alternate function high register (GPIOx_AFRH) (x = A..J)
 
-   AF0  : constant := 2#0000#;
-   AF0_SYS renames AF0;
+   AFR0  : constant := 2#0000#;
+   AFR0_SYS renames AFR0;
 
-   AF1  : constant := 2#0001#;
-   AF1_I2C4  renames AF1;
-   AF1_UART5 renames AF1;
-   AF1_TIM1  renames AF1;
-   AF1_TIM2  renames AF1;
+   AFR1  : constant := 2#0001#;
+   AFR1_I2C4  renames AFR1;
+   AFR1_UART5 renames AFR1;
+   AFR1_TIM1  renames AFR1;
+   AFR1_TIM2  renames AFR1;
 
-   AF2  : constant := 2#0010#;
-   AF2_TIM3 renames AF2;
-   AF2_TIM4 renames AF2;
-   AF2_TIM5 renames AF2;
+   AFR2  : constant := 2#0010#;
+   AFR2_TIM3 renames AFR2;
+   AFR2_TIM4 renames AFR2;
+   AFR2_TIM5 renames AFR2;
 
-   AF3  : constant := 2#0011#;
-   AF3_TIM8   renames AF3;
-   AF3_TIM9   renames AF3;
-   AF3_TIM10  renames AF3;
-   AF3_TIM11  renames AF3;
-   AF3_LPTIM1 renames AF3;
-   AF3_DFSDM1 renames AF3;
-   AF3_CEC    renames AF3;
+   AFR3  : constant := 2#0011#;
+   AFR3_TIM8   renames AFR3;
+   AFR3_TIM9   renames AFR3;
+   AFR3_TIM10  renames AFR3;
+   AFR3_TIM11  renames AFR3;
+   AFR3_LPTIM1 renames AFR3;
+   AFR3_DFSDM1 renames AFR3;
+   AFR3_CEC    renames AFR3;
 
-   AF4  : constant := 2#0100#;
-   AF4_I2C1   renames AF4;
-   AF4_I2C2   renames AF4;
-   AF4_I2C3   renames AF4;
-   AF4_I2C4   renames AF4;
-   AF4_USART1 renames AF4;
-   AF4_CEC    renames AF4;
+   AFR4  : constant := 2#0100#;
+   AFR4_I2C1   renames AFR4;
+   AFR4_I2C2   renames AFR4;
+   AFR4_I2C3   renames AFR4;
+   AFR4_I2C4   renames AFR4;
+   AFR4_USART1 renames AFR4;
+   AFR4_CEC    renames AFR4;
 
-   AF5  : constant := 2#0101#;
-   AF5_SPI1 renames AF5;
-   AF5_I2S1 renames AF5;
-   AF5_SPI2 renames AF5;
-   AF5_I2S2 renames AF5;
-   AF5_SPI3 renames AF5;
-   AF5_I2S3 renames AF5;
-   AF5_SPI4 renames AF5;
-   AF5_SPI5 renames AF5;
-   AF5_SPI6 renames AF5;
+   AFR5  : constant := 2#0101#;
+   AFR5_SPI1 renames AFR5;
+   AFR5_I2S1 renames AFR5;
+   AFR5_SPI2 renames AFR5;
+   AFR5_I2S2 renames AFR5;
+   AFR5_SPI3 renames AFR5;
+   AFR5_I2S3 renames AFR5;
+   AFR5_SPI4 renames AFR5;
+   AFR5_SPI5 renames AFR5;
+   AFR5_SPI6 renames AFR5;
 
-   AF6  : constant := 2#0110#;
-   AF6_SPI2   renames AF6;
-   AF6_I2S2   renames AF6;
-   AF6_SPI3   renames AF6;
-   AF6_I2S3   renames AF6;
-   AF6_SAI1   renames AF6;
-   AF6_I2C4   renames AF6;
-   AF6_UART4  renames AF6;
-   AF6_DFSDM1 renames AF6;
+   AFR6  : constant := 2#0110#;
+   AFR6_SPI2   renames AFR6;
+   AFR6_I2S2   renames AFR6;
+   AFR6_SPI3   renames AFR6;
+   AFR6_I2S3   renames AFR6;
+   AFR6_SAI1   renames AFR6;
+   AFR6_I2C4   renames AFR6;
+   AFR6_UART4  renames AFR6;
+   AFR6_DFSDM1 renames AFR6;
 
-   AF7  : constant := 2#0111#;
-   AF7_SPI2   renames AF7;
-   AF7_I2S2   renames AF7;
-   AF7_SPI3   renames AF7;
-   AF7_I2S3   renames AF7;
-   AF7_SPI6   renames AF7;
-   AF7_USART1 renames AF7;
-   AF7_USART2 renames AF7;
-   AF7_USART3 renames AF7;
-   AF7_UART5  renames AF7;
-   AF7_DFSDM1 renames AF7;
-   AF7_SPDIF  renames AF7;
+   AFR7  : constant := 2#0111#;
+   AFR7_SPI2   renames AFR7;
+   AFR7_I2S2   renames AFR7;
+   AFR7_SPI3   renames AFR7;
+   AFR7_I2S3   renames AFR7;
+   AFR7_SPI6   renames AFR7;
+   AFR7_USART1 renames AFR7;
+   AFR7_USART2 renames AFR7;
+   AFR7_USART3 renames AFR7;
+   AFR7_UART5  renames AFR7;
+   AFR7_DFSDM1 renames AFR7;
+   AFR7_SPDIF  renames AFR7;
 
-   AF8  : constant := 2#1000#;
-   AF8_SPI6   renames AF8;
-   AF8_SAI2   renames AF8;
-   AF8_USART6 renames AF8;
-   AF8_UART4  renames AF8;
-   AF8_UART5  renames AF8;
-   AF8_UART7  renames AF8;
-   AF8_UART8  renames AF8;
-   AF8_OTG_FS renames AF8;
-   AF8_SPDIF  renames AF8;
+   AFR8  : constant := 2#1000#;
+   AFR8_SPI6   renames AFR8;
+   AFR8_SAI2   renames AFR8;
+   AFR8_USART6 renames AFR8;
+   AFR8_UART4  renames AFR8;
+   AFR8_UART5  renames AFR8;
+   AFR8_UART7  renames AFR8;
+   AFR8_UART8  renames AFR8;
+   AFR8_OTG_FS renames AFR8;
+   AFR8_SPDIF  renames AFR8;
 
-   AF9  : constant := 2#1001#;
-   AF9_CAN1    renames AF9;
-   AF9_CAN2    renames AF9;
-   AF9_TIM12   renames AF9;
-   AF9_TIM13   renames AF9;
-   AF9_TIM14   renames AF9;
-   AF9_QUADSPI renames AF9;
-   AF9_FMC     renames AF9;
-   AF9_LCD     renames AF9;
+   AFR9  : constant := 2#1001#;
+   AFR9_CAN1    renames AFR9;
+   AFR9_CAN2    renames AFR9;
+   AFR9_TIM12   renames AFR9;
+   AFR9_TIM13   renames AFR9;
+   AFR9_TIM14   renames AFR9;
+   AFR9_QUADSPI renames AFR9;
+   AFR9_FMC     renames AFR9;
+   AFR9_LCD     renames AFR9;
 
-   AF10 : constant := 2#1010#;
-   AF10_SAI2    renames AF10;
-   AF10_QUADSPI renames AF10;
-   AF10_SDMMC2  renames AF10;
-   AF10_DFSDM1  renames AF10;
-   AF10_OTG2_HS renames AF10;
-   AF10_OTG1_FS renames AF10;
-   AF10_LCD     renames AF10;
+   AFR10 : constant := 2#1010#;
+   AFR10_SAI2    renames AFR10;
+   AFR10_QUADSPI renames AFR10;
+   AFR10_SDMMC2  renames AFR10;
+   AFR10_DFSDM1  renames AFR10;
+   AFR10_OTG2_HS renames AFR10;
+   AFR10_OTG1_FS renames AFR10;
+   AFR10_LCD     renames AFR10;
 
-   AF11 : constant := 2#1011#;
-   AF11_I2C4   renames AF11;
-   AF11_CAN3   renames AF11;
-   AF11_SDMMC2 renames AF11;
-   AF11_ETH    renames AF11;
+   AFR11 : constant := 2#1011#;
+   AFR11_I2C4   renames AFR11;
+   AFR11_CAN3   renames AFR11;
+   AFR11_SDMMC2 renames AFR11;
+   AFR11_ETH    renames AFR11;
 
-   AF12 : constant := 2#1100#;
-   AF12_UART7   renames AF12;
-   AF12_FMC     renames AF12;
-   AF12_SDMMC1  renames AF12;
-   AF12_MDIOS   renames AF12;
-   AF12_OTG2_FS renames AF12;
+   AFR12 : constant := 2#1100#;
+   AFR12_UART7   renames AFR12;
+   AFR12_FMC     renames AFR12;
+   AFR12_SDMMC1  renames AFR12;
+   AFR12_MDIOS   renames AFR12;
+   AFR12_OTG2_FS renames AFR12;
 
-   AF13 : constant := 2#1101#;
-   AF13_DCMI renames AF13;
-   AF13_LCD  renames AF13;
-   AF13_DSI  renames AF13;
+   AFR13 : constant := 2#1101#;
+   AFR13_DCMI renames AFR13;
+   AFR13_LCD  renames AFR13;
+   AFR13_DSI  renames AFR13;
 
-   AF14 : constant := 2#1110#;
-   AF14_LCD renames AF14;
+   AFR14 : constant := 2#1110#;
+   AFR14_LCD renames AFR14;
 
-   AF15 : constant := 2#1111#;
-   AF15_SYS renames AF15;
+   AFR15 : constant := 2#1111#;
+   AFR15_SYS renames AFR15;
 
-   type AFRL_Type is array (0 .. 7) of Bits_4
-      with Object_Size => 32,
-           Pack        => True;
+   type AFRL_Type is record
+      AFR : Bits4_Array8L := [others => AFR0]; -- Alternate function selection for port x pin y (y = 0..7)
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for AFRL_Type use record
+      AFR at 0 range 0 .. 31;
+   end record;
 
-   type AFRH_Type is array (8 .. 15) of Bits_4
-      with Object_Size => 32,
-           Pack        => True;
+   type AFRH_Type is record
+      AFR : Bits4_Array8H := [others => AFR0]; -- Alternate function selection for port x pin y (y = 8..15)
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for AFRH_Type use record
+      AFR at 0 range 0 .. 31;
+   end record;
 
    -- 6.4.11 GPIO register map
 
-   MODER_Default   : constant GPIOx_MODER_Type   := [others => GPIO_IN];
-   OTYPER_Default  : constant GPIOx_OTYPER_Type  := [others => GPIO_PP];
-   OSPEEDR_Default : constant GPIOx_OSPEEDR_Type := [others => GPIO_LO];
-   PUPDR_Default   : constant GPIOx_PUPDR_Type   := [others => GPIO_NOPUPD];
-   BSRR_Default    : constant GPIOx_BSRR_Type    := ([others => False], [others => False]);
-   LCKR_Default    : constant GPIOx_LCKR_Type    := (LCK => [others => False], LCKK => False, others => <>);
-   AFRL_Default    : constant AFRL_Type          := [others => AF0];
-   AFRH_Default    : constant AFRH_Type          := [others => AF0];
-
    type GPIO_PORT_Type is record
-      MODER   : GPIOx_MODER_Type   := MODER_Default   with Volatile_Full_Access => True; -- mode register
-      OTYPER  : GPIOx_OTYPER_Type  := OTYPER_Default  with Volatile_Full_Access => True; -- output type register
-      OSPEEDR : GPIOx_OSPEEDR_Type := OSPEEDR_Default with Volatile_Full_Access => True; -- output speed register
-      PUPDR   : GPIOx_PUPDR_Type   := PUPDR_Default   with Volatile_Full_Access => True; -- pull-up/pull-down register
-      IDR     : GPIOx_IDR_Type                        with Volatile_Full_Access => True; -- input data register
-      ODR     : GPIOx_ODR_Type                        with Volatile_Full_Access => True; -- output data register
-      BSRR    : GPIOx_BSRR_Type    := BSRR_Default    with Volatile_Full_Access => True; -- bit set/reset register
-      LCKR    : GPIOx_LCKR_Type    := LCKR_Default    with Volatile_Full_Access => True; -- configuration lock register
-      AFRL    : AFRL_Type          := AFRL_Default    with Volatile_Full_Access => True; -- alternate function low register
-      AFRH    : AFRH_Type          := AFRH_Default    with Volatile_Full_Access => True; -- alternate function high register
+      MODER   : GPIOx_MODER_Type   with Volatile_Full_Access => True; -- mode register
+      OTYPER  : GPIOx_OTYPER_Type  with Volatile_Full_Access => True; -- output type register
+      OSPEEDR : GPIOx_OSPEEDR_Type with Volatile_Full_Access => True; -- output speed register
+      PUPDR   : GPIOx_PUPDR_Type   with Volatile_Full_Access => True; -- pull-up/pull-down register
+      IDR     : GPIOx_IDR_Type     with Volatile_Full_Access => True; -- input data register
+      ODR     : GPIOx_ODR_Type     with Volatile_Full_Access => True; -- output data register
+      BSRR    : GPIOx_BSRR_Type    with Volatile_Full_Access => True; -- bit set/reset register
+      LCKR    : GPIOx_LCKR_Type    with Volatile_Full_Access => True; -- configuration lock register
+      AFRL    : AFRL_Type          with Volatile_Full_Access => True; -- alternate function low register
+      AFRH    : AFRH_Type          with Volatile_Full_Access => True; -- alternate function high register
    end record
-      with Object_Size             => 16#28# * 8,
-           Suppress_Initialization => True;
+      with Object_Size => 16#28# * 8,
+           Volatile    => True;
    for GPIO_PORT_Type use record
       MODER   at 16#00# range 0 .. 31;
       OTYPER  at 16#04# range 0 .. 31;
@@ -2403,7 +2438,6 @@ pragma Warnings (On);
 
    GPIOA : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIOA_BASEADDRESS),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
@@ -2411,7 +2445,6 @@ pragma Warnings (On);
 
    GPIOB : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIOB_BASEADDRESS),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
@@ -2419,7 +2452,6 @@ pragma Warnings (On);
 
    GPIOC : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIOC_BASEADDRESS),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
@@ -2427,7 +2459,6 @@ pragma Warnings (On);
 
    GPIOD : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIOD_BASEADDRESS),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
@@ -2435,7 +2466,6 @@ pragma Warnings (On);
 
    GPIOE : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIOE_BASEADDRESS),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
@@ -2443,7 +2473,6 @@ pragma Warnings (On);
 
    GPIOF : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIOF_BASEADDRESS),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
@@ -2451,7 +2480,6 @@ pragma Warnings (On);
 
    GPIOG : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIOG_BASEADDRESS),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
@@ -2459,7 +2487,6 @@ pragma Warnings (On);
 
    GPIOH : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIOH_BASEADDRESS),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
@@ -2467,7 +2494,6 @@ pragma Warnings (On);
 
    GPIOI : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIOI_BASEADDRESS),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
@@ -2475,7 +2501,6 @@ pragma Warnings (On);
 
    GPIOJ : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIOJ_BASEADDRESS),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 
@@ -2483,7 +2508,6 @@ pragma Warnings (On);
 
    GPIOK : aliased GPIO_PORT_Type
       with Address    => System'To_Address (GPIOK_BASEADDRESS),
-           Volatile   => True,
            Import     => True,
            Convention => Ada;
 

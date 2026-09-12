@@ -1,5 +1,4 @@
 
-with Interfaces;
 with Bits;
 with CPU;
 with STM32F769I;
@@ -16,7 +15,6 @@ package body Application
    --                                                                        --
    --========================================================================--
 
-   use Interfaces;
    use Bits;
    use STM32F769I;
 
@@ -39,13 +37,13 @@ package body Application
          -- blink user LED LD2
          while True loop
             -- 1) toggle by using SET/RESET registers
-            if GPIOJ.ODR (5) /= 0 then
-               GPIOJ.BSRR.RST (5) := True;
+            if GPIOJ.ODR.ODR (5) /= 0 then
+               GPIOJ.BSRR.BR (5) := True;
             else
-               GPIOJ.BSRR.SET (5) := True;
+               GPIOJ.BSRR.BS (5) := True;
             end if;
             -- 2) toggle by reading back
-            -- GPIOJ.ODR (5) := not @;
+            -- GPIOJ.ODR.ODR (5) := not @;
             Console.Print ("hello, SweetAda", NL => True);
             for Count in 1 .. 100_000_000 loop CPU.NOP; end loop;
          end loop;

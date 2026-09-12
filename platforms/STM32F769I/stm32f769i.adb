@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 package body STM32F769I
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -32,7 +32,7 @@ package body STM32F769I
    function DATAST_HCLK
       (Cycles : Bits_8)
       return Bits_8
-      is
+   is
    begin
       if Cycles = 0 then
          raise Constraint_Error;
@@ -46,7 +46,7 @@ package body STM32F769I
    function MEMSET_HCLK
       (Cycles : Bits_8)
       return Bits_8
-      is
+   is
    begin
       if Cycles = 0 then
          raise Constraint_Error;
@@ -60,7 +60,7 @@ package body STM32F769I
    function MEMWAIT_HCLK
       (Cycles : Bits_8)
       return Bits_8
-      is
+   is
    begin
       if Cycles < 2 then
          raise Constraint_Error;
@@ -74,7 +74,7 @@ package body STM32F769I
    function MEMHOLD_HCLK
       (Cycles : Bits_8)
       return Bits_8
-      is
+   is
    begin
       if Cycles = 0 or else Cycles = 255 then
          raise Constraint_Error;
@@ -88,7 +88,7 @@ package body STM32F769I
    function MEMHIZ_HCLK
       (Cycles : Bits_8)
       return Bits_8
-      is
+   is
    begin
       if Cycles = 0 then
          raise Constraint_Error;
@@ -102,7 +102,7 @@ package body STM32F769I
    function ATTSET_HCLK
       (Cycles : Bits_8)
       return Bits_8
-      is
+   is
    begin
       if Cycles = 0 then
          raise Constraint_Error;
@@ -116,7 +116,7 @@ package body STM32F769I
    function ATTWAIT_HCLK
       (Cycles : Bits_8)
       return Bits_8
-      is
+   is
    begin
       if Cycles < 2 then
          raise Constraint_Error;
@@ -130,7 +130,7 @@ package body STM32F769I
    function ATTHOLD_HCLK
       (Cycles : Bits_8)
       return Bits_8
-      is
+   is
    begin
       if Cycles = 0 or else Cycles = 255 then
          raise Constraint_Error;
@@ -144,7 +144,7 @@ package body STM32F769I
    function ATTHIZ_HCLK
       (Cycles : Bits_8)
       return Bits_8
-      is
+   is
    begin
       if Cycles = 0 then
          raise Constraint_Error;
@@ -160,7 +160,7 @@ package body STM32F769I
        ICxPSC : Bits_2;
        ICxF   : Bits_4)
       return Bits_8
-      is
+   is
    begin
       if CCxS = CCxS_OUT then
          raise Constraint_Error;
@@ -182,7 +182,7 @@ package body STM32F769I
        OCxM  : Bits_4;
        OCxCE : Boolean)
       return Bits_8
-      is
+   is
    begin
       if CCxS /= CCxS_OUT then
          raise Constraint_Error;
@@ -205,7 +205,7 @@ package body STM32F769I
        OCxM  : Bits_4;
        OCxCE : Boolean)
       return Bits_1
-      is
+   is
       pragma Unreferenced (OCxFE);
       pragma Unreferenced (OCxPE);
       pragma Unreferenced (OCxCE);
@@ -222,7 +222,7 @@ package body STM32F769I
    function TIMx_CNT_Genpurp_Read
       (TimerN : TimerN_Type)
       return Unsigned_32
-      is
+   is
       Result : Unsigned_32;
    begin
       case TimerN is
@@ -252,7 +252,7 @@ package body STM32F769I
    procedure TIMx_CNT_Genpurp_Write
       (TimerN : in TimerN_Type;
        Value  : in Unsigned_32)
-      is
+   is
    begin
       case TimerN is
          when 2 =>
