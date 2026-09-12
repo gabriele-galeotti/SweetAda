@@ -1094,6 +1094,9 @@ createblockstring(const char **argv, int flags)
 }
 #endif
 
+#if __START_IF_SELECTION__
+#elif defined(_WIN32)
+#else
 /******************************************************************************
  * library_strchrnul()                                                        *
  *                                                                            *
@@ -1111,7 +1114,11 @@ library_strchrnul(const char *s, int c)
 
         return p;
 }
+#endif
 
+#if __START_IF_SELECTION__
+#elif defined(_WIN32)
+#else
 /******************************************************************************
  * execvpe()                                                                  *
  *                                                                            *
@@ -1219,6 +1226,7 @@ execvpe(const char *file, char *const argv[], char *const envp[])
 
         return -1;
 }
+#endif
 
 /******************************************************************************
  * execute_create()                                                           *
