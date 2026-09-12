@@ -44,9 +44,6 @@ Lfcall\@:       // next instruction
                 .global _start
 _start:
 
-                cli
-                cld
-
                 //
                 // Setup segments.
                 //
