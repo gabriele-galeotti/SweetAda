@@ -24,7 +24,7 @@ function Build_Address
     Offset       : SSE.Storage_Offset;
     Scale_Factor : Bits.Address_Shift)
    return System.Address
-   is
+is
    use System.Machine_Code;
    package ISO88591 renames Ada.Characters.Latin_1;
    CRLF   : constant String := ISO88591.CR & ISO88591.LF;

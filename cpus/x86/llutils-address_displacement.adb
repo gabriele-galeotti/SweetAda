@@ -24,7 +24,7 @@ function Address_Displacement
     Object_Address : System.Address;
     Scale_Factor   : Bits.Address_Shift)
    return SSE.Storage_Offset
-   is
+is
    use System.Machine_Code;
    package ISO88591 renames Ada.Characters.Latin_1;
    CRLF   : constant String := ISO88591.CR & ISO88591.LF;

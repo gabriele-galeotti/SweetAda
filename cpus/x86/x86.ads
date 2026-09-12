@@ -259,6 +259,7 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    SEGMENT_DESCRIPTOR_ALIGNMENT : constant := 8;
+   SEGMENT_DESCRIPTOR_SIZE      : constant := 8;
 
    type Segment_Descriptor_Type is record
       Limit_LO : Unsigned_16         := 0;                 -- Segment Limit 0 .. 15
@@ -277,7 +278,7 @@ pragma Style_Checks (Off);
    end record
       with Alignment   => SEGMENT_DESCRIPTOR_ALIGNMENT,
            Bit_Order   => Low_Order_First,
-           Object_Size => 8 * 8;
+           Object_Size => SEGMENT_DESCRIPTOR_SIZE * 8;
    for Segment_Descriptor_Type use record
       Limit_LO at 0 range 0 .. 15;
       Base_LO  at 2 range 0 .. 15;
@@ -314,14 +315,17 @@ pragma Style_Checks (Off);
    -- GDT
    ----------------------------------------------------------------------------
 
+   GDT_DESCRIPTOR_ALIGNMENT : constant := 2;
+   GDT_DESCRIPTOR_SIZE      : constant := 6;
+
    type GDT_Descriptor_Type is record
       Limit   : Unsigned_16 := 0;
       Base_LO : Unsigned_16 := 0;
       Base_HI : Unsigned_16 := 0;
    end record
-      with Alignment   => 2,
+      with Alignment   => GDT_DESCRIPTOR_ALIGNMENT,
            Bit_Order   => Low_Order_First,
-           Object_Size => 6 * 8;
+           Object_Size => GDT_DESCRIPTOR_SIZE * 8;
    for GDT_Descriptor_Type use record
       Limit   at 0 range 0 .. 15;
       Base_LO at 2 range 0 .. 15;
@@ -376,6 +380,7 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    EXCEPTION_DESCRIPTOR_ALIGNMENT : constant := 8;
+   EXCEPTION_DESCRIPTOR_SIZE      : constant := 8;
 
    type Exception_Descriptor_Type is record
       Offset_LO : Unsigned_16;            -- Offset to procedure entry point 0 .. 15
@@ -390,7 +395,7 @@ pragma Style_Checks (Off);
    end record
       with Alignment   => EXCEPTION_DESCRIPTOR_ALIGNMENT,
            Bit_Order   => Low_Order_First,
-           Object_Size => 8 * 8;
+           Object_Size => EXCEPTION_DESCRIPTOR_SIZE * 8;
    for Exception_Descriptor_Type use record
       Offset_LO at 0 range 0 .. 15;
       Selector  at 2 range 0 .. 15;
@@ -419,14 +424,17 @@ pragma Style_Checks (Off);
    -- IDT
    ----------------------------------------------------------------------------
 
+   IDT_DESCRIPTOR_ALIGNMENT : constant := 2;
+   IDT_DESCRIPTOR_SIZE      : constant := 6;
+
    type IDT_Descriptor_Type is record
       Limit   : Unsigned_16;
       Base_LO : Unsigned_16;
       Base_HI : Unsigned_16;
    end record
-      with Alignment   => 2,
+      with Alignment   => IDT_DESCRIPTOR_ALIGNMENT,
            Bit_Order   => Low_Order_First,
-           Object_Size => 6 * 8;
+           Object_Size => IDT_DESCRIPTOR_SIZE * 8;
    for IDT_Descriptor_Type use record
       Limit   at 0 range 0 .. 15;
       Base_LO at 2 range 0 .. 15;
@@ -548,6 +556,7 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    TSS_ALIGNMENT : constant := 4;
+   TSS_SIZE      : constant := 16#68#; -- 10#104#
 
    type TSS_Type is record
       BACK_LINK   : Unsigned_16 := 0;     -- The selector of the TSS of the previously executing task (updated only when a return is expected).
@@ -592,7 +601,7 @@ pragma Style_Checks (Off);
    end record
       with Alignment   => TSS_ALIGNMENT,
            Bit_Order   => Low_Order_First,
-           Object_Size => 16#68# * 8;
+           Object_Size => TSS_SIZE * 8;
    for TSS_Type use record
       BACK_LINK   at 16#00# range 0 .. 15;
       Unused1     at 16#02# range 0 .. 15;

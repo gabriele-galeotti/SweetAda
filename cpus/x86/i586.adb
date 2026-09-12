@@ -22,7 +22,7 @@ with Ada.Unchecked_Conversion;
 with Definitions;
 
 package body i586
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -51,7 +51,7 @@ package body i586
    function To_U64
       (Value : IA32_APIC_BASE_Type)
       return Unsigned_64
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (IA32_APIC_BASE_Type, Unsigned_64);
    begin
       return Convert (Value);
@@ -60,7 +60,7 @@ package body i586
    function To_IA32_APIC_BASE
       (Value : Unsigned_64)
       return IA32_APIC_BASE_Type
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (Unsigned_64, IA32_APIC_BASE_Type);
    begin
       return Convert (Value);
@@ -73,7 +73,7 @@ package body i586
    function RDMSR
       (MSR_Register_Number : MSR_Type)
       return Unsigned_64
-      is
+   is
       Result : Unsigned_64;
    begin
       Asm (
@@ -91,7 +91,7 @@ package body i586
    procedure WRMSR
       (MSR_Register_Number : in MSR_Type;
        Value               : in Unsigned_64)
-      is
+   is
    begin
       Asm (
            Template => ""              & CRLF &
@@ -112,7 +112,7 @@ package body i586
    ----------------------------------------------------------------------------
    function RDTSC
       return Unsigned_64
-      is
+   is
       Result : Unsigned_64;
    begin
       Asm (

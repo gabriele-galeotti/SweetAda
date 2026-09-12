@@ -21,7 +21,7 @@ with System.Machine_Code;
 with Definitions;
 
 package body i486
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -49,7 +49,7 @@ package body i486
 
    function CR4_Read
       return CR4_Type
-      is
+   is
       Result : CR4_Type;
    begin
       Asm (
@@ -66,7 +66,7 @@ package body i486
 
    procedure CR4_Write
       (Value : in CR4_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -84,7 +84,7 @@ package body i486
    ----------------------------------------------------------------------------
    function CPUID_Enabled
       return Boolean
-      is
+   is
       Result : Unsigned_32;
    begin
       Asm (
@@ -116,7 +116,7 @@ package body i486
    ----------------------------------------------------------------------------
    function CPU_VendorID_Read
       return CPUID_VendorID_String_Type
-      is
+   is
       Result       : aliased CPUID_VendorID_String_Type;
       EBX_Register : aliased Unsigned_32
          with Address    => Result (1)'Address,
@@ -155,7 +155,7 @@ package body i486
    ----------------------------------------------------------------------------
    function CPU_Features_Read
       return CPU_Features_Type
-      is
+   is
       Result : CPU_Features_Type;
    begin
       Asm (
