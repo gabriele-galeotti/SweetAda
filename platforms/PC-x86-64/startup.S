@@ -46,9 +46,6 @@ _start:
 
                 .code32
 
-                cli
-                cld
-
                 //
                 // Setup segments.
                 //
