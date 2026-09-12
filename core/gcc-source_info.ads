@@ -22,6 +22,8 @@ package GCC.Source_Info
 is
 
    ----------------------------------------------------------------------------
+   -- File
+   ----------------------------------------------------------------------------
    -- Return the basename of the current input source file.
    ----------------------------------------------------------------------------
    function File
@@ -31,6 +33,8 @@ is
            Convention        => Intrinsic;
 
    ----------------------------------------------------------------------------
+   -- Line
+   ----------------------------------------------------------------------------
    -- Return the current line number of the current input source file.
    ----------------------------------------------------------------------------
    function Line
@@ -39,6 +43,8 @@ is
            Import            => True,
            Convention        => Intrinsic;
 
+   ----------------------------------------------------------------------------
+   -- Source_Location
    ----------------------------------------------------------------------------
    -- Return the concatenation "<file>:<line>", where <file> is the basename
    -- of the current input source file and <line> is the current line number.
