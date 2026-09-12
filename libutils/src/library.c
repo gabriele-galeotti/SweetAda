@@ -1095,6 +1095,132 @@ createblockstring(const char **argv, int flags)
 #endif
 
 /******************************************************************************
+ * library_strchrnul()                                                        *
+ *                                                                            *
+ ******************************************************************************/
+static char *
+library_strchrnul(const char *s, int c)
+{
+        char *p;
+
+        p = strchr(s, c);
+        if (p == NULL)
+        {
+                p = (char *)s + strlen(s);
+        }
+
+        return p;
+}
+
+/******************************************************************************
+ * execvpe()                                                                  *
+ *                                                                            *
+ ******************************************************************************/
+static int
+execvpe(const char *file, char *const argv[], char *const envp[])
+{
+        const char *path;
+        size_t      file_length;
+        size_t      path_length;
+        bool        eacces_flag;
+
+        path = getenv("PATH");
+        if (path == NULL)
+        {
+                path = "/bin:/usr/bin";
+        }
+
+        /*
+         * Initial check.
+         */
+        if (*file == '\0')
+        {
+                errno = ENOENT;
+                return -1;
+        }
+
+        /*
+         * If file starts with '/', then it is an absolute path.
+         */
+        if (strchr(file, '/') != NULL)
+        {
+                execve(file, argv, envp);
+                errno = ENOEXEC;
+                return -1;
+        }
+
+        /*
+         * Compute (and check) lengths of file and path.
+         */
+        file_length = strnlen(file, NAME_MAX) + 1;
+        path_length = strnlen(path, PATH_MAX - 1) + 1;
+        if (file_length - 1 > NAME_MAX)
+        {
+                errno = ENAMETOOLONG;
+                return -1;
+        }
+
+        /*
+         * Search loop.
+         */
+        eacces_flag = false;
+        {
+                char buffer[path_length + file_length + 1];
+                const char *p;
+                const char *p_start;
+                char *p_end;
+                p = path;
+                while (true)
+                {
+                        p_start = library_strchrnul(p, ':');
+                        if (p_start - p >= path_length)
+                        {
+                                if (*p_start == '\0')
+                                {
+                                        break;
+                                }
+                                continue;
+                        }
+                        /* found an executable */
+                        p_end = mempcpy(buffer, p, p_start - p);
+                        *p_end = '/';
+                        if (p < p_start)
+                        {
+                                ++p_end;
+                        }
+                        memcpy(p_end, file, file_length);
+                        execve(buffer, argv, envp);
+                        /* execve() error */
+                        switch (errno)
+                        {
+                                case EACCES:
+                                        eacces_flag = true;
+                                case ENOENT:
+                                case ESTALE:
+                                case ENOTDIR:
+                                case ENODEV:
+                                case ETIMEDOUT:
+                                        break;
+                                default:
+                                        return -1;
+                        }
+                        if (*p_start++ == '\0')
+                        {
+                                break;
+                        }
+                        p = p_start;
+                }
+        }
+
+        if (eacces_flag)
+        {
+                errno = EACCES;
+        }
+
+        return -1;
+}
+
+/******************************************************************************
  * execute_create()                                                           *
  *                                                                            *
  ******************************************************************************/

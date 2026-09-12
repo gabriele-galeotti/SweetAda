@@ -16,6 +16,7 @@
  ******************************************************************************/
 
 #include <inttypes.h>
+#include <limits.h>
 #include <stdarg.h>     /* va_list */
 #include <stdbool.h>
 #include <stddef.h>     /* size_t */

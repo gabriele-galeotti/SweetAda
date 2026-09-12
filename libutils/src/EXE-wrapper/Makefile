@@ -90,7 +90,7 @@ exe-wrapper$(EXEEXT): $(OBJS)
 exe-wrapper.o: exe-wrapper.c
 	$(HOST_CC) -o $@ -c -I. -I.. $(HOST_CC_SWITCHES) $<
 library.o: ../library.c
-	$(HOST_CC) -o $@ -c -D_GNU_SOURCE -DNO_DLL_HANDLING=1 $(HOST_CC_SWITCHES) $<
+	$(HOST_CC) -o $@ -c -DNO_DLL_HANDLING=1 $(HOST_CC_SWITCHES) $<
 
 .PHONY: install
 install: exe-wrapper$(EXEEXT)
