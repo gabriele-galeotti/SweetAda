@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ main.adb                                                                                                  --
+-- __FLN__ main-main.adb                                                                                             --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,28 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-pragma Restrictions (No_Elaboration_Code);
+with BSP;
+with Application;
 
---===========================================================================--
---                                                                           --
---                                                                           --
---                               Main subprogram                             --
---                                                                           --
---                                                                           --
---===========================================================================--
-
+separate (Main)
 procedure Main
 is
-   procedure Ada_Init
-      with Import        => True,
-           Convention    => C,
-           External_Name => "adainit";
-   procedure Main
-      with Inline => True;
-   procedure Main
-   is
-   separate;
 begin
-   Ada_Init;
-   Main;
+   BSP.Setup;
+   Application.Run;
 end Main;

@@ -16,6 +16,7 @@ INCLUDE_DIRECTORIES += $(CORE_DIRECTORY)                     \
                        $(CORE_DIRECTORY)/last_chance_handler \
                        $(CORE_DIRECTORY)/libgcc              \
                        $(CORE_DIRECTORY)/llutils             \
+                       $(CORE_DIRECTORY)/main                \
                        $(CORE_DIRECTORY)/malloc              \
                        $(CORE_DIRECTORY)/memory_functions    \
                        $(CORE_DIRECTORY)/mmio                \
