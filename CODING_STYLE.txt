@@ -125,6 +125,7 @@ Hexadecimal literals all uppercase, C-style "0x" prefix preferred in comments.
 Some object prefixes/suffixes/abbreviations:
 Idx = "index"
 Mem = "memory"
+Msg = "message"
 Ptr = "pointer"
 Reg = "register"
 
