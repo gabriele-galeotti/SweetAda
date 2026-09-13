@@ -5,9 +5,14 @@ plus some utilities and/or fragments of software code.
 core)
 
 The "core" is the whole SweetAda codebase. A core file is every file in the
-SweetAda filesystem hierarchy, except those specified below.
+SweetAda filesystem hierarchy, except those specified below in "RTS" and
+"LibGCC" descriptions.
 
 core files are licensed under the terms of the MIT License.
+
+Note that not all core files are subject to a license, e.g., configuration
+and/or support files, or files that contain no specific source code --
+these files are recognizable because they do not carry the header notice.
 
 Please consult the LICENSE.MIT file located in the top-level directory.
 
@@ -23,14 +28,14 @@ LICENSE Version 3, coupled with the GCC RUNTIME LIBRARY EXCEPTION Version 3.1.
 Other support files and scripts are licensed under the terms of the MIT
 License.
 
-Please consult the LICENSE.COPYING3 and the LICENSE.COPYING3.RUNTIME files
-located in the top-level directory.
+Please consult the COPYING3 and the COPYING3.RUNTIME files located in the
+top-level directory.
 
 LibGCC)
 
 LibGCC files are a small set of assembly/C files insterspersed in the various
 cpus/<cpu> subdirectories, extracted from a GCC standard FSF release. SweetAda
-LibGCC files are only a source code re-formatted and cleaned-up version, with
+LibGCC files are only source code re-formatted and cleaned-up versions, with
 minor changes, and suitable for a compile-time build. These files are not
 strictly needed if you want to link the SweetAda executable with the binary
 form of the library normally present in the compiler toolchain package.
@@ -38,6 +43,6 @@ form of the library normally present in the compiler toolchain package.
 All LibGCC assembly/C files have their own license, i.e, GNU GENERAL PUBLIC
 LICENSE Version 3, coupled with the GCC RUNTIME LIBRARY EXCEPTION Version 3.1.
 
-Please consult the LICENSE.COPYING3 and the LICENSE.COPYING3.RUNTIME files
-located in the top-level directory.
+Please consult the COPYING3 and the COPYING3.RUNTIME files located in the
+top-level directory.
 
