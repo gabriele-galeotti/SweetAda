@@ -15,8 +15,6 @@
 *~
 # GPS
 sweetada-loc.xml
-# jGRASP
-SweetAda.gpj
 # KDE Kate
 .kateproject.d/
 .kateproject
@@ -86,7 +84,6 @@ rts/zfp/
 ################################################################################
 
 cpus/**/L_*
-cpus/RISC-V/mmio-*
 
 ################################################################################
 # application                                                                  #
