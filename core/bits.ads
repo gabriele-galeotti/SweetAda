@@ -446,38 +446,38 @@ pragma Style_Checks (Off);
 
    -- padding bytes
 
-   BYTES_1_SIZE  : constant := 8 * 1;
-   BYTES_2_SIZE  : constant := 8 * 2;
-   BYTES_3_SIZE  : constant := 8 * 3;
-   BYTES_4_SIZE  : constant := 8 * 4;
-   BYTES_5_SIZE  : constant := 8 * 5;
-   BYTES_6_SIZE  : constant := 8 * 6;
-   BYTES_7_SIZE  : constant := 8 * 7;
-   BYTES_8_SIZE  : constant := 8 * 8;
-   BYTES_9_SIZE  : constant := 8 * 9;
-   BYTES_10_SIZE : constant := 8 * 10;
-   BYTES_11_SIZE : constant := 8 * 11;
-   BYTES_12_SIZE : constant := 8 * 12;
-   BYTES_13_SIZE : constant := 8 * 13;
-   BYTES_14_SIZE : constant := 8 * 14;
-   BYTES_15_SIZE : constant := 8 * 15;
-   BYTES_16_SIZE : constant := 8 * 16;
-   BYTES_17_SIZE : constant := 8 * 17;
-   BYTES_18_SIZE : constant := 8 * 18;
-   BYTES_19_SIZE : constant := 8 * 19;
-   BYTES_20_SIZE : constant := 8 * 20;
-   BYTES_21_SIZE : constant := 8 * 21;
-   BYTES_22_SIZE : constant := 8 * 22;
-   BYTES_23_SIZE : constant := 8 * 23;
-   BYTES_24_SIZE : constant := 8 * 24;
-   BYTES_25_SIZE : constant := 8 * 25;
-   BYTES_26_SIZE : constant := 8 * 26;
-   BYTES_27_SIZE : constant := 8 * 27;
-   BYTES_28_SIZE : constant := 8 * 28;
-   BYTES_29_SIZE : constant := 8 * 29;
-   BYTES_30_SIZE : constant := 8 * 30;
-   BYTES_31_SIZE : constant := 8 * 31;
-   BYTES_32_SIZE : constant := 8 * 32;
+   BYTES_1_SIZE  : constant :=  1 * 8;
+   BYTES_2_SIZE  : constant :=  2 * 8;
+   BYTES_3_SIZE  : constant :=  3 * 8;
+   BYTES_4_SIZE  : constant :=  4 * 8;
+   BYTES_5_SIZE  : constant :=  5 * 8;
+   BYTES_6_SIZE  : constant :=  6 * 8;
+   BYTES_7_SIZE  : constant :=  7 * 8;
+   BYTES_8_SIZE  : constant :=  8 * 8;
+   BYTES_9_SIZE  : constant :=  9 * 8;
+   BYTES_10_SIZE : constant := 10 * 8;
+   BYTES_11_SIZE : constant := 11 * 8;
+   BYTES_12_SIZE : constant := 12 * 8;
+   BYTES_13_SIZE : constant := 13 * 8;
+   BYTES_14_SIZE : constant := 14 * 8;
+   BYTES_15_SIZE : constant := 15 * 8;
+   BYTES_16_SIZE : constant := 16 * 8;
+   BYTES_17_SIZE : constant := 17 * 8;
+   BYTES_18_SIZE : constant := 18 * 8;
+   BYTES_19_SIZE : constant := 19 * 8;
+   BYTES_20_SIZE : constant := 20 * 8;
+   BYTES_21_SIZE : constant := 21 * 8;
+   BYTES_22_SIZE : constant := 22 * 8;
+   BYTES_23_SIZE : constant := 23 * 8;
+   BYTES_24_SIZE : constant := 24 * 8;
+   BYTES_25_SIZE : constant := 25 * 8;
+   BYTES_26_SIZE : constant := 26 * 8;
+   BYTES_27_SIZE : constant := 27 * 8;
+   BYTES_28_SIZE : constant := 28 * 8;
+   BYTES_29_SIZE : constant := 29 * 8;
+   BYTES_30_SIZE : constant := 30 * 8;
+   BYTES_31_SIZE : constant := 31 * 8;
+   BYTES_32_SIZE : constant := 32 * 8;
 
    type Pad_Bytes_1  is array (0 ..  0) of Bits_8 with Alignment => 1, Object_Size => BYTES_1_SIZE;
    type Pad_Bytes_2  is array (0 ..  1) of Bits_8 with Alignment => 1, Object_Size => BYTES_2_SIZE;
@@ -517,10 +517,15 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- null object
-   type Null_Object is limited private;
+   type Null_Object is limited null record
+      with Alignment => 1,
+           Size      => 0;
 
    -- low-level assembler interfacing
-   type Asm_Entry_Point is limited private;
+   type Asm_Entry_Point is limited null record
+      with Alignment  => 1,
+           Size       => 0,
+           Convention => Asm;
 
    ----------------------------------------------------------------------------
    -- P/NBooleans
@@ -1375,23 +1380,6 @@ pragma Style_Checks (Off);
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8
       with Inline => True;
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   type Null_Object is null record
-      with Alignment => 1,
-           Size      => 0;
-
-   type Asm_Entry_Point is new Null_Object
-      with Convention => Asm;
 
 pragma Style_Checks (On);
 
