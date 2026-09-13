@@ -15,6 +15,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1131,12 +1132,6 @@ execvpe(const char *file, char *const argv[], char *const envp[])
         size_t      path_length;
         bool        eacces_flag;
 
-        path = getenv("PATH");
-        if (path == NULL)
-        {
-                path = "/bin:/usr/bin";
-        }
-
         /*
          * Initial check.
          */
@@ -1154,6 +1149,15 @@ execvpe(const char *file, char *const argv[], char *const envp[])
                 execve(file, argv, envp);
                 errno = ENOEXEC;
                 return -1;
+        }
+
+        /*
+         * Read PATH from the environment.
+         */
+        path = getenv("PATH");
+        if (path == NULL)
+        {
+                path = "/bin:/usr/bin";
         }
 
         /*
