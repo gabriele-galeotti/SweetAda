@@ -56,7 +56,9 @@ is
 
    Mtx : Mutex.Semaphore_Binary := Mutex.SEMAPHORE_UNLOCKED;
 
-   Debug : Boolean := False;
+   Debug_Flag : Boolean := False;
+
+   Init_Flag : Boolean := False;
 
    function Round_Size
       (Size      : Interfaces.C.size_t;
@@ -127,7 +129,7 @@ is
    procedure Init
       (Memory_Address : in System.Address;
        Size           : in Bits.Bytesize;
-       Debug_Flag     : in Boolean)
+       Debug_Enable   : in Boolean)
    is
    separate;
 

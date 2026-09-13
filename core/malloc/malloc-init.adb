@@ -19,7 +19,7 @@ separate (Malloc)
 procedure Init
    (Memory_Address : in System.Address;
     Size           : in Bits.Bytesize;
-    Debug_Flag     : in Boolean)
+    Debug_Enable   : in Boolean)
 is
    use System;
    use System.Storage_Elements;
@@ -28,22 +28,24 @@ is
            Import     => True,
            Convention => Ada;
 begin
-   Debug := Debug_Flag;
-   -- simulate a request to sbrk()
-   Heap_Block.Size     := Size;
-   Heap_Block.Next_Ptr := null;
-   if Debug then
-      Console.Print (
-         Prefix => "[MALLOC] Size:                 ",
-         Value  => Size,
-         NL     => True
+   if not Init_Flag then
+      Init_Flag := True;
+      Debug_Flag := Debug_Enable;
+      -- simulate a request to sbrk()
+      Heap_Block.Size     := Size;
+      Heap_Block.Next_Ptr := null;
+      Free (Heap_Block'Address + MEMORYBLOCKTYPE_SIZE);
+      if Debug_Flag then
+         Console.Print (
+            Prefix => "[MALLOC] Size:                 ",
+            Value  => Size,
+            NL     => True
+            );
+         Console.Print (
+            Prefix => "[MALLOC] MEMORYBLOCKTYPE_SIZE: ",
+            Value  => Integer'(MEMORYBLOCKTYPE_SIZE),
+            NL     => True
          );
-      Console.Print (
-         Prefix => "[MALLOC] MEMORYBLOCKTYPE_SIZE: ",
-         Value  => Integer'(MEMORYBLOCKTYPE_SIZE),
-         NL     => True
-         );
+      end if;
    end if;
-   Init_Flag := True;
-   Free (Heap_Block'Address + MEMORYBLOCKTYPE_SIZE);
 end Init;

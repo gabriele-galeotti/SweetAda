@@ -30,15 +30,15 @@ begin
    if not Init_Flag then
       raise Program_Error;
    end if;
-   if Debug then
-      Console.Print (Prefix => "Requesting: ", Value => Size, NL => True);
+   if Debug_Flag then
+      Console.Print (Prefix => "[MALLOC] Requesting: ", Value => Size, NL => True);
    end if;
    if Size = 0 then
       return Null_Address;
    end if;
    RSize := Round_Size (MEMORYBLOCKTYPE_SIZE + Size, DEFAULT_ALIGNMENT);
-   if Debug then
-      Console.Print (Prefix => "Rounded size: ", Value => RSize, NL => True);
+   if Debug_Flag then
+      Console.Print (Prefix => "[MALLOC] Rounded size: ", Value => RSize, NL => True);
    end if;
    Mutex.Acquire (Mtx);
    -- traverse the list of free block
@@ -53,9 +53,9 @@ begin
       -- no block with sufficient size was found
       raise Storage_Error;
    end if;
-   if Debug then
+   if Debug_Flag then
       Console.Print (
-         Prefix => "Found block @ ",
+         Prefix => "[MALLOC] Found block @ ",
          Value  => Q.all'Address,
          NL     => True
          );
@@ -70,9 +70,9 @@ begin
                  Import     => True,
                  Convention => Ada;
       begin
-         if Debug then
+         if Debug_Flag then
             Console.Print (
-               Prefix => "Creating free block @ ",
+               Prefix => "[MALLOC] Creating free block @ ",
                Value  => Half_Block'Address,
                NL     => True
                );

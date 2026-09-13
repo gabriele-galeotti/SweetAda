@@ -83,9 +83,9 @@ begin
       Heap_Descriptor.Next_Ptr := Memory_Block'Unchecked_Access;
    end if;
    Mutex.Release (Mtx);
-   if Debug then
+   if Debug_Flag then
       Console.Print (
-         Prefix => "Free block: ",
+         Prefix => "[MALLOC] Free block: ",
          Value  => Memory_Block'Address,
          NL     => True
          );

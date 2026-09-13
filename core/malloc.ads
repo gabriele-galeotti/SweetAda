@@ -93,18 +93,6 @@ is
    procedure Init
       (Memory_Address : in System.Address;
        Size           : in Bits.Bytesize;
-       Debug_Flag     : in Boolean);
-
-private
-
-   --========================================================================--
-   --                                                                        --
-   --                                                                        --
-   --                              Private part                              --
-   --                                                                        --
-   --                                                                        --
-   --========================================================================--
-
-   Init_Flag : Boolean := False;
+       Debug_Enable   : in Boolean);
 
 end Malloc;
