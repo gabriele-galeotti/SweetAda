@@ -1313,21 +1313,6 @@ else
 	@$(MKDIR) $(OBJECT_DIRECTORY)
 endif
 
-.PHONY: kernel_start
-kernel_start:
-ifneq ($(RTS_INSTALLED),Y)
-	$(error Error: no RTS available)
-endif
-	@$(call echo-print,"")
-	@$(call echo-print,"$(PLATFORM): start kernel build.")
-	@$(call echo-print,"")
-
-.PHONY: kernel_end
-kernel_end:
-	@$(call echo-print,"")
-	@$(call echo-print,"$(PLATFORM): kernel compiled successfully.")
-	@$(call echo-print,"")
-
 $(KERNEL_BASENAME).lst     \
 $(KERNEL_BASENAME).src.lst \
 $(KERNEL_BASENAME).elf.lst: $(KERNEL_OUTFILE)
@@ -1359,12 +1344,29 @@ kernel_info: kernel_libinfo             \
              $(KERNEL_BASENAME).src.lst \
              $(KERNEL_BASENAME).elf.lst
 
+.PHONY: kernel_start
+kernel_start:
+	@$(call echo-print,"")
+	@$(call echo-print,"$(PLATFORM): start kernel build.")
+	@$(call echo-print,"")
+
+.PHONY: kernel_end
+kernel_end:
+	@$(call echo-print,"")
+	@$(call echo-print,"$(PLATFORM): kernel compiled successfully.")
+	@$(call echo-print,"")
+
 #
 # Main targets.
 #
 
 .PHONY: $(KERNEL_BASENAME)
+ifneq ($(RTS_INSTALLED),Y)
+$(KERNEL_BASENAME):
+	$(error Error: no RTS available)
+else
 $(KERNEL_BASENAME): $(KERNEL_OUTFILE)
+endif
 
 .PHONY: all
 all: kernel_start       \
