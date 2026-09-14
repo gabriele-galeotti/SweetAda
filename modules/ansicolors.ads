@@ -19,7 +19,7 @@ with Ada.Characters.Latin_1;
 
 package ANSICOLORS
    with Pure => True
-   is
+is
 
    --========================================================================--
    --                                                                        --
