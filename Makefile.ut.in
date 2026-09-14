@@ -70,6 +70,7 @@ UPDATETM           := updatetm$(SCREXT)
 ifeq ($(OSTYPE),cmd)
 ADJMAKEDEPS        := adjmakedeps$(SCREXT)
 DOS2UNIX           := dos2unix$(SCREXT)
+PROCESSOBJS        := processobjs$(SCREXT)
 endif
 endif
 

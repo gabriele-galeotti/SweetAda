@@ -1151,30 +1151,10 @@ else
 endif
 endif
 ifeq      ($(OSTYPE),cmd)
-	$(call create-emptyfile,gnatbind_objs.lst.tmp)
-ifeq      ($(BUILD_MODE),GNATMAKE)
-	@SETLOCAL ENABLEDELAYEDEXPANSION                                       && \
-        FOR /F "delims=?" %%U IN (gnatbind_objs.lst) DO                           \
-          (                                                                       \
-           ECHO $(foreach u,$(IMPLICIT_ALI_UNITS),$(OBJECT_DIRECTORY)/$(u).o)|    \
-           %SystemRoot%\System32\findstr.exe >nul /C:"%%U"                     || \
-           (CALL REM & ECHO %%U>>gnatbind_objs.lst.tmp)                           \
-          )
-else ifeq ($(BUILD_MODE),GPRbuild)
-	@SETLOCAL ENABLEDELAYEDEXPANSION                                               && \
-        SET "PWD=$(shell ECHO %CD%)"                                                   && \
-        FOR /F "delims=?" %%U IN (gnatbind_objs.lst) DO                                   \
-          (                                                                               \
-           ECHO $(foreach u,$(IMPLICIT_ALI_UNITS),"!PWD!\$(OBJECT_DIRECTORY)\$(u).o")|    \
-           %SystemRoot%\System32\findstr.exe >nul /C:"%%U"                             || \
-           (                                                                              \
-            CALL REM                                                                    & \
-            SET "U1=%%U" && SET "U2=!U1:\=/!" && SET "U3=!U2: =\ !"                    && \
-            (ECHO !U3!>>gnatbind_objs.lst.tmp)                                            \
-           )                                                                              \
-          )
-endif
-	-@$(MV) .\gnatbind_objs.lst.tmp .\gnatbind_objs.lst
+	$(PROCESSOBJS)                                              \
+                       -b $(BUILD_MODE) -o $(OBJECT_DIRECTORY)      \
+                       $(foreach u,$(IMPLICIT_ALI_UNITS),-i $(u).o) \
+                       gnatbind_objs.lst
 else ifeq ($(OSTYPE),msys)
 	@sed                                                   \
              -i                                                \
