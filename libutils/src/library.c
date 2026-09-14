@@ -1099,11 +1099,11 @@ createblockstring(const char **argv, int flags)
 #elif defined(_WIN32)
 #else
 /******************************************************************************
- * library_strchrnul()                                                        *
+ * lib_strchrnul()                                                            *
  *                                                                            *
  ******************************************************************************/
 static char *
-library_strchrnul(const char *s, int c)
+lib_strchrnul(const char *s, int c)
 {
         char *p;
 
@@ -1183,7 +1183,7 @@ execvpe(const char *file, char *const argv[], char *const envp[])
                 p = path;
                 while (true)
                 {
-                        p_start = library_strchrnul(p, ':');
+                        p_start = lib_strchrnul(p, ':');
                         if (p_start - p >= path_length)
                         {
                                 if (*p_start == '\0')
