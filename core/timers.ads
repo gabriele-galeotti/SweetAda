@@ -46,9 +46,11 @@ is
 
    procedure Add
       (T : in Timer_Ptr);
+
    function Delete
       (T : Timer_Ptr)
       return Boolean;
+
    procedure Process;
 
 end Timers;

@@ -38,6 +38,9 @@ is
 
    type Stack_Access is access all Integer;
 
+   ----------------------------------------------------------------------------
+   -- Stack_Check
+   ----------------------------------------------------------------------------
    function Stack_Check
       (Stack_Address : System.Address)
       return Stack_Access
@@ -45,6 +48,9 @@ is
            Convention    => C,
            External_Name => "__gnat_stack_check";
 
+   ----------------------------------------------------------------------------
+   -- Get_Env
+   ----------------------------------------------------------------------------
    procedure Get_Env
       (Name   : in System.Address;
        Length : in System.Address;

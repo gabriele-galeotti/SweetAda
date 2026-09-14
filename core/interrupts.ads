@@ -44,12 +44,14 @@ is
       Data_Address => System.Null_Address
       );
 
-   procedure Init;
    procedure Install
       (Irq          : in CPU.Irq_Id_Type;
        Irq_Handler  : in Interrupt_Handler_Ptr;
        Data_Address : in System.Address);
+
    procedure Handler
       (Irq : in CPU.Irq_Id_Type);
+
+   procedure Init;
 
 end Interrupts;
