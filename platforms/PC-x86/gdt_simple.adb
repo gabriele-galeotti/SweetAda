@@ -16,9 +16,10 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Storage_Elements;
+with BSP;
 
 package body GDT_Simple
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -32,7 +33,7 @@ package body GDT_Simple
 
    GDT_Descriptor : aliased GDT_Descriptor_Type
       with Suppress_Initialization => True;
-   GDT            : aliased GDT_Type (0 .. 2)
+   GDT            : aliased GDT_Type (0 .. 3)
       with Suppress_Initialization => True;
 
    --========================================================================--
@@ -47,7 +48,7 @@ package body GDT_Simple
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup
-      is
+   is
    begin
       -- index0: invalid descriptor
       GDT (0) := SEGMENT_DESCRIPTOR_INVALID;
@@ -74,6 +75,18 @@ package body GDT_Simple
          P         => True,
          D_B       => DEFAULT_OPSIZE32,
          G         => GRANULARITY_4k
+         );
+      -- index3: TSS
+      GDT_Set_Entry (
+         GDT_Entry => GDT (2),
+         Base      => BSP.TSS'Address,
+         Limit     => TSS_SIZE - 1,
+         SegType   => SYSGATE_TSSA,
+         S         => DESCRIPTOR_SYSTEM,
+         DPL       => PL0,
+         P         => True,
+         D_B       => 0,
+         G         => GRANULARITY_BYTE
          );
       GDT_Set (GDT_Descriptor, GDT'Address, GDT'Length, 1);
    end Setup;
