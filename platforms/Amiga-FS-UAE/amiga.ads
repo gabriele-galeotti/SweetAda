@@ -24,7 +24,7 @@ with Bits;
 with Videofont8x8;
 
 package Amiga
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -255,10 +255,13 @@ pragma Style_Checks (Off);
    Cursor : Cursor_Type;
 
    procedure OCS_Clear_Screen;
+
    procedure OCS_Print
       (C : in Character);
+
    procedure OCS_Print
       (S : in String);
+
    procedure OCS_Setup;
 
    -- CIAs
@@ -452,9 +455,11 @@ pragma Style_Checks (Off);
 
    procedure CIAA_ICR_ClearAll
       with Inline => True;
+
    procedure CIAA_ICR_ClearBitMask
       (Value : in Unsigned_8)
       with Inline => True;
+
    procedure CIAA_ICR_SetBitMask
       (Value : in Unsigned_8)
       with Inline => True;
@@ -558,17 +563,22 @@ pragma Warnings (On);
    -- Subprograms
 
    procedure Tclk_Init;
+
    procedure Serialport_Init;
+
    procedure Serialport_RX
       (C : out Character);
+
    procedure Serialport_TX
       (C : in Character);
 
    function OpenLibrary
-      (Library_Name : char_array)
+      (Library_Name : aliased char_array)
       return Integer_Address;
+
    procedure CloseLibrary
       (Library_Address : Integer_Address);
+
    function FindConfigDev
       (Library_Base    : Integer_Address;
        oldDev          : Integer_Address;
