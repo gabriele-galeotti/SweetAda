@@ -15,8 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 package body GEMI
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -42,7 +44,7 @@ package body GEMI
    ----------------------------------------------------------------------------
    function LEDPORT_In
       return Unsigned_8
-      is
+   is
    begin
       return LEDPORT_Status;
    end LEDPORT_In;
@@ -52,7 +54,7 @@ package body GEMI
    ----------------------------------------------------------------------------
    procedure LEDPORT_Out
       (Value : in Unsigned_8)
-      is
+   is
    begin
       LEDPORT_Status := Value;
       LEDPORT := LEDPORT_Status;
