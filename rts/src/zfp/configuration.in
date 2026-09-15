@@ -21,10 +21,15 @@ LIBGNAT_SRCS_COMMON += s-parame.ads
 #
 # system.ads default values.
 #
+
+# using "<>" instead of an empty value will physically delete the assignment
+# textual line from generated source, avoiding sparse empty lines
 export RESTRICTIONS_NO_EXCEPTION_PROPAGATION     := pragma Restrictions (No_Exception_Propagation);
 export RESTRICTIONS_NO_EXCEPTION_REGISTRATION    := pragma Restrictions (No_Exception_Registration);
 export RESTRICTIONS_NO_IMPLICIT_DYNAMIC_CODE     := pragma Restrictions (No_Implicit_Dynamic_Code);
 export RESTRICTIONS_NO_IMPLICIT_HEAP_ALLOCATIONS := pragma Restrictions (No_Implicit_Heap_Allocations);
+
+# parameters analyzed by the compiler
 export COMMAND_LINE_ARGS         := False
 export CONFIGURABLE_RUN_TIME     := True
 export SUPPRESS_STANDARD_LIBRARY := True
