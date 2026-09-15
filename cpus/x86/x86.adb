@@ -267,6 +267,24 @@ is
    end LGDTR;
 
    ----------------------------------------------------------------------------
+   -- LLDT
+   ----------------------------------------------------------------------------
+   procedure LLDT
+      (LDT_Selector : in Selector_Type)
+   is
+   begin
+      Asm (
+           Template => ""                     & CRLF &
+                       "        lldt    %%ax" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => Selector_Type'Asm_Input ("a", LDT_Selector),
+           Clobber  => "",
+           Volatile => True
+          );
+   end LLDT;
+
+   ----------------------------------------------------------------------------
    -- LIDTR
    ----------------------------------------------------------------------------
    procedure LIDTR
