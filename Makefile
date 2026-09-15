@@ -1029,8 +1029,8 @@ endif
 ifeq ($(USE_EXE_WRAPPER),Y)
 $(EXE_WRAPPER_TIMESTAMP_FILENAME): FORCE
 else
-.PHONY: compile_main
-compile_main:
+.PHONY: compile-main
+compile-main:
 endif
 ifeq      ($(BUILD_MODE),GNATMAKE)
 	@$(REM) GNATMAKE-driven procedure
@@ -1068,7 +1068,7 @@ B__MAIN_ADB_DEPS += $(CLIBRARY_OBJECT)
 ifeq ($(USE_EXE_WRAPPER),Y)
 B__MAIN_ADB_DEPS += $(EXE_WRAPPER_TIMESTAMP_FILENAME)
 else
-B__MAIN_ADB_DEPS += compile_main
+B__MAIN_ADB_DEPS += compile-main
 endif
 $(OBJECT_DIRECTORY)/b__main.adb: $(B__MAIN_ADB_DEPS)
 	@$(REM) bind all units and generate b__main
@@ -1210,8 +1210,8 @@ $(CORE_DIRECTORY)/linker.adb: $(CONFIGURE_DEPS) $(PLATFORM_DIRECTORY)/$(LD_SCRIP
 # Link phase.
 #
 
-.PHONY: b__main_update
-b__main_update:
+.PHONY: b__main-update
+b__main-update:
 ifeq ($(OSTYPE),cmd)
 	@$(RM) $(OBJECT_DIRECTORY)\b__main.adb
 else
@@ -1229,7 +1229,7 @@ KERNEL_OUTFILE_DEPS += $(CORE_DIRECTORY)/linker.ads
 KERNEL_OUTFILE_DEPS += $(CORE_DIRECTORY)/linker.adb
 ifeq ($(BUILD_MODE),GPRbuild)
 ifeq ($(wildcard $(OBJECT_DIRECTORY)/b__main.o),)
-KERNEL_OUTFILE_DEPS += b__main_update
+KERNEL_OUTFILE_DEPS += b__main-update
 endif
 endif
 KERNEL_OUTFILE_DEPS += $(OBJECT_DIRECTORY)/b__main.o
@@ -1283,8 +1283,8 @@ endif
 # Auxiliary targets.
 #
 
-.PHONY: kernel_lib_obj_dir
-kernel_lib_obj_dir:
+.PHONY: kernel-lib-obj-dir
+kernel-lib-obj-dir:
 ifeq ($(OSTYPE),cmd)
 	@IF NOT EXIST $(LIBRARY_DIRECTORY)\ $(MKDIR) $(LIBRARY_DIRECTORY)
 	@IF NOT EXIST $(OBJECT_DIRECTORY)\ $(MKDIR) $(OBJECT_DIRECTORY)
@@ -1311,27 +1311,27 @@ libgcc.elf.lst: $(KERNEL_OUTFILE)
 	@$(OBJDUMP) -Sdx $(LIBGCC_OBJECT) > libgcc.lst
 	@$(READELF) $(LIBGCC_OBJECT) > libgcc.elf.lst
 
-.PHONY: kernel_libinfo
-kernel_libinfo:
+.PHONY: kernel-libinfo
+kernel-libinfo:
 ifeq ($(USE_LIBGCC),Y)
-kernel_libinfo: libgcc.lst libgcc.elf.lst
+kernel-libinfo: libgcc.lst libgcc.elf.lst
 endif
-kernel_libinfo: libgnat.lst libgnat.elf.lst libgnarl.lst libgnarl.elf.lst
+kernel-libinfo: libgnat.lst libgnat.elf.lst libgnarl.lst libgnarl.elf.lst
 
-.PHONY: kernel_info
-kernel_info: kernel_libinfo             \
+.PHONY: kernel-info
+kernel-info: kernel-libinfo             \
              $(KERNEL_BASENAME).lst     \
              $(KERNEL_BASENAME).src.lst \
              $(KERNEL_BASENAME).elf.lst
 
-.PHONY: kernel_start
-kernel_start:
+.PHONY: kernel-start
+kernel-start:
 	@$(call echo-print,"")
 	@$(call echo-print,"$(PLATFORM): start kernel build.")
 	@$(call echo-print,"")
 
-.PHONY: kernel_end
-kernel_end:
+.PHONY: kernel-end
+kernel-end:
 	@$(call echo-print,"")
 	@$(call echo-print,"$(PLATFORM): kernel compiled successfully.")
 	@$(call echo-print,"")
@@ -1349,10 +1349,10 @@ $(KERNEL_BASENAME): $(KERNEL_OUTFILE)
 endif
 
 .PHONY: all
-all: kernel_start       \
+all: kernel-start       \
      $(KERNEL_BASENAME) \
-     kernel_end         \
-     kernel_info
+     kernel-end         \
+     kernel-info
 
 #
 # Configuration targets.
@@ -1361,7 +1361,7 @@ all: kernel_start       \
 # create KERNEL_CFGFILE file and eventually install subplatform-dependent
 # files (subsequent "configure" phase needs all target files in place)
 .PHONY: createkernelcfg
-createkernelcfg: kernel_lib_obj_dir
+createkernelcfg: kernel-lib-obj-dir
 ifneq ($(filter $(PLATFORM),$(PLATFORMS)),)
 	-$(MAKE) distclean
 	@$(RM) $(KERNEL_CFGFILE)
@@ -1541,16 +1541,16 @@ endif
 # Commands are executed with current directory = SWEETADA_PATH.
 #
 
-.PHONY: debug_notify_off
-debug_notify_off: $(KERNEL_OUTFILE)
+.PHONY: debug-notify-off
+debug-notify-off: $(KERNEL_OUTFILE)
 ifeq ($(USE_ELFTOOL),Y)
 	$(call brief-command, \
         $(ELFTOOL) -c setdebugflag=0x00 $(KERNEL_OUTFILE) \
         ,[ELFTOOL],Debug_Flag=0)
 endif
 
-.PHONY: debug_notify_on
-debug_notify_on: $(KERNEL_OUTFILE)
+.PHONY: debug-notify-on
+debug-notify-on: $(KERNEL_OUTFILE)
 ifeq ($(USE_ELFTOOL),Y)
 	$(call brief-command, \
         $(ELFTOOL) -c setdebugflag=0x01 $(KERNEL_OUTFILE) \
@@ -1588,7 +1588,7 @@ else
 endif
 
 .PHONY: run
-run: debug_notify_off
+run: debug-notify-off
 	$(MAKE) NOBUILD=Y postbuild
 ifneq ($(RUN_COMMAND),)
 	-$(RUN_COMMAND)
@@ -1597,7 +1597,7 @@ else
 endif
 
 .PHONY: debug
-debug: debug_notify_on
+debug: debug-notify-on
 	$(MAKE) NOBUILD=Y postbuild
 ifneq ($(DEBUG_COMMAND),)
 	-$(DEBUG_COMMAND)
