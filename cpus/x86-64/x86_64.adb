@@ -23,7 +23,7 @@ with Definitions;
 with LLutils;
 
 package body x86_64
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -52,7 +52,7 @@ package body x86_64
 
    function CR0_Read
       return CR0_Type
-      is
+   is
       Result : CR0_Type;
    begin
       Asm (
@@ -69,7 +69,7 @@ package body x86_64
 
    procedure CR0_Write
       (Value : in CR0_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -84,7 +84,7 @@ package body x86_64
 
    function CR1_Read
       return CR1_Type
-      is
+   is
       Result : CR1_Type;
    begin
       Asm (
@@ -101,7 +101,7 @@ package body x86_64
 
    procedure CR1_Write
       (Value : in CR1_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -116,7 +116,7 @@ package body x86_64
 
    function CR2_Read
       return CR2_Type
-      is
+   is
       Result : CR2_Type;
    begin
       Asm (
@@ -133,7 +133,7 @@ package body x86_64
 
    procedure CR2_Write
       (Value : in CR2_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -148,7 +148,7 @@ package body x86_64
 
    function CR3_Read
       return CR3_Type
-      is
+   is
       Result : CR3_Type;
    begin
       Asm (
@@ -165,7 +165,7 @@ package body x86_64
 
    procedure CR3_Write
       (Value : in CR3_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -180,7 +180,7 @@ package body x86_64
 
    function CR4_Read
       return CR4_Type
-      is
+   is
       Result : CR4_Type;
    begin
       Asm (
@@ -197,7 +197,7 @@ package body x86_64
 
    procedure CR4_Write
       (Value : in CR4_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                         & CRLF &
@@ -215,7 +215,7 @@ package body x86_64
    ----------------------------------------------------------------------------
    procedure LIDTR
       (IDT_Descriptor : in IDT_Descriptor_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -239,7 +239,7 @@ package body x86_64
       (IDT_Descriptor : in out IDT_Descriptor_Type;
        IDT_Address    : in     Address;
        IDT_Length     : in     IDT_Length_Type)
-      is
+   is
       Intcontext : Intcontext_Type;
    begin
       IDT_Descriptor.Base_LO := Unsigned_16 (Select_Address_Bits (IDT_Address, 0, 15));
@@ -259,7 +259,7 @@ package body x86_64
        Exception_Handler : in     Address;
        Selector          : in     Selector_Type;
        SegType           : in     Segment_Gate_Type)
-      is
+   is
    begin
       IDT_Entry.Offset_LO := Unsigned_16 (Select_Address_Bits (Exception_Handler, 0, 15));
       IDT_Entry.Selector  := Selector;
@@ -275,7 +275,7 @@ package body x86_64
    ----------------------------------------------------------------------------
    procedure LTR
       (Selector : in Selector_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -293,7 +293,7 @@ package body x86_64
    ---------------------------------------------------------------------------
    function RDTSC
       return Unsigned_64
-      is
+   is
       EAX : Unsigned_32;
       EDX : Unsigned_32;
    begin
@@ -319,7 +319,7 @@ package body x86_64
    function RDMSR
       (MSR : MSR_Type)
       return Unsigned_64
-      is
+   is
       Result : Unsigned_64;
    begin
       Asm (
@@ -337,7 +337,7 @@ package body x86_64
    procedure WRMSR
       (MSR   : in MSR_Type;
        Value : in Unsigned_64)
-      is
+   is
    begin
       Asm (
            Template => ""              & CRLF &
@@ -359,7 +359,7 @@ package body x86_64
 
    function IA32_APIC_BASE_Read
       return IA32_APIC_BASE_Type
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (Unsigned_64, IA32_APIC_BASE_Type);
    begin
       return Convert (RDMSR (IA32_APIC_BASE));
@@ -367,7 +367,7 @@ package body x86_64
 
    procedure IA32_APIC_BASE_Write
       (Value : in IA32_APIC_BASE_Type)
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (IA32_APIC_BASE_Type, Unsigned_64);
    begin
       WRMSR (IA32_APIC_BASE, Convert (Value));
@@ -379,7 +379,7 @@ package body x86_64
 
    function IA32_EFER_Read
       return IA32_EFER_Type
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (Unsigned_64, IA32_EFER_Type);
    begin
       return Convert (RDMSR (IA32_EFER));
@@ -387,7 +387,7 @@ package body x86_64
 
    procedure IA32_EFER_Write
       (Value : in IA32_EFER_Type)
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (IA32_EFER_Type, Unsigned_64);
    begin
       WRMSR (IA32_EFER, Convert (Value));
@@ -397,7 +397,7 @@ package body x86_64
    -- NOP
    ----------------------------------------------------------------------------
    procedure NOP
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -414,7 +414,7 @@ package body x86_64
    -- HLT
    ----------------------------------------------------------------------------
    procedure HLT
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -431,7 +431,7 @@ package body x86_64
    -- BREAKPOINT
    ----------------------------------------------------------------------------
    procedure BREAKPOINT
-      is
+   is
    begin
       Asm (
            Template => ""                                 & CRLF &
@@ -449,7 +449,7 @@ package body x86_64
    ----------------------------------------------------------------------------
    procedure Asm_Call
       (Target_Address : in Address)
-      is
+   is
    begin
       Asm (
            Template => ""                    & CRLF &
@@ -467,7 +467,7 @@ package body x86_64
    ----------------------------------------------------------------------------
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -486,7 +486,7 @@ package body x86_64
    ----------------------------------------------------------------------------
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
-      is
+   is
    begin
       Asm (
            Template => ""                   & CRLF &
@@ -504,7 +504,7 @@ package body x86_64
    -- Irq_Enable
    ----------------------------------------------------------------------------
    procedure Irq_Enable
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
@@ -521,7 +521,7 @@ package body x86_64
    -- Irq_Disable
    ----------------------------------------------------------------------------
    procedure Irq_Disable
-      is
+   is
    begin
       Asm (
            Template => ""            & CRLF &
