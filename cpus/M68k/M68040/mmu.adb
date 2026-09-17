@@ -18,7 +18,6 @@
 pragma Restrictions (No_Elaboration_Code);
 
 with System.Storage_Elements;
-with Interfaces;
 with Bits;
 with LLutils;
 
@@ -34,7 +33,6 @@ is
    --========================================================================--
 
    use System.Storage_Elements;
-   use Interfaces;
    use Bits;
    use LLutils;
 
@@ -97,7 +95,6 @@ is
    ----------------------------------------------------------------------------
    procedure Init
    is
-      Page_Address : Integer_Address;
    begin
       for Idx in Root_Table'Range loop
          Root_Table (Idx) := (
