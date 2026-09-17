@@ -15,11 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System;
 with Interfaces;
 
 package CPU.IO
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -29,65 +31,62 @@ package CPU.IO
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use Interfaces;
-
    ----------------------------------------------------------------------------
    -- PortIn/PortOut
    ----------------------------------------------------------------------------
 
    function PortIn
-      (Port : Unsigned_16)
-      return Unsigned_8
+      (Port : Interfaces.Unsigned_16)
+      return Interfaces.Unsigned_8
       with Inline => True;
    function PortIn
-      (Port : Unsigned_16)
-      return Unsigned_16
+      (Port : Interfaces.Unsigned_16)
+      return Interfaces.Unsigned_16
       with Inline => True;
    function PortIn
-      (Port : Unsigned_16)
-      return Unsigned_32
+      (Port : Interfaces.Unsigned_16)
+      return Interfaces.Unsigned_32
       with Inline => True;
    procedure PortOut
-      (Port  : in Unsigned_16;
-       Value : in Unsigned_8)
+      (Port  : in Interfaces.Unsigned_16;
+       Value : in Interfaces.Unsigned_8)
       with Inline => True;
    procedure PortOut
-      (Port  : in Unsigned_16;
-       Value : in Unsigned_16)
+      (Port  : in Interfaces.Unsigned_16;
+       Value : in Interfaces.Unsigned_16)
       with Inline => True;
    procedure PortOut
-      (Port  : in Unsigned_16;
-       Value : in Unsigned_32)
+      (Port  : in Interfaces.Unsigned_16;
+       Value : in Interfaces.Unsigned_32)
       with Inline => True;
 
    ----------------------------------------------------------------------------
    -- I/O operations referenced by address
    ----------------------------------------------------------------------------
 
-   function IO_Read
-      (Port_Address : Address)
-      return Unsigned_8
+   function Read
+      (Port_Address : System.Address)
+      return Interfaces.Unsigned_8
       with Inline => True;
-   function IO_Read
-      (Port_Address : Address)
-      return Unsigned_16
+   function Read
+      (Port_Address : System.Address)
+      return Interfaces.Unsigned_16
       with Inline => True;
-   function IO_Read
-      (Port_Address : Address)
-      return Unsigned_32
+   function Read
+      (Port_Address : System.Address)
+      return Interfaces.Unsigned_32
       with Inline => True;
-   procedure IO_Write
-      (Port_Address : in Address;
-       Value        : in Unsigned_8)
+   procedure Write
+      (Port_Address : in System.Address;
+       Value        : in Interfaces.Unsigned_8)
       with Inline => True;
-   procedure IO_Write
-      (Port_Address : in Address;
-       Value        : in Unsigned_16)
+   procedure Write
+      (Port_Address : in System.Address;
+       Value        : in Interfaces.Unsigned_16)
       with Inline => True;
-   procedure IO_Write
-      (Port_Address : in Address;
-       Value        : in Unsigned_32)
+   procedure Write
+      (Port_Address : in System.Address;
+       Value        : in Interfaces.Unsigned_32)
       with Inline => True;
 
 end CPU.IO;

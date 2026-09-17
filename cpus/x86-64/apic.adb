@@ -15,8 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 package body APIC
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -34,7 +36,7 @@ package body APIC
    -- LAPIC_Init
    ----------------------------------------------------------------------------
    procedure LAPIC_Init
-      is
+   is
    begin
       null;
    end LAPIC_Init;
