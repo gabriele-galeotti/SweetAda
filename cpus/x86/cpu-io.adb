@@ -23,7 +23,7 @@ with Definitions;
 with Bits;
 
 package body CPU.IO
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -33,8 +33,10 @@ package body CPU.IO
    --                                                                        --
    --========================================================================--
 
+   use System;
    use System.Storage_Elements;
    use System.Machine_Code;
+   use Interfaces;
    use Bits;
 
    CRLF : String renames Definitions.CRLF;
@@ -54,7 +56,7 @@ package body CPU.IO
    function PortIn
       (Port : Unsigned_16)
       return Unsigned_8
-      is
+   is
       Result : Unsigned_8;
    begin
       Asm (
@@ -72,7 +74,7 @@ package body CPU.IO
    function PortIn
       (Port : Unsigned_16)
       return Unsigned_16
-      is
+   is
       Result : Unsigned_16;
    begin
       Asm (
@@ -90,7 +92,7 @@ package body CPU.IO
    function PortIn
       (Port : Unsigned_16)
       return Unsigned_32
-      is
+   is
       Result : Unsigned_32;
    begin
       Asm (
@@ -108,7 +110,7 @@ package body CPU.IO
    procedure PortOut
       (Port  : in Unsigned_16;
        Value : in Unsigned_8)
-      is
+   is
    begin
       Asm (
            Template => ""                        & CRLF &
@@ -127,7 +129,7 @@ package body CPU.IO
    procedure PortOut
       (Port  : in Unsigned_16;
        Value : in Unsigned_16)
-      is
+   is
    begin
       Asm (
            Template => ""                        & CRLF &
@@ -146,7 +148,7 @@ package body CPU.IO
    procedure PortOut
       (Port  : in Unsigned_16;
        Value : in Unsigned_32)
-      is
+   is
    begin
       Asm (
            Template => ""                       & CRLF &
@@ -168,56 +170,56 @@ package body CPU.IO
 
    -- Unsigned_8
 
-   function IO_Read
+   function Read
       (Port_Address : Address)
       return Unsigned_8
-      is
+   is
    begin
       return PortIn (Unsigned_16 (To_Integer (Port_Address)) and Unsigned_16_Mask);
-   end IO_Read;
+   end Read;
 
-   procedure IO_Write
+   procedure Write
       (Port_Address : in Address;
        Value        : in Unsigned_8)
-      is
+   is
    begin
       PortOut (Unsigned_16 (To_Integer (Port_Address)) and Unsigned_16_Mask, Value);
-   end IO_Write;
+   end Write;
 
    -- Unsigned_16
 
-   function IO_Read
+   function Read
       (Port_Address : Address)
       return Unsigned_16
-      is
+   is
    begin
       return PortIn (Unsigned_16 (To_Integer (Port_Address)) and Unsigned_16_Mask);
-   end IO_Read;
+   end Read;
 
-   procedure IO_Write
+   procedure Write
       (Port_Address : in Address;
        Value        : in Unsigned_16)
-      is
+   is
    begin
       PortOut (Unsigned_16 (To_Integer (Port_Address)) and Unsigned_16_Mask, Value);
-   end IO_Write;
+   end Write;
 
    -- Unsigned_32
 
-   function IO_Read
+   function Read
       (Port_Address : Address)
       return Unsigned_32
-      is
+   is
    begin
       return PortIn (Unsigned_16 (To_Integer (Port_Address)) and Unsigned_16_Mask);
-   end IO_Read;
+   end Read;
 
-   procedure IO_Write
+   procedure Write
       (Port_Address : in Address;
        Value        : in Unsigned_32)
-      is
+   is
    begin
       PortOut (Unsigned_16 (To_Integer (Port_Address)) and Unsigned_16_Mask, Value);
-   end IO_Write;
+   end Write;
 
 end CPU.IO;
