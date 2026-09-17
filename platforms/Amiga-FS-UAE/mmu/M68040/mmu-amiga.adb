@@ -15,13 +15,14 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System.Storage_Elements;
-with Interfaces;
 with Bits;
 with LLutils;
 
 package body MMU.Amiga
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -32,7 +33,6 @@ package body MMU.Amiga
    --========================================================================--
 
    use System.Storage_Elements;
-   use Interfaces;
    use Bits;
    use LLutils;
 
@@ -74,7 +74,7 @@ package body MMU.Amiga
    --========================================================================--
 
    procedure Setup
-      is
+   is
       Page_Address : Integer_Address;
    begin
       MMU.Init;

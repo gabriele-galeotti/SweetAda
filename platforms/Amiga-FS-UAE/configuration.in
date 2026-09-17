@@ -37,8 +37,6 @@ FPU_MODEL := M68881
 #                                                                              #
 ################################################################################
 
-$(call list-insert,INCLUDE_DIRECTORIES,$(PLATFORM_DIRECTORY)/mmu/$(CPU_MODEL))
-
 GCC_SWITCHES_PLATFORM     := -mcpu=68010
 #GCC_SWITCHES_PLATFORM     := -mcpu=68020 -m68881
 #GCC_SWITCHES_PLATFORM     := -mcpu=68030 -m68881
@@ -66,6 +64,8 @@ LOWLEVEL_FILES_PLATFORM        := startup.S llkernel.S
 GCC_SWITCHES_LOWLEVEL_PLATFORM := -Wa,--bitwise-or
 
 CLEAN_OBJECTS_COMMON += debug.uae fs-uae.log.txt adfboot.o adboot.bin adfboot.lst boot.adf
+
+EXTRA_INCLUDE_DIRECTORIES += $(PLATFORM_DIRECTORY)/mmu/$(CPU_MODEL)
 
 ################################################################################
 # User parameters.                                                             #

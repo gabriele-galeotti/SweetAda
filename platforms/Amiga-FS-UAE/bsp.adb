@@ -166,6 +166,7 @@ package body BSP is
          Gayle.IDE_Devcon.IRQDISABLE := True;
       end if;
       -- system timer initialization ------------------------------------------
+      Tick_Count := 0;
       Tclk_Init;
       -- interrupt setup ------------------------------------------------------
       INTENA_ClearAll;
@@ -180,7 +181,7 @@ package body BSP is
       Malloc.Init (
          Memory_Address => System'To_Address (16#000C_0000#),
          Size           => KiB64,
-         Debug_Flag     => True
+         Debug_Enable   => True
          );
       -------------------------------------------------------------------------
    end Setup;

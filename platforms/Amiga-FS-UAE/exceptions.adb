@@ -21,7 +21,7 @@ with Core;
 with MMIO;
 with Amiga;
 with BSP;
-with Gdbstub;
+with GDBstub;
 with A2065;
 with Console;
 
@@ -39,7 +39,6 @@ package body Exceptions
    use System.Storage_Elements;
    use Abort_Library;
    use Amiga;
-   -- use BSP;
 
    --========================================================================--
    --                                                                        --
@@ -68,7 +67,7 @@ package body Exceptions
             Console.Print (Prefix => "4: ", Value => Unsigned_16'(MMIO.Read (Frame_Address + 16 + 6)), NL => True);
             System_Abort;
          when Trace | Trap_15 =>
-            Gdbstub.Enter_Stub (Gdbstub.TARGET_BREAKPOINT, Core.KERNEL_THREAD_ID);
+            GDBstub.Enter_Stub (GDBstub.TARGET_BREAKPOINT, Core.KERNEL_THREAD_ID);
          when Format_Error =>
             Irq_Disable;
             Console.Print_NewLine;

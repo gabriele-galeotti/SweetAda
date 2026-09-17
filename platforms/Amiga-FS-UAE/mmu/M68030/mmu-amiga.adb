@@ -15,8 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 package body MMU.Amiga
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -27,7 +29,7 @@ package body MMU.Amiga
    --========================================================================--
 
    procedure Setup
-      is
+   is
    begin
       Init;
       declare
