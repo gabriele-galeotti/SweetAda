@@ -517,12 +517,12 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- null object
-   type Null_Object is limited null record
+   type Null_Object is null record
       with Alignment => 1,
            Size      => 0;
 
    -- low-level assembler interfacing
-   type Asm_Entry_Point is limited null record
+   type Asm_Entry_Point is null record
       with Alignment  => 1,
            Size       => 0,
            Convention => Asm;
