@@ -24,7 +24,7 @@ with ML605;
 with BSP;
 
 package body Exceptions
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -54,18 +54,18 @@ package body Exceptions
    -- Exception_Process
    ----------------------------------------------------------------------------
    procedure Exception_Process
-      is
+   is
    begin
       BSP.Tick_Count := @ + 1;
       Timer.TCSR0.T0INT := False; -- clear Timer flag
-      INTC.IAR (TIMER_IRQ) := True; -- clear INTC flag
+      INTC.IAR.INT (TIMER_IRQ) := True; -- clear INTC flag
    end Exception_Process;
 
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
    begin
       -- Memory_Functions.Cpymem (
       --   SSE.To_Address (Linker.Vectors_EText), -- .vectors section

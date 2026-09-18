@@ -20,7 +20,7 @@ with Bits;
 with XPS;
 
 package ML605
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -41,13 +41,13 @@ package ML605
    AXIENET_BASEADDRESS   : constant := 16#8278_0000#;
    AXIDMA_BASEADDRESS    : constant := 16#8460_0000#;
 
-   Timer : aliased XPS_Timer_Type
+   Timer : aliased TimerCounter_Type
       with Address    => System'To_Address (TIMER_BASEADDRESS),
            Volatile   => True,
            Import     => True,
            Convention => Ada;
 
-   INTC : aliased XPS_INTC_Type
+   INTC : aliased InterruptController_Type
       with Address    => System'To_Address (INTC_BASEADDRESS),
            Volatile   => True,
            Import     => True,

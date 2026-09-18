@@ -19,7 +19,7 @@ with Interfaces;
 with Definitions;
 
 package body ML605
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -47,9 +47,9 @@ package body ML605
    -- Tclk_Init
    ----------------------------------------------------------------------------
    procedure Tclk_Init
-      is
+   is
    begin
-      Timer.TLR0 := TIMER_CLK / 1_000;
+      Timer.TLR0.TimerCounter_Load_Register := TIMER_CLK / 1_000;
       Timer.TCSR0 := (
          ENALL  => False,
          PWMA0  => False,
@@ -75,18 +75,10 @@ package body ML605
    -- INTC_Init
    ----------------------------------------------------------------------------
    procedure INTC_Init
-      is
+   is
    begin
-      INTC := (
-         ISR => [others => False],
-         IPR => [others => False],
-         IER => [others => False],
-         IAR => [others => False],
-         SIE => [others => False],
-         CIE => [others => False],
-         IVR => 0,
-         MER => (HIE => True, ME => True, others => 0)
-         );
+      INTC.IVR.Interrupt_Vector_Number := 0;
+      INTC.MER := (HIE => True, ME => True, others => 0);
    end INTC_Init;
 
 end ML605;
