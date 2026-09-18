@@ -18,7 +18,7 @@
 with GCC.Types;
 
 package LibGCC
-   with Pure => True,
+   with Pure => True
 is
 
    --========================================================================--
