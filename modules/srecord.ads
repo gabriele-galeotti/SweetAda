@@ -18,7 +18,7 @@
 with System.Storage_Elements;
 
 package Srecord
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -28,14 +28,14 @@ package Srecord
    --                                                                        --
    --========================================================================--
 
-   use System.Storage_Elements;
-
    type Getchar_Ptr is access procedure (C : out Character);
    type Putchar_Ptr is access procedure (C : in  Character);
 
-   Start_Address : Integer_Address := 0;
-
    procedure Receive;
+
+   function Get_StartAddress
+      return System.Storage_Elements.Integer_Address;
+
    procedure Init
       (Getchar     : in Getchar_Ptr;
        Putchar     : in Putchar_Ptr;

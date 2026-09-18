@@ -22,7 +22,7 @@ with LLutils;
 with Memory_Functions;
 
 package body Srecord
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -32,6 +32,7 @@ package body Srecord
    --                                                                        --
    --========================================================================--
 
+   use System.Storage_Elements;
    use Ada.Characters.Latin_1;
    use Interfaces;
    use Bits;
@@ -58,6 +59,8 @@ package body Srecord
    Data         : Byte_Array (0 .. 255);
    Prompt       : constant String := CR & LF & "S-record" & CR & LF;
 
+   Start_Address : Integer_Address;
+
    --========================================================================--
    --                                                                        --
    --                                                                        --
@@ -73,7 +76,7 @@ package body Srecord
    -- A quick exit from the loop could be obtained by typing "S70400000000FB".
    ----------------------------------------------------------------------------
    procedure Receive
-      is
+   is
       RX_Status         : RX_Status_Type;
       C                 : Character;
       C_Is_HexDigit     : Boolean;
@@ -266,6 +269,16 @@ package body Srecord
    end Receive;
 
    ----------------------------------------------------------------------------
+   -- Get_StartAddress
+   ----------------------------------------------------------------------------
+   function Get_StartAddress
+      return Integer_Address
+   is
+   begin
+      return Start_Address;
+   end Get_StartAddress;
+
+   ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
    -- Getchar: procedure pointer to get a character from terminal
@@ -275,7 +288,7 @@ package body Srecord
       (Getchar     : in Getchar_Ptr;
        Putchar     : in Putchar_Ptr;
        Echo_Enable : in Boolean)
-      is
+   is
    begin
       RX_Character := Getchar;
       TX_Character := Putchar;
