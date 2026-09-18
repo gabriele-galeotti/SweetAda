@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with Interfaces;
 with Bits;
 
 package MPC106
@@ -31,7 +30,6 @@ package MPC106
    --========================================================================--
 
    use System;
-   use Interfaces;
    use Bits;
 
 pragma Style_Checks (Off);
@@ -53,6 +51,26 @@ pragma Style_Checks (Off);
 
    PICR1_Offset : constant := 16#A8#;
    PICR2_Offset : constant := 16#AC#;
+
+   -- 3.2.3 PCI Registers
+   -- 3.2.3.1 PCI Command Register
+   -- 3.2.3.2 PCI Status Register
+   -- 3.2.4 Performance Monitor Registers
+   -- 3.2.4.1 Performance Monitor Command Register (CMDR)—0x48
+   -- 3.2.4.2 Performance Monitor Mode Control Register (MMCR)—0x4C
+   -- 3.2.4.3 Performance Monitor Counters (PMC0, PMC1, PMC2, PMC3)—0x50, 0x54, 0x58, 0x5C
+   -- 3.2.5 Power Management Configuration Registers (PMCRs)
+   -- 3.2.6 Output Driver Control Register (ODCR)—0x73
+   -- 3.2.7 Error Handling Registers
+   -- 3.2.7.1 ECC Single-Bit Error Registers
+   -- 3.2.7.2 Error Enabling Registers
+   -- 3.2.7.3 Error Detection Registers
+   -- 3.2.7.4 Error Status Registers
+   -- 3.2.8 Memory Interface Configuration Registers
+   -- 3.2.8.1 Memory Boundary Registers
+   -- 3.2.8.2 Memory Bank Enable Register
+   -- 3.2.8.3 Memory Page Mode Register
+   -- 3.2.8.4 Memory Control Configuration Registers
 
    -- 3.2.9 Processor Interface Configuration Registers
 
@@ -265,6 +283,145 @@ pragma Style_Checks (Off);
       NO_SERIAL_CFG        at 0 range 29 .. 29;
       L2_EN                at 0 range 30 .. 30;
       L2_UPDATE_EN         at 0 range 31 .. 31;
+   end record;
+
+   -- 3.2.10 Alternate OS-Visible Parameters Registers
+
+   nXIO_MODE_DISCONTIGUOUS : constant := 0; -- Discontiguous mode
+   nXIO_MODE_CONTIGUOUS    : constant := 1; -- Contiguous mode
+
+   type AOSVPR1_Type is record
+      MCP_EN     : Boolean := False;                -- Machine check enable.
+      TEA_EN     : Boolean := False;                -- Transfer error acknowledge enable.
+      nXIO_MODE  : Bits_1  := nXIO_MODE_CONTIGUOUS; -- Address map A discontiguous/contiguous mode.
+      Reserved1  : Bits_2  := 0;
+      RX_SERR_EN : Boolean := False;                -- This bit controls whether the MPC106 recognizes the assertion of SERR by another PCI device.
+      Reserved2  : Bits_2  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for AOSVPR1_Type use record
+      MCP_EN     at 0 range 0 .. 0;
+      TEA_EN     at 0 range 1 .. 1;
+      nXIO_MODE  at 0 range 2 .. 2;
+      Reserved1  at 0 range 3 .. 4;
+      RX_SERR_EN at 0 range 5 .. 5;
+      Reserved2  at 0 range 6 .. 7;
+   end record;
+
+   type AOSVPR2_Type is record
+      FLASH_WR_EN : Boolean := False; -- Flash write enable.
+      Reserved    : Bits_7  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for AOSVPR2_Type use record
+      FLASH_WR_EN at 0 range 0 .. 0;
+      Reserved    at 0 range 1 .. 7;
+   end record;
+
+   -- 3.2.11 Emulation Support Configuration Registers
+
+   PROC_COMPATIBILITY_HOLE_MEM : constant := 0; -- The MPC106 forwards 60x processor-initiated transactions in the address range 0x000A_0000–0x000B_FFFF to system memory.
+   PROC_COMPATIBILITY_HOLE_PCI : constant := 1; -- The MPC106 forwards 60x processor-initiated transactions in the address range 0x000A_0000–0x000B_FFFF to the PCI memory space.
+
+   PCI_COMPATIBILITY_HOLE_MEM  : constant := 0; -- The MPC106, as a PCI target, responds to PCI addresses in the range 0x000A_0000–0x000F_FFFF, and forwards the transaction to system memory.
+   PCI_COMPATIBILITY_HOLE_NONE : constant := 1; -- The MPC106, as a PCI target, does not respond to PCI addresses in the range 0x000A_0000–0x000F_FFFF.
+
+   type ESCR1_Type is record
+      EMULATION_MODE_EN       : Boolean := False;                       -- Emulation mode address map enable.
+      EMULATION_MODE_HW       : Bits_1  := 1;                           -- This bit is read-only and indicates that the MPC106 supports the emulation mode address map.
+      PROC_COMPATIBILITY_HOLE : Bits_1  := PROC_COMPATIBILITY_HOLE_MEM; -- This bit is used for address map B and the emulation mode map only; it is not used for address map A.
+      PCI_COMPATIBILITY_HOLE  : Bits_1  := PCI_COMPATIBILITY_HOLE_MEM;  -- This bit is used for address map B and the emulation mode map only; it is not used for address map A.
+      PIRQ_ACTIVE_HIGH        : Boolean := False;                       -- /PIRQ signal polarity.
+      PIRQ_EN                 : Boolean := False;                       -- When emulation mode is enabled, PIRQ will be asserted if a PCI-write-to-system-memory occurs when the modified memory status is 0b00.
+      FD_ALIAS_EN             : Boolean := True;                        -- This bit is used in address map B only; it is not used for map A or the emulation mode map.
+      Reserved1               : Bits_1  := 0;
+      TOP_OF_MEM              : Bits_8  := 0;                           -- These bits represent the block address of a 1-Mbyte block that is the upper address boundary to which the MPC106, as a PCI target, will respond.
+      INT_VECTOR_RELOCATE     : Bits_12 := 16#FFF#;                     -- These bits represent the 1-Mbyte block of system memory that is accessed when emulation mode is enabled (EMULATION_MODE_EN = 1) and a 60x transaction to the address range 0xFFF0_0000–0xFFFF_FFFF occurs.
+      Reserved2               : Bits_4  := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ESCR1_Type use record
+      EMULATION_MODE_EN       at 0 range  0 ..  0;
+      EMULATION_MODE_HW       at 0 range  1 ..  1;
+      PROC_COMPATIBILITY_HOLE at 0 range  2 ..  2;
+      PCI_COMPATIBILITY_HOLE  at 0 range  3 ..  3;
+      PIRQ_ACTIVE_HIGH        at 0 range  4 ..  4;
+      PIRQ_EN                 at 0 range  5 ..  5;
+      FD_ALIAS_EN             at 0 range  6 ..  6;
+      Reserved1               at 0 range  7 ..  7;
+      TOP_OF_MEM              at 0 range  8 .. 15;
+      INT_VECTOR_RELOCATE     at 0 range 16 .. 27;
+      Reserved2               at 0 range 28 .. 31;
+   end record;
+
+   MOD_MEM_SIZE_NONE_1 : constant := 2#1000_0000#; -- 16 Kbytes (not supported)
+   MOD_MEM_SIZE_8k     : constant := 2#0100_0000#; -- 8 Kbytes
+   MOD_MEM_SIZE_4k     : constant := 2#0010_0000#; -- 4 Kbytes
+   MOD_MEM_SIZE_NONE_2 : constant := 2#0001_0000#; -- 2 Kbytes (not supported)
+   MOD_MEM_SIZE_NONE_3 : constant := 2#0000_1000#; -- 1 Kbyte (not supported)
+   MOD_MEM_SIZE_NONE_4 : constant := 2#0000_0100#; -- 512 bytes (not supported)
+   MOD_MEM_SIZE_NONE_5 : constant := 2#0000_0010#; -- 256 bytes (not supported)
+   MOD_MEM_SIZE_NONE_6 : constant := 2#0000_0001#; -- 128 bytes (not supported)
+
+   type ESCR2_Type is record
+      MOD_MEM_SIZE : Bits_8  := MOD_MEM_SIZE_4k; -- These bits configure the size of the modified memory regions in system memory for the emulation mode address map.
+      Reserved     : Bits_24 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 32;
+   for ESCR2_Type use record
+      MOD_MEM_SIZE at 0 range 0 ..  7;
+      Reserved     at 0 range 8 .. 31;
+   end record;
+
+   -- 3.2.12 External Configuration Registers
+
+   -- LE_MODE_* constants already defined at 3.2.9
+
+   type ExternalConfigurationRegister1_Type is record
+      Reserved1 : Bits_1 := 0;
+      LE_MODE   : Bits_1 := LE_MODE_BE; -- This bit controls the endian mode of the MPC106.
+      Reserved2 : Bits_6 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ExternalConfigurationRegister1_Type use record
+      Reserved1 at 0 range 0 .. 0;
+      LE_MODE   at 0 range 1 .. 1;
+      Reserved2 at 0 range 2 .. 7;
+   end record;
+
+   type ExternalConfigurationRegister2_Type is record
+      Reserved     : Bits_4  := 0;
+      CF_FLUSH_L2  : Boolean := False; -- L2 cache flush.
+      TEA_EN       : Boolean := False; -- Transfer error acknowledge enable.
+      L2_EN        : Boolean := True;  -- This bit enables/disables the L2 cache.
+      L2_UPDATE_EN : Boolean := True;  -- This bit controls how the L2 cache handles cache misses.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ExternalConfigurationRegister2_Type use record
+      Reserved     at 0 range 0 .. 3;
+      CF_FLUSH_L2  at 0 range 4 .. 4;
+      TEA_EN       at 0 range 5 .. 5;
+      L2_EN        at 0 range 6 .. 6;
+      L2_UPDATE_EN at 0 range 7 .. 7;
+   end record;
+
+   -- nXIO_MODE_* already defined at 3.2.10
+
+   type ExternalConfigurationRegister3_Type is record
+      nXIO_MODE : Bits_1 := nXIO_MODE_CONTIGUOUS; -- Address map A discontiguous/contiguous mode.
+      Reserved  : Bits_7 := 0;
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for ExternalConfigurationRegister3_Type use record
+      nXIO_MODE at 0 range 0 .. 0;
+      Reserved  at 0 range 1 .. 7;
    end record;
 
 pragma Style_Checks (On);
