@@ -25,7 +25,7 @@ with Linker;
 with Srecord;
 
 package body Monitor
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -60,7 +60,7 @@ package body Monitor
    -- Getline
    ----------------------------------------------------------------------------
    procedure Getline
-      is
+   is
       C : Character;
    begin
       Buffer_Idx := 1;
@@ -97,7 +97,7 @@ package body Monitor
    -- Parameters_Dump
    ----------------------------------------------------------------------------
    procedure Parameters_Dump
-      is
+   is
    begin
       Console.Print ("CPU byte order:        ");
       if Bits.BigEndian then
@@ -117,7 +117,7 @@ package body Monitor
    -- Help
    ----------------------------------------------------------------------------
    procedure Help
-      is
+   is
    begin
       Console.Print ("help    - this help",         NL => True);
       Console.Print ("parms   - parameters dump",   NL => True);
@@ -129,7 +129,7 @@ package body Monitor
    -- Monitor
    ----------------------------------------------------------------------------
    procedure Monitor
-      is
+   is
    begin
       Console.Print (Banner, NL => True);
       Console.Print ("type 'help' for available commands", NL => True);
@@ -147,9 +147,13 @@ package body Monitor
             elsif Buffer (1 .. 7) = "srecord" then
                Srecord.Init (BSP.Console_Getchar'Access, BSP.Console_Putchar'Access, False);
                Srecord.Receive;
-               if Srecord.Start_Address /= 0 then
-                  Console.Print (Prefix => "START ADDRESS: ", Value => Srecord.Start_Address, NL => True);
-                  CPU.Asm_Call (To_Address (Srecord.Start_Address));
+               if Srecord.Get_StartAddress /= 0 then
+                  Console.Print (
+                     Prefix => "START ADDRESS: ",
+                     Value => Srecord.Get_StartAddress,
+                     NL => True
+                     );
+                  CPU.Asm_Call (To_Address (Srecord.Get_StartAddress));
                end if;
             ------------------------------------
             elsif Buffer (1 .. 5) = "ticks" then
