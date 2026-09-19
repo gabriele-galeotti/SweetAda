@@ -15,12 +15,14 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
 
 package LPC2148
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -33,8 +35,6 @@ package LPC2148
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- UM10139
@@ -1051,12 +1051,14 @@ pragma Style_Checks (Off);
 
    UART0_BASEADDRESS : constant := 16#E000_C000#;
 
-   procedure UART0_Init
-      (Clock_Peripherals : in Positive);
    procedure UART0_TX
       (Data : in Unsigned_8);
+
    procedure UART0_RX
       (Data : out Unsigned_8);
+
+   procedure UART0_Init
+      (Clock_Peripherals : in Positive);
 
    ----------------------------------------------------------------------------
    -- Chapter 11: LPC214x UART1
@@ -1064,6 +1066,154 @@ pragma Style_Checks (Off);
 
    UART1_BASEADDRESS : constant := 16#E001_0000#;
 
-pragma Style_Checks (On);
+   ----------------------------------------------------------------------------
+   -- Chapter 12: LPC214x SPI
+   ----------------------------------------------------------------------------
+
+   -- 12.4.1 SPI Control Register (S0SPCR - 0xE002 0000)
+
+   CPHA_EDGE1ST : constant := 0; -- Data is sampled on the first clock edge of SCK. A transfer starts and ends with activation and deactivation of the SSEL signal.
+   CPHA_EDGE2ND : constant := 1; -- Data is sampled on the second clock edge of the SCK. A transfer starts with the first clock edge, and ends with the last sampling edge when the SSEL signal is active.
+
+   CPOL_HIGH : constant := 0; -- SCK is active high.
+   CPOL_LOW  : constant := 1; -- SCK is active low.
+
+   LSBF_MSB : constant := 0; -- SPI data is transferred MSB (bit 7) first.
+   LSBF_LSB : constant := 1; -- SPI data is transferred LSB (bit 0) first.
+
+   -- __INF__ use "B1TS" instead of "BITS"
+   B1TS_8  : constant := 2#1000#; -- 8 bits per transfer
+   B1TS_9  : constant := 2#1001#; -- 9 bits per transfer
+   B1TS_10 : constant := 2#1010#; -- 10 bits per transfer
+   B1TS_11 : constant := 2#1011#; -- 11 bits per transfer
+   B1TS_12 : constant := 2#1100#; -- 12 bits per transfer
+   B1TS_13 : constant := 2#1101#; -- 13 bits per transfer
+   B1TS_14 : constant := 2#1110#; -- 14 bits per transfer
+   B1TS_15 : constant := 2#1111#; -- 15 bits per transfer
+   B1TS_16 : constant := 2#0000#; -- 16 bits per transfer
+
+   -- __INF__ use "B1TS" instead of "BITS"
+   type S0SPCR_Type is record
+      Reserved1 : Bits_2  := 0;
+      BitEnable : Boolean := False;        -- BitEnable
+      CPHA      : Bits_1  := CPHA_EDGE1ST; -- Clock phase control determines the relationship betweenthe data and the clock on SPI transfers, and controls when a slave transfer is defined as starting and ending.
+      CPOL      : Bits_1  := CPOL_HIGH;    -- Clock polarity control.
+      MSTR      : Boolean := False;        -- Master mode select.
+      LSBF      : Bits_1  := LSBF_MSB;     -- LSB First controls which direction each byte is shifted when transferred.
+      SPIE      : Boolean := False;        -- Serial peripheral interrupt enable.
+      B1TS      : Bits_4  := B1TS_8;       -- When bit 2 of this register is 1, this field controls the number of bits per transfer:
+      Reserved2 : Bits_4  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for S0SPCR_Type use record
+      Reserved1 at 0 range  0 ..  1;
+      BitEnable at 0 range  2 ..  2;
+      CPHA      at 0 range  3 ..  3;
+      CPOL      at 0 range  4 ..  4;
+      MSTR      at 0 range  5 ..  5;
+      LSBF      at 0 range  6 ..  6;
+      SPIE      at 0 range  7 ..  7;
+      B1TS      at 0 range  8 .. 11;
+      Reserved2 at 0 range 12 .. 15;
+   end record;
+
+   S0SPCR_ADDRESS : constant := 16#E002_0000#;
+
+   S0SPCR : aliased S0SPCR_Type
+      with Address              => System'To_Address (S0SPCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 12.4.2 SPI Status Register (S0SPSR - 0xE002 0004)
+
+   type S0SPSR_Type is record
+      Reserved : Bits_3;
+      ABRT     : Boolean; -- Slave abort.
+      MODF     : Boolean; -- Mode fault.
+      ROVR     : Boolean; -- Read overrun.
+      WCOL     : Boolean; -- Write collision.
+      SPIF     : Boolean; -- SPI transfer complete flag.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for S0SPSR_Type use record
+      Reserved at 0 range  0 ..  2;
+      ABRT     at 0 range  3 ..  3;
+      MODF     at 0 range  4 ..  4;
+      ROVR     at 0 range  5 ..  5;
+      WCOL     at 0 range  6 ..  6;
+      SPIF     at 0 range  7 ..  7;
+   end record;
+
+   S0SPSR_ADDRESS : constant := 16#E002_0004#;
+
+   S0SPSR : aliased S0SPSR_Type
+      with Address              => System'To_Address (S0SPSR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 12.4.3 SPI Data Register (S0SPDR - 0xE002 0008)
+
+   type S0SPDR_Type is record
+      DataLow  : Bits_8;      -- SPI Bi-directional data port
+      DataHigh : Bits_8 := 0; -- If bit 2 of the SPCR is 1 and bits 11:8 are other than 1000, some 0x00 or all of these bits contain the additional transmit and receive bits.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 16;
+   for S0SPDR_Type use record
+      DataLow  at 0 range 0 ..  7;
+      DataHigh at 0 range 8 .. 15;
+   end record;
+
+   S0SPDR_ADDRESS : constant := 16#E002_0008#;
+
+   S0SPDR : aliased S0SPDR_Type
+      with Address              => System'To_Address (S0SPDR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 12.4.4 SPI Clock Counter Register (S0SPCCR - 0xE002 000C)
+
+   type S0SPCCR_Type is record
+      Counter : Unsigned_8; -- SPI0 Clock counter setting.
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for S0SPCCR_Type use record
+      Counter at 0 range 0 ..  7;
+   end record;
+
+   S0SPCCR_ADDRESS : constant := 16#E002_000C#;
+
+   S0SPCCR : aliased S0SPCCR_Type
+      with Address              => System'To_Address (S0SPCCR_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
+
+   -- 12.4.5 SPI Interrupt register (S0SPINT - 0xE002 001C)
+
+   type S0SPINT_Type is record
+      SPI_Interrupt_Flag : Boolean := False; -- SPI interrupt flag.
+      Reserved           : Bits_7  := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for S0SPINT_Type use record
+      SPI_Interrupt_Flag at 0 range 0 .. 0;
+      Reserved           at 0 range 1 .. 7;
+   end record;
+
+   S0SPINT_ADDRESS : constant := 16#E002_001C#;
+
+   S0SPINT : aliased S0SPINT_Type
+      with Address              => System'To_Address (S0SPINT_ADDRESS),
+           Volatile_Full_Access => True,
+           Import               => True,
+           Convention           => Ada;
 
 end LPC2148;

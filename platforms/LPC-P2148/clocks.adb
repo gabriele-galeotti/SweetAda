@@ -19,7 +19,7 @@ with Definitions;
 with LPC2148;
 
 package body Clocks
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -46,7 +46,7 @@ package body Clocks
    -- XTAL input frequency = 12 MHz
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
    begin
       PLL0CFG := (
          MSEL   => MSEL_M5, -- CCLK = 12 MHz x 5 = 60 MHz
