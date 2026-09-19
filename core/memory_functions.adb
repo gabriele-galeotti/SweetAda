@@ -17,7 +17,6 @@
 
 pragma Restrictions (No_Elaboration_Code);
 
-with Ada.Unchecked_Conversion;
 with System.Address_To_Access_Conversions;
 with Interfaces.C.Extensions;
 
