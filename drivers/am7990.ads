@@ -15,13 +15,15 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
 with MMIO;
 
 package Am7990
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -34,8 +36,6 @@ package Am7990
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- Am7990 Local Area Network Controller for Ethernet (LANCE)
@@ -413,7 +413,5 @@ pragma Style_Checks (Off);
        Register   : in Register_Type;
        Value      : in Unsigned_16)
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end Am7990;
