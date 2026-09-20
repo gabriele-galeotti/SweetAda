@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Warnings (Off, "* is not referenced");
 
 with System.Machine_Code;
 with Ada.Unchecked_Conversion;
@@ -33,8 +34,6 @@ is
    --========================================================================--
 
    use System.Machine_Code;
-
-pragma Warnings (Off, "* is not referenced");
 
    CRLF : String renames Definitions.CRLF;
 
@@ -583,7 +582,5 @@ pragma Style_Checks (On);
            Volatile => True
           );
    end Irq_Disable;
-
-pragma Warnings (On, "* is not referenced");
 
 end ARMv8A;

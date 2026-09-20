@@ -15,6 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
@@ -33,8 +36,6 @@ is
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- 4.3 Distributor register descriptions
@@ -542,7 +543,5 @@ pragma Style_Checks (Off);
       GICC_IIDR   at 16#00FC# range 0 .. 31;
       GICC_DIR    at 16#1000# range 0 .. 31;
    end record;
-
-pragma Style_Checks (On);
 
 end GICv2;

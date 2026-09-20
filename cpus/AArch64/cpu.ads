@@ -37,8 +37,10 @@ is
 
    procedure NOP
       renames ARMv8A.NOP;
+
    procedure BREAKPOINT
       renames ARMv8A.BREAKPOINT;
+
    procedure Asm_Call
       (Target_Address : in Address)
       renames ARMv8A.Asm_Call;
@@ -49,10 +51,13 @@ is
 
    procedure WFE
       renames ARMv8A.WFE;
+
    procedure WFI
       renames ARMv8A.WFI;
+
    procedure DSB
       renames ARMv8A.DSB;
+
    procedure ISB
       renames ARMv8A.ISB;
 
@@ -62,6 +67,7 @@ is
 
    procedure Irq_Enable
       renames ARMv8A.Irq_Enable;
+
    procedure Irq_Disable
       renames ARMv8A.Irq_Disable;
 
