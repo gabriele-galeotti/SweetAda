@@ -15,6 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
+
 with System;
 with Bits;
 
@@ -31,8 +34,6 @@ is
 
    use System;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- MicroBlaze Processor Reference Guide
@@ -148,14 +149,17 @@ pragma Style_Checks (Off);
       with Export        => True,
            Convention    => Asm,
            External_Name => "icache_invalidate";
+
    procedure ICache_Enable
       with Export        => True,
            Convention    => Asm,
            External_Name => "icache_enable";
+
    procedure DCache_Invalidate
       with Export        => True,
            Convention    => Asm,
            External_Name => "dcache_invalidate";
+
    procedure DCache_Enable
       with Export        => True,
            Convention    => Asm,
@@ -172,6 +176,7 @@ pragma Style_Checks (Off);
 
    procedure NOP
       with Inline => True;
+
    procedure BREAKPOINT
       with Inline => True;
 
@@ -184,15 +189,15 @@ pragma Style_Checks (Off);
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       with Inline => True;
+
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       with Inline => True;
 
    procedure Irq_Enable
       with Inline => True;
+
    procedure Irq_Disable
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end MicroBlaze;
