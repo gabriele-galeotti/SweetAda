@@ -577,7 +577,7 @@ pragma Warnings (On);
       return Integer_Address;
 
    procedure CloseLibrary
-      (Library_Address : Integer_Address);
+      (Library_Address : in Integer_Address);
 
    function FindConfigDev
       (Library_Base    : Integer_Address;

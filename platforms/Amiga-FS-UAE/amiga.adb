@@ -389,7 +389,7 @@ is
            Inputs   => Address'Asm_Input ("a", Library_Name'Address),
            Clobber  => "d0,d1,a0,a1,cc,memory",
            Volatile => True
-           );
+          );
       return Library_Address;
    end OpenLibrary;
 
@@ -397,7 +397,7 @@ is
    -- CloseLibrary
    ----------------------------------------------------------------------------
    procedure CloseLibrary
-      (Library_Address : Integer_Address)
+      (Library_Address : in Integer_Address)
    is
    begin
       Asm (
@@ -412,7 +412,7 @@ is
            Inputs   => Integer_Address'Asm_Input ("a", Library_Address),
            Clobber  => "d0,d1,a0,a1,cc,memory",
            Volatile => True
-           );
+          );
    end CloseLibrary;
 
    ----------------------------------------------------------------------------
@@ -447,7 +447,7 @@ is
                        ],
            Clobber  => "d0,d1,a0,a1,cc,memory",
            Volatile => True
-           );
+          );
       return ConfigDev;
    end FindConfigDev;
 

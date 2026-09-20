@@ -28,6 +28,7 @@ is
 
    procedure Putchar
       (C : in Character);
+
    procedure Getchar
       (C : out Character);
 
