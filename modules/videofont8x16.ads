@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System.Storage_Elements;
 
 package Videofont8x16
@@ -44,7 +46,6 @@ is
    ----------------------------------------------------------------------------
 
    -- font bitmap values reversed - bit0 is leftmost when drawn on video
-pragma Style_Checks (Off);
    Font : constant array (0 .. Font_NCharacters - 1) of Font_Character_Type :=
       [
        [16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#], -- 0x00 |  ^@|
@@ -304,6 +305,5 @@ pragma Style_Checks (Off);
        [16#00#, 16#00#, 16#00#, 16#00#, 16#7C#, 16#7C#, 16#7C#, 16#7C#, 16#7C#, 16#7C#, 16#7C#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#], -- 0xFE | M-~|
        [16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#]  -- 0xFF |    |
       ];
-pragma Style_Checks (On);
 
 end Videofont8x16;
