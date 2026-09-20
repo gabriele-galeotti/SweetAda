@@ -332,7 +332,7 @@ extern size_t      file_length(const char *);
 extern const char *file_basename_simple(const char *);
 extern const char *file_extensionname(const char *);
 extern char       *file_dirname_simple(char *);
-extern char       *file_add_path_separator(char *);
+extern char       *file_pathseparator_append(char *);
 extern int         symlink_create(const char *, const char *);
 extern int         symlink_delete(const char *);
 

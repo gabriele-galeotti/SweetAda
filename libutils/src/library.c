@@ -617,11 +617,11 @@ file_dirname_simple(char *path)
 }
 
 /******************************************************************************
- * file_add_path_separator()                                                  *
+ * file_pathseparator_append()                                                *
  *                                                                            *
  ******************************************************************************/
 char *
-file_add_path_separator(char *path)
+file_pathseparator_append(char *path)
 {
         if (path != NULL)
         {
@@ -1098,6 +1098,7 @@ createblockstring(const char **argv, int flags)
 #if __START_IF_SELECTION__
 #elif defined(_WIN32)
 #else
+
 /******************************************************************************
  * lib_strchrnul()                                                            *
  *                                                                            *
@@ -1115,6 +1116,17 @@ lib_strchrnul(const char *s, int c)
 
         return p;
 }
+
+/******************************************************************************
+ * lib_mempcpy()                                                              *
+ *                                                                            *
+ ******************************************************************************/
+static inline void *
+lib_mempcpy(void *dest, const void *src, size_t n)
+{
+        return (char *)memcpy(dest, src, n) + n;
+}
+
 #endif
 
 #if __START_IF_SELECTION__
@@ -1193,7 +1205,7 @@ execvpe(const char *file, char *const argv[], char *const envp[])
                                 continue;
                         }
                         /* found an executable */
-                        p_end = mempcpy(buffer, p, p_start - p);
+                        p_end = lib_mempcpy(buffer, p, p_start - p);
                         *p_end = '/';
                         if (p < p_start)
                         {
