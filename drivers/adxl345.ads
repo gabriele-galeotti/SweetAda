@@ -15,11 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Bits;
 
 package ADXL345
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -31,8 +33,6 @@ package ADXL345
 
    use System;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- ADXL345
@@ -399,7 +399,5 @@ pragma Style_Checks (Off);
       Unused    at 0 range 6 .. 6;
       FIFO_TRIG at 0 range 7 .. 7;
    end record;
-
-pragma Style_Checks (On);
 
 end ADXL345;
