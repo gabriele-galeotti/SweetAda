@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+with Ada.Unchecked_Conversion;
 with Interfaces.C;
 with Definitions;
 with Bits;
@@ -25,7 +26,7 @@ with Exceptions;
 with Console;
 
 package body BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -60,7 +61,7 @@ package body BSP
    ----------------------------------------------------------------------------
    function Number_Of_CPUs
       return Interfaces.C.int
-      is
+   is
    begin
       return 4;
    end Number_Of_CPUs;
@@ -69,7 +70,7 @@ package body BSP
    -- Timer_Reload
    ----------------------------------------------------------------------------
    procedure Timer_Reload
-      is
+   is
    begin
       RPI3.SYSTEM_TIMER.C1 := RPI3.SYSTEM_TIMER.CLO + Timer_Constant;
    end Timer_Reload;
@@ -80,7 +81,7 @@ package body BSP
 
    procedure Console_Putchar
       (C : in Character)
-      is
+   is
    begin
       -- wait for transmitter available
       loop exit when RPI3.AUX_MU_LSR_REG.Transmitter_Empty; end loop;
@@ -89,7 +90,7 @@ package body BSP
 
    procedure Console_Getchar
       (C : out Character)
-      is
+   is
    begin
       -- wait for receiver available
       loop exit when RPI3.AUX_MU_LSR_REG.Data_Ready; end loop;
@@ -100,7 +101,7 @@ package body BSP
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup
-      is
+   is
       System_Clock : constant := 250 * MHz1;
       Baud_Rate    : constant := Baud_Rate_Type'Enum_Rep (BR_115200);
    begin
@@ -144,6 +145,11 @@ package body BSP
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("Raspberry Pi 3", NL => True);
+      declare
+         function To_U32 is new Ada.Unchecked_Conversion (ARMv8A.MIDR_EL1_Type, Unsigned_32);
+      begin
+         Console.Print (Prefix => "Main ID:      ", Value => To_U32 (ARMv8A.MIDR_EL1_Read), NL => True);
+      end;
       Console.Print (Prefix => "Current EL:   ", Value => Natural (ARMv8A.CurrentEL_Read.EL), NL => True);
       Console.Print (Prefix => "ARM Timer ID: ", Value => RPI3.ARMTIMER_IRQ_ClrAck, NL => True); -- "TMRA"
       -- handle IRQs at EL2 ---------------------------------------------------
@@ -157,10 +163,9 @@ package body BSP
          end;
       end if;
       -- Timer IRQ ------------------------------------------------------------
-      Tick_Count := 0;
       RPI3.Enable_IRQs_1 (RPI3.system_timer_match_1) := True;
+      Tick_Count := 0;
       Timer_Reload;
-      -------------------------------------------------------------------------
       ARMv8A.Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;

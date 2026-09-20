@@ -162,6 +162,7 @@ cat > ${MOUNTPOINT}/config.txt << EOF
 arm_64bit=1                     # ARMv8 mode
 core_freq=250                   # core clock frequency
 arm_freq=250                    # ARM clock frequency
+kernel_old=1
 kernel=$(basename ${FILENAME})
 enable_jtag_gpio=1              # enable JTAG (GPIO22..27)
 EOF

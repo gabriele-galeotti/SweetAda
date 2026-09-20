@@ -18,7 +18,7 @@
 with Interfaces;
 
 package BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -35,10 +35,13 @@ package BSP
            External_Name => "tick_count";
 
    procedure Timer_Reload;
+
    procedure Console_Putchar
       (C : in Character);
+
    procedure Console_Getchar
       (C : out Character);
+
    procedure Setup;
 
 end BSP;

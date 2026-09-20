@@ -10,6 +10,7 @@
 
 #define __ASSEMBLER__ 1
 
+#include <armv8.h>
 #include "mmu.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -28,56 +29,66 @@ _start:
                 msr     daifset,#0xF
 
                 //
-                // CPACR_EL1/FPEN Advanced SIMD and floating-point registers.
-                //
-#define CPACR_FPEN_NOTRAP (3<<20)
-                mrs     x1,cpacr_el1
-                orr     x0,x1,#CPACR_FPEN_NOTRAP
-                msr     cpacr_el1,x0
-                isb
-
-#if defined(STARTUP_EL1)
-                //
-                // Check if current level = EL1.
+                // Check if current level = EL3.
                 //
                 mrs     x0,currentel
                 ubfx    x1,x0,2,2
-                cmp     x1,1
+                cmp     x1,3
                 beq     1f
-                //
-                // EL2 ---> EL1
-                //
-#define SCTLR_DEFAULT  ((3<<28)|(3<<22)|(1<<20)|(1<<11))
-#define HCR_RW         (1<<31)
-#define SPSR_MASK_ALL  (7<<6)
-#define SPSR_MODE_EL0  (0<<0)
-#define SPSR_MODE_ELt  (4<<0)
-#define SPSR_MODE_EL1h (5<<0)
-#define SPSR_MODE_EL2t (8<<0)
-#define SPSR_MODE_EL2h (9<<0)
-                ldr     x0,=SCTLR_DEFAULT
-                msr     sctlr_el1,x0
-                ldr     x0,=HCR_RW
-                msr     hcr_el2,x0
-                ldr     x0,=(SPSR_MASK_ALL|SPSR_MODE_EL1h)
-                msr     spsr_el2,x0
-                adr     x0,1f
-                msr     elr_el2,x0
-                eret
+                b       .
 1:
-#endif
+
+                //
+                // Enable CPUECTLR_EL1.
+                // The CPUECTLR_EL1 is write accessible in EL1 if
+                // - ACTLR_EL3.CPUECTLR is 1, and
+                // - ACTLR_EL2.CPUECTLR is 1,
+                // or
+                // - ACTLR_EL3.CPUECTLR is 1 and SCR.NS is 0.
+                //
+                mrs     x1,actlr_el3
+                orr     x0,x1,#ACTLR_CPUECTLR
+                msr     actlr_el3,x0
+                mrs     x1,actlr_el2
+                orr     x0,x1,#ACTLR_CPUECTLR
+                msr     actlr_el2,x0
 
                 //
                 // Enable CPUECTLR_EL1.SMPEN.
                 //
-#define CPUECTLR_SMPEN (1<<6)
-                mrs     x0,s3_1_c15_c2_1
-                //orr     x0,x0,#CPUECTLR_SMPEN
-                //msr     s3_1_c15_c2_1,x0
-                //isb
-                cmp     x0,#CPUECTLR_SMPEN
-                beq     1f
-                b       .
+#define cpuectlr_el1 s3_1_c15_c2_1
+                mrs     x1,cpuectlr_el1
+                orr     x0,x1,#CPUECTLR_SMPEN
+                msr     cpuectlr_el1,x0
+                isb
+
+                //
+                // CPACR_EL1/FPEN Advanced SIMD and floating-point registers.
+                //
+                mrs     x1,cpacr_el1
+                orr     x0,x1,#CPACR_CP10
+                msr     cpacr_el1,x0
+
+                //
+                // EL3 -> EL2
+                //
+#define SCTLR_VALUE_MMU_DISABLED (SCTLR_RESERVED)
+#define SCTLR_VALUE_MMU_ENABLED  (SCTLR_RESERVED|SCTLR_I|SCTLR_C|SCTLR_M)
+#define HCR_VALUE                HCR_RW
+#define SCR_VALUE                (SCR_RESERVED|SCR_RW|SCR_NS)
+#define SPSR_VALUE_EL1h          (SPSR_MASK_ALL|SPSR_EL1h)
+#define SPSR_VALUE_EL2h          (SPSR_MASK_ALL|SPSR_EL2h)
+                ldr     x0,=SCTLR_VALUE_MMU_DISABLED
+                msr     sctlr_el1,x0
+                ldr     x0,=HCR_VALUE
+                msr     hcr_el2,x0
+                ldr     x0,=SCR_VALUE
+                msr     scr_el3,x0
+                ldr     x0,=SPSR_VALUE_EL2h
+                msr     spsr_el3,x0
+                adr     x0,1f
+                msr     elr_el3,x0
+                eret
 1:
 
                 //
@@ -86,6 +97,8 @@ _start:
                 .extern mmu_l1
                 .extern mmu_l2
                 tlbi    alle2
+                dsb     ish
+                isb
                 movz    x0,#(0<<8|0xEE<<0)
                 msr     mair_el2,x0
                 adrp    x0,mmu_l1
@@ -100,15 +113,11 @@ _start:
                 //
                 // Enable cache.
                 //
-#define SCTLR_M   (1<<0)
-#define SCTLR_C   (1<<2)
-#define SCTLR_I   (1<<12)
-#define SCTLR_WXN (1<<19)
                 mrs     x0,sctlr_el2
                 bic     x0,x0,#SCTLR_WXN
                 movz    x1,#(SCTLR_M|SCTLR_C|SCTLR_I)
                 orr     x0,x0,x1
-                msr     sctlr_el2, x0
+                msr     sctlr_el2,x0
                 isb
 
                 //

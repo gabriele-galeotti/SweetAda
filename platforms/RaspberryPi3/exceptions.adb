@@ -26,7 +26,7 @@ with Abort_Library;
 with Console;
 
 package body Exceptions
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -42,12 +42,15 @@ package body Exceptions
 
    EL3_Table : aliased constant Asm_Entry_Point
       with Import        => True,
+           Convention    => Asm,
            External_Name => "el3_table";
    EL2_Table : aliased constant Asm_Entry_Point
       with Import        => True,
+           Convention    => Asm,
            External_Name => "el2_table";
    EL1_Table : aliased constant Asm_Entry_Point
       with Import        => True,
+           Convention    => Asm,
            External_Name => "el1_table";
 
    --========================================================================--
@@ -62,7 +65,7 @@ package body Exceptions
    -- Exception_Process
    ----------------------------------------------------------------------------
    procedure Exception_Process
-      is
+   is
    begin
       Console.Print ("*** EXCEPTION", NL => True);
       -- Console.Print (Prefix => "ELR_EL2: ", Value => ARMv8A.ELR_EL2Read, NL => True);
@@ -73,7 +76,7 @@ package body Exceptions
    -- Irq_Process
    ----------------------------------------------------------------------------
    procedure Irq_Process
-      is
+   is
    begin
       BSP.Tick_Count := @ + 1;
       if (BSP.Tick_Count mod 1_000) = 0 then
@@ -91,7 +94,7 @@ package body Exceptions
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
       function To_U64 is new Ada.Unchecked_Conversion (Address, Unsigned_64);
    begin
       if ARMv8A.CurrentEL_Read.EL = 3 then
