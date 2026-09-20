@@ -51,12 +51,14 @@ is
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       renames NiosII.Intcontext_Get;
+
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       renames NiosII.Intcontext_Set;
 
    procedure Irq_Enable
       renames NiosII.Irq_Enable;
+
    procedure Irq_Disable
       renames NiosII.Irq_Disable;
 

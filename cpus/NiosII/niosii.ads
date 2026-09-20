@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 with System;
 with Interfaces;
@@ -35,8 +36,6 @@ is
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- Nios II Classic Processor Reference Guide
@@ -209,7 +208,5 @@ pragma Style_Checks (Off);
       with Inline => True;
    procedure Irq_Disable
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end NiosII;
