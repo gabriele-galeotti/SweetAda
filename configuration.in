@@ -121,21 +121,26 @@ TOOLCHAIN_NAME_x86_64     := x86_64-elf
 
 ################################################################################
 #                                                                              #
-# SweetAda definitions.                                                        #
+# Build parameters.                                                            #
 #                                                                              #
 ################################################################################
 
-#BUILD_MODE := GNATMAKE
+# GNATMAKE or GPRbuild
 BUILD_MODE := GPRbuild
 
+# Y/N (default=N)
 USE_EXE_WRAPPER := Y
 USE_ELFTOOL := Y
 
+# ADA95/ADA05/ADA12/ADA22
 ADA_MODE := ADA22
 
+# STATIC/SPARK/DYNAMIC (default=STATIC)
 ELABORATION_MODEL :=
 
+# 0/1/2
 OPTIMIZATION_LEVEL := 1
 
+# Y/N (default=N)
 SUPPRESS_ALL_CHECKS :=
 
