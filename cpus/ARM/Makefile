@@ -18,6 +18,11 @@ ifeq ($(OBJECT_DIRECTORY),)
 $(error Error: invalid OBJECT_DIRECTORY)
 endif
 
+# verbose mode, "Y"/"y"/"1" = enabled
+VERBOSE ?=
+override VERBOSE := $(subst y,Y,$(subst 1,y,$(VERBOSE)))
+export VERBOSE
+
 include $(KERNEL_PARENT_PATH)/Makefile.os.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 include $(KERNEL_PARENT_PATH)/Makefile.fn.in
