@@ -411,6 +411,41 @@ pragma Style_Checks (Off);
            Convention       => Ada;
 
    ----------------------------------------------------------------------------
+   -- 17. External Interrupts
+   ----------------------------------------------------------------------------
+
+   -- 17.1.1. EICRA – External Interrupt Control Register A
+
+   ISC_LOW      : constant := 2#00#; -- The low level of INTn generates an interrupt request.
+   ISC_RSVD     : constant := 2#01#; -- Reserved.
+   ISC_FALLEDGE : constant := 2#10#; -- The falling edge of INTn generates asynchronously an interrupt request.
+   ISC_RISEDGE  : constant := 2#11#; -- The rising edge of INTn generates asynchronously an interrupt request.
+
+   type EICRA_Type is record
+      ISC0 : Bits_2 := ISC_LOW; -- ISC0n: External Interrupt 0 Sense Control Bits [n = 1:0]
+      ISC1 : Bits_2 := ISC_LOW; -- ISC1n: External Interrupt 1 Sense Control Bits [n = 1:0]
+      ISC2 : Bits_2 := ISC_LOW; -- ISC2n: External Interrupt 2 Sense Control Bits [n = 1:0]
+      ISC3 : Bits_2 := ISC_LOW; -- ISC3n: External Interrupt 3 Sense Control Bits [n = 1:0]
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 8;
+   for EICRA_Type use record
+      ISC0 at 0 range 0 .. 1;
+      ISC1 at 0 range 2 .. 3;
+      ISC2 at 0 range 4 .. 5;
+      ISC3 at 0 range 6 .. 7;
+   end record;
+
+   EICRA_ADDRESS : constant := 16#6A#;
+
+   EICRA : aliased EICRA_Type
+      with Address          => System'To_Address (EICRA_ADDRESS),
+           Full_Access_Only => True,
+           Volatile         => True,
+           Import           => True,
+           Convention       => Ada;
+
+   ----------------------------------------------------------------------------
    -- 18. I/O Ports
    ----------------------------------------------------------------------------
 
