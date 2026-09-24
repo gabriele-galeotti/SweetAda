@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Warnings (Off, "* is not referenced");
+
 with System;
 with Bits;
 with Memory_Functions;
@@ -22,7 +24,7 @@ with CPU.IO;
 with Videofont8x16;
 
 package body VGA
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -34,8 +36,6 @@ package body VGA
 
    use System;
    use Bits;
-
-pragma Warnings (Off, "* is not referenced");
 
    Video_Buffer_BaseAddress : Integer_Address := 16#000A_0000#;
    Text_Buffer_BaseAddress  : Integer_Address := 16#000B_8000#;
@@ -321,21 +321,29 @@ pragma Warnings (Off, "* is not referenced");
    procedure SEQUENCER_Register_Write
       (R     : in SEQUENCER_Register_Type;
        Value : in Unsigned_8);
+
    procedure CRTC6845_Register_Read
       (R     : in     CRTC6845_Register_Type;
        Value :    out Unsigned_8);
+
    procedure CRTC6845_Register_Write
       (R     : in CRTC6845_Register_Type;
        Value : in Unsigned_8);
+
    procedure CRTC6845_Registers_Lock;
+
    procedure CRTC6845_Registers_Unlock;
+
    procedure GC_Register_Write
       (R     : in GC_Register_Type;
        Value : in Unsigned_8);
+
    procedure ATC_Register_Write
       (R     : in ATC_Register_Type;
        Value : in Unsigned_8);
+
    procedure DAC_Init;
+
    procedure Load_Font;
 
    --========================================================================--
@@ -352,7 +360,7 @@ pragma Warnings (Off, "* is not referenced");
    procedure SEQUENCER_Register_Write
       (R     : in SEQUENCER_Register_Type;
        Value : in Unsigned_8)
-      is
+   is
    begin
       CPU.IO.PortOut (SEQUENCER_INDEX, Unsigned_8 (R));
       CPU.IO.PortOut (SEQUENCER_DATA, Value);
@@ -364,7 +372,7 @@ pragma Warnings (Off, "* is not referenced");
    procedure CRTC6845_Register_Read
       (R     : in     CRTC6845_Register_Type;
        Value :    out Unsigned_8)
-      is
+   is
    begin
       CPU.IO.PortOut (CRTC6845_INDEX, Unsigned_8 (R));
       Value := CPU.IO.PortIn (CRTC6845_DATA);
@@ -376,7 +384,7 @@ pragma Warnings (Off, "* is not referenced");
    procedure CRTC6845_Register_Write
       (R     : in CRTC6845_Register_Type;
        Value : in Unsigned_8)
-      is
+   is
    begin
       CPU.IO.PortOut (CRTC6845_INDEX, Unsigned_8 (R));
       CPU.IO.PortOut (CRTC6845_DATA, Value);
@@ -386,7 +394,7 @@ pragma Warnings (Off, "* is not referenced");
    -- CRTC6845_Registers_Lock
    ----------------------------------------------------------------------------
    procedure CRTC6845_Registers_Lock
-      is
+   is
       Unused : Unsigned_8;
    begin
       -- CRTC registers 0-7 are locked by setting bit 7 of CRTC[0x11]
@@ -398,7 +406,7 @@ pragma Warnings (Off, "* is not referenced");
    -- CRTC6845_Registers_Unlock
    ----------------------------------------------------------------------------
    procedure CRTC6845_Registers_Unlock
-      is
+   is
       Unused : Unsigned_8;
    begin
       -- CRTC registers 0-7 are unlocked by clearing bit 7 of CRTC[0x11]
@@ -412,7 +420,7 @@ pragma Warnings (Off, "* is not referenced");
    procedure GC_Register_Write
       (R     : in GC_Register_Type;
        Value : in Unsigned_8)
-      is
+   is
    begin
       CPU.IO.PortOut (GRAPHICS_INDEX, Unsigned_8 (R));
       CPU.IO.PortOut (GRAPHICS_DATA, Value);
@@ -424,7 +432,7 @@ pragma Warnings (Off, "* is not referenced");
    procedure ATC_Register_Write
       (R     : in ATC_Register_Type;
        Value : in Unsigned_8)
-      is
+   is
       Unused : Unsigned_8;
    begin
       Unused := CPU.IO.PortIn (INPUT_STATUS_1);
@@ -442,7 +450,7 @@ pragma Warnings (Off, "* is not referenced");
    -- DAC_Init
    ----------------------------------------------------------------------------
    procedure DAC_Init
-      is
+   is
    begin
       CPU.IO.PortOut (PEL_MASK, Unsigned_8'(16#FF#));
       -- data
@@ -465,7 +473,7 @@ pragma Warnings (Off, "* is not referenced");
    -- Load_Font
    ----------------------------------------------------------------------------
    procedure Load_Font
-      is
+   is
       -- VGA font types and memory space
       type VGA_Character_Type is new Storage_Array (0 .. 31);
       VGA_Font_Memory : aliased array (0 .. Videofont8x16.Font_NCharacters - 1) of VGA_Character_Type
@@ -493,27 +501,11 @@ pragma Warnings (Off, "* is not referenced");
    end Load_Font;
 
    ----------------------------------------------------------------------------
-   -- Init
-   ----------------------------------------------------------------------------
-   procedure Init
-      (Video_Memory_BaseAddress : in Integer_Address;
-       Text_Memory_BaseAddress  : in Integer_Address)
-      is
-   begin
-      if Video_Memory_BaseAddress /= 0 then
-         Video_Buffer_BaseAddress := Video_Memory_BaseAddress;
-      end if;
-      if Text_Memory_BaseAddress /= 0 then
-         Text_Buffer_BaseAddress := Text_Memory_BaseAddress;
-      end if;
-   end Init;
-
-   ----------------------------------------------------------------------------
    -- Set_Mode
    ----------------------------------------------------------------------------
    procedure Set_Mode
       (Mode : in Mode_Type)
-      is
+   is
    begin
       -- Video Subsystem Enable -----------------------------------------------
       -- bit0 = 1  --> the I/O and memory address decoding for the video
@@ -600,7 +592,7 @@ pragma Warnings (Off, "* is not referenced");
    -- Clear_Screen
    ----------------------------------------------------------------------------
    procedure Clear_Screen
-      is
+   is
    begin
       for Index in Storage_Offset range 0 .. VIDEO_TEXT_WIDTH * VIDEO_TEXT_HEIGHT * 2 - 1 loop
          declare
@@ -621,7 +613,7 @@ pragma Warnings (Off, "* is not referenced");
       (X : in Video_X_Coordinate_Type;
        Y : in Video_Y_Coordinate_Type;
        C : in Character)
-      is
+   is
       type Video_Text_Memory_Type is array (0 .. (VIDEO_TEXT_WIDTH * VIDEO_TEXT_HEIGHT) - 1)
          of aliased Text_Character_Type
          with Pack => True;
@@ -643,7 +635,7 @@ pragma Warnings (Off, "* is not referenced");
       (X : in Video_X_Coordinate_Type;
        Y : in Video_Y_Coordinate_Type;
        S : in String)
-      is
+   is
       X1 : Video_X_Coordinate_Type;
       Y1 : Video_Y_Coordinate_Type;
       C  : Character;
@@ -670,7 +662,7 @@ pragma Warnings (Off, "* is not referenced");
    -- Scroll_Text
    ----------------------------------------------------------------------------
    procedure Scroll_Text
-      is
+   is
       use type Bits.Bytesize'Base;
       BYTES_PER_TEXTLINE : constant := VIDEO_TEXT_WIDTH * TEXT_CHARACTER_SIZE;
    begin
@@ -691,7 +683,7 @@ pragma Warnings (Off, "* is not referenced");
       (X     : in Natural;
        Y     : in Natural;
        Color : in Unsigned_8)
-      is
+   is
       type Plane_Type is array (0 .. 2**16 - 1) of Unsigned_8
          with Pack => True;
       Plane         : Plane_Type
@@ -723,7 +715,7 @@ pragma Warnings (Off, "* is not referenced");
    ----------------------------------------------------------------------------
    procedure Draw_Picture
       (Picture : in Storage_Array)
-      is
+   is
       PIXEL_X   : constant := 640;
       PIXEL_Y   : constant := 480;
       Pixel_Idx : Storage_Offset := 0;
@@ -736,6 +728,20 @@ pragma Warnings (Off, "* is not referenced");
       end loop;
    end Draw_Picture;
 
-pragma Warnings (On, "* is not referenced");
+   ----------------------------------------------------------------------------
+   -- Init
+   ----------------------------------------------------------------------------
+   procedure Init
+      (Video_Memory_BaseAddress : in Integer_Address;
+       Text_Memory_BaseAddress  : in Integer_Address)
+   is
+   begin
+      if Video_Memory_BaseAddress /= 0 then
+         Video_Buffer_BaseAddress := Video_Memory_BaseAddress;
+      end if;
+      if Text_Memory_BaseAddress /= 0 then
+         Text_Buffer_BaseAddress := Text_Memory_BaseAddress;
+      end if;
+   end Init;
 
 end VGA;

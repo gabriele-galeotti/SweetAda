@@ -19,7 +19,7 @@ with System.Storage_Elements;
 with Interfaces;
 
 package VGA
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -43,13 +43,6 @@ package VGA
 
    subtype Video_X_Coordinate_Type is Natural range 0 .. VIDEO_TEXT_WIDTH - 1;
    subtype Video_Y_Coordinate_Type is Natural range 0 .. VIDEO_TEXT_HEIGHT - 1;
-
-   ----------------------------------------------------------------------------
-   -- Initialization procedure.
-   ----------------------------------------------------------------------------
-   procedure Init
-      (Video_Memory_BaseAddress : in Integer_Address;
-       Text_Memory_BaseAddress  : in Integer_Address);
 
    ----------------------------------------------------------------------------
    -- Set VGA mode.
@@ -109,5 +102,12 @@ package VGA
    ----------------------------------------------------------------------------
    procedure Draw_Picture
       (Picture : in Storage_Array);
+
+   ----------------------------------------------------------------------------
+   -- Initialization procedure.
+   ----------------------------------------------------------------------------
+   procedure Init
+      (Video_Memory_BaseAddress : in Integer_Address;
+       Text_Memory_BaseAddress  : in Integer_Address);
 
 end VGA;
