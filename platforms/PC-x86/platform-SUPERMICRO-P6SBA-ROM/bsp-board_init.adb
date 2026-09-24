@@ -19,7 +19,7 @@ with Winbond_W83977;
 
 separate (BSP)
 procedure Board_Init
-   is
+is
 begin
    Winbond_W83977.Setup;
 end Board_Init;

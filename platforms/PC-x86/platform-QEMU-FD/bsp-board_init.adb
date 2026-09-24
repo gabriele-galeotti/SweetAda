@@ -17,7 +17,7 @@
 
 separate (BSP)
 procedure Board_Init
-   is
+is
 begin
    null;
 end Board_Init;
