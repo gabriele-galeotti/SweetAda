@@ -22,7 +22,7 @@ with System.Storage_Elements;
 with x86;
 
 package body MMU
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -60,7 +60,7 @@ package body MMU
    ----------------------------------------------------------------------------
 
    procedure Init
-      is
+   is
       CR0                      : CR0_Type;
       CR3                      : CR3_Type;
       Page_Frame_Address_Start : Address;

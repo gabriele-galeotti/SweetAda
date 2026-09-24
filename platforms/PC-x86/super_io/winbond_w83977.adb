@@ -19,7 +19,7 @@ with Interfaces;
 with CPU.IO;
 
 package body Winbond_W83977
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -30,7 +30,7 @@ package body Winbond_W83977
    --========================================================================--
 
    procedure Setup
-      is
+   is
       -- 8. PLUG AND PLAY CONFIGURATION
       -- 11. CONFIGURATION REGISTER
       type W83977_Type is record

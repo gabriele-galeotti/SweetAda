@@ -23,7 +23,7 @@ with x86;
 with i586;
 
 package body MMU
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -56,7 +56,7 @@ package body MMU
    -- 4-MiB page version (PSE)
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
       CR0                      : CR0_Type;
       CR3                      : CR3_Type;
       CR4                      : CR4_Type;

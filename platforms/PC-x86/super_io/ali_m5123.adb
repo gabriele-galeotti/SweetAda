@@ -19,7 +19,7 @@ with Interfaces;
 with CPU.IO;
 
 package body ALi_M5123
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -42,7 +42,7 @@ package body ALi_M5123
    --========================================================================--
 
    procedure Setup
-      is
+   is
    begin
       -- enter configuration mode
       CPU.IO.PortOut (CONFIG_Port, Interfaces.Unsigned_8'(16#51#));
