@@ -23,8 +23,7 @@ _start:
                 //
                 // Setup stack pointer.
                 //
-                ldr     r0,=SVC_stack
-                mov     sp,r0
+                ldr     sp,=SVC_stack
 
                 //
                 // Jump to high-level code.
