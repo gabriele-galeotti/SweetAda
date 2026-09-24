@@ -174,7 +174,7 @@ print_value(void)
                                 stdout,
 #if __START_IF_SELECTION__
 #elif defined(_WIN32)
-                                "0x%08I64X\n",
+                                "0x%08X\n",
 #elif defined(__APPLE__)
                                 "0x%08X\n",
 #else
@@ -188,7 +188,7 @@ print_value(void)
                                 stdout,
 #if __START_IF_SELECTION__
 #elif defined(_WIN32)
-                                "0x%016I64X\n",
+                                "0x%016llX\n",
 #elif defined(__APPLE__)
                                 "0x%016llX\n",
 #else
@@ -722,7 +722,7 @@ command_dumpsections(void)
                                         tmp_string_buffer,
 #if __START_IF_SELECTION__
 #elif defined(_WIN32)
-                                        "0x%08I64X\t0x%08I64X\n",
+                                        "0x%08llX\t0x%08llX\n",
 #elif defined(__APPLE__)
                                         "0x%08llX\t0x%08lX\n",
 #else
@@ -739,7 +739,7 @@ command_dumpsections(void)
                                         tmp_string_buffer,
 #if __START_IF_SELECTION__
 #elif defined(_WIN32)
-                                        "0x%016I64X\t0x%016I64X\n",
+                                        "0x%016llX\t0x%016llX\n",
 #elif defined(__APPLE__)
                                         "0x%016llX\t0x%016lX\n",
 #else

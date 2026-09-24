@@ -565,7 +565,7 @@ file_extensionname(const char *filename)
 
         for (p = extension + 1; *p != '\0'; ++p)
         {
-                if (isalnum(*p) == 0)
+                if (isalnum((unsigned int)*p) == 0)
                 {
                         return filename + string_length;
                 }
