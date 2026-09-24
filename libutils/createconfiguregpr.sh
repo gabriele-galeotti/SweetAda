@@ -15,6 +15,8 @@
 # $2 = configure filename
 #
 # Environment variables:
+# VERBOSE
+# BRIEFTEXT_WIDTH
 # SWEETADA_PATH
 # TOOLCHAIN_PREFIX
 # GPRBUILD_PREFIX
@@ -280,7 +282,12 @@ configuregpr=${configuregpr}$(print_I "end ${CONFIGURE_PROJECT};")${NL}
 
 printf "%s" "${configuregpr}" > "${CONFIGURE_FILENAME}"
 
-log_print "${SCRIPT_FILENAME}: ${CONFIGURE_FILENAME}: done."
+if [ "x${VERBOSE}" = "xY" ] ; then
+  log_print "${SCRIPT_FILENAME}: ${CONFIGURE_FILENAME}: done."
+else
+  briefcommand=$(printf "%-*s" "${BRIEFTEXT_WIDTH}" "[CONFIG/GPR]")
+  log_print "${briefcommand} ${CONFIGURE_FILENAME}"
+fi
 
 exit 0
 

@@ -15,7 +15,7 @@
 # $2 = Ada unit pathname
 #
 # Environment variables:
-# None
+# BRIEFTEXT_WIDTH
 #
 
 #
@@ -144,10 +144,22 @@ linkerads=${linkerads}$(printf "%s\n" "end ${PACKAGE};")${NL}
 linkeradb=${linkeradb}$(printf "%s\n" "end ${PACKAGE};")${NL}
 
 printf "%s" "${linkerads}" > ${OUTPUT_FILENAME_ADS}
-log_print "${SCRIPT_FILENAME}: ${OUTPUT_FILENAME_ADS}: done."
+
+if [ "x${VERBOSE}" = "xY" ] ; then
+  log_print "${SCRIPT_FILENAME}: ${OUTPUT_FILENAME_ADS}: done."
+else
+  briefcommand=$(printf "%-*s" "${BRIEFTEXT_WIDTH}" "[LINKERADSB]")
+  log_print "${briefcommand} ${OUTPUT_FILENAME_ADS}"
+fi
 
 printf "%s" "${linkeradb}" > ${OUTPUT_FILENAME_ADB}
-log_print "${SCRIPT_FILENAME}: ${OUTPUT_FILENAME_ADB}: done."
+
+if [ "x${VERBOSE}" = "xY" ] ; then
+  log_print "${SCRIPT_FILENAME}: ${OUTPUT_FILENAME_ADB}: done."
+else
+  #briefcommand=$(printf "%-*s" "${BRIEFTEXT_WIDTH}" "[LINKERADSB]")
+  log_print "${briefcommand} ${OUTPUT_FILENAME_ADB}"
+fi
 
 exit 0
 

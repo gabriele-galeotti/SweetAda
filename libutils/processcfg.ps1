@@ -15,6 +15,8 @@
 # $2 = output filename
 #
 # Environment variables:
+# VERBOSE
+# BRIEFTEXT_WIDTH
 # every variable referenced in the input file
 #
 
@@ -121,6 +123,9 @@ function GetEnvVar
 #                                                                              #
 ################################################################################
 
+# check environment variable for verbosity
+$verbose = $(GetEnvVar VERBOSE)
+
 [int]$argc = 0
 [bool]$remove_cr = $false
 
@@ -212,7 +217,15 @@ if ($remove_cr)
 }
 Set-Content -Path $output_filename -Value $stdout -NoNewLine -Force
 
-Write-Host "$($scriptname): $($output_filename): done."
+if ($verbose -eq "Y")
+{
+  Write-Host "$($scriptname): $($output_filename): done."
+}
+else
+{
+  $briefcommand = "[PROCESSCFG]".PadRight($(GetEnvVar "BRIEFTEXT_WIDTH"), " ")
+  Write-Host "$($briefcommand) $($output_filename)"
+}
 
 ExitWithCode 0
 

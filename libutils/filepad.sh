@@ -16,6 +16,8 @@
 #
 # Environment variables:
 # OSTYPE
+# VERBOSE
+# BRIEFTEXT_WIDTH
 #
 
 # shellcheck disable=SC2016,SC2086,SC2181,SC2268,SC3028
@@ -123,14 +125,19 @@ else
   PADCOUNT=$((REQUESTEDSIZE-FILESIZE))
 fi
 
-log_print "${SCRIPT_FILENAME}: padding file \"$(basename $1)\"."
-
 if [ "${PADCOUNT}" -gt 0 ] ; then
   dd if=/dev/zero ibs=1 count="${PADCOUNT}" >> "$1" 2> /dev/null
   if [ $? -ne 0 ] ; then
     log_print_error "${SCRIPT_FILENAME}: *** Error: dd."
     exit 1
   fi
+fi
+
+if [ "x${VERBOSE}" = "xY" ] ; then
+  log_print "${SCRIPT_FILENAME}: $(basename $1): done."
+else
+  briefcommand=$(printf "%-*s" "${BRIEFTEXT_WIDTH}" "[FILEPAD]")
+  log_print "${briefcommand} $(basename $1)"
 fi
 
 exit 0

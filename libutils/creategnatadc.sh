@@ -16,7 +16,8 @@
 # $3 = output GNATADC_FILENAME
 #
 # Environment variables:
-# every variable referenced
+# VERBOSE
+# BRIEFTEXT_WIDTH
 #
 
 # shellcheck disable=SC2086,SC2268
@@ -112,7 +113,12 @@ if [ $? -ne 0 ] ; then
   exit 1
 fi
 
-log_print "${SCRIPT_FILENAME}: ${GNATADC_FILENAME}: done."
+if [ "x${VERBOSE}" = "xY" ] ; then
+  log_print "${SCRIPT_FILENAME}: ${GNATADC_FILENAME}: done."
+else
+  briefcommand=$(printf "%-*s" "${BRIEFTEXT_WIDTH}" "[GNATADC]")
+  log_print "${briefcommand} ${GNATADC_FILENAME}"
+fi
 
 exit 0
 

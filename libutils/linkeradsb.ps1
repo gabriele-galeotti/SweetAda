@@ -14,7 +14,8 @@
 # $2 = Ada unit pathname
 #
 # Environment variables:
-# None
+# VERBOSE
+# BRIEFTEXT_WIDTH
 #
 
 #
@@ -71,9 +72,64 @@ function Write-Stderr
 }
 
 ################################################################################
+# GetEnvVar()                                                                  #
+#                                                                              #
+################################################################################
+
+$GetEnvironmentVariable_signature = @'
+[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+public static extern uint
+GetEnvironmentVariable(
+  string lpName,
+  System.Text.StringBuilder lpBuffer,
+  uint nSize
+  );
+'@
+Add-Type                                              `
+  -MemberDefinition $GetEnvironmentVariable_signature `
+  -Name "Win32GetEnvironmentVariable"                 `
+  -Namespace Win32
+
+$gev_buffer_size = 4096
+$gev_buffer = [System.Text.StringBuilder]::new($gev_buffer_size)
+
+function GetEnvVar
+{
+  param([string]$varname)
+  if (-not (Test-Path Env:$varname))
+  {
+    return [string]::Empty
+  }
+  else
+  {
+    if ([System.Environment]::OSVersion.Platform -eq "Win32NT")
+    {
+      $nchars = [Win32.Win32GetEnvironmentVariable]::GetEnvironmentVariable(
+                  $varname,
+                  $gev_buffer,
+                  [uint32]$gev_buffer_size
+                  )
+      if ($nchars -gt $gev_buffer_size)
+      {
+        Write-Stderr "$($scriptname): *** Error: GetEnvVar: buffer size < $($nchars)."
+        ExitWithCode 1
+      }
+      return [string]$gev_buffer
+    }
+    else
+    {
+      return [string][Environment]::GetEnvironmentVariable($varname)
+    }
+  }
+}
+
+################################################################################
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
+
+# check environment variable for verbosity
+$verbose = $(GetEnvVar VERBOSE)
 
 #
 # Basic input parameters check.
@@ -174,7 +230,15 @@ catch
   ExitWithCode 1
 }
 
-Write-Host "$($scriptname): $($OUTPUT_FILENAME_ADS): done."
+if ($verbose -eq "Y")
+{
+  Write-Host "$($scriptname): $($OUTPUT_FILENAME_ADS): done."
+}
+else
+{
+  $briefcommand = "[LINKERADSB]".PadRight($(GetEnvVar "BRIEFTEXT_WIDTH"), " ")
+  Write-Host "$($briefcommand) $($OUTPUT_FILENAME_ADS)"
+}
 
 try
 {
@@ -188,7 +252,15 @@ catch
   ExitWithCode 1
 }
 
-Write-Host "$($scriptname): $($OUTPUT_FILENAME_ADB): done."
+if ($verbose -eq "Y")
+{
+  Write-Host "$($scriptname): $($OUTPUT_FILENAME_ADB): done."
+}
+else
+{
+  $briefcommand = "[LINKERADSB]".PadRight($(GetEnvVar "BRIEFTEXT_WIDTH"), " ")
+  Write-Host "$($briefcommand) $($OUTPUT_FILENAME_ADB)"
+}
 
 ExitWithCode 0
 

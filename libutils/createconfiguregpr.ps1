@@ -14,6 +14,8 @@
 # $2 = configure filename
 #
 # Environment variables:
+# VERBOSE
+# BRIEFTEXT_WIDTH
 # SWEETADA_PATH
 # TOOLCHAIN_PREFIX
 # GPRBUILD_PREFIX
@@ -244,6 +246,9 @@ function LFPL_list
 #                                                                              #
 ################################################################################
 
+# check environment variable for verbosity
+$verbose = $(GetEnvVar VERBOSE)
+
 #
 # Basic input parameters check.
 #
@@ -351,7 +356,15 @@ catch
   ExitWithCode 1
 }
 
-Write-Host "$($scriptname): $($configure_filename): done."
+if ($verbose -eq "Y")
+{
+  Write-Host "$($scriptname): $($configure_filename): done."
+}
+else
+{
+  $briefcommand = "[CONFIG/GPR]".PadRight($(GetEnvVar "BRIEFTEXT_WIDTH"), " ")
+  Write-Host "$($briefcommand) $($configure_filename)"
+}
 
 ExitWithCode 0
 

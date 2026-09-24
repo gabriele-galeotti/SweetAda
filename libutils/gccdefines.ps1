@@ -15,6 +15,8 @@
 # $3..$n = list of GCC macro define specifications
 #
 # Environment variables:
+# VERBOSE
+# BRIEFTEXT_WIDTH
 # TOOLCHAIN_CC
 # CC_SWITCHES_RTS
 # GCC_SWITCHES_PLATFORM
@@ -155,6 +157,9 @@ function ConvertHex
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
+
+# check environment variable for verbosity
+$verbose = $(GetEnvVar VERBOSE)
 
 #
 # Basic input parameters check.
@@ -390,7 +395,15 @@ catch
   ExitWithCode 1
 }
 
-Write-Host "$($scriptname): $($output_filename): done."
+if ($verbose -eq "Y")
+{
+  Write-Host "$($scriptname): $($output_filename): done."
+}
+else
+{
+  $briefcommand = "[GCCDEFINES]".PadRight($(GetEnvVar "BRIEFTEXT_WIDTH"), " ")
+  Write-Host "$($briefcommand) $($output_filename)"
+}
 
 ExitWithCode 0
 

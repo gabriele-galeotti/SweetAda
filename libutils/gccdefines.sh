@@ -16,6 +16,8 @@
 # $3..$n = list of GCC macro define specifications
 #
 # Environment variables:
+# VERBOSE
+# BRIEFTEXT_WODTH
 # TOOLCHAIN_CC
 # CC_SWITCHES_RTS
 # GCC_SWITCHES_PLATFORM
@@ -266,7 +268,12 @@ gcc_defines=${gcc_defines}$(printf "%s\n" "end ${PACKAGE_NAME};")${NL}
 
 printf "%s" "${gcc_defines}" > ${OUTPUT_FILENAME}
 
-log_print "${SCRIPT_FILENAME}: ${OUTPUT_FILENAME}: done."
+if [ "x${VERBOSE}" = "xY" ] ; then
+  log_print "${SCRIPT_FILENAME}: ${OUTPUT_FILENAME}: done."
+else
+  briefcommand=$(printf "%-*s" "${BRIEFTEXT_WIDTH}" "[GCCDEFINES]")
+  log_print "${briefcommand} ${OUTPUT_FILENAME}"
+fi
 
 exit 0
 

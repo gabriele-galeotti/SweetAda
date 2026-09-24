@@ -16,6 +16,7 @@
 # $2 = output filename
 #
 # Environment variables:
+# BRIEFTEXT_WIDTH
 # every variable referenced in the input file
 #
 
@@ -117,7 +118,7 @@ while IFS= read -r textline ; do
       *)
         ;;
     esac
-    value=$(eval printf \"%s\" \"\$${variable}\" 2> /dev/null)
+    value=$(/usr/bin/env sh -c "printf \"%s\" \"\${${variable}}\"" 2> /dev/null)
     if [ "x${value}" = "x" ] ; then
       if [ "x${optional}" != "xY" ] ; then
         log_print_error "${SCRIPT_FILENAME}: *** Warning: variable \"${variable}\" has no value."
@@ -146,7 +147,12 @@ while IFS= read -r textline ; do
   fi
 done < "${INPUT_FILENAME}"
 
-log_print "${SCRIPT_FILENAME}: ${OUTPUT_FILENAME}: done."
+if [ "x${VERBOSE}" = "xY" ] ; then
+  log_print "${SCRIPT_FILENAME}: ${OUTPUT_FILENAME}: done."
+else
+  briefcommand=$(printf "%-*s" "${BRIEFTEXT_WIDTH}" "[PROCESSCFG]")
+  log_print "${briefcommand} ${OUTPUT_FILENAME}"
+fi
 
 exit 0
 

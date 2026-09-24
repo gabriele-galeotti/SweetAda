@@ -16,7 +16,8 @@
 # $3 = string containing the hexadecimal representation of a byte to patch in
 #
 # Environment variables:
-# none
+# VERBOSE
+# BRIEFTEXT_WIDTH
 #
 # Example:
 # filepatch.sh mbr.bin 1FE "55 AA"
@@ -92,12 +93,17 @@ for b in $3 ; do
   BYTES_STRING="${BYTES_STRING}\x${b}"
 done
 
-log_print "${SCRIPT_FILENAME}: patching file \"$(basename $1)\"."
-
 printf "%s" "${BYTES_STRING}" | dd of="$1" bs=1 seek="${OFFSET}" conv=notrunc 2> /dev/null
 if [ $? -ne 0 ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: dd."
   exit 1
+fi
+
+if [ "x${VERBOSE}" = "xY" ] ; then
+  log_print "${SCRIPT_FILENAME}: $(basename $1): done."
+else
+  briefcommand=$(printf "%-*s" "${BRIEFTEXT_WIDTH}" "[FILEPATCH]")
+  log_print "${briefcommand} $(basename $1)"
 fi
 
 exit 0
