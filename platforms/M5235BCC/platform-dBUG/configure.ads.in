@@ -3,7 +3,7 @@ with Definitions;
 
 package Configure
    with Pure => True
-   is
+is
 
    use Definitions;
 
