@@ -87,8 +87,7 @@ while IFS= read -r textline ; do
   EMPTY_TEXTLINE=
   case ${textline} in
     __exitstatus__=*)
-      eval ${textline}
-      exit_status=${__exitstatus__}
+      exit_status=${textline#__exitstatus__=}
       break
       ;;
     "ELABORATION ORDER DEPENDENCIES")
