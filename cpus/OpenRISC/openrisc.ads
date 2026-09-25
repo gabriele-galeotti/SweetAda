@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 with System;
 with Interfaces;
@@ -35,8 +36,6 @@ is
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- OpenRISC 1000 Architecture Manual
@@ -250,15 +249,15 @@ pragma Style_Checks (Off);
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       with Inline => True;
+
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       with Inline => True;
 
    procedure Irq_Enable
       with Inline => True;
+
    procedure Irq_Disable
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end OpenRISC;
