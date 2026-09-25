@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 with System;
 with Interfaces;
@@ -36,8 +37,6 @@ is
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- PowerPC Microprocessor Family:
@@ -490,10 +489,13 @@ pragma Style_Checks (Off);
 
    procedure NOP
       with Inline => True;
+
    procedure BREAKPOINT
       with Inline => True;
+
    procedure SYNC
       with Inline => True;
+
    procedure ISYNC
       with Inline => True;
 
@@ -506,15 +508,15 @@ pragma Style_Checks (Off);
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       with Inline_Always => True;
+
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       with Inline_Always => True;
 
    procedure Irq_Enable
       with Inline_Always => True;
+
    procedure Irq_Disable
       with Inline_Always => True;
-
-pragma Style_Checks (On);
 
 end PowerPC;

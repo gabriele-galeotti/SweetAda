@@ -237,7 +237,9 @@ pragma Style_Checks (Off);
       (Intcontext : in Intcontext_Type)
    is
    begin
+      SYNC;
       MSR_Write ((MSR_Read with delta EE => Intcontext.EE));
+      ISYNC;
    end Intcontext_Set;
 
    ----------------------------------------------------------------------------
@@ -251,6 +253,7 @@ pragma Style_Checks (Off);
       MSR.EE := True;
       SYNC;
       MSR_Write (MSR);
+      ISYNC;
    end Irq_Enable;
 
    ----------------------------------------------------------------------------
@@ -264,6 +267,7 @@ pragma Style_Checks (Off);
       MSR.EE := False;
       SYNC;
       MSR_Write (MSR);
+      ISYNC;
    end Irq_Disable;
 
 pragma Style_Checks (On);
