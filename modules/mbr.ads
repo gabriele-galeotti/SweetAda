@@ -20,7 +20,7 @@ with BlockDevices;
 with IDE;
 
 package MBR
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -30,10 +30,7 @@ package MBR
    --                                                                        --
    --========================================================================--
 
-   use Interfaces;
-   use BlockDevices;
-
-   type Partition_Type is new Unsigned_8;
+   type Partition_Type is new Interfaces.Unsigned_8;
 
    Partition_NULL      : constant := 16#00#;
    Partition_FAT12     : constant := 16#01#;
@@ -47,12 +44,12 @@ package MBR
    PARTITION_ENTRY_SIZE : constant := 16;
 
    type Partition_Entry_Type is record
-      Status           : Unsigned_8;
-      CHS_First_Sector : CHS_Layout_Type;
+      Status           : Interfaces.Unsigned_8;
+      CHS_First_Sector : BlockDevices.CHS_Layout_Type;
       Partition        : Partition_Type;
-      CHS_Last_Sector  : CHS_Layout_Type;
-      LBA_Start        : Unsigned_32;
-      LBA_Size         : Unsigned_32;
+      CHS_Last_Sector  : BlockDevices.CHS_Layout_Type;
+      LBA_Start        : Interfaces.Unsigned_32;
+      LBA_Size         : Interfaces.Unsigned_32;
    end record
       with Size => PARTITION_ENTRY_SIZE * 8;
    for Partition_Entry_Type use record

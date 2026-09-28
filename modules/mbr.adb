@@ -20,7 +20,7 @@ with Bits;
 with Memory_Functions;
 
 package body MBR
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -32,6 +32,7 @@ package body MBR
 
    use System.Storage_Elements;
    use Bits;
+   use BlockDevices;
 
    --========================================================================--
    --                                                                        --
@@ -49,7 +50,7 @@ package body MBR
        Partition_Number : in     Partition_Number_Type;
        Partition        :    out Partition_Entry_Type;
        Success          :    out Boolean)
-      is
+   is
       Block  : aliased Block_Type (0 .. 16#01FF#);
       Offset : Storage_Offset;
    begin
