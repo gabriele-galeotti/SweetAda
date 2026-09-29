@@ -18,34 +18,46 @@ ifeq      ($(OSTYPE),cmd)
   #
   # Win64 cmd.exe
   #
+  # symlinking mode: HARD/COPY
+  OS_WINDOWS_SYMLINK := HARD
+  # Python interpreter executable
   PYTHON := C:\Users\Administrator\AppData\Local\Programs\Python\Python311\python.exe
+  # Tcl interpreter executable
   TCLSH  := C:\Tcl\bin\tclsh86.exe
+  # mintty/conemu/...
   #export TERMINAL := conemu
 else ifeq ($(OSTYPE),msys)
   #
   # MSYS2
   #
+  # symlinking mode: HARD/COPY
+  OS_WINDOWS_SYMLINK := HARD
+  # Python interpreter executable
   PYTHON := C:/Users/Administrator/AppData/Local/Programs/Python/Python311/python.exe
+  # Tcl interpreter executable
   TCLSH  := C:/Tcl/bin/tclsh86.exe
+  # mintty/conemu/...
   export TERMINAL := mintty
-  #export TERMINAL := conemu
 else ifeq ($(OSTYPE),darwin)
   #
   # Darwin
   #
+  # Python interpreter executable
   PYTHON := python3
+  # Tcl interpreter executable
   TCLSH  := tclsh
+  # undefined
+  export TERMINAL :=
 else ifeq ($(OSTYPE),linux)
   #
   # Linux and other compliant environments
   #
+  # Python interpreter executable
   PYTHON := python3
+  # Tcl interpreter executable
   TCLSH  := tclsh
+  # xterm/rxvt/xfce4/gnome/konsole
   export TERMINAL := xterm
-  #export TERMINAL := rxvt
-  #export TERMINAL := xfce4
-  #export TERMINAL := gnome
-  #export TERMINAL := konsole
 endif
 
 ################################################################################
@@ -126,7 +138,7 @@ TOOLCHAIN_NAME_x86_64     := x86_64-elf
 ################################################################################
 
 # GNATMAKE or GPRbuild
-BUILD_MODE := GPRbuild
+BUILD_MODE := GNATMAKE
 
 # Y/N (default=N)
 USE_EXE_WRAPPER := Y

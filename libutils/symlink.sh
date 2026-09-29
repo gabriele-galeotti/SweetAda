@@ -11,15 +11,14 @@
 
 #
 # Arguments:
-# optional initial -c (ignored)
 # optional initial -m <filelist> to record symlinks
-# optional initial -v for verbosity
 # $1 = target filename or directory
 # $2 = link name filename or directory
 # every following pair is another symlink
 #
 # Environment variables:
 # VERBOSE
+# BRIEFTEXT_WIDTH
 #
 # If the target is a directory, then link name should be a directory, and
 # every file contained in the directory is made target of the correspondent
@@ -80,17 +79,12 @@ FILELIST_FILENAME=
 #
 while [ $# -gt 0 ] ; do
   argument="$1"
-  if [ $(printf "%.1s" "${argument}") = "-" ] ; then
+  if [ "x"$(printf "%.1s" "${argument}") = "x-" ] ; then
     # "-" option
     case "${argument}" in
-      "-c")
-        ;;
       "-m")
         shift
         FILELIST_FILENAME="$1"
-        ;;
-      "-v")
-        VERBOSE=Y
         ;;
       *)
         log_print_error "${SCRIPT_FILENAME}: *** Error: unknown option \"${argument}\"."
@@ -104,13 +98,6 @@ while [ $# -gt 0 ] ; do
   shift
 done
 
-# check environment variable or explicit argument
-if [ "x${VERBOSE}" = "xY" ] ; then
-  VERBOSE_OPTION="-v"
-else
-  VERBOSE_OPTION=""
-fi
-
 # check for at least one symlink target
 if [ "x$1" = "x" ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: no symlink target specified."
@@ -120,7 +107,8 @@ fi
 # create filelist if specified
 if [ "x${FILELIST_FILENAME}" != "x" ] ; then
   if [ ! -f "${FILELIST_FILENAME}" ] ; then
-    printf "%s\n" "INSTALLED_FILENAMES :=" > "${FILELIST_FILENAME}"
+    printf "%s\n" "MAKEFILE_IF_IN_INCLUDED := Y" > "${FILELIST_FILENAME}"
+    printf "%s\n" "INSTALLED_FILENAMES :=" >> "${FILELIST_FILENAME}"
   fi
 fi
 
@@ -143,6 +131,9 @@ while true ; do
     ln -s "${TARGET}" "${LINK_NAME}" > /dev/null || exit $?
     if [ "x${VERBOSE}" = "xY" ] ; then
       log_print "${SCRIPT_FILENAME}: '${LINK_NAME}' -> '${TARGET}'"
+    else
+      briefcommand=$(printf "%-*s" "${BRIEFTEXT_WIDTH}" "[SYMLINK]")
+      log_print "${briefcommand} '${LINK_NAME}' -> '${TARGET}'"
     fi
     if [ "x${FILELIST_FILENAME}" != "x" ] ; then
       printf "%s\n" "INSTALLED_FILENAMES += ${LINK_NAME}" >> "${FILELIST_FILENAME}"
@@ -153,7 +144,10 @@ while true ; do
       rm -f "${f}"
       ln -s "${TARGET}"/"${f}" "${LINK_DIRECTORY}"/"${f}" > /dev/null || exit $?
       if [ "x${VERBOSE}" = "xY" ] ; then
-        log_print "${SCRIPT_FILENAME}: '${LINK_DIRECTORY}/${f}' -> '${TARGET}/${f}'"
+        log_print "${SCRIPT_FILENAME}: '${f}' -> '${TARGET}/${f}'"
+      else
+        briefcommand=$(printf "%-*s" "${BRIEFTEXT_WIDTH}" "[SYMLINK]")
+        log_print "${briefcommand} '${f}' -> '${TARGET}/${f}'"
       fi
       if [ "x${FILELIST_FILENAME}" != "x" ] ; then
         printf "%s\n" "INSTALLED_FILENAMES += ${LINK_DIRECTORY}/${f}" >> "${FILELIST_FILENAME}"

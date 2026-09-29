@@ -18,6 +18,11 @@ ifeq ($(OBJECT_DIRECTORY),)
 $(error Error: invalid OBJECT_DIRECTORY)
 endif
 
+# verbose mode, "Y"/"y"/"1" = enabled
+VERBOSE ?=
+override VERBOSE := $(subst y,Y,$(subst 1,y,$(VERBOSE)))
+export VERBOSE
+
 include $(KERNEL_PARENT_PATH)/Makefile.os.in
 include $(KERNEL_PARENT_PATH)/Makefile.ut.in
 include $(KERNEL_PARENT_PATH)/Makefile.fn.in
@@ -39,8 +44,32 @@ OBJECTS_XFORM_2 := $(OBJECTS_XFORM_1:.S=.o)
 OBJECTS_XFORM_3 := $(OBJECTS_XFORM_2:.c=.o)
 OBJECTS := $(foreach f,$(OBJECTS_XFORM_3),$(OBJ_DIRECTORY)/$(f))
 
+INSTALLED_FILENAMES :=
+ifneq ($(filter cmd msys,$(OSTYPE)),)
+SYMLINK_MODE :=
+endif
+
+MAKEFILE_IF_IN_INCLUDED :=
+-include Makefile.if.in
+
 .PHONY: all
 all: $(CONFIGURE_FILES_PLATFORM) $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
+
+.PHONY: installfiles
+installfiles: clean-installed-files
+ifneq ($(SUBPLATFORM),)
+ifeq ($(SUBPLATFORM),.)
+	$(error Error: invalid symlink)
+else
+	@$(call echo-print,"Installing files for subplatform $(SUBPLATFORM):")
+ifneq ($(filter cmd msys,$(OSTYPE)),)
+	$(SYMLINK) -s $(OS_WINDOWS_SYMLINK) -m Makefile.if.in $(SUBPLATFORM) .
+else
+	$(SYMLINK) -m Makefile.if.in $(SUBPLATFORM) .
+endif
+	@$(call echo-print,"")
+endif
+endif
 
 .PHONY: configure
 configure: clean-configure-files $(CONFIGURE_FILES_PLATFORM) $(LD_SCRIPT)
@@ -52,16 +81,34 @@ endif
 
 ifneq ($(wildcard $(LD_SCRIPT).S),)
 $(LD_SCRIPT): $(LD_SCRIPT).S $(LD_SCRIPT_DEPS)
-	$(CPP) -o $@ -C -E -P $<
-	@$(call echo-print,"pre-processing: $<: done.")
+	$(call brief-command, \
+        $(CPP) -o $@ -C -E -P $< \
+        ,[CPP],$<)
 else
 $(LD_SCRIPT):
+endif
+
+.PHONY: prebuild
+prebuild:
+ifneq ($(PREBUILD_COMMAND),)
+	$(PREBUILD_COMMAND)
 endif
 
 .PHONY: postbuild
 postbuild:
 ifneq ($(POSTBUILD_COMMAND),)
 	$(POSTBUILD_COMMAND)
+endif
+
+.PHONY: clean-installed-files
+clean-installed-files:
+ifneq ($(INSTALLED_FILENAMES),)
+ifneq ($(filter cmd msys,$(OSTYPE)),)
+	$(RMSYMLINK) -s $(SYMLINK_MODE) $(INSTALLED_FILENAMES) -o $(ORIGIN_FILENAMES)
+else
+	$(RM) $(INSTALLED_FILENAMES)
+endif
+	$(RM) Makefile.if.in
 endif
 
 .PHONY: clean-configure-files
@@ -78,7 +125,7 @@ clean:
 	$(RM) $(CLEAN_OBJECTS_COMMON)
 
 .PHONY: distclean
-distclean: clean-configure-files clean
+distclean: clean-installed-files clean-configure-files clean
 	$(RM) $(DISTCLEAN_OBJECTS_COMMON)
 
 include $(KERNEL_PARENT_PATH)/Makefile.lb.in

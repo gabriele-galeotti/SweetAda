@@ -85,11 +85,13 @@ export VERBOSE
 # help                          S       NP
 # tools-check                   S       NP
 # rts                   R               NP
+# installfiles                          P
+# prebuild                              P
 # configure                             P
 # $(KERNEL_BASENAME)                    P
 # all                                   P
-# kernel_info                           P
-# kernel_libinfo                        P
+# kernel-info                           P
+# kernel-libinfo                        P
 # postbuild                             P
 # session-start                         P
 # session-end                           P
@@ -126,11 +128,13 @@ NOT_PLATFORM_GOALS := $(SERVICE_GOALS)       \
                       rts
 
 # platform-related goals
-PLATFORM_GOALS := configure          \
+PLATFORM_GOALS := installfiles       \
+                  prebuild           \
+                  configure          \
                   $(KERNEL_BASENAME) \
                   all                \
-                  kernel_info        \
-                  kernel_libinfo     \
+                  kernel-info        \
+                  kernel-libinfo     \
                   postbuild          \
                   session-start      \
                   session-end        \
@@ -255,31 +259,24 @@ ifeq ($(MAKECMDGOALS),rts)
 RTS_BUILD := $(RTS)
 endif
 
-# default system parameters
-TOOLCHAIN_PREFIX    :=
-GPRBUILD_PREFIX     :=
-BUILD_MODE          := GNATMAKE
-RTS                 :=
-PROFILE             :=
-ADA_MODE            := ADA22
-USE_LIBGCC          :=
-USE_LIBM            :=
-USE_CLIBRARY        :=
-USE_APPLICATION     := dummy
-ELABORATION_MODEL   :=
-OPTIMIZATION_LEVEL  :=
-SUPPRESS_ALL_CHECKS :=
-STACK_LIMIT         := 4096
-POSTBUILD_ROMFILE   :=
-LD_SCRIPT           := linker.lds
-KERNEL_ENTRY_POINT  := _start
-IMPLICIT_ALI_UNITS  :=
-EXTERNAL_OBJECTS    :=
-EXTERNAL_ALIS       :=
-
 # read the master configuration file
 include configuration.in
 CONFIGURE_DEPS += configuration.in
+
+# default system parameters
+BUILD_MODE         ?= GNATMAKE
+ADA_MODE           ?= ADA22
+USE_APPLICATION    ?= dummy
+STACK_LIMIT        ?= 4096
+LD_SCRIPT          ?= linker.lds
+KERNEL_ENTRY_POINT ?= _start
+
+# OS_WINDOWS_SYMLINK shall be defined for platform Makefiles
+ifneq ($(filter cmd msys,$(OSTYPE)),)
+ifeq ($(OS_WINDOWS_SYMLINK),)
+OS_WINDOWS_SYMLINK := HARD
+endif
+endif
 
 # check for a configured toolchain
 ifneq ($(filter rts $(PLATFORM_GOALS),$(MAKECMDGOALS)),)
@@ -482,6 +479,12 @@ CONFIGURE_FILES_PLATFORM :=
 #
 GNATPREP_FILES :=
 
+#
+# User-specific command.
+#
+PREBUILD_COMMAND  ?=
+POSTBUILD_COMMAND ?=
+
 ################################################################################
 #                                                                              #
 # Global PLATFORM/CPU configuration logic.                                     #
@@ -490,8 +493,8 @@ GNATPREP_FILES :=
 
 ifneq ($(MAKECMDGOALS),)
 ifeq ($(filter distclean,$(MAKECMDGOALS)),distclean)
-        override undefine PLATFORM
-        override undefine CPU
+override undefine PLATFORM
+override undefine CPU
 endif
 ifneq ($(filter createkernelcfg,$(MAKECMDGOALS)),createkernelcfg)
 -include $(KERNEL_CFGFILE)
@@ -802,7 +805,9 @@ export                                \
        GNATBIND_SECSTACK              \
        KERNEL_ENTRY_POINT             \
        LD_SCRIPT                      \
-       POSTBUILD_COMMAND
+       PREBUILD_COMMAND               \
+       POSTBUILD_COMMAND              \
+       OS_WINDOWS_SYMLINK
 
 export USE_ELFTOOL
 ifeq ($(USE_ELFTOOL),Y)
@@ -917,6 +922,8 @@ help:
 	@$(call echo-print,"  Perform the same as 'make $(KERNEL_BASENAME)'.")
 	@$(call echo-print,"make $(KERNEL_BASENAME)")
 	@$(call echo-print,"  Build the kernel target-output file '$(KERNEL_OUTFILE)'.")
+	@$(call echo-print,"make prebuild")
+	@$(call echo-print,"  Perform platform-specific initializations.")
 	@$(call echo-print,"make postbuild")
 	@$(call echo-print,"  Perform platform-specific finalizations \
                               and build a customized binary file '$(KERNEL_ROMFILE)'.")
@@ -939,7 +946,7 @@ help:
 	@$(call echo-print,"make distclean")
 	@$(call echo-print,"  Clean object files and all configuration/support files.")
 	@$(call echo-print,"make tools-check")
-	@$(call echo-print,"  Check wheter Makefile tools are available.")
+	@$(call echo-print,"  Check whether Makefile tools are available.")
 	@$(call echo-print,"make libutils-elftool")
 	@$(call echo-print,"  Build ELFtool.")
 	@$(call echo-print,"make libutils-exe-wrapper")
@@ -1074,10 +1081,10 @@ $(OBJECT_DIRECTORY)/b__main.adb: $(B__MAIN_ADB_DEPS)
 	@$(REM) bind all units and generate b__main
 ifeq ($(USE_EXE_WRAPPER),Y)
 ifeq ($(OSTYPE),cmd)
-	@IF NOT EXIST $(EXE_WRAPPER_TIMESTAMP_FILENAME)              \
+	IF NOT EXIST $(EXE_WRAPPER_TIMESTAMP_FILENAME)               \
           $(call create-emptyfile,$(EXE_WRAPPER_TIMESTAMP_FILENAME))
 else
-	@if [ ! -e $(EXE_WRAPPER_TIMESTAMP_FILENAME) ] ; then          \
+	if [ ! -e $(EXE_WRAPPER_TIMESTAMP_FILENAME) ] ; then           \
           $(call create-emptyfile,$(EXE_WRAPPER_TIMESTAMP_FILENAME)) ; \
         fi
 endif
@@ -1102,28 +1109,24 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
         ,[GNATBIND],b__main.adb)
 ifeq ($(OSTYPE),cmd)
 	$(call create-emptyfile,gnatbind_alis.lst.tmp)
-	@SETLOCAL ENABLEDELAYEDEXPANSION                    && \
+	SETLOCAL ENABLEDELAYEDEXPANSION                     && \
         FOR /F "delims=?" %%A IN (gnatbind_alis.lst) DO        \
           (                                                    \
            SET "A1=%%A" && SET "A2=!A1:$(SWEETADA_PATH)/=!" && \
            (ECHO !A2!>>gnatbind_alis.lst.tmp)                  \
           )
-	-@$(MV) .\gnatbind_alis.lst.tmp .\gnatbind_alis.lst
-	@$(MV) b__main.ad* $(OBJECT_DIRECTORY)\ $(NULL)
+	$(MV) .\gnatbind_alis.lst.tmp .\gnatbind_alis.lst
+	$(MV) b__main.ad* $(OBJECT_DIRECTORY)\ $(NULL)
 else
-ifeq ($(OSTYPE),darwin)
-	sed -i '' -e "s|$(SWEETADA_PATH)/||g" gnatbind_alis.lst
-else
-	sed -i -e "s|$(SWEETADA_PATH)/||g" gnatbind_alis.lst
+	$(SED_INPLACE) -e "s|$(SWEETADA_PATH)/||g" gnatbind_alis.lst
 endif
-	@$(MV) b__main.ad* $(OBJECT_DIRECTORY)/
-endif
+	$(MV) b__main.ad* $(OBJECT_DIRECTORY)/
 else ifeq ($(BUILD_MODE),GPRbuild)
 	@$(REM) force rebind under GPRbuild
 ifeq ($(OSTYPE),cmd)
-	-@$(RM) $(OBJECT_DIRECTORY)\main.bexch
+	$(RM) $(OBJECT_DIRECTORY)\main.bexch
 else
-	-@$(RM) $(OBJECT_DIRECTORY)/main.bexch
+	$(RM) $(OBJECT_DIRECTORY)/main.bexch
 endif
 ifeq ($(OSTYPE),cmd)
 	$(call brief-command, \
@@ -1145,34 +1148,24 @@ else
         ,[GPRBUILD-B],$(KERNEL_GPRFILE))
 endif
 ifeq ($(OSTYPE),cmd)
-	-@$(MV) $(OBJECT_DIRECTORY)\gnatbind_objs.lst .\ 2>nul
+	$(MV) $(OBJECT_DIRECTORY)\gnatbind_objs.lst .\ 2>nul
 else
-	-@$(MV) $(OBJECT_DIRECTORY)/gnatbind_objs.lst ./ 2> /dev/null
+	$(MV) $(OBJECT_DIRECTORY)/gnatbind_objs.lst ./ 2> /dev/null
 endif
 endif
-ifeq      ($(OSTYPE),cmd)
+ifeq ($(OSTYPE),cmd)
 	$(PROCESSOBJS)                                              \
                        -b $(BUILD_MODE) -o $(OBJECT_DIRECTORY)      \
                        $(foreach u,$(IMPLICIT_ALI_UNITS),-i $(u).o) \
                        gnatbind_objs.lst
-else ifeq ($(OSTYPE),msys)
-	@sed                                                   \
-             -i                                                \
-             -e "s|\\\\|/|g" -e "s| |\\\\ |g"                  \
-             $(foreach u,$(IMPLICIT_ALI_UNITS),-e "/$(u).o/d") \
-             gnatbind_objs.lst
-else ifeq ($(OSTYPE),darwin)
-	@sed                                                   \
-             -i ''                                             \
-             -e "s| |\\\\ |g"                                  \
-             $(foreach u,$(IMPLICIT_ALI_UNITS),-e "/$(u).o/d") \
-             gnatbind_objs.lst
 else
-	@sed                                                   \
-             -i                                                \
-             -e "s| |\\\\ |g"                                  \
-             $(foreach u,$(IMPLICIT_ALI_UNITS),-e "/$(u).o/d") \
-             gnatbind_objs.lst
+ifeq ($(OSTYPE),msys)
+	$(SED_INPLACE) -e "s|\\\\|/|g" gnatbind_objs.lst
+endif
+	$(SED_INPLACE)                                                   \
+                       -e "s| |\\\\ |g"                                  \
+                       $(foreach u,$(IMPLICIT_ALI_UNITS),-e "/$(u).o/d") \
+                       gnatbind_objs.lst
 endif
 
 #
@@ -1184,12 +1177,11 @@ B__MAIN_O_DEPS += $(OBJECT_DIRECTORY)/b__main.adb
 $(OBJECT_DIRECTORY)/b__main.o: $(B__MAIN_O_DEPS)
 	@$(REM) compile the main program, incorporating the given elaboration order
 ifeq ($(BUILD_MODE),GNATMAKE)
-	$(CHDIR) $(OBJECT_DIRECTORY) && \
-        $(call brief-command, \
-        $(ADAC_GNATBIND)              \
-                         -o b__main.o \
-                         -c           \
-                         b__main.adb  \
+	$(call brief-command, \
+        $(CHDIR) $(OBJECT_DIRECTORY)  && \
+        $(ADAC_GNATBIND)                 \
+                         -o b__main.o -c \
+                         b__main.adb     \
         ,[ADAC],b__main.adb)
 endif
 
@@ -1198,9 +1190,9 @@ endif
 #
 
 $(PLATFORM_DIRECTORY)/$(LD_SCRIPT): FORCE
-	@$(MAKE) $(MAKE_PLATFORM) $(LD_SCRIPT)
+	$(MAKE) $(MAKE_PLATFORM) $(LD_SCRIPT)
 
-$(CORE_DIRECTORY)/linker.ads \
+$(CORE_DIRECTORY)/linker.ads  \
 $(CORE_DIRECTORY)/linker.adb: $(CONFIGURE_DEPS) $(PLATFORM_DIRECTORY)/$(LD_SCRIPT)
 	$(LINKERADSB)                                    \
                       $(PLATFORM_DIRECTORY)/$(LD_SCRIPT) \
@@ -1213,16 +1205,15 @@ $(CORE_DIRECTORY)/linker.adb: $(CONFIGURE_DEPS) $(PLATFORM_DIRECTORY)/$(LD_SCRIP
 .PHONY: b__main-update
 b__main-update:
 ifeq ($(OSTYPE),cmd)
-	@$(RM) $(OBJECT_DIRECTORY)\b__main.adb
+	$(RM) $(OBJECT_DIRECTORY)\b__main.adb
 else
-	@$(RM) $(OBJECT_DIRECTORY)/b__main.adb
+	$(RM) $(OBJECT_DIRECTORY)/b__main.adb
 endif
 
 ifeq ($(NOBUILD),Y)
 $(KERNEL_OUTFILE):
 else
 KERNEL_OUTFILE_DEPS :=
-KERNEL_OUTFILE_DEPS += $(GNATTDI_FILENAME)
 KERNEL_OUTFILE_DEPS += $(DOTSWEETADA)
 KERNEL_OUTFILE_DEPS += $(GNATPREP_FILES)
 KERNEL_OUTFILE_DEPS += $(CORE_DIRECTORY)/linker.ads
@@ -1254,7 +1245,7 @@ endif
               --end-group                           \
         ,[LD],$@ @ $(LD_SCRIPT))
 ifneq ($(OSTYPE),cmd)
-	@chmod a-x $@
+	chmod a-x $@
 endif
 	$(UPDATETM) -r $@ $(DOTSWEETADA)
 	$(call brief-command, \
@@ -1270,12 +1261,12 @@ endif
 	@$(call echo-print,"$(PLATFORM): ELF sections dump.")
 	@$(call echo-print,"")
 ifeq ($(USE_ELFTOOL),Y)
-	@$(ELFTOOL) -c dumpsections $@
+	$(ELFTOOL) -c dumpsections $@
 	@$(call echo-print,"")
-	@$(ELFTOOL) -p "Kernel entry point: " -c findsymbol=$(KERNEL_ENTRY_POINT) $@
+	$(ELFTOOL) -p "Kernel entry point: " -c findsymbol=$(KERNEL_ENTRY_POINT) $@
 else
-	@$(SIZE) $@
-	@$(ELFSYMBOL) -p "Kernel entry point: " $(KERNEL_ENTRY_POINT) $@
+	$(SIZE) $@
+	$(ELFSYMBOL) -p "Kernel entry point: " $(KERNEL_ENTRY_POINT) $@
 endif
 	@$(call echo-print,"")
 
@@ -1286,30 +1277,30 @@ endif
 .PHONY: kernel-lib-obj-dir
 kernel-lib-obj-dir:
 ifeq ($(OSTYPE),cmd)
-	@IF NOT EXIST $(LIBRARY_DIRECTORY)\ $(MKDIR) $(LIBRARY_DIRECTORY)
-	@IF NOT EXIST $(OBJECT_DIRECTORY)\ $(MKDIR) $(OBJECT_DIRECTORY)
+	IF NOT EXIST $(LIBRARY_DIRECTORY)\ $(MKDIR) $(LIBRARY_DIRECTORY)
+	IF NOT EXIST $(OBJECT_DIRECTORY)\ $(MKDIR) $(OBJECT_DIRECTORY)
 else
-	@$(MKDIR) $(LIBRARY_DIRECTORY)
-	@$(MKDIR) $(OBJECT_DIRECTORY)
+	$(MKDIR) $(LIBRARY_DIRECTORY)
+	$(MKDIR) $(OBJECT_DIRECTORY)
 endif
 
-$(KERNEL_BASENAME).lst     \
-$(KERNEL_BASENAME).src.lst \
+$(KERNEL_BASENAME).lst      \
+$(KERNEL_BASENAME).src.lst  \
 $(KERNEL_BASENAME).elf.lst: $(KERNEL_OUTFILE)
 
-libgnat.lst      \
-libgnat.elf.lst  \
-libgnarl.lst     \
+libgnat.lst       \
+libgnat.elf.lst   \
+libgnarl.lst      \
 libgnarl.elf.lst: $(KERNEL_OUTFILE)
-	@$(OBJDUMP) -Sdx $(LIBGNAT_OBJECT) > libgnat.lst
-	@$(READELF) $(LIBGNAT_OBJECT) > libgnat.elf.lst
-	@$(OBJDUMP) -Sdx $(LIBGNARL_OBJECT) > libgnarl.lst
-	@$(READELF) $(LIBGNARL_OBJECT) > libgnarl.elf.lst
+	$(OBJDUMP) -Sdx $(LIBGNAT_OBJECT) > libgnat.lst
+	$(READELF) $(LIBGNAT_OBJECT) > libgnat.elf.lst
+	$(OBJDUMP) -Sdx $(LIBGNARL_OBJECT) > libgnarl.lst
+	$(READELF) $(LIBGNARL_OBJECT) > libgnarl.elf.lst
 
-libgcc.lst     \
+libgcc.lst      \
 libgcc.elf.lst: $(KERNEL_OUTFILE)
-	@$(OBJDUMP) -Sdx $(LIBGCC_OBJECT) > libgcc.lst
-	@$(READELF) $(LIBGCC_OBJECT) > libgcc.elf.lst
+	$(OBJDUMP) -Sdx $(LIBGCC_OBJECT) > libgcc.lst
+	$(READELF) $(LIBGCC_OBJECT) > libgcc.elf.lst
 
 .PHONY: kernel-libinfo
 kernel-libinfo:
@@ -1358,67 +1349,108 @@ all: kernel-start       \
 # Configuration targets.
 #
 
+ifeq ($(filter createkernelcfg,$(MAKECMDGOALS)),createkernelcfg)
+ifneq ($(SUBPLATFORM),)
+ifeq ($(SUBPLATFORM),.)
+$(error Error: no valid SUBPLATFORM, configuration not created)
+endif
+DOTSUBPLATFORM := $(SUBPLATFORM)
+else
+DOTSUBPLATFORM := .
+endif
+ifeq ($(OSTYPE),cmd)
+PLATFORM_CONFIGURATIONIN := \
+  $(PLATFORM_BASE_DIRECTORY)\$(PLATFORM)\$(DOTSUBPLATFORM)\configuration.in
+PLATFORM_MAKEFILE        := \
+  $(PLATFORM_BASE_DIRECTORY)\$(PLATFORM)\Makefile
+else
+PLATFORM_CONFIGURATIONIN := \
+  $(PLATFORM_BASE_DIRECTORY)/$(PLATFORM)/$(DOTSUBPLATFORM)/configuration.in
+PLATFORM_MAKEFILE        := \
+  $(PLATFORM_BASE_DIRECTORY)/$(PLATFORM)/Makefile
+endif
+endif
+
 # create KERNEL_CFGFILE file and eventually install subplatform-dependent
 # files (subsequent "configure" phase needs all target files in place)
 .PHONY: createkernelcfg
 createkernelcfg: kernel-lib-obj-dir
 ifneq ($(filter $(PLATFORM),$(PLATFORMS)),)
-	-$(MAKE) distclean
-	@$(RM) $(KERNEL_CFGFILE)
+ifeq ($(OSTYPE),cmd)
+	IF NOT EXIST "$(PLATFORM_CONFIGURATIONIN)"       \
+          ECHO *** Error: configuration.in not found.>2& \
+          EXIT /B 1
+	IF NOT EXIST "$(PLATFORM_MAKEFILE)"       \
+          ECHO *** Error: Makefile not found.>2 & \
+          EXIT /B 1
+else
+	if [ ! -e "$(PLATFORM_CONFIGURATIONIN)" ] ; then    \
+          printf "%s\n"                                     \
+            "*** Error: configuration.in not found." 1>&2 ; \
+          exit 1                                          ; \
+        fi
+	if [ ! -e "$(PLATFORM_MAKEFILE)" ] ; then   \
+          printf "%s\n"                             \
+            "*** Error: Makefile not found." 1>&2 ; \
+          exit 1                                  ; \
+        fi
+endif
+	$(MAKE) distclean
+	$(RM) $(KERNEL_CFGFILE)
 	@$(call echo-print,"PLATFORM := $(PLATFORM)")> $(KERNEL_CFGFILE)
 ifneq ($(SUBPLATFORM),)
 	@$(call echo-print,"SUBPLATFORM := $(SUBPLATFORM)")>> $(KERNEL_CFGFILE)
 endif
 	@$(call echo-print,"")
-	@$(call echo-print,"$(PLATFORM): configuration file $(KERNEL_CFGFILE) created successfully.")
+ifeq ($(SUBPLATFORM),)
+	@$(call echo-print,"$(PLATFORM): $(KERNEL_CFGFILE) created successfully.")
+else
+	@$(call echo-print,"$(PLATFORM)/$(SUBPLATFORM) : $(KERNEL_CFGFILE) created successfully.")
+endif
 	@$(call echo-print,"")
 ifneq ($(SUBPLATFORM),)
-	@$(REM) if SUBPLATFORM does exist, execute the "installfiles" target
-	-@$(MAKE) $(MAKE_PLATFORM) installfiles
+	$(MAKE) $(MAKE_PLATFORM) installfiles
 endif
 else
 	$(error Error: no valid PLATFORM, configuration not created)
 endif
 
 define configure-subdirs-command =
-@$(MAKE) $(MAKE_APPLICATION) configure
-@$(MAKE) $(MAKE_CLIBRARY) configure
-@$(MAKE) $(MAKE_CORE) configure
-@$(MAKE) $(MAKE_CPU) configure
-@$(MAKE) $(MAKE_DRIVERS) configure
-@$(MAKE) $(MAKE_MODULES) configure
-@$(MAKE) $(MAKE_PLATFORM) configure
+$(MAKE) $(MAKE_APPLICATION) configure
+$(MAKE) $(MAKE_CLIBRARY) configure
+$(MAKE) $(MAKE_CORE) configure
+$(MAKE) $(MAKE_CPU) configure
+$(MAKE) $(MAKE_DRIVERS) configure
+$(MAKE) $(MAKE_MODULES) configure
+$(MAKE) $(MAKE_PLATFORM) configure
 endef
 
-DOTSWEETADA_DEPS :=
-DOTSWEETADA_DEPS += $(CONFIGURE_DEPS)
-DOTSWEETADA_DEPS += $(GNATADC_FILENAME)
-DOTSWEETADA_DEPS += $(CONFIGUREGPR_FILENAME)
-DOTSWEETADA_DEPS += $(filter-out $(CONFIGUREGPR_FILENAME),$(GPRBUILD_DEPS))
-./$(DOTSWEETADA): $(DOTSWEETADA_DEPS)
-	$(MAKE) clean
+.PHONY: configure-subdirs
+configure-subdirs:
 	$(configure-subdirs-command)
-	$(UPDATETM) $@
 
 .PHONY: configure-gnattdi
 configure-gnattdi: $(GNATTDI_FILENAME)
 $(GNATTDI_FILENAME): $(CONFIGURE_DEPS)
 ifeq ($(OSTYPE),cmd)
-	-$(CHDIR) $(OBJECT_DIRECTORY)          && \
+	-$(call brief-command, \
+        $(CHDIR) $(OBJECT_DIRECTORY)           && \
         $(ADAC)                                   \
                 -gnatet=../$(GNATTDI_FILENAME)    \
                 -c                                \
                 __tdi__.ads                       \
-                1>nul 2>nul
+                1>nul 2>nul                       \
+        ,[ADAC],$(GNATTDI_FILENAME))
 else
-	-$(CHDIR) $(OBJECT_DIRECTORY)          && \
+	-$(call brief-command, \
+        $(CHDIR) $(OBJECT_DIRECTORY)           && \
         $(ADAC)                                   \
                 -gnatet=../$(GNATTDI_FILENAME)    \
                 -c                                \
                 __tdi__.ads                       \
-                1> /dev/null 2> /dev/null
+                1> /dev/null 2> /dev/null         \
+        ,[ADAC],$(GNATTDI_FILENAME))
 endif
-	$(info $(MAKEFILENAME): $(GNATTDI_FILENAME): done.)
 
 .PHONY: configure-gnatadc
 configure-gnatadc: $(GNATADC_FILENAME)
@@ -1429,10 +1461,6 @@ $(GNATADC_FILENAME): $(CONFIGURE_DEPS) $(GNATADC_FILENAME).in
 configure-configuregpr: $(CONFIGUREGPR_FILENAME)
 $(CONFIGUREGPR_FILENAME): $(CONFIGURE_DEPS)
 	$(CREATECONFIGUREGPR) Configure $(CONFIGUREGPR_FILENAME)
-
-.PHONY: configure-subdirs
-configure-subdirs:
-	$(configure-subdirs-command)
 
 .PHONY: configure-linkeradsb
 configure-linkeradsb: $(CORE_DIRECTORY)/linker.ads $(CORE_DIRECTORY)/linker.adb
@@ -1454,6 +1482,7 @@ configure-end:
 
 .PHONY: configure-aux
 CONFIGURE_AUX_DEPS :=
+CONFIGURE_AUX_DEPS += prebuild-aux
 CONFIGURE_AUX_DEPS += configure-start
 CONFIGURE_AUX_DEPS += configure-gnattdi
 CONFIGURE_AUX_DEPS += configure-gnatadc
@@ -1463,6 +1492,17 @@ CONFIGURE_AUX_DEPS += configure-linkeradsb
 CONFIGURE_AUX_DEPS += configure-gnatprep
 CONFIGURE_AUX_DEPS += configure-end
 configure-aux: $(CONFIGURE_AUX_DEPS)
+
+DOTSWEETADA_DEPS :=
+DOTSWEETADA_DEPS += $(CONFIGURE_DEPS)
+DOTSWEETADA_DEPS += $(GNATTDI_FILENAME)
+DOTSWEETADA_DEPS += $(GNATADC_FILENAME)
+DOTSWEETADA_DEPS += $(CONFIGUREGPR_FILENAME)
+DOTSWEETADA_DEPS += $(filter-out $(CONFIGUREGPR_FILENAME),$(GPRBUILD_DEPS))
+./$(DOTSWEETADA): $(DOTSWEETADA_DEPS)
+	$(MAKE) clean
+	$(configure-subdirs-command)
+	$(UPDATETM) $@
 
 .PHONY: configure
 configure: clean clean-configure configure-aux infodump
@@ -1536,10 +1576,51 @@ endif
 	@$(call echo-print,"")
 
 #
-# KERNEL_ROMFILE/postbuild/session-start/session-end/run/debug targets.
+# KERNEL_ROMFILE/prebuild/postbuild/session-start/session-end/run/debug targets.
 #
 # Commands are executed with current directory = SWEETADA_PATH.
 #
+
+$(KERNEL_ROMFILE): $(KERNEL_OUTFILE)
+ifeq ($(POSTBUILD_ROMFILE),Y)
+	$(call brief-command, \
+        $(OBJCOPY) $(KERNEL_OUTFILE) $(KERNEL_ROMFILE) \
+        ,[OBJCOPY],$(KERNEL_ROMFILE))
+ifneq ($(OSTYPE),cmd)
+	chmod a-x $(KERNEL_ROMFILE)
+endif
+endif
+
+.PHONY: installfiles
+installfiles: clean clean-configure
+	$(MAKE) $(MAKE_PLATFORM) installfiles
+
+.PHONY: prebuild-aux
+prebuild-aux: clean clean-configure
+	$(MAKE) $(MAKE_PLATFORM) prebuild
+
+.PHONY: prebuild
+prebuild: prebuild-aux
+
+.PHONY: postbuild
+postbuild: $(KERNEL_ROMFILE)
+	$(MAKE) $(MAKE_PLATFORM) postbuild
+
+.PHONY: session-start
+session-start:
+ifneq ($(SESSION_START_COMMAND),)
+	$(SESSION_START_COMMAND)
+else
+	$(error Error: no SESSION_START_COMMAND defined)
+endif
+
+.PHONY: session-end
+session-end:
+ifneq ($(SESSION_END_COMMAND),)
+	$(SESSION_END_COMMAND)
+else
+	$(error Error: no SESSION_END_COMMAND defined)
+endif
 
 .PHONY: debug-notify-off
 debug-notify-off: $(KERNEL_OUTFILE)
@@ -1555,36 +1636,6 @@ ifeq ($(USE_ELFTOOL),Y)
 	$(call brief-command, \
         $(ELFTOOL) -c setdebugflag=0x01 $(KERNEL_OUTFILE) \
         ,[ELFTOOL],Debug_Flag=1)
-endif
-
-$(KERNEL_ROMFILE): $(KERNEL_OUTFILE)
-ifeq ($(POSTBUILD_ROMFILE),Y)
-	$(call brief-command, \
-        $(OBJCOPY) $(KERNEL_OUTFILE) $(KERNEL_ROMFILE) \
-        ,[OBJCOPY],$(KERNEL_ROMFILE))
-ifneq ($(OSTYPE),cmd)
-	@chmod a-x $(KERNEL_ROMFILE)
-endif
-endif
-
-.PHONY: postbuild
-postbuild: $(KERNEL_ROMFILE)
-	@$(MAKE) $(MAKE_PLATFORM) postbuild
-
-.PHONY: session-start
-session-start:
-ifneq ($(SESSION_START_COMMAND),)
-	-$(SESSION_START_COMMAND)
-else
-	$(error Error: no SESSION_START_COMMAND defined)
-endif
-
-.PHONY: session-end
-session-end:
-ifneq ($(SESSION_END_COMMAND),)
-	-$(SESSION_END_COMMAND)
-else
-	$(error Error: no SESSION_END_COMMAND defined)
 endif
 
 .PHONY: run
@@ -1610,9 +1661,9 @@ endif
 #
 
 .PHONY: rts
-rts: clean clean-configure
+rts: make-check clean clean-configure
 ifeq ($(OSTYPE),cmd)
-	@SETLOCAL ENABLEDELAYEDEXPANSION                                  && \
+	SETLOCAL ENABLEDELAYEDEXPANSION                                   && \
         FOR %%M IN ($(foreach m,$(GCC_MULTILIBS),"$(m)")) DO                 \
           (                                                                  \
            ECHO.&& ECHO $(CPU): RTS = $(RTS_BUILD), multilib = %%M&& ECHO.&& \
@@ -1646,8 +1697,8 @@ ifeq ($(OSTYPE),cmd)
           DEL /F /Q 2>nul *.*                      && \
           $(RMDIR) ..\$(OBJECT_DIRECTORY)\ $(NULL)
 else
-	-$(RM) $(LIBRARY_DIRECTORY)/*
-	-$(RMDIR) $(OBJECT_DIRECTORY)/*
+	$(RM) $(LIBRARY_DIRECTORY)/*
+	$(RMDIR) $(OBJECT_DIRECTORY)/*
 endif
 	$(MAKE) $(MAKE_APPLICATION) clean
 	$(MAKE) $(MAKE_CLIBRARY) clean
@@ -1664,16 +1715,17 @@ ifeq ($(filter $(PLATFORM),$(PLATFORMS)),$(PLATFORM))
 	$(MAKE) $(MAKE_PLATFORM) clean
 endif
 endif
-	-$(RM) $(CLEAN_OBJECTS)
+	$(RM) $(CLEAN_OBJECTS)
 
 .PHONY: clean-configure
 clean-configure:
-	@-$(RM) $(GNATADC_FILENAME)
-	@-$(RM) $(CONFIGUREGPR_FILENAME)
+	$(RM) $(GNATTDI_FILENAME)
+	$(RM) $(GNATADC_FILENAME)
+	$(RM) $(CONFIGUREGPR_FILENAME)
 ifeq ($(OSTYPE),cmd)
-	@-$(RM) $(CORE_DIRECTORY)\linker.ad*
+	$(RM) $(CORE_DIRECTORY)\linker.ad*
 else
-	@-$(RM) $(CORE_DIRECTORY)/linker.ad*
+	$(RM) $(CORE_DIRECTORY)/linker.ad*
 endif
 
 .PHONY: distclean
@@ -1692,14 +1744,11 @@ endif
 	$(RM) $(DISTCLEAN_OBJECTS)
 
 #
-# Utility targets.
-#
-
-#
 # Check basic tools.
 #
-.PHONY: tools-check
-tools-check:
+
+.PHONY: make-check
+make-check:
 ifeq ($(OSTYPE),cmd)
 	IF $(call substring,$(subst .,,$(MAKE_VERSION)),1,2) LSS 44          \
           ECHO *** Warning: SweetAda requires GNU Make version 4.4 or later.
@@ -1708,21 +1757,32 @@ else
           printf "%s\n" "*** Warning: SweetAda requires GNU Make version 4.4 or later." ; \
         fi
 endif
+
+.PHONY: exe-wrapper-check
+exe-wrapper-check:
 ifeq ($(USE_EXE_WRAPPER),Y)
 	$(EXE_WRAPPER) -v
 endif
+
+.PHONY: elftool-check
+elftool-check:
 ifeq ($(USE_ELFTOOL),Y)
 	$(ELFTOOL) -v
 endif
 
+.PHONY: tools-check
+tools-check: make-check exe-wrapper-check elftool-check
+
 #
 # Libutils tools.
 #
+
 .PHONY: libutils-elftool
 libutils-elftool:
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/ELFtool clean
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/ELFtool all
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/ELFtool install
+
 .PHONY: libutils-exe-wrapper
 libutils-exe-wrapper:
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/EXE-wrapper clean

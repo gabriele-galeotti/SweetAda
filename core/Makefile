@@ -46,7 +46,7 @@ all: $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a
 
 .PHONY: configure
 configure: clean-configure-files
-	@$(GCCDEFINES)                                 \
+	$(GCCDEFINES)                                  \
           GCC.Defines gcc-defines.ads                  \
           __VERSION__:VERSION:String:S                 \
           __ELF__:ELF:Boolean:H                        \

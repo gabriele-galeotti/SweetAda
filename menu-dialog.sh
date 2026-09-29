@@ -108,8 +108,13 @@ else
 fi
 # check whether PLATFORM is available, either from command line or the select menu
 if [ "x${PLATFORM}" != "x" ] ; then
-  _subplatforms=$(cd platforms/${PLATFORM} && ls -A -d platform-* 2> /dev/null | sed -e "s|platform-||g" -e "s|/\$||g")
-  if [ "x${_subplatforms}" != "x" ] ; then
+  _subplatforms=$(cd platforms/${PLATFORM}                    && \
+    for f in $(find . -type f -name configuration.in)          ; \
+      do                                                         \
+        printf "%s\n" $(dirname ${f} | sed -e "s|^./||")       ; \
+      done                                                     | \
+    sort | sed -e "s|^./||g" | tr '\n' ' ' | sed -e "s| \$||")
+  if [ "x${_subplatforms}" != "x" ] && [ "x${_subplatforms}" != "x." ] ; then
     # subplatforms exist
     if [ "x${SUBPLATFORM}" = "x" ] ; then
       # no SUBPLATFORM supplied

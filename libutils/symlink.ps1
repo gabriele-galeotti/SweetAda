@@ -10,16 +10,15 @@
 
 #
 # Arguments:
-# optional initial -c physical copy instead of symlink
+# optional initial -s symlink_mode HARD/COPY
 # optional initial -m <filelist> to record symlinks
-# optional initial -v for verbosity
 # $1 = target filename or directory
 # $2 = link name filename or directory
 # every following pair is another symlink
 #
 # Environment variables:
-# USE_HARDLINK
 # VERBOSE
+# BRIEFTEXT_WIDTH
 #
 
 ################################################################################
@@ -121,98 +120,12 @@ function GetEnvVar
 }
 
 ################################################################################
-# SetTimeOfSymlink()                                                           #
-#                                                                              #
-################################################################################
-
-$CreateFile_signature = @'
-[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-public static extern IntPtr
-CreateFile(
-  string filename,
-  uint   access,
-  uint   share,
-  IntPtr securityAttributes,
-  uint   creationDisposition,
-  uint   flagsAndAttributes,
-  IntPtr templateFile
-  );
-'@
-Add-Type -MemberDefinition $CreateFile_signature -Name "Win32CreateFile" -Namespace Win32
-
-$CloseHandle_signature = @'
-[DllImport("kernel32.dll", SetLastError = true)]
-public static extern bool
-CloseHandle(IntPtr hHandle);
-'@
-Add-Type -MemberDefinition $CloseHandle_signature -Name "Win32CloseHandle" -Namespace Win32
-
-$GetFileTime_signature = @'
-[DllImport("kernel32.dll", SetLastError = true)]
-public static extern bool
-GetFileTime(
-  IntPtr   hFile,
-  ref long lpCreationTime,
-  ref long lpLastAccessTime,
-  ref long lpLastWriteTime
-  );
-'@
-Add-Type -MemberDefinition $GetFileTime_signature -Name "Win32GetFileTime" -Namespace Win32
-
-$SetFileTime_signature = @'
-[DllImport("kernel32.dll", SetLastError = true)]
-public static extern bool
-SetFileTime(
-  IntPtr   hFile,
-  ref long lpCreationTime,
-  ref long lpLastAccessTime,
-  ref long lpLastWriteTime
-  );
-'@
-Add-Type -MemberDefinition $SetFileTime_signature -Name "Win32SetFileTime" -Namespace Win32
-
-function SetTimeOfSymlink
-{
-  param([string]$symlink, [string]$source)
-  [Long]$CreationTime   = 0
-  [Long]$LastAccessTime = 0
-  [Long]$LastWriteTime  = 0
-  $handle = [Win32.Win32CreateFile]::CreateFile(
-              $source,
-              0x80,
-              0,
-              [System.IntPtr]::Zero,
-              3,
-              0x80,
-              [System.IntPtr]::Zero
-              )
-  [Win32.Win32GetFileTime]::GetFileTime(
-    $handle,
-    [ref]$CreationTime,
-    [ref]$LastAccessTime,
-    [ref]$LastWriteTime) | Out-Null
-  [Win32.Win32CloseHandle]::CloseHandle($handle) | Out-Null
-  $handle = [Win32.Win32CreateFile]::CreateFile(
-              $symlink,
-              0x100,
-              0,
-              [System.IntPtr]::Zero,
-              3,
-              0x200000,
-              [System.IntPtr]::Zero
-              )
-  [Win32.Win32SetFileTime]::SetFileTime(
-    $handle,
-    [ref]$CreationTime,
-    [ref]$LastAccessTime,
-    [ref]$LastWriteTime) | Out-Null
-  [Win32.Win32CloseHandle]::CloseHandle($handle) | Out-Null
-}
-
-################################################################################
 # Main loop.                                                                   #
 #                                                                              #
 ################################################################################
+
+# check environment variable for verbosity
+$verbose = $(GetEnvVar VERBOSE)
 
 # check if we can use $IsWindows
 if ($PSVersionTable.PSVersion.Major -eq "5")
@@ -227,36 +140,25 @@ if ($PSVersionTable.PSVersion.Major -eq "5")
   }
 }
 
-# use hard links
-$use_hardlink = $(GetEnvVar USE_HARDLINK)
-
-# check environment variable for verbosity
-$verbose = $(GetEnvVar VERBOSE)
-
 #
 # Parse command line arguments.
 #
 $argsindex = 0
+$symlink_mode = "HARD"
 while ($argsindex -lt $args.Length)
 {
   if ($args[$argsindex][0] -eq "-")
   {
     $optionchar = $args[$argsindex].Substring(1)
-    if ($optionchar -eq "c")
-    {
-      if ($IsWindows)
-      {
-        $symlinkcopy = "Y"
-      }
-    }
-    elseif ($optionchar -eq "m")
+    if ($optionchar -eq "m")
     {
       $argsindex++
       $filelist_filename = $args[$argsindex]
     }
-    elseif ($optionchar -eq "v")
+    elseif ($optionchar -eq "s")
     {
-      $verbose = "Y"
+      $argsindex++
+      $symlink_mode = $args[$argsindex]
     }
     else
     {
@@ -271,6 +173,11 @@ while ($argsindex -lt $args.Length)
   $argsindex++
 }
 
+if (-not $IsWindows)
+{
+  $symlink_mode = "COPY"
+}
+
 # check for at least one symlink target
 if ($argsindex -ge $args.Length)
 {
@@ -283,11 +190,10 @@ if (![string]::IsNullOrEmpty($filelist_filename))
 {
   if (-not (Test-Path $filelist_filename))
   {
-    "INSTALLED_FILENAMES :=" | Set-Content $filelist_filename
-    if ($symlinkcopy -eq "Y")
-    {
-      "ORIGIN_FILENAMES :=" | Add-Content $filelist_filename
-    }
+    "MAKEFILE_IF_IN_INCLUDED := Y" | Set-Content $filelist_filename
+    "SYMLINK_MODE := $($symlink_mode)" | Add-Content $filelist_filename
+    "INSTALLED_FILENAMES :=" | Add-Content $filelist_filename
+    "ORIGIN_FILENAMES :=" | Add-Content $filelist_filename
   }
 }
 
@@ -306,55 +212,44 @@ while ($argsindex -lt $args.Length)
   {
     $link_name = $args[$argsindex + 1]
     Remove-Item -Path $link_name -Force -ErrorAction Ignore
-    if ($symlinkcopy -eq "Y")
+    if ($symlink_mode -eq "HARD")
+    {
+      try
+      {
+        New-Item                       `
+          -ItemType HardLink           `
+          -Name $link_name             `
+          -Value $target               `
+          -ErrorAction Stop | Out-Null
+      }
+      catch
+      {
+        Write-Stderr "$($scriptname): *** Error: New-Item (HardLink)."
+        ExitWithCode 1
+      }
+    }
+    elseif ($symlink_mode -eq "COPY")
     {
       Copy-Item $target -Destination $link_name | Out-Null
     }
     else
     {
-      try
-      {
-        if ($use_hardlink -eq "Y")
-        {
-          New-Item                                                `
-            -ItemType HardLink                                    `
-            -Name (Join-Path -Path $link_directory -ChildPath $f) `
-            -Value (Join-Path -Path $target -ChildPath $f)        `
-            -ErrorAction Stop | Out-Null
-        }
-        else
-        {
-          New-Item                                                `
-            -ItemType SymbolicLink                                `
-            -Path (Join-Path -Path $link_directory -ChildPath $f) `
-            -Target (Join-Path -Path $target -ChildPath $f)       `
-            -ErrorAction Stop | Out-Null
-        }
-      }
-      catch
-      {
-        Write-Stderr "$($scriptname): *** Error: New-Item."
-        ExitWithCode 1
-      }
-      if ($IsWindows)
-      {
-        if ($use_hardlink -ne "Y")
-        {
-          SetTimeOfSymlink $link_name $target
-        }
-      }
+      Write-Stderr "$($scriptname): *** Error: wrong mode."
+      ExitWithCode 1
     }
     if ($verbose -eq "Y")
     {
       Write-Host "$($scriptname): '$($link_name)' -> '$($target)'"
     }
+    else
+    {
+      $briefcommand = "[SYMLINK]".PadRight($(GetEnvVar "BRIEFTEXT_WIDTH"), " ")
+      Write-Host "$($briefcommand) '$($link_name)' -> '$($target)'"
+    }
     if (![string]::IsNullOrEmpty($filelist_filename))
     {
       "INSTALLED_FILENAMES += $($link_name)" | Add-Content $filelist_filename
-      if ($symlinkcopy -eq "Y")
-      {
-        "ORIGIN_FILENAMES += $($target)" | Add-Content $filelist_filename
-      }
+      "ORIGIN_FILENAMES += $($target)" | Add-Content $filelist_filename
     }
   }
   elseif (Test-Path -Path $target -PathType Container)
@@ -366,7 +261,23 @@ while ($argsindex -lt $args.Length)
       Remove-Item                                             `
         -Path (Join-Path -Path $link_directory -ChildPath $f) `
         -Force -ErrorAction Ignore
-      if ($symlinkcopy -eq "Y")
+      if ($symlink_mode -eq "HARD")
+      {
+        try
+        {
+          New-Item                                                `
+            -ItemType HardLink                                    `
+            -Name (Join-Path -Path $link_directory -ChildPath $f) `
+            -Value (Join-Path -Path $target -ChildPath $f)        `
+            -ErrorAction Stop | Out-Null
+        }
+        catch
+        {
+          Write-Stderr "$($scriptname): *** Error: New-Item (HardLink)."
+          ExitWithCode 1
+        }
+      }
+      elseif ($symlink_mode -eq "COPY")
       {
         Copy-Item                                                      `
           (Join-Path -Path $target -ChildPath $f)                      `
@@ -375,51 +286,24 @@ while ($argsindex -lt $args.Length)
       }
       else
       {
-        try
-        {
-          if ($use_hardlink -eq "Y")
-          {
-            New-Item                                                `
-              -ItemType HardLink                                    `
-              -Name (Join-Path -Path $link_directory -ChildPath $f) `
-              -Value (Join-Path -Path $target -ChildPath $f)        `
-              -ErrorAction Stop | Out-Null
-          }
-          else
-          {
-            New-Item                                                `
-              -ItemType SymbolicLink                                `
-              -Path (Join-Path -Path $link_directory -ChildPath $f) `
-              -Target (Join-Path -Path $target -ChildPath $f)       `
-              -ErrorAction Stop | Out-Null
-          }
-        }
-        catch
-        {
-          Write-Stderr "$($scriptname): *** Error: New-Item."
-          ExitWithCode 1
-        }
-        if ($IsWindows)
-        {
-          if ($use_hardlink -ne "Y")
-          {
-            SetTimeOfSymlink $link_name $target
-          }
-        }
+        Write-Stderr "$($scriptname): *** Error: wrong mode."
+        ExitWithCode 1
       }
       if ($verbose -eq "Y")
       {
-        Write-Host "$($scriptname): '$($link_directory)/$($f)' -> '$($target)/$($f)'"
+        Write-Host "$($scriptname): '$($f)' -> '$($target)/$($f)'"
+      }
+      else
+      {
+        $briefcommand = "[SYMLINK]".PadRight($(GetEnvVar "BRIEFTEXT_WIDTH"), " ")
+        Write-Host "$($briefcommand) '$($f)' -> '$($target)/$($f)'"
       }
       if (![string]::IsNullOrEmpty($filelist_filename))
       {
         "INSTALLED_FILENAMES += $(Join-Path -Path $link_directory -ChildPath $f)" `
         | Add-Content $filelist_filename
-        if ($symlinkcopy -eq "Y")
-        {
-          "ORIGIN_FILENAMES += $(Join-Path -Path $target -ChildPath $f)" `
-          | Add-Content $filelist_filename
-        }
+        "ORIGIN_FILENAMES += $(Join-Path -Path $target -ChildPath $f)" `
+        | Add-Content $filelist_filename
       }
     }
   }

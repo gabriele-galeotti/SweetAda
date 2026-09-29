@@ -10,13 +10,15 @@
 
 #
 # Arguments:
-# $1 .. n = destination filename list
+# $1 .. 2 = -s <symlink_mode>
+# $3 .. n = destination filename list
 # $n+1    = mandatory "-o" switch to separate destinations and targets
 # $n+2 .. = target filename list
 # The two lists must have the same length.
 #
 # Environment variables:
-# USE_HARDLINK
+# VERBOSE
+# BRIEFTEXT_WIDTH
 #
 
 ################################################################################
@@ -122,11 +124,9 @@ function GetEnvVar
 #                                                                              #
 ################################################################################
 
-# use hard links
-$use_hardlink = $(GetEnvVar USE_HARDLINK)
+# check environment variable for verbosity
+$verbose = $(GetEnvVar VERBOSE)
 
-$destinationindex = 0
-$targetindex = 0
 $ndestination = 0
 $ntarget = 0
 
@@ -136,9 +136,29 @@ $ntarget = 0
 $argsindex = 0
 while ($argsindex -lt $args.Length)
 {
-  if ($args[$argsindex] -eq "-o")
+  if ($args[$argsindex][0] -eq "-")
   {
-    $targetindex = $argsindex + 1
+    $optionchar = $args[$argsindex].Substring(1)
+    if ($optionchar -eq "s")
+    {
+      if ($argsindex -ne 0)
+      {
+        Write-Stderr "$($scriptname): *** Error: misplaced -s option."
+        ExitWithCode 1
+      }
+      $argsindex++
+      $symlink_mode = $args[$argsindex]
+      $destinationindex = $argsindex + 1
+    }
+    elseif ($optionchar -eq "o")
+    {
+      $targetindex = $argsindex + 1
+    }
+    else
+    {
+      Write-Stderr "$($scriptname): *** Error: unknown option `"$($optionchar)`"."
+      ExitWithCode 1
+    }
   }
   else
   {
@@ -154,23 +174,35 @@ while ($argsindex -lt $args.Length)
   $argsindex++
 }
 
-if ($use_hardlink -eq "Y")
+if ($symlink_mode -eq "HARD")
 {
-  while ($destination -gt 0)
+  while ($ndestination -gt 0)
   {
     $destination = $args[$destinationindex]
-    Remove-Item -Path $destination -Force -ErrorAction Ignore
+    try
+    {
+      Remove-Item -Path $destination -Force -ErrorAction Ignore
+    }
+    catch
+    {
+      Write-Stderr "$($scriptname): *** Error: Remove-Item (HardLink)."
+      ExitWithCode 1
+    }
+    if ($verbose -eq "Y")
+    {
+      Write-Host "$($scriptname): removed '$($destination)'"
+    }
     $destinationindex++
-    $destination--
+    $ndestination--
   }
 }
-else
+elseif ($symlink_mode -eq "COPY")
 {
-if ($ndestination -ne $ntarget)
-{
-  Write-Stderr "$($scriptname): *** Error: wrong filelist specification."
-  ExitWithCode 1
-}
+  if ($ndestination -ne $ntarget)
+  {
+    Write-Stderr "$($scriptname): *** Error: wrong filelist specification."
+    ExitWithCode 1
+  }
   while ($ntarget -gt 0)
   {
     $remove = $false
@@ -180,10 +212,10 @@ if ($ndestination -ne $ntarget)
     {
       $destination_mtime = (Get-Item $destination).LastWriteTime
       $target_mtime = (Get-Item $target).LastWriteTime
-      if ($destination_mtime -gt $target_mtime)
+      if ($destination_mtime -ne $target_mtime)
       {
         Write-Host "file [installed/symlinked]: `"$($destination)`""
-        Write-Host "  -> will be deleted, but timestamp is more recent than"
+        Write-Host "  -> will be deleted, but timestamp is different from that of"
         Write-Host "file [origin]:              `"$($target)`""
         Write-Host "*** Warning: changes could be lost."
         while ($true)
@@ -207,13 +239,33 @@ if ($ndestination -ne $ntarget)
       }
       if ($remove)
       {
-        Remove-Item -Path $destination -Force -ErrorAction Ignore
+        try
+        {
+          Remove-Item -Path $destination -Force -ErrorAction Ignore
+        }
+        catch
+        {
+          Write-Stderr "$($scriptname): *** Error: Remove-Item."
+          ExitWithCode 1
+        }
+        if ($verbose -eq "Y")
+        {
+          Write-Host "$($scriptname): removed '$($destination)'"
+        }
       }
     }
     $destinationindex++
     $targetindex++
     $ntarget--
   }
+}
+else
+{
+  # do not flag an error since some files could have been deleted, and this
+  # should not preempt the cleanup phase; in any case a new re-initialization
+  # will delete dangling files
+  #Write-Stderr "$($scriptname): *** Error: wrong mode."
+  #ExitWithCode 1
 }
 
 ExitWithCode 0
