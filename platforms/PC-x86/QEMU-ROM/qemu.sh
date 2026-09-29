@@ -86,7 +86,6 @@ if [ "x${QEMU_CAN}" = "xY" ] ; then
 fi
 
 # debug options
-QEMU_DEBUG_OPTIONS=
 if [ "x$1" = "x-debug" ] ; then
   QEMU_DEBUG_OPTIONS="-S -gdb tcp:localhost:1234,ipv4"
 fi
@@ -133,17 +132,19 @@ case ${OSTYPE} in
     ;;
 esac
 # console for serial port
-tcpport_is_listening ${SERIALPORT1} ${TILTIMEOUT} "*** Error"
-case ${OSTYPE} in
-  darwin)
-    osascript -e \
-      "tell application \"Terminal\" to do script \"clear ; telnet localhost ${SERIALPORT1} ; exit 0\"" \
-      > /dev/null
-    ;;
-  *)
-    $(terminal ${TERMINAL}) /bin/telnet localhost ${SERIALPORT1} &
-    ;;
-esac
+if true ; then
+  tcpport_is_listening ${SERIALPORT1} ${TILTIMEOUT} "*** Error"
+  case ${OSTYPE} in
+    darwin)
+      osascript -e \
+        "tell application \"Terminal\" to do script \"clear ; telnet localhost ${SERIALPORT1} ; exit 0\"" \
+        > /dev/null
+      ;;
+    *)
+      $(terminal ${TERMINAL}) /bin/telnet localhost ${SERIALPORT1} &
+      ;;
+  esac
+fi
 
 # debug session
 if [ "x$1" = "x-debug" ] ; then
@@ -154,7 +155,6 @@ if [ "x$1" = "x-debug" ] ; then
       -iex "set architecture i386" \
       -ex "set tcp connect-timeout 30" \
       -ex "target extended-remote tcp:localhost:1234" \
-      -ex "tbreak _start" -ex "continue" \
       '${KERNEL_OUTFILE}' \
     ; \
     if [ $? -ne 0 ] ; then \
