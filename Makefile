@@ -993,6 +993,8 @@ endif
 # Compile phase.
 #
 
+GNATMAKE_WRAPPER :=
+GPRBUILD_WRAPPER :=
 ifeq ($(USE_EXE_WRAPPER),Y)
 EXE_WRAPPER_TIMESTAMP_FILENAME := $(OBJECT_DIRECTORY)/exe_wrapper.tmp
 ifeq      ($(BUILD_MODE),GNATMAKE)
@@ -1007,12 +1009,6 @@ GPRBUILD_WRAPPER := "-XUSE_EXE_WRAPPER=$(USE_EXE_WRAPPER)"                      
                     "-XEXE_WRAPPER_TIMESTAMP_FILENAME=$(EXE_WRAPPER_TIMESTAMP_FILENAME)" \
                     "-XEXE_WRAPPER_VERBOSE=$(VERBOSE)"                                   \
                     "-XEXE_WRAPPER_BRIEFTEXT="
-endif
-else
-ifeq      ($(BUILD_MODE),GNATMAKE)
-GNATMAKE_WRAPPER :=
-else ifeq ($(BUILD_MODE),GPRbuild)
-GPRBUILD_WRAPPER :=
 endif
 endif
 
@@ -1119,16 +1115,12 @@ ifeq ($(OSTYPE),cmd)
 	$(MV) b__main.ad* $(OBJECT_DIRECTORY)\ $(NULL)
 else
 	$(SED_INPLACE) -e "s|$(SWEETADA_PATH)/||g" gnatbind_alis.lst
-endif
 	$(MV) b__main.ad* $(OBJECT_DIRECTORY)/
+endif
 else ifeq ($(BUILD_MODE),GPRbuild)
 	@$(REM) force rebind under GPRbuild
 ifeq ($(OSTYPE),cmd)
 	$(RM) $(OBJECT_DIRECTORY)\main.bexch
-else
-	$(RM) $(OBJECT_DIRECTORY)/main.bexch
-endif
-ifeq ($(OSTYPE),cmd)
 	$(call brief-command, \
         (                                    \
          $(GPRBUILD)                         \
@@ -1137,7 +1129,9 @@ ifeq ($(OSTYPE),cmd)
          || (ECHO __exitstatus__=1)          \
         ) | $(GPRBINDFILT) gnatbind_elab.lst \
         ,[GPRBUILD-B],$(KERNEL_GPRFILE))
+	$(MV) $(OBJECT_DIRECTORY)\gnatbind_objs.lst .\ 2>nul
 else
+	$(RM) $(OBJECT_DIRECTORY)/main.bexch
 	$(call brief-command, \
         (                                      \
          $(GPRBUILD)                           \
@@ -1146,10 +1140,6 @@ else
          || printf "%s\n" "__exitstatus__=$$?" \
         ) | $(GPRBINDFILT) gnatbind_elab.lst   \
         ,[GPRBUILD-B],$(KERNEL_GPRFILE))
-endif
-ifeq ($(OSTYPE),cmd)
-	$(MV) $(OBJECT_DIRECTORY)\gnatbind_objs.lst .\ 2>nul
-else
 	$(MV) $(OBJECT_DIRECTORY)/gnatbind_objs.lst ./ 2> /dev/null
 endif
 endif
@@ -1377,11 +1367,11 @@ endif
 createkernelcfg: kernel-lib-obj-dir
 ifneq ($(filter $(PLATFORM),$(PLATFORMS)),)
 ifeq ($(OSTYPE),cmd)
-	IF NOT EXIST "$(PLATFORM_CONFIGURATIONIN)"       \
-          ECHO *** Error: configuration.in not found.>2& \
+	IF NOT EXIST "$(PLATFORM_CONFIGURATIONIN)"        \
+          ECHO *** Error: configuration.in not found.>&2& \
           EXIT /B 1
 	IF NOT EXIST "$(PLATFORM_MAKEFILE)"       \
-          ECHO *** Error: Makefile not found.>2 & \
+          ECHO *** Error: Makefile not found.>&2& \
           EXIT /B 1
 else
 	if [ ! -e "$(PLATFORM_CONFIGURATIONIN)" ] ; then    \
@@ -1397,9 +1387,9 @@ else
 endif
 	$(MAKE) distclean
 	$(RM) $(KERNEL_CFGFILE)
-	@$(call echo-print,"PLATFORM := $(PLATFORM)")> $(KERNEL_CFGFILE)
+	$(call echo-print,"PLATFORM := $(PLATFORM)")> $(KERNEL_CFGFILE)
 ifneq ($(SUBPLATFORM),)
-	@$(call echo-print,"SUBPLATFORM := $(SUBPLATFORM)")>> $(KERNEL_CFGFILE)
+	$(call echo-print,"SUBPLATFORM := $(SUBPLATFORM)")>> $(KERNEL_CFGFILE)
 endif
 	@$(call echo-print,"")
 ifeq ($(SUBPLATFORM),)
