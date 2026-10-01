@@ -20,7 +20,8 @@ with Bits;
 with UART16x50;
 with BSP;
 
-package body Gdbstub.SerialComm is
+package body GDBstub.SerialComm
+is
 
    --========================================================================--
    --                                                                        --
@@ -32,7 +33,6 @@ package body Gdbstub.SerialComm is
 
    use Interfaces;
    use Bits;
-   use BSP;
 
    --========================================================================--
    --                                                                        --
@@ -42,16 +42,20 @@ package body Gdbstub.SerialComm is
    --                                                                        --
    --========================================================================--
 
-   procedure Putchar (C : in Character) is
+   procedure Putchar
+      (C : in Character)
+   is
    begin
       UART16x50.TX (BSP.UART_Descriptors (2), To_U8 (C));
    end Putchar;
 
-   procedure Getchar (C : out Character) is
+   procedure Getchar
+      (C : out Character)
+   is
       Data : Unsigned_8;
    begin
       UART16x50.RX (BSP.UART_Descriptors (2), Data);
       C := To_Ch (Data);
    end Getchar;
 
-end Gdbstub.SerialComm;
+end GDBstub.SerialComm;

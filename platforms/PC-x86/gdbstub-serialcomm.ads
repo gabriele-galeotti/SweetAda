@@ -15,7 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-package Gdbstub.SerialComm is
+package GDBstub.SerialComm
+is
 
    --========================================================================--
    --                                                                        --
@@ -25,7 +26,10 @@ package Gdbstub.SerialComm is
    --                                                                        --
    --========================================================================--
 
-   procedure Putchar (C : in Character);
-   procedure Getchar (C : out Character);
+   procedure Putchar
+      (C : in Character);
 
-end Gdbstub.SerialComm;
+   procedure Getchar
+      (C : out Character);
+
+end GDBstub.SerialComm;
