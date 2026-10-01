@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 with System;
 with System.Storage_Elements;
@@ -38,8 +39,6 @@ is
    use System.Storage_Elements;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- Intel (R) i486 (TM) MICROPROCESSOR
@@ -950,7 +949,5 @@ pragma Style_Checks (Off);
       with Inline => True;
    procedure Irq_Disable
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end x86;
