@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 with System;
 with Interfaces;
@@ -35,8 +36,6 @@ is
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- MOTOROLA M68000 FAMILY Programmer’s Reference Manual
@@ -577,7 +576,5 @@ pragma Style_Checks (Off);
       with Inline => True;
    procedure Irq_Disable
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end M68k;

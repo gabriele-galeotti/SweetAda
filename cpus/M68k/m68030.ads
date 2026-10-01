@@ -15,6 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
@@ -33,8 +36,6 @@ is
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- MC68030
@@ -236,7 +237,5 @@ pragma Style_Checks (Off);
    procedure TCR_Set
       (Value : in TCR_Type)
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end M68030;

@@ -21,7 +21,7 @@ else ifeq ($(CPU_MODEL),MCF5235)
   GPR_CORE_CPU += m68k.adb m68k.ads cfv2.adb cfv2.ads
 else ifeq ($(CPU_MODEL),MCF5373)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/MCF5373
-  GPR_CORE_CPU += m68k.adb m68k.ads cfv2.adb cfv2.ads
+  GPR_CORE_CPU += m68k.adb m68k.ads cfv2.adb cfv2.ads cfv3.ads
 else ifeq ($(CPU_MODEL),CFv2)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CFv2
   GPR_CORE_CPU += m68k.adb m68k.ads cfv2.adb cfv2.ads
