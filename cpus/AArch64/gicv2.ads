@@ -304,7 +304,7 @@ is
       GICD_CPENDSGIR  at 16#F10# range 0 .. 2 * 32 - 1;
       GICD_SPENDSGIR  at 16#F20# range 0 .. 2 * 32 - 1;
       GICD_ICPIDR2    at 16#FE8# range 0 .. 31;
-      Unused          at 16#FEC# range 0 .. PAD_B20_SIZE - 1;
+      Unused          at 16#FEC# range 0 .. BYTES_20_SIZE - 1;
    end record;
 
    ----------------------------------------------------------------------------
