@@ -75,6 +75,8 @@ exist.
 
 Sometimes we write "0" in place of "o", e.g., "L00P" instead of "LOOP".
 
+Sometimes we write "1" in place of "I", e.g., "B1TS" instead of "BITS".
+
 Sometimes we write "3" in place of "e", e.g., "Rang3" instead of "Range",
 "D3lay" instead of "Delay", "Typ3" instead of "Type".
 
