@@ -15,8 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 package body ZynqA9
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -31,7 +33,7 @@ package body ZynqA9
    ----------------------------------------------------------------------------
    procedure UART_TX
       (Data : in Unsigned_8)
-      is
+   is
    begin
       -- wait for transmitter available
       loop exit when uart0.SR.TXEMPTY; end loop;
@@ -43,7 +45,7 @@ package body ZynqA9
    ----------------------------------------------------------------------------
    procedure UART_RX
       (Data : out Unsigned_8)
-      is
+   is
    begin
       -- wait for receiver available
       loop exit when not uart0.SR.RXEMPTY; end loop;
@@ -54,7 +56,7 @@ package body ZynqA9
    -- UART_Init
    ----------------------------------------------------------------------------
    procedure UART_Init
-      is
+   is
    begin
       uart0.CR := (
          RXRST    => False,

@@ -22,7 +22,7 @@ with BSP;
 with Console;
 
 package body Exceptions
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -46,7 +46,7 @@ package body Exceptions
    procedure Exception_Process
       (VectorN : in Unsigned_32;
        LR      : in Unsigned_32)
-      is
+   is
    begin
       Console.Print ("*** EXCEPTION", NL => True);
       case VectorN is
@@ -73,7 +73,7 @@ package body Exceptions
    -- Irq_Process
    ----------------------------------------------------------------------------
    procedure Irq_Process
-      is
+   is
    begin
       -- ttc
       declare

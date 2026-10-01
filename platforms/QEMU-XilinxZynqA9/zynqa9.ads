@@ -15,12 +15,15 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
 
 package ZynqA9
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -33,8 +36,6 @@ package ZynqA9
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- Zynq-7000 SoC Technical Reference Manual
@@ -1086,10 +1087,10 @@ pragma Style_Checks (Off);
 
    procedure UART_TX
       (Data : in Unsigned_8);
+
    procedure UART_RX
       (Data : out Unsigned_8);
-   procedure UART_Init;
 
-pragma Style_Checks (On);
+   procedure UART_Init;
 
 end ZynqA9;

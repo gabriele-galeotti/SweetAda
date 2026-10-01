@@ -26,7 +26,7 @@ with ZynqA9;
 with Console;
 
 package body BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -55,14 +55,14 @@ package body BSP
 
    procedure Console_Putchar
       (C : in Character)
-      is
+   is
    begin
       UART_TX (To_U8 (C));
    end Console_Putchar;
 
    procedure Console_Getchar
       (C : out Character)
-      is
+   is
       Data : Unsigned_8;
    begin
       UART_RX (Data);
@@ -73,7 +73,7 @@ package body BSP
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup
-      is
+   is
    begin
       -------------------------------------------------------------------------
       Secondary_Stack.Init;
@@ -129,6 +129,7 @@ package body BSP
       -------------------------------------------------------------------------
       CPU.Irq_Enable;
       -- ttc timer ------------------------------------------------------------
+      Tick_Count := 0;
       ttc0.CNT_CNTRL (0) := (
          DIS      => False,
          INT      => INT_OVERFLOW,
