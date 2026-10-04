@@ -99,7 +99,15 @@ internal_atoi(const char **pstring)
  * Create a literal from an integer value.                                    *
  ******************************************************************************/
 static char *
-number_to_literal(char *string, char *string_end, unsigned long number, int base, int field_width, int precision, int type)
+number_to_literal(
+        char          *string,
+        char          *string_end,
+        unsigned long  number,
+        int            base,
+        int            field_width,
+        int            precision,
+        int            type
+        )
 {
         const char *digit_table_ucase;
         const char *digit_table_lcase;

@@ -34,7 +34,13 @@ is
    use type Interfaces.C.int;
    use type Bits.Bits_8;
 
-   type Ctype_Idx_Type is range 0 .. 256;
+   CTYPE_IDX_START : constant := 0;
+   CTYPE_IDX_LIMIT : constant := 16#FF#;
+   CTYPE_IDX_END   : constant := CTYPE_IDX_LIMIT + 1;
+
+   ASCII_IDX_START  : constant := CTYPE_IDX_START + 1;
+   ASCII_IDX_END    : constant := 16#7F# + 1;
+   ASCII_CASE_XFORM : constant := 16#20#;
 
    UCASE : constant := 2#00000001#; -- UPPERCASE SYMBOL
    LCASE : constant := 2#00000010#; -- LOWERCASE SYMBOL
@@ -44,6 +50,12 @@ is
    CNTRL : constant := 2#00100000#; -- CONTROL CHARACTER
    BLANK : constant := 2#01000000#; -- "C" LOCALE WHITE SPACE CHARACTER (HT/LF/VT/FF/CR/SP)
    DIGIX : constant := 2#10000000#; -- HEXADECIMAL DIGIT
+
+   type mod_Cint is mod 2**Interfaces.C.int'Size;
+
+   type Ctype_Idx_Type is range CTYPE_IDX_START .. CTYPE_IDX_END;
+
+   subtype Ctype_Idx_ASCII_Type is Ctype_Idx_Type range ASCII_IDX_START .. ASCII_IDX_END;
 
    Ctype_Character_Table : constant array (Ctype_Idx_Type) of Bits.Bits_8 := [
         --                DEC  HEX |    |
@@ -309,7 +321,7 @@ is
            Convention    => C,
            External_Name => "_CTYPE_character_table";
 
-   function To_CtypeIdx
+   function CtypeMap
       (c : Interfaces.C.int)
       return Ctype_Idx_Type
       with Inline => True;
@@ -328,21 +340,32 @@ is
    --                                                                        --
    --========================================================================--
 
-   function To_CtypeIdx
+   ----------------------------------------------------------------------------
+   -- Map an 8-bit input value into an index in table.
+   ----------------------------------------------------------------------------
+   function CtypeMap
       (c : Interfaces.C.int)
       return Ctype_Idx_Type
    is
    begin
-      return (if c < 0 or else c > 255 then 0 else Ctype_Idx_Type (c + 1));
-   end To_CtypeIdx;
+      return (
+         if c < CTYPE_IDX_START or else c > CTYPE_IDX_LIMIT then
+            0
+         else
+            Ctype_Idx_Type (c + 1)
+         );
+   end CtypeMap;
 
+   ----------------------------------------------------------------------------
+   -- Return a value /= 0 whether a bitmask is flagged true.
+   ----------------------------------------------------------------------------
    function Is_Something
       (c : Interfaces.C.int;
        x : Bits.Bits_8)
       return Interfaces.C.int
    is
    begin
-      return Interfaces.C.int (Ctype_Character_Table (To_CtypeIdx (c)) and x);
+      return Interfaces.C.int (Ctype_Character_Table (CtypeMap (c)) and x);
    end Is_Something;
 
    ----------------------------------------------------------------------------
@@ -443,46 +466,38 @@ is
    is
       Idx : Ctype_Idx_Type;
    begin
-      Idx := To_CtypeIdx (c);
-      return (if Idx > 0 and then Idx <= 16#80# then 1 else 0);
+      Idx := CtypeMap (c);
+      return (if Idx in Ctype_Idx_ASCII_Type'Range then 1 else 0);
    end Is_ASCII;
 
    function To_ASCII
       (c : Interfaces.C.int)
       return Interfaces.C.int
    is
-      Idx   : Ctype_Idx_Type;
-      Value : Interfaces.C.int := c;
+      Ci : aliased Interfaces.C.int := c;
+      Cm : mod_Cint
+         with Address    => Ci'Address,
+              Import     => True,
+              Convention => Ada;
    begin
-      Idx := To_CtypeIdx (c);
-      if Idx > 16#80# then
-         Value := @ - 16#80#;
-      end if;
-      return Value;
+      Cm := @ and 16#7F#;
+      return Ci;
    end To_ASCII;
 
    function To_Lower
       (c : Interfaces.C.int)
       return Interfaces.C.int
    is
-      Value : Interfaces.C.int := c;
    begin
-      if Is_Upper (c) /= 0 then
-         Value := @ + 16#20#;
-      end if;
-      return Value;
+      return (if Is_Upper (c) /= 0 then c + ASCII_CASE_XFORM else 0);
    end To_Lower;
 
    function To_Upper
       (c : Interfaces.C.int)
       return Interfaces.C.int
    is
-      Value : Interfaces.C.int := c;
    begin
-      if Is_Lower (c) /= 0 then
-         Value := @ - 16#20#;
-      end if;
-      return Value;
+      return (if Is_Lower (c) /= 0 then c - ASCII_CASE_XFORM else 0);
    end To_Upper;
 
    ----------------------------------------------------------------------------
