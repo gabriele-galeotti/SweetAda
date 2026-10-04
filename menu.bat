@@ -47,6 +47,7 @@ IF "%1"=="createkernelcfg" (
   SET "SUBPLATFORM=!SUBPLATFORM!"
   %MAKE% createkernelcfg
   )
+IF "%1"=="prebuild"        SET "ACTION_VALID=Y" && %MAKE% prebuild
 IF "%1"=="configure"       SET "ACTION_VALID=Y" && %MAKE% configure
 IF "%1"=="infodump"        SET "ACTION_VALID=Y" && %MAKE% infodump
 IF "%1"=="all" (
@@ -132,6 +133,7 @@ ECHO.
 ECHO ^<action^> is one of:
 ECHO help            - build system help
 ECHO createkernelcfg - create a kernel.cfg file
+ECHO prebuild        - auxiliary pre-processing
 ECHO configure       - configure the system for a build
 ECHO infodump        - dump essential informations
 ECHO all             - build target
