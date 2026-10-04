@@ -23,11 +23,11 @@ function EMemset
    return Interfaces.C.Extensions.void_ptr
 is
    use Interfaces.C;
-   type int_mod is mod 2**int'Size;
+   type mod_Cint is mod 2**Interfaces.C.int'Size;
    P  : constant MAP.Object_Pointer := MAP.To_Pointer (S);
-   Ca : aliased constant Interfaces.C.int := C;
-   Cm : constant int_mod
-      with Address    => Ca'Address,
+   Ci : aliased constant Interfaces.C.int := C;
+   Cm : constant mod_Cint
+      with Address    => Ci'Address,
            Import     => True,
            Convention => Ada;
    Ic : char;
