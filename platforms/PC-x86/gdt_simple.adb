@@ -16,7 +16,6 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System.Storage_Elements;
-with BSP;
 
 package body GDT_Simple
 is
@@ -79,7 +78,7 @@ is
       -- index3: TSS
       GDT_Set_Entry (
          GDT_Entry => GDT (2),
-         Base      => BSP.TSS'Address,
+         Base      => To_Address (0),
          Limit     => TSS_SIZE - 1,
          SegType   => SYSGATE_TSSA,
          S         => DESCRIPTOR_SYSTEM,

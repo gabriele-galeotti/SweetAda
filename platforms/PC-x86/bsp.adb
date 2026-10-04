@@ -180,8 +180,8 @@ package body BSP
          Scale_Address => 0,
          Baud_Clock    => CLK_UART1M8,
          Flags         => (PC_UART => True),
-         Read_8        => IO_Read'Access,
-         Write_8       => IO_Write'Access,
+         Read_8        => CPU.IO.Read'Access,
+         Write_8       => CPU.IO.Write'Access,
          Data_Queue    => ([others => 0], 0, 0, 0)
          );
       UART16x50.Init (UART_Descriptors (1));
@@ -191,8 +191,8 @@ package body BSP
          Scale_Address => 0,
          Baud_Clock    => CLK_UART1M8,
          Flags         => (PC_UART => True),
-         Read_8        => IO_Read'Access,
-         Write_8       => IO_Write'Access,
+         Read_8        => CPU.IO.Read'Access,
+         Write_8       => CPU.IO.Write'Access,
          Data_Queue    => ([others => 0], 0, 0, 0)
          );
       UART16x50.Init (UART_Descriptors (2));
@@ -307,10 +307,10 @@ package body BSP
       IDE_Descriptors (1) := (
          Base_Address  => System'To_Address (PC.IDE1_BASEADDRESS),
          Scale_Address => 0,
-         Read_8        => IO_Read'Access,
-         Write_8       => IO_Write'Access,
-         Read_16       => IO_Read'Access,
-         Write_16      => IO_Write'Access
+         Read_8        => CPU.IO.Read'Access,
+         Write_8       => CPU.IO.Write'Access,
+         Read_16       => CPU.IO.Read'Access,
+         Write_16      => CPU.IO.Write'Access
          );
       IDE.Init (IDE_Descriptors (1));
       -- NE2000 (PCI) ---------------------------------------------------------
