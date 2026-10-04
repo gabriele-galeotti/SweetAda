@@ -22,7 +22,7 @@ with BSP;
 with Console;
 
 package body Exceptions
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -46,7 +46,7 @@ package body Exceptions
    procedure Exception_Process
       (VectorN       : in Unsigned_32;
        ReturnAddress : in Unsigned_32)
-      is
+   is
    begin
       Console.Print ("*** EXCEPTION", NL => True);
       case VectorN is
@@ -72,7 +72,7 @@ package body Exceptions
    -- SysTick_Process
    ----------------------------------------------------------------------------
    procedure SysTick_Process
-      is
+   is
    begin
       BSP.Tick_Count := @ + 1;
       if BSP.Tick_Count mod 1_000 = 0 then
@@ -84,7 +84,7 @@ package body Exceptions
    -- Irq_Process
    ----------------------------------------------------------------------------
    procedure Irq_Process
-      is
+   is
    begin
       null;
    end Irq_Process;
@@ -93,7 +93,7 @@ package body Exceptions
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
       Vector_Table : constant Asm_Entry_Point
          with Import        => True,
               External_Name => "vectors";

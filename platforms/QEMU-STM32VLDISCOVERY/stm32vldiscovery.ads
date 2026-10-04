@@ -15,12 +15,15 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
 
 package STM32VLDISCOVERY
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -33,8 +36,6 @@ package STM32VLDISCOVERY
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- STM32F100xx advanced Arm®-based 32-bit MCUs
@@ -444,7 +445,5 @@ pragma Style_Checks (Off);
            Volatile   => True,
            Import     => True,
            Convention => Ada;
-
-pragma Style_Checks (On);
 
 end STM32VLDISCOVERY;

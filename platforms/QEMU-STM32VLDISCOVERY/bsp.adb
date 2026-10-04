@@ -25,7 +25,7 @@ with Exceptions;
 with Console;
 
 package body BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -54,7 +54,7 @@ package body BSP
    -- SysTick_Init
    ----------------------------------------------------------------------------
    procedure SysTick_Init
-      is
+   is
    begin
       ARMv7M.SYST_RVR.RELOAD := Bits_24 (Configure.SYSCLK_FREQUENCY / Configure.TICK_FREQUENCY);
       ARMv7M.SHPR3.PRI_15 := 16#01#;
@@ -74,7 +74,7 @@ package body BSP
 
    procedure Console_Putchar
       (C : in Character)
-      is
+   is
    begin
       -- wait for transmitter available
       loop exit when USART1.USART_SR.TXE; end loop;
@@ -83,7 +83,7 @@ package body BSP
 
    procedure Console_Getchar
       (C : out Character)
-      is
+   is
       Data : Unsigned_8;
    begin
       -- wait for receiver available
@@ -96,7 +96,7 @@ package body BSP
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup
-      is
+   is
    begin
       -- Console --------------------------------------------------------------
       Console.Console_Descriptor := (
@@ -121,6 +121,7 @@ package body BSP
       end if;
       -------------------------------------------------------------------------
       ARMv7M.Irq_Enable;
+      Tick_Count := 0;
       SysTick_Init;
       -------------------------------------------------------------------------
    end Setup;
