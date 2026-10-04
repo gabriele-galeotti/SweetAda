@@ -15,6 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
+
 with System;
 with System.Storage_Elements;
 with Interfaces;
@@ -22,7 +25,7 @@ with Definitions;
 with Bits;
 
 package NETARM
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -37,8 +40,6 @@ package NETARM
    use Interfaces;
    use Definitions;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- Part number/version: 90000353_G
@@ -553,8 +554,6 @@ pragma Style_Checks (Off);
            Volatile   => True,
            Import     => True,
            Convention => Ada;
-
-pragma Style_Checks (On);
 
    ----------------------------------------------------------------------------
    -- subprograms
