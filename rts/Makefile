@@ -15,6 +15,7 @@
 # Environment variables:
 # KERNEL_PARENT_PATH
 # TOOLCHAIN_NAME
+# TOOLCHAIN_GCC
 # TOOLCHAIN_ADAC
 # TOOLCHAIN_CC
 # TOOLCHAIN_AR
@@ -39,15 +40,22 @@ MAKEFILE_RTS_INCLUDED := Y
 
 .NOTPARALLEL:
 
-ifneq ($(words $(MAKECMDGOALS)),1)
-$(error Error: only one Makefile target should be specified)
-endif
-
 # add silent operation in probevariable[s] targets
 ifneq ($(filter probevariable probevariables,$(MAKECMDGOALS)),)
 VERBOSE :=
 MAKEFLAGS += s
 MAKEFLAGS += --no-print-directory
+else
+VERBOSE := Y
+endif
+export VERBOSE
+
+ifneq ($(words $(MAKECMDGOALS)),1)
+$(error Error: only one Makefile target should be specified)
+endif
+
+ifeq ($(KERNEL_PARENT_PATH),)
+$(error Error: no KERNEL_PARENT_PATH)
 endif
 
 include $(KERNEL_PARENT_PATH)/Makefile.os.in
@@ -59,7 +67,9 @@ RTS_SRC_ALL_DIRS := $(shell $(CHDIR) src && $(call ls-dirs) 2>nul)
 else
 RTS_SRC_ALL_DIRS := $(shell ($(CHDIR) src && $(call ls-dirs)) 2> /dev/null)
 endif
-RTS_SRC_NO_DIRS  := common targets
+RTS_SRC_NO_DIRS  :=
+RTS_SRC_NO_DIRS  += common
+RTS_SRC_NO_DIRS  += targets
 RTSES            := $(filter-out $(RTS_SRC_NO_DIRS),$(RTS_SRC_ALL_DIRS))
 
 ################################################################################
@@ -77,6 +87,14 @@ $(error Error: no valid CPU)
 endif
 ifeq ($(TOOLCHAIN_NAME),)
 $(error Error: no valid TOOLCHAIN_NAME)
+endif
+ifeq ($(OSTYPE),cmd)
+GCC_VERSION := $(shell SET "PATH=$(PATH)" && $(TOOLCHAIN_GCC) -dumpversion 2>nul)
+else
+GCC_VERSION := $(shell PATH="$(PATH)" $(TOOLCHAIN_GCC) -dumpversion 2> /dev/null)
+endif
+ifeq ($(GCC_VERSION),)
+$(error Error: no valid toolchain)
 endif
 ifeq ($(MULTILIB),)
 $(error Error: no valid MULTILIB)
@@ -210,31 +228,31 @@ all: multilib
 .PHONY: create-dirs
 create-dirs:
 ifeq ($(OSTYPE),cmd)
-	@IF EXIST $(ADAINCLUDE_PATH_CMD)\ $(RMDIR) $(ADAINCLUDE_PATH_CMD)\ $(NULL)
-	@$(MKDIR) $(ADAINCLUDE_PATH_CMD)
-	@IF EXIST $(ADALIB_PATH_CMD)\ $(RMDIR) $(ADALIB_PATH_CMD)\ $(NULL)
-	@$(MKDIR) $(ADALIB_PATH_CMD)
+	IF EXIST $(ADAINCLUDE_PATH_CMD)\ $(RMDIR) $(ADAINCLUDE_PATH_CMD)\ $(NULL)
+	$(MKDIR) $(ADAINCLUDE_PATH_CMD)
+	IF EXIST $(ADALIB_PATH_CMD)\ $(RMDIR) $(ADALIB_PATH_CMD)\ $(NULL)
+	$(MKDIR) $(ADALIB_PATH_CMD)
 else
-	@$(RMDIR) $(ADAINCLUDE_PATH)
-	@$(MKDIR) $(ADAINCLUDE_PATH)
-	@$(RMDIR) $(ADALIB_PATH)
-	@$(MKDIR) $(ADALIB_PATH)
+	$(RMDIR) $(ADAINCLUDE_PATH)
+	$(MKDIR) $(ADAINCLUDE_PATH)
+	$(RMDIR) $(ADALIB_PATH)
+	$(MKDIR) $(ADALIB_PATH)
 endif
 
 .PHONY: configure-rts
 configure-rts:
 ifeq ($(OSTYPE),cmd)
-	@FOR %%F IN ($(subst /,\,$(LIBGNAT_SRCS_COMMON)) $(subst /,\,$(LIBGNARL_SRCS_COMMON))) DO \
-          @ECHO OFF &&                                                                            \
-          IF EXIST $(RTS_SOURCE_PATH_CMD)\%%F.in (                                                \
-            $(PROCESSCFG) -r $(RTS_SOURCE_PATH_CMD)\%%F.in $(ADAINCLUDE_PATH_CMD)\%%~nF%%~xF      \
-            || EXIT /B 1                                                                          \
-          ) ELSE (                                                                                \
-            $(CP) "$(RTS_SOURCE_PATH_CMD)"\%%F "$(ADAINCLUDE_PATH_CMD)"\%%~nF%%~xF                \
-            || EXIT /B 1                                                                          \
+	FOR %%F IN ($(subst /,\,$(LIBGNAT_SRCS_COMMON)) $(subst /,\,$(LIBGNARL_SRCS_COMMON))) DO \
+          @ECHO OFF &&                                                                           \
+          IF EXIST $(RTS_SOURCE_PATH_CMD)\%%F.in (                                               \
+            $(PROCESSCFG) -r $(RTS_SOURCE_PATH_CMD)\%%F.in $(ADAINCLUDE_PATH_CMD)\%%~nF%%~xF     \
+            || EXIT /B 1                                                                         \
+          ) ELSE (                                                                               \
+            $(CP) "$(RTS_SOURCE_PATH_CMD)"\%%F "$(ADAINCLUDE_PATH_CMD)"\%%~nF%%~xF               \
+            || EXIT /B 1                                                                         \
           )
 else
-	@for f in $(LIBGNAT_SRCS_COMMON) $(LIBGNARL_SRCS_COMMON) ; do                         \
+	for f in $(LIBGNAT_SRCS_COMMON) $(LIBGNARL_SRCS_COMMON) ; do                          \
           (                                                                                   \
            if [ -e $(RTS_SOURCE_PATH)/$$f.in ] ; then                                         \
              $(PROCESSCFG) -r $(RTS_SOURCE_PATH)/$$f.in $(ADAINCLUDE_PATH)/$$(basename $$f) ; \
@@ -248,7 +266,7 @@ endif
 .PHONY: configure-rts-target
 configure-rts-target:
 ifeq ($(OSTYPE),cmd)
-	@FOR %%F IN ($(subst /,\,$(LIBGNAT_SRCS_TARGET)) $(subst /,\,$(LIBGNARL_SRCS_TARGET))) DO   \
+	FOR %%F IN ($(subst /,\,$(LIBGNAT_SRCS_TARGET)) $(subst /,\,$(LIBGNARL_SRCS_TARGET))) DO    \
           @ECHO OFF &&                                                                              \
           IF EXIST $(RTS_SOURCE_PATH_TARGET_CMD)\%%F.in (                                           \
             $(PROCESSCFG) -r $(RTS_SOURCE_PATH_TARGET_CMD)\%%F.in $(ADAINCLUDE_PATH_CMD)\%%~nF%%~xF \
@@ -258,7 +276,7 @@ ifeq ($(OSTYPE),cmd)
             || EXIT /B 1                                                                            \
           )
 else
-	@for f in $(LIBGNAT_SRCS_TARGET) $(LIBGNARL_SRCS_TARGET) ; do                                \
+	for f in $(LIBGNAT_SRCS_TARGET) $(LIBGNARL_SRCS_TARGET) ; do                                 \
           (                                                                                          \
            if [ -e $(RTS_SOURCE_PATH_TARGET)/$$f.in ] ; then                                         \
              $(PROCESSCFG) -r $(RTS_SOURCE_PATH_TARGET)/$$f.in $(ADAINCLUDE_PATH)/$$(basename $$f) ; \
@@ -291,9 +309,9 @@ $(LIBGNARL): $(LIBGNARL_OBJS)
 .PHONY: clean-objs
 clean-objs:
 ifeq ($(OSTYPE),cmd)
-	@$(RM) $(ADALIB_PATH_CMD)\*.o
+	$(RM) $(ADALIB_PATH_CMD)\*.o
 else
-	@$(RM) $(ADALIB_PATH)/*.o
+	$(RM) $(ADALIB_PATH)/*.o
 endif
 
 # RTS target-independent part
