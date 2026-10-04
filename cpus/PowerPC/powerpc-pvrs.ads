@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ power8.ads                                                                                                   --
+-- __FLN__ powerpc-pvrs.ads                                                                                          --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,13 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-pragma Style_Checks (Off);
-
-with System;
-with Bits;
-
-package POWER8
-   with Pure => True
+package PowerPC.PVRs
 is
 
    --========================================================================--
@@ -32,29 +26,20 @@ is
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use Bits;
+   PVR_601   : constant := 16#0001#;
+   PVR_603   : constant := 16#0003#;
+   PVR_604   : constant := 16#0004#;
+   PVR_602   : constant := 16#0005#;
+   PVR_603e  : constant := 16#0006#;
+   PVR_603ev : constant := 16#0007#;
+   PVR_603r  : constant := 16#0007#;
+   PVR_440EP : constant := 16#4222#;
 
    ----------------------------------------------------------------------------
-   -- POWER8 Processor User’s Manual for the Single-Chip Module
-   -- Advance 16 March 2016 Version 1.3
+   -- Read PVR register and return a string if CPU has been identified.
    ----------------------------------------------------------------------------
+   function PVR_Name
+      (Value : in Unsigned_16)
+      return String;
 
-   -- 3.6.3.2 Processor ID Register (PIR)
-
-   type PIR_Type is record
-      Reserved : Bits_22;
-      ChID     : Bits_3;  -- Chip ID
-      CoID     : Bits_4;  -- Core number
-      TID      : Bits_3;  -- Thread ID
-   end record
-      with Bit_Order => High_Order_First,
-           Size      => 32;
-   for PIR_Type use record
-      Reserved at 0 range  0 .. 21;
-      ChID     at 0 range 22 .. 24;
-      CoID     at 0 range 25 .. 28;
-      TID      at 0 range 29 .. 31;
-   end record;
-
-end POWER8;
+end PowerPC.PVRs;

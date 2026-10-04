@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with Interfaces;
 with PowerPC;
 
@@ -31,8 +33,6 @@ is
 
    use Interfaces;
    use PowerPC;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- e300 Power ArchitectureTM Core
@@ -91,7 +91,5 @@ pragma Style_Checks (Off);
    function SVR_Read
       return Unsigned_32
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end e300;

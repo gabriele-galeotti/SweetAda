@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ power8.ads                                                                                                   --
+-- __FLN__ mpc603e.adb                                                                                               --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -15,46 +15,33 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+pragma Warnings (Off, "* is not referenced");
 pragma Style_Checks (Off);
 
-with System;
-with Bits;
-
-package POWER8
-   with Pure => True
+package body MPC603e
 is
 
    --========================================================================--
    --                                                                        --
    --                                                                        --
-   --                               Public part                              --
+   --                           Local declarations                           --
    --                                                                        --
    --                                                                        --
    --========================================================================--
 
-   use System;
-   use Bits;
+   --========================================================================--
+   --                                                                        --
+   --                                                                        --
+   --                           Package subprograms                          --
+   --                                                                        --
+   --                                                                        --
+   --========================================================================--
 
-   ----------------------------------------------------------------------------
-   -- POWER8 Processor User’s Manual for the Single-Chip Module
-   -- Advance 16 March 2016 Version 1.3
-   ----------------------------------------------------------------------------
+   function HID0_Read return HID0_Type is function SPR_Read is new MFSPR (HID0, HID0_Type); begin return SPR_Read; end HID0_Read;
+   procedure HID0_Write (Value : in HID0_Type) is procedure SPR_Write is new MTSPR (HID0, HID0_Type); begin SPR_Write (Value); end HID0_Write;
 
-   -- 3.6.3.2 Processor ID Register (PIR)
+   function HID1_Read return HID1_Type is function SPR_Read is new MFSPR (HID1, HID1_Type); begin return SPR_Read; end HID1_Read;
+   -- procedure HID1_Write (Value : in HID1_Type) is procedure SPR_Write is new MTSPR (HID1, HID1_Type); begin SPR_Write (Value); end HID1_Write;
 
-   type PIR_Type is record
-      Reserved : Bits_22;
-      ChID     : Bits_3;  -- Chip ID
-      CoID     : Bits_4;  -- Core number
-      TID      : Bits_3;  -- Thread ID
-   end record
-      with Bit_Order => High_Order_First,
-           Size      => 32;
-   for PIR_Type use record
-      Reserved at 0 range  0 .. 21;
-      ChID     at 0 range 22 .. 24;
-      CoID     at 0 range 25 .. 28;
-      TID      at 0 range 29 .. 31;
-   end record;
-
-end POWER8;
+end MPC603e;
