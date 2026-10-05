@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 package X3270
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -27,11 +27,14 @@ package X3270
    --========================================================================--
 
    procedure Clear_Screen;
+
    procedure Line_Feed;
+
    procedure Write_Message_RC
       (Message : in String;
        Row     : in Natural;
        Column  : in Natural);
+
    procedure Write_Message
       (Message : in String);
 

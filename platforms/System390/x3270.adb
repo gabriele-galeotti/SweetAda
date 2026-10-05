@@ -24,7 +24,7 @@ with Bits;
 with EBCDIC;
 
 package body X3270
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -96,7 +96,7 @@ pragma Warnings (On, "size is not a multiple of alignment");
       (R : Natural;
        C : Natural)
       return Unsigned_16
-      is
+   is
       BA : Unsigned_16;
    begin
       BA := Unsigned_16 (R * 80 + C);
@@ -107,7 +107,7 @@ pragma Warnings (On, "size is not a multiple of alignment");
    -- Clear_Screen
    ----------------------------------------------------------------------------
    procedure Clear_Screen
-      is
+   is
       Message_Header : aliased MSG_Header_Type;
       Cursor_Address : Unsigned_16;
       procedure CLS
@@ -133,7 +133,7 @@ pragma Warnings (On, "size is not a multiple of alignment");
    -- Line_Feed
    ----------------------------------------------------------------------------
    procedure Line_Feed
-      is
+   is
    begin
       Current_Row := @ + 1;
       if Current_Row = 24 then
@@ -149,7 +149,7 @@ pragma Warnings (On, "size is not a multiple of alignment");
       (Message : in String;
        Row     : in Natural;
        Column  : in Natural)
-      is
+   is
       subtype Work_Area is Byte_A4Array (1 .. MSG_HDR_SIZE + Message'Length);
       package Work_Area_Ops is new System.Address_To_Access_Conversions (Work_Area);
       use type Work_Area_Ops.Object_Pointer;
@@ -191,7 +191,7 @@ pragma Warnings (On, "size is not a multiple of alignment");
    ----------------------------------------------------------------------------
    procedure Write_Message
       (Message : in String)
-      is
+   is
    begin
       Write_Message_RC (Message, Current_Row, Current_Column);
       Line_Feed;

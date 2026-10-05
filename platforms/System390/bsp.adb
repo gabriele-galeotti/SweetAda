@@ -19,12 +19,11 @@ with System;
 with System.Machine_Code;
 with System.Storage_Elements;
 with Definitions;
-with Bits;
 with Secondary_Stack;
 with Malloc;
 
 package body BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -39,7 +38,6 @@ package body BSP
    use System.Storage_Elements;
    use Interfaces;
    use Definitions;
-   use Bits;
 
    -- Malloc memory area
    Heap : aliased Storage_Array (0 .. KiB64 - 1)
@@ -60,7 +58,7 @@ package body BSP
    -- Tclk_Init
    ----------------------------------------------------------------------------
    procedure Tclk_Init
-      is
+   is
       init_timer_cc : Unsigned_64;
       cc            : Unsigned_32;
    begin
@@ -81,14 +79,19 @@ package body BSP
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup
-      is
+   is
    begin
       -------------------------------------------------------------------------
       Secondary_Stack.Init;
       -------------------------------------------------------------------------
-      Tclk_Init;
+      Malloc.Init (
+         Memory_Address => Heap'Address,
+         Size           => KiB64,
+         Debug_Enable   => False
+         );
       -------------------------------------------------------------------------
-      Malloc.Init (Heap'Address, Heap'Size / Storage_Unit, False);
+      Tick_Count := 0;
+      Tclk_Init;
       -------------------------------------------------------------------------
    end Setup;
 

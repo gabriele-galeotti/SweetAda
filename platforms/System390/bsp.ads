@@ -18,7 +18,7 @@
 with Interfaces;
 
 package BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -28,12 +28,15 @@ package BSP
    --                                                                        --
    --========================================================================--
 
-   Tick_Count : aliased Interfaces.Unsigned_32 := 0
+   Tick_Count : aliased Interfaces.Unsigned_32
       with Atomic        => True,
            Export        => True,
            Convention    => Asm,
            External_Name => "tick_count";
 
+   ----------------------------------------------------------------------------
+   -- Setup
+   ----------------------------------------------------------------------------
    procedure Setup;
 
 end BSP;

@@ -20,7 +20,7 @@ with Definitions;
 with Bits;
 
 package body TOD
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -55,7 +55,7 @@ package body TOD
    ----------------------------------------------------------------------------
    function Read
       return Unsigned_64
-      is
+   is
       Value : Unsigned_64;
    begin
       Asm (
@@ -76,7 +76,7 @@ package body TOD
    procedure To_Epoch
       (Value : in     Unsigned_64;
        TM    :    out Time.TM_Time)
-      is
+   is
       T : Unsigned_64 := Value;
    begin
       T := @ - EPOCH_1900; -- TOD offset 1900-01-01 -> 1970-01-01
