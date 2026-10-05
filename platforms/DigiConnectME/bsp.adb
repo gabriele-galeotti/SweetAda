@@ -24,7 +24,7 @@ with NETARM;
 with Console;
 
 package body BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -55,7 +55,7 @@ package body BSP
 
    procedure Console_Putchar
       (C : in Character)
-      is
+   is
    begin
       -- wait for transmitter available
       loop exit when SCSR.TXRDY; end loop;
@@ -64,7 +64,7 @@ package body BSP
 
    procedure Console_Getchar
       (C : out Character)
-      is
+   is
       Data : Unsigned_8;
    begin
       SCSR.RXBC := True;
@@ -78,7 +78,7 @@ package body BSP
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup
-      is
+   is
    begin
       --- Serial Channel A ----------------------------------------------------
       -- FXTAL = 18.432 MHz/ 5 = 3.6864 MHz
@@ -123,6 +123,9 @@ package body BSP
       Console.Print (Prefix => "NREG:   ", Value => Unsigned_16 (SCBRGR.NREG), NL => True);
       -- unlock Flash memory WP -----------------------------------------------
       CSBAR0 := @ and 16#FFFF_FFFD#;
+      -------------------------------------------------------------------------
+      Tick_Count := 0;
+      -------------------------------------------------------------------------
    end Setup;
 
 end BSP;
