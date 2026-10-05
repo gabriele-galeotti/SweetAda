@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 package Android
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -28,9 +28,13 @@ package Android
 
    procedure Print_Message
       (Message : in String);
+
    procedure Uname_Get;
+
    procedure Gettimeofday;
+
    procedure Getpid;
+
    procedure System_Exit
       (Exit_Status : in Integer);
 

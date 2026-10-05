@@ -20,7 +20,7 @@ with Android;
 with Console;
 
 package body BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -47,14 +47,14 @@ package body BSP
 
    procedure Console_Putchar
       (C : in Character)
-      is
+   is
    begin
       Android.Print_Message ("" & C);
    end Console_Putchar;
 
    procedure Console_Getchar
       (C : out Character)
-      is
+   is
       Data : Unsigned_8;
    begin
       Data := 0;
@@ -65,7 +65,7 @@ package body BSP
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup
-      is
+   is
    begin
       -------------------------------------------------------------------------
       Console.Console_Descriptor := (
@@ -75,6 +75,9 @@ package body BSP
       Console.Print ("*******************", NL => True);
       Console.Print ("* Hello, SweetAda *", NL => True);
       Console.Print ("*******************", NL => True);
+      -------------------------------------------------------------------------
+      Tick_Count := 0;
+      -------------------------------------------------------------------------
       Android.Uname_Get;
       Android.Getpid;
       Android.Gettimeofday;

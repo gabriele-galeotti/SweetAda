@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Warnings (Off, "* is not referenced");
+
 with System;
 with System.Machine_Code;
 with Interfaces;
@@ -23,7 +25,7 @@ with Console;
 with Time;
 
 package body Android
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -37,8 +39,6 @@ package body Android
    use System.Machine_Code;
    use Interfaces;
    use Definitions;
-
-pragma Warnings (Off, "* is not referenced");
 
    --   arch    syscall#    return  arg0    arg1    arg2    arg3    arg4    arg5
    --   ARM     R7          R0      R0      R1      R2      R3      R4      R5
@@ -81,7 +81,7 @@ pragma Warnings (Off, "* is not referenced");
    ----------------------------------------------------------------------------
    procedure Print_Message
       (Message : in String)
-      is
+   is
    begin
       Asm (
            Template => ""                      & CRLF &
@@ -116,7 +116,7 @@ pragma Warnings (Off, "* is not referenced");
    -- Uname_Get
    ----------------------------------------------------------------------------
    procedure Uname_Get
-      is
+   is
       Uname : Old_UTSName_Type;
    begin
       Asm (
@@ -155,7 +155,7 @@ pragma Warnings (Off, "* is not referenced");
    -- Gettimeofday
    ----------------------------------------------------------------------------
    procedure Gettimeofday
-      is
+   is
       tv     : Timeval_Type;
       tz     : Timezone_Type;
       Status : Unsigned_64;
@@ -201,7 +201,7 @@ pragma Warnings (Off, "* is not referenced");
    -- Getpid
    ----------------------------------------------------------------------------
    procedure Getpid
-      is
+   is
       Pid : Unsigned_64;
    begin
       Asm (
@@ -223,7 +223,7 @@ pragma Warnings (Off, "* is not referenced");
    ----------------------------------------------------------------------------
    procedure System_Exit
       (Exit_Status : in Integer)
-      is
+   is
    begin
       Asm (
            Template => ""                      & CRLF &
@@ -240,7 +240,5 @@ pragma Warnings (Off, "* is not referenced");
            Volatile => True
           );
    end System_Exit;
-
-pragma Warnings (On, "* is not referenced");
 
 end Android;
