@@ -55,6 +55,7 @@ library project Core is
       "console-print_bits1.adb",
       "console-print_boolean.adb",
       "console-print_byte_array.adb",
+      "console-print_cchar.adb",
       "console-print_integer.adb",
       "console-print_integer16.adb",
       "console-print_integer32.adb",

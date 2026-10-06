@@ -37,7 +37,7 @@ is
 
    package SSE renames System.Storage_Elements;
 
-   Maximum_String_Length : constant := 256;
+   Maximum_String_Length : constant := 1024;
 
    type Row_Size_Type is range 1 .. 64;
 
@@ -68,11 +68,14 @@ is
    ----------------------------------------------------------------------------
    -- Print (cchar)
    ----------------------------------------------------------------------------
-   procedure Print
+   procedure Print_Cchar
       (c : in Interfaces.C.char)
       with Export        => True,
            Convention    => Ada,
            External_Name => "console__print__cchar";
+   procedure Print
+      (c : in Interfaces.C.char)
+      renames Print_Cchar;
 
    ----------------------------------------------------------------------------
    -- Print_NewLine

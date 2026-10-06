@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ console-print.adb                                                                                         --
+-- __FLN__ console-print_cchar.adb                                                                                   --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -16,9 +16,17 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 separate (Console)
-procedure Print
-   (C : in Character)
+procedure Print_Cchar
+   (c : in Interfaces.C.char)
 is
+   use Interfaces.C;
+   -- borrowed from i-c.adb, avoid using a non-ZFP unit
+   function To_Ada
+      (Item : char)
+      return Character
+   is
+      (Character'Val (char'Pos (Item)))
+      with Inline => True;
 begin
-   Console_Descriptor.Write (C);
-end Print;
+   Print (To_Ada (c));
+end Print_Cchar;

@@ -67,14 +67,15 @@ is
    procedure Print
       (C : in Character)
    is
-   begin
-      Console_Descriptor.Write (C);
-   end Print;
+   separate;
+--   begin
+--      Console_Descriptor.Write (C);
+--   end Print;
 
    ----------------------------------------------------------------------------
-   -- Print (Bits.C.char)
+   -- Print (Interfaces.C.char)
    ----------------------------------------------------------------------------
-   procedure Print
+   procedure Print_Cchar
       (c : in Interfaces.C.char)
    is
    separate;
