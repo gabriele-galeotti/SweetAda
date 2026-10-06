@@ -18,7 +18,7 @@
 with Ada.Unchecked_Conversion;
 
 package body MCP23x17
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -31,7 +31,7 @@ package body MCP23x17
    function To_U8
       (Value : IOCON_Type)
       return Unsigned_8
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (IOCON_Type, Unsigned_8);
    begin
       return Convert (Value);
@@ -40,7 +40,7 @@ package body MCP23x17
    function To_IOCON
       (Value : Unsigned_8)
       return IOCON_Type
-      is
+   is
       function Convert is new Ada.Unchecked_Conversion (Unsigned_8, IOCON_Type);
    begin
       return Convert (Value);

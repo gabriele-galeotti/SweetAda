@@ -15,12 +15,14 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
 
 package MCP23x17
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -33,8 +35,6 @@ package MCP23x17
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- MCP23017/MCP23S17 16-Bit I/O Expander with Serial Interface
@@ -81,7 +81,5 @@ pragma Style_Checks (Off);
       (Value : Unsigned_8)
       return IOCON_Type
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end MCP23x17;
