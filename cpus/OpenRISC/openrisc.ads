@@ -111,6 +111,7 @@ is
    function SR_Read
       return SR_Type
       with Inline => True;
+
    procedure SR_Write
       (Value : in SR_Type)
       with Inline => True;
@@ -144,6 +145,7 @@ is
    function TTMR_Read
       return TTMR_Type
       with Inline => True;
+
    procedure TTMR_Write
       (Value : in TTMR_Type)
       with Inline => True;
@@ -153,6 +155,7 @@ is
    function TTCR_Read
       return Unsigned_32
       with Inline => True;
+
    procedure TTCR_Write
       (Value : in Unsigned_32)
       with Inline => True;
