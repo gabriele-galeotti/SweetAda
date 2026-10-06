@@ -110,7 +110,7 @@ sys.stdout = fdout
 print('')
 print('package {0:s}'.format(package_name))
 print(indent + 'with Pure => True')
-print(indent + 'is')
+print('is')
 print('')
 for i in items:
     padstring = ' ' * (max_name_length - len(i['name']))

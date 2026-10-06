@@ -104,11 +104,11 @@ download_command = [
      PATH=' + TOOLCHAIN_PROGRAM_PREFIX + ':${PATH}              \
      ./nios2_command_shell.sh                                   \
      nios2-download                                             \
-       --cable "' + CABLE_NAME + '"                       \
-       --device ' + DEVICE_NO + '                         \
-       --jdi ' + JDI_FILE + '                             \
-       --reset-target                                     \
-       --go                                               \
+       --cable "' + CABLE_NAME + '"                             \
+       --device ' + DEVICE_NO + '                               \
+       --jdi ' + JDI_FILE + '                                   \
+       --reset-target                                           \
+       --go                                                     \
     ' + ELF_FILE
     ]
 result = subprocess.run(download_command)

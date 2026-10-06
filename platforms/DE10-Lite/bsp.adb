@@ -21,7 +21,7 @@ with Console;
 with DE10Lite;
 
 package body BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -50,7 +50,7 @@ package body BSP
 
    procedure Console_Putchar
       (C : in Character)
-      is
+   is
    begin
       -- wait for transmitter available
       loop exit when JTAG_UART.control.WSPACE /= 0; end loop;
@@ -59,7 +59,7 @@ package body BSP
 
    procedure Console_Getchar
       (C : out Character)
-      is
+   is
    begin
       -- wait for receiver available
       loop exit when JTAG_UART.data.RVALID; end loop;
@@ -70,7 +70,7 @@ package body BSP
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup
-      is
+   is
    begin
       -- JTAG UART ------------------------------------------------------------
       JTAG_UART.control := (
@@ -86,6 +86,8 @@ package body BSP
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Console.Print ("DE10-Lite", NL => True);
+      -------------------------------------------------------------------------
+      Tick_Count := 0;
       -------------------------------------------------------------------------
    end Setup;
 

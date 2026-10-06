@@ -65,27 +65,27 @@ if {[lindex $argv 0] eq "-jtagd"} {
 
 puts stdout "Running nios2-configure-sof ..."
 exec -ignorestderr >@stdout 2>@stderr sh -c "\
-cd ${QUARTUS_ROOTDIR}/../nios2eds && \
-./nios2_command_shell.sh             \
-nios2-configure-sof                  \
-  --cable \"${CABLE_NAME}\"          \
-  --device ${DEVICE_NO}              \
-  ${SOF_FILE}                        \
+cd ${QUARTUS_ROOTDIR}/../nios2eds         && \
+./nios2_command_shell.sh                     \
+nios2-configure-sof                          \
+  --cable \"${CABLE_NAME}\"                  \
+  --device ${DEVICE_NO}                      \
+  ${SOF_FILE}                                \
 "
 
 # NOTE: needs nios2-elf-objcopy
 puts stdout "Running nios2-download ..."
 exec -ignorestderr >@stdout 2>@stderr sh -c "\
-cd ${QUARTUS_ROOTDIR}/../nios2eds &&      \
-PATH=${TOOLCHAIN_PROGRAM_PREFIX}:\${PATH} \
-./nios2_command_shell.sh                  \
-nios2-download                            \
-  --cable \"${CABLE_NAME}\"               \
-  --device ${DEVICE_NO}                   \
-  --jdi ${JDI_FILE}                       \
-  --reset-target                          \
-  --go                                    \
-  ${ELF_FILE}                             \
+cd ${QUARTUS_ROOTDIR}/../nios2eds &&         \
+PATH=${TOOLCHAIN_PROGRAM_PREFIX}:\${PATH}    \
+./nios2_command_shell.sh                     \
+nios2-download                               \
+  --cable \"${CABLE_NAME}\"                  \
+  --device ${DEVICE_NO}                      \
+  --jdi ${JDI_FILE}                          \
+  --reset-target                             \
+  --go                                       \
+  ${ELF_FILE}                                \
 "
 
 exit 0

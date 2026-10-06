@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with System.Storage_Elements;
 with Interfaces;
@@ -22,7 +24,7 @@ with Bits;
 with Quartus;
 
 package DE10Lite
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -37,8 +39,6 @@ package DE10Lite
    use Interfaces;
    use Bits;
    use Quartus;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- Embedded Peripherals IP User Guide
@@ -182,7 +182,5 @@ pragma Style_Checks (Off);
            Volatile   => True,
            Import     => True,
            Convention => Ada;
-
-pragma Style_Checks (On);
 
 end DE10Lite;
