@@ -26,21 +26,17 @@ is
    type mod_Cint is mod 2**Interfaces.C.int'Size;
    P  : constant MAP.Object_Pointer := MAP.To_Pointer (S);
    Ci : aliased constant Interfaces.C.int := C;
-   Cm : constant mod_Cint
+   Cm : aliased constant mod_Cint
       with Address    => Ci'Address,
            Import     => True,
            Convention => Ada;
-   Ic : char;
+   Cc : char;
 begin
    -- avoid underflow since size_t is a modular type
    if N > 0 then
-      -- int has negative values, so it is necessary to convert first to a
-      -- modular type in order to avoid warnings on implicit conditionals
-      -- when applying the mod operation which restricts output range to
-      -- char type values
-      Ic := char'Val (Cm mod 2**char'Size);
+      Cc := char'Val (Cm mod 2**char'Size);
       for Idx in 0 .. N - 1 loop
-         P.all (Idx) := Ic;
+         P.all (Idx) := Cc;
       end loop;
    end if;
    return S;
