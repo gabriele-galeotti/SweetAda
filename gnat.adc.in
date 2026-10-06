@@ -1,13 +1,26 @@
 
 -- gnat.adc template file
 
-pragma Discard_Names;                                                              -- zfp sfp mfp
-pragma Task_Dispatching_Policy (FIFO_Within_Priorities);                           -- zfp sfp mfp rvn jrv
-pragma Locking_Policy (Ceiling_Locking);                                           -- zfp sfp mfp rvn jrv
+-- the value of the PROFILE variable is used to process the file by selecting
+-- correspondent pragmas
+
 pragma Detect_Blocking;                                                            -- zfp sfp mfp rvn jrv
+pragma Discard_Names;                                                              -- zfp sfp mfp
+pragma Initialize_Scalars;                                                         --
+pragma Locking_Policy (Ceiling_Locking);                                           -- zfp sfp mfp rvn jrv
+pragma Normalize_Scalars;                                                          --
+pragma Task_Dispatching_Policy (FIFO_Within_Priorities);                           -- zfp sfp mfp rvn jrv
+pragma Restrictions (Immediate_Reclamation);                                       -- zfp sfp mfp
 pragma Restrictions (No_Abort_Statements);                                         -- zfp sfp mfp rvn jrv
+pragma Restrictions (No_Access_Parameter_Allocators);                              -- zfp sfp mfp
+pragma Restrictions (No_Access_Subprograms);                                       --
+pragma Restrictions (No_Allocators);                                               --
+pragma Restrictions (No_Anonymous_Allocators);                                     -- zfp sfp mfp
 pragma Restrictions (No_Calendar);                                                 -- zfp sfp mfp
+pragma Restrictions (No_Coextensions);                                             -- zfp sfp mfp
+pragma Restrictions (No_Delay);                                                    -- zfp sfp mfp
 pragma Restrictions (No_Direct_Boolean_Operators);                                 -- zfp sfp mfp
+pragma Restrictions (No_Dispatch);                                                 -- zfp sfp mfp
 pragma Restrictions (No_Dynamic_Attachment);                                       -- zfp sfp mfp rvn jrv
 pragma Restrictions (No_Dynamic_CPU_Assignment);                                   -- zfp sfp mfp rvn jrv
 pragma Restrictions (No_Dynamic_Priorities);                                       -- zfp sfp mfp rvn jrv
@@ -15,16 +28,23 @@ pragma Restrictions (No_Elaboration_Code);                                      
 pragma Restrictions (No_Exceptions);                                               --
 pragma Restrictions (No_Exception_Propagation);                                    -- zfp
 pragma Restrictions (No_Exception_Registration);                                   -- zfp
+pragma Restrictions (No_Finalization);                                             -- zfp sfp
+pragma Restrictions (No_Fixed_Point);                                              -- zfp sfp mfp
+pragma Restrictions (No_Floating_Point);                                           --
 pragma Restrictions (No_Implicit_Aliasing);                                        --
 pragma Restrictions (No_Implicit_Conditionals);                                    --
 pragma Restrictions (No_Implicit_Dynamic_Code);                                    -- zfp sfp mfp
 pragma Restrictions (No_Implicit_Heap_Allocations);                                -- zfp sfp mfp rvn
 pragma Restrictions (No_Implicit_Loops);                                           --
+pragma Restrictions (No_IO);                                                       -- zfp sfp mfp
+pragma Restrictions (No_Local_Allocators);                                         -- zfp sfp mfp rvn jrv
 pragma Restrictions (No_Local_Protected_Objects);                                  -- zfp sfp mfp rvn jrv
 pragma Restrictions (No_Local_Timing_Events);                                      -- zfp sfp mfp rvn jrv
 pragma Restrictions (No_Obsolescent_Features);                                     --
+pragma Restrictions (No_Protected_Types);                                          -- zfp sfp mfp
 pragma Restrictions (No_Protected_Type_Allocators);                                -- zfp sfp mfp rvn jrv
 pragma Restrictions (No_Recursion);                                                -- zfp sfp mfp
+pragma Restrictions (No_Reentrancy);                                               -- zfp sfp mfp
 pragma Restrictions (No_Relative_Delay);                                           -- zfp sfp mfp rvn
 pragma Restrictions (No_Requeue_Statements);                                       -- zfp sfp mfp rvn jrv
 pragma Restrictions (No_Secondary_Stack);                                          -- zfp
@@ -33,6 +53,7 @@ pragma Restrictions (No_Specific_Termination_Handlers);                         
 pragma Restrictions (No_Task_Allocators);                                          -- zfp sfp mfp rvn jrv
 pragma Restrictions (No_Task_Hierarchy);                                           -- zfp sfp mfp rvn jrv
 pragma Restrictions (No_Task_Termination);                                         -- zfp sfp mfp rvn jrv
+pragma Restrictions (No_Unchecked_Access);                                         --
 pragma Restrictions (No_Wide_Characters);                                          -- zfp sfp mfp
 pragma Restrictions (Pure_Barriers);                                               -- zfp sfp mfp     jrv
 pragma Restrictions (Simple_Barriers);                                             -- zfp sfp mfp rvn
@@ -45,4 +66,3 @@ pragma Restrictions (No_Dependence => Ada.Execution_Time.Group_Budget);         
 pragma Restrictions (No_Dependence => Ada.Execution_Time.Timers);                  -- zfp sfp mfp rvn jrv
 pragma Restrictions (No_Dependence => Ada.Task_Attributes);                        -- zfp sfp mfp rvn jrv
 pragma Restrictions (No_Dependence => System.Multiprocessors.Dispatching_Domains); -- zfp sfp mfp rvn jrv
-pragma Restrictions (No_Finalization);                                             -- zfp sfp
