@@ -13,9 +13,9 @@ abstract project Gprbuild_Tc is
    -- Types and variables
    ----------------------------------------------------------------------------
 
-   Ostype          := External ("OSTYPE", "");
-   Verbose         := External ("VERBOSE", "");
-   Mode            := External ("GPR_TOOL", "");
+   Ostype  := External ("OSTYPE", "");
+   Verbose := External ("VERBOSE", "");
+   Mode    := External ("GPR_TOOL", "");
 
    Use_EXE_Wrapper                := External ("USE_EXE_WRAPPER", "");
    EXE_Wrapper_Executable         := External ("EXE_WRAPPER_EXECUTABLE", "");
@@ -85,11 +85,11 @@ abstract project Gprbuild_Tc is
       when "Y" =>
          Compiler_FQExecutable := EXE_Wrapper_Executable;
          EXE_Wrapper_Switches := (
-            "-D_exewrapperexecutable=" & Compiler_GCC,
-            "-D_exewrappertmfname=" & EXE_Wrapper_Timestamp_Filename,
-            "-D_exewrapperbasename=Y",
-            "-D_exewrapperverbose=" & EXE_Wrapper_Verbose,
-            "-D_exewrapperbrieftext=" & EXE_Wrapper_Brieftext
+            "-DEXE_WRAPPER_EXECUTABLE=" & Compiler_GCC,
+            "-DEXE_WRAPPER_TIMESTAMP_FILENAME=" & EXE_Wrapper_Timestamp_Filename,
+            "-DEXE_WRAPPER_BASENAME=Y",
+            "-DEXE_WRAPPER_VERBOSE=" & EXE_Wrapper_Verbose,
+            "-DEXE_WRAPPER_BRIEFTEXT=" & EXE_Wrapper_Brieftext
             );
       when others =>
          Compiler_FQExecutable := Compiler_GCC;
@@ -166,18 +166,25 @@ abstract project Gprbuild_Tc is
          "-O" & Configure.Optimization_Level,
          "-fno-omit-frame-pointer",
          "-fverbose-asm",
-         "-ffunction-sections",
-         "-fdata-sections",
-         "-gdwarf-5",
          "-gnatef",
          "-gnatf",
          "-gnatU",
          "-gnatn",
+         "-gnatX",
+         "-ffunction-sections",
+         "-fdata-sections",
+         "-gdwarf-5",
          "-gnato13",
          -- "-fstack-check",
-         "-gnatVa",
-         "-gnatX",
          "-fstack-usage",
+         -- "-gnatD",
+         -- "-gnatG", "-gnatL",
+         -- "-gnatR",
+         -- "-gnatdp",
+         -- "-gnatdt",
+         -- "-gnatd.b",
+         -- "-gnatd.j",
+         "-gnatVa",
          No_DOS_LT_Switch
          )                                 &
          EXE_Wrapper_Switches              &

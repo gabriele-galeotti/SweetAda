@@ -998,11 +998,11 @@ GPRBUILD_WRAPPER :=
 ifeq ($(USE_EXE_WRAPPER),Y)
 EXE_WRAPPER_TIMESTAMP_FILENAME := $(OBJECT_DIRECTORY)/exe_wrapper.tmp
 ifeq      ($(BUILD_MODE),GNATMAKE)
-GNATMAKE_WRAPPER := "--GCC=$(EXE_WRAPPER)"                                              \
-                    "-D_exewrapperexecutable=$(firstword $(ADAC))"                      \
-                    "-D_exewrappertmfname=$(EXE_WRAPPER_TIMESTAMP_FILENAME)"            \
-                    "-D_exewrapperverbose=$(VERBOSE)"                                   \
-                    "-D_exewrapperbrieftext=$(shell $(call brief-text,[EXE-WRAP],(+)))"
+GNATMAKE_WRAPPER := "--GCC=$(EXE_WRAPPER)"                                               \
+                    "-DEXE_WRAPPER_EXECUTABLE=$(firstword $(ADAC))"                      \
+                    "-DEXE_WRAPPER_TIMESTAMP_FILENAME=$(EXE_WRAPPER_TIMESTAMP_FILENAME)" \
+                    "-DEXE_WRAPPER_VERBOSE=$(VERBOSE)"                                   \
+                    "-DEXE_WRAPPER_BRIEFTEXT=$(shell $(call brief-text,[EXE-WRAP],(+)))"
 else ifeq ($(BUILD_MODE),GPRbuild)
 GPRBUILD_WRAPPER := "-XUSE_EXE_WRAPPER=$(USE_EXE_WRAPPER)"                               \
                     "-XEXE_WRAPPER_EXECUTABLE=$(EXE_WRAPPER)"                            \
@@ -1445,7 +1445,7 @@ endif
 .PHONY: configure-gnatadc
 configure-gnatadc: $(GNATADC_FILENAME)
 $(GNATADC_FILENAME): $(CONFIGURE_DEPS) $(GNATADC_FILENAME).in
-	$(CREATEGNATADC) "$(PROFILE)" $(GNATADC_FILENAME).in $(GNATADC_FILENAME)
+	$(CREATEGNATADC) $(PROFILE) $(GNATADC_FILENAME).in $(GNATADC_FILENAME)
 
 .PHONY: configure-configuregpr
 configure-configuregpr: $(CONFIGUREGPR_FILENAME)
@@ -1483,6 +1483,10 @@ CONFIGURE_AUX_DEPS += configure-gnatprep
 CONFIGURE_AUX_DEPS += configure-end
 configure-aux: $(CONFIGURE_AUX_DEPS)
 
+.PHONY: configure
+configure: clean clean-configure configure-aux infodump
+	$(UPDATETM) $(DOTSWEETADA)
+
 DOTSWEETADA_DEPS :=
 DOTSWEETADA_DEPS += $(CONFIGURE_DEPS)
 DOTSWEETADA_DEPS += $(GNATTDI_FILENAME)
@@ -1490,13 +1494,14 @@ DOTSWEETADA_DEPS += $(GNATADC_FILENAME)
 DOTSWEETADA_DEPS += $(CONFIGUREGPR_FILENAME)
 DOTSWEETADA_DEPS += $(filter-out $(CONFIGUREGPR_FILENAME),$(GPRBUILD_DEPS))
 ./$(DOTSWEETADA): $(DOTSWEETADA_DEPS)
+ifeq ($(OSTYPE),cmd)
+	$(RM) $(subst /,\,$(GNATPREP_FILES))
+else
+	$(RM) $(GNATPREP_FILES)
+endif
 	$(MAKE) clean
 	$(configure-subdirs-command)
 	$(UPDATETM) $@
-
-.PHONY: configure
-configure: clean clean-configure configure-aux infodump
-	$(UPDATETM) $(DOTSWEETADA)
 
 .PHONY: infodump
 infodump:
@@ -1653,6 +1658,8 @@ endif
 .PHONY: rts
 rts: make-check clean clean-configure
 ifeq ($(OSTYPE),cmd)
+	IF "$(strip $(GCC_MULTILIBS))"==""                      \
+          ECHO *** Error: GCC_MULTILIBS is empty.>&2& EXIT /B 1
 	SETLOCAL ENABLEDELAYEDEXPANSION                                   && \
         FOR %%M IN ($(foreach m,$(GCC_MULTILIBS),"$(m)")) DO                 \
           (                                                                  \
@@ -1661,6 +1668,10 @@ ifeq ($(OSTYPE),cmd)
            "$(MAKE)" $(MAKE_RTS) MULTILIB=%%M multilib                       \
           ) || EXIT /B 1
 else
+	if [ "x$(strip $(GCC_MULTILIBS))" = "x" ] ; then            \
+          printf "%s\n" "*** Error: GCC_MULTILIBS is empty." 1>&2 ; \
+          exit 1 ;                                                  \
+        fi
 	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do                   \
           (                                                                  \
            printf "%s\n" ""                                               && \
@@ -1740,11 +1751,11 @@ endif
 .PHONY: make-check
 make-check:
 ifeq ($(OSTYPE),cmd)
-	IF $(call substring,$(subst .,,$(MAKE_VERSION)),1,2) LSS 44          \
-          ECHO *** Warning: SweetAda requires GNU Make version 4.4 or later.
+	IF $(call substring,$(subst .,,$(MAKE_VERSION)),1,2) LSS 44             \
+          ECHO *** Warning: SweetAda requires GNU Make version 4.4 or later.>&2
 else
-	if [ $(call substring,$(subst .,,$(MAKE_VERSION)),1,2) -lt 44 ] ; then            \
-          printf "%s\n" "*** Warning: SweetAda requires GNU Make version 4.4 or later." ; \
+	if [ $(call substring,$(subst .,,$(MAKE_VERSION)),1,2) -lt 44 ] ; then                 \
+          printf "%s\n" "*** Warning: SweetAda requires GNU Make version 4.4 or later." 1>&2 ; \
         fi
 endif
 
