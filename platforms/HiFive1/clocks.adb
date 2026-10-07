@@ -20,7 +20,7 @@ with CPU;
 with HiFive1;
 
 package body Clocks
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -42,7 +42,7 @@ package body Clocks
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
       use Definitions;
       use HiFive1.PRCI;
    begin
@@ -69,7 +69,8 @@ package body Clocks
          );
       -- PLL Final Divide By 1
       plloutdiv.plloutdivby1 := plloutdivby1_SET;
-      -- wait for PLL to settle down
+      -- wait for PLL to settle down; wait for at least 3 consecutive positive
+      -- reads
       declare
          locks : Integer := 0;
       begin

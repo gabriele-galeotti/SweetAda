@@ -25,7 +25,7 @@ with Console;
 with BSP;
 
 package body Exceptions
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -50,7 +50,7 @@ package body Exceptions
    -- Exception_Process
    ----------------------------------------------------------------------------
    procedure Exception_Process
-      is
+   is
       use RISCV;
       use MTIME;
       mcause : mcause_Type;
@@ -107,7 +107,7 @@ package body Exceptions
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
       use RISCV;
       Vectors : aliased Asm_Entry_Point
          with Import        => True,

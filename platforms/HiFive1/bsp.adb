@@ -25,7 +25,7 @@ with QSPI;
 with Console;
 
 package body BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -54,7 +54,7 @@ package body BSP
 
    procedure Console_Putchar
       (C : in Character)
-      is
+   is
       use HiFive1.UART;
    begin
       -- wait for transmitter available
@@ -64,7 +64,7 @@ package body BSP
 
    procedure Console_Getchar
       (C : out Character)
-      is
+   is
       use HiFive1.UART;
       rxdata : rxdata_Type;
    begin
@@ -80,7 +80,7 @@ package body BSP
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup
-      is
+   is
       use HiFive1.GPIO;
       use HiFive1.UART;
       use Clocks;
@@ -112,6 +112,7 @@ package body BSP
       -------------------------------------------------------------------------
       Exceptions.Init;
       -------------------------------------------------------------------------
+      Tick_Count := 0;
       Timer_Value := mtime_Read + Timer_Constant;
       mtimecmp_Write (Timer_Value);
       mie_Set_Interrupt ((MTIE => True, others => <>));

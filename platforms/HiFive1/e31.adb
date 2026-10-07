@@ -19,7 +19,7 @@ with System.Machine_Code;
 with Definitions;
 
 package body E31
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -44,7 +44,7 @@ package body E31
    -- Implemented as state machine in L1 D$, for cores with data caches.
    procedure CFLUSH_D_L1
       (VAddress : in Integer_Address)
-      is
+   is
    begin
       if VAddress /= 0 then
          Asm (
@@ -72,7 +72,7 @@ package body E31
    -- Implemented as state machine in L1 D$, for cores with data caches.
    procedure CDISCARD_D_L1
       (VAddress : in Integer_Address)
-      is
+   is
    begin
       if VAddress /= 0 then
          Asm (

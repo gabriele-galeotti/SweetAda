@@ -15,13 +15,15 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
 with RISCV;
 
 package HiFive1
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -39,8 +41,6 @@ package HiFive1
    use Interfaces;
    use Bits;
 
-pragma Style_Checks (Off);
-
    ----------------------------------------------------------------------------
    -- SiFive FE310-G002 Manual v1p0
    ----------------------------------------------------------------------------
@@ -50,7 +50,7 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    package PRCI
-      is
+   is
 
       PRCI_BASEADDRESS : constant := 16#1000_8000#;
 
@@ -304,7 +304,7 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    package CLINT
-      is
+   is
 
       -- 9.2 MSIP Registers
 
@@ -348,7 +348,7 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    package PLIC
-      is
+   is
 
       PLIC_BASEADDRESS : constant := 16#0C00_0000#;
 
@@ -491,7 +491,7 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    package OTP
-      is
+   is
 
       OTP_BASEADDRESS : constant := 16#1001_0000#;
 
@@ -561,7 +561,7 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    package AON
-      is
+   is
 
       AON_BASEADDRESS : constant := 16#1000_0000#;
 
@@ -583,7 +583,7 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    package WDT
-      is
+   is
 
       wdogkey_Value  : constant := 16#0051_F15E#;
       wdogfeed_Value : constant := 16#0D09_F00D#;
@@ -690,7 +690,7 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    package PMU
-      is
+   is
 
       -- 15.3 PMU Key Register (pmukey)
 
@@ -805,7 +805,7 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    package RTC
-      is
+   is
 
       rtcscale_DIVNONE : constant := 2#0000#;
       rtcscale_DIV2    : constant := 2#0001#;
@@ -880,7 +880,7 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    package GPIO
-      is
+   is
 
       GPIO_BASEADDRESS : constant := 16#1001_2000#;
 
@@ -1024,7 +1024,7 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    package UART
-      is
+   is
 
       UART0_BASEADDRESS : constant := 16#1001_3000#;
       UART1_BASEADDRESS : constant := 16#1002_3000#;
@@ -1180,7 +1180,7 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    package SPI
-      is
+   is
 
       QSPI0_BASEADDRESS : constant := 16#1001_4000#;
       SPI1_BASEADDRESS  : constant := 16#1002_4000#;
@@ -1509,7 +1509,7 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    package PWM
-      is
+   is
 
       PWM0_BASEADDRESS : constant := 16#1001_5000#;
       PWM1_BASEADDRESS : constant := 16#1002_5000#;
@@ -1721,7 +1721,5 @@ pragma Style_Checks (Off);
               Convention => Ada;
 
    end PWM;
-
-pragma Style_Checks (On);
 
 end HiFive1;

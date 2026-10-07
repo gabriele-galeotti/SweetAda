@@ -15,10 +15,12 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System.Storage_Elements;
 
 package E31
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -29,8 +31,6 @@ package E31
    --========================================================================--
 
    use System.Storage_Elements;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- SiFive E31 Manual v19.08p0
@@ -51,7 +51,5 @@ pragma Style_Checks (Off);
    procedure CDISCARD_D_L1
       (VAddress : in Integer_Address)
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end E31;

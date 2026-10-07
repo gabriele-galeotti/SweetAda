@@ -21,7 +21,7 @@ with HiFive1;
 with Console;
 
 package body QSPI
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -61,7 +61,7 @@ package body QSPI
    procedure Byte_Read
       (Byte    : out Unsigned_8;
        Success : out Boolean)
-      is
+   is
       Timeout    : Integer := 3_000_000;
       RxDataPoll : rxdata_Type;
    begin
@@ -84,7 +84,7 @@ package body QSPI
    procedure Byte_Write
       (Byte    : in     Unsigned_8;
        Success :    out Boolean)
-      is
+   is
       Timeout : Integer := 3_000_000;
    begin
       Success := False;
@@ -105,7 +105,7 @@ package body QSPI
       (TX      : in     Unsigned_8;
        RX      :    out Unsigned_8;
        Success :    out Boolean)
-      is
+   is
    begin
       RX := 0;
       Byte_Write (TX, Success);
@@ -119,7 +119,7 @@ package body QSPI
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
       Success : Boolean;
       RxByte  : Unsigned_8;
       Id1     : Unsigned_8;
