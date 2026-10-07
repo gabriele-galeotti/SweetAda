@@ -475,7 +475,7 @@ is
       return Interfaces.C.int
    is
       Ci : aliased Interfaces.C.int := c;
-      Cm : mod_Cint
+      Cm : aliased mod_Cint
          with Address    => Ci'Address,
               Import     => True,
               Convention => Ada;
