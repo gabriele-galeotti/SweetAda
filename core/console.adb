@@ -68,9 +68,6 @@ is
       (C : in Character)
    is
    separate;
---   begin
---      Console_Descriptor.Write (C);
---   end Print;
 
    ----------------------------------------------------------------------------
    -- Print (Interfaces.C.char)
