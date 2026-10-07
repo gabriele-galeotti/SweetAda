@@ -61,7 +61,7 @@ struct switch_descriptor {
 static const struct switch_descriptor switches[] = {
         { "-RTS=",                                      TRANSLATE_BS    },
         { "D",             EXACT_MATCH | HAS_ARGUMENT                   },
-        { "D_exewrapper",                               EXE_WRAPPER     },
+        { "DEXE_WRAPPER",                               EXE_WRAPPER     },
         { "G",             EXACT_MATCH | HAS_ARGUMENT                   },
         { "I",             EXACT_MATCH | HAS_ARGUMENT                   },
         { "I",                                          TRANSLATE_BS    },
@@ -100,7 +100,7 @@ execute_setup(execute_t execute, const char *executable_filename, int argc, char
         /* execute_exec() function) */
         for (idx = idx_start; idx < argc; ++idx)
         {
-                if (strncmp(argv[idx], "-D_exewrapper", 13) == 0)
+                if (strncmp(argv[idx], "-DEXE_WRAPPER", 13) == 0)
                 {
                         continue;
                 }
@@ -238,68 +238,68 @@ main(int argc, char **argv)
                                         }
                                         if ((flags & EXE_WRAPPER) != 0)
                                         {
-                                                if (strncmp(&argv[idx][13], "executable=", 11) == 0)
+                                                if (strncmp(&argv[idx][13], "_EXECUTABLE=", 12) == 0)
                                                 {
                                                         if (executable_filename == NULL)
                                                         {
-                                                                executable_filename = lib_strdup(&argv[idx][13 + 11]);
+                                                                executable_filename = lib_strdup(&argv[idx][13 + 12]);
                                                         }
                                                         else
                                                         {
-                                                                fprintf(stderr, "%s: *** Error: duplicate argument 'executable'.\n", program_name);
+                                                                fprintf(stderr, "%s: *** Error: duplicate argument 'EXECUTABLE'.\n", program_name);
                                                         }
                                                 }
-                                                else if (strncmp(&argv[idx][13], "verbose=", 8) == 0)
+                                                else if (strncmp(&argv[idx][13], "_VERBOSE=", 9) == 0)
                                                 {
                                                         if (verbose == NULL)
                                                         {
-                                                                verbose = lib_strdup(&argv[idx][13 + 8]);
+                                                                verbose = lib_strdup(&argv[idx][13 + 9]);
                                                         }
                                                         else
                                                         {
-                                                                fprintf(stderr, "%s: *** Error: duplicate argument 'verbose'.\n", program_name);
+                                                                fprintf(stderr, "%s: *** Error: duplicate argument 'VERBOSE'.\n", program_name);
                                                                 error_flag = true;
                                                         }
                                                 }
-                                                else if (strncmp(&argv[idx][13], "brieftext=", 10) == 0)
+                                                else if (strncmp(&argv[idx][13], "_BRIEFTEXT=", 11) == 0)
                                                 {
                                                         if (brieftext == NULL)
                                                         {
-                                                                brieftext = lib_strdup(&argv[idx][13 + 10]);
+                                                                brieftext = lib_strdup(&argv[idx][13 + 11]);
                                                         }
                                                         else
                                                         {
-                                                                fprintf(stderr, "%s: *** Error: duplicate argument 'brieftext'.\n", program_name);
+                                                                fprintf(stderr, "%s: *** Error: duplicate argument 'BRIEFTEXT'.\n", program_name);
                                                                 error_flag = true;
                                                         }
                                                 }
-                                                else if (strncmp(&argv[idx][13], "tmfname=", 8) == 0)
+                                                else if (strncmp(&argv[idx][13], "_TIMESTAMP_FILENAME=", 20) == 0)
                                                 {
                                                         if (timestamp_filename == NULL)
                                                         {
-                                                                timestamp_filename = lib_strdup(&argv[idx][13 + 8]);
+                                                                timestamp_filename = lib_strdup(&argv[idx][13 + 20]);
                                                         }
                                                         else
                                                         {
-                                                                fprintf(stderr, "%s: *** Error: duplicate argument 'tmfname'.\n", program_name);
+                                                                fprintf(stderr, "%s: *** Error: duplicate argument 'TIMESTAMP_FILENAME'.\n", program_name);
                                                                 error_flag = true;
                                                         }
                                                 }
-                                                else if (strncmp(&argv[idx][13], "basename=", 9) == 0)
+                                                else if (strncmp(&argv[idx][13], "_BASENAME=", 10) == 0)
                                                 {
                                                         if (use_basename == NULL)
                                                         {
-                                                                use_basename = lib_strdup(&argv[idx][13 + 9]);
+                                                                use_basename = lib_strdup(&argv[idx][13 + 10]);
                                                         }
                                                         else
                                                         {
-                                                                fprintf(stderr, "%s: *** Error: duplicate argument 'basename'.\n", program_name);
+                                                                fprintf(stderr, "%s: *** Error: duplicate argument 'BASENAME'.\n", program_name);
                                                                 error_flag = true;
                                                         }
                                                 }
                                                 else
                                                 {
-                                                        fprintf(stderr, "%s: *** Error: unknown argument for 'exewrapper'.\n", program_name);
+                                                        fprintf(stderr, "%s: *** Error: unknown argument for 'EXE_WRAPPER'.\n", program_name);
                                                         error_flag = true;
                                                 }
                                         }
