@@ -318,8 +318,10 @@ is
       T.WDay  := Time.TM_WDay_Type (Adjust_BCD (RTC_DayOfWeek, RTC_BCD));
       T.MDay  := Time.TM_MDay_Type (Adjust_BCD (RTC_DayOfMonth, RTC_BCD));
       T.Mon   := Time.TM_Mon_Type (Adjust_BCD (RTC_Month, RTC_BCD) - 1);
-      T.Year  := Time.TM_Year_Type (Adjust_BCD (RTC_Year, RTC_BCD)) +
-                 (if @ < 70 then 100 else 0);
+      T.Year  := Time.TM_Year_Type (Adjust_BCD (RTC_Year, RTC_BCD));
+      if T.Year < 70 then
+         T.Year := @ + 100;
+      end if;
       T.YDay  := 0;
    end Time_Read;
 
