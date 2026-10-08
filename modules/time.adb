@@ -26,27 +26,34 @@ package body Time
    --                                                                        --
    --========================================================================--
 
-   Days_Per_Month : constant array (Natural range 1 .. 12) of Natural :=
+   -- time in seconds
+   MINUTE2S : constant := 60;           -- 60
+   HOUR2S   : constant := 60 * 60;      -- 3_600
+   DAY2S    : constant := 24 * 60 * 60; -- 86_400
+
+   type Month_Idx_Type is range 1 .. MONTH_PER_YEAR + 1;
+
+   Days_In_Month : constant array (Mon_Type) of Natural :=
       [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-   Days_In_Year : constant array (Natural range 1 .. 13) of Natural :=
-      [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
+   Days_In_Year : constant array (Month_Idx_Type) of Natural :=
+      [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, DAYS_PER_YEAR];
 
    function Is_Leap_Year
-      (Year : Natural)
+      (Year : Year_Type)
       return Boolean;
 
    function Leap_Days
-      (Year : Natural)
+      (Year : Year_Type)
       return Natural;
 
    function Leap_Days_since1970
-      (Year : Natural)
+      (Year : Year_Type)
       return Natural;
 
-   function Days_In_Month
-      (Month : Natural;
-       Year  : Natural)
+   function Days_Of_YearMonth
+      (Year  : Year_Type;
+       Month : Mon_Type)
       return Natural;
 
    --========================================================================--
@@ -61,7 +68,7 @@ package body Time
    -- Return whether year is a leap year.
    ----------------------------------------------------------------------------
    function Is_Leap_Year
-      (Year : Natural)
+      (Year : Year_Type)
       return Boolean
       is
    begin
@@ -75,18 +82,18 @@ package body Time
    -- Return the number of leap days.
    ----------------------------------------------------------------------------
    function Leap_Days
-      (Year : Natural)
+      (Year : Year_Type)
       return Natural
       is
    begin
-      return Year / 4 - Year / 100 + Year / 400;
+      return Natural (Year / 4 - Year / 100 + Year / 400);
    end Leap_Days;
 
    ----------------------------------------------------------------------------
    -- Return the number of leap days since 1970-01-01.
    ----------------------------------------------------------------------------
    function Leap_Days_since1970
-      (Year : Natural)
+      (Year : Year_Type)
       return Natural
       is
       Leap_Days_until1970 : constant := 477;
@@ -95,34 +102,34 @@ package body Time
    end Leap_Days_since1970;
 
    ----------------------------------------------------------------------------
-   -- Days_In_Month
+   -- Days_Of_YearMonth
    ----------------------------------------------------------------------------
-   function Days_In_Month
-      (Month : Natural;
-       Year  : Natural)
+   function Days_Of_YearMonth
+      (Year  : Year_Type;
+       Month : Mon_Type)
       return Natural
       is
       February_29 : Natural range 0 .. 1;
    begin
       February_29 := (if Is_Leap_Year (Year) and then Month = 2 then 1 else 0);
-      return Days_Per_Month (Month) + February_29;
-   end Days_In_Month;
+      return Days_In_Month (Month) + February_29;
+   end Days_Of_YearMonth;
 
    ----------------------------------------------------------------------------
    -- Date2Days
    ----------------------------------------------------------------------------
    function Date2Days
-      (D : Natural;
-       M : Natural;
-       Y : Natural)
+      (D : MDay_Type;
+       M : Mon_Type;
+       Y : Year_Type)
       return Natural
       is
    begin
       return
-         (Y - 1_970) * 365  +
-         Leap_Days_since1970 (Y - 1) +
-         Days_In_Year (M) +
-         D - 1 +
+         Natural (Y - 1_970) * DAYS_PER_YEAR                +
+         Leap_Days_since1970 (Y - 1)                        +
+         Days_In_Year (Month_Idx_Type (M))                  +
+         Natural (D) - 1                                    +
          (if Is_Leap_Year (Y) and then M > 2 then 1 else 0)
          ;
    end Date2Days;
@@ -131,29 +138,33 @@ package body Time
    -- NDay_Of_Week
    ----------------------------------------------------------------------------
    function NDay_Of_Week
-      (D : Natural;
-       M : Natural;
-       Y : Natural)
+      (D : MDay_Type;
+       M : Mon_Type;
+       Y : Year_Type)
       return Natural
       is
    begin
-      return (Date2Days (D, M, Y) + 3) mod 7 + 1;
+      -- 1970-01-01 = Thursday
+      return (Date2Days (D, M, Y) + 3) mod DAYS_PER_WEEK + 1;
    end NDay_Of_Week;
 
    ----------------------------------------------------------------------------
    -- Make_Time
    ----------------------------------------------------------------------------
    function Make_Time
-      (Year : Positive;
-       Mon  : Positive;
-       Day  : Positive;
-       Hour : Natural;
-       Min  : Natural;
-       Sec  : Natural)
+      (Year : Year_Type;
+       Mon  : Mon_Type;
+       Day  : MDay_Type;
+       Hour : Hour_Type;
+       Min  : Min_Type;
+       Sec  : Sec_Type)
       return Natural
       is
    begin
-      return Date2Days (Day, Mon, Year) * 86_400 + Hour * 3_600 + Min * 60 + Sec;
+      return Date2Days (Day, Mon, Year) * DAY2S +
+             Natural (Hour) * HOUR2S            +
+             Natural (Min) * MINUTE2S           +
+             Natural (Sec);
    end Make_Time;
 
    ----------------------------------------------------------------------------
@@ -164,40 +175,46 @@ package body Time
        TM :    out TM_Time)
       is
       Seconds        : Natural := Natural (T);
-      Days           : Integer;
-      Year_minus1970 : Natural;
-      Year           : Natural;
+      Minutes        : Natural;
+      Hours          : Natural;
+      Days           : Natural;
+      Months         : Natural;
+      Year_minus1970 : Year_Type;
+      Year           : Year_Type;
    begin
-      Days := Seconds / 86_400;
-      Seconds := @ - Days * 86_400;
-      TM.WDay := (Days + 4) mod 7;
-      Year_minus1970 := Days / 365;
+      Days := Seconds / DAY2S;
+      Seconds := @ - Days * DAY2S;
+      TM.WDay := TM_WDay_Type ((Days + 4) mod DAYS_PER_WEEK);
+      Year_minus1970 := Year_Type (Days / DAYS_PER_YEAR);
       Year := Year_minus1970 + 1_970;
-      Days := @ - (Year_minus1970 * 365 + Leap_Days_since1970 (Year - 1));
+      Days := @ - (Natural (Year_minus1970) * DAYS_PER_YEAR + Leap_Days_since1970 (Year - 1));
       if Days < 0 then
          Year := @ - 1;
-         Days := @ + 365 + (if Is_Leap_Year (Year) then 1 else 0);
+         Days := @ + DAYS_PER_YEAR + (if Is_Leap_Year (Year) then 1 else 0);
       end if;
-      TM.Year := Year - 1_900;
-      TM.YDay := Days;
-      TM.Mon := 0;
-      for Month in 1 .. 12 loop
+      TM.Year := TM_Year_Type (Year - 1_900);
+      TM.YDay := TM_YDay_Type (Days);
+      Months := 0;
+      for Month in Mon_Type'Range loop
          declare
             TDays : Integer;
          begin
-            TDays := Days - Days_In_Month (Month, Year);
+            TDays := Days - Days_Of_YearMonth (Year, Month);
             if TDays < 0 then
-               TM.Mon := Month - 1;
+               Months := Natural (Month) - 1;
                exit;
             end if;
             Days := TDays;
          end;
       end loop;
-      TM.MDay := Days + 1;
-      TM.Hour := Seconds / 3_600;
-      Seconds := @ - TM.Hour * 3_600;
-      TM.Min := Seconds / 60;
-      TM.Sec := Seconds - TM.Min * 60;
+      TM.Mon := TM_Mon_Type (Months);
+      TM.MDay := TM_MDay_Type (Days + 1);
+      Hours := Seconds / HOUR2S;
+      TM.Hour := TM_Hour_Type (Seconds / HOUR2S);
+      Seconds := @ - Hours * HOUR2S;
+      Minutes := Seconds / MINUTE2S;
+      TM.Min := TM_Min_Type (Minutes);
+      TM.Sec := TM_Sec_Type (Seconds - Minutes * MINUTE2S);
       TM.IsDST := -1;
    end Make_Time;
 
