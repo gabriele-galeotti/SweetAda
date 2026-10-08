@@ -53,6 +53,7 @@ is
    is
       Block  : aliased Block_Type (0 .. 16#01FF#);
       Offset : Storage_Offset;
+      P      : aliased Partition_Entry_Type;
    begin
       IDE.Read (Device.all, 0, Block, Success);
       if Success then
@@ -66,9 +67,10 @@ is
             -- explicit assignment could cause misaligned access (e.g., MIPS)
             Memory_Functions.Cpymem (
                Block'Address + Offset,
-               Partition'Address,
+               P'Address,
                PARTITION_ENTRY_SIZE
                );
+            Partition := P;
             if BigEndian then
                Partition.LBA_Start := Byte_Swap (@);
                Partition.LBA_Size  := Byte_Swap (@);
