@@ -81,6 +81,7 @@ is
    function status_Read
       return status_Type
       with Inline => True;
+
    procedure status_Write
       (Value : in status_Type)
       with Inline => True;
@@ -88,6 +89,7 @@ is
    function estatus_Read
       return status_Type
       with Inline => True;
+
    procedure estatus_Write
       (Value : in status_Type)
       with Inline => True;
@@ -95,6 +97,7 @@ is
    function bstatus_Read
       return status_Type
       with Inline => True;
+
    procedure bstatus_Write
       (Value : in status_Type)
       with Inline => True;
@@ -139,6 +142,7 @@ is
    function ienable_Read
       return Bitmap_32
       with Inline => True;
+
    procedure ienable_Write
       (Value : in Bitmap_32)
       with Inline => True;
@@ -183,6 +187,7 @@ is
 
    procedure NOP
       with Inline => True;
+
    procedure Asm_Call
       (Target_Address : in Address)
       with Inline => True;
@@ -200,12 +205,14 @@ is
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       with Inline => True;
+
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       with Inline => True;
 
    procedure Irq_Enable
       with Inline => True;
+
    procedure Irq_Disable
       with Inline => True;
 
