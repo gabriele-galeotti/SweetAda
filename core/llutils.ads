@@ -38,6 +38,22 @@ is
 
    subtype Decimal_Digit_Type is Natural range 0 .. 9;
 
+   type BCD_Digit is new Bits.Bits_4 range 0 .. 9
+      with Size => 4;
+
+   type BCD_2 is record
+      L : BCD_Digit;
+      H : BCD_Digit;
+   end record
+      with Bit_Order   => System.Low_Order_First,
+           Object_Size => 8;
+   for BCD_2 use record
+      L at 0 range 0 .. 3;
+      H at 0 range 4 .. 7;
+   end record;
+
+   subtype U8BCD_2 is Interfaces.Unsigned_8 range 0 .. 99;
+
    subtype Atomic_Type is Interfaces.Unsigned_8;
 
    ----------------------------------------------------------------------------
@@ -47,9 +63,11 @@ is
    procedure Byte_Swap_16
       (Object_Address : in System.Address)
       with Inline => True;
+
    procedure Byte_Swap_32
       (Object_Address : in System.Address)
       with Inline => True;
+
    procedure Byte_Swap_64
       (Object_Address : in System.Address)
       with Inline => True;
@@ -58,10 +76,12 @@ is
       (Object_Address : System.Address)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function BE_To_CPUE_32
       (Object_Address : System.Address)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function BE_To_CPUE_64
       (Object_Address : System.Address)
       return Interfaces.Unsigned_64
@@ -71,10 +91,12 @@ is
       (Object_Address : System.Address)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function LE_To_CPUE_32
       (Object_Address : System.Address)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function LE_To_CPUE_64
       (Object_Address : System.Address)
       return Interfaces.Unsigned_64
@@ -134,20 +156,18 @@ is
       with Inline => True;
 
    ----------------------------------------------------------------------------
-   -- BCD numbers
+   -- BCD_2 -> Unsigned_8
    ----------------------------------------------------------------------------
-
-   type BCD_Type is new Interfaces.Unsigned_8;
-
-   -- transform an Unsigned_8 from BCD form
    function To_U8
-      (Value : BCD_Type)
-      return Interfaces.Unsigned_8;
+      (Value : BCD_2)
+      return U8BCD_2;
 
-   -- transform an Unsigned_8 to BCD form
-   function To_BCD
-      (Value : Interfaces.Unsigned_8)
-      return BCD_Type;
+   ----------------------------------------------------------------------------
+   -- Unsigned_8 -> BCD_2
+   ----------------------------------------------------------------------------
+   function To_BCD2
+      (Value : U8BCD_2)
+      return BCD_2;
 
    ----------------------------------------------------------------------------
    -- Convert a digit to a character.

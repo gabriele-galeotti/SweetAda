@@ -48,10 +48,12 @@ is
       (Object_Address : in System.Address)
    is
    separate;
+
    procedure Byte_Swap_32
       (Object_Address : in System.Address)
    is
    separate;
+
    procedure Byte_Swap_64
       (Object_Address : in System.Address)
    is
@@ -66,11 +68,13 @@ is
       return Interfaces.Unsigned_16
    is
    separate;
+
    function BE_To_CPUE_32
       (Object_Address : System.Address)
       return Interfaces.Unsigned_32
    is
    separate;
+
    function BE_To_CPUE_64
       (Object_Address : System.Address)
       return Interfaces.Unsigned_64
@@ -86,11 +90,13 @@ is
       return Interfaces.Unsigned_16
    is
    separate;
+
    function LE_To_CPUE_32
       (Object_Address : System.Address)
       return Interfaces.Unsigned_32
    is
    separate;
+
    function LE_To_CPUE_64
       (Object_Address : System.Address)
       return Interfaces.Unsigned_64
@@ -170,32 +176,27 @@ is
    -- To_U8
    ----------------------------------------------------------------------------
    function To_U8
-      (Value : BCD_Type)
-      return Interfaces.Unsigned_8
+      (Value : BCD_2)
+      return U8BCD_2
    is
-      V : Interfaces.Unsigned_8;
    begin
-      V := Interfaces.Unsigned_8 (Value);
-      return (V and 16#0F#) + Bits.ShR (V, 4) * 10;
+      return Interfaces.Unsigned_8 (Value.L) +
+             Interfaces.Unsigned_8 (Value.H) * 10;
    end To_U8;
 
    ----------------------------------------------------------------------------
-   -- To_BCD
+   -- To_BCD2
    ----------------------------------------------------------------------------
-   function To_BCD
-      (Value : Interfaces.Unsigned_8)
-      return BCD_Type
+   function To_BCD2
+      (Value : U8BCD_2)
+      return BCD_2
    is
-      L : Interfaces.Unsigned_8;
-      H : Interfaces.Unsigned_8;
    begin
-      L := Value mod 10;
-      H := Value / 10;
-      if L > 9 or else H > 9 then
-         raise Constraint_Error;
-      end if;
-      return BCD_Type (Bits.ShL (H, 4) or L);
-   end To_BCD;
+      return (
+         L => BCD_Digit (Value mod 10),
+         H => BCD_Digit (Value / 10)
+         );
+   end To_BCD2;
 
    ----------------------------------------------------------------------------
    -- To_Ch
@@ -257,10 +258,12 @@ is
          when others     => Success := False;
       end case;
       if Success then
-         Value := (if MSD then
-                      (@ and 16#0F#) or (Digit * 2**4)
-                   else
-                      (@ and 16#F0#) or Digit);
+         Value := (
+            if MSD then
+               (@ and 16#0F#) or (Digit * 2**4)
+            else
+               (@ and 16#F0#) or Digit
+            );
       end if;
    end To_U8;
 
