@@ -33,7 +33,7 @@ is
    --                                                                        --
    --========================================================================--
 
-   DEFAULT_ALIGNMENT    : constant := 16;
+   DEFAULT_ALIGNMENT    : constant := Standard'System_Allocator_Alignment;
    -- Size includes Memory_Block tag
    MEMORYBLOCKTYPE_SIZE : constant :=
       DEFAULT_ALIGNMENT * ((
