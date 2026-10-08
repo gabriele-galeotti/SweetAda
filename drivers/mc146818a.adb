@@ -15,13 +15,15 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Warnings (Off, "* is not referenced");
+
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with LLutils;
 with CPU;
 
 package body MC146818A
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -33,8 +35,8 @@ package body MC146818A
 
    use System.Storage_Elements;
    use LLutils;
-
-pragma Warnings (Off, "* is not referenced");
+   use type Time.TM_Year_Type;
+   use type Time.TM_IsDST_Type;
 
    ----------------------------------------------------------------------------
    -- Register types
@@ -217,7 +219,7 @@ pragma Warnings (Off, "* is not referenced");
       (D : Descriptor_Type;
        R : Register_Type)
       return Unsigned_8
-      is
+   is
    begin
       return D.Read_8 (Build_Address (
          D.Base_Address,
@@ -233,7 +235,7 @@ pragma Warnings (Off, "* is not referenced");
       (D     : in Descriptor_Type;
        R     : in Register_Type;
        Value : in Unsigned_8)
-      is
+   is
    begin
       D.Write_8 (Build_Address (
          D.Base_Address,
@@ -247,7 +249,7 @@ pragma Warnings (Off, "* is not referenced");
    ----------------------------------------------------------------------------
    procedure Handle
       (Data_Address : in System.Address)
-      is
+   is
       D      : aliased Descriptor_Type
          with Address    => Data_Address,
               Import     => True,
@@ -264,7 +266,7 @@ pragma Warnings (Off, "* is not referenced");
    procedure Time_Read
       (D : in     Descriptor_Type;
        T :    out Time.TM_Time)
-      is
+   is
       Intcontext     : CPU.Intcontext_Type;
       RB             : RegisterB_Type;
       RTC_BCD        : Boolean;
@@ -284,9 +286,10 @@ pragma Warnings (Off, "* is not referenced");
          (V   : Unsigned_8;
           BCD : Boolean)
          return Unsigned_8
-         is
+      is
+         function To_BCD2 is new Ada.Unchecked_Conversion (Unsigned_8, BCD_2);
       begin
-         return (if BCD then To_U8 (BCD_Type (V)) else V);
+         return (if BCD then To_U8 (To_BCD2 (V)) else V);
       end Adjust_BCD;
    begin
       CPU.Intcontext_Get (Intcontext);
@@ -309,14 +312,14 @@ pragma Warnings (Off, "* is not referenced");
       CPU.Intcontext_Set (Intcontext);
       RTC_BCD := RB.DM = DM_BCD;
       T.IsDST := (if RB.DSE then 1 else 0);
-      T.Sec   := Natural (Adjust_BCD (RTC_Second, RTC_BCD));
-      T.Min   := Natural (Adjust_BCD (RTC_Minute, RTC_BCD));
-      T.Hour  := Natural (Adjust_BCD (RTC_Hour, RTC_BCD));
-      T.WDay  := Natural (Adjust_BCD (RTC_DayOfWeek, RTC_BCD));
-      T.MDay  := Natural (Adjust_BCD (RTC_DayOfMonth, RTC_BCD));
-      T.Mon   := Natural (Adjust_BCD (RTC_Month, RTC_BCD) - 1);
-      T.Year  := Natural (Adjust_BCD (RTC_Year, RTC_BCD));
-      T.Year  := @ + (if @ < 70 then 100 else 0);
+      T.Sec   := Time.TM_Sec_Type (Adjust_BCD (RTC_Second, RTC_BCD));
+      T.Min   := Time.TM_Min_Type (Adjust_BCD (RTC_Minute, RTC_BCD));
+      T.Hour  := Time.TM_Hour_Type (Adjust_BCD (RTC_Hour, RTC_BCD));
+      T.WDay  := Time.TM_WDay_Type (Adjust_BCD (RTC_DayOfWeek, RTC_BCD));
+      T.MDay  := Time.TM_MDay_Type (Adjust_BCD (RTC_DayOfMonth, RTC_BCD));
+      T.Mon   := Time.TM_Mon_Type (Adjust_BCD (RTC_Month, RTC_BCD) - 1);
+      T.Year  := Time.TM_Year_Type (Adjust_BCD (RTC_Year, RTC_BCD)) +
+                 (if @ < 70 then 100 else 0);
       T.YDay  := 0;
    end Time_Read;
 
@@ -326,10 +329,11 @@ pragma Warnings (Off, "* is not referenced");
    procedure Time_Set
       (D : in Descriptor_Type;
        T : in Time.TM_Time)
-      is
+   is
       Intcontext : CPU.Intcontext_Type;
       RB         : RegisterB_Type;
       RTC_BCD    : Boolean;
+      TYear      : Time.TM_Year_Type;
       function Adjust_BCD
          (V   : Unsigned_8;
           BCD : Boolean)
@@ -339,9 +343,10 @@ pragma Warnings (Off, "* is not referenced");
          (V   : Unsigned_8;
           BCD : Boolean)
          return Unsigned_8
-         is
+      is
+         function To_U8 is new Ada.Unchecked_Conversion (BCD_2, Unsigned_8);
       begin
-         return (if BCD then Unsigned_8 (To_BCD (V)) else V);
+         return (if BCD then To_U8 (To_BCD2 (V)) else V);
       end Adjust_BCD;
    begin
       CPU.Intcontext_Get (Intcontext);
@@ -355,7 +360,8 @@ pragma Warnings (Off, "* is not referenced");
       Register_Write (D, Hours, Adjust_BCD (Unsigned_8 (T.Hour), RTC_BCD));
       Register_Write (D, DayOfMonth, Adjust_BCD (Unsigned_8 (T.MDay), RTC_BCD));
       Register_Write (D, Month, Adjust_BCD (Unsigned_8 (T.Mon) + 1, RTC_BCD));
-      Register_Write (D, Year, Adjust_BCD (Unsigned_8 (T.Year), RTC_BCD));
+      TYear := (if T.Year < 70 then T.Year else T.Year - 100);
+      Register_Write (D, Year, Adjust_BCD (Unsigned_8 (TYear), RTC_BCD));
       if D.Flags.GXemul then
          Register_Write (D, RAM3F, Adjust_BCD (Unsigned_8 (T.Year), RTC_BCD));
       end if;
@@ -370,7 +376,7 @@ pragma Warnings (Off, "* is not referenced");
    ----------------------------------------------------------------------------
    procedure Init
       (D : in Descriptor_Type)
-      is
+   is
       RA     : RegisterA_Type;
       Unused : Unsigned_8 with Unreferenced => True;
       RB     : RegisterB_Type;
@@ -390,7 +396,5 @@ pragma Warnings (Off, "* is not referenced");
          );
       Register_Write (D, RegisterB, To_U8 (RB));
    end Init;
-
-pragma Warnings (On, "* is not referenced");
 
 end MC146818A;

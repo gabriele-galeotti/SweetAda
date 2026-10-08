@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
@@ -35,8 +37,6 @@ package MC146818A
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- MC146818A REAL-TIME CLOCK PLUS RAM (RTC)
@@ -80,7 +80,5 @@ pragma Style_Checks (Off);
 
    procedure Init
       (D : in Descriptor_Type);
-
-pragma Style_Checks (On);
 
 end MC146818A;
