@@ -31,7 +31,7 @@ package body Time
    HOUR2S   : constant := 60 * 60;      -- 3_600
    DAY2S    : constant := 24 * 60 * 60; -- 86_400
 
-   type Month_Idx_Type is range 1 .. MONTH_PER_YEAR + 1;
+   type Month_Idx_Type is range 1 .. MONTHS_PER_YEAR + 1;
 
    Days_In_Month : constant array (Mon_Type) of Natural :=
       [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];

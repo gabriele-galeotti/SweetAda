@@ -30,27 +30,27 @@ package Time
 
    use Interfaces;
 
-   DAYS_PER_WEEK  : constant := 7;
-   DAYS_PER_MONTH : constant := 31;
-   DAYS_PER_YEAR  : constant := 365;
-   MONTH_PER_YEAR : constant := 12;
+   DAYS_PER_WEEK   : constant := 7;
+   DAYS_PER_MONTH  : constant := 31;
+   DAYS_PER_YEAR   : constant := 365;
+   MONTHS_PER_YEAR : constant := 12;
 
-   type Sec_Type  is range 0 .. 60;             -- Seconds (0-60)
-   type Min_Type  is range 0 .. 59;             -- Minutes (0-59)
-   type Hour_Type is range 0 .. 23;             -- Hours (0-23)
-   type MDay_Type is range 1 .. DAYS_PER_MONTH; -- Day of the month (1-31)
-   type Mon_Type  is range 1 .. MONTH_PER_YEAR; -- Month (1-12)
+   type Sec_Type  is range 0 .. 60;              -- Seconds (0-60)
+   type Min_Type  is range 0 .. 59;              -- Minutes (0-59)
+   type Hour_Type is range 0 .. 23;              -- Hours (0-23)
+   type MDay_Type is range 1 .. DAYS_PER_MONTH;  -- Day of the month (1-31)
+   type Mon_Type  is range 1 .. MONTHS_PER_YEAR; -- Month (1-12)
    type Year_Type is new Natural;
 
-   type TM_Sec_Type   is new Sec_Type;                  -- Seconds (0-60)
-   type TM_Min_Type   is new Min_Type;                  -- Minutes (0-59)
-   type TM_Hour_Type  is new Hour_Type;                 -- Hours (0-23)
-   type TM_MDay_Type  is new MDay_Type;                 -- Day of the month (1-31)
-   type TM_Mon_Type   is range 0 .. MONTH_PER_YEAR - 1; -- Month (0-11)
-   type TM_Year_Type  is new Year_Type;                 -- Year - 1900
-   type TM_WDay_Type  is range 0 .. DAYS_PER_WEEK - 1;  -- Day of the week (0-6, Sunday = 0)
-   type TM_YDay_Type  is range 0 .. DAYS_PER_YEAR;      -- Day in the year (0-365, 1 Jan = 0)
-   type TM_IsDST_Type is new Integer;                   -- Daylight saving time
+   type TM_Sec_Type   is new Sec_Type;                   -- Seconds (0-60)
+   type TM_Min_Type   is new Min_Type;                   -- Minutes (0-59)
+   type TM_Hour_Type  is new Hour_Type;                  -- Hours (0-23)
+   type TM_MDay_Type  is new MDay_Type;                  -- Day of the month (1-31)
+   type TM_Mon_Type   is range 0 .. MONTHS_PER_YEAR - 1; -- Month (0-11)
+   type TM_Year_Type  is new Year_Type;                  -- Year - 1900
+   type TM_WDay_Type  is range 0 .. DAYS_PER_WEEK - 1;   -- Day of the week (0-6, Sunday = 0)
+   type TM_YDay_Type  is range 0 .. DAYS_PER_YEAR;       -- Day in the year (0-365, 1 Jan = 0)
+   type TM_IsDST_Type is new Integer;                    -- Daylight saving time
 
    type TM_Time is record
       Sec   : TM_Sec_Type;
