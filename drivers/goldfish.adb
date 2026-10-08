@@ -15,10 +15,12 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Warnings (Off, "* is not referenced");
+
 with LLutils;
 
 package body Goldfish
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -29,8 +31,6 @@ package body Goldfish
    --========================================================================--
 
    use LLutils;
-
-pragma Warnings (Off, "* is not referenced");
 
    ----------------------------------------------------------------------------
    -- Register types
@@ -77,7 +77,7 @@ pragma Warnings (Off, "* is not referenced");
       (D : Descriptor_Type;
        R : Register_Type)
       return Unsigned_32
-      is
+   is
    begin
       return D.Read_32 (Build_Address (
          D.Base_Address,
@@ -93,7 +93,7 @@ pragma Warnings (Off, "* is not referenced");
       (D     : in Descriptor_Type;
        R     : in Register_Type;
        Value : in Unsigned_32)
-      is
+   is
    begin
       D.Write_32 (Build_Address (
          D.Base_Address,
@@ -111,7 +111,7 @@ pragma Warnings (Off, "* is not referenced");
    procedure Time_Read
       (D : in     Descriptor_Type;
        T :    out Time.TM_Time)
-      is
+   is
       Time_L  : Unsigned_32;
       Time_H  : Unsigned_32;
       Time_ns : Integer_64;
@@ -123,7 +123,5 @@ pragma Warnings (Off, "* is not referenced");
       T.IsDST := 0;
       T.YDay  := 0;
    end Time_Read;
-
-pragma Warnings (On, "* is not referenced");
 
 end Goldfish;
