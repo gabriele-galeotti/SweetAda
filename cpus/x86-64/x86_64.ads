@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 with System;
 with Interfaces;
@@ -35,8 +36,6 @@ is
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- Intel (R) 64 and IA-32 Architectures Software Developer’s Manual
@@ -208,7 +207,7 @@ pragma Style_Checks (Off);
    -- Segment descriptor
    ----------------------------------------------------------------------------
 
-   SEGMENT_DESCRIPTOR_ALIGNMENT : constant := 8;
+   SEGMENT_DESCRIPTOR_ALIGNMENT : constant := 16;
    SEGMENT_DESCRIPTOR_SIZE      : constant := 8;
 
    type Segment_Descriptor_Type is record
@@ -459,11 +458,13 @@ pragma Style_Checks (Off);
    procedure LIDTR
       (IDT_Descriptor : in IDT_Descriptor_Type)
       with Inline => True;
+
    procedure IDT_Set
       (IDT_Descriptor : in out IDT_Descriptor_Type;
        IDT_Address    : in     Address;
        IDT_Length     : in     IDT_Length_Type)
       with Inline => True;
+
    procedure IDT_Set_Handler
       (IDT_Entry         : in out Exception_Descriptor_Type;
        Exception_Handler : in     Address;
@@ -473,6 +474,8 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
    -- Task State Segment
    ----------------------------------------------------------------------------
+
+   TSS_ALIGNMENT : constant := 16;
 
    procedure LTR
       (Selector : in Selector_Type)
@@ -524,6 +527,7 @@ pragma Style_Checks (Off);
    function CR0_Read
       return CR0_Type
       with Inline => True;
+
    procedure CR0_Write
       (Value : in CR0_Type)
       with Inline => True;
@@ -542,6 +546,7 @@ pragma Style_Checks (Off);
    function CR1_Read
       return CR1_Type
       with Inline => True;
+
    procedure CR1_Write
       (Value : in CR1_Type)
       with Inline => True;
@@ -560,6 +565,7 @@ pragma Style_Checks (Off);
    function CR2_Read
       return CR2_Type
       with Inline => True;
+
    procedure CR2_Write
       (Value : in CR2_Type)
       with Inline => True;
@@ -586,6 +592,7 @@ pragma Style_Checks (Off);
    function CR3_Read
       return CR3_Type
       with Inline => True;
+
    procedure CR3_Write
       (Value : in CR3_Type)
       with Inline => True;
@@ -650,6 +657,7 @@ pragma Style_Checks (Off);
    function CR4_Read
       return CR4_Type
       with Inline => True;
+
    procedure CR4_Write
       (Value : in CR4_Type)
       with Inline => True;
@@ -811,6 +819,7 @@ pragma Style_Checks (Off);
       (MSR : MSR_Type)
       return Unsigned_64
       with Inline => True;
+
    procedure WRMSR
       (MSR   : in MSR_Type;
        Value : in Unsigned_64)
@@ -842,6 +851,7 @@ pragma Style_Checks (Off);
    function IA32_APIC_BASE_Read
       return IA32_APIC_BASE_Type
       with Inline => True;
+
    procedure IA32_APIC_BASE_Write
       (Value : in IA32_APIC_BASE_Type)
       with Inline => True;
@@ -872,6 +882,7 @@ pragma Style_Checks (Off);
    function IA32_EFER_Read
       return IA32_EFER_Type
       with Inline => True;
+
    procedure IA32_EFER_Write
       (Value : in IA32_EFER_Type)
       with Inline => True;
@@ -888,10 +899,13 @@ pragma Style_Checks (Off);
 
    procedure NOP
       with Inline => True;
+
    procedure HLT
       with Inline => True;
+
    procedure BREAKPOINT
       with Inline => True;
+
    procedure Asm_Call
       (Target_Address : in Address)
       with Inline => True;
@@ -903,15 +917,15 @@ pragma Style_Checks (Off);
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       with Inline => True;
+
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       with Inline => True;
 
    procedure Irq_Enable
       with Inline => True;
+
    procedure Irq_Disable
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end x86_64;
