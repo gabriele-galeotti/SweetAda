@@ -15,8 +15,10 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 package body Time
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -70,7 +72,7 @@ package body Time
    function Is_Leap_Year
       (Year : Year_Type)
       return Boolean
-      is
+   is
    begin
       return
          (Year mod 4 = 0 and then Year mod 100 /= 0)
@@ -84,7 +86,7 @@ package body Time
    function Leap_Days
       (Year : Year_Type)
       return Natural
-      is
+   is
    begin
       return Natural (Year / 4 - Year / 100 + Year / 400);
    end Leap_Days;
@@ -95,7 +97,7 @@ package body Time
    function Leap_Days_since1970
       (Year : Year_Type)
       return Natural
-      is
+   is
       Leap_Days_until1970 : constant := 477;
    begin
       return Leap_Days (Year) - Leap_Days_until1970;
@@ -108,7 +110,7 @@ package body Time
       (Year  : Year_Type;
        Month : Mon_Type)
       return Natural
-      is
+   is
       February_29 : Natural range 0 .. 1;
    begin
       February_29 := (if Is_Leap_Year (Year) and then Month = 2 then 1 else 0);
@@ -123,7 +125,7 @@ package body Time
        M : Mon_Type;
        Y : Year_Type)
       return Natural
-      is
+   is
    begin
       return
          Natural (Y - 1_970) * DAYS_PER_YEAR                +
@@ -142,7 +144,7 @@ package body Time
        M : Mon_Type;
        Y : Year_Type)
       return Natural
-      is
+   is
    begin
       -- 1970-01-01 = Thursday
       return (Date2Days (D, M, Y) + 3) mod DAYS_PER_WEEK + 1;
@@ -159,7 +161,7 @@ package body Time
        Min  : Min_Type;
        Sec  : Sec_Type)
       return Natural
-      is
+   is
    begin
       return Date2Days (Day, Mon, Year) * DAY2S +
              Natural (Hour) * HOUR2S            +
@@ -173,7 +175,7 @@ package body Time
    procedure Make_Time
       (T  : in     Unsigned_32;
        TM :    out TM_Time)
-      is
+   is
       Seconds        : Natural := Natural (T);
       Minutes        : Natural;
       Hours          : Natural;
