@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 with System;
 with SH_Definitions;
@@ -32,8 +33,6 @@ is
    --========================================================================--
 
    use System;
-
-pragma Style_Checks (Off);
 
    subtype SR_Type is SH_Definitions.SR_Type;
 
@@ -54,6 +53,7 @@ pragma Style_Checks (Off);
    function SR_Read
       return SR_Type
       with Inline => True;
+
    procedure SR_Write
       (SR : in SR_Type)
       with Inline => True;
@@ -74,12 +74,14 @@ pragma Style_Checks (Off);
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       with Inline => True;
+
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       with Inline => True;
 
    procedure Irq_Enable
       with Inline => True;
+
    procedure Irq_Disable
       with Inline => True;
 

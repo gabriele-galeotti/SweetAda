@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 with System;
 with Interfaces;
@@ -36,8 +37,6 @@ is
    use Interfaces;
    use Bits;
 
-pragma Style_Checks (Off);
-
    ----------------------------------------------------------------------------
    -- SH7750, SH7750S, SH7750R Group
    -- User’s Manual: Hardware
@@ -57,8 +56,10 @@ pragma Style_Checks (Off);
 
    procedure NOP
       with Inline => True;
+
    procedure BREAKPOINT
       with Inline => True;
+
    procedure Asm_Call
       (Target_Address : in Address)
       with Inline => True;
@@ -150,6 +151,7 @@ pragma Style_Checks (Off);
    function SR_Read
       return SR_Type
       with Inline => True;
+
    procedure SR_Write
       (SR : in SR_Type)
       with Inline => True;
@@ -602,7 +604,5 @@ pragma Warnings (On, "* bits of ""SCIF_Type"" unused");
            Volatile   => True,
            Import     => True,
            Convention => Ada;
-
-pragma Style_Checks (On);
 
 end SH7750;

@@ -41,6 +41,7 @@ is
 
    procedure Irq_Enable
       renames SH.Irq_Enable;
+
    procedure Irq_Disable
       renames SH.Irq_Disable;
 

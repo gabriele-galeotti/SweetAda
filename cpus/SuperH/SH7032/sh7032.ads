@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 with System;
 with Interfaces;
@@ -35,8 +36,6 @@ is
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- SH7032, SH7034 Hardware Manual
@@ -1087,6 +1086,7 @@ pragma Style_Checks (Off);
    function TCNT_Read
       return Unsigned_8
       with Inline => True;
+
    procedure TCNT_Write
       (Value : in Unsigned_8)
       with Inline => True;
@@ -1133,6 +1133,7 @@ pragma Style_Checks (Off);
    function TCSR_Read
       return TCSR_Type
       with Inline => True;
+
    procedure TCSR_Write
       (Value : in TCSR_Type)
       with Inline => True;
@@ -1167,8 +1168,10 @@ pragma Style_Checks (Off);
    function RSTCSR_Read
       return RSTCSR_Type
       with Inline => True;
+
    procedure RSTCSR_WOVF_Clear
       with Inline => True;
+
    procedure RSTCSR_Write
       (RSTS : in Bits_1;
        RSTE : in Boolean)
@@ -1899,7 +1902,5 @@ pragma Style_Checks (Off);
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
-
-pragma Style_Checks (On);
 
 end SH7032;
