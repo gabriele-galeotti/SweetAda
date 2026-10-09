@@ -151,6 +151,9 @@ is
            Convention    => C,
            External_Name => "errno";
 
+   EINVAL : constant Interfaces.C.int := 1;
+   ERANGE : constant Interfaces.C.int := 2;
+
    ----------------------------------------------------------------------------
    -- STDIO
    ----------------------------------------------------------------------------

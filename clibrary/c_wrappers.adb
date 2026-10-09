@@ -17,7 +17,6 @@
 
 pragma Restrictions (No_Elaboration_Code);
 
-with System;
 with Bits;
 
 package body C_Wrappers
@@ -533,11 +532,11 @@ is
 
    function Ada_Malloc
       (S : Interfaces.C.size_t)
-      return System.Address
+      return Interfaces.C.Extensions.void_ptr
    is
       function Malloc
          (SS : Interfaces.C.size_t)
-         return System.Address
+         return Interfaces.C.Extensions.void_ptr
          with Import        => True,
               Convention    => C,
               External_Name => "__gnat_malloc";
@@ -546,10 +545,10 @@ is
    end Ada_Malloc;
 
    procedure Ada_Free
-      (A : in System.Address)
+      (A : in Interfaces.C.Extensions.void_ptr)
    is
       procedure Free
-         (AA : in System.Address)
+         (AA : in Interfaces.C.Extensions.void_ptr)
          with Import        => True,
               Convention    => C,
               External_Name => "__gnat_free";
@@ -560,12 +559,12 @@ is
    function Ada_Calloc
       (N : Interfaces.C.size_t;
        S : Interfaces.C.size_t)
-      return System.Address
+      return Interfaces.C.Extensions.void_ptr
    is
       function Calloc
          (NN : Interfaces.C.size_t;
           SS : Interfaces.C.size_t)
-         return System.Address
+         return Interfaces.C.Extensions.void_ptr
          with Import        => True,
               Convention    => Ada,
               External_Name => "malloc__calloc";
@@ -574,14 +573,14 @@ is
    end Ada_Calloc;
 
    function Ada_Realloc
-      (A : System.Address;
+      (A : Interfaces.C.Extensions.void_ptr;
        S : Interfaces.C.size_t)
-      return System.Address
+      return Interfaces.C.Extensions.void_ptr
    is
       function Realloc
-         (AA : System.Address;
+         (AA : Interfaces.C.Extensions.void_ptr;
           SS : Interfaces.C.size_t)
-         return System.Address
+         return Interfaces.C.Extensions.void_ptr
          with Import        => True,
               Convention    => Ada,
               External_Name => "malloc__realloc";
