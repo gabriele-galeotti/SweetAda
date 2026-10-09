@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 package PowerPC.PVRs
 is
 
@@ -40,6 +42,6 @@ is
    ----------------------------------------------------------------------------
    function PVR_Name
       (Value : in Unsigned_16)
-      return String;
+      return access constant String;
 
 end PowerPC.PVRs;

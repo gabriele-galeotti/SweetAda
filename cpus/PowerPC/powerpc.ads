@@ -312,6 +312,7 @@ is
    function LR_Read
       return LR_Type
       with Inline => True;
+
    procedure LR_Write
       (Value : in LR_Type)
       with Inline => True;
@@ -323,6 +324,7 @@ is
    function CTR_Read
       return CTR_Type
       with Inline => True;
+
    procedure CTR_Write
       (Value : in CTR_Type)
       with Inline => True;
@@ -334,6 +336,7 @@ is
    function MSR_Read
       return MSR_Type
       with Inline => True;
+
    procedure MSR_Write
       (Value : in MSR_Type)
       with Inline => True;
@@ -367,6 +370,7 @@ is
    function SDR1_Read
       return SDR1_Type
       with Inline => True;
+
    procedure SDR1_Write
       (Value : in SDR1_Type)
       with Inline => True;
@@ -451,6 +455,7 @@ is
    function DEC_Read
       return DEC_Type
       with Inline => True;
+
    procedure DEC_Write
       (Value : in DEC_Type)
       with Inline => True;
