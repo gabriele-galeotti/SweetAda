@@ -40,6 +40,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function Read
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_8
@@ -49,6 +50,7 @@ is
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_8)
       with Inline => True;
+
    procedure Write
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_8)
@@ -58,6 +60,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function Read
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_16
@@ -67,6 +70,7 @@ is
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_16)
       with Inline => True;
+
    procedure Write
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_16)
@@ -76,6 +80,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function Read
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_32
@@ -85,6 +90,7 @@ is
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_32)
       with Inline => True;
+
    procedure Write
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_32)
@@ -94,6 +100,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_64
       with Inline => True;
+
    function Read
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_64
@@ -103,6 +110,7 @@ is
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_64)
       with Inline => True;
+
    procedure Write
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_64)
@@ -116,6 +124,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function ReadN
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_8
@@ -125,6 +134,7 @@ is
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_8)
       with Inline => True;
+
    procedure WriteN
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_8)
@@ -134,6 +144,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function ReadN
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_16
@@ -143,6 +154,7 @@ is
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_16)
       with Inline => True;
+
    procedure WriteN
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_16)
@@ -152,6 +164,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function ReadN
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_32
@@ -161,6 +174,7 @@ is
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_32)
       with Inline => True;
+
    procedure WriteN
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_32)
@@ -170,6 +184,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_64
       with Inline => True;
+
    function ReadN
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_64
@@ -179,6 +194,7 @@ is
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_64)
       with Inline => True;
+
    procedure WriteN
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_64)
@@ -192,6 +208,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function ReadA
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_8
@@ -201,6 +218,7 @@ is
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_8)
       with Inline => True;
+
    procedure WriteA
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_8)
@@ -210,6 +228,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function ReadA
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_16
@@ -219,6 +238,7 @@ is
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_16)
       with Inline => True;
+
    procedure WriteA
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_16)
@@ -228,6 +248,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function ReadA
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_32
@@ -237,6 +258,7 @@ is
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_32)
       with Inline => True;
+
    procedure WriteA
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_32)
@@ -246,6 +268,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_64
       with Inline => True;
+
    function ReadA
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_64
@@ -255,6 +278,7 @@ is
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_64)
       with Inline => True;
+
    procedure WriteA
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_64)
@@ -268,6 +292,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function ReadS (Memory_Address : System.Address)
       return Interfaces.Unsigned_8
       renames ReadS_U8;
@@ -276,6 +301,7 @@ is
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_8)
       with Inline => True;
+
    procedure WriteS
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_8)
@@ -285,6 +311,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function ReadS
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_16
@@ -294,6 +321,7 @@ is
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_16)
       with Inline => True;
+
    procedure WriteS
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_16)
@@ -303,6 +331,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function ReadS
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_32
@@ -312,6 +341,7 @@ is
       (Memory_Address : in System.Address;
        Value : in Interfaces.Unsigned_32)
       with Inline => True;
+
    procedure WriteS
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_32)
@@ -321,6 +351,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_64
       with Inline => True;
+
    function ReadS
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_64
@@ -330,6 +361,7 @@ is
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_64)
       with Inline => True;
+
    procedure WriteS
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_64)
@@ -343,6 +375,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function ReadAS
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_8
@@ -352,6 +385,7 @@ is
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_8)
       with Inline => True;
+
    procedure WriteAS
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_8)
@@ -361,6 +395,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function ReadAS
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_16
@@ -370,6 +405,7 @@ is
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_16)
       with Inline => True;
+
    procedure WriteAS
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_16)
@@ -379,6 +415,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function ReadAS
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_32
@@ -388,6 +425,7 @@ is
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_32)
       with Inline => True;
+
    procedure WriteAS
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_32)
@@ -397,6 +435,7 @@ is
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_64
       with Inline => True;
+
    function ReadAS
       (Memory_Address : System.Address)
       return Interfaces.Unsigned_64
@@ -406,6 +445,7 @@ is
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_64)
       with Inline => True;
+
    procedure WriteAS
       (Memory_Address : in System.Address;
        Value          : in Interfaces.Unsigned_64)
