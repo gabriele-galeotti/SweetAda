@@ -89,6 +89,7 @@ is
       (Value : Selector_Type)
       return Unsigned_16
       with Inline => True;
+
    function To_SEL
       (Value : Unsigned_16)
       return Selector_Type
@@ -345,6 +346,7 @@ is
       (GDT_Descriptor          : in GDT_Descriptor_Type;
        GDT_Code_Selector_Index : in GDT_Index_Type)
       with Inline => True;
+
    procedure GDT_Set
       (GDT_Descriptor          : in out GDT_Descriptor_Type;
        GDT_Address             : in     Address;
@@ -547,11 +549,13 @@ is
    procedure LIDTR
       (IDT_Descriptor : in IDT_Descriptor_Type)
       with Inline => True;
+
    procedure IDT_Set
       (IDT_Descriptor : in out IDT_Descriptor_Type;
        IDT_Address    : in     Address;
        IDT_Length     : in     IDT_Length_Type)
       with Inline => True;
+
    procedure IDT_Set_Handler
       (IDT_Entry         : in out Exception_Descriptor_Type;
        Exception_Handler : in     Address;
@@ -562,7 +566,7 @@ is
    -- Task State Segment
    ----------------------------------------------------------------------------
 
-   TSS_ALIGNMENT : constant := 4;
+   TSS_ALIGNMENT : constant := 8;
    TSS_SIZE      : constant := 16#68#; -- 10#104#
 
    type TSS_Type is record
@@ -654,6 +658,7 @@ is
    procedure LTR
       (Selector : in Selector_Type)
       with Inline => True;
+
    procedure STR
       (Destination : in Address)
       with Inline => True;
@@ -786,16 +791,19 @@ is
       (CPU_Address : Address)
       return Bits_12
       with Inline => True;
+
    -- 4-KiB page
    function Select_Address_Bits_PFA
       (CPU_Address : Address)
       return Bits_20
       with Inline => True;
+
    -- page table entry for 4-MiB page
    function Select_Address_Bits_PTE
       (CPU_Address : Address)
       return Bits_10
       with Inline => True;
+
    -- page directory entry
    function Select_Address_Bits_PDE
       (CPU_Address : Address)
@@ -846,6 +854,7 @@ is
    function CR0_Read
       return CR0_Type
       with Inline => True;
+
    procedure CR0_Write
       (Value : in CR0_Type)
       with Inline => True;
@@ -864,6 +873,7 @@ is
    function CR2_Read
       return CR2_Type
       with Inline => True;
+
    procedure CR2_Write
       (Value : in CR2_Type)
       with Inline => True;
@@ -890,6 +900,7 @@ is
    function CR3_Read
       return CR3_Type
       with Inline => True;
+
    procedure CR3_Write
       (Value : in CR3_Type)
       with Inline => True;
@@ -908,13 +919,17 @@ is
 
    procedure NOP
       with Inline => True;
+
    procedure HLT
       with Inline => True;
+
    procedure BREAKPOINT
       with Inline => True;
+
    function ESP_Read
       return Address
       with Inline => True;
+
    procedure Asm_Call
       (Target_Address : in Address)
       with Inline => True;
@@ -941,12 +956,14 @@ is
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       with Inline => True;
+
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       with Inline => True;
 
    procedure Irq_Enable
       with Inline => True;
+
    procedure Irq_Disable
       with Inline => True;
 
