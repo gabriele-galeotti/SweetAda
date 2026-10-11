@@ -48,11 +48,13 @@ is
       with Export        => True,
            Convention    => C,
            External_Name => "__aeabi_unwind_cpp_pr0";
+
    function EABI_unwind_cpp_pr1
       return Unwind_Reason_Code
       with Export        => True,
            Convention    => C,
            External_Name => "__aeabi_unwind_cpp_pr1";
+
    function EABI_unwind_cpp_pr2
       return Unwind_Reason_Code
       with Export        => True,

@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 package ARMv7M.FPU
 is
@@ -27,8 +28,6 @@ is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-pragma Style_Checks (Off);
 
    -- B3.2.21 Floating Point Context Control Register, FPCCR
 
@@ -167,7 +166,5 @@ pragma Style_Checks (Off);
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
-
-pragma Style_Checks (On);
 
 end ARMv7M.FPU;

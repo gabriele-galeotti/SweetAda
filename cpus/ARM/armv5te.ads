@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 with ARMv4;
 
@@ -29,8 +30,6 @@ is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- ARM Architecture Reference Manual
@@ -53,15 +52,15 @@ pragma Style_Checks (Off);
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       renames ARMv4.Intcontext_Get;
+
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       renames ARMv4.Intcontext_Set;
 
    procedure Irq_Enable
       renames ARMv4.Irq_Enable;
+
    procedure Irq_Disable
       renames ARMv4.Irq_Disable;
-
-pragma Style_Checks (On);
 
 end ARMv5TE;

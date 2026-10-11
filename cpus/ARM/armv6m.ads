@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 with System;
 with Interfaces;
@@ -40,8 +41,6 @@ is
    use Interfaces;
    use Bits;
 
-pragma Style_Checks (Off);
-
    ----------------------------------------------------------------------------
    -- ARMv6-M Architecture Reference Manual
    -- ARM DDI 0419C (ID092410)
@@ -56,6 +55,7 @@ pragma Style_Checks (Off);
    function MSP_Read
       return Unsigned_32
       with Inline => True;
+
    procedure MSP_Write
       (Value : in Unsigned_32)
       with Inline => True;
@@ -63,6 +63,7 @@ pragma Style_Checks (Off);
    function PSP_Read
       return Unsigned_32
       with Inline => True;
+
    procedure PSP_Write
       (Value : in Unsigned_32)
       with Inline => True;
@@ -89,6 +90,7 @@ pragma Style_Checks (Off);
    function APSR_Read
       return APSR_Type
       with Inline => True;
+
    procedure APSR_Write
       (Value : in APSR_Type)
       with Inline => True;
@@ -107,6 +109,7 @@ pragma Style_Checks (Off);
    function IPSR_Read
       return IPSR_Type
       with Inline => True;
+
    procedure IPSR_Write
       (Value : in IPSR_Type)
       with Inline => True;
@@ -131,6 +134,7 @@ pragma Style_Checks (Off);
    function EPSR_Read
       return EPSR_Type
       with Inline => True;
+
    procedure EPSR_Write
       (Value : in EPSR_Type)
       with Inline => True;
@@ -151,6 +155,7 @@ pragma Style_Checks (Off);
    function PRIMASK_Read
       return PRIMASK_Type
       with Inline => True;
+
    procedure PRIMASK_Write
       (Value : in PRIMASK_Type)
       with Inline => True;
@@ -176,6 +181,7 @@ pragma Style_Checks (Off);
    function CONTROL_Read
       return CONTROL_Type
       with Inline => True;
+
    procedure CONTROL_Write
       (Value : in CONTROL_Type)
       with Inline => True;
@@ -611,9 +617,11 @@ pragma Style_Checks (Off);
    procedure NVIC_EnableIRQ
       (IRQ : in Natural)
       with Inline => True;
+
    procedure NVIC_DisableIRQ
       (IRQ : in Natural)
       with Inline => True;
+
    function NVIC_GetEnableIRQ
       (IRQ : Natural)
       return Boolean
@@ -623,6 +631,7 @@ pragma Style_Checks (Off);
       (IRQ : Natural)
       return Unsigned_8
       with Inline => True;
+
    procedure NVIC_SetPriority
       (IRQ      : in Natural;
        Priority : in Unsigned_8)
@@ -632,9 +641,11 @@ pragma Style_Checks (Off);
       (IRQ : Natural)
       return Boolean
       with Inline => True;
+
    procedure NVIC_SetPendingIRQ
       (IRQ : in Natural)
       with Inline => True;
+
    procedure NVIC_ClearPendingIRQ
       (IRQ : in Natural)
       with Inline => True;
@@ -889,6 +900,7 @@ pragma Style_Checks (Off);
 
    procedure NOP
       with Inline => True;
+
    procedure BREAKPOINT
       with Inline => True;
 
@@ -898,12 +910,16 @@ pragma Style_Checks (Off);
 
    procedure WFE
       with Inline => True;
+
    procedure WFI
       with Inline => True;
+
    procedure DMB
       with Inline => True;
+
    procedure DSB
       with Inline => True;
+
    procedure ISB
       with Inline => True;
 
@@ -947,13 +963,14 @@ pragma Style_Checks (Off);
 
    procedure Irq_Enable
       with Inline => True;
+
    procedure Irq_Disable
       with Inline => True;
+
    procedure Fault_Irq_Enable
       with Inline => True;
+
    procedure Fault_Irq_Disable
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end ARMv6M;

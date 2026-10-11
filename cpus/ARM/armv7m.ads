@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 with System;
 with Interfaces;
@@ -41,8 +42,6 @@ is
    use Interfaces;
    use Bits;
 
-pragma Style_Checks (Off);
-
    ----------------------------------------------------------------------------
    -- Arm®v7-M Architecture Reference Manual
    -- ARM DDI 0403E.e (ID021621)
@@ -57,6 +56,7 @@ pragma Style_Checks (Off);
    function MSP_Read
       return Unsigned_32
       renames ARMv6M.MSP_Read;
+
    procedure MSP_Write
       (Value : in Unsigned_32)
       renames ARMv6M.MSP_Write;
@@ -64,6 +64,7 @@ pragma Style_Checks (Off);
    function PSP_Read
       return Unsigned_32
       renames ARMv6M.PSP_Read;
+
    procedure PSP_Write
       (Value : in Unsigned_32)
       renames ARMv6M.PSP_Write;
@@ -96,6 +97,7 @@ pragma Style_Checks (Off);
    function APSR_Read
       return APSR_Type
       with Inline => True;
+
    procedure APSR_Write
       (Value : in APSR_Type)
       with Inline => True;
@@ -114,6 +116,7 @@ pragma Style_Checks (Off);
    function IPSR_Read
       return IPSR_Type
       with Inline => True;
+
    procedure IPSR_Write
       (Value : in IPSR_Type)
       with Inline => True;
@@ -142,6 +145,7 @@ pragma Style_Checks (Off);
    function EPSR_Read
       return EPSR_Type
       with Inline => True;
+
    procedure EPSR_Write
       (Value : in EPSR_Type)
       with Inline => True;
@@ -149,9 +153,11 @@ pragma Style_Checks (Off);
    -- B1.4.3 The special-purpose mask registers
 
    subtype PRIMASK_Type is ARMv6M.PRIMASK_Type;
+
    function PRIMASK_Read
       return PRIMASK_Type
       renames ARMv6M.PRIMASK_Read;
+
    procedure PRIMASK_Write
       (Value : in PRIMASK_Type)
       renames ARMv6M.PRIMASK_Write;
@@ -170,6 +176,7 @@ pragma Style_Checks (Off);
    function BASEPRI_Read
       return BASEPRI_Type
       with Inline => True;
+
    procedure BASEPRI_Write
       (Value : in BASEPRI_Type)
       with Inline => True;
@@ -188,6 +195,7 @@ pragma Style_Checks (Off);
    function FAULTMASK_Read
       return FAULTMASK_Type
       with Inline => True;
+
    procedure FAULTMASK_Write
       (Value : in FAULTMASK_Type)
       with Inline => True;
@@ -215,6 +223,7 @@ pragma Style_Checks (Off);
    function CONTROL_Read
       return CONTROL_Type
       with Inline => True;
+
    procedure CONTROL_Write
       (Value : in CONTROL_Type)
       with Inline => True;
@@ -801,9 +810,11 @@ pragma Style_Checks (Off);
    procedure NVIC_EnableIRQ
       (IRQ : in Natural)
       with Inline => True;
+
    procedure NVIC_DisableIRQ
       (IRQ : in Natural)
       with Inline => True;
+
    function NVIC_GetEnableIRQ
       (IRQ : Natural)
       return Boolean
@@ -813,6 +824,7 @@ pragma Style_Checks (Off);
       (IRQ : Natural)
       return Unsigned_8
       with Inline => True;
+
    procedure NVIC_SetPriority
       (IRQ      : in Natural;
        Priority : in Unsigned_8)
@@ -822,9 +834,11 @@ pragma Style_Checks (Off);
       (IRQ : Natural)
       return Boolean
       with Inline => True;
+
    procedure NVIC_SetPendingIRQ
       (IRQ : in Natural)
       with Inline => True;
+
    procedure NVIC_ClearPendingIRQ
       (IRQ : in Natural)
       with Inline => True;
@@ -844,6 +858,7 @@ pragma Style_Checks (Off);
 
    procedure NOP
       renames ARMv6M.NOP;
+
    procedure BREAKPOINT
       renames ARMv6M.BREAKPOINT;
 
@@ -853,12 +868,16 @@ pragma Style_Checks (Off);
 
    procedure WFE
       renames ARMv6M.WFE;
+
    procedure WFI
       renames ARMv6M.WFI;
+
    procedure DMB
       renames ARMv6M.DMB;
+
    procedure DSB
       renames ARMv6M.DSB;
+
    procedure ISB
       renames ARMv6M.ISB;
 
@@ -902,13 +921,14 @@ pragma Style_Checks (Off);
 
    procedure Irq_Enable
       renames ARMv6M.Irq_Enable;
+
    procedure Irq_Disable
       renames ARMv6M.Irq_Disable;
+
    procedure Fault_Irq_Enable
       renames ARMv6M.Fault_Irq_Enable;
+
    procedure Fault_Irq_Disable
       renames ARMv6M.Fault_Irq_Disable;
-
-pragma Style_Checks (On);
 
 end ARMv7M;

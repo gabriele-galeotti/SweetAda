@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with ARMv6M;
 
 package CPU
@@ -41,6 +43,7 @@ is
 
    procedure Irq_Enable
       renames ARMv6M.Irq_Enable;
+
    procedure Irq_Disable
       renames ARMv6M.Irq_Disable;
 

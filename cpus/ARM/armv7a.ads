@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 package ARMv7A
 is
@@ -27,8 +28,6 @@ is
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- ARM® Architecture Reference Manual
@@ -42,6 +41,7 @@ pragma Style_Checks (Off);
 
    procedure NOP
       with Inline => True;
+
    procedure BREAKPOINT
       with Inline => True;
 
@@ -81,13 +81,14 @@ pragma Style_Checks (Off);
 
    procedure Irq_Enable
       with Inline => True;
+
    procedure Irq_Disable
       with Inline => True;
+
    procedure Fiq_Enable
       with Inline => True;
+
    procedure Fiq_Disable
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end ARMv7A;
