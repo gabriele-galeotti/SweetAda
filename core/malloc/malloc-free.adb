@@ -28,6 +28,7 @@ is
       with Address    => Memory_Address - MEMORYBLOCKTYPE_SIZE, -- uncover the data structure
            Import     => True,
            Convention => Ada;
+   M            : Memory_Block_Ptr;
 begin
    if not Init_Flag then
       raise Program_Error;
@@ -64,6 +65,7 @@ begin
       -- this is the last block
       Memory_Block.Next_Ptr := null;
    end if;
+   M := Memory_Block'Unchecked_Access;
    -- try to merge with the preceding block
    if P /= Heap_Descriptor'Access then
       declare
@@ -76,11 +78,11 @@ begin
             P.all.Size     := @ + Memory_Block.Size;
             P.all.Next_Ptr := Memory_Block.Next_Ptr;
          else
-            P.all.Next_Ptr := Memory_Block'Unchecked_Access;
+            P.all.Next_Ptr := M;
          end if;
       end;
    else
-      Heap_Descriptor.Next_Ptr := Memory_Block'Unchecked_Access;
+      Heap_Descriptor.Next_Ptr := M;
    end if;
    Mutex.Release (Mtx);
    if Debug_Flag then

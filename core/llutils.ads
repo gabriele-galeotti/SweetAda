@@ -38,12 +38,11 @@ is
 
    subtype Decimal_Digit_Type is Natural range 0 .. 9;
 
-   type BCD_Digit is new Bits.Bits_4 range 0 .. 9
-      with Size => 4;
+   subtype BCD_Digit_Type is Bits.Bits_4 range 0 .. 9;
 
    type BCD_2 is record
-      L : BCD_Digit;
-      H : BCD_Digit;
+      L : BCD_Digit_Type;
+      H : BCD_Digit_Type;
    end record
       with Bit_Order   => System.Low_Order_First,
            Object_Size => 8;

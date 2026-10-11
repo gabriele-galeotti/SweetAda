@@ -193,8 +193,8 @@ is
    is
    begin
       return (
-         L => BCD_Digit (Value mod 10),
-         H => BCD_Digit (Value / 10)
+         L => BCD_Digit_Type (Value mod 10),
+         H => BCD_Digit_Type (Value / 10)
          );
    end To_BCD2;
 

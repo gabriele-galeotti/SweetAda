@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with System.Storage_Elements;
 with Interfaces;
@@ -34,8 +36,6 @@ is
    --========================================================================--
 
    use type System.Bit_Order;
-
-pragma Style_Checks (Off);
 
    package SSE renames System.Storage_Elements;
 
@@ -1229,6 +1229,7 @@ pragma Style_Checks (Off);
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function Byte_Swap
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8
@@ -1238,6 +1239,7 @@ pragma Style_Checks (Off);
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function Byte_Swap
       (Value : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
@@ -1247,6 +1249,7 @@ pragma Style_Checks (Off);
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    function Byte_Swap
       (Value : Interfaces.Unsigned_32)
       return Interfaces.Unsigned_32
@@ -1256,6 +1259,7 @@ pragma Style_Checks (Off);
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_64
       with Inline => True;
+
    function Byte_Swap
       (Value : Interfaces.Unsigned_64)
       return Interfaces.Unsigned_64
@@ -1380,7 +1384,5 @@ pragma Style_Checks (Off);
       (Value : Interfaces.Unsigned_8)
       return Interfaces.Unsigned_8
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end Bits;

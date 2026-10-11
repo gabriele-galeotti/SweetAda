@@ -23,6 +23,7 @@ is
    use System;
    use System.Storage_Elements;
    use Interfaces.C;
+   use Interfaces.C.Extensions;
    RSize : size_t;
    P     : Memory_Block_Ptr;
    Q     : Memory_Block_Ptr;
@@ -88,5 +89,5 @@ begin
    end if;
    Q.all.Next_Ptr := null;
    Mutex.Release (Mtx);
-   return Q.all'Address + MEMORYBLOCKTYPE_SIZE;
+   return void_ptr (Q.all'Address + MEMORYBLOCKTYPE_SIZE);
 end Malloc;
