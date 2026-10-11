@@ -89,7 +89,7 @@ fi
 # Parse padding size (eventually in units of kB/MB).
 #
 REQUESTEDSIZE=$2
-SUFFIX=$(printf "%s\n" "$2" | sed -e "s/.*\(.\)\$/\1/")
+SUFFIX=$(printf "%s\n" "$2" | sed -e "s|.*\(.\)\$|\1|")
 case ${SUFFIX} in
   [0-9])
     MULTIPLIER=1
@@ -106,7 +106,7 @@ case ${SUFFIX} in
     ;;
 esac
 if [ "x${MULTIPLIER}" != "x1" ] ; then
-  REQUESTEDSIZE=$(printf "%s\n" "$2" | sed -e "s/\(.*\).\$/\1/")
+  REQUESTEDSIZE=$(printf "%s\n" "$2" | sed -e "s|\(.*\).\$|\1|")
   REQUESTEDSIZE=$((REQUESTEDSIZE*MULTIPLIER))
 fi
 

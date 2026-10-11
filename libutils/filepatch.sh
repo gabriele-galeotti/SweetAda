@@ -86,7 +86,7 @@ if [ "x$3" = "x" ] ; then
   exit 1
 fi
 
-OFFSET=$(echo "ibase=16;$2" | bc)
+OFFSET=$(printf "%s" "ibase=16;$2" | bc)
 
 BYTES_STRING=""
 for b in $3 ; do
