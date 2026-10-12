@@ -19,7 +19,10 @@
 # VERBOSE
 # PLATFORM
 # SUBPLATFORM
+# CPU
+# CPU_MODEL
 # RTS
+# TOOLCHAIN_NAME
 # NOBUILD
 # PROBEVARIABLE
 # PROBEVARIABLES
@@ -809,17 +812,21 @@ export                                \
        POSTBUILD_COMMAND              \
        OS_WINDOWS_SYMLINK
 
-export USE_ELFTOOL
-ifeq ($(USE_ELFTOOL),Y)
-export ELFTOOL
-endif
-
 ifneq ($(PYTHON),)
 export PYTHON
 endif
 
 ifneq ($(TCLSH),)
 export TCLSH
+endif
+
+ifeq ($(BUILD_MODE),GNATMAKE)
+export USE_EXE_WRAPPER
+endif
+
+export USE_ELFTOOL
+ifeq ($(USE_ELFTOOL),Y)
+export ELFTOOL
 endif
 
 ################################################################################
@@ -1104,14 +1111,7 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
                     > gnatbind_elab.lst            \
         ,[GNATBIND],b__main.adb)
 ifeq ($(OSTYPE),cmd)
-	$(call create-emptyfile,gnatbind_alis.lst.tmp)
-	SETLOCAL ENABLEDELAYEDEXPANSION                     && \
-        FOR /F "delims=?" %%A IN (gnatbind_alis.lst) DO        \
-          (                                                    \
-           SET "A1=%%A" && SET "A2=!A1:$(SWEETADA_PATH)/=!" && \
-           (ECHO !A2!>>gnatbind_alis.lst.tmp)                  \
-          )
-	$(MV) .\gnatbind_alis.lst.tmp .\gnatbind_alis.lst
+	$(PROCESSALIS) -p "$(SWEETADA_PATH)" gnatbind_alis.lst
 	$(MV) b__main.ad* $(OBJECT_DIRECTORY)\ $(NULL)
 else
 	$(SED_INPLACE) -e "s|$(SWEETADA_PATH)/||g" gnatbind_alis.lst
@@ -1750,6 +1750,7 @@ endif
 
 .PHONY: make-check
 make-check:
+	@$(call echo-print,"MAKE VERSION: $(MAKE_VERSION)")
 ifeq ($(OSTYPE),cmd)
 	IF $(call substring,$(subst .,,$(MAKE_VERSION)),1,2) LSS 44             \
           ECHO *** Warning: SweetAda requires GNU Make version 4.4 or later.>&2

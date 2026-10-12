@@ -63,6 +63,15 @@ else
 GCC_SWITCHES_LIBRARY :=
 endif
 
+ifeq ($(USE_EXE_WRAPPER),Y)
+GNATMAKE_WRAPPER := "--GCC=$(EXE_WRAPPER)"                                               \
+                    "-DEXE_WRAPPER_EXECUTABLE=$(firstword $(ADAC))"                      \
+                    "-DEXE_WRAPPER_VERBOSE=$(VERBOSE)"                                   \
+                    "-DEXE_WRAPPER_BRIEFTEXT=$(shell $(call brief-text,[EXE-WRAP],(+)))"
+else
+GNATMAKE_WRAPPER :=
+endif
+
 $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a: $(OBJECTS)
 	$(call brief-command, \
         $(AR) cr $@ $(OBJECTS) \
@@ -74,6 +83,7 @@ $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a: $(OBJECTS)
 define compile-gnatmake =
 $(call brief-command, \
 $(GNATMAKE)                                                   \
+            $(GNATMAKE_WRAPPER)                               \
             -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
             -D $(OBJ_DIRECTORY)                               \
             $(GCC_SWITCHES_LIBRARY)                           \
