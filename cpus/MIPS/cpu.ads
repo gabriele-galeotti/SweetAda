@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System;
 with MIPS;
 
@@ -50,12 +52,14 @@ is
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       renames MIPS.Intcontext_Get;
+
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       renames MIPS.Intcontext_Set;
 
    procedure Irq_Enable
       renames MIPS.Irq_Enable;
+
    procedure Irq_Disable
       renames MIPS.Irq_Disable;
 

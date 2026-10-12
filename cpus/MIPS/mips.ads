@@ -15,6 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Definitions;
@@ -34,8 +37,6 @@ is
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- MIPS32® 24K® Processor Core Family
@@ -115,6 +116,7 @@ pragma Style_Checks (Off);
    function CP0_Count_Read
       return Unsigned_32
       with Inline => True;
+
    procedure CP0_Count_Write
       (Value : in Unsigned_32)
       with Inline => True;
@@ -124,6 +126,7 @@ pragma Style_Checks (Off);
    function CP0_Compare_Read
       return Unsigned_32
       with Inline => True;
+
    procedure CP0_Compare_Write
       (Value : in Unsigned_32)
       with Inline => True;
@@ -196,6 +199,7 @@ pragma Style_Checks (Off);
    function CP0_SR_Read
       return SR_Type
       with Inline => True;
+
    procedure CP0_SR_Write
       (Value : in SR_Type)
       with Inline => True;
@@ -250,6 +254,7 @@ pragma Style_Checks (Off);
    function CP0_Config_Read
       return Unsigned_32
       with Inline => True;
+
    procedure CP0_Config_Write
       (Value : in Unsigned_32)
       with Inline => True;
@@ -260,10 +265,13 @@ pragma Style_Checks (Off);
 
    procedure NOP
       with Inline => True;
+
    procedure BREAK
       with Inline => True;
+
    procedure SYNC
       with Inline => True;
+
    procedure Asm_Call
       (Target_Address : in Address)
       with Inline => True;
@@ -284,15 +292,15 @@ pragma Style_Checks (Off);
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       with Inline => True;
+
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       with Inline => True;
 
    procedure Irq_Enable
       with Inline => True;
+
    procedure Irq_Disable
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end MIPS;

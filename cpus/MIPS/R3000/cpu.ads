@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with MIPS;
 with R3000;
 
@@ -45,12 +47,14 @@ is
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       renames R3000.Intcontext_Get;
+
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       renames R3000.Intcontext_Set;
 
    procedure Irq_Enable
       renames R3000.Irq_Enable;
+
    procedure Irq_Disable
       renames R3000.Irq_Disable;
 

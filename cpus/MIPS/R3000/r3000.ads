@@ -15,6 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
@@ -33,8 +36,6 @@ is
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- IDT R30xx Family
@@ -137,6 +138,7 @@ pragma Style_Checks (Off);
    function CP0_SR_Read
       return SR_Type
       with Inline => True;
+
    procedure CP0_SR_Write
       (Value : in SR_Type)
       with Inline => True;
@@ -158,15 +160,15 @@ pragma Style_Checks (Off);
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       with Inline => True;
+
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       with Inline => True;
 
    procedure Irq_Enable
       with Inline => True;
+
    procedure Irq_Disable
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end R3000;
