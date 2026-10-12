@@ -16,7 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 package body BlockDevices
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -27,12 +27,12 @@ package body BlockDevices
    --========================================================================--
 
    --------------------------------------------------------------------------
-   -- To_CHS (Values -> Layout)
+   -- To_CHS
    --------------------------------------------------------------------------
    function To_CHS
       (CHS : CHS_Type)
       return CHS_Layout_Type
-      is
+   is
    begin
       return
          (H  => CHS.H,
@@ -42,12 +42,12 @@ package body BlockDevices
    end To_CHS;
 
    --------------------------------------------------------------------------
-   -- To_CHS (Layout -> Values)
+   -- To_CHS
    --------------------------------------------------------------------------
    function To_CHS
       (CHS : CHS_Layout_Type)
       return CHS_Type
-      is
+   is
    begin
       return
          (C => CHS.CH * 256 + CHS.CL,
@@ -58,13 +58,11 @@ package body BlockDevices
    --------------------------------------------------------------------------
    -- To_LBA
    --------------------------------------------------------------------------
-   -- LBA = (C * HPC + H) * SPT + (S - 1)
-   --------------------------------------------------------------------------
    function To_LBA
       (CHS          : CHS_Type;
        CHS_Geometry : CHS_Type)
       return LBA_Type
-      is
+   is
    begin
       return LBA_Type ((CHS.C * CHS_Geometry.H + CHS.H) * CHS_Geometry.S + (CHS.S - 1));
    end To_LBA;
@@ -72,17 +70,11 @@ package body BlockDevices
    --------------------------------------------------------------------------
    -- To_CHS
    --------------------------------------------------------------------------
-   -- Mapping from an LBA (0-based) to a CHS triplet (with underlying disk
-   -- geometry (CYL, HPC, SPT) specified in CHS_Geometry:
-   -- C = LBA / (HPC * SPT)
-   -- H = (LBA / SPT) mod HPC
-   -- S = (LBA mod SPT) + 1
-   --------------------------------------------------------------------------
    function To_CHS
       (Sector_Number : LBA_Type;
        CHS_Geometry  : CHS_Type)
       return CHS_Type
-      is
+   is
    begin
       return
          (C => Natural (Sector_Number) / (CHS_Geometry.H * CHS_Geometry.S),

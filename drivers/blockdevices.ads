@@ -21,7 +21,7 @@ with Bits;
 
 package BlockDevices
    with Pure => True
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -70,10 +70,20 @@ package BlockDevices
       CL at 2 range 0 .. 7;
    end record;
 
+   ----------------------------------------------------------------------------
+   -- To_CHS
+   ----------------------------------------------------------------------------
+   -- Uncompress a CHS geometry specification to a standard CHS layout.
+   ----------------------------------------------------------------------------
    function To_CHS
       (CHS : CHS_Type)
       return CHS_Layout_Type;
 
+   ----------------------------------------------------------------------------
+   -- To_CHS
+   ----------------------------------------------------------------------------
+   -- Convert a standard CHS layout to an independent CHS specification.
+   ----------------------------------------------------------------------------
    function To_CHS
       (CHS : CHS_Layout_Type)
       return CHS_Type;
@@ -84,11 +94,25 @@ package BlockDevices
 
    type LBA_Type is mod 2**28;
 
+   ----------------------------------------------------------------------------
+   -- To_LBA
+   ----------------------------------------------------------------------------
+   -- LBA = (C * HPC + H) * SPT + (S - 1)
+   --------------------------------------------------------------------------
    function To_LBA
       (CHS          : CHS_Type;
        CHS_Geometry : CHS_Type)
       return LBA_Type;
 
+   ----------------------------------------------------------------------------
+   -- To_CHS
+   ----------------------------------------------------------------------------
+   -- Mapping from an LBA (0-based) to a CHS triplet (with underlying disk
+   -- geometry (CYL, HPC, SPT) specified in CHS_Geometry:
+   -- C = LBA / (HPC * SPT)
+   -- H = (LBA / SPT) mod HPC
+   -- S = (LBA mod SPT) + 1
+   --------------------------------------------------------------------------
    function To_CHS
       (Sector_Number : LBA_Type;
        CHS_Geometry  : CHS_Type)
