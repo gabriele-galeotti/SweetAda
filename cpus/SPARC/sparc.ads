@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 with System;
 with Bits;
@@ -34,8 +35,6 @@ is
    use System;
    use Bits;
 
-pragma Style_Checks (Off);
-
    ----------------------------------------------------------------------------
    -- Generic definitions
    ----------------------------------------------------------------------------
@@ -49,6 +48,7 @@ pragma Style_Checks (Off);
 
    procedure NOP
       with Inline => True;
+
    procedure Asm_Call
       (Target_Address : in Address)
       with Inline => True;
@@ -95,6 +95,7 @@ pragma Style_Checks (Off);
    function PSR_Read
       return PSR_Type
       with Inline => True;
+
    procedure PSR_Write
       (PSR : in PSR_Type)
       with Inline => True;
@@ -131,6 +132,7 @@ pragma Style_Checks (Off);
    procedure TBR_Set
       (TBR_Address : in Address)
       with Inline => True;
+
    procedure Traps_Enable
       (Enable : in Boolean)
       with Inline => True;
@@ -144,15 +146,15 @@ pragma Style_Checks (Off);
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       with Inline => True;
+
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       with Inline => True;
 
    procedure Irq_Enable
       with Inline => True;
+
    procedure Irq_Disable
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end SPARC;
