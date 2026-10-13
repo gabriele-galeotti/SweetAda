@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System;
 with x86;
 
@@ -51,12 +53,14 @@ is
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       renames x86.Intcontext_Get;
+
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       renames x86.Intcontext_Set;
 
    procedure Irq_Enable
       renames x86.Irq_Enable;
+
    procedure Irq_Disable
       renames x86.Irq_Disable;
 
