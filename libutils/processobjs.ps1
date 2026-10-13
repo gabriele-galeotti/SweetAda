@@ -158,7 +158,7 @@ while ($argsindex -lt $args.Length)
     {
       # path prefix
       $argsindex++
-      $path_prefix = "$($args[$argsindex])/"
+      $path_prefix = $($args[$argsindex])
     }
     else
     {
@@ -198,6 +198,10 @@ catch
 }
 
 [string]$stdout = ""
+if ($path_prefix -ne "")
+{
+  $path_prefix += "/"
+}
 
 $textlines | ForEach-Object `
 {

@@ -180,7 +180,7 @@ $textlines | ForEach-Object `
   $textline = $_
   if ($path_prefix -ne "")
   {
-    $textline = $textline.Replace("$($path_prefix)/", "")
+    $textline = $textline.Replace("\", "/").Replace("$($path_prefix)/", "")
   }
   $stdout = "$($stdout)$($textline)$($nl)"
 }

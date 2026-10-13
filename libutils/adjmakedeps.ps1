@@ -136,14 +136,14 @@ for ($idx = 0 ; $idx -lt $textlines.Length ; $idx++)
       }
       elseif ($t_splitted[0].Contains($target_obj_path))
       {
-        $t_splitted[0] = $t_splitted[0].Replace($target_obj_path,"`$(OBJ_DIRECTORY)")
+        $t_splitted[0] = $t_splitted[0].Replace($target_obj_path, "`$(OBJ_DIRECTORY)")
         $textlines[$idx] = "$($t_splitted[0]):$($t_splitted[1])"
       }
     }
   }
   if ($kernel_parent_path -ne "")
   {
-    $textlines[$idx] = $textlines[$idx].Replace($kernel_parent_path,"`$(KERNEL_PARENT_PATH)")
+    $textlines[$idx] = $textlines[$idx].Replace($kernel_parent_path, "`$(KERNEL_PARENT_PATH)")
   }
 }
 
