@@ -1,14 +1,15 @@
 
+pragma Style_Checks (Off);
+
 with System.Storage_Elements;
 
 package SweetAda
    with Pure => True
-   is
+is
 
    package SSE renames System.Storage_Elements;
 
    -- VGA 640 * 480 4 bpp (LSB) per pixel
-pragma Style_Checks (Off);
    SweetAda_Picture : constant SSE.Storage_Array (0 .. 16#4_AFFF#) :=
       [
        16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#,
@@ -19212,6 +19213,5 @@ pragma Style_Checks (Off);
        16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#,
        16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#, 16#00#
       ];
-pragma Style_Checks (On);
 
 end SweetAda;
