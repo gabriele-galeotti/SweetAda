@@ -83,6 +83,7 @@ is
 
    -- canonical bit sizes of memory words
    type Bitsize is (BITNONE, BIT8, BIT16, BIT32, BIT64);
+   for Bitsize use (0, 8, 16, 32, 64);
 
    -- Bytesize is a modular type representing size in bytes of large objects
    subtype Bytesize is Interfaces.C.size_t;
