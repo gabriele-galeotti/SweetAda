@@ -81,7 +81,7 @@ is
    end Is_Leap_Year;
 
    ----------------------------------------------------------------------------
-   -- Return the number of leap days.
+   -- Return the number of leap days, including current year.
    ----------------------------------------------------------------------------
    function Leap_Days
       (Year : Year_Type)
@@ -92,19 +92,18 @@ is
    end Leap_Days;
 
    ----------------------------------------------------------------------------
-   -- Return the number of leap days since 1970-01-01.
+   -- Return the number of leap days since 1970-01-01, including current year.
    ----------------------------------------------------------------------------
    function Leap_Days_since1970
       (Year : Year_Type)
       return Natural
    is
-      Leap_Days_until1970 : constant := 477;
    begin
-      return Leap_Days (Year) - Leap_Days_until1970;
+      return Leap_Days (Year) - Leap_Days (1969);
    end Leap_Days_since1970;
 
    ----------------------------------------------------------------------------
-   -- Days_Of_YearMonth
+   -- Return the number of days of Year/Month.
    ----------------------------------------------------------------------------
    function Days_Of_YearMonth
       (Year  : Year_Type;
@@ -118,7 +117,7 @@ is
    end Days_Of_YearMonth;
 
    ----------------------------------------------------------------------------
-   -- Date2Days
+   -- Return the number of days since 1970-01-01.
    ----------------------------------------------------------------------------
    function Date2Days
       (D : MDay_Type;
@@ -128,16 +127,15 @@ is
    is
    begin
       return
-         Natural (Y - 1_970) * DAYS_PER_YEAR                +
-         Leap_Days_since1970 (Y - 1)                        +
-         Days_In_Year (Month_Idx_Type (M))                  +
-         Natural (D) - 1                                    +
-         (if Is_Leap_Year (Y) and then M > 2 then 1 else 0)
-         ;
+         Natural (Y - 1970) * DAYS_PER_YEAR                 + -- days starting 1970-01-01 up to last year
+         Leap_Days_since1970 (Y - 1)                        + -- leap days starting 1970-01-01 up to last year
+         Days_In_Year (Month_Idx_Type (M))                  + -- days of this year up to last month
+         Natural (D) - 1                                    + -- days of this month
+         (if Is_Leap_Year (Y) and then M > 2 then 1 else 0);  -- leap day
    end Date2Days;
 
    ----------------------------------------------------------------------------
-   -- NDay_Of_Week
+   -- Return the day of week.
    ----------------------------------------------------------------------------
    function NDay_Of_Week
       (D : MDay_Type;
@@ -146,12 +144,13 @@ is
       return Natural
    is
    begin
-      -- 1970-01-01 = Thursday
+      -- 1970-01-01 = Thursday, so it is a +3 offset from a 0-based-Monday,
+      -- then add a +1 offset accounting for the array index
       return (Date2Days (D, M, Y) + 3) mod DAYS_PER_WEEK + 1;
    end NDay_Of_Week;
 
    ----------------------------------------------------------------------------
-   -- Make_Time
+   -- Return the number of seconds since 1970-01-01 00:00:00.
    ----------------------------------------------------------------------------
    function Make_Time
       (Year : Year_Type;
@@ -170,7 +169,7 @@ is
    end Make_Time;
 
    ----------------------------------------------------------------------------
-   -- Make_Time
+   -- Return the date-time of seconds since 1970-01-01.
    ----------------------------------------------------------------------------
    procedure Make_Time
       (T  : in     Unsigned_32;
@@ -186,15 +185,16 @@ is
    begin
       Days := Seconds / DAY2S;
       Seconds := @ - Days * DAY2S;
+      -- +4 since 1970-01-01 is Thursday relative to 0-based-Sunday
       TM.WDay := TM_WDay_Type ((Days + 4) mod DAYS_PER_WEEK);
       Year_minus1970 := Year_Type (Days / DAYS_PER_YEAR);
-      Year := Year_minus1970 + 1_970;
+      Year := Year_minus1970 + 1970;
       Days := @ - (Natural (Year_minus1970) * DAYS_PER_YEAR + Leap_Days_since1970 (Year - 1));
       if Days < 0 then
          Year := @ - 1;
          Days := @ + DAYS_PER_YEAR + (if Is_Leap_Year (Year) then 1 else 0);
       end if;
-      TM.Year := TM_Year_Type (Year - 1_900);
+      TM.Year := TM_Year_Type (Year - 1900);
       TM.YDay := TM_YDay_Type (Days);
       Months := 0;
       for Month in Mon_Type'Range loop
