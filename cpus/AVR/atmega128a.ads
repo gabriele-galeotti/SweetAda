@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 with System;
 with Interfaces;
@@ -35,8 +36,6 @@ is
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- ATmega128A
@@ -580,7 +579,5 @@ pragma Style_Checks (Off);
            Volatile         => True,
            Import           => True,
            Convention       => Ada;
-
-pragma Style_Checks (On);
 
 end ATmega128A;
