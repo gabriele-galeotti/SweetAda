@@ -112,11 +112,11 @@ is
    is
    begin
       case Size is
+         when Bits.BITNONE => null;                          -- undefined swap
          when Bits.BIT8    => null;                          -- 8-bit no-swap
          when Bits.BIT16   => Byte_Swap_16 (Object_Address); -- 16-bit swap
          when Bits.BIT32   => Byte_Swap_32 (Object_Address); -- 32-bit swap
          when Bits.BIT64   => Byte_Swap_64 (Object_Address); -- 64-bit swap
-         when Bits.BITNONE => null;                          -- undefined swap
       end case;
    end Byte_Swap;
 
@@ -127,15 +127,17 @@ is
       (Object_Address : in out System.Address;
        Size           : in     Bits.Bitsize)
    is
+      Increment : SSE.Storage_Offset;
    begin
       Byte_Swap (Object_Address, Size);
       case Size is
-         when Bits.BIT8    => Object_Address := @ + SSE.Storage_Offset'(1); -- 8-bit no-swap
-         when Bits.BIT16   => Object_Address := @ + SSE.Storage_Offset'(2); -- 16-bit swap
-         when Bits.BIT32   => Object_Address := @ + SSE.Storage_Offset'(4); -- 32-bit swap
-         when Bits.BIT64   => Object_Address := @ + SSE.Storage_Offset'(8); -- 64-bit swap
-         when Bits.BITNONE => null;                                         -- undefined swap
+         when Bits.BITNONE => Increment := 0; -- undefined swap
+         when Bits.BIT8    => Increment := 1; -- 8-bit no-swap
+         when Bits.BIT16   => Increment := 2; -- 16-bit swap
+         when Bits.BIT32   => Increment := 4; -- 32-bit swap
+         when Bits.BIT64   => Increment := 8; -- 64-bit swap
       end case;
+      Object_Address := @ + Increment;
    end Byte_Swap_Next;
 
    ----------------------------------------------------------------------------

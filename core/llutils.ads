@@ -36,6 +36,8 @@ is
 
    package SSE renames System.Storage_Elements;
 
+   subtype Radix_Type is Natural range 2 .. 36;
+
    subtype Decimal_Digit_Type is Natural range 0 .. 9;
 
    subtype BCD_Digit_Type is Bits.Bits_4 range 0 .. 9;
