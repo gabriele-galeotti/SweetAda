@@ -39,22 +39,27 @@ is
       (Port : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function PortIn
       (Port : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function PortIn
       (Port : Interfaces.Unsigned_16)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    procedure PortOut
       (Port  : in Interfaces.Unsigned_16;
        Value : in Interfaces.Unsigned_8)
       with Inline => True;
+
    procedure PortOut
       (Port  : in Interfaces.Unsigned_16;
        Value : in Interfaces.Unsigned_16)
       with Inline => True;
+
    procedure PortOut
       (Port  : in Interfaces.Unsigned_16;
        Value : in Interfaces.Unsigned_32)
@@ -68,22 +73,27 @@ is
       (Port_Address : System.Address)
       return Interfaces.Unsigned_8
       with Inline => True;
+
    function Read
       (Port_Address : System.Address)
       return Interfaces.Unsigned_16
       with Inline => True;
+
    function Read
       (Port_Address : System.Address)
       return Interfaces.Unsigned_32
       with Inline => True;
+
    procedure Write
       (Port_Address : in System.Address;
        Value        : in Interfaces.Unsigned_8)
       with Inline => True;
+
    procedure Write
       (Port_Address : in System.Address;
        Value        : in Interfaces.Unsigned_16)
       with Inline => True;
+
    procedure Write
       (Port_Address : in System.Address;
        Value        : in Interfaces.Unsigned_32)

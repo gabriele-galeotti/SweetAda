@@ -208,7 +208,7 @@ is
    ----------------------------------------------------------------------------
 
    SEGMENT_DESCRIPTOR_ALIGNMENT : constant := 16;
-   SEGMENT_DESCRIPTOR_SIZE      : constant := 8;
+   SEGMENT_DESCRIPTOR_SIZE      : constant := 16;
 
    type Segment_Descriptor_Type is record
       Limit_LO : Unsigned_16;         -- Segment Limit 0 .. 15

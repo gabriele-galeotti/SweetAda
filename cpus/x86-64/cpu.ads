@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System;
 with x86_64;
 
@@ -35,6 +37,7 @@ is
 
    procedure NOP
       renames x86_64.NOP;
+
    procedure Asm_Call
       (Target_Address : in System.Address)
       renames x86_64.Asm_Call;
@@ -49,12 +52,14 @@ is
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       renames x86_64.Intcontext_Get;
+
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       renames x86_64.Intcontext_Set;
 
    procedure Irq_Enable
       renames x86_64.Irq_Enable;
+
    procedure Irq_Disable
       renames x86_64.Irq_Disable;
 
