@@ -6,7 +6,10 @@
 Welcome to SweetAda.
 
 SweetAda is a lightweight development framework whose purpose is the
-implementation of Ada-based software systems.
+implementation of Ada based software systems.
+
+SweetAda has no AI code in whatsoever form, and it is developed entirely with
+human NI (Natural Intelligence).
 
 The code produced by SweetAda is able to run on a wide range of machines, from
 ARM&reg; embedded boards up to x86-64-class machines, as well as MIPS&reg; machines
