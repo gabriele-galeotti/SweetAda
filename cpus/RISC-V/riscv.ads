@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 with System;
 with RISCV_Definitions;
@@ -32,8 +33,6 @@ is
    --========================================================================--
 
    use System;
-
-pragma Style_Checks (Off);
 
    MXLEN renames RISCV_Definitions.XLEN;
 
@@ -82,9 +81,11 @@ pragma Style_Checks (Off);
    function mstatus_Read
       return mstatus_Type
       with Inline => True;
+
    procedure mstatus_Write
       (mstatus : in mstatus_Type)
       with Inline => True;
+
    procedure mstatus_Set
       (mstatus : in mstatus_Type)
       with Inline => True;
@@ -180,6 +181,7 @@ pragma Style_Checks (Off);
       (Value : mcause_Type)
       return MXLEN_Type
       with Inline => True;
+
    function To_mcause
       (Value : MXLEN_Type)
       return mcause_Type
@@ -197,10 +199,13 @@ pragma Style_Checks (Off);
 
    procedure NOP
       with Inline => True;
+
    procedure BREAKPOINT
       with Inline => True;
+
    procedure FENCE
       with Inline => True;
+
    procedure Asm_Call
       (Target_Address : in Address)
       with Inline => True;
@@ -214,15 +219,15 @@ pragma Style_Checks (Off);
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       with Inline => True;
+
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       with Inline => True;
 
    procedure Irq_Enable
       with Inline => True;
+
    procedure Irq_Disable
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end RISCV;
