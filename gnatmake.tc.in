@@ -110,15 +110,15 @@ endif
 #
 # Elaboration model.
 #
-ifeq      ($(ELABORATION_MODEL),DYNAMIC)
+ifeq       ($(ELABORATION_MODEL),DYNAMIC)
 ADAC_SWITCHES_DEFAULT += -gnatE         # Enables dynamic checks for access-before-elaboration on subprogram calls and generic instantiations.
 #ADAC_SWITCHES_DEFAULT += -gnatel        # This switch can be used with the static elaboration model to issue info messages showing where implicit pragma Elaborate and pragma Elaborate_All are generated.
 #ADAC_SWITCHES_DEFAULT += -gnateL        # This switch turns off the info messages about implicit elaboration pragmas.
-else ifeq ($(ELABORATION_MODEL),STATIC)
+else ifeq  ($(ELABORATION_MODEL),STATIC)
 # default elaboration model
-else ifeq ($(ELABORATION_MODEL),SPARK)
+else ifeq  ($(ELABORATION_MODEL),SPARK)
 ADAC_SWITCHES_DEFAULT += -gnatd.v       # SPARK elaboration model.
-else
+else ifneq ($(ELABORATION_MODEL),)
 $(warning *** Warning: no valid ELABORATION_MODEL.)
 endif
 
