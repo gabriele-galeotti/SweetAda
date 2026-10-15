@@ -1,7 +1,7 @@
 @ECHO OFF
 
 REM
-REM SweetAda cmd.exe PowerShell wrapper.
+REM SweetAda cmd.exe launch utility.
 REM
 REM Copyright (C) 2020-2026 Gabriele Galeotti
 REM
@@ -11,11 +11,10 @@ REM
 
 REM
 REM Arguments:
-REM all arguments are passed to .ps1
+REM all arguments are passed to the executable and the .ps1 script
 REM
 REM Environment variables:
-REM SWEETADA_PATH
-REM LIBUTILS_DIRECTORY
+REM none
 REM
 
 REM ############################################################################
@@ -31,12 +30,17 @@ REM # Main loop.                                                               #
 REM #                                                                          #
 REM ############################################################################
 
-powershell.exe                                               ^
-  -NoLogo                                                    ^
-  -NoProfile                                                 ^
-  -ExecutionPolicy Bypass                                    ^
-  -File "%SWEETADA_PATH%"/%LIBUTILS_DIRECTORY%/filepatch.ps1 ^
-  %*
+IF EXIST "%~dp0filepatch.exe" ( ^
+  "%~dp0filepatch.exe"          ^
+    %*                          ^
+  ) ELSE (                      ^
+  powershell.exe                ^
+    -NoLogo                     ^
+    -NoProfile                  ^
+    -ExecutionPolicy Bypass     ^
+    -File "%~dp0filepatch.ps1"  ^
+    %*                          ^
+  )
 
 EXIT /B %ERRORLEVEL%
 
