@@ -49,7 +49,6 @@ package body BSP
    use Definitions;
    use Bits;
    use x86_64;
-   use CPU.IO;
 
    function Number_Of_CPUs
       return Interfaces.C.int
@@ -150,8 +149,8 @@ package body BSP
          Scale_Address => 0,
          Baud_Clock    => CLK_UART1M8,
          Flags         => (PC_UART => True),
-         Read_8        => IO_Read'Access,
-         Write_8       => IO_Write'Access,
+         Read_8        => CPU.IO.Read'Access,
+         Write_8       => CPU.IO.Write'Access,
          Data_Queue    => ([others => 0], 0, 0, 0)
          );
       UART16x50.Init (UART_Descriptors (1));
@@ -162,8 +161,8 @@ package body BSP
          Scale_Address => 0,
          Baud_Clock    => CLK_UART1M8,
          Flags         => (PC_UART => True),
-         Read_8        => IO_Read'Access,
-         Write_8       => IO_Write'Access,
+         Read_8        => CPU.IO.Read'Access,
+         Write_8       => CPU.IO.Write'Access,
          Data_Queue    => ([others => 0], 0, 0, 0)
          );
       UART16x50.Init (UART_Descriptors (2));
