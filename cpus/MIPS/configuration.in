@@ -5,26 +5,27 @@ ifeq      ($(or                               \
   $(if $(findstring RM5231,$(CPU_MODEL)),Y,)  \
   ),Y)
   TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_MIPS)
+  MIPS64              := False
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/R3000
-  GPR_CORE_CPU += mips.adb mips.ads r3000.adb r3000.ads
+  GPR_CORE_CPU        += r3000.adb r3000.ads
 else ifeq ($(or                                  \
   $(if $(findstring MIPS32-24K,$(CPU_MODEL)),Y,) \
   ),Y)
   TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_MIPS)
+  MIPS64              := False
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/32
-  GPR_CORE_CPU += mips.adb mips.ads
 else ifeq ($(or                                 \
   $(if $(findstring MIPS64-5K,$(CPU_MODEL)),Y,) \
   ),Y)
   TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_MIPS64)
+  MIPS64              := True
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/64
-  GPR_CORE_CPU += mips.adb mips.ads
 else ifeq ($(or                                  \
   $(if $(findstring MIPS64-20K,$(CPU_MODEL)),Y,) \
   ),Y)
   TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_MIPS64)
+  MIPS64              := True
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/64
-  GPR_CORE_CPU += mips.adb mips.ads
 else
   ifneq ($(filter rts,$(MAKECMDGOALS)),rts)
     $(warning *** Warning: "$(CPU_MODEL)": no CPU model supported.\
@@ -32,7 +33,15 @@ else
   endif
 endif
 
-GPR_CORE_CPU += cpu.ads
+GPR_CORE_CPU += mips.adb mips.ads cpu.ads
 
 GCCDEFINES_CPU += _MIPS_ISA:MIPS_ISA:Integer:P
+
+GNATPREP_DEFINES_mmio := -DENABLE_MMIO16ATOMIC=True \
+                         -DENABLE_MMIO32ATOMIC=True
+ifeq ($(MIPS64),True)
+GNATPREP_DEFINES_mmio += -DENABLE_MMIO64ATOMIC=True
+else
+GNATPREP_DEFINES_mmio += -DENABLE_MMIO64ATOMIC=False
+endif
 

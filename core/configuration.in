@@ -57,3 +57,6 @@ ifneq ($(SUPPRESS_STANDARD_LIBRARY),True)
 IMPLICIT_CORE_UNITS += core-expanded
 endif
 
+GNATPREP_FILES += $(CORE_DIRECTORY)/mmio.ads \
+                  $(CORE_DIRECTORY)/mmio.adb
+

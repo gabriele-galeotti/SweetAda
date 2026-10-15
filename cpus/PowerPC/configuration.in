@@ -1,20 +1,30 @@
 
 ifeq ($(CPU_MODEL),POWERPC64)
-  TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_PowerPC64)
+  TOOLCHAIN_NAME          := $(TOOLCHAIN_NAME_PowerPC64)
+  POWERPC64               := True
   CPU_INCLUDE_DIRECTORIES := $(CPU_DIRECTORY)/64
 else
-  TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_PowerPC)
+  TOOLCHAIN_NAME          := $(TOOLCHAIN_NAME_PowerPC)
+  POWERPC64               := False
   CPU_INCLUDE_DIRECTORIES := $(CPU_DIRECTORY)/32
   ifeq      ($(CPU_MODEL),PPC405)
-    CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/PPC405
-    GPR_CORE_CPU += ppc405.adb ppc405.ads
+    CPU_MODEL_DIRECTORY   := $(CPU_DIRECTORY)/PPC405
+    GPR_CORE_CPU          += ppc405.adb ppc405.ads
   else ifeq ($(CPU_MODEL),PPC440)
-    CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/PPC440
-    GPR_CORE_CPU += ppc440.adb ppc440.ads
+    CPU_MODEL_DIRECTORY   := $(CPU_DIRECTORY)/PPC440
+    GPR_CORE_CPU          += ppc440.adb ppc440.ads
   endif
 endif
 
 GPR_CORE_CPU += cpu.ads                 \
                 powerpc.adb powerpc.ads \
                 powerpc_definitions.ads
+
+GNATPREP_DEFINES_mmio := -DENABLE_MMIO16ATOMIC=True \
+                         -DENABLE_MMIO32ATOMIC=True
+ifeq ($(POWERPC64),True)
+GNATPREP_DEFINES_mmio += -DENABLE_MMIO64ATOMIC=True
+else
+GNATPREP_DEFINES_mmio += -DENABLE_MMIO64ATOMIC=False
+endif
 

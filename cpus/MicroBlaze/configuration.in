@@ -4,3 +4,7 @@ TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_MicroBlaze)
 GPR_CORE_CPU += cpu.ads                       \
                 microblaze.adb microblaze.ads
 
+GNATPREP_DEFINES_mmio := -DENABLE_MMIO16ATOMIC=True  \
+                         -DENABLE_MMIO32ATOMIC=True  \
+                         -DENABLE_MMIO64ATOMIC=False
+

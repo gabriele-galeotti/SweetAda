@@ -54,3 +54,7 @@ GCCDEFINES_CPU += __mc68000__:MC68000:Boolean:H               \
                   __mcfv3__:MCFV3:Boolean:H                   \
                   __mcoldfire__:MCOLDFIRE:Boolean:H
 
+GNATPREP_DEFINES_mmio := -DENABLE_MMIO16ATOMIC=True  \
+                         -DENABLE_MMIO32ATOMIC=True  \
+                         -DENABLE_MMIO64ATOMIC=False
+

@@ -2,11 +2,11 @@
 ifeq      ($(CPU_MODEL),SH7032)
   TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_SuperH)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/SH7032
-  GPR_CORE_CPU += sh7032.adb sh7032.ads
+  GPR_CORE_CPU        += sh7032.adb sh7032.ads
 else ifeq ($(CPU_MODEL),SH7750)
   TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_SH4)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/SH7750
-  GPR_CORE_CPU += sh7750.adb sh7750.ads
+  GPR_CORE_CPU        += sh7750.adb sh7750.ads
 else
   $(warning *** Warning: "$(CPU_MODEL)": no CPU model supported.\
     Available CPU_MODEL are: SH[7032|7750].)
@@ -19,4 +19,8 @@ GPR_CORE_CPU += cpu.ads               \
                 sh.adb sh.ads         \
                 sh_definitions.ads    \
                 shmmio.adb shmmio.ads
+
+GNATPREP_DEFINES_mmio := -DENABLE_MMIO16ATOMIC=True  \
+                         -DENABLE_MMIO32ATOMIC=True  \
+                         -DENABLE_MMIO64ATOMIC=False
 

@@ -65,3 +65,7 @@ GCCDEFINES_CPU += __APCS_32__:APCS_32:Boolean:H                     \
                   __thumb2__:THUMB2:Boolean:H                       \
                   __VFP_FP__:VFP_FP:Boolean:H
 
+GNATPREP_DEFINES_mmio := -DENABLE_MMIO16ATOMIC=True  \
+                         -DENABLE_MMIO32ATOMIC=True  \
+                         -DENABLE_MMIO64ATOMIC=False
+

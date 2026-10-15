@@ -5,3 +5,7 @@ GPR_CORE_CPU := cpu.ads           \
                 s390.adb s390.ads
 export GPR_CORE_CPU
 
+GNATPREP_DEFINES_mmio := -DENABLE_MMIO16ATOMIC=True  \
+                         -DENABLE_MMIO32ATOMIC=True  \
+                         -DENABLE_MMIO64ATOMIC=False
+

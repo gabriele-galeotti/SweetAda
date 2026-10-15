@@ -1,11 +1,11 @@
 
 ifeq      ($(findstring RV32,$(CPU_MODEL)),RV32)
-  RISCV               := RV32
   TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_RISCV32)
+  RISCV               := RV32
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/32
 else ifeq ($(findstring RV64,$(CPU_MODEL)),RV64)
-  RISCV               := RV64
   TOOLCHAIN_NAME      := $(TOOLCHAIN_NAME_RISCV64)
+  RISCV               := RV64
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/64
 else
   $(warning *** Warning: "$(CPU_MODEL)": no CPU model supported.\
@@ -20,4 +20,12 @@ CPU_INCLUDE_DIRECTORIES += $(CPU_DIRECTORY)/mmio
 GPR_CORE_CPU += cpu.ads               \
                 riscv.adb riscv.ads   \
                 riscv_definitions.ads
+
+GNATPREP_DEFINES_mmio := -DENABLE_MMIO16ATOMIC=True \
+                         -DENABLE_MMIO32ATOMIC=True
+ifeq      ($(RISCV),RV32)
+GNATPREP_DEFINES_mmio += -DENABLE_MMIO64ATOMIC=False
+else ifeq ($(RISCV),RV64)
+GNATPREP_DEFINES_mmio += -DENABLE_MMIO64ATOMIC=True
+endif
 

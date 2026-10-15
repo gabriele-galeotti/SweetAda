@@ -33,3 +33,7 @@ GCCDEFINES_CPU += __code_model_32__:CODE_MODEL_32:Boolean:H     \
                   __tune_i686__:TUNE_i686:Boolean:H             \
                   __tune_pentiumpro__:TUNE_PENTIUMPRO:Boolean:H
 
+GNATPREP_DEFINES_mmio := -DENABLE_MMIO16ATOMIC=True  \
+                         -DENABLE_MMIO32ATOMIC=True  \
+                         -DENABLE_MMIO64ATOMIC=False
+

@@ -4,3 +4,7 @@ TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_NiosII)
 GPR_CORE_CPU += cpu.ads               \
                 niosii.adb niosii.ads
 
+GNATPREP_DEFINES_mmio := -DENABLE_MMIO16ATOMIC=True  \
+                         -DENABLE_MMIO32ATOMIC=True  \
+                         -DENABLE_MMIO64ATOMIC=False
+

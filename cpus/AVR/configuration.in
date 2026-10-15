@@ -1,9 +1,6 @@
 
 TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_AVR)
 
-# override core MMIO
-CPU_INCLUDE_DIRECTORIES := $(CPU_DIRECTORY)/mmio
-
 GPR_CORE_CPU += cpu.ads         \
                 avr.adb avr.ads
 
@@ -30,4 +27,11 @@ GCCDEFINES_CPU += __AVR_2_BYTE_PC__:AVR_2_BYTE_PC:Boolean:H                 \
                   __AVR_RODATA_IN_RAM__:AVR_RODATA_IN_RAM:Boolean:H         \
                   __AVR_SFR_OFFSET__:AVR_SFR_OFFSET::N                      \
                   __AVR_XMEGA__:AVR_XMEGA:Boolean:H
+
+# override core MMIO
+CPU_INCLUDE_DIRECTORIES := $(CPU_DIRECTORY)/mmio
+
+GNATPREP_DEFINES_mmio := -DENABLE_MMIO16ATOMIC=False \
+                         -DENABLE_MMIO32ATOMIC=False \
+                         -DENABLE_MMIO64ATOMIC=False
 

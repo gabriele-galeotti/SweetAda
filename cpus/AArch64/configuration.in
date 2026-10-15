@@ -16,3 +16,7 @@ GPR_CORE_CPU += cpu.ads    \
                 armv8a.adb \
                 armv8a.ads
 
+GNATPREP_DEFINES_mmio := -DENABLE_MMIO16ATOMIC=True \
+                         -DENABLE_MMIO32ATOMIC=True \
+                         -DENABLE_MMIO64ATOMIC=True
+

@@ -20,19 +20,11 @@ function ReadA_U64
    (Memory_Address : System.Address)
    return Interfaces.Unsigned_64
 is
+   Result : aliased Interfaces.Unsigned_64
+      with Address    => Memory_Address,
+           Atomic     => True,
+           Import     => True,
+           Convention => Ada;
 begin
-   if System.Word_Size = 64 then
-      declare
-         Result : aliased Interfaces.Unsigned_64
-            with Address    => Memory_Address,
-                 Atomic     => True,
-                 Import     => True,
-                 Convention => Ada;
-      begin
-         return Result;
-      end;
-   else
-      raise Program_Error;
-      return 0;
-   end if;
+   return Result;
 end ReadA_U64;
