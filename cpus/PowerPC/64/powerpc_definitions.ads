@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
@@ -34,8 +36,6 @@ is
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    -- 1.6 Link Register (LR)
 
@@ -277,7 +277,5 @@ pragma Style_Checks (Off);
       DW  at 0 range 62 .. 62;
       DR  at 0 range 63 .. 63;
    end record;
-
-pragma Style_Checks (On);
 
 end PowerPC_Definitions;

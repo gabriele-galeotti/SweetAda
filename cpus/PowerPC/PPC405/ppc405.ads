@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 with System;
 with Interfaces;
@@ -36,8 +37,6 @@ is
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- AMCC 405 PowerPC
@@ -153,6 +152,7 @@ pragma Style_Checks (Off);
    function UIC0_SR_Read
       return UIC0_SR_Type
       with Inline => True;
+
    procedure UIC0_SR_Write
       (Value : in UIC0_SR_Type)
       with Inline => True;
@@ -164,6 +164,7 @@ pragma Style_Checks (Off);
    function UIC0_ER_Read
       return UIC0_ER_Type
       with Inline => True;
+
    procedure UIC0_ER_Write
       (Value : in UIC0_ER_Type)
       with Inline => True;
@@ -177,6 +178,7 @@ pragma Style_Checks (Off);
    function PIT_Read
       return Unsigned_32
       with Inline => True;
+
    procedure PIT_Write
       (Value : in Unsigned_32)
       with Inline => True;
@@ -210,12 +212,18 @@ pragma Style_Checks (Off);
    function TSR_Read
       return TSR_Type
       with Inline => True;
+
    procedure TSR_Write
       (Value : in TSR_Type)
       with Inline => True;
 
-   function TSR_PIS return TSR_Type with Inline => True;
-   function TSR_FIS return TSR_Type with Inline => True;
+   function TSR_PIS
+      return TSR_Type
+      with Inline => True;
+
+   function TSR_FIS
+      return TSR_Type
+      with Inline => True;
 
    -- 11.5 Timer Control Register (TCR)
 
@@ -260,6 +268,7 @@ pragma Style_Checks (Off);
    function TCR_Read
       return TCR_Type
       with Inline => True;
+
    procedure TCR_Write
       (Value : in TCR_Type)
       with Inline => True;
@@ -270,9 +279,8 @@ pragma Style_Checks (Off);
 
    procedure Irq_Enable
       with Inline => True;
+
    procedure Irq_Disable
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end PPC405;

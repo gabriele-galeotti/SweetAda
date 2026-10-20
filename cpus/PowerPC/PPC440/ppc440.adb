@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 with System.Machine_Code;
 with Ada.Unchecked_Conversion;
@@ -33,8 +34,6 @@ is
    --========================================================================--
 
    use System.Machine_Code;
-
-pragma Style_Checks (Off);
 
    CRLF : String renames Definitions.CRLF;
 
@@ -95,7 +94,5 @@ pragma Style_Checks (Off);
            Volatile => True
           );
    end Irq_Disable;
-
-pragma Style_Checks (On);
 
 end PPC440;

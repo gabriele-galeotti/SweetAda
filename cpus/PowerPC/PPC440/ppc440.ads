@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 with System;
 with Interfaces;
@@ -36,8 +37,6 @@ is
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- AMCC 440 PPC440 Processor
@@ -154,6 +153,7 @@ pragma Style_Checks (Off);
    function TCR_Read
       return TCR_Type
       with Inline => True;
+
    procedure TCR_Write
       (Value : in TCR_Type)
       with Inline => True;
@@ -187,12 +187,18 @@ pragma Style_Checks (Off);
    function TSR_Read
       return TSR_Type
       with Inline => True;
+
    procedure TSR_Write
       (Value : in TSR_Type)
       with Inline => True;
 
-   function TSR_DIS return TSR_Type with Inline => True;
-   function TSR_FIS return TSR_Type with Inline => True;
+   function TSR_DIS
+      return TSR_Type
+      with Inline => True;
+
+   function TSR_FIS
+      return TSR_Type
+      with Inline => True;
 
    ----------------------------------------------------------------------------
    -- Exceptions and interrupts
@@ -200,9 +206,8 @@ pragma Style_Checks (Off);
 
    procedure Irq_Enable
       with Inline => True;
+
    procedure Irq_Disable
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end PPC440;
