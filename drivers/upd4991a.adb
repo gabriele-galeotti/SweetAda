@@ -15,11 +15,14 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+pragma Warnings (Off, "* is not referenced");
+
 with Ada.Unchecked_Conversion;
 with LLutils;
 
 package body uPD4991A
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -30,8 +33,6 @@ package body uPD4991A
    --========================================================================--
 
    use LLutils;
-
-pragma Warnings (Off, "* is not referenced");
 
    ----------------------------------------------------------------------------
    -- Register data types
@@ -162,7 +163,7 @@ pragma Warnings (Off, "* is not referenced");
       (D : Descriptor_Type;
        R : Register_Type)
       return Unsigned_8
-      is
+   is
    begin
       return D.Read_8 (Build_Address (
                 D.Base_Address,
@@ -178,7 +179,7 @@ pragma Warnings (Off, "* is not referenced");
       (D     : in Descriptor_Type;
        R     : in Register_Type;
        Value : in Unsigned_8)
-      is
+   is
    begin
       D.Write_8 (Build_Address (
          D.Base_Address,
@@ -194,7 +195,7 @@ pragma Warnings (Off, "* is not referenced");
    procedure Time_Read
       (D : in     Descriptor_Type;
        T :    out Time.TM_Time)
-      is
+   is
    begin
       Register_Write (D, CR1, To_U8 (CR1_Type'(
          WAIT   => True,
@@ -240,7 +241,7 @@ pragma Warnings (Off, "* is not referenced");
    procedure Time_Set
       (D : in Descriptor_Type;
        T : in Time.TM_Time)
-      is
+   is
    begin
       Register_Write (D, S1, Unsigned_8 (To_BCD (Unsigned_8 (T.Sec))));
       Register_Write (D, S10, ShR (Unsigned_8 (To_BCD (Unsigned_8 (T.Sec))), 4));
@@ -261,13 +262,11 @@ pragma Warnings (Off, "* is not referenced");
    ----------------------------------------------------------------------------
    procedure Init
       (D : in out Descriptor_Type)
-      is
+   is
    begin
       Register_Write (D, MODE, MODE_BASIC1);
       Register_Write (D, CR2, 0);
       Register_Write (D, CR1, 0);
    end Init;
-
-pragma Warnings (On, "* is not referenced");
 
 end uPD4991A;
