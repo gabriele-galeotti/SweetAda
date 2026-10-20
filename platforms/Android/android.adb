@@ -187,12 +187,12 @@ is
       begin
          Time.Make_Time (tv.tv_sec, TM);
          Console.Print ("Current datetime: ");
-         Console.Print (Prefix => "",  Value => TM.Year + 1_900);
-         Console.Print (Prefix => "-", Value => TM.Mon + 1);
-         Console.Print (Prefix => "-", Value => TM.MDay);
-         Console.Print (Prefix => " ", Value => TM.Hour);
-         Console.Print (Prefix => ":", Value => TM.Min);
-         Console.Print (Prefix => ":", Value => TM.Sec);
+         Console.Print (Prefix => "",  Value => Natural (TM.Year) + 1_900);
+         Console.Print (Prefix => "-", Value => Natural (TM.Mon) + 1);
+         Console.Print (Prefix => "-", Value => Natural (TM.MDay));
+         Console.Print (Prefix => " ", Value => Natural (TM.Hour));
+         Console.Print (Prefix => ":", Value => Natural (TM.Min));
+         Console.Print (Prefix => ":", Value => Natural (TM.Sec));
          Console.Print_NewLine;
       end;
    end Gettimeofday;
