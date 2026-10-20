@@ -23,7 +23,7 @@ with Atlas;
 with Console;
 
 package body BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -52,14 +52,14 @@ package body BSP
 
    procedure Console_Putchar
       (C : in Character)
-      is
+   is
    begin
       UART16x50.TX (UART1_Descriptor, To_U8 (C));
    end Console_Putchar;
 
    procedure Console_Getchar
       (C : out Character)
-      is
+   is
       Data : Unsigned_8;
    begin
       UART16x50.RX (UART1_Descriptor, Data);
@@ -70,7 +70,7 @@ package body BSP
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup
-      is
+   is
    begin
       -- UART1 ----------------------------------------------------------------
       UART1_Descriptor.Base_Address  := System'To_Address (UART1_BASEADDRESS);
@@ -85,6 +85,8 @@ package body BSP
          Read  => Console_Getchar'Access
          );
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
+      -------------------------------------------------------------------------
+      Tick_Count := 0;
       -------------------------------------------------------------------------
       Console.Print ("Atlas", NL => True);
       declare
