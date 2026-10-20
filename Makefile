@@ -84,6 +84,8 @@ export VERBOSE
 # probevariables        V               NP
 # clean                 C               NP
 # distclean             C               NP
+# configure-save                S       NP
+# configure-restore             S       NP
 # createkernelcfg               S       NP
 # help                          S       NP
 # tools-check                   S       NP
@@ -118,7 +120,9 @@ CLEANING_GOALS := clean     \
                   distclean
 
 # general service goals
-SERVICE_GOALS := createkernelcfg   \
+SERVICE_GOALS := configure-save    \
+                 configure-restore \
+                 createkernelcfg   \
                  help              \
                  tools-check       \
                  $(LIBUTILS_GOALS)
@@ -207,14 +211,6 @@ CONFIGURE_DEPS += Makefile.ut.in
 # load complex functions
 include Makefile.fn.in
 CONFIGURE_DEPS += Makefile.fn.in
-
-# make these useful variables publicly available
-ifeq ($(OSTYPE),cmd)
-PROGRAM_FILES := $(shell ECHO %ProgramFiles%)
-export PROGRAM_FILES
-PROGRAM_FILES_x86 := $(shell ECHO %ProgramFiles(x86)%)
-export PROGRAM_FILES_x86
-endif
 
 ################################################################################
 #                                                                              #
@@ -316,6 +312,14 @@ endif
 
 # re-export PATH so that we can use everything
 export PATH
+
+# make these useful variables publicly available
+ifeq ($(OSTYPE),cmd)
+PROGRAM_FILES := $(shell ECHO %ProgramFiles%)
+export PROGRAM_FILES
+PROGRAM_FILES_x86 := $(shell ECHO %ProgramFiles(x86)%)
+export PROGRAM_FILES_x86
+endif
 
 ################################################################################
 #                                                                              #
@@ -503,10 +507,14 @@ ifneq ($(filter createkernelcfg,$(MAKECMDGOALS)),createkernelcfg)
 -include $(KERNEL_CFGFILE)
 endif
 # PLATFORM processing
-ifneq ($(filter $(sort                                                 \
-         $(CLEANING_GOALS) $(INFOCONFIG_GOALS) rts $(PLATFORM_GOALS)), \
-         $(MAKECMDGOALS)                                               \
-         ),)
+ifneq ($(filter $(sort      \
+        $(CLEANING_GOALS)   \
+        $(INFOCONFIG_GOALS) \
+        configure-save      \
+        rts                 \
+        $(PLATFORM_GOALS)), \
+        $(MAKECMDGOALS)),)
+ifneq ($(MAKECMDGOALS),installfiles)
 ifneq ($(PLATFORM),)
 # PLATFORM defined
 ifeq ($(filter $(PLATFORM),$(PLATFORMS)),)
@@ -529,16 +537,20 @@ $(error Error: no valid PLATFORM)
 endif
 endif
 endif
+endif
 # CPU processing
 ifneq ($(CPU),)
 # CPU defined
 ifeq ($(filter $(CPU),$(CPUS)),)
 $(error Error: no valid CPU)
 endif
-ifneq ($(filter $(sort                                                 \
-         $(CLEANING_GOALS) $(INFOCONFIG_GOALS) rts $(PLATFORM_GOALS)), \
-         $(MAKECMDGOALS)                                               \
-         ),)
+ifneq ($(filter $(sort       \
+         $(CLEANING_GOALS)   \
+         $(INFOCONFIG_GOALS) \
+         configure-save      \
+         rts                 \
+         $(PLATFORM_GOALS)), \
+         $(MAKECMDGOALS)),)
 CPU_DIRECTORY := $(CPU_BASE_DIRECTORY)/$(CPU)
 include $(CPU_DIRECTORY)/configuration.in
 ifeq ($(TOOLCHAIN_NAME),)
@@ -634,19 +646,9 @@ CONFIGURE_DEPS += Makefile.lb.in
 ifeq ($(BUILD_MODE),GPRbuild)
 ifneq ($(filter $(PLATFORM_GOALS) $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(OSTYPE),cmd)
-GPRBUILD_DEPS += $(sort $(shell                                      \
-                   SET "PATH=$(PATH)"                             && \
-                   SET "SWEETADA_PATH=$(SWEETADA_PATH)"           && \
-                   SET "LIBUTILS_DIRECTORY=$(LIBUTILS_DIRECTORY)" && \
-                   $(GPRDEPS) $(KERNEL_GPRFILE)                      \
-                   2>nul))
+GPRBUILD_DEPS += $(sort $(shell $(GPRDEPS) $(KERNEL_GPRFILE) 2>nul))
 else
-GPRBUILD_DEPS += $(sort $(shell                               \
-                   PATH="$(PATH)"                             \
-                   SWEETADA_PATH="$(SWEETADA_PATH)"           \
-                   LIBUTILS_DIRECTORY="$(LIBUTILS_DIRECTORY)" \
-                   $(GPRDEPS) $(KERNEL_GPRFILE)               \
-                   2> /dev/null))
+GPRBUILD_DEPS += $(sort $(shell $(GPRDEPS) $(KERNEL_GPRFILE) 2> /dev/null))
 endif
 endif
 endif
@@ -866,6 +868,7 @@ CLEAN_OBJECTS     := $(KERNEL_OBJFILE)       \
                      $(KERNEL_OUTFILE)       \
                      $(KERNEL_ROMFILE)       \
                      $(CLEAN_OBJECTS_COMMON)
+
 DISTCLEAN_OBJECTS := $(KERNEL_CFGFILE)           \
                      $(DISTCLEAN_OBJECTS_COMMON)
 ifeq ($(OSTYPE),cmd)
@@ -958,6 +961,12 @@ help:
 	@$(call echo-print,"  Build ELFtool.")
 	@$(call echo-print,"make libutils-exe-wrapper")
 	@$(call echo-print,"  Build EXE-wrapper.")
+	@$(call echo-print,"make configure-save")
+	@$(call echo-print,"  Load and execute a user-owned 'configuration.user.in' file \
+                              to save  configuration files.")
+	@$(call echo-print,"make configure-restore")
+	@$(call echo-print,"  Load and execute a user-owned 'configuration.user.in' file \
+                              to restore configuration files.")
 	@$(call echo-print,"make PROBEVARIABLE=<variablename> probevariable")
 	@$(call echo-print,"  Obtain the value of a variable.")
 	@$(call echo-print,"make PROBEVARIABLES=<variablename_list> probevariables")
@@ -997,11 +1006,9 @@ endif
         ,[GNATPREP],$@)
 
 #
-# Compile phase.
+# EXE-wrapper management.
 #
 
-GNATMAKE_WRAPPER :=
-GPRBUILD_WRAPPER :=
 ifeq ($(USE_EXE_WRAPPER),Y)
 EXE_WRAPPER_TIMESTAMP_FILENAME := $(OBJECT_DIRECTORY)/exe_wrapper.tmp
 ifeq      ($(BUILD_MODE),GNATMAKE)
@@ -1017,7 +1024,17 @@ GPRBUILD_WRAPPER := "-XUSE_EXE_WRAPPER=$(USE_EXE_WRAPPER)"                      
                     "-XEXE_WRAPPER_VERBOSE=$(VERBOSE)"                                   \
                     "-XEXE_WRAPPER_BRIEFTEXT="
 endif
+else
+ifeq      ($(BUILD_MODE),GNATMAKE)
+GNATMAKE_WRAPPER :=
+else ifeq ($(BUILD_MODE),GPRbuild)
+GPRBUILD_WRAPPER :=
 endif
+endif
+
+#
+# Compile phase.
+#
 
 .PHONY: FORCE
 FORCE:
@@ -1386,7 +1403,6 @@ else
         fi
 endif
 	$(MAKE) distclean
-	$(RM) $(KERNEL_CFGFILE)
 	$(call echo-print,"PLATFORM := $(PLATFORM)")> $(KERNEL_CFGFILE)
 ifneq ($(SUBPLATFORM),)
 	$(call echo-print,"SUBPLATFORM := $(SUBPLATFORM)")>> $(KERNEL_CFGFILE)
@@ -1398,9 +1414,7 @@ else
 	@$(call echo-print,"$(PLATFORM)/$(SUBPLATFORM) : $(KERNEL_CFGFILE) created successfully.")
 endif
 	@$(call echo-print,"")
-ifneq ($(SUBPLATFORM),)
 	$(MAKE) $(MAKE_PLATFORM) installfiles
-endif
 else
 	$(error Error: no valid PLATFORM, configuration not created)
 endif
@@ -1478,8 +1492,8 @@ CONFIGURE_AUX_DEPS += configure-gnattdi
 CONFIGURE_AUX_DEPS += configure-gnatadc
 CONFIGURE_AUX_DEPS += configure-configuregpr
 CONFIGURE_AUX_DEPS += configure-subdirs
-CONFIGURE_AUX_DEPS += configure-linkeradsb
 CONFIGURE_AUX_DEPS += configure-gnatprep
+CONFIGURE_AUX_DEPS += configure-linkeradsb
 CONFIGURE_AUX_DEPS += configure-end
 configure-aux: $(CONFIGURE_AUX_DEPS)
 
@@ -1724,8 +1738,10 @@ clean-configure:
 	$(RM) $(GNATADC_FILENAME)
 	$(RM) $(CONFIGUREGPR_FILENAME)
 ifeq ($(OSTYPE),cmd)
+	$(RM) $(subst /,\,$(GNATPREP_FILES))
 	$(RM) $(CORE_DIRECTORY)\linker.ad*
 else
+	$(RM) $(GNATPREP_FILES)
 	$(RM) $(CORE_DIRECTORY)/linker.ad*
 endif
 
@@ -1790,6 +1806,39 @@ libutils-exe-wrapper:
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/EXE-wrapper clean
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/EXE-wrapper all
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/EXE-wrapper install
+
+#
+# Configuration save/restore.
+#
+
+ifneq ($(filter configure-save configure-restore,$(MAKECMDGOALS)),)
+include configuration.user.in
+endif
+
+.PHONY: configure-save
+configure-save:
+ifneq ($(CONFIGURE_SAVE_COMMAND),)
+	$(CONFIGURE_SAVE_COMMAND)
+endif
+
+.PHONY: configure-restore
+configure-restore: distclean
+ifneq ($(CONFIGURE_RESTORE_COMMAND),)
+	$(CONFIGURE_RESTORE_COMMAND)
+ifeq ($(OSTYPE),cmd)
+	IF EXIST $(KERNEL_CFGFILE) $(MAKE) installfiles
+else
+	if [ -e $(KERNEL_CFGFILE) ] ; then $(MAKE) installfiles ; fi
+endif
+ifeq ($(REBUILD_RTS),Y)
+	$(MAKE) rts
+endif
+ifeq ($(OSTYPE),cmd)
+	IF EXIST $(KERNEL_CFGFILE) $(MAKE) configure
+else
+	if [ -e $(KERNEL_CFGFILE) ] ; then $(MAKE) configure ; fi
+endif
+endif
 
 #
 # Probe variable values.

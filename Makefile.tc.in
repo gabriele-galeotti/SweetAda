@@ -140,14 +140,10 @@ ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(OSTYPE),cmd)
 AS_VERSION := $(shell                                                \
                 SET "PATH=$(PATH)"                                && \
-                SET "SWEETADA_PATH=$(SWEETADA_PATH)"              && \
-                SET "LIBUTILS_DIRECTORY=$(LIBUTILS_DIRECTORY)"    && \
                 $(TOOLCHAIN_AS) --version 2>nul| $(FILEHEAD) -n 1    \
                 )
 LD_VERSION := $(shell                                                \
                 SET "PATH=$(PATH)"                                && \
-                SET "SWEETADA_PATH=$(SWEETADA_PATH)"              && \
-                SET "LIBUTILS_DIRECTORY=$(LIBUTILS_DIRECTORY)"    && \
                 $(TOOLCHAIN_LD) --version 2>nul| $(FILEHEAD) -n 1    \
                 )
 else
@@ -369,15 +365,12 @@ ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(OSTYPE),cmd)
 GNATMAKE_VERSION := $(shell                                                      \
                       SET "PATH=$(PATH)"                                      && \
-                      SET "SWEETADA_PATH=$(SWEETADA_PATH)"                    && \
-                      SET "LIBUTILS_DIRECTORY=$(LIBUTILS_DIRECTORY)"          && \
                       $(TOOLCHAIN_GNATMAKE) --version 2>nul| $(FILEHEAD) -n 1    \
                       )
 else
-GNATMAKE_VERSION := $(shell                                       \
-                      PATH="$(PATH)"                              \
-                      $(TOOLCHAIN_GNATMAKE)                       \
-                        --version 2> /dev/null | $(FILEHEAD) -n 1 \
+GNATMAKE_VERSION := $(shell                                                           \
+                      PATH="$(PATH)"                                                  \
+                      $(TOOLCHAIN_GNATMAKE) --version 2> /dev/null | $(FILEHEAD) -n 1 \
                       )
 endif
 endif
@@ -385,17 +378,14 @@ else ifeq ($(BUILD_MODE),GPRbuild)
 GPRBUILD := gprbuild$(EXEEXT)
 ifneq ($(filter $(INFOCONFIG_GOALS),$(MAKECMDGOALS)),)
 ifeq ($(OSTYPE),cmd)
-GPRBUILD_VERSION := $(shell                                             \
-                      SET "PATH=$(PATH)"                             && \
-                      SET "SWEETADA_PATH=$(SWEETADA_PATH)"           && \
-                      SET "LIBUTILS_DIRECTORY=$(LIBUTILS_DIRECTORY)" && \
-                      $(GPRBUILD) --version 2>nul| $(FILEHEAD) -n 1     \
+GPRBUILD_VERSION := $(shell                                            \
+                      SET "PATH=$(PATH)"                            && \
+                      $(GPRBUILD) --version 2>nul| $(FILEHEAD) -n 1    \
                       )
 else
-GPRBUILD_VERSION := $(shell                                       \
-                      PATH="$(PATH)"                              \
-                      $(GPRBUILD)                                 \
-                        --version 2> /dev/null | $(FILEHEAD) -n 1 \
+GPRBUILD_VERSION := $(shell                                                 \
+                      PATH="$(PATH)"                                        \
+                      $(GPRBUILD) --version 2> /dev/null | $(FILEHEAD) -n 1 \
                       )
 endif
 endif

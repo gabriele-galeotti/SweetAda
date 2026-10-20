@@ -53,6 +53,7 @@ lib/
 obj/
 
 # reserved user owned directories and files
+configuration.user.in
 user-*
 user_*
 user/
