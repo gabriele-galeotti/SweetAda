@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
@@ -33,8 +35,6 @@ package SJA1000
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- SJA1000 Stand-alone CAN controller
@@ -309,7 +309,5 @@ pragma Style_Checks (Off);
       Unused  at 30 range 0 .. 7;
       CDR     at 31 range 0 .. 7;
    end record;
-
-pragma Style_Checks (On);
 
 end SJA1000;
