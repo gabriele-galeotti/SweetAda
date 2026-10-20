@@ -223,28 +223,6 @@ is
    end To_BM64;
 
    ----------------------------------------------------------------------------
-   -- Unsigned_8 <=> Storage_Element conversions
-   ----------------------------------------------------------------------------
-
-   function To_U8
-      (Value : SSE.Storage_Element)
-      return Interfaces.Unsigned_8
-   is
-      function Convert is new Ada.Unchecked_Conversion (SSE.Storage_Element, Interfaces.Unsigned_8);
-   begin
-      return Convert (Value);
-   end To_U8;
-
-   function To_SE
-      (Value : Interfaces.Unsigned_8)
-      return SSE.Storage_Element
-   is
-      function Convert is new Ada.Unchecked_Conversion (Interfaces.Unsigned_8, SSE.Storage_Element);
-   begin
-      return Convert (Value);
-   end To_SE;
-
-   ----------------------------------------------------------------------------
    -- Unsigned_8 <=> Character conversions
    ----------------------------------------------------------------------------
 
@@ -268,14 +246,14 @@ is
    -- Integer/Mod_Integer conversions and functions
    ----------------------------------------------------------------------------
 
-   function To_Mod
+   function To_ModInt
       (Value : Integer)
       return Mod_Integer
    is
       function Convert is new Ada.Unchecked_Conversion (Integer, Mod_Integer);
    begin
       return Convert (Value);
-   end To_Mod;
+   end To_ModInt;
 
    function To_Integer
       (Value : Mod_Integer)
@@ -728,7 +706,8 @@ is
       return Interfaces.Unsigned_16
    is
    begin
-      return ShL (Interfaces.Unsigned_16 (Value_H), 8) or Interfaces.Unsigned_16 (Value_L);
+      return ShL (Interfaces.Unsigned_16 (Value_H), 8) or
+                  Interfaces.Unsigned_16 (Value_L);
    end Make_Word;
 
    function Make_Word
@@ -751,7 +730,8 @@ is
       return Interfaces.Unsigned_32
    is
    begin
-      return ShL (Interfaces.Unsigned_32 (Value_H), 16) or Interfaces.Unsigned_32 (Value_L);
+      return ShL (Interfaces.Unsigned_32 (Value_H), 16) or
+                  Interfaces.Unsigned_32 (Value_L);
    end Make_Word;
 
    function Make_Word
@@ -760,7 +740,8 @@ is
       return Interfaces.Unsigned_64
    is
    begin
-      return ShL (Interfaces.Unsigned_64 (Value_H), 32) or Interfaces.Unsigned_64 (Value_L);
+      return ShL (Interfaces.Unsigned_64 (Value_H), 32) or
+                  Interfaces.Unsigned_64 (Value_L);
    end Make_Word;
 
    ----------------------------------------------------------------------------

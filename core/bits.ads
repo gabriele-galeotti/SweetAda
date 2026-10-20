@@ -307,6 +307,7 @@ is
    type Bitmap_14 is array (0 .. 13) of Boolean with Component_Size => 1, Size => 14;
    type Bitmap_15 is array (0 .. 14) of Boolean with Component_Size => 1, Size => 15;
    type Bitmap_16 is array (0 .. 15) of Boolean with Component_Size => 1, Size => 16;
+pragma Warnings (Off, "* bits of ""*"" unused"); -- AVR
    type Bitmap_17 is array (0 .. 16) of Boolean with Component_Size => 1, Size => 17;
    type Bitmap_18 is array (0 .. 17) of Boolean with Component_Size => 1, Size => 18;
    type Bitmap_19 is array (0 .. 18) of Boolean with Component_Size => 1, Size => 19;
@@ -323,6 +324,7 @@ is
    type Bitmap_30 is array (0 .. 29) of Boolean with Component_Size => 1, Size => 30;
    type Bitmap_31 is array (0 .. 30) of Boolean with Component_Size => 1, Size => 31;
    type Bitmap_32 is array (0 .. 31) of Boolean with Component_Size => 1, Size => 32;
+pragma Warnings (On, "* bits of ""*"" unused");
    type Bitmap_33 is array (0 .. 32) of Boolean with Component_Size => 1, Size => 33;
    type Bitmap_34 is array (0 .. 33) of Boolean with Component_Size => 1, Size => 34;
    type Bitmap_35 is array (0 .. 34) of Boolean with Component_Size => 1, Size => 35;
@@ -628,20 +630,8 @@ is
       with Inline => True;
 
    ----------------------------------------------------------------------------
-   -- Unsigned_8 <=> Storage_Element conversions
-   ----------------------------------------------------------------------------
-
-   function To_U8
-      (Value : SSE.Storage_Element)
-      return Interfaces.Unsigned_8
-      with Inline => True;
-
-   function To_SE
-      (Value : Interfaces.Unsigned_8)
-      return SSE.Storage_Element
-      with Inline => True;
-
    -- Unsigned_8 <=> Character conversions
+   ----------------------------------------------------------------------------
 
    function To_U8
       (C : Character)
@@ -653,7 +643,9 @@ is
       return Character
       with Inline => True;
 
-   -- Unsigned_8
+   ----------------------------------------------------------------------------
+   -- Shift operations
+   ----------------------------------------------------------------------------
 
    function ShL
       (Value  : Interfaces.Unsigned_8;
@@ -789,6 +781,11 @@ is
       return CPU_Unsigned
       with Import     => True,
            Convention => Intrinsic;
+   function ShL
+      (Value  : CPU_Unsigned;
+       Amount : Natural)
+      return CPU_Unsigned
+      renames Shift_Left;
 
    function Shift_Right
       (Value  : CPU_Unsigned;
@@ -796,6 +793,11 @@ is
       return CPU_Unsigned
       with Import     => True,
            Convention => Intrinsic;
+   function ShR
+      (Value  : CPU_Unsigned;
+       Amount : Natural)
+      return CPU_Unsigned
+      renames Shift_Right;
 
    function Shift_Right_Arithmetic
       (Value  : CPU_Unsigned;
@@ -803,6 +805,11 @@ is
       return CPU_Unsigned
       with Import     => True,
            Convention => Intrinsic;
+   function ShRA
+      (Value  : CPU_Unsigned;
+       Amount : Natural)
+      return CPU_Unsigned
+      renames Shift_Right_Arithmetic;
 
    function Rotate_Left
       (Value  : CPU_Unsigned;
@@ -810,6 +817,11 @@ is
       return CPU_Unsigned
       with Import     => True,
            Convention => Intrinsic;
+   function RoL
+      (Value  : CPU_Unsigned;
+       Amount : Natural)
+      return CPU_Unsigned
+      renames Rotate_Left;
 
    function Rotate_Right
       (Value  : CPU_Unsigned;
@@ -817,31 +829,6 @@ is
       return CPU_Unsigned
       with Import     => True,
            Convention => Intrinsic;
-
-   function ShL
-      (Value  : CPU_Unsigned;
-       Amount : Natural)
-      return CPU_Unsigned
-      renames Shift_Left;
-
-   function ShR
-      (Value  : CPU_Unsigned;
-       Amount : Natural)
-      return CPU_Unsigned
-      renames Shift_Right;
-
-   function ShRA
-      (Value  : CPU_Unsigned;
-       Amount : Natural)
-      return CPU_Unsigned
-      renames Shift_Right_Arithmetic;
-
-   function RoL
-      (Value  : CPU_Unsigned;
-       Amount : Natural)
-      return CPU_Unsigned
-      renames Rotate_Left;
-
    function RoR
       (Value  : CPU_Unsigned;
        Amount : Natural)
@@ -856,6 +843,11 @@ is
       return Bytesize
       with Import     => True,
            Convention => Intrinsic;
+   function ShL
+      (Value  : Bytesize;
+       Amount : Natural)
+      return Bytesize
+      renames Shift_Left;
 
    function Shift_Right
       (Value  : Bytesize;
@@ -863,6 +855,11 @@ is
       return Bytesize
       with Import     => True,
            Convention => Intrinsic;
+   function ShR
+      (Value  : Bytesize;
+       Amount : Natural)
+      return Bytesize
+      renames Shift_Right;
 
    function Shift_Right_Arithmetic
       (Value  : Bytesize;
@@ -870,6 +867,11 @@ is
       return Bytesize
       with Import     => True,
            Convention => Intrinsic;
+   function ShRA
+      (Value  : Bytesize;
+       Amount : Natural)
+      return Bytesize
+      renames Shift_Right_Arithmetic;
 
    function Rotate_Left
       (Value  : Bytesize;
@@ -877,6 +879,11 @@ is
       return Bytesize
       with Import     => True,
            Convention => Intrinsic;
+   function RoL
+      (Value  : Bytesize;
+       Amount : Natural)
+      return Bytesize
+      renames Rotate_Left;
 
    function Rotate_Right
       (Value  : Bytesize;
@@ -884,31 +891,6 @@ is
       return Bytesize
       with Import     => True,
            Convention => Intrinsic;
-
-   function ShL
-      (Value  : Bytesize;
-       Amount : Natural)
-      return Bytesize
-      renames Shift_Left;
-
-   function ShR
-      (Value  : Bytesize;
-       Amount : Natural)
-      return Bytesize
-      renames Shift_Right;
-
-   function ShRA
-      (Value  : Bytesize;
-       Amount : Natural)
-      return Bytesize
-      renames Shift_Right_Arithmetic;
-
-   function RoL
-      (Value  : Bytesize;
-       Amount : Natural)
-      return Bytesize
-      renames Rotate_Left;
-
    function RoR
       (Value  : Bytesize;
        Amount : Natural)
@@ -919,7 +901,7 @@ is
    -- Integer <=> Mod_Integer conversions
    ----------------------------------------------------------------------------
 
-   function To_Mod
+   function To_ModInt
       (Value : Integer)
       return Mod_Integer
       with Inline => True;
