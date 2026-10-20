@@ -116,7 +116,7 @@ is
       for Index in Storage_Offset range 0 .. Videofont8x8.Font_Height - 1 loop
          Pattern_Offset := BYTES_PER_RASTER * Natural (Index);
          Framebuffer (Framebuffer_Offset + Pattern_Offset) :=
-            To_U8 (Videofont8x8.Font (Character'Pos (C)) (Index));
+            Unsigned_8 (Videofont8x8.Font (Character'Pos (C)) (Index));
       end loop;
    end OCS_Print;
 
@@ -207,8 +207,8 @@ is
    ----------------------------------------------------------------------------
    procedure OCS_Setup
    is
-      function To_U32 is new Ada.Unchecked_Conversion (Address, Unsigned_32);
       Unused : Unsigned_16 with Unreferenced => True;
+      function To_U32 is new Ada.Unchecked_Conversion (Address, Unsigned_32);
    begin
       --
       -- Bitplane colors:
@@ -326,18 +326,6 @@ is
    end Tclk_Init;
 
    ----------------------------------------------------------------------------
-   -- Serialport_Init
-   ----------------------------------------------------------------------------
-   procedure Serialport_Init
-   is
-   begin
-      -- CUSTOM.SERPER := (RATE => 16#0173#, LONG => False); -- NTSC clock, 9600 bps
-      CUSTOM.SERPER := (RATE => 16#005C#, LONG => False); -- NTSC clock, 38400 bps
-      -- CUSTOM.SERPER := (RATE => 16#0170#, LONG => False); -- PAL clock, 9600 bps
-      -- CUSTOM.SERPER := (RATE => 16#005B#, LONG => False); -- PAL clock, 38400 bps
-   end Serialport_Init;
-
-   ----------------------------------------------------------------------------
    -- Serialport_RX
    ----------------------------------------------------------------------------
    procedure Serialport_RX
@@ -365,6 +353,18 @@ is
       loop exit when CUSTOM.SERDATR.TBE; end loop;
       CUSTOM.SERDAT := (D => To_U8 (C), S => 16#01#);
    end Serialport_TX;
+
+   ----------------------------------------------------------------------------
+   -- Serialport_Init
+   ----------------------------------------------------------------------------
+   procedure Serialport_Init
+   is
+   begin
+      -- CUSTOM.SERPER := (RATE => 16#0173#, LONG => False); -- NTSC clock, 9600 bps
+      CUSTOM.SERPER := (RATE => 16#005C#, LONG => False); -- NTSC clock, 38400 bps
+      -- CUSTOM.SERPER := (RATE => 16#0170#, LONG => False); -- PAL clock, 9600 bps
+      -- CUSTOM.SERPER := (RATE => 16#005B#, LONG => False); -- PAL clock, 38400 bps
+   end Serialport_Init;
 
    ----------------------------------------------------------------------------
    -- OpenLibrary

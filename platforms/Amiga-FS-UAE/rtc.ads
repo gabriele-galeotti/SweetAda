@@ -15,12 +15,14 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Bits;
 with Time;
 
 package RTC
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -33,8 +35,6 @@ package RTC
    use System;
    use Bits;
    use Time;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- MSM6242B
@@ -218,7 +218,5 @@ pragma Style_Checks (Off);
 
    procedure Time_Read
       (T : out TM_Time);
-
-pragma Style_Checks (On);
 
 end RTC;

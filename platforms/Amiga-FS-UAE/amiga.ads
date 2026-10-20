@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with System.Storage_Elements;
 with Interfaces;
@@ -40,8 +42,6 @@ is
    use Interfaces.C;
    use Definitions;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- AMIGA(R) Hardware Reference Manual
@@ -564,13 +564,13 @@ pragma Warnings (On);
 
    procedure Tclk_Init;
 
-   procedure Serialport_Init;
-
    procedure Serialport_RX
       (C : out Character);
 
    procedure Serialport_TX
       (C : in Character);
+
+   procedure Serialport_Init;
 
    function OpenLibrary
       (Library_Name : aliased char_array)
@@ -585,7 +585,5 @@ pragma Warnings (On);
        Manufacturer_ID : Unsigned_32;
        Product_ID      : Unsigned_32)
       return Integer_Address;
-
-pragma Style_Checks (On);
 
 end Amiga;

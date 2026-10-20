@@ -22,11 +22,10 @@ with MMIO;
 with Amiga;
 with BSP;
 with GDBstub;
-with A2065;
 with Console;
 
 package body Exceptions
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -54,17 +53,33 @@ package body Exceptions
    procedure Exception_Process
       (Exception_Number : in Unsigned_32;
        Frame_Address    : in Address)
-      is
+   is
    begin
       case Exception_Number is
          when Illegal_Instruction =>
             Irq_Disable;
             Console.Print_NewLine;
             Console.Print ("Illegal instruction", NL => True);
-            Console.Print (Prefix => "1: ", Value => Unsigned_16'(MMIO.Read (Frame_Address + 16 + 0)), NL => True);
-            Console.Print (Prefix => "2: ", Value => Unsigned_16'(MMIO.Read (Frame_Address + 16 + 2)), NL => True);
-            Console.Print (Prefix => "3: ", Value => Unsigned_16'(MMIO.Read (Frame_Address + 16 + 4)), NL => True);
-            Console.Print (Prefix => "4: ", Value => Unsigned_16'(MMIO.Read (Frame_Address + 16 + 6)), NL => True);
+            Console.Print (
+               Prefix => "1: ",
+               Value  => Unsigned_16'(MMIO.Read (Frame_Address + 16 + 0)),
+               NL     => True
+               );
+            Console.Print (
+               Prefix => "2: ",
+               Value  => Unsigned_16'(MMIO.Read (Frame_Address + 16 + 2)),
+               NL     => True
+               );
+            Console.Print (
+               Prefix => "3: ",
+               Value  => Unsigned_16'(MMIO.Read (Frame_Address + 16 + 4)),
+               NL     => True
+               );
+            Console.Print (
+               Prefix => "4: ",
+               Value  => Unsigned_16'(MMIO.Read (Frame_Address + 16 + 6)),
+               NL => True
+               );
             System_Abort;
          when Trace | Trap_15 =>
             GDBstub.Enter_Stub (GDBstub.TARGET_BREAKPOINT, Core.KERNEL_THREAD_ID);
@@ -76,7 +91,10 @@ package body Exceptions
          when others =>
             Irq_Disable;
             Console.Print_NewLine;
-            Console.Print (Prefix => "Exception: 0x", Value => Exception_Number, NL => True);
+            Console.Print (
+               Prefix => "Exception: 0x",
+               Value  => Exception_Number,
+               NL     => True);
             System_Abort;
       end case;
    end Exception_Process;
@@ -86,7 +104,7 @@ package body Exceptions
    ----------------------------------------------------------------------------
    procedure Irq_Process
       (Irq_Identifier : in Exception_Vector_Id_Type)
-      is
+   is
       Unused : Unsigned_8 with Unreferenced => True;
    begin
       if Irq_Identifier = Level1_Autovector then
@@ -129,7 +147,7 @@ package body Exceptions
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
    begin
       for Index in IVT'Range loop
          IVT (Index) := Null_Address;
@@ -158,14 +176,14 @@ package body Exceptions
       -- IVT (Unassigned_Reserved_7)              := Null_Address;
       -- IVT (Unassigned_Reserved_8)              := Null_Address;
       -- IVT (Unassigned_Reserved_9)              := Null_Address;
-      IVT (Spurious_Interrupt)      := SpuriousInt_Handler'Address;
-      IVT (Level1_Autovector)       := Level1_Autovector_Handler'Address;
-      IVT (Level2_Autovector)       := Level2_Autovector_Handler'Address;
-      IVT (Level3_Autovector)       := Level3_Autovector_Handler'Address;
-      IVT (Level4_Autovector)       := Level4_Autovector_Handler'Address;
-      IVT (Level5_Autovector)       := Level5_Autovector_Handler'Address;
-      IVT (Level6_Autovector)       := Level6_Autovector_Handler'Address;
-      IVT (Level7_Autovector)       := Level7_Autovector_Handler'Address;
+      IVT (Spurious_Interrupt)                 := SpuriousInt_Handler'Address;
+      IVT (Level1_Autovector)                  := Level1_Autovector_Handler'Address;
+      IVT (Level2_Autovector)                  := Level2_Autovector_Handler'Address;
+      IVT (Level3_Autovector)                  := Level3_Autovector_Handler'Address;
+      IVT (Level4_Autovector)                  := Level4_Autovector_Handler'Address;
+      IVT (Level5_Autovector)                  := Level5_Autovector_Handler'Address;
+      IVT (Level6_Autovector)                  := Level6_Autovector_Handler'Address;
+      IVT (Level7_Autovector)                  := Level7_Autovector_Handler'Address;
       -- IVT (Trap_1)                             := Trap_1_Handler'Address;
       -- IVT (Trap_2)                             := Trap_2_Handler'Address;
       -- IVT (Trap_3)                             := Trap_3_Handler'Address;

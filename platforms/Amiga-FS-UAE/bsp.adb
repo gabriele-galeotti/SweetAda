@@ -17,10 +17,8 @@
 
 with System;
 with System.Storage_Elements;
-with Configure;
 with Definitions;
 with Core;
-with Bits;
 with Secondary_Stack;
 with MMIO;
 with M68k;
@@ -33,7 +31,8 @@ with Exceptions;
 with Console;
 with Malloc;
 
-package body BSP is
+package body BSP
+is
 
    --========================================================================--
    --                                                                        --
@@ -47,7 +46,6 @@ package body BSP is
    use System.Storage_Elements;
    use Interfaces;
    use Definitions;
-   use Bits;
    use M68k;
    use Amiga;
 
@@ -65,14 +63,14 @@ package body BSP is
 
    procedure Console_Putchar
       (C : in Character)
-      is
+   is
    begin
       Serialport_TX (C);
    end Console_Putchar;
 
    procedure Console_Getchar
       (C : out Character)
-      is
+   is
    begin
       Serialport_RX (C);
    end Console_Getchar;
@@ -81,7 +79,7 @@ package body BSP is
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup
-      is
+   is
    begin
       -------------------------------------------------------------------------
       Secondary_Stack.Init;
@@ -126,8 +124,7 @@ package body BSP is
       -- A2065 ----------------------------------------------------------------
       if False then
          declare
-            Success : Boolean;
-            PIC     : ZorroII.PIC_Type;
+            PIC : ZorroII.PIC_Type;
          begin
             loop
                PIC := ZorroII.Read;
@@ -144,8 +141,7 @@ package body BSP is
       end if;
       if True then
          declare
-            -- Success : Boolean;
-            -- PIC     : ZorroII.PIC_Type;
+            -- PIC : ZorroII.PIC_Type;
          begin
             ZorroII.Setup (A2065.A2065_BASEADDRESS);
             -- A2065.Probe (PIC, Success);

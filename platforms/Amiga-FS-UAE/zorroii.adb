@@ -20,7 +20,7 @@ with Bits;
 with MMIO;
 
 package body ZorroII
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -57,7 +57,7 @@ package body ZorroII
    function Byte_Read
       (Offset : Storage_Offset)
       return Unsigned_8
-      is
+   is
       Value : Unsigned_8;
    begin
       Value := (MMIO.Read (Cfg_Space'Address + Offset)          and 16#F0#) or
@@ -73,7 +73,7 @@ package body ZorroII
    ----------------------------------------------------------------------------
    function Read
       return PIC_Type
-      is
+   is
       PIC : PIC_Type;
    begin
       PIC.Board           := Byte_Read (16#00#);
@@ -97,7 +97,7 @@ package body ZorroII
    ----------------------------------------------------------------------------
    procedure Setup
       (Base_Address : in Integer_Address)
-      is
+   is
       E_Byte : Unsigned_8;
       function To_U32 is new Ada.Unchecked_Conversion (Integer_Address, Unsigned_32);
    begin
@@ -110,7 +110,7 @@ package body ZorroII
    -- Shutup
    ----------------------------------------------------------------------------
    procedure Shutup
-      is
+   is
    begin
       MMIO.Write (Cfg_Space'Address + 16#4C#, Unsigned_8'(0));
    end Shutup;

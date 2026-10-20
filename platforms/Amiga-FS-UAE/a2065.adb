@@ -17,6 +17,8 @@
 
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
+with Interfaces;
+with Bits;
 with MMIO;
 with LLutils;
 with Memory_Functions;
@@ -35,7 +37,8 @@ package body A2065
    --========================================================================--
 
    use System.Storage_Elements;
-   use Amiga;
+   use Interfaces;
+   use Bits;
    use Am7990;
    use Ethernet;
 
@@ -121,12 +124,140 @@ package body A2065
    --========================================================================--
 
    ----------------------------------------------------------------------------
+   -- Receive
+   ----------------------------------------------------------------------------
+   function Receive
+      return Boolean
+   is
+      Result       : Boolean;
+      A2065_Status : CSR0_Type;
+      P            : PBUF.Pbuf_Ptr;
+      function To_U16 is new Ada.Unchecked_Conversion (CSR0_Type, Unsigned_16);
+      function To_CSR0 is new Ada.Unchecked_Conversion (Unsigned_16, CSR0_Type);
+   begin
+      Result := False;
+      if not Am7990_Descriptor_Initialized then
+         return Result;
+      end if;
+      A2065_Status := To_CSR0 (Register_Read (Am7990_Descriptor, CSR0));
+      if A2065_Status.INTR then
+         if A2065_Status.IDON then
+            -- initialization complete
+            Register_Write (
+               Am7990_Descriptor,
+               CSR0,
+               To_U16 (CSR0_Type'(
+                  IDON   => True,
+                  others => False
+                  ))
+               );
+            Initialization_Done := True;
+            Result := True;
+            -- Console.Print ("A2065: Initialization done.", NL => True);
+         elsif A2065_Status.RINT then
+            loop
+               exit when not Receive_Ring (RX_Buffer_Index).RMD1.OWN;
+               RX_Buffer_Index := (RX_Buffer_Index + 1) mod 2**RDR_ORDER;
+            end loop;
+            -- __FIX__ check for errors
+            Register_Write (
+               Am7990_Descriptor,
+               CSR0,
+               To_U16 (CSR0_Type'(
+                  TXON   => True,
+                  RXON   => True,
+                  BABL   => True,
+                  MISS   => True,
+                  MERR   => True,
+                  TINT   => False,
+                  RINT   => True,
+                  others => False
+                  ))
+               );
+            -- Console.Print (Natural (Receive_Ring (RX_Buffer_Index).RMD3.MCNT), Prefix => "RECEIVE = ", NL => True);
+            P := PBUF.Allocate (Natural (Receive_Ring (RX_Buffer_Index).RMD3.MCNT) - 4); -- discard FCS
+            Memory_Functions.Cpymem (
+               Receive_Buffers (RX_Buffer_Index)'Address,
+               PBUF.Payload_Address (P),
+               Bytesize (Receive_Ring (RX_Buffer_Index).RMD3.MCNT - 4)
+               );
+            -- Receive_Ring (RX_Buffer_Index).RMD3.MCNT := 0; ???
+            Receive_Ring (RX_Buffer_Index).RMD1.OWN := True;
+            declare
+               Success : Boolean;
+            begin
+               Enqueue (Packet_Queue'Access, P, Success);
+            end;
+            Result := True;
+         elsif A2065_Status.TINT then
+            Register_Write (
+               Am7990_Descriptor,
+               CSR0,
+               To_U16 (CSR0_Type'(
+                  TXON   => True,
+                  RXON   => True,
+                  BABL   => True,
+                  MISS   => True,
+                  MERR   => True,
+                  TINT   => True,
+                  RINT   => False,
+                  others => False
+                  ))
+               );
+            Transmit_Ring (0).TMD1.OWN := False;
+            Result := True;
+         end if;
+      end if;
+      return Result;
+   end Receive;
+
+   ----------------------------------------------------------------------------
+   -- Transmit
+   ----------------------------------------------------------------------------
+   procedure Transmit
+      (Data_Address : in System.Address with Unreferenced => True;
+       P            : in PBUF.Pbuf_Ptr)
+   is
+      function To_U16 is new Ada.Unchecked_Conversion (CSR0_Type, Unsigned_16);
+   begin
+      -- __FIX__
+      if P.all.Size < 60 then
+         P.all.Size := 60;
+      end if;
+      Console.Print (P.all.Size, Prefix => "TRANSMIT: ", NL => True);
+      -- __FIX__ only one pbuf
+      Memory_Functions.Cpymem (
+         PBUF.Payload_Address (P),
+         Transmit_Buffers (0)'Address,
+         Bytesize (P.all.Size)
+         );
+      Transmit_Ring (0).TMD2 := (BCNT => -Bits_12 (P.all.Size), others => <>);
+      Transmit_Ring (0).TMD1.ENP := True;
+      Transmit_Ring (0).TMD1.STP := True;
+      Transmit_Ring (0).TMD1.OWN := True;
+      Register_Write (
+         Am7990_Descriptor,
+         CSR0,
+         To_U16 (CSR0_Type'(
+            TXON   => True,
+            RXON   => True,
+            BABL   => True,
+            MISS   => True,
+            MERR   => True,
+            TINT   => True,
+            RINT   => True,
+            others => False
+            ))
+         );
+   end Transmit;
+
+   ----------------------------------------------------------------------------
    -- Probe
    ----------------------------------------------------------------------------
    procedure Probe
       (PIC     : in     ZorroII.PIC_Type;
        Success :    out Boolean)
-      is
+   is
    begin
       -- MAC = 02-80-10 (Commodore OUI, locally administered) + last 24 bits of
       -- the board S/N offsets
@@ -160,13 +291,12 @@ package body A2065
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
       RDRA                : Ring_Descriptor_Pointer_Type;
       TDRA                : Ring_Descriptor_Pointer_Type;
       Ethernet_Descriptor : Ethernet.Descriptor_Type := Ethernet.DESCRIPTOR_INVALID;
       function To_U16 is new Ada.Unchecked_Conversion (CSR0_Type, Unsigned_16);
       function To_U16 is new Ada.Unchecked_Conversion (CSR3_Type, Unsigned_16);
-
       function To_R_RDP is new Ada.Unchecked_Conversion (Unsigned_32, Ring_Descriptor_Pointer_Type);
       function To_U32 is new Ada.Unchecked_Conversion (Ring_Descriptor_Pointer_Type, Unsigned_32);
    begin
@@ -296,134 +426,5 @@ package body A2065
             ))
          );
    end Init;
-
-   ----------------------------------------------------------------------------
-   -- Receive
-   ----------------------------------------------------------------------------
-   function Receive
-      return Boolean
-      is
-      Result       : Boolean;
-      A2065_Status : CSR0_Type;
-      P            : PBUF.Pbuf_Ptr;
-      function To_U16 is new Ada.Unchecked_Conversion (CSR0_Type, Unsigned_16);
-      function To_CSR0 is new Ada.Unchecked_Conversion (Unsigned_16, CSR0_Type);
-   begin
-      Result := False;
-      if not Am7990_Descriptor_Initialized then
-         return Result;
-      end if;
-      A2065_Status := To_CSR0 (Register_Read (Am7990_Descriptor, CSR0));
-      if A2065_Status.INTR then
-         if A2065_Status.IDON then
-            -- initialization complete
-            Register_Write (
-               Am7990_Descriptor,
-               CSR0,
-               To_U16 (CSR0_Type'(
-                  IDON   => True,
-                  others => False
-                  ))
-               );
-            Initialization_Done := True;
-            Result := True;
-            -- Console.Print ("A2065: Initialization done.", NL => True);
-         elsif A2065_Status.RINT then
-            loop
-               exit when not Receive_Ring (RX_Buffer_Index).RMD1.OWN;
-               RX_Buffer_Index := (RX_Buffer_Index + 1) mod 2**RDR_ORDER;
-            end loop;
-            -- __FIX__ check for errors
-            Register_Write (
-               Am7990_Descriptor,
-               CSR0,
-               To_U16 (CSR0_Type'(
-                  TXON   => True,
-                  RXON   => True,
-                  BABL   => True,
-                  MISS   => True,
-                  MERR   => True,
-                  TINT   => False,
-                  RINT   => True,
-                  others => False
-                  ))
-               );
-            -- Console.Print (Natural (Receive_Ring (RX_Buffer_Index).RMD3.MCNT), Prefix => "RECEIVE = ", NL => True);
-            P := PBUF.Allocate (Natural (Receive_Ring (RX_Buffer_Index).RMD3.MCNT) - 4); -- discard FCS
-            Memory_Functions.Cpymem (
-               Receive_Buffers (RX_Buffer_Index)'Address,
-               PBUF.Payload_Address (P),
-               Bytesize (Receive_Ring (RX_Buffer_Index).RMD3.MCNT - 4)
-               );
-            -- Receive_Ring (RX_Buffer_Index).RMD3.MCNT := 0; ???
-            Receive_Ring (RX_Buffer_Index).RMD1.OWN := True;
-            declare
-               Success : Boolean;
-            begin
-               Enqueue (Packet_Queue'Access, P, Success);
-            end;
-            Result := True;
-         elsif A2065_Status.TINT then
-            Register_Write (
-               Am7990_Descriptor,
-               CSR0,
-               To_U16 (CSR0_Type'(
-                  TXON   => True,
-                  RXON   => True,
-                  BABL   => True,
-                  MISS   => True,
-                  MERR   => True,
-                  TINT   => True,
-                  RINT   => False,
-                  others => False
-                  ))
-               );
-            Transmit_Ring (0).TMD1.OWN := False;
-            Result := True;
-         end if;
-      end if;
-      return Result;
-   end Receive;
-
-   ----------------------------------------------------------------------------
-   -- Transmit
-   ----------------------------------------------------------------------------
-   procedure Transmit
-      (Data_Address : in System.Address;
-       P            : in PBUF.Pbuf_Ptr)
-      is
-      pragma Unreferenced (Data_Address);
-      function To_U16 is new Ada.Unchecked_Conversion (CSR0_Type, Unsigned_16);
-   begin
-      -- __FIX__
-      if P.all.Size < 60 then
-         P.all.Size := 60;
-      end if;
-      Console.Print (P.all.Size, Prefix => "TRANSMIT: ", NL => True);
-      -- __FIX__ only one pbuf
-      Memory_Functions.Cpymem (
-         PBUF.Payload_Address (P),
-         Transmit_Buffers (0)'Address,
-         Bytesize (P.all.Size)
-         );
-      Transmit_Ring (0).TMD2 := (BCNT => -Bits_12 (P.all.Size), others => <>);
-      Transmit_Ring (0).TMD1.ENP := True;
-      Transmit_Ring (0).TMD1.STP := True;
-      Transmit_Ring (0).TMD1.OWN := True;
-      Register_Write (
-         Am7990_Descriptor,
-         CSR0,
-         To_U16 (CSR0_Type'(
-            TXON   => True,
-            RXON   => True,
-            BABL   => True,
-            MISS   => True,
-            MERR   => True,
-            TINT   => True,
-            RINT   => True,
-            others => False
-            ))
-         );
-   end Transmit;
 
 end A2065;

@@ -16,15 +16,13 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 with System;
-with Interfaces;
-with Bits;
 with ZorroII;
 with Am7990;
 with Ethernet;
 with PBUF;
 
 package A2065
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -33,10 +31,6 @@ package A2065
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-   use System;
-   use Interfaces;
-   use Bits;
 
    ----------------------------------------------------------------------------
    -- A2065 Zorro II Ethernet Card
@@ -57,14 +51,17 @@ package A2065
    -- subprograms
    ----------------------------------------------------------------------------
 
-   procedure Probe
-      (PIC     : in     ZorroII.PIC_Type;
-       Success :    out Boolean);
-   procedure Init;
    function Receive
       return Boolean;
+
    procedure Transmit
       (Data_Address : in System.Address;
        P            : in PBUF.Pbuf_Ptr);
+
+   procedure Probe
+      (PIC     : in     ZorroII.PIC_Type;
+       Success :    out Boolean);
+
+   procedure Init;
 
 end A2065;

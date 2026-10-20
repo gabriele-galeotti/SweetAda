@@ -19,7 +19,7 @@ with System.Storage_Elements;
 with Interfaces;
 
 package ZorroII
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -42,8 +42,10 @@ package ZorroII
 
    function Read
       return PIC_Type;
+
    procedure Setup
       (Base_Address : in Integer_Address);
+
    procedure Shutup;
 
 end ZorroII;
