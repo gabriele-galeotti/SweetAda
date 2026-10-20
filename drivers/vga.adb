@@ -723,7 +723,7 @@ is
    begin
       for Y in 0 .. PIXEL_Y - 1 loop
          for X in 0 .. PIXEL_X - 1 loop
-            Draw_Pixel (X, Y, To_U8 (Picture (Pixel_Idx)));
+            Draw_Pixel (X, Y, Unsigned_8 (Picture (Pixel_Idx)));
             Pixel_Idx := @ + 1;
          end loop;
       end loop;
