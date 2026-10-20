@@ -38,8 +38,10 @@ is
 
    procedure NOP
       with Inline => True;
+
    procedure RET
       with Inline => True;
+
    procedure Asm_Call
       (Target_Address : in Address)
       with Inline => True;
@@ -52,6 +54,7 @@ is
 
    procedure Irq_Enable
       with Inline => True;
+
    procedure Irq_Disable
       with Inline => True;
 

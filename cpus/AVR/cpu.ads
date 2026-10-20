@@ -50,6 +50,7 @@ is
 
    procedure Irq_Enable
       renames AVR.Irq_Enable;
+
    procedure Irq_Disable
       renames AVR.Irq_Disable;
 
