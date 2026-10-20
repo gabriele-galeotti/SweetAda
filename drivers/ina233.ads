@@ -15,11 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Bits;
 
 package INA233
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -32,21 +34,44 @@ package INA233
    use System;
    use Bits;
 
-pragma Style_Checks (Off);
-
    ----------------------------------------------------------------------------
    -- INA233 36V, 16-Bit, Ultra-Precise I2C and PMBus Output Current, Voltage,
    -- Power, and Energy Monitor With Alert
    -- SBOS790A – APRIL 2017 – REVISED MARCH 2025
    ----------------------------------------------------------------------------
 
-   IOUT_OC_WARN_LIMIT : constant := 16#4A#;
-   VIN_OV_WARN_LIMIT  : constant := 16#57#;
-   VIN_UV_WARN_LIMIT  : constant := 16#58#;
-   PIN_OP_WARN_LIMIT  : constant := 16#6B#;
-   STATUS_BYTE        : constant := 16#78#;
-   MFR_ID             : constant := 16#99#;
-   MFR_CALIBRATION    : constant := 16#D4#;
+   CLEAR_FAULTS        : constant := 16#03#;
+   RESTORE_DEFAULT_ALL : constant := 16#12#;
+   CAPABILITY          : constant := 16#19#;
+   IOUT_OC_WARN_LIMIT  : constant := 16#4A#;
+   VIN_OV_WARN_LIMIT   : constant := 16#57#;
+   VIN_UV_WARN_LIMIT   : constant := 16#58#;
+   PIN_OP_WARN_LIMIT   : constant := 16#6B#;
+   STATUS_BYTE         : constant := 16#78#;
+   STATUS_WORD         : constant := 16#79#;
+   STATUS_IOUT         : constant := 16#7B#;
+   STATUS_INPUT        : constant := 16#7C#;
+   STATUS_CML          : constant := 16#7E#;
+   STATUS_MFR_SPECIFIC : constant := 16#80#;
+   READ_EIN            : constant := 16#86#;
+   READ_VIN            : constant := 16#88#;
+   READ_IIN            : constant := 16#89#;
+   READ_VOUT           : constant := 16#8B#;
+   READ_IOUT           : constant := 16#8C#;
+   READ_POUT           : constant := 16#96#;
+   READ_PIN            : constant := 16#97#;
+   MFR_ID              : constant := 16#99#;
+   MFR_MODEL           : constant := 16#9A#;
+   MFR_REVISION        : constant := 16#9B#;
+   MFR_ADC_CONFIG      : constant := 16#D0#;
+   MFR_READ_VSHUNT     : constant := 16#D1#;
+   MFR_ALERT_MASK      : constant := 16#D2#;
+   MFR_CALIBRATION     : constant := 16#D4#;
+   MFR_DEVICE_CONFIG   : constant := 16#D5#;
+   CLEAR_EIN           : constant := 16#D6#;
+   TI_MFR_ID           : constant := 16#E0#;
+   TI_MFR_MODEL        : constant := 16#E1#;
+   TI_MFR_REVISION     : constant := 16#E2#;
 
    -- 6.6.2.4 IOUT_OC_WARN_LIMIT (4Ah)
 
@@ -189,14 +214,37 @@ pragma Style_Checks (Off);
 
    -- 6.6.3.1 MFR_ADC_CONFIG (D0h)
    -- 6.6.3.2 MFR_READ_VSHUNT (D1h)
+
    -- 6.6.3.3 MFR_ALERT_MASK (D2h)
+
+   type MFR_ALERT_MASK_Type is record
+      IN_UV_WARNING         : Boolean := False; -- Input undervoltage warning mask
+      IN_OV_WARNING         : Boolean := False; -- Input overvoltage warning mask
+      IN_OC_WARNING         : Boolean := False; -- Input overcurrent warning mask
+      IN_OP_WARNING         : Boolean := False; -- Input overpower warning mask
+      Communications        : Boolean := True;  -- Communications or memory fault (or of STATUS_CML)
+      POR_event_detected    : Boolean := True;  -- Masks the detection of a power-on-reset event.
+      ADC_overflow_detected : Boolean := True;  -- Masks the ADC overflow detection
+      Conversion_ready      : Boolean := True;  -- Masks the conversion ready signal to the ALERT pin (masked by default).
+   end record
+   with Bit_Order => Low_Order_First,
+        Size      => 8;
+   for MFR_ALERT_MASK_Type use record
+      IN_UV_WARNING         at 0 range 0 .. 0;
+      IN_OV_WARNING         at 0 range 1 .. 1;
+      IN_OC_WARNING         at 0 range 2 .. 2;
+      IN_OP_WARNING         at 0 range 3 .. 3;
+      Communications        at 0 range 4 .. 4;
+      POR_event_detected    at 0 range 5 .. 5;
+      ADC_overflow_detected at 0 range 6 .. 6;
+      Conversion_ready      at 0 range 7 .. 7;
+   end record;
+
    -- 6.6.3.4 MFR_CALIBRATION (D4h)
-   -- 6.6.3.5 MFR_DEVICE_CONFIG (D5h
+   -- 6.6.3.5 MFR_DEVICE_CONFIG (D5h)
    -- 6.6.3.6 CLEAR_EIN (D6h)
    -- 6.6.3.7 TI_MFR_ID (E0h)
    -- 6.6.3.8 TI_MFR_MODEL (E1h)
    -- 6.6.3.9 TI_MFR_REVISION (E2h)
-
-pragma Style_Checks (On);
 
 end INA233;
