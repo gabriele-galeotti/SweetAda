@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with S390;
 
 package CPU
@@ -43,6 +45,7 @@ is
 
    procedure Irq_Enable
       renames S390.Irq_Enable;
+
    procedure Irq_Disable
       renames S390.Irq_Disable;
 

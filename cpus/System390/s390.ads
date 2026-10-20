@@ -16,6 +16,7 @@
 -----------------------------------------------------------------------------------------------------------------------
 
 pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
 
 with System;
 with Interfaces;
@@ -35,8 +36,6 @@ is
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- Enterprise Systems Architecture/390 (TM)
@@ -107,8 +106,7 @@ pragma Style_Checks (Off);
    subtype Intcontext_Type is Integer;
 
    procedure Irq_Enable;
-   procedure Irq_Disable;
 
-pragma Style_Checks (On);
+   procedure Irq_Disable;
 
 end S390;
