@@ -963,7 +963,7 @@ help:
 	@$(call echo-print,"  Build EXE-wrapper.")
 	@$(call echo-print,"make configure-save")
 	@$(call echo-print,"  Load and execute a user-owned 'configuration.user.in' file \
-                              to save  configuration files.")
+                              to save configuration files.")
 	@$(call echo-print,"make configure-restore")
 	@$(call echo-print,"  Load and execute a user-owned 'configuration.user.in' file \
                               to restore configuration files.")
@@ -1822,7 +1822,7 @@ ifneq ($(CONFIGURE_SAVE_COMMAND),)
 endif
 
 .PHONY: configure-restore
-configure-restore: distclean
+configure-restore: distclean kernel-lib-obj-dir
 ifneq ($(CONFIGURE_RESTORE_COMMAND),)
 	$(CONFIGURE_RESTORE_COMMAND)
 ifeq ($(OSTYPE),cmd)
