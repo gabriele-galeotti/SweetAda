@@ -53,8 +53,7 @@ abstract project Gprbuild_Tc is
          when "gnatprove" =>
             for Global_Compilation_Switches ("Ada") use (
                "-gnateT="                 &
-               Configure.SweetAda_Path    &
-               "/"                        &
+               Project'Project_Dir        &
                Configure.GnatTDI_Filename
                );
          when others      =>
