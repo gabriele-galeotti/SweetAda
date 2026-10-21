@@ -159,7 +159,7 @@ if ($uniq)
   $gprdeps = $gprdeps | Sort-Object -Unique
 }
 
-Write-Host "$gprdeps"
+Write-Host "$($gprdeps)"
 
 ExitWithCode 0
 
