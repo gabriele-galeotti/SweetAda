@@ -15,6 +15,9 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
+
 with System;
 with System.Storage_Elements;
 with Interfaces;
@@ -36,8 +39,6 @@ is
    use System.Storage_Elements;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- MCF5206 ColdFire Integrated Microprocessor User’s Manual
@@ -151,72 +152,84 @@ pragma Style_Checks (Off);
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
    -- Interrupt Control Register 2 - External IPL2
    ICR2 : aliased ICR_Type
       with Address              => System'To_Address (Configure.MBAR_VALUE + 16#15#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
    -- Interrupt Control Register 3 - External IPL3
    ICR3 : aliased ICR_Type
       with Address              => System'To_Address (Configure.MBAR_VALUE + 16#16#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
    -- Interrupt Control Register 4 - External IRQ4/IPL4
    ICR4 : aliased ICR_Type
       with Address              => System'To_Address (Configure.MBAR_VALUE + 16#17#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
    -- Interrupt Control Register 5 - External IPL5
    ICR5 : aliased ICR_Type
       with Address              => System'To_Address (Configure.MBAR_VALUE + 16#18#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
    -- Interrupt Control Register 6 - External IPL6
    ICR6 : aliased ICR_Type
       with Address              => System'To_Address (Configure.MBAR_VALUE + 16#19#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
    -- Interrupt Control Register 7 - External IRQ7/IPL7
    ICR7 : aliased ICR_Type
       with Address              => System'To_Address (Configure.MBAR_VALUE + 16#1A#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
    -- Interrupt Control Register 8 - SWT
    ICR8 : aliased ICR_Type
       with Address              => System'To_Address (Configure.MBAR_VALUE + 16#1B#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
    -- Interrupt Control Register 9 - Timer 1 Interrupt
    ICR9 : aliased ICR_Type
       with Address              => System'To_Address (Configure.MBAR_VALUE + 16#1C#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
    -- Interrupt Control Register 10 - Timer 2 Interrupt 
    ICR10 : aliased ICR_Type
       with Address              => System'To_Address (Configure.MBAR_VALUE + 16#1D#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
    -- Interrupt Control Register 11 - MBUS Interrupt
    ICR11 : aliased ICR_Type
       with Address              => System'To_Address (Configure.MBAR_VALUE + 16#1E#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
    -- Interrupt Control Register 12 - UART 1 Interrupt
    ICR12 : aliased ICR_Type
       with Address              => System'To_Address (Configure.MBAR_VALUE + 16#1F#),
            Volatile_Full_Access => True,
            Import               => True,
            Convention           => Ada;
+
    -- Interrupt Control Register 13 - UART2 Interrupt
    ICR13 : aliased ICR_Type
       with Address              => System'To_Address (Configure.MBAR_VALUE + 16#20#),
@@ -300,6 +313,7 @@ pragma Style_Checks (Off);
       (Value : UMR1_Type)
       return Unsigned_8
       with Inline => True;
+
    function To_UMR1
       (Value : Unsigned_8)
       return UMR1_Type
@@ -349,6 +363,7 @@ pragma Style_Checks (Off);
       (Value : UMR2_Type)
       return Unsigned_8
       with Inline => True;
+
    function To_UMR2
       (Value : Unsigned_8)
       return UMR2_Type
@@ -383,6 +398,7 @@ pragma Style_Checks (Off);
       (Value : USR_Type)
       return Unsigned_8
       with Inline => True;
+
    function To_USR
       (Value : Unsigned_8)
       return USR_Type
@@ -413,6 +429,7 @@ pragma Style_Checks (Off);
       (Value : UCSR_Type)
       return Unsigned_8
       with Inline => True;
+
    function To_UCSR
       (Value : Unsigned_8)
       return UCSR_Type
@@ -456,6 +473,7 @@ pragma Style_Checks (Off);
       (Value : UCR_Type)
       return Unsigned_8
       with Inline => True;
+
    function To_UCR
       (Value : Unsigned_8)
       return UCR_Type
@@ -485,6 +503,7 @@ pragma Style_Checks (Off);
       (Value : UIPCR_Type)
       return Unsigned_8
       with Inline => True;
+
    function To_UIPCR
       (Value : Unsigned_8)
       return UIPCR_Type
@@ -507,6 +526,7 @@ pragma Style_Checks (Off);
       (Value : UACR_Type)
       return Unsigned_8
       with Inline => True;
+
    function To_UACR
       (Value : Unsigned_8)
       return UACR_Type
@@ -535,6 +555,7 @@ pragma Style_Checks (Off);
       (Value : UISR_Type)
       return Unsigned_8
       with Inline => True;
+
    function To_UISR
       (Value : Unsigned_8)
       return UISR_Type
@@ -563,6 +584,7 @@ pragma Style_Checks (Off);
       (Value : UIMR_Type)
       return Unsigned_8
       with Inline => True;
+
    function To_UIMR
       (Value : Unsigned_8)
       return UIMR_Type
@@ -585,6 +607,7 @@ pragma Style_Checks (Off);
       (Value : UIP_Type)
       return Unsigned_8
       with Inline => True;
+
    function To_UIP
       (Value : Unsigned_8)
       return UIP_Type
@@ -607,6 +630,7 @@ pragma Style_Checks (Off);
       (Value : UOP_Type)
       return Unsigned_8
       with Inline => True;
+
    function To_UOP
       (Value : Unsigned_8)
       return UOP_Type
@@ -699,7 +723,5 @@ pragma Style_Checks (Off);
            Volatile   => True,
            Import     => True,
            Convention => Ada;
-
-pragma Style_Checks (On);
 
 end MCF5206;

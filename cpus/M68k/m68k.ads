@@ -206,6 +206,7 @@ is
       (A : in Address)
       return Unsigned_8
       with Inline => True;
+
    procedure MoveSByte
       (A : in Address;
        B : in Unsigned_8)
@@ -215,6 +216,7 @@ is
       (A : in Address)
       return Unsigned_16
       with Inline => True;
+
    procedure MoveSWord
       (A : in Address;
        W : in Unsigned_16)
@@ -224,6 +226,7 @@ is
       (A : in Address)
       return Unsigned_32
       with Inline => True;
+
    procedure MoveSLong
       (A : in Address;
        L : in Unsigned_32)
@@ -568,12 +571,14 @@ is
    procedure Intcontext_Get
       (Intcontext : out Intcontext_Type)
       with Inline => True;
+
    procedure Intcontext_Set
       (Intcontext : in Intcontext_Type)
       with Inline => True;
 
    procedure Irq_Enable
       with Inline => True;
+
    procedure Irq_Disable
       with Inline => True;
 

@@ -231,9 +231,11 @@ is
    procedure CRP_Set
       (CRP_Address : in Address)
       with Inline => True;
+
    procedure SRP_Set
       (SRP_Address : in Address)
       with Inline => True;
+
    procedure TCR_Set
       (Value : in TCR_Type)
       with Inline => True;

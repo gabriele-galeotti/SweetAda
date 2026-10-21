@@ -79,6 +79,7 @@ is
 
    procedure Irq_Enable
       renames CFv2.Irq_Enable;
+
    procedure Irq_Disable
       renames CFv2.Irq_Disable;
 
