@@ -1,0 +1,10 @@
+
+package Configure
+   with Pure => True
+is
+
+   -- PLATFORM and CPU definitions
+   PLATFORM : constant String := "@PLATFORM@";
+   CPU      : constant String := "@CPU@";
+
+end Configure;
