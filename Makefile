@@ -1062,24 +1062,26 @@ endif
 ifeq      ($(BUILD_MODE),GNATMAKE)
 	@$(REM) GNATMAKE-driven procedure
 	$(call brief-command, \
-        $(GNATMAKE)                             \
-                    $(GNATMAKE_WRAPPER)         \
-                    -c                          \
-                    -gnatec=$(GNATADC_FILENAME) \
-                    -D $(OBJECT_DIRECTORY)      \
-                    $(foreach                   \
-                      d,$(INCLUDE_DIRECTORIES), \
-                      -I$(d)                    \
-                      )                         \
-                    main.adb                    \
+        $(GNATMAKE)                                                            \
+                    $(GNATMAKE_WRAPPER)                                        \
+                    --RTS="$(KERNEL_PARENT_PATH)/$(RTS_DIRECTORY)/$(RTS_PATH)" \
+                    -gnatec=$(GNATADC_FILENAME)                                \
+                    -D $(OBJECT_DIRECTORY)                                     \
+                    $(foreach                                                  \
+                      d,$(INCLUDE_DIRECTORIES),                                \
+                      -I$(d)                                                   \
+                      )                                                        \
+                    -c                                                         \
+                    main.adb                                                   \
         ,[GNATMAKE],main.adb)
 else ifeq ($(BUILD_MODE),GPRbuild)
 	@$(REM) GPRbuild-driven procedure
 	$(call brief-command, \
-        $(GPRBUILD)                      \
-                    $(GPRBUILD_WRAPPER)  \
-                    -c -p                \
-                    -P $(KERNEL_GPRFILE) \
+        $(GPRBUILD)                                            \
+                    $(GPRBUILD_WRAPPER)                        \
+                    -c -p                                      \
+                    -P $(KERNEL_GPRFILE)                       \
+                    -XKERNEL_PARENT_PATH=$(KERNEL_PARENT_PATH) \
         ,[GPRBUILD-C],$(KERNEL_GPRFILE))
 endif
 
@@ -1111,27 +1113,26 @@ endif
 endif
 ifeq      ($(BUILD_MODE),GNATMAKE)
 	$(call brief-command, \
-        $(GNATBIND)                                \
-                    -o b__main.adb                 \
-                    -F -e -l -n -s                 \
-                    -A=gnatbind_alis.lst           \
-                    -O=gnatbind_objs.lst           \
-                    $(foreach                      \
-                      d,$(INCLUDE_DIRECTORIES),    \
-                      -I$(d)                       \
-                      )                            \
-                    $(patsubst                     \
-                      %,$(OBJECT_DIRECTORY)/%.ali, \
-                      main $(IMPLICIT_ALI_UNITS)   \
-                      )                            \
-                    $(EXTERNAL_ALIS)               \
-                    > gnatbind_elab.lst            \
+        $(GNATBIND)                                        \
+                    -o b__main.adb                         \
+                    -F -e -l -n -s                         \
+                    --RTS="./$(RTS_DIRECTORY)/$(RTS_PATH)" \
+                    -A=gnatbind_alis.lst                   \
+                    -O=gnatbind_objs.lst                   \
+                    $(foreach                              \
+                      d,$(INCLUDE_DIRECTORIES),            \
+                      -I$(d)                               \
+                      )                                    \
+                    $(patsubst                             \
+                      %,$(OBJECT_DIRECTORY)/%.ali,         \
+                      main $(IMPLICIT_ALI_UNITS)           \
+                      )                                    \
+                    $(EXTERNAL_ALIS)                       \
+                    > gnatbind_elab.lst                    \
         ,[GNATBIND],b__main.adb)
 ifeq ($(OSTYPE),cmd)
-	$(PROCESSALIS) -p "$(SWEETADA_PATH)" gnatbind_alis.lst
 	$(MV) b__main.ad* $(OBJECT_DIRECTORY)\ $(NULL)
 else
-	$(SED_INPLACE) -e "s|$(SWEETADA_PATH)/||g" gnatbind_alis.lst
 	$(MV) b__main.ad* $(OBJECT_DIRECTORY)/
 endif
 else ifeq ($(BUILD_MODE),GPRbuild)
@@ -1139,33 +1140,37 @@ else ifeq ($(BUILD_MODE),GPRbuild)
 ifeq ($(OSTYPE),cmd)
 	$(RM) $(OBJECT_DIRECTORY)\main.bexch
 	$(call brief-command, \
-        (                                    \
-         $(GPRBUILD)                         \
-                     -b                      \
-                     -P $(KERNEL_GPRFILE)    \
-         || (ECHO __exitstatus__=1)          \
-        ) | $(GPRBINDFILT) gnatbind_elab.lst \
+        (                                                       \
+         $(GPRBUILD)                                            \
+                     -b                                         \
+                     -P $(KERNEL_GPRFILE)                       \
+                     -XKERNEL_PARENT_PATH=$(KERNEL_PARENT_PATH) \
+         || (ECHO __exitstatus__=1)                             \
+        ) | $(GPRBINDFILT) gnatbind_elab.lst                    \
         ,[GPRBUILD-B],$(KERNEL_GPRFILE))
 	$(MV) $(OBJECT_DIRECTORY)\gnatbind_objs.lst .\ 2>nul
 else
 	$(RM) $(OBJECT_DIRECTORY)/main.bexch
 	$(call brief-command, \
-        (                                      \
-         $(GPRBUILD)                           \
-                     -b                        \
-                     -P $(KERNEL_GPRFILE)      \
-         || printf "%s\n" "__exitstatus__=$$?" \
-        ) | $(GPRBINDFILT) gnatbind_elab.lst   \
+        (                                                       \
+         $(GPRBUILD)                                            \
+                     -b                                         \
+                     -P $(KERNEL_GPRFILE)                       \
+                     -XKERNEL_PARENT_PATH=$(KERNEL_PARENT_PATH) \
+         || printf "%s\n" "__exitstatus__=$$?"                  \
+        ) | $(GPRBINDFILT) gnatbind_elab.lst                    \
         ,[GPRBUILD-B],$(KERNEL_GPRFILE))
 	$(MV) $(OBJECT_DIRECTORY)/gnatbind_objs.lst ./ 2> /dev/null
 endif
 endif
 ifeq ($(OSTYPE),cmd)
+	$(PROCESSALIS) -p "$(SWEETADA_PATH)" gnatbind_alis.lst
 	$(PROCESSOBJS)                                              \
                        -b $(BUILD_MODE) -o $(OBJECT_DIRECTORY)      \
                        $(foreach u,$(IMPLICIT_ALI_UNITS),-i $(u).o) \
                        gnatbind_objs.lst
 else
+	$(SED_INPLACE) -e "s|$(SWEETADA_PATH)/||g" gnatbind_alis.lst
 ifeq ($(OSTYPE),msys)
 	$(SED_INPLACE) -e "s|\\\\|/|g" gnatbind_objs.lst
 endif
@@ -1185,10 +1190,12 @@ $(OBJECT_DIRECTORY)/b__main.o: $(B__MAIN_O_DEPS)
 	@$(REM) compile the main program, incorporating the given elaboration order
 ifeq ($(BUILD_MODE),GNATMAKE)
 	$(call brief-command, \
-        $(CHDIR) $(OBJECT_DIRECTORY)  && \
-        $(ADAC_GNATBIND)                 \
-                         -o b__main.o -c \
-                         b__main.adb     \
+        $(CHDIR) $(OBJECT_DIRECTORY)                             && \
+        $(ADAC_GNATBIND)                                            \
+                         -o b__main.o                               \
+                         --RTS="../$(RTS_DIRECTORY)/$(RTS_PATH)"    \
+                         -c                                         \
+                         b__main.adb                                \
         ,[ADAC],b__main.adb)
 endif
 
@@ -1438,21 +1445,23 @@ configure-gnattdi: $(GNATTDI_FILENAME)
 $(GNATTDI_FILENAME): $(CONFIGURE_DEPS)
 ifeq ($(OSTYPE),cmd)
 	-$(call brief-command, \
-        $(CHDIR) $(OBJECT_DIRECTORY)           && \
-        $(ADAC)                                   \
-                -gnatet=../$(GNATTDI_FILENAME)    \
-                -c                                \
-                __tdi__.ads                       \
-                1>nul 2>nul                       \
+        $(CHDIR) $(OBJECT_DIRECTORY)                    && \
+        $(ADAC)                                            \
+                --RTS="../$(RTS_DIRECTORY)/$(RTS_PATH)"    \
+                -gnatet=../$(GNATTDI_FILENAME)             \
+                -c                                         \
+                __tdi__.ads                                \
+                1>nul 2>nul                                \
         ,[ADAC],$(GNATTDI_FILENAME))
 else
 	-$(call brief-command, \
-        $(CHDIR) $(OBJECT_DIRECTORY)           && \
-        $(ADAC)                                   \
-                -gnatet=../$(GNATTDI_FILENAME)    \
-                -c                                \
-                __tdi__.ads                       \
-                1> /dev/null 2> /dev/null         \
+        $(CHDIR) $(OBJECT_DIRECTORY)                    && \
+        $(ADAC)                                            \
+                --RTS="../$(RTS_DIRECTORY)/$(RTS_PATH)"    \
+                -gnatet=../$(GNATTDI_FILENAME)             \
+                -c                                         \
+                __tdi__.ads                                \
+                1> /dev/null 2> /dev/null                  \
         ,[ADAC],$(GNATTDI_FILENAME))
 endif
 

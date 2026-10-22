@@ -19,6 +19,8 @@
 # UPDATETM
 # GNATADC_FILENAME
 # KERNEL_PARENT_PATH
+# RTS_DIRECTORY
+# RTS_PATH
 # LIB_DIRECTORY
 # OBJ_DIRECTORY
 # DEP_DIRECTORY
@@ -82,24 +84,26 @@ $(OBJ_DIRECTORY)/lib$(LIBRARY_NAME).a: $(OBJECTS)
 
 define compile-gnatmake =
 $(call brief-command, \
-$(GNATMAKE)                                                   \
-            $(GNATMAKE_WRAPPER)                               \
-            -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
-            -D $(OBJ_DIRECTORY)                               \
-            $(GCC_SWITCHES_LIBRARY)                           \
-            -c $(INCLUDES) $<                                 \
+$(GNATMAKE)                                                            \
+            $(GNATMAKE_WRAPPER)                                        \
+            --RTS="$(KERNEL_PARENT_PATH)/$(RTS_DIRECTORY)/$(RTS_PATH)" \
+            -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME)          \
+            -D $(OBJ_DIRECTORY)                                        \
+            $(GCC_SWITCHES_LIBRARY)                                    \
+            -c $(INCLUDES) $<                                          \
 ,[GNATMAKE],$(notdir $<))
 endef
 
 define compile-gnatmake-depend =
 $(call brief-command, \
-$(GNATMAKE_DEPEND)                                                   \
-                   -M -q                                             \
-                   -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME) \
-                   -D $(OBJ_DIRECTORY)                               \
-                   $(GCC_SWITCHES_LIBRARY)                           \
-                   -c $(INCLUDES) $<                                 \
-                   > $(DEP_DIRECTORY)/$*.td                          \
+$(GNATMAKE_DEPEND)                                                            \
+                   -M -q                                                      \
+                   --RTS="$(KERNEL_PARENT_PATH)/$(RTS_DIRECTORY)/$(RTS_PATH)" \
+                   -gnatec=$(KERNEL_PARENT_PATH)/$(GNATADC_FILENAME)          \
+                   -D $(OBJ_DIRECTORY)                                        \
+                   $(GCC_SWITCHES_LIBRARY)                                    \
+                   -c $(INCLUDES) $<                                          \
+                   > $(DEP_DIRECTORY)/$*.td                                   \
 ,[GNATMAKE-D],$*.d)
 endef
 

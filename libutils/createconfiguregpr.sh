@@ -17,7 +17,6 @@
 # Environment variables:
 # VERBOSE
 # BRIEFTEXT_WIDTH
-# SWEETADA_PATH
 # TOOLCHAIN_PREFIX
 # GPRBUILD_PREFIX
 # TOOLCHAIN_NAME
@@ -29,6 +28,7 @@
 # PLATFORM
 # CPU
 # CPU_MODEL
+# RTS_DIRECTORY
 # RTS_PATH
 # RTS
 # PROFILE
@@ -219,7 +219,6 @@ INDENTATION_LEVEL=$((INDENTATION_LEVEL+1))
 configuregpr=${configuregpr}$(print_I "Platform                          := \"${PLATFORM}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Cpu                               := \"${CPU}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Cpu_Model                         := \"${CPU_MODEL}\";")${NL}
-configuregpr=${configuregpr}$(print_I "SweetAda_Path                     := \"${SWEETADA_PATH}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Toolchain_Prefix                  := \"${TOOLCHAIN_PREFIX}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Toolchain_Name                    := \"${TOOLCHAIN_NAME}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Gprbuild_Prefix                   := \"${GPRBUILD_PREFIX}\";")${NL}
@@ -251,6 +250,7 @@ configuregpr=${configuregpr}$(print_I "GCC_Switches_Platform             := (")$
 string=$(print_list "${GCC_SWITCHES_PLATFORM}" "${INDENTATION_LEVEL}" "${INDENTL}")
 if [ "x${string}" != "x" ] ; then configuregpr=${configuregpr}${string}${NL} ; fi
 configuregpr=${configuregpr}$(print_I "                                     );")${NL}
+configuregpr=${configuregpr}$(print_I "RTS_Directory                     := \"${RTS_DIRECTORY}\";")${NL}
 configuregpr=${configuregpr}$(print_I "RTS_Path                          := \"${RTS_PATH}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Lowlevel_Files_Platform           := (")${NL}
 string=$(print_list "${LOWLEVEL_FILES_PLATFORM}" "${INDENTATION_LEVEL}" "${INDENTL}")

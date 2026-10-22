@@ -13,10 +13,12 @@ abstract project Gprbuild_Tc is
    -- Types and variables
    ----------------------------------------------------------------------------
 
-   Ostype  := External ("OSTYPE", "");
-   Verbose := External ("VERBOSE", "");
-   Mode    := External ("GPR_TOOL", "");
-
+   Ostype                         := External ("OSTYPE", "");
+   Verbose                        := External ("VERBOSE", "");
+   SweetAda_Path                  := External ("SWEETADA_PATH", "");
+   RTS_Directory                  := External ("RTS_DIRECTORY", "");
+   Kernel_Parent_Path             := External ("KERNEL_PARENT_PATH", "");
+   Mode                           := External ("GPR_TOOL", "");
    Use_EXE_Wrapper                := External ("USE_EXE_WRAPPER", "");
    EXE_Wrapper_Executable         := External ("EXE_WRAPPER_EXECUTABLE", "");
    EXE_Wrapper_Timestamp_Filename := External ("EXE_WRAPPER_TIMESTAMP_FILENAME", "");
@@ -64,8 +66,12 @@ abstract project Gprbuild_Tc is
       for Switches ("Ada") use (
          "-nostdinc",
          "-nostdlib",
-         "--RTS=" & Configure.RTS_Path
-         ) &
+         "--RTS="                &
+         Kernel_Parent_Path      &
+         "/"                     &
+         Configure.RTS_Directory &
+         "/"                     &
+         Configure.RTS_Path) &
          Builder_Switches;
    end Builder;
 

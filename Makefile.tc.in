@@ -261,13 +261,6 @@ $(foreach s,                                                        \
     2> /dev/null))),$(eval $(strip $(subst $(DEL),$(SPACE),$(s)))))
 endif
 
-RTS_PATH := $(SWEETADA_PATH)/$(RTS_DIRECTORY)/$(RTS_PATH)
-
-# add RTS and import switches
-ADAC     += --RTS="$(RTS_PATH)"
-GNATLS   += --RTS="$(RTS_PATH)"
-GNATBIND += --RTS="$(RTS_PATH)"
-
 ################################################################################
 #                                                                              #
 # Basic switches.                                                              #

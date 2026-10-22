@@ -16,7 +16,6 @@
 # Environment variables:
 # VERBOSE
 # BRIEFTEXT_WIDTH
-# SWEETADA_PATH
 # TOOLCHAIN_PREFIX
 # GPRBUILD_PREFIX
 # TOOLCHAIN_NAME
@@ -28,6 +27,7 @@
 # PLATFORM
 # CPU
 # CPU_MODEL
+# RTS_DIRECTORY
 # RTS_PATH
 # RTS
 # PROFILE
@@ -293,7 +293,6 @@ $configuregpr += $(print_V $configure_filename) + $nl
 $configuregpr += $(print_I "Platform                          := `"$(GetEnvVar PLATFORM)`";") + $nl
 $configuregpr += $(print_I "Cpu                               := `"$(GetEnvVar CPU)`";") + $nl
 $configuregpr += $(print_I "Cpu_Model                         := `"$(GetEnvVar CPU_MODEL)`";") + $nl
-$configuregpr += $(print_I "SweetAda_Path                     := `"$(GetEnvVar SWEETADA_PATH)`";") + $nl
 $configuregpr += $(print_I "Toolchain_Prefix                  := `"$(GetEnvVar TOOLCHAIN_PREFIX)`";") + $nl
 $configuregpr += $(print_I "Toolchain_Name                    := `"$(GetEnvVar TOOLCHAIN_NAME)`";") + $nl
 $configuregpr += $(print_I "Gprbuild_Prefix                   := `"$(GetEnvVar GPRBUILD_PREFIX)`";") + $nl
@@ -322,6 +321,7 @@ $configuregpr += $(print_I "                                     );") + $nl
 $configuregpr += $(print_I "GCC_Switches_Platform             := (") + $nl
 $configuregpr += $(print_list $(GetEnvVar GCC_SWITCHES_PLATFORM).Trim(" ") $indentation_level $indentl)
 $configuregpr += $(print_I "                                     );") + $nl
+$configuregpr += $(print_I "RTS_Directory                     := `"$(GetEnvVar RTS_DIRECTORY)`";") + $nl
 $configuregpr += $(print_I "RTS_Path                          := `"$(GetEnvVar RTS_PATH)`";") + $nl
 $configuregpr += $(print_I "Lowlevel_Files_Platform           := (") + $nl
 $configuregpr += $(print_list $(GetEnvVar LOWLEVEL_FILES_PLATFORM).Trim(" ") $indentation_level $indentl)

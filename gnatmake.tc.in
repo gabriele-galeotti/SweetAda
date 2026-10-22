@@ -7,7 +7,6 @@
 # Environment variables:
 # EXEEXT
 # TOOLCHAIN_PROGRAM_PREFIX
-# RTS_PATH
 # ADAC_*
 # AS_*
 # CC_*
@@ -28,7 +27,7 @@
 
 TOOLCHAIN_GNATMAKE := $(TOOLCHAIN_PROGRAM_PREFIX)gnatmake$(EXEEXT)
 
-GNATMAKE := $(TOOLCHAIN_GNATMAKE) --RTS="$(RTS_PATH)"
+GNATMAKE := $(TOOLCHAIN_GNATMAKE)
 
 ################################################################################
 #                                                                              #
