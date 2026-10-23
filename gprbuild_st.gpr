@@ -5,7 +5,7 @@
 
 abstract project Gprbuild_St is
 
-   MNL := "9";   -- Maximum Nesting Level
+   MNL := "7";   -- Maximum Nesting Level
    MLL := "132"; -- Maximum Line Length
 
    ADAC_Switches_Style := (
