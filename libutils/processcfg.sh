@@ -20,7 +20,7 @@
 # every variable referenced in the input file
 #
 
-# shellcheck disable=SC2086,SC2181,SC2268
+# shellcheck disable=SC2034,SC2086,SC2181,SC2268,SC2295
 
 ################################################################################
 # Script initialization.                                                       #
@@ -87,8 +87,8 @@ fi
 #
 # Gather "@"-delimited symbols from input file.
 #
-SYMBOLS=$(grep -U -o -e "@-\?[_A-Za-z][_A-Za-z0-9]*@" "${INPUT_FILENAME}" 2> /dev/null)
-if [ $? -eq 2 ] ; then
+SYMBOLS=$(sed -n -e "s|.*\(@-\{0,1\}[_A-Za-z][_A-Za-z0-9]*@\).*| \1|p" "${INPUT_FILENAME}" 2> /dev/null)
+if [ $? -ne 0 ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: in processing input file \"${INPUT_FILENAME}\"."
   exit 1
 fi

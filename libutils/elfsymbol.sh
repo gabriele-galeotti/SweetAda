@@ -19,7 +19,7 @@
 # TOOLCHAIN_NM
 #
 
-# shellcheck disable=SC2086,SC2268,SC2317
+# shellcheck disable=SC2016,SC2268,SC2329
 
 ################################################################################
 # Script initialization.                                                       #
@@ -87,19 +87,17 @@ if [ "x$2" = "x" ] ; then
   exit 1
 fi
 
-SYMBOL_NMLINE=$(${TOOLCHAIN_NM} --format=posix $2 2> /dev/null | grep -m 1 -w -e $1)
-if [ "x${SYMBOL_NMLINE}" = "x" ] ; then
+AWK_SCRIPT='{ for (i = 1 ; i <= NF ; i++) { if ($i == "'"$1"'") { print $3 ; next } } }'
+SYMBOL_VALUE=$(${TOOLCHAIN_NM} --format=posix "$2" 2> /dev/null | \
+               awk -- "${AWK_SCRIPT}"                           | \
+               head -n 1 | tr "[:lower:]" "[:upper:]")
+
+if [ "x${SYMBOL_VALUE}" = "x" ] ; then
   log_print_error "${SCRIPT_FILENAME}: *** Error: no symbol \"$1\" found."
   exit 1
 fi
 
-SYMBOL_VALUE=$(printf "%s\n" "${SYMBOL_NMLINE}"                            | \
-               sed -e "s|^\([A-Za-z_]\+\) *. *\([0-9A-Fa-f]\+\) *.*\$|\2|" | \
-               tr "[:lower:]" "[:upper:]")
-
-if [ "x${SYMBOL_VALUE}" != "x" ] ; then
-  printf "%s0x%s\n" "${PREFIX_STRING}" "${SYMBOL_VALUE}"
-fi
+printf "%s0x%s\n" "${PREFIX_STRING}" "${SYMBOL_VALUE}"
 
 exit 0
 

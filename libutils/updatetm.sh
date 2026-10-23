@@ -17,7 +17,7 @@
 # none
 #
 
-# shellcheck disable=SC2034,SC2317
+# shellcheck disable=SC2034,SC2268,SC2329
 
 ################################################################################
 # Script initialization.                                                       #

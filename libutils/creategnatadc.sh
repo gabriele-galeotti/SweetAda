@@ -20,7 +20,7 @@
 # BRIEFTEXT_WIDTH
 #
 
-# shellcheck disable=SC2086,SC2268
+# shellcheck disable=SC2086,SC2181,SC2268
 
 ################################################################################
 # Script initialization.                                                       #
@@ -93,13 +93,16 @@ while IFS= read -r textline ; do
   textline_woc=$(printf "%s" "${textline}" | sed -e "s|^ *--.*\$||")
   if [ "x${textline_woc}" != "x" ] ; then
     pragma=$(printf "%s" "${textline_woc}" | sed -e "s|^\(pragma.*;\)\(.*\)|\1|")
-    profiles=$(printf "%s" "${textline_woc}" | sed -e "s|^\(pragma.*--\)\(.*\)|\2|")
+    profiles=$(printf "%s" "${textline_woc}" | sed -e "s|^\(pragma.*-- *\)\(.*\)|\2|")
     if [ "x${PROFILE}" != "x" ] ; then
-      profile_check=$(printf "%s" "${profiles}" | grep -c -w -e "${PROFILE}" 2> /dev/null)
-      if [ "x${profile_check}" != "x0" ] ; then
-        gnatadc=${gnatadc}$(printf "%s" "${pragma}")${NL}
-        pragma_seen=Y
-      fi
+      case " ${profiles} " in
+        *" ${PROFILE} "*)
+          gnatadc=${gnatadc}$(printf "%s" "${pragma}")${NL}
+          pragma_seen=Y
+          ;;
+        *)
+          ;;
+      esac
     fi
   fi
 done < "${GNATADC_FILENAME_TEMPLATE}"

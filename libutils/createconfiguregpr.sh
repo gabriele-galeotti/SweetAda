@@ -50,7 +50,7 @@
 # IMPLICIT_ALI_UNITS
 #
 
-# shellcheck disable=SC2016,SC2086,SC2268
+# shellcheck disable=SC2086,SC2268
 
 ################################################################################
 # Script initialization.                                                       #

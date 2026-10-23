@@ -25,7 +25,7 @@
 # symlink (with the same filename).
 #
 
-# shellcheck disable=SC2045,SC2046,SC2268,SC2317
+# shellcheck disable=SC2045,SC2046,SC2268
 
 ################################################################################
 # Script initialization.                                                       #

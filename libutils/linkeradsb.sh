@@ -86,10 +86,8 @@ if [ "x${ADA_UNIT_PATHNAME}" = "x" ] ; then
   exit 1
 fi
 
-textlines=$(                                             \
-            grep -e "LINKERADSB:" ${LINKER_SCRIPT}     | \
-            sed -e "s|.*\(LINKERADSB:.*:[^ ]*\).*|\1|"   \
-           )
+textlines=$(grep -e "LINKERADSB:" ${LINKER_SCRIPT}     | \
+            sed -e "s|.*\(LINKERADSB:.*:[^ ]*\).*|\1|")
 if [ "x${textlines}" = "x" ] ; then
   exit 0
 fi
