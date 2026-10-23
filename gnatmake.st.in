@@ -18,7 +18,7 @@ MAKEFILE_INCLUDE := Y
 ################################################################################
 
 # Maximum Nesting Level
-MNL := 9
+MNL := 7
 # Maximum Line Length
 MLL := 132
 
