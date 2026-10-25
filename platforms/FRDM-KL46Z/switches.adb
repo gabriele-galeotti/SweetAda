@@ -18,7 +18,7 @@
 with KL46Z;
 
 package body Switches
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -43,7 +43,7 @@ package body Switches
    ----------------------------------------------------------------------------
    function SW1_Read
       return Boolean
-      is
+   is
    begin
       return GPIOC.PDIR (3);
    end SW1_Read;
@@ -53,7 +53,7 @@ package body Switches
    ----------------------------------------------------------------------------
    function SW3_Read
       return Boolean
-      is
+   is
    begin
       return GPIOC.PDIR (12);
    end SW3_Read;
@@ -62,7 +62,7 @@ package body Switches
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
    begin
       -- port multiplexing control
       -- PTC3  = SW1

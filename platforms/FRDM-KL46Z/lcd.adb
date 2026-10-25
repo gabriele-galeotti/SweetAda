@@ -18,7 +18,7 @@
 with KL46Z;
 
 package body LCD
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -44,7 +44,7 @@ package body LCD
    procedure Digit_Set
       (Digit : in Natural;
        Value : in Natural)
-      is
+   is
       WaveForm1 : LCD_Waveform_Type;
       WaveForm2 : LCD_Waveform_Type;
       Pin1      : Natural;
@@ -127,7 +127,7 @@ package body LCD
    ----------------------------------------------------------------------------
    procedure Colon_Set
       (On : in Boolean)
-      is
+   is
       Pin : Natural;
    begin
       Pin := 11;
@@ -138,7 +138,7 @@ package body LCD
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
    begin
       -- safe state
       LCD_GCR.LCDEN   := False;

@@ -26,7 +26,7 @@ with Exceptions;
 with Console;
 
 package body BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -55,7 +55,7 @@ package body BSP
    -- SysTick_Init
    ----------------------------------------------------------------------------
    procedure SysTick_Init
-      is
+   is
    begin
       ARMv6M.SYST_RVR.RELOAD := Bits_24 (Clocks.CLK_Core / 1_000);
       ARMv6M.SHPR3.PRI_15 := 16#1#;
@@ -75,7 +75,7 @@ package body BSP
 
    procedure Console_Putchar
       (C : in Character)
-      is
+   is
    begin
       -- wait for transmitter available
       loop exit when UART0.S1.TDRE; end loop;
@@ -93,7 +93,7 @@ package body BSP
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup
-      is
+   is
    begin
       -------------------------------------------------------------------------
       Exceptions.Init;

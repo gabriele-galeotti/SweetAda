@@ -15,13 +15,15 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Interfaces.C.Extensions;
 with Bits;
 
 package KL46Z
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -36,8 +38,6 @@ package KL46Z
    use Bits;
 
    subtype Signed_8 is Interfaces.C.Extensions.Signed_8;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- KL46P121M48SF4RM
@@ -6310,7 +6310,11 @@ pragma Style_Checks (Off);
    -- 41.3.2 SAI Transmit Configuration 2 Register (I2Sx_TCR2)
 
    DIV_2 : constant := 0;
-   function DIV_SAIBITCLOCK (Value : Natural) return Bits_8 with Inline => True;
+
+   function DIV_SAIBITCLOCK
+      (Value : Natural)
+      return Bits_8
+      with Inline => True;
 
    BCD_SLAVE  : constant := 0; -- Bit clock is generated externally in Slave mode.
    BCD_MASTER : constant := 1; -- Bit clock is generated internally in Master mode.
@@ -7453,7 +7457,5 @@ pragma Style_Checks (Off);
            Volatile   => True,
            Import     => True,
            Convention => Ada;
-
-pragma Style_Checks (On);
 
 end KL46Z;

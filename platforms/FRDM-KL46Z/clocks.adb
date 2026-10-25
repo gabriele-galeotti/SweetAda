@@ -20,7 +20,7 @@ with Bits;
 with KL46Z;
 
 package body Clocks
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -49,7 +49,7 @@ package body Clocks
    -- peripheral clocks.
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
    begin
       -- MCG comes out of reset in FEI mode
       SIM_CLKDIV1 := (
