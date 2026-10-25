@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Warnings (Off, "* is not referenced");
 
 with System.Storage_Elements;
@@ -315,14 +316,12 @@ is
       T.Sec   := Time.TM_Sec_Type (Adjust_BCD (RTC_Second, RTC_BCD));
       T.Min   := Time.TM_Min_Type (Adjust_BCD (RTC_Minute, RTC_BCD));
       T.Hour  := Time.TM_Hour_Type (Adjust_BCD (RTC_Hour, RTC_BCD));
-      T.WDay  := Time.TM_WDay_Type (Adjust_BCD (RTC_DayOfWeek, RTC_BCD));
+      T.WDay  := Time.TM_WDay_Type (Adjust_BCD (RTC_DayOfWeek, RTC_BCD) - 1);
       T.MDay  := Time.TM_MDay_Type (Adjust_BCD (RTC_DayOfMonth, RTC_BCD));
+      T.YDay  := 0;
       T.Mon   := Time.TM_Mon_Type (Adjust_BCD (RTC_Month, RTC_BCD) - 1);
       T.Year  := Time.TM_Year_Type (Adjust_BCD (RTC_Year, RTC_BCD));
-      if T.Year < 70 then
-         T.Year := @ + 100;
-      end if;
-      T.YDay  := 0;
+      T.Year  := (if @ < 70 then @ + 100 else @);
    end Time_Read;
 
    ----------------------------------------------------------------------------
@@ -360,6 +359,7 @@ is
       Register_Write (D, Seconds, Adjust_BCD (Unsigned_8 (T.Sec), RTC_BCD));
       Register_Write (D, Minutes, Adjust_BCD (Unsigned_8 (T.Min), RTC_BCD));
       Register_Write (D, Hours, Adjust_BCD (Unsigned_8 (T.Hour), RTC_BCD));
+      Register_Write (D, DayOfWeek, Adjust_BCD (Unsigned_8 (T.WDay) + 1, RTC_BCD));
       Register_Write (D, DayOfMonth, Adjust_BCD (Unsigned_8 (T.MDay), RTC_BCD));
       Register_Write (D, Month, Adjust_BCD (Unsigned_8 (T.Mon) + 1, RTC_BCD));
       TYear := (if T.Year < 70 then T.Year else T.Year - 100);
