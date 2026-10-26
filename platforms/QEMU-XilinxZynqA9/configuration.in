@@ -13,7 +13,7 @@
 RTS     := sfp
 PROFILE := sfp
 
-USE_APPLICATION := test-qemu-xilinxzynqa9
+USE_APPLICATION := tests/test-qemu-xilinxzynqa9
 
 ################################################################################
 # CPU.                                                                         #

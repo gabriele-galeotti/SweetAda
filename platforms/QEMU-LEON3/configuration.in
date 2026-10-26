@@ -13,7 +13,7 @@
 RTS     := sfp
 PROFILE := sfp
 
-USE_APPLICATION := test-qemu-leon3
+USE_APPLICATION := tests/test-qemu-leon3
 
 ################################################################################
 # CPU.                                                                         #

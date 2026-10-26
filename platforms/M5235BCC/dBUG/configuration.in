@@ -13,7 +13,7 @@
 RTS     := sfp
 PROFILE := sfp
 
-USE_APPLICATION := test-m5235bcc
+USE_APPLICATION := tests/test-m5235bcc
 
 ################################################################################
 # CPU.                                                                         #

@@ -13,7 +13,7 @@
 RTS     := sfp
 PROFILE := sfp
 
-USE_APPLICATION := test-amiga-fs-uae
+USE_APPLICATION := tests/test-amiga-fs-uae
 
 BOOT_FLOPPY := Y
 

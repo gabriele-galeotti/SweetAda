@@ -13,7 +13,7 @@
 RTS     := sfp
 PROFILE := sfp
 
-USE_APPLICATION := test-qemu-integratorcp
+USE_APPLICATION := tests/test-qemu-integratorcp
 
 ################################################################################
 # CPU.                                                                         #

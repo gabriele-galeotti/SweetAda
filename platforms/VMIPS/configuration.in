@@ -13,7 +13,7 @@
 RTS     := sfp
 PROFILE := sfp
 
-USE_APPLICATION := test-vmips
+USE_APPLICATION := tests/test-vmips
 
 ################################################################################
 # CPU.                                                                         #

@@ -13,7 +13,7 @@
 RTS     := zfp
 PROFILE := zfp
 
-USE_APPLICATION := test-hifive1
+USE_APPLICATION := tests/test-hifive1
 
 ################################################################################
 # CPU.                                                                         #

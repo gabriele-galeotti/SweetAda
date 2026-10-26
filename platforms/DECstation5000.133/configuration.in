@@ -13,7 +13,7 @@
 RTS     := sfp
 PROFILE := sfp
 
-USE_APPLICATION := test-decstation5000.133
+USE_APPLICATION := tests/test-decstation5000.133
 
 USE_GXEMUL := Y
 

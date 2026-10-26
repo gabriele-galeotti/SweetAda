@@ -13,7 +13,7 @@
 RTS     := zfp
 PROFILE := zfp
 
-USE_APPLICATION := test-spartan3e-sk
+USE_APPLICATION := tests/test-spartan3e-sk
 
 ################################################################################
 # CPU.                                                                         #

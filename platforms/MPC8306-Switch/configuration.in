@@ -11,7 +11,7 @@
 RTS     := zfp
 PROFILE := zfp
 
-USE_APPLICATION := test-mpc8306-switch
+USE_APPLICATION := tests/test-mpc8306-switch
 
 ################################################################################
 # CPU.                                                                         #

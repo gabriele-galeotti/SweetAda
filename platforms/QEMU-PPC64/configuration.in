@@ -17,7 +17,7 @@ endif
 RTS     := zfp
 PROFILE := zfp
 
-USE_APPLICATION := test-qemu-ppc64
+USE_APPLICATION := tests/test-qemu-ppc64
 
 ################################################################################
 # CPU.                                                                         #

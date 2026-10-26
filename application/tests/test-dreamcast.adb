@@ -1,7 +1,9 @@
 
 with Interfaces;
+with Configure;
 with CPU;
-with MVME162FX;
+with Dreamcast;
+with BSP;
 with Console;
 
 package body Application
@@ -16,6 +18,15 @@ package body Application
    --========================================================================--
 
    use Interfaces;
+
+   procedure Video
+      with Import        => True,
+           Convention    => Asm,
+           External_Name => "video";
+   procedure Roto
+      with Import        => True,
+           Convention    => Asm,
+           External_Name => "roto";
 
    --========================================================================--
    --                                                                        --
@@ -33,12 +44,35 @@ package body Application
    begin
       -------------------------------------------------------------------------
       if True then
+         Console.Print ("Starting ""video"" demo ...", NL => True);
+         Video;
+         for Delay_Loop_Count in 1 .. 100_000_000 loop CPU.NOP; end loop;
+      end if;
+      -------------------------------------------------------------------------
+      if True then
+         -- Console.Print ("Starting ""roto"" demo ...", NL => True);
+         Roto;
+      end if;
+      -------------------------------------------------------------------------
+      -- if Configure.BOOT_TYPE = "ROM" or else Configure.BOOT_TYPE = "CD-ROM" then
+      --    Console.Print ("Starting ""video"" demo ...", NL => True);
+      --    Video;
+      --    for Delay_Loop_Count in 1 .. 30_000_000 loop CPU.NOP; end loop;
+      -- end if;
+      -------------------------------------------------------------------------
+      -- if Configure.BOOT_TYPE = "ROM" or else Configure.BOOT_TYPE = "CD-ROM" then
+      --    Console.Print ("Starting ""roto"" demo ...", NL => True);
+      --    Roto;
+      -- end if;
+      -------------------------------------------------------------------------
+      if True then
          declare
-            Delay_Count : constant := 1_000_000;
+            Delay_Count : constant := 10_000_000; -- normal
+            -- Delay_Count : constant := 100; -- debug
          begin
             loop
-               Console.Print ("MVME162-510A", NL => True);
-               MVME162FX.RESET_SCR := MVME162FX.RESET_SCR xor 16#02#;
+               -- emit a message
+               Console.Print ("hello, SweetAda", NL => True);
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
          end;

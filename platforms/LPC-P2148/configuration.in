@@ -13,7 +13,7 @@
 RTS     := zfp
 PROFILE := zfp
 
-USE_APPLICATION := test-lpc-p2148
+USE_APPLICATION := tests/test-lpc-p2148
 
 ################################################################################
 # CPU.                                                                         #

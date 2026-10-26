@@ -1,11 +1,7 @@
 
-with System.Machine_Code;
 with Ada.Unchecked_Conversion;
 with Interfaces;
-with Bits;
-with MMIO;
 with CPU;
-with M68k;
 with Amiga;
 with RTC;
 with BSP;
@@ -21,7 +17,7 @@ with Console;
 with Time;
 
 package body Application
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -31,12 +27,7 @@ package body Application
    --                                                                        --
    --========================================================================--
 
-   use System.Machine_Code;
    use Interfaces;
-   use Bits;
-   use MMIO;
-   use M68k;
-   use Amiga;
 
    Fatfs_Object : FATFS.Descriptor_Type;
 
@@ -61,7 +52,7 @@ package body Application
       (Flash_Count : Unsigned_32;
        Timeout     : Unsigned_32)
       return Boolean
-      is
+   is
    begin
       return (BSP.Tick_Count - Flash_Count) > Timeout;
    end Tick_Count_Expired;
@@ -70,7 +61,7 @@ package body Application
    -- Handle_Ethernet
    ----------------------------------------------------------------------------
    procedure Handle_Ethernet
-      is
+   is
       P       : PBUF.Pbuf_Ptr;
       Success : Boolean;
    begin
@@ -85,7 +76,7 @@ package body Application
    -- Run
    ----------------------------------------------------------------------------
    procedure Run
-      is
+   is
    begin
       -------------------------------------------------------------------------
       if False then
@@ -140,12 +131,12 @@ package body Application
                -- end if;
                if Tick_Count_Expired (TC3, 1000) then
                   RTC.Time_Read (TM);
-                  Console.Print (Prefix => "",  Value => TM.Year + 1_900);
-                  Console.Print (Prefix => "-", Value => TM.Mon);
-                  Console.Print (Prefix => "-", Value => TM.MDay);
-                  Console.Print (Prefix => " ", Value => TM.Hour);
-                  Console.Print (Prefix => ":", Value => TM.Min);
-                  Console.Print (Prefix => ":", Value => TM.Sec);
+                  Console.Print (Prefix => "",  Value => Natural (TM.Year) + 1_900);
+                  Console.Print (Prefix => "-", Value => Natural (TM.Mon));
+                  Console.Print (Prefix => "-", Value => Natural (TM.MDay));
+                  Console.Print (Prefix => " ", Value => Natural (TM.Hour));
+                  Console.Print (Prefix => ":", Value => Natural (TM.Min));
+                  Console.Print (Prefix => ":", Value => Natural (TM.Sec));
                   Console.Print_NewLine;
                   TC3 := BSP.Tick_Count;
                end if;

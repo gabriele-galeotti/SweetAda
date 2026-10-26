@@ -1,8 +1,5 @@
 
-with System;
-with System.Storage_Elements;
 with Ada.Characters.Latin_1;
-with Ada.Unchecked_Conversion;
 with Interfaces;
 with Configure;
 with Bits;
@@ -79,7 +76,7 @@ package body Application
       Delay_Simple (32);
       NBlinks := 3;
       -- blink test -----------------------------------------------------------
-      if False then
+      if True then
          loop
             for N in 1 .. NBlinks loop
                PORTB (5) := True;

@@ -18,7 +18,7 @@ PROFILE := mfp
 
 USE_CLIBRARY := Y
 
-USE_APPLICATION := test-pc-x86
+USE_APPLICATION := tests/test-pc-x86
 
 ################################################################################
 # CPU.                                                                         #

@@ -1,9 +1,10 @@
 
+with System;
+with System.Storage_Elements;
 with Interfaces;
-with Configure;
+with MMIO;
 with CPU;
-with Dreamcast;
-with BSP;
+with MVME1600011;
 with Console;
 
 package body Application
@@ -17,16 +18,9 @@ package body Application
    --                                                                        --
    --========================================================================--
 
+   use System;
+   use System.Storage_Elements;
    use Interfaces;
-
-   procedure Video
-      with Import        => True,
-           Convention    => Asm,
-           External_Name => "video";
-   procedure Roto
-      with Import        => True,
-           Convention    => Asm,
-           External_Name => "roto";
 
    --========================================================================--
    --                                                                        --
@@ -41,41 +35,17 @@ package body Application
    ----------------------------------------------------------------------------
    procedure Run
       is
+      X : Unsigned_8;
    begin
       -------------------------------------------------------------------------
       if True then
-         Console.Print ("Starting ""video"" demo ...", NL => True);
-         Video;
-         for Delay_Loop_Count in 1 .. 30_000_000 loop CPU.NOP; end loop;
-      end if;
-      -------------------------------------------------------------------------
-      if True then
-         Console.Print ("Starting ""roto"" demo ...", NL => True);
-         Roto;
-      end if;
-      -------------------------------------------------------------------------
-      -- if Configure.BOOT_TYPE = "ROM" or else Configure.BOOT_TYPE = "CD-ROM" then
-      --    Console.Print ("Starting ""video"" demo ...", NL => True);
-      --    Video;
-      --    for Delay_Loop_Count in 1 .. 30_000_000 loop CPU.NOP; end loop;
-      -- end if;
-      -------------------------------------------------------------------------
-      -- if Configure.BOOT_TYPE = "ROM" or else Configure.BOOT_TYPE = "CD-ROM" then
-      --    Console.Print ("Starting ""roto"" demo ...", NL => True);
-      --    Roto;
-      -- end if;
-      -------------------------------------------------------------------------
-      if True then
-         declare
-            Delay_Count : constant := 10_000_000; -- normal
-            -- Delay_Count : constant := 100; -- debug
-         begin
-            loop
-               -- emit a message
-               Console.Print ("hello, SweetAda", NL => True);
-               for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
-            end loop;
-         end;
+         loop
+            Console.Print ("hello, SweetAda", NL => True);
+            for D3lay in 1 .. 30_000_000 loop CPU.NOP; end loop;
+            X := MMIO.Read_U8 (To_Address (MVME1600011.Z8536_PORTA_ADDRESS));
+            X := @ xor 16#40#;
+            MMIO.Write_U8 (To_Address (MVME1600011.Z8536_PORTA_ADDRESS), X);
+         end loop;
       end if;
       -------------------------------------------------------------------------
       loop null; end loop;

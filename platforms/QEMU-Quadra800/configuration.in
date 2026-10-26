@@ -13,7 +13,7 @@
 RTS     := zfp
 PROFILE := zfp
 
-USE_APPLICATION := test-qemu-quadra800
+USE_APPLICATION := tests/test-qemu-quadra800
 
 ################################################################################
 # CPU.                                                                         #

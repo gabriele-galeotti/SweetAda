@@ -39,7 +39,7 @@
 RTS     := sfp
 PROFILE := sfp
 
-USE_APPLICATION := test-neorv32-radionaulx3s-litex
+USE_APPLICATION := tests/test-neorv32-radionaulx3s-litex
 
 ################################################################################
 # CPU.                                                                         #

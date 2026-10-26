@@ -13,7 +13,7 @@
 RTS     := zfp
 PROFILE := zfp
 
-USE_APPLICATION := test-gemi
+USE_APPLICATION := tests/test-gemi
 
 ################################################################################
 # CPU.                                                                         #

@@ -13,7 +13,7 @@
 RTS     := zfp
 PROFILE := zfp
 
-USE_APPLICATION := test-pk-s5d9
+USE_APPLICATION := tests/test-pk-s5d9
 
 ################################################################################
 # CPU.                                                                         #

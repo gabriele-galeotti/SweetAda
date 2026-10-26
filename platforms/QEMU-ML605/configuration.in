@@ -13,7 +13,7 @@
 RTS     := zfp
 PROFILE := zfp
 
-USE_APPLICATION := test-qemu-ml605
+USE_APPLICATION := tests/test-qemu-ml605
 
 ################################################################################
 # CPU.                                                                         #

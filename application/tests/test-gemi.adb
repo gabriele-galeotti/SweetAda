@@ -73,6 +73,7 @@ package body Application
                Console.Print (Prefix => ":", Value => TM.Min);
                Console.Print (Prefix => ":", Value => TM.Sec);
                Console.Print_NewLine;
+               Console.Print (BSP.Tick_Count, NL => True);
                for Delay_Loop_Count in 1 .. 300_000 loop CPU.NOP; end loop;
             end loop;
          end;

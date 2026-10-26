@@ -13,7 +13,7 @@
 RTS     := sfp
 PROFILE := sfp
 
-USE_APPLICATION := test-ref405ep
+USE_APPLICATION := tests/test-ref405ep
 
 ################################################################################
 # CPU.                                                                         #

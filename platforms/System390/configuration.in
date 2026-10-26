@@ -19,7 +19,7 @@ endif
 RTS     := sfp
 PROFILE := sfp
 
-USE_APPLICATION := test-system390
+USE_APPLICATION := tests/test-system390
 
 ################################################################################
 # CPU.                                                                         #

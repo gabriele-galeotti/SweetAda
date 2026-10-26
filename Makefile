@@ -265,7 +265,7 @@ CONFIGURE_DEPS += configuration.in
 # default system parameters
 BUILD_MODE         ?= GNATMAKE
 ADA_MODE           ?= ADA22
-USE_APPLICATION    ?= dummy
+USE_APPLICATION    ?= tests/dummy
 STACK_LIMIT        ?= 4096
 LD_SCRIPT          ?= linker.lds
 KERNEL_ENTRY_POINT ?= _start
@@ -1136,7 +1136,6 @@ else
 	$(MV) b__main.ad* $(OBJECT_DIRECTORY)/
 endif
 else ifeq ($(BUILD_MODE),GPRbuild)
-	@$(REM) force rebind under GPRbuild
 ifeq ($(OSTYPE),cmd)
 	$(RM) $(OBJECT_DIRECTORY)\main.bexch
 	$(call brief-command, \

@@ -13,7 +13,7 @@
 RTS     := sfp
 PROFILE := sfp
 
-USE_APPLICATION := test-zoom
+USE_APPLICATION := tests/test-zoom
 
 ################################################################################
 # CPU.                                                                         #

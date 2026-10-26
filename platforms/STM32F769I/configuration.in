@@ -13,7 +13,7 @@
 RTS     := zfp
 PROFILE := zfp
 
-USE_APPLICATION := test-stm32f769i
+USE_APPLICATION := tests/test-stm32f769i
 
 ################################################################################
 # CPU.                                                                         #

@@ -13,7 +13,7 @@
 RTS     := zfp
 PROFILE := zfp
 
-USE_APPLICATION := test-qemu-stm32vldiscovery
+USE_APPLICATION := tests/test-qemu-stm32vldiscovery
 
 ################################################################################
 # CPU.                                                                         #

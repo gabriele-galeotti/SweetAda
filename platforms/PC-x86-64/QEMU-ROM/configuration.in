@@ -24,7 +24,7 @@
 RTS     := sfp
 PROFILE := sfp
 
-USE_APPLICATION := test-pc-x86-64
+USE_APPLICATION := tests/test-pc-x86-64
 
 ################################################################################
 # CPU.                                                                         #
