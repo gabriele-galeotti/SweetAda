@@ -113,12 +113,12 @@ package body Application
          begin
             Console.Print ("Current date: ", NL => False);
             MC146818A.Time_Read (BSP.RTC_Descriptor, TM);
-            Console.Print (Prefix => "",  Value => TM.Year + 1_900);
-            Console.Print (Prefix => "-", Value => TM.Mon + 1);
-            Console.Print (Prefix => "-", Value => TM.MDay);
-            Console.Print (Prefix => " ", Value => TM.Hour);
-            Console.Print (Prefix => ":", Value => TM.Min);
-            Console.Print (Prefix => ":", Value => TM.Sec);
+            Console.Print (Prefix => "",  Value => Natural (TM.Year) + 1_900);
+            Console.Print (Prefix => "-", Value => Natural (TM.Mon) + 1);
+            Console.Print (Prefix => "-", Value => Natural (TM.MDay));
+            Console.Print (Prefix => " ", Value => Natural (TM.Hour));
+            Console.Print (Prefix => ":", Value => Natural (TM.Min));
+            Console.Print (Prefix => ":", Value => Natural (TM.Sec));
             Console.Print_NewLine;
          end;
       end if;
@@ -180,7 +180,7 @@ package body Application
          PCICAN.TX;
       end if;
       -------------------------------------------------------------------------
-      if True then
+      if False then
          declare
             TC1 : Unsigned_32 := BSP.Tick_Count;
             TC2 : Unsigned_32 := BSP.Tick_Count;

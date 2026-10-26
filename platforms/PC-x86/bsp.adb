@@ -376,19 +376,19 @@ package body BSP
       -- NE2000
       PC.PIC_Irq_Enable (PC.PIC_Irq5);
       Interrupts.Install (PC.PIC_Irq5, NE2000.Interrupt_Handler'Access, NE2000_Descriptors (1)'Address);
-      declare
-         Pirqc : constant PIIX.PIRQC_Type := (
-            IRQROUTE   => PIIX.IRQROUTE_IRQ5,
-            IRQROUTEEN => NTrue,
-            others     => <>
-            );
-      begin
-         -- PIC ELCR
-         CPU.IO.PortOut (16#04D0#, Unsigned_8'(16#20#)); -- RTL8029 bit5, Irq5
-         CPU.IO.PortOut (16#04D1#, Unsigned_8'(16#00#));
-         -- QEMU RTL8029 Irq5
-         PCI.Cfg_Write (PCI_Descriptor, PCI.BUS0, 1, 0, PIIX.PIRQRCC, Unsigned_8'(PIIX.To_U8 (Pirqc)));
-      end;
+--      declare
+--         Pirqc : constant PIIX.PIRQC_Type := (
+--            IRQROUTE   => PIIX.IRQROUTE_IRQ5,
+--            IRQROUTEEN => NTrue,
+--            others     => <>
+--            );
+--      begin
+--         -- PIC ELCR
+--         CPU.IO.PortOut (16#04D0#, Unsigned_8'(16#20#)); -- RTL8029 bit5, Irq5
+--         CPU.IO.PortOut (16#04D1#, Unsigned_8'(16#00#));
+--         -- QEMU RTL8029 Irq5
+--         PCI.Cfg_Write (PCI_Descriptor, PCI.BUS0, 1, 0, PIIX.PIRQRCC, Unsigned_8'(PIIX.To_U8 (Pirqc)));
+--      end;
       -- final IRQ enable
       Irq_Enable;
       -------------------------------------------------------------------------
