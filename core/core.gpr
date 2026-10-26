@@ -17,18 +17,23 @@ library project Core is
    -- Definitions
    ----------------------------------------------------------------------------
 
-   Kernel_Parent_Path := External ("KERNEL_PARENT_PATH", ".");
-   Include_Directories := Split (External ("GPR_INCLUDES", ""), " ");
+   Kernel_Parent_Path        := External ("KERNEL_PARENT_PATH", ".");
+   Include_Directories       := Split (External ("GPR_INCLUDES", ""), " ");
    Suppress_Standard_Library := External ("SUPPRESS_STANDARD_LIBRARY", "True");
-   CPU_Files := Split (External ("GPR_CORE_CPU", ""), " ");
+   CPU_Files                 := Split (External ("GPR_CORE_CPU", ""), " ");
 
-   -- shorthands
+   -- shorthands ---------------------------------------------------
    Obj_Dir := Kernel_Parent_Path & "/" & Configure.Object_Directory;
    Lib_Dir := Kernel_Parent_Path & "/" & Configure.Library_Directory;
 
    for Target use Configure.Toolchain_Name;
+   for Runtime ("Ada") use
+      Kernel_Parent_Path      &
+      "/"                     &
+      Configure.RTS_Directory &
+      "/"                     &
+      Configure.RTS_Path;
    for Source_Dirs use Include_Directories & (".");
-
    for Default_Language use "Ada";
 
    Abort_Library_Files := (
@@ -243,7 +248,6 @@ library project Core is
    ----------------------------------------------------------------------------
 
    for Library_Name use "core";
-
    for Library_Kind use Gprbuild_Tc.Library_Kind;
    for Library_Support use Gprbuild_Tc.Library_Support;
    for Library_Builder use Gprbuild_Tc.Library_Builder;

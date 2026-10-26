@@ -48,42 +48,44 @@ abstract project Gprbuild_Tc is
       when others          => null;
    end case;
 
+   Ada_Switches_Global := (
+      "-nostdinc",
+      "-nostdlib"
+      );
+
+   GnatTDI_Switch :=
+      "-gnateT="                 &
+      Project'Project_Dir        &
+      Configure.GnatTDI_Filename;
+
    package Builder is
-      for Global_Configuration_Pragmas use Configure.GnatAdc_Filename;
       case Mode is
          when "gnatprove" =>
-            for Global_Compilation_Switches ("Ada") use (
-               "-gnateT=" & Project'Project_Dir & Configure.GnatTDI_Filename
-               );
+            Ada_Switches_Global := Ada_Switches_Global & GnatTDI_Switch;
          when others      =>
             null;
       end case;
+      for Global_Compilation_Switches ("Ada") use Ada_Switches_Global;
+      for Global_Configuration_Pragmas use Configure.GnatAdc_Filename;
       for Switches ("Asm_Cpp") use Builder_Switches;
       for Switches ("C") use Builder_Switches;
-      for Switches ("Ada") use (
-         "-nostdinc",
-         "-nostdlib",
-         "--RTS="                &
-         Kernel_Parent_Path      &
-         "/"                     &
-         Configure.RTS_Directory &
-         "/"                     &
-         Configure.RTS_Path
-         )                &
-         Builder_Switches;
+      for Switches ("Ada") use Builder_Switches;
    end Builder;
 
    ----------------------------------------------------------------------------
    -- Compiler
    ----------------------------------------------------------------------------
 
-   Compiler_GCC := Configure.Toolchain_Prefix &
-                   "/"                        &
-                   "bin"                      &
-                   "/"                        &
-                   Configure.Toolchain_Name   &
-                   "-gcc";
+   Compiler_GCC :=
+      Configure.Toolchain_Prefix &
+      "/"                        &
+      "bin"                      &
+      "/"                        &
+      Configure.Toolchain_Name   &
+      "-gcc";
+
    Compiler_FQExecutable := "";
+
    EXE_Wrapper_Switches := ();
 
    case Use_EXE_Wrapper is
@@ -101,6 +103,7 @@ abstract project Gprbuild_Tc is
    end case;
 
    Ada_Mode := "";
+
    case Configure.Ada_Mode is
       when "ADA95" => Ada_Mode := "-gnat95";
       when "ADA05" => Ada_Mode := "-gnat2005";
@@ -111,28 +114,30 @@ abstract project Gprbuild_Tc is
    end case;
 
    Elaboration_Model_Switches := ();
+
    case Configure.Elaboration_Model is
-      when "DYNAMIC" => Elaboration_Model_Switches := ("-gnatE");
-                        -- "-gnatel", "-gnateL"
-      when "STATIC"  => null;
+      when "DYNAMIC" => Elaboration_Model_Switches := ("-gnatE"); -- "-gnatel", "-gnateL"
       when "SPARK"   => Elaboration_Model_Switches := ("-gnatd.v");
+      when "STATIC"  => null;
       when others    => null;
    end case;
 
    Suppress_All_Checks_Switches := ();
+
    case Configure.Suppress_All_Checks is
       when "Y"    => Suppress_All_Checks_Switches := ("-gnatp");
       when others => null;
    end case;
 
    No_DOS_LT_Switch := "";
+
    case Ostype is
       when "cmd" | "msys" => null;
       when others         => No_DOS_LT_Switch := "-gnatyd";
    end case;
 
    package Compiler is
-      -- Asm_Cpp
+      -- Asm_Cpp --------------------------------------
       for Driver ("Asm_Cpp") use Compiler_FQExecutable;
       for Switches ("Asm_Cpp") use (
          "-ffunction-sections",
@@ -140,7 +145,7 @@ abstract project Gprbuild_Tc is
          "-g3", "-gdwarf-5"
          )                               &
          Configure.GCC_Switches_Platform;
-      -- C
+      -- C --------------------------------------
       for Driver ("C") use Compiler_FQExecutable;
       for Leading_Required_Switches ("C") use (
          "-ffreestanding",
@@ -157,7 +162,7 @@ abstract project Gprbuild_Tc is
          Configure.CC_Switches_RTS       &
          Configure.GCC_Switches_Platform &
          Gprbuild_Wr.CC_Switches_Warning;
-      -- Ada
+      -- Ada --------------------------------------
       for Driver ("Ada") use Compiler_FQExecutable;
       for Mapping_Spec_Suffix ("Ada") use "%s";
       for Mapping_Body_Suffix ("Ada") use "%b";
@@ -166,8 +171,6 @@ abstract project Gprbuild_Tc is
       for Include_Switches ("Ada") use ("-I");
       for Switches ("Ada") use (
          Ada_Mode,
-         "-nostdinc",
-         "-nostdlib",
          "-O" & Configure.Optimization_Level,
          "-fno-omit-frame-pointer",
          "-fverbose-asm",
@@ -211,8 +214,10 @@ abstract project Gprbuild_Tc is
       when ""     =>
          null;
       when others =>
-         Binder_Switches := Binder_Switches                      &
-                            ("-D" & Configure.Gnatbind_SecStack);
+         Binder_Switches := (
+            "-D" & Configure.Gnatbind_SecStack
+            )            &
+         Binder_Switches;
    end case;
 
    package Binder is
@@ -234,16 +239,18 @@ abstract project Gprbuild_Tc is
    -- Library definitions
    ----------------------------------------------------------------------------
 
-   AR_FQExecutable := Configure.Toolchain_Prefix &
-                      "/"                        &
-                      "bin"                      &
-                      "/"                        &
-                      Configure.Toolchain_Name   &
-                      "-ar";
+   AR_FQExecutable :=
+      Configure.Toolchain_Prefix &
+      "/"                        &
+      "bin"                      &
+      "/"                        &
+      Configure.Toolchain_Name   &
+      "-ar";
 
    Library_Kind    := "static";
    Library_Support := "static_only";
    Library_Builder := "libexec/gprbuild/gprlib";
+
    case Configure.Gprbuild_Prefix is
       when ""     =>
          Library_Builder := ".."            &
@@ -254,6 +261,7 @@ abstract project Gprbuild_Tc is
                             "/"                       &
                             Library_Builder;
    end case;
+
    Archive_Builder := (AR_FQExecutable, "cr");
 
 end Gprbuild_Tc;
