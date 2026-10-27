@@ -224,8 +224,8 @@ configuregpr=${configuregpr}$(print_I "Toolchain_Name                    := \"${
 configuregpr=${configuregpr}$(print_I "Gprbuild_Prefix                   := \"${GPRBUILD_PREFIX}\";")${NL}
 configuregpr=${configuregpr}$(print_I "GnatTDI_Filename                  := \"${GNATTDI_FILENAME}\";")${NL}
 configuregpr=${configuregpr}$(print_I "GnatAdc_Filename                  := \"${GNATADC_FILENAME}\";")${NL}
-configuregpr=${configuregpr}$(print_I "Library_Directory                 := \"${LIBRARY_DIRECTORY}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Object_Directory                  := \"${OBJECT_DIRECTORY}\";")${NL}
+configuregpr=${configuregpr}$(print_I "Library_Directory                 := \"${LIBRARY_DIRECTORY}\";")${NL}
 configuregpr=${configuregpr}$(print_I "RTS                               := \"${RTS}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Profile                           := \"${PROFILE}\";")${NL}
 configuregpr=${configuregpr}$(print_I "Ada_Mode                          := \"${ADA_MODE}\";")${NL}
