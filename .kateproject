@@ -1,5 +1,9 @@
 {
   "name": "SweetAda",
+  "directory": ".",
+  "lspclient": { "servers": { "ada": { "initializationOptions": { "ada": {
+                 "projectFile": "sweetada.gpr"
+               } } } } },
   "files": [ {
                "filters": [
                            "Makefile*",
@@ -7,7 +11,7 @@
                            "gnat.adc*",
                            "kernel.cfg",
                            "*.gpr",
-                           "*.adb", "*.ads", "*.adc", "*.apb", "*.aps",
+                           "*.adb", "*.ads", "*.adbp", "*.adsp", "*.adc",
                            "*.S", "*.c", "*.h",
                            "*.lds",
                            "*.sh", "*.bat", "*.ps1",
