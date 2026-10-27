@@ -8,6 +8,8 @@
 # Please consult the LICENSE.txt file located in the top-level directory.
 #
 
+.POSIX:
+
 ifeq ($(KERNEL_PARENT_PATH),)
 $(error Error: invalid KERNEL_PARENT_PATH)
 endif
