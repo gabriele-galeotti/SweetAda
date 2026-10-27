@@ -576,7 +576,11 @@ CONFIGURE_DEPS += Makefile.tc.in
 #                                                                              #
 ################################################################################
 
-ifneq ($(MAKECMDGOALS),)
+ifneq ($(filter-out         \
+         createkernelcfg    \
+         installfiles       \
+         configure-restore, \
+         $(MAKECMDGOALS)),)
 include $(APPLICATION_DIRECTORY)/configuration.in
 CONFIGURE_DEPS += $(APPLICATION_DIRECTORY)/configuration.in
 ifeq ($(USE_CLIBRARY),Y)
@@ -1525,6 +1529,43 @@ endif
 	$(configure-subdirs-command)
 	$(UPDATETM) $@
 
+#
+# Configuration save/restore.
+#
+
+ifneq ($(filter configure-save configure-restore,$(MAKECMDGOALS)),)
+include configuration.user.in
+endif
+
+.PHONY: configure-save
+configure-save:
+ifneq ($(CONFIGURE_SAVE_COMMAND),)
+	$(CONFIGURE_SAVE_COMMAND)
+endif
+
+.PHONY: configure-restore
+configure-restore: distclean kernel-lib-obj-dir
+ifneq ($(CONFIGURE_RESTORE_COMMAND),)
+	$(CONFIGURE_RESTORE_COMMAND)
+ifeq ($(OSTYPE),cmd)
+	IF EXIST $(KERNEL_CFGFILE) $(MAKE) installfiles
+else
+	if [ -e $(KERNEL_CFGFILE) ] ; then $(MAKE) installfiles ; fi
+endif
+ifeq ($(REBUILD_RTS),Y)
+	$(MAKE) rts
+endif
+ifeq ($(OSTYPE),cmd)
+	IF EXIST $(KERNEL_CFGFILE) $(MAKE) configure
+else
+	if [ -e $(KERNEL_CFGFILE) ] ; then $(MAKE) configure ; fi
+endif
+endif
+
+#
+# Configuration dump.
+#
+
 .PHONY: infodump
 infodump:
 	@$(call echo-print,"Configuration parameters:")
@@ -1575,6 +1616,7 @@ ifneq ($(TOOLCHAIN_NAME),)
 	@$(call echo-print,"C GCC SWITCHES (RTS):    $(strip $(CC_SWITCHES_RTS))")
 	@$(call echo-print,"GCC SWITCHES (PLATFORM): $(strip $(GCC_SWITCHES_PLATFORM))")
 	@$(call echo-print,"GCC MULTIDIR:            $(GCC_MULTIDIR)")
+	@$(call echo-print,"RTS DIRECTORY            $(RTS_DIRECTORY)")
 ifneq ($(RTS),)
 	@$(call echo-print,"RTS PATH:                $(RTS_PATH)")
 endif
@@ -1814,39 +1856,6 @@ libutils-exe-wrapper:
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/EXE-wrapper clean
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/EXE-wrapper all
 	$(MAKE) -C $(LIBUTILS_DIRECTORY)/src/EXE-wrapper install
-
-#
-# Configuration save/restore.
-#
-
-ifneq ($(filter configure-save configure-restore,$(MAKECMDGOALS)),)
-include configuration.user.in
-endif
-
-.PHONY: configure-save
-configure-save:
-ifneq ($(CONFIGURE_SAVE_COMMAND),)
-	$(CONFIGURE_SAVE_COMMAND)
-endif
-
-.PHONY: configure-restore
-configure-restore: distclean kernel-lib-obj-dir
-ifneq ($(CONFIGURE_RESTORE_COMMAND),)
-	$(CONFIGURE_RESTORE_COMMAND)
-ifeq ($(OSTYPE),cmd)
-	IF EXIST $(KERNEL_CFGFILE) $(MAKE) installfiles
-else
-	if [ -e $(KERNEL_CFGFILE) ] ; then $(MAKE) installfiles ; fi
-endif
-ifeq ($(REBUILD_RTS),Y)
-	$(MAKE) rts
-endif
-ifeq ($(OSTYPE),cmd)
-	IF EXIST $(KERNEL_CFGFILE) $(MAKE) configure
-else
-	if [ -e $(KERNEL_CFGFILE) ] ; then $(MAKE) configure ; fi
-endif
-endif
 
 #
 # Probe variable values.
