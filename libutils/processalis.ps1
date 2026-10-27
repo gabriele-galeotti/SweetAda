@@ -1,6 +1,6 @@
 
 #
-# Process an ALI list file to remove the a prefixed path.
+# Process an ALI list file to remove a prefixed path.
 #
 # Copyright (C) 2020-2026 Gabriele Galeotti
 #
