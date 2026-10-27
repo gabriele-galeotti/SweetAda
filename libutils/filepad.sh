@@ -79,11 +79,7 @@ if [ "x$2" = "x" ] ; then
   exit 1
 fi
 
-if [ "x${OSTYPE}" = "xdarwin" ] ; then
-  FILESIZE=$(stat -f "%z" "$1" 2> /dev/null)
-else
-  FILESIZE=$(stat -c "%s" "$1" 2> /dev/null)
-fi
+FILESIZE=$(wc -c "$1" | awk "{ print \$1 }")
 
 #
 # Parse padding size (eventually in units of kB/MB).
