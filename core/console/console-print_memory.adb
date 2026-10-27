@@ -51,10 +51,14 @@ begin
          ASCII_Syms (Item_Count) := ' ';
       end loop;
       -- print a sequence of bytes
-      for Byte_Offset in IAddress_L .. IAddress_L + SSE.Integer_Address (NBytes_Row) - 1 loop
+      for Byte_Offset in
+         IAddress_L .. IAddress_L + SSE.Integer_Address (NBytes_Row) - 1
+      loop
          declare
-            Byte : Interfaces.Unsigned_8
-               with Address  => SSE.To_Address (IAddress_H + Byte_Offset);
+            Byte : aliased Interfaces.Unsigned_8
+               with Address    => SSE.To_Address (IAddress_H + Byte_Offset),
+                    Import     => True,
+                    Convention => Asm;
          begin
             Item_Count := @ + 1;
             Print (Byte, Prefix => " ");
