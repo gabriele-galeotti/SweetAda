@@ -24,7 +24,7 @@ project SweetAda is
       Configure.RTS_Path;
    for Source_Dirs use Configure.Include_Directories;
    for Object_Dir use project'Project_Dir & Configure.Object_Directory;
-   for Library_Dir use project'Project_Dir & Configure.Library_Directory;
+   -- for Library_Dir use project'Project_Dir & Configure.Library_Directory;
    for Default_Language use "Ada";
    for Main use ("main.adb");
 
