@@ -213,6 +213,60 @@ is
    -- 6.6.2.23 MFR_REVISION (9Bh)
 
    -- 6.6.3.1 MFR_ADC_CONFIG (D0h)
+
+   MODE_POWER_DOWN           : constant := 2#000#; -- Power-down (or shutdown)
+   MODE_SHUNT_TRIGGERED      : constant := 2#001#; -- Shunt voltage, triggered
+   MODE_BUS_TRIGGERED        : constant := 2#010#; -- Bus voltage, triggered
+   MODE_SHUNT_BUS_TRIGGERED  : constant := 2#011#; -- Shunt and bus, triggered
+   MODE_POWER_DOWN_2         : constant := 2#100#; -- Power-down (or shutdown)
+   MODE_SHUNT_CONTINUOUS     : constant := 2#101#; -- Shunt voltage, continuous
+   MODE_BUS_CONTINUOUS       : constant := 2#110#; -- Bus voltage, continuous
+   MODE_SHUNT_BUS_CONTINUOUS : constant := 2#111#; -- Shunt and bus, continuous (default)
+
+   VSHCT_140us  : constant := 2#000#; -- 140 µs
+   VSHCT_204us  : constant := 2#001#; -- 204 µs
+   VSHCT_332us  : constant := 2#010#; -- 332 µs
+   VSHCT_588us  : constant := 2#011#; -- 588 µs
+   VSHCT_1ms1   : constant := 2#100#; -- 1.1 ms (default)
+   VSHCT_2ms116 : constant := 2#101#; -- 2.116 ms
+   VSHCT_4ms156 : constant := 2#110#; -- 4.156 ms
+   VSHCT_8ms244 : constant := 2#111#; -- 8.244 ms
+
+   VBUSCT_140us  renames VSHCT_140us;
+   VBUSCT_204us  renames VSHCT_204us;
+   VBUSCT_332us  renames VSHCT_332us;
+   VBUSCT_588us  renames VSHCT_588us;
+   VBUSCT_1ms1   renames VSHCT_1ms1;
+   VBUSCT_2ms116 renames VSHCT_2ms116;
+   VBUSCT_4ms156 renames VSHCT_4ms156;
+   VBUSCT_8ms244 renames VSHCT_8ms244;
+
+   AVG_1    : constant := 2#000#; -- NUMBER OF AVERAGES 1 (default)
+   AVG_4    : constant := 2#001#; -- NUMBER OF AVERAGES 4
+   AVG_16   : constant := 2#010#; -- NUMBER OF AVERAGES 16
+   AVG_64   : constant := 2#011#; -- NUMBER OF AVERAGES 64
+   AVG_128  : constant := 2#100#; -- NUMBER OF AVERAGES 128
+   AVG_256  : constant := 2#101#; -- NUMBER OF AVERAGES 256
+   AVG_512  : constant := 2#110#; -- NUMBER OF AVERAGES 512
+   AVG_1024 : constant := 2#111#; -- NUMBER OF AVERAGES 1024
+
+   type MFR_ADC_CONFIG_Type is record
+      MODE     : Bits_3 := MODE_SHUNT_BUS_CONTINUOUS; -- Operating mode.
+      VSHCT    : Bits_3 := VSHCT_1ms1;                -- Shunt voltage conversion time.
+      VBUSCT   : Bits_3 := VBUSCT_1ms1;               -- Bus voltage conversion time.
+      AVG      : Bits_3 := AVG_1;                     -- Averaging mode.
+      Reserved : Bits_4 := 2#0100#;
+   end record
+   with Bit_Order => Low_Order_First,
+        Size      => 16;
+   for MFR_ADC_CONFIG_Type use record
+      MODE     at 0 range  0 ..  2;
+      VSHCT    at 0 range  3 ..  5;
+      VBUSCT   at 0 range  6 ..  8;
+      AVG      at 0 range  9 .. 11;
+      Reserved at 0 range 12 .. 15;
+   end record;
+
    -- 6.6.3.2 MFR_READ_VSHUNT (D1h)
 
    -- 6.6.3.3 MFR_ALERT_MASK (D2h)
