@@ -103,7 +103,7 @@ else ifeq ($(OSTYPE),linux)
   TOOLCHAIN_PREFIX := /opt/toolchains
   #TOOLCHAIN_PREFIX := /opt/GNAT/2021-arm-elf
   #TOOLCHAIN_PREFIX := /opt/GNAT/2021-riscv32-elf
-  GPRBUILD_PREFIX  := /usr
+  GPRBUILD_PREFIX  := /opt/gprbuild-x86_64-linux-25.0.0-1
 endif
 
 # standard toolchain names
@@ -138,7 +138,7 @@ TOOLCHAIN_NAME_x86_64     := x86_64-elf
 ################################################################################
 
 # GNATMAKE or GPRbuild
-BUILD_MODE := GNATMAKE
+BUILD_MODE := GPRbuild
 
 # Y/N (default=N)
 USE_EXE_WRAPPER := Y

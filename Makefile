@@ -501,6 +501,7 @@ POSTBUILD_COMMAND ?=
 ifneq ($(MAKECMDGOALS),)
 ifeq ($(filter distclean,$(MAKECMDGOALS)),distclean)
 override undefine PLATFORM
+override undefine SUBPLATFORM
 override undefine CPU
 endif
 ifneq ($(filter createkernelcfg,$(MAKECMDGOALS)),createkernelcfg)
@@ -564,6 +565,9 @@ ifeq ($(filter rts,$(MAKECMDGOALS)),rts)
 $(error Error: no valid CPU)
 endif
 endif
+endif
+ifneq ($(filter configure-save configure-restore,$(MAKECMDGOALS)),)
+include configuration.user.in
 endif
 
 # toolchain specifications
@@ -1533,10 +1537,6 @@ endif
 # Configuration save/restore.
 #
 
-ifneq ($(filter configure-save configure-restore,$(MAKECMDGOALS)),)
-include configuration.user.in
-endif
-
 .PHONY: configure-save
 configure-save:
 ifneq ($(CONFIGURE_SAVE_COMMAND),)
@@ -1788,10 +1788,14 @@ clean-configure:
 	$(RM) $(GNATADC_FILENAME)
 	$(RM) $(CONFIGUREGPR_FILENAME)
 ifeq ($(OSTYPE),cmd)
+ifneq ($(GNATPREP_FILES),)
 	$(RM) $(subst /,\,$(GNATPREP_FILES))
+endif
 	$(RM) $(CORE_DIRECTORY)\linker.ad*
 else
+ifneq ($(GNATPREP_FILES),)
 	$(RM) $(GNATPREP_FILES)
+endif
 	$(RM) $(CORE_DIRECTORY)/linker.ad*
 endif
 
