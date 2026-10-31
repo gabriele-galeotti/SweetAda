@@ -15,11 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with Configure;
 with PPC405;
 
 package body REF405EP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -43,7 +45,7 @@ package body REF405EP
    -- Tclk_Init
    ----------------------------------------------------------------------------
    procedure Tclk_Init
-      is
+   is
       Period : constant :=
                   (Configure.TIMER_SYSCLK + Configure.TICK_FREQUENCY / 2) /
                    Configure.TICK_FREQUENCY;

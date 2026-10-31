@@ -28,7 +28,7 @@ with REF405EP;
 with Console;
 
 package body BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -58,14 +58,14 @@ package body BSP
 
    procedure Console_Putchar
       (C : in Character)
-      is
+   is
    begin
       UART16x50.TX (UART1_Descriptor, To_U8 (C));
    end Console_Putchar;
 
    procedure Console_Getchar
       (C : out Character)
-      is
+   is
       Data : Unsigned_8;
    begin
       UART16x50.RX (UART1_Descriptor, Data);
@@ -76,7 +76,7 @@ package body BSP
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup
-      is
+   is
    begin
       -------------------------------------------------------------------------
       Secondary_Stack.Init;
@@ -122,6 +122,7 @@ package body BSP
       Console.Print (Prefix => "PVR revision: ", Value => PVR_Read.Revision, NL => True);
       -------------------------------------------------------------------------
       Tclk_Init;
+      Tick_Count := 0;
       PPC405.Irq_Enable;
       -------------------------------------------------------------------------
    end Setup;
