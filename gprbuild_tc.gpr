@@ -116,10 +116,14 @@ abstract project Gprbuild_Tc is
    Elaboration_Model_Switches := ();
 
    case Configure.Elaboration_Model is
-      when "DYNAMIC" => Elaboration_Model_Switches := ("-gnatE"); -- "-gnatel", "-gnateL"
-      when "SPARK"   => Elaboration_Model_Switches := ("-gnatd.v");
-      when "STATIC"  => null;
-      when others    => null;
+      when "DYNAMIC"      => Elaboration_Model_Switches := ("-gnatE"); -- "-gnatel", "-gnateL"
+      when "SPARK"        => Elaboration_Model_Switches := ("-gnatd.v");
+      when "STATIC" | ""  => null;
+      when others         => Elaboration_Model_Switches := (
+                                Configure.Elaboration_Model &
+                                ": "                        &
+                                "ELABORATION_MODEL UNKNOWN"
+                                );
    end case;
 
    Suppress_All_Checks_Switches := ();
