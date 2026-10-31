@@ -30,7 +30,7 @@ _start:
                 //
                 // IPSBAR initialization.
                 //
-                move.l  #(IPSBAR+1),%d0                 // bit0 = 1 --> mark as valid
+                move.l  #(IPSBAR+1),%d0                 // bit0 = 1 -> mark as valid
                 move.l  %d0,IPSBAR_DEFAULT              // store in IPSBAR power-on configuration register
 
                 //
