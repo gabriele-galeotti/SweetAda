@@ -21,9 +21,6 @@ with Interrupts;
 with BSP;
 with GDT_Simple;
 with PC;
-with Ethernet;
-with PBUF;
-with NE2000;
 with Console;
 
 package body Exceptions
@@ -52,54 +49,54 @@ package body Exceptions
 
    Exception_Vectors : constant array (Exception_DE .. PC.PIC_Irq15) of Exception_Vector_Type :=
       [
-       (Div_By_0_Handler'Address,        SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_DE
-       (Debug_Exception_Handler'Address, SELECTOR_KCODE, SYSGATE_INT),  -- Exception_DB
-       (Nmi_Interrupt_Handler'Address,   SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_NN
-       (One_Byte_Int_Handler'Address,    SELECTOR_KCODE, SYSGATE_INT),  -- Exception_BP
-       (Int_On_Overflow_Handler'Address, SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_OF
-       (Array_Bounds_Handler'Address,    SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_BR
-       (Invalid_Opcode_Handler'Address,  SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_UD
-       (Device_Not_Avl_Handler'Address,  SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_NM
-       (Double_Fault_Handler'Address,    SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_DF
-       (Cp_Seg_Ovr_Handler'Address,      SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_CS
-       (Invalid_Tss_Handler'Address,     SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_TS
-       (Seg_Not_Prsnt_Handler'Address,   SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_NP
-       (Stack_Fault_Handler'Address,     SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_SS
-       (Gen_Prot_Fault_Handler'Address,  SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_GP
-       (Page_Fault_Handler'Address,      SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_PF
-       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved0F
-       (Coproc_Error_Handler'Address,    SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_MF
-       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_AC
-       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_MC
-       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_XM
-       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Exception_VE
-       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved15
-       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved16
-       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved17
-       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved18
-       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved19
-       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved1A
-       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved1B
-       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved1C
-       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved1D
-       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved1E
-       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- Reserved1F
-       (Irq0_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- Irq0
-       (Irq1_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- Irq1
-       (Null_Address,                    SELECTOR_KCODE, SYSGATE_INT),  -- Irq2
-       (Irq3_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- Irq3
-       (Irq4_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- Irq4
-       (Irq5_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- Irq5
-       (Irq6_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- Irq6
-       (Irq7_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- Irq7
-       (Irq8_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- Irq8
-       (Irq9_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- Irq9
-       (Irq10_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT),  -- Irq10
-       (Irq11_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT),  -- Irq11
-       (Irq12_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT),  -- Irq12
-       (Irq13_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT),  -- Irq13
-       (Irq14_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT),  -- Irq14
-       (Irq15_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT)   -- Irq15
+       (Div_By_0_Handler'Address,        SELECTOR_KCODE, SYSGATE_TRAP), -- 0x00 Exception_DE
+       (Debug_Exception_Handler'Address, SELECTOR_KCODE, SYSGATE_INT),  -- 0x01 Exception_DB
+       (Nmi_Interrupt_Handler'Address,   SELECTOR_KCODE, SYSGATE_TRAP), -- 0x02 Exception_NN
+       (One_Byte_Int_Handler'Address,    SELECTOR_KCODE, SYSGATE_INT),  -- 0x03 Exception_BP
+       (Int_On_Overflow_Handler'Address, SELECTOR_KCODE, SYSGATE_TRAP), -- 0x04 Exception_OF
+       (Array_Bounds_Handler'Address,    SELECTOR_KCODE, SYSGATE_TRAP), -- 0x05 Exception_BR
+       (Invalid_Opcode_Handler'Address,  SELECTOR_KCODE, SYSGATE_TRAP), -- 0x06 Exception_UD
+       (Device_Not_Avl_Handler'Address,  SELECTOR_KCODE, SYSGATE_TRAP), -- 0x07 Exception_NM
+       (Double_Fault_Handler'Address,    SELECTOR_KCODE, SYSGATE_TRAP), -- 0x08 Exception_DF
+       (Cp_Seg_Ovr_Handler'Address,      SELECTOR_KCODE, SYSGATE_TRAP), -- 0x09 Exception_CS
+       (Invalid_Tss_Handler'Address,     SELECTOR_KCODE, SYSGATE_TRAP), -- 0x0A Exception_TS
+       (Seg_Not_Prsnt_Handler'Address,   SELECTOR_KCODE, SYSGATE_TRAP), -- 0x0B Exception_NP
+       (Stack_Fault_Handler'Address,     SELECTOR_KCODE, SYSGATE_TRAP), -- 0x0C Exception_SS
+       (Gen_Prot_Fault_Handler'Address,  SELECTOR_KCODE, SYSGATE_TRAP), -- 0x0D Exception_GP
+       (Page_Fault_Handler'Address,      SELECTOR_KCODE, SYSGATE_TRAP), -- 0x0E Exception_PF
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- 0x0F Reserved0F
+       (Coproc_Error_Handler'Address,    SELECTOR_KCODE, SYSGATE_TRAP), -- 0x10 Exception_MF
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- 0x11 Exception_AC
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- 0x12 Exception_MC
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- 0x13 Exception_XM
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- 0x14 Exception_VE
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- 0x15 Reserved15
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- 0x16 Reserved16
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- 0x17 Reserved17
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- 0x18 Reserved18
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- 0x19 Reserved19
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- 0x1A Reserved1A
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- 0x1B Reserved1B
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- 0x1C Reserved1C
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- 0x1D Reserved1D
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- 0x1E Reserved1E
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_TRAP), -- 0x1F Reserved1F
+       (Irq0_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- 0x20 Irq0
+       (Irq1_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- 0x21 Irq1
+       (Null_Address,                    SELECTOR_KCODE, SYSGATE_INT),  -- 0x22 Irq2
+       (Irq3_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- 0x23 Irq3
+       (Irq4_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- 0x24 Irq4
+       (Irq5_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- 0x25 Irq5
+       (Irq6_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- 0x26 Irq6
+       (Irq7_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- 0x27 Irq7
+       (Irq8_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- 0x28 Irq8
+       (Irq9_Handler'Address,            SELECTOR_KCODE, SYSGATE_INT),  -- 0x29 Irq9
+       (Irq10_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT),  -- 0x2A Irq10
+       (Irq11_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT),  -- 0x2B Irq11
+       (Irq12_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT),  -- 0x2C Irq12
+       (Irq13_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT),  -- 0x2D Irq13
+       (Irq14_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT),  -- 0x2E Irq14
+       (Irq15_Handler'Address,           SELECTOR_KCODE, SYSGATE_INT)   -- 0x2F Irq15
       ];
 
    --========================================================================--
@@ -116,7 +113,7 @@ package body Exceptions
    procedure Exception_Process
       (Exception_Identifier          : in Exception_Id_Type;
        Exception_Stack_Frame_Address : in Address)
-      is
+   is
       Exception_Frame : aliased Exception_Stack_Frame_Type
          with Address    => Exception_Stack_Frame_Address,
               Import     => True,
@@ -156,7 +153,7 @@ package body Exceptions
    ----------------------------------------------------------------------------
    procedure Irq_Process
       (Irq_Identifier : in Irq_Id_Type)
-      is
+   is
    begin
       case Irq_Identifier is
          when PC.PIT_Interrupt =>
@@ -206,7 +203,7 @@ package body Exceptions
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
    begin
       for Exception_Id in Exception_Vectors'Range loop
          IDT_Set_Handler (
