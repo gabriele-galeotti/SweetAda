@@ -233,7 +233,7 @@ _start64:
                 .global _longmode
 _longmode:
 
-                cli
+                clc
                 cld
                 xorq    %rax,%rax
                 xorq    %rbx,%rbx
