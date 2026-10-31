@@ -15,11 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Bits;
 
 package ILI9341V
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -31,8 +33,6 @@ package ILI9341V
 
    use System;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- ILI9341V
@@ -208,7 +208,5 @@ pragma Style_Checks (Off);
    PWONSC   : constant := 16#ED#; -- Power on sequence control
    ENABLE3G : constant := 16#F2#; -- Enable_3G
    PRCTRL   : constant := 16#F7#; -- Pump ratio control
-
-pragma Style_Checks (On);
 
 end ILI9341V;
