@@ -22,7 +22,7 @@ with PPC440;
 with BSP;
 
 package body Exceptions
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -47,7 +47,7 @@ package body Exceptions
    -- Exception_Fatal
    ----------------------------------------------------------------------------
    procedure Exception_Fatal (Identifier : in Unsigned_32)
-      is
+   is
    begin
       Abort_Library.System_Abort;
    end Exception_Fatal;
@@ -56,7 +56,7 @@ package body Exceptions
    -- Exception_Process
    ----------------------------------------------------------------------------
    procedure Exception_Process (Identifier : in Unsigned_32)
-      is
+   is
    begin
       if Identifier = DEC_IRQ_ID then
          PPC440.TSR_Write (PPC440.TSR_DIS);
@@ -68,7 +68,7 @@ package body Exceptions
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
    begin
       Asm (
            Template => ""                                        & CRLF &

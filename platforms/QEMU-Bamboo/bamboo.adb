@@ -15,12 +15,14 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with Configure;
 with PowerPC;
 with PPC440;
 
 package body Bamboo
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -45,7 +47,7 @@ package body Bamboo
    -- Tclk_Init
    ----------------------------------------------------------------------------
    procedure Tclk_Init
-      is
+   is
       Period : constant :=
                   (Configure.TIMER_SYSCLK + Configure.TICK_FREQUENCY / 2) /
                    Configure.TICK_FREQUENCY;
