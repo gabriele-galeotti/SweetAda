@@ -55,12 +55,12 @@ package body Application
                -- dump RTC time -----------------------------------------------
                Console.Print ("Current date: ", NL => False);
                MC146818A.Time_Read (BSP.RTC_Descriptor, TM);
-               Console.Print (Prefix => "",  Value => TM.Year + 1_900);
-               Console.Print (Prefix => "-", Value => TM.Mon + 1);
-               Console.Print (Prefix => "-", Value => TM.MDay);
-               Console.Print (Prefix => " ", Value => TM.Hour);
-               Console.Print (Prefix => ":", Value => TM.Min);
-               Console.Print (Prefix => ":", Value => TM.Sec);
+               Console.Print (Prefix => "",  Value => Natural (TM.Year) + 1_900);
+               Console.Print (Prefix => "-", Value => Natural (TM.Mon) + 1);
+               Console.Print (Prefix => "-", Value => Natural (TM.MDay));
+               Console.Print (Prefix => " ", Value => Natural (TM.Hour));
+               Console.Print (Prefix => ":", Value => Natural (TM.Min));
+               Console.Print (Prefix => ":", Value => Natural (TM.Sec));
                Console.Print_NewLine;
                for Delay_Loop_Count in 1 .. Delay_Count loop CPU.NOP; end loop;
             end loop;
