@@ -15,12 +15,14 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System;
 with Interfaces;
 with Bits;
 
 package Dreamcast
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -51,8 +53,10 @@ package Dreamcast
 
    function Video_Cable
       return Video_Cable_Type;
+
    function Video_Font
       return Address;
+
    function RTC_Read
       return Unsigned_32;
 

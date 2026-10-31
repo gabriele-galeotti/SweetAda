@@ -15,11 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System.Machine_Code;
 with Definitions;
 
 package body Dreamcast
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -45,7 +47,7 @@ package body Dreamcast
    ----------------------------------------------------------------------------
    function Video_Cable
       return Video_Cable_Type
-      is
+   is
       PortA : aliased Unsigned_32
          with Address              => System'To_Address (16#FF80_002C#),
               Volatile_Full_Access => True,
@@ -72,7 +74,7 @@ package body Dreamcast
    ----------------------------------------------------------------------------
    function Video_Font
       return Address
-      is
+   is
       Result : System.Address;
    begin
       Asm (
@@ -99,7 +101,7 @@ package body Dreamcast
    ----------------------------------------------------------------------------
    function RTC_Read
       return Unsigned_32
-      is
+   is
       EPOCH_50_70 : constant := 631_152_000;
    begin
       return 0; -- __TBD__

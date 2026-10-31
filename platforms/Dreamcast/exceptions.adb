@@ -19,7 +19,7 @@ with Abort_Library;
 with Console;
 
 package body Exceptions
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -33,7 +33,7 @@ package body Exceptions
    -- Exception_Process
    ----------------------------------------------------------------------------
    procedure Exception_Process
-      is
+   is
    begin
       Console.Print ("*** EXCEPTION", NL => True);
       Abort_Library.System_Abort;

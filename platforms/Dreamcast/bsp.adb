@@ -24,7 +24,7 @@ with Exceptions;
 with Console;
 
 package body BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -53,7 +53,7 @@ package body BSP
 
    procedure Console_Putchar
       (C : in Character)
-      is
+   is
    begin
       -- wait for transmitter available
       loop exit when SCIF.SCFDR2.T < 16#10#; end loop;
@@ -62,7 +62,7 @@ package body BSP
 
    procedure Console_Getchar
       (C : out Character)
-      is
+   is
       Data : Unsigned_8;
    begin
       -- wait for receiver available
@@ -76,7 +76,7 @@ package body BSP
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup
-      is
+   is
    begin
       -- enable SCIF RX/TX ----------------------------------------------------
       SCIF.SCSCR2 := (
@@ -99,10 +99,14 @@ package body BSP
          others   => 0
          );
       -- Console --------------------------------------------------------------
-      -- Console.Console_Descriptor := (
-      --    Write => Console_Putchar'Access,
-      --    Read  => Console_Getchar'Access
-      --    );
+      -- under the redream emulator the serial port console is unusable and
+      -- causes hangs
+      if False then
+         Console.Console_Descriptor := (
+            Write => Console_Putchar'Access,
+            Read  => Console_Getchar'Access
+            );
+      end if;
       Console.Print (ANSI_CLS & ANSI_CUPHOME & VT100_LINEWRAP);
       -------------------------------------------------------------------------
       Exceptions.Init;
