@@ -200,10 +200,11 @@ package body BSP
             Min    => 0,
             Hour   => 0,
             MDay   => 1,
-            Mon    => 1 - 1,
+            Mon    => 0,
             Year   => 26,
-            IsDST  => 0,
-            others => 0
+            WDay   => 0,
+            YDay   => 0,
+            IsDST  => 0
             );
          MC146818A.Time_Set (BSP.RTC_Descriptor, TM);
       end;

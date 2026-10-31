@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
@@ -34,8 +36,6 @@ package KN02BA
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    MEMORY_CR_BASEADDRESS     : constant := 16#0C00_0000#; -- 32M space
    CPU_CR_BASEADDRESS        : constant := 16#0E00_0000#; -- 32M space
