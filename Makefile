@@ -1525,9 +1525,13 @@ DOTSWEETADA_DEPS += $(CONFIGUREGPR_FILENAME)
 DOTSWEETADA_DEPS += $(filter-out $(CONFIGUREGPR_FILENAME),$(GPRBUILD_DEPS))
 ./$(DOTSWEETADA): $(DOTSWEETADA_DEPS)
 ifeq ($(OSTYPE),cmd)
+ifneq ($(GNATPREP_FILES),)
 	$(RM) $(subst /,\,$(GNATPREP_FILES))
+endif
 else
+ifneq ($(GNATPREP_FILES),)
 	$(RM) $(GNATPREP_FILES)
+endif
 endif
 	$(MAKE) clean
 	$(configure-subdirs-command)
