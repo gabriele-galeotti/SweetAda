@@ -22,7 +22,7 @@ with MMIO;
 with MCF5206;
 
 package body SBC5206
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -40,6 +40,7 @@ package body SBC5206
       (Register : UART_Register_Type)
       return Unsigned_8
       with Inline => True;
+
    procedure Register_Write
       (Register : in UART_Register_Type;
        Value    : in Unsigned_8)
@@ -59,7 +60,7 @@ package body SBC5206
    function Register_Read
       (Register : UART_Register_Type)
       return Unsigned_8
-      is
+   is
    begin
       return MMIO.Read_U8
          (LLutils.Build_Address
@@ -74,7 +75,7 @@ package body SBC5206
    procedure Register_Write
       (Register : in UART_Register_Type;
        Value    : in Unsigned_8)
-      is
+   is
    begin
       MMIO.Write_U8
          (LLutils.Build_Address
@@ -88,7 +89,7 @@ package body SBC5206
    ----------------------------------------------------------------------------
    procedure TX
       (Data : in Unsigned_8)
-      is
+   is
    begin
       -- wait for transmitter buffer empty
       loop
@@ -102,7 +103,7 @@ package body SBC5206
    ----------------------------------------------------------------------------
    procedure RX
       (Data : out Unsigned_8)
-      is
+   is
    begin
       -- wait for data available
       loop
@@ -115,7 +116,7 @@ package body SBC5206
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
    begin
       Register_Write (UCR, To_U8 (UCR_Type'(
          RC     => RC_NONE,

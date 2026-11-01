@@ -18,7 +18,7 @@
 with Interfaces;
 
 package SBC5206
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -32,8 +32,10 @@ package SBC5206
 
    procedure TX
       (Data : in Unsigned_8);
+
    procedure RX
       (Data : out Unsigned_8);
+
    procedure Init;
 
 end SBC5206;

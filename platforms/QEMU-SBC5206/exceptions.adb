@@ -22,7 +22,7 @@ with BSP;
 with Console;
 
 package body Exceptions
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -36,7 +36,7 @@ package body Exceptions
    -- Exception_Process
    ----------------------------------------------------------------------------
    procedure Exception_Process
-      is
+   is
    begin
       Console.Print ("*** EXCEPTION", NL => True);
       Abort_Library.System_Abort;
@@ -46,7 +46,7 @@ package body Exceptions
    -- Irq_Process
    ----------------------------------------------------------------------------
    procedure Irq_Process
-      is
+   is
    begin
       BSP.Tick_Count := @ + 1;
       MCF5206.TIMER1.TER := (
@@ -64,7 +64,7 @@ package body Exceptions
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
    begin
       CPU.VBR_Set (Vector_Table'Address);
    end Init;

@@ -18,7 +18,7 @@
 with Interfaces;
 
 package BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -36,8 +36,10 @@ package BSP
 
    procedure Console_Putchar
       (C : in Character);
+
    procedure Console_Getchar
       (C : out Character);
+
    procedure Setup;
 
 end BSP;

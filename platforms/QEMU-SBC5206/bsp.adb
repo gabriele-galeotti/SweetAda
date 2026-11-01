@@ -25,7 +25,7 @@ with SBC5206;
 with Console;
 
 package body BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -85,14 +85,14 @@ package body BSP
 
    procedure Console_Putchar
       (C : in Character)
-      is
+   is
    begin
       SBC5206.TX (To_U8 (C));
    end Console_Putchar;
 
    procedure Console_Getchar
       (C : out Character)
-      is
+   is
       Data : Unsigned_8;
    begin
       SBC5206.RX (Data);
@@ -103,7 +103,7 @@ package body BSP
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup
-      is
+   is
    begin
       -------------------------------------------------------------------------
       Secondary_Stack.Init;
