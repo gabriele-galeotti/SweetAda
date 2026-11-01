@@ -20,7 +20,7 @@ with Interfaces;
 with Ethernet;
 
 package EtherLinkIII
-   is
+is
 
    --========================================================================--
    --                                                                        --

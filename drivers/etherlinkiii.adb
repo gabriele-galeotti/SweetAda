@@ -15,15 +15,16 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Warnings (Off, "* is not referenced");
+
 with System.Storage_Elements;
 with Bits;
-with CPU;
 with CPU.IO;
 with PC;
 with Console;
 
 package body EtherLinkIII
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -35,8 +36,6 @@ package body EtherLinkIII
 
    use System.Storage_Elements;
    use Bits;
-   use CPU;
-   use CPU.IO;
    use PC;
 
    ID_PORT : constant := 16#0100#;
@@ -63,9 +62,11 @@ package body EtherLinkIII
    procedure Select_Window
       (N : in NWindow_Type)
       with Inline => True;
+
    function Status_Read
       return Unsigned_16
       with Inline => True;
+
    function EEPROM_ID_Read
       (Data_Index : Natural)
       return Unsigned_16;
@@ -83,11 +84,12 @@ package body EtherLinkIII
    ----------------------------------------------------------------------------
    procedure Select_Window
       (N : in NWindow_Type)
-      is
+   is
    begin
-      IO_Write
-         (EtherLinkIII_Card.Base_Address + CMD_REGISTER,
-          16#0800# + Unsigned_16 (N));
+      CPU.IO.Write (
+          EtherLinkIII_Card.Base_Address + CMD_REGISTER,
+          16#0800# + Unsigned_16 (N)
+          );
    end Select_Window;
 
    ----------------------------------------------------------------------------
@@ -95,9 +97,9 @@ package body EtherLinkIII
    ----------------------------------------------------------------------------
    function Status_Read
       return Unsigned_16
-      is
+   is
    begin
-      return Unsigned_16'(IO_Read (EtherLinkIII_Card.Base_Address + 16#0E#));
+      return Unsigned_16'(CPU.IO.Read (EtherLinkIII_Card.Base_Address + 16#0E#));
    end Status_Read;
 
    ----------------------------------------------------------------------------
@@ -106,15 +108,15 @@ package body EtherLinkIII
    function EEPROM_ID_Read
       (Data_Index : Natural)
       return Unsigned_16
-      is
+   is
       Result : Unsigned_16;
    begin
-      PortOut (ID_PORT, EEPROM_READ or Unsigned_8 (Data_Index));
+      CPU.IO.PortOut (ID_PORT, EEPROM_READ or Unsigned_8 (Data_Index));
       PIT_Counter1_Delay (2); -- 200 us
       Result := 0;
       for Index in 1 .. Result'Size loop
          Result := Shift_Left (Result, 1);
-         Result := Result or Bit0 (Unsigned_8'(PortIn (ID_PORT)));
+         Result := Result or Bit0 (Unsigned_8'(CPU.IO.PortIn (ID_PORT)));
       end loop;
       return Result;
    end EEPROM_ID_Read;
@@ -125,7 +127,7 @@ package body EtherLinkIII
    -- __REF__ 7-2 Adapter Configuration and Enable
    ----------------------------------------------------------------------------
    procedure Probe
-      is
+   is
    begin
       -- ID sequence
       -- IDS is in ID_WAIT state, and it monitors write accesses to 01x0h
@@ -134,10 +136,10 @@ package body EtherLinkIII
          High_Bit : Boolean;
       begin
          -- ID_PORT = 0x100
-         PortOut (ID_PORT, Unsigned_8'(0));
+         CPU.IO.PortOut (ID_PORT, Unsigned_8'(0));
          Data := 16#FF#;
          for Index in 1 .. 255 loop
-            PortOut (ID_PORT, Data);
+            CPU.IO.PortOut (ID_PORT, Data);
             High_Bit := MSBitOn (Data);
             Data := Shift_Left (Data, 1);
             if High_Bit then
@@ -147,7 +149,7 @@ package body EtherLinkIII
       end;
       -- IDS is now in the ID_CMD state
       -- set adapter tag register to 0
-      PortOut (ID_PORT, Unsigned_8'(16#D0#));
+      CPU.IO.PortOut (ID_PORT, Unsigned_8'(16#D0#));
       if EEPROM_ID_Read (7) = 16#6D50# then
          Console.Print ("3C509B adapter found", NL => True);
       else
@@ -186,12 +188,12 @@ package body EtherLinkIII
          Console.Print (Prefix => "IRQ:        ", Value => EtherLinkIII_Card.IRQ, NL => True);
       end;
       -- set adapter tag register
-      PortOut (ID_PORT, Unsigned_8'(16#D0# + 1));
+      CPU.IO.PortOut (ID_PORT, Unsigned_8'(16#D0# + 1));
       -- activate adapter
-      PortOut (ID_PORT, Unsigned_8'(16#FF#));
+      CPU.IO.PortOut (ID_PORT, Unsigned_8'(16#FF#));
       -- select window 0
       Select_Window (WINDOW0);
-      if Unsigned_16'(IO_Read (EtherLinkIII_Card.Base_Address)) /= 16#6D50# then
+      if Unsigned_16'(CPU.IO.Read (EtherLinkIII_Card.Base_Address)) /= 16#6D50# then
          Console.Print ("3C509B: no adapters found", NL => True);
          return;
       end if;
