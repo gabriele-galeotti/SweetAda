@@ -51,6 +51,7 @@ is
 
    procedure Console_Null_Write
       (C : in Character);
+
    procedure Console_Null_Read
       (C : out Character);
 
