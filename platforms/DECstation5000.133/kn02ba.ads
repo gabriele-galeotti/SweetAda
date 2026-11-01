@@ -15,6 +15,7 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Style_Checks (Off);
 
 with System;
@@ -23,7 +24,7 @@ with Bits;
 with MIPS;
 
 package KN02BA
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -193,7 +194,5 @@ package KN02BA
       (Memory_Address : Address)
       return Unsigned_32
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end KN02BA;

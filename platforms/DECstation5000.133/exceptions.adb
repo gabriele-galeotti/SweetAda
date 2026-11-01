@@ -21,7 +21,7 @@ with MC146818A;
 with BSP;
 
 package body Exceptions
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -53,7 +53,7 @@ package body Exceptions
    -- Irq_Process
    ----------------------------------------------------------------------------
    procedure Irq_Process
-      is
+   is
    begin
       if IOASIC_SIR.RTC then
          MC146818A.Handle (BSP.RTC_Descriptor'Address);

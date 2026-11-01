@@ -15,11 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System.Machine_Code;
 with Definitions;
 
 package body KN02BA
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -46,7 +48,7 @@ package body KN02BA
    function Read32_NOP
       (Memory_Address : Address)
       return Unsigned_32
-      is
+   is
       Result : Unsigned_32;
    begin
       Asm (

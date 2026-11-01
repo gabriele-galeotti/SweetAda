@@ -20,7 +20,7 @@ with MC146818A;
 with Z8530;
 
 package BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -30,7 +30,7 @@ package BSP
    --                                                                        --
    --========================================================================--
 
-   Tick_Count : aliased Interfaces.Unsigned_32 := 0
+   Tick_Count : aliased Interfaces.Unsigned_32
       with Atomic        => True,
            Export        => True,
            Convention    => Asm,
@@ -45,8 +45,10 @@ package BSP
 
    procedure Console_Putchar
       (C : in Character);
+
    procedure Console_Getchar
       (C : out Character);
+
    procedure Setup;
 
 end BSP;
