@@ -98,6 +98,8 @@ is
           );
    end VBR_Set;
 
+#if ENABLE_MOVES
+
    ----------------------------------------------------------------------------
    -- MoveSByte
    ----------------------------------------------------------------------------
@@ -108,20 +110,16 @@ is
    is
       B : Unsigned_8;
    begin
-      if GCC.Defines.MCOLDFIRE then
-         raise Program_Error;
-      else
-         Asm (
-              Template => ""                       & CRLF &
-                          "        moves.b %1@,%0" & CRLF &
-                          "",
-              Outputs  => Unsigned_8'Asm_Output ("=d", B),
-              Inputs   => Address'Asm_Input ("a", A),
-              Clobber  => "",
-              Volatile => True
-             );
-         return B;
-      end if;
+      Asm (
+           Template => ""                       & CRLF &
+                       "        moves.b %1@,%0" & CRLF &
+                       "",
+           Outputs  => Unsigned_8'Asm_Output ("=d", B),
+           Inputs   => Address'Asm_Input ("a", A),
+           Clobber  => "",
+           Volatile => True
+          );
+      return B;
    end MoveSByte;
 
    procedure MoveSByte
@@ -129,22 +127,18 @@ is
        B : in Unsigned_8)
    is
    begin
-      if GCC.Defines.MCOLDFIRE then
-         raise Program_Error;
-      else
-         Asm (
-              Template => ""                       & CRLF &
-                          "        moves.b %0,%1@" & CRLF &
-                          "",
-              Outputs  => No_Output_Operands,
-              Inputs   => [
-                           Unsigned_8'Asm_Input ("d", B),
-                           Address'Asm_Input ("a", A)
-                          ],
-              Clobber  => "",
-              Volatile => True
-             );
-      end if;
+      Asm (
+           Template => ""                       & CRLF &
+                       "        moves.b %0,%1@" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => [
+                        Unsigned_8'Asm_Input ("d", B),
+                        Address'Asm_Input ("a", A)
+                       ],
+           Clobber  => "",
+           Volatile => True
+          );
    end MoveSByte;
 
    ----------------------------------------------------------------------------
@@ -157,20 +151,16 @@ is
    is
       W : Unsigned_16;
    begin
-      if GCC.Defines.MCOLDFIRE then
-         raise Program_Error;
-      else
-         Asm (
-              Template => ""                       & CRLF &
-                          "        moves.w %1@,%0" & CRLF &
-                          "",
-              Outputs  => Unsigned_16'Asm_Output ("=d", W),
-              Inputs   => Address'Asm_Input ("a", A),
-              Clobber  => "",
-              Volatile => True
-             );
-         return W;
-      end if;
+      Asm (
+           Template => ""                       & CRLF &
+                       "        moves.w %1@,%0" & CRLF &
+                       "",
+           Outputs  => Unsigned_16'Asm_Output ("=d", W),
+           Inputs   => Address'Asm_Input ("a", A),
+           Clobber  => "",
+           Volatile => True
+          );
+      return W;
    end MoveSWord;
 
    procedure MoveSWord
@@ -178,22 +168,18 @@ is
        W : in Unsigned_16)
    is
    begin
-      if GCC.Defines.MCOLDFIRE then
-         raise Program_Error;
-      else
-         Asm (
-              Template => ""                       & CRLF &
-                          "        moves.w %0,%1@" & CRLF &
-                          "",
-              Outputs  => No_Output_Operands,
-              Inputs   => [
-                           Unsigned_16'Asm_Input ("d", W),
-                           Address'Asm_Input ("a", A)
-                          ],
-              Clobber  => "",
-              Volatile => True
-             );
-      end if;
+      Asm (
+           Template => ""                       & CRLF &
+                       "        moves.w %0,%1@" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => [
+                        Unsigned_16'Asm_Input ("d", W),
+                        Address'Asm_Input ("a", A)
+                       ],
+           Clobber  => "",
+           Volatile => True
+          );
    end MoveSWord;
 
    ----------------------------------------------------------------------------
@@ -206,20 +192,16 @@ is
    is
       L : Unsigned_32;
    begin
-      if GCC.Defines.MCOLDFIRE then
-         raise Program_Error;
-      else
-         Asm (
-              Template => ""                       & CRLF &
-                          "        moves.l %1@,%0" & CRLF &
-                          "",
-              Outputs  => Unsigned_32'Asm_Output ("=d", L),
-              Inputs   => Address'Asm_Input ("a", A),
-              Clobber  => "",
-              Volatile => True
-             );
-         return L;
-      end if;
+      Asm (
+           Template => ""                       & CRLF &
+                       "        moves.l %1@,%0" & CRLF &
+                       "",
+           Outputs  => Unsigned_32'Asm_Output ("=d", L),
+           Inputs   => Address'Asm_Input ("a", A),
+           Clobber  => "",
+           Volatile => True
+          );
+      return L;
    end MoveSLong;
 
    procedure MoveSLong
@@ -227,23 +209,21 @@ is
        L : in Unsigned_32)
    is
    begin
-      if GCC.Defines.MCOLDFIRE then
-         raise Program_Error;
-      else
-         Asm (
-              Template => ""                       & CRLF &
-                          "        moves.l %0,%1@" & CRLF &
-                          "",
-              Outputs  => No_Output_Operands,
-              Inputs   => [
-                           Unsigned_32'Asm_Input ("d", L),
-                           Address'Asm_Input ("a", A)
-                          ],
-              Clobber  => "",
-              Volatile => True
-             );
-      end if;
+      Asm (
+           Template => ""                       & CRLF &
+                       "        moves.l %0,%1@" & CRLF &
+                       "",
+           Outputs  => No_Output_Operands,
+           Inputs   => [
+                        Unsigned_32'Asm_Input ("d", L),
+                        Address'Asm_Input ("a", A)
+                       ],
+           Clobber  => "",
+           Volatile => True
+          );
    end MoveSLong;
+
+#end if;
 
    ----------------------------------------------------------------------------
    -- NOP
@@ -370,6 +350,18 @@ is
               Clobber  => "memory",
               Volatile => True
              );
+      else
+         Asm (
+              Template => ""                          & CRLF &
+                          "        move.w  %%sr,%%d0" & CRLF &
+                          "        andi.l  %0,%%d0  " & CRLF &
+                          "        move.w  %%d0,%%sr" & CRLF &
+                          "",
+              Outputs  => No_Output_Operands,
+              Inputs   => Integer'Asm_Input ("i", 16#F8FF#),
+              Clobber  => "d0,memory",
+              Volatile => True
+             );
       end if;
    end Irq_Enable;
 
@@ -387,6 +379,18 @@ is
               Outputs  => No_Output_Operands,
               Inputs   => Integer'Asm_Input ("i", 16#0700#),
               Clobber  => "memory",
+              Volatile => True
+             );
+      else
+         Asm (
+              Template => ""                          & CRLF &
+                          "        move.w  %%sr,%%d0" & CRLF &
+                          "        ori.l   %0,%%d0  " & CRLF &
+                          "        move.w  %%d0,%%sr" & CRLF &
+                          "",
+              Outputs  => No_Output_Operands,
+              Inputs   => Integer'Asm_Input ("i", 16#0700#),
+              Clobber  => "d0,memory",
               Volatile => True
              );
       end if;

@@ -202,6 +202,8 @@ is
       (VBR_Address : in Address)
       with Inline => True;
 
+#if ENABLE_MOVES
+
    function MoveSByte
       (A : in Address)
       return Unsigned_8
@@ -231,6 +233,8 @@ is
       (A : in Address;
        L : in Unsigned_32)
       with Inline => True;
+
+#end if;
 
    procedure NOP
       with Inline => True;
