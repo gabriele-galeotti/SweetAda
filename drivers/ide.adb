@@ -15,13 +15,15 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Warnings (Off, "* is not referenced");
+
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with LLutils;
 with Console;
 
 package body IDE
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -33,8 +35,6 @@ package body IDE
 
    use System.Storage_Elements;
    use LLutils;
-
-pragma Warnings (Off, "* is not referenced");
 
    ----------------------------------------------------------------------------
    -- Register types
@@ -217,7 +217,7 @@ pragma Warnings (Off, "* is not referenced");
       (D : Descriptor_Type;
        R : Register_Type)
       return Unsigned_8
-      is
+   is
    begin
       return D.Read_8 (Build_Address (D.Base_Address, Register_Offset (R), D.Scale_Address));
    end Register_Read_8;
@@ -229,7 +229,7 @@ pragma Warnings (Off, "* is not referenced");
       (D     : in Descriptor_Type;
        R     : in Register_Type;
        Value : in Unsigned_8)
-      is
+   is
    begin
       D.Write_8 (Build_Address (D.Base_Address, Register_Offset (R), D.Scale_Address), Value);
    end Register_Write_8;
@@ -241,7 +241,7 @@ pragma Warnings (Off, "* is not referenced");
       (D : Descriptor_Type;
        R : Register_Type)
       return Unsigned_16
-      is
+   is
    begin
       return D.Read_16 (Build_Address (D.Base_Address, Register_Offset (R), D.Scale_Address));
    end Register_Read_16;
@@ -253,7 +253,7 @@ pragma Warnings (Off, "* is not referenced");
       (D     : in Descriptor_Type;
        R     : in Register_Type;
        Value : in Unsigned_16)
-      is
+   is
    begin
       D.Write_16 (Build_Address (D.Base_Address, Register_Offset (R), D.Scale_Address), Value);
    end Register_Write_16;
@@ -264,7 +264,7 @@ pragma Warnings (Off, "* is not referenced");
    function Is_Drive_Ready
       (D : Descriptor_Type)
       return Boolean
-      is
+   is
       Success : Boolean := False;
    begin
       for Loop_Count in 1 .. 100_000 loop
@@ -288,7 +288,7 @@ pragma Warnings (Off, "* is not referenced");
    function Is_DRQ_Active
       (D : Descriptor_Type)
       return Boolean
-      is
+   is
       Success : Boolean := False;
    begin
       for Loop_Count in 1 .. 100_000 loop
@@ -306,7 +306,7 @@ pragma Warnings (Off, "* is not referenced");
    function HEAD_Set
       (H : Unsigned_8)
       return Unsigned_8
-      is
+   is
    begin
       return ((H and 16#0F#) or 16#E0#);
    end HEAD_Set;
@@ -317,7 +317,7 @@ pragma Warnings (Off, "* is not referenced");
    procedure DRIVE_Set
       (D            : in Descriptor_Type;
        Drive_Number : in Drive_Type)
-      is
+   is
       Drive_Value : Unsigned_8;
    begin
       case Drive_Number is
@@ -335,7 +335,7 @@ pragma Warnings (Off, "* is not referenced");
        S       : in     Sector_Type;
        B       :    out Block_Type;
        Success :    out Boolean)
-      is
+   is
       type HD_Buffer_Type is array (0 .. 255) of Unsigned_16
          with Pack => True;
       Buffer : HD_Buffer_Type
@@ -373,7 +373,7 @@ pragma Warnings (Off, "* is not referenced");
        S       : in     Sector_Type;
        B       : in     Block_Type;
        Success :    out Boolean)
-      is
+   is
       type HD_Buffer_Type is array (0 .. 255) of Unsigned_16
          with Pack => True;
       Buffer : HD_Buffer_Type
@@ -408,11 +408,9 @@ pragma Warnings (Off, "* is not referenced");
    ----------------------------------------------------------------------------
    procedure Init
       (D : in out Descriptor_Type)
-      is
+   is
    begin
       null;
    end Init;
-
-pragma Warnings (On, "* is not referenced");
 
 end IDE;
