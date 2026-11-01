@@ -118,7 +118,7 @@ else ifeq  ($(ELABORATION_MODEL),STATIC)
 else ifeq  ($(ELABORATION_MODEL),SPARK)
 ADAC_SWITCHES_DEFAULT += -gnatd.v       # SPARK elaboration model.
 else ifneq ($(ELABORATION_MODEL),)
-$(warning *** Warning: no valid ELABORATION_MODEL.)
+$(error Error: no valid ELABORATION_MODEL)
 endif
 
 #
