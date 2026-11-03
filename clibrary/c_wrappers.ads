@@ -17,6 +17,8 @@
 
 pragma Restrictions (No_Elaboration_Code);
 
+with System;
+with System.Parameters;
 with Interfaces.C;
 with Interfaces.C.Extensions;
 
@@ -173,6 +175,28 @@ is
            Convention    => C,
            External_Name => "ada_abort",
            No_Return     => True;
+
+   -- specific types for Ada_StrToxL
+
+   type ULong_Integer is mod 2**Long_Integer'Size;
+
+   type chars_ptr is access all Character
+      with Size       => System.Parameters.ptr_bits,
+           Convention => C;
+
+   type chars_pptr is access all chars_ptr
+      with Size       => System.Parameters.ptr_bits,
+           Convention => C;
+
+   function Ada_StrToxL
+      (Str            : in chars_ptr;
+       EndPtr         : in chars_pptr;
+       Base_Input     : in Integer;
+       Flags_Input    : in Integer)
+      return ULong_Integer
+      with Export        => True,
+           Convention    => C,
+           External_Name => "ada_strtoxl";
 
    function Ada_Malloc
       (S : Interfaces.C.size_t)

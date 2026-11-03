@@ -17,6 +17,8 @@
 
 pragma Restrictions (No_Elaboration_Code);
 
+with System.Storage_Elements;
+with Ada.Unchecked_Conversion;
 with Bits;
 
 package body C_Wrappers
@@ -30,6 +32,9 @@ is
    --                                                                        --
    --========================================================================--
 
+   package SSE renames System.Storage_Elements;
+
+   use SSE;
    use type Interfaces.C.int;
    use type Bits.Bits_8;
 
@@ -368,9 +373,12 @@ is
    end Is_Something;
 
    ----------------------------------------------------------------------------
-   -- CTYPE
+   -- CTYPE subprograms
    ----------------------------------------------------------------------------
 
+   ----------------------------------------------------------------------------
+   -- Is_Alnum
+   ----------------------------------------------------------------------------
    function Is_Alnum
       (c : Interfaces.C.int)
       return Interfaces.C.int
@@ -379,6 +387,9 @@ is
       return Is_Something (c, Bits.Bits_8'(UCASE or LCASE or DIGIT));
    end Is_Alnum;
 
+   ----------------------------------------------------------------------------
+   -- Is_Alpha
+   ----------------------------------------------------------------------------
    function Is_Alpha
       (c : Interfaces.C.int)
       return Interfaces.C.int
@@ -387,6 +398,9 @@ is
       return Is_Something (c, Bits.Bits_8'(UCASE or LCASE));
    end Is_Alpha;
 
+   ----------------------------------------------------------------------------
+   -- Is_Cntrl
+   ----------------------------------------------------------------------------
    function Is_Cntrl
       (c : Interfaces.C.int)
       return Interfaces.C.int
@@ -395,6 +409,9 @@ is
       return Is_Something (c, Bits.Bits_8'(CNTRL));
    end Is_Cntrl;
 
+   ----------------------------------------------------------------------------
+   -- Is_Digit
+   ----------------------------------------------------------------------------
    function Is_Digit
       (c : Interfaces.C.int)
       return Interfaces.C.int
@@ -403,6 +420,9 @@ is
       return Is_Something (c, Bits.Bits_8'(DIGIT));
    end Is_Digit;
 
+   ----------------------------------------------------------------------------
+   -- Is_Graph
+   ----------------------------------------------------------------------------
    function Is_Graph
       (c : Interfaces.C.int)
       return Interfaces.C.int
@@ -411,6 +431,9 @@ is
       return Is_Something (c, Bits.Bits_8'(UCASE or LCASE or DIGIT or PUNCT));
    end Is_Graph;
 
+   ----------------------------------------------------------------------------
+   -- Is_Lower
+   ----------------------------------------------------------------------------
    function Is_Lower
       (c : Interfaces.C.int)
       return Interfaces.C.int
@@ -419,6 +442,9 @@ is
       return Is_Something (c, Bits.Bits_8'(LCASE));
    end Is_Lower;
 
+   ----------------------------------------------------------------------------
+   -- Is_Print
+   ----------------------------------------------------------------------------
    function Is_Print
       (c : Interfaces.C.int)
       return Interfaces.C.int
@@ -427,6 +453,9 @@ is
       return Is_Something (c, Bits.Bits_8'(UCASE or LCASE or DIGIT or SPACE or PUNCT));
    end Is_Print;
 
+   ----------------------------------------------------------------------------
+   -- Is_Punct
+   ----------------------------------------------------------------------------
    function Is_Punct
       (c : Interfaces.C.int)
       return Interfaces.C.int
@@ -435,6 +464,9 @@ is
       return Is_Something (c, Bits.Bits_8'(PUNCT));
    end Is_Punct;
 
+   ----------------------------------------------------------------------------
+   -- Is_Space
+   ----------------------------------------------------------------------------
    function Is_Space
       (c : Interfaces.C.int)
       return Interfaces.C.int
@@ -443,6 +475,9 @@ is
       return Is_Something (c, Bits.Bits_8'(BLANK));
    end Is_Space;
 
+   ----------------------------------------------------------------------------
+   -- Is_Upper
+   ----------------------------------------------------------------------------
    function Is_Upper
       (c : Interfaces.C.int)
       return Interfaces.C.int
@@ -451,6 +486,9 @@ is
       return Is_Something (c, Bits.Bits_8'(UCASE));
    end Is_Upper;
 
+   ----------------------------------------------------------------------------
+   -- Is_XDigit
+   ----------------------------------------------------------------------------
    function Is_XDigit
       (c : Interfaces.C.int)
       return Interfaces.C.int
@@ -459,6 +497,9 @@ is
       return Is_Something (c, Bits.Bits_8'(DIGIT or DIGIX));
    end Is_XDigit;
 
+   ----------------------------------------------------------------------------
+   -- Is_ASCII
+   ----------------------------------------------------------------------------
    function Is_ASCII
       (c : Interfaces.C.int)
       return Interfaces.C.int
@@ -469,6 +510,9 @@ is
       return (if Idx in Ctype_Idx_ASCII_Type'Range then 1 else 0);
    end Is_ASCII;
 
+   ----------------------------------------------------------------------------
+   -- To_ASCII
+   ----------------------------------------------------------------------------
    function To_ASCII
       (c : Interfaces.C.int)
       return Interfaces.C.int
@@ -483,6 +527,9 @@ is
       return Ci;
    end To_ASCII;
 
+   ----------------------------------------------------------------------------
+   -- To_Lower
+   ----------------------------------------------------------------------------
    function To_Lower
       (c : Interfaces.C.int)
       return Interfaces.C.int
@@ -491,6 +538,9 @@ is
       return (if Is_Upper (c) /= 0 then c + ASCII_CASE_XFORM else 0);
    end To_Lower;
 
+   ----------------------------------------------------------------------------
+   -- To_Upper
+   ----------------------------------------------------------------------------
    function To_Upper
       (c : Interfaces.C.int)
       return Interfaces.C.int
@@ -500,9 +550,12 @@ is
    end To_Upper;
 
    ----------------------------------------------------------------------------
-   -- STDIO
+   -- STDIO subprograms
    ----------------------------------------------------------------------------
 
+   ----------------------------------------------------------------------------
+   -- Ada_Print_Character
+   ----------------------------------------------------------------------------
    procedure Ada_Print_Character
       (c : in Interfaces.C.char)
    is
@@ -516,9 +569,12 @@ is
    end Ada_Print_Character;
 
    ----------------------------------------------------------------------------
-   -- STDLIB
+   -- STDLIB subprograms
    ----------------------------------------------------------------------------
 
+   ----------------------------------------------------------------------------
+   -- Ada_Abort
+   ----------------------------------------------------------------------------
    procedure Ada_Abort
    is
       procedure System_Abort
@@ -530,6 +586,168 @@ is
       System_Abort;
    end Ada_Abort;
 
+   ----------------------------------------------------------------------------
+   -- Ada_StrToxL
+   ----------------------------------------------------------------------------
+   function Ada_StrToxL
+      (Str            : in chars_ptr;
+       EndPtr         : in chars_pptr;
+       Base_Input     : in Integer;
+       Flags_Input    : in Integer)
+       return ULong_Integer
+   is
+      UNSIGNED    : constant := 0; -- use unsigned long version
+      NEGATIVE    : constant := 1; -- "-" detected
+      OVERFLOW    : constant := 2; -- overflow in conversion
+      ANYDIGIT    : constant := 3; -- 1+ valid digits detected
+      Number      : ULong_Integer;
+      Base        : Integer := Base_Input;
+      function To_BM4 is new Ada.Unchecked_Conversion (Bits.Bits_4, Bits.Bitmap_4);
+      function To_Flags
+         (Value : Integer)
+         return Bits.Bitmap_4
+         with Inline => True;
+      function To_Flags
+         (Value : Integer)
+         return Bits.Bitmap_4
+      is
+      begin
+         return To_BM4 (Bits.Bits_4 (Value));
+      end To_Flags;
+      Flags       : Bits.Bitmap_4 := To_Flags (Flags_Input);
+      Str_Address : System.Address := Str.all'Address;
+      D           : Natural range 0 .. 35;
+      C           : Character;
+      Cutoff      : ULong_Integer;
+      Limit       : ULong_Integer;
+      function Get_Character
+         (Addr : System.Address)
+         return Character
+         with Inline => True;
+      function Get_Character
+         (Addr : System.Address)
+         return Character
+      is
+         Cchar : aliased Character
+            with Address => Addr,
+                 Import  => True;
+      begin
+         return Cchar;
+      end Get_Character;
+   begin
+      Number := 0;
+      loop
+         -- check for invalid base
+         if Base in 2 .. 36 then
+            -- skip white spaces
+            loop
+               C := Get_Character (Str_Address);
+               Str_Address := @ + 1;
+               exit when C /= ' ';
+            end loop;
+            -- detect sign
+            if C = '-' or else C = '+' then
+               Flags (NEGATIVE) := (if C = '-' then True);
+               C := Get_Character (Str_Address);
+               Str_Address := @ + 1;
+            end if;
+         else
+            Errno := EINVAL;
+            exit; -- goto <<strtoxl_exit>>
+         end if;
+         -- setup base
+         if (Base = 0 or else Base = 16) and then C = '0' then
+            C := Get_Character (Str_Address);
+            if C = 'X' or else C = 'x' then
+               Base := 16;
+               Str_Address := @ + 1;
+               C := Get_Character (Str_Address);
+               Str_Address := @ + 1;
+            end if;
+         end if;
+         if Base = 0 then
+            Base := (if C = '0' then 8 else 10);
+         end if;
+         -- setup range values
+         if Flags (UNSIGNED) then
+            Cutoff := ULong_Integer'Last / ULong_Integer (Base);
+            Limit := ULong_Integer'Last mod ULong_Integer (Base);
+         else
+            declare
+               Maxvalue : ULong_Integer;
+            begin
+               if Flags (NEGATIVE) then
+                  Maxvalue := ULong_Integer (-Long_Integer'First);
+               else
+                  Maxvalue := ULong_Integer (Long_Integer'Last);
+               end if;
+               Cutoff := Maxvalue / ULong_Integer (Base);
+               Limit := Maxvalue mod ULong_Integer (Base);
+            end;
+         end if;
+         -- conversion loop
+         loop
+            case C is
+               when '0' .. '9' => D := Character'Pos (C) - Character'Pos ('0');
+               when 'A' .. 'Z' => D := Character'Pos (C) - Character'Pos ('A') + 10;
+               when 'a' .. 'z' => D := Character'Pos (C) - Character'Pos ('a') + 10;
+               when others     => exit;
+            end case;
+            if D >= Base then
+               exit;
+            end if;
+            -- valid digit
+            Flags (ANYDIGIT) := True;
+            if Flags (OVERFLOW) or else
+               Number > Cutoff or else
+               (Number = Cutoff and then ULong_Integer (D) > Limit)
+            then
+               Flags (OVERFLOW) := True;
+            else
+               Number := Number * ULong_Integer (Base) + ULong_Integer (D);
+            end if;
+            C := Get_Character (Str_Address);
+            Str_Address := @ + 1;
+         end loop;
+         -- conversion overflowed
+         if Flags (OVERFLOW) then
+            if Flags (UNSIGNED) then
+               Number := ULong_Integer'Last;
+            else
+               if Flags (NEGATIVE) then
+                  Number := ULong_Integer (-Long_Integer'First);
+               else
+                  Number := ULong_Integer (Long_Integer'Last);
+               end if;
+            end if;
+            Errno := ERANGE;
+         -- valid number
+         else
+            if Flags (NEGATIVE) then
+               Number := -Number;
+            end if;
+         end if;
+         exit;
+      end loop;
+      -- <<strtoxl_exit>>
+      if EndPtr /= null then
+         -- note that last fetch statement increments Str_Address
+         if Flags (ANYDIGIT) then
+            Str_Address := @ - 1;
+         end if;
+         declare
+            S : aliased Character
+               with Address => Str_Address;
+         begin
+            EndPtr.all := S'Unchecked_Access;
+         end;
+      end if;
+      return Number;
+   end Ada_StrToxL;
+
+   ----------------------------------------------------------------------------
+   -- Ada_Malloc
+   ----------------------------------------------------------------------------
    function Ada_Malloc
       (S : Interfaces.C.size_t)
       return Interfaces.C.Extensions.void_ptr
@@ -544,6 +762,9 @@ is
       return Malloc (S);
    end Ada_Malloc;
 
+   ----------------------------------------------------------------------------
+   -- Ada_Free
+   ----------------------------------------------------------------------------
    procedure Ada_Free
       (A : in Interfaces.C.Extensions.void_ptr)
    is
@@ -556,6 +777,9 @@ is
       Free (A);
    end Ada_Free;
 
+   ----------------------------------------------------------------------------
+   -- Ada_Calloc
+   ----------------------------------------------------------------------------
    function Ada_Calloc
       (N : Interfaces.C.size_t;
        S : Interfaces.C.size_t)
@@ -572,6 +796,9 @@ is
       return Calloc (N, S);
    end Ada_Calloc;
 
+   ----------------------------------------------------------------------------
+   -- Ada_Realloc
+   ----------------------------------------------------------------------------
    function Ada_Realloc
       (A : Interfaces.C.Extensions.void_ptr;
        S : Interfaces.C.size_t)

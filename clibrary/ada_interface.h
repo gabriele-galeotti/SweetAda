@@ -17,12 +17,13 @@
 extern "C" {
 #endif
 
-extern void  ada_abort(void) __attribute__((noreturn));
-extern void  ada_print_character(char);
-extern void *ada_malloc(size_t);
-extern void  ada_free(void *);
-extern void *ada_calloc(size_t, size_t);
-extern void *ada_realloc(void *, size_t);
+extern void           ada_abort(void) __attribute__((noreturn));
+extern void           ada_print_character(char);
+extern unsigned long  ada_strtoxl(const char *, char **, int, int);
+extern void          *ada_malloc(size_t);
+extern void           ada_free(void *);
+extern void          *ada_calloc(size_t, size_t);
+extern void          *ada_realloc(void *, size_t);
 
 #ifdef __cplusplus
 }
