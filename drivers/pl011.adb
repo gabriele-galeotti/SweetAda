@@ -15,12 +15,15 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+pragma Warnings (Off, "* is not referenced");
+
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 with Bits;
 
 package body PL011
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -32,8 +35,6 @@ package body PL011
 
    use System.Storage_Elements;
    use Bits;
-
-pragma Warnings (Off, "* is not referenced");
 
    ----------------------------------------------------------------------------
    -- Register types
@@ -160,16 +161,19 @@ pragma Warnings (Off, "* is not referenced");
        Register   : Register_Type)
       return Unsigned_8
       with Inline => True;
+
    procedure Register_Write
       (Descriptor : in Descriptor_Type;
        Register   : in Register_Type;
        Value      : in Unsigned_8)
       with Inline => True;
+
    function Register_Read
       (Descriptor : Descriptor_Type;
        Register   : Register_Type)
       return Unsigned_16
       with Inline => True;
+
    procedure Register_Write
       (Descriptor : in Descriptor_Type;
        Register   : in Register_Type;
@@ -191,7 +195,7 @@ pragma Warnings (Off, "* is not referenced");
       (Descriptor : Descriptor_Type;
        Register   : Register_Type)
       return Unsigned_8
-      is
+   is
    begin
       return Descriptor.Read_8 (Descriptor.Base_Address + Register_Offset (Register));
    end Register_Read;
@@ -203,7 +207,7 @@ pragma Warnings (Off, "* is not referenced");
       (Descriptor : in Descriptor_Type;
        Register   : in Register_Type;
        Value      : in Unsigned_8)
-      is
+   is
    begin
       Descriptor.Write_8 (Descriptor.Base_Address + Register_Offset (Register), Value);
    end Register_Write;
@@ -215,7 +219,7 @@ pragma Warnings (Off, "* is not referenced");
       (Descriptor : Descriptor_Type;
        Register   : Register_Type)
       return Unsigned_16
-      is
+   is
    begin
       return Descriptor.Read_16 (Descriptor.Base_Address + Register_Offset (Register));
    end Register_Read;
@@ -227,17 +231,47 @@ pragma Warnings (Off, "* is not referenced");
       (Descriptor : in Descriptor_Type;
        Register   : in Register_Type;
        Value      : in Unsigned_16)
-      is
+   is
    begin
       Descriptor.Write_16 (Descriptor.Base_Address + Register_Offset (Register), Value);
    end Register_Write;
+
+   ----------------------------------------------------------------------------
+   -- TX
+   ----------------------------------------------------------------------------
+   procedure TX
+      (Descriptor : in Descriptor_Type;
+       Data       : in Unsigned_8)
+   is
+   begin
+      -- wait for transmitter available
+      loop
+         exit when not To_UARTFR (Register_Read (Descriptor, UARTFR)).TXFF;
+      end loop;
+      Register_Write (Descriptor, UARTDR, Data);
+   end TX;
+
+   ----------------------------------------------------------------------------
+   -- RX
+   ----------------------------------------------------------------------------
+   procedure RX
+      (Descriptor : in     Descriptor_Type;
+       Data       :    out Unsigned_8)
+   is
+   begin
+      -- wait for receiver available
+      loop
+         exit when To_UARTFR (Register_Read (Descriptor, UARTFR)).RXFF;
+      end loop;
+      Data := To_UARTDR (Register_Read (Descriptor, UARTDR)).DATA;
+   end RX;
 
    ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
       (Descriptor : in Descriptor_Type)
-      is
+   is
    begin
       Register_Write
          (Descriptor,
@@ -258,37 +292,5 @@ pragma Warnings (Off, "* is not referenced");
              others => 0
              )));
    end Init;
-
-   ----------------------------------------------------------------------------
-   -- TX
-   ----------------------------------------------------------------------------
-   procedure TX
-      (Descriptor : in Descriptor_Type;
-       Data       : in Unsigned_8)
-      is
-   begin
-      -- wait for transmitter available
-      loop
-         exit when not To_UARTFR (Register_Read (Descriptor, UARTFR)).TXFF;
-      end loop;
-      Register_Write (Descriptor, UARTDR, Data);
-   end TX;
-
-   ----------------------------------------------------------------------------
-   -- RX
-   ----------------------------------------------------------------------------
-   procedure RX
-      (Descriptor : in     Descriptor_Type;
-       Data       :    out Unsigned_8)
-      is
-   begin
-      -- wait for receiver available
-      loop
-         exit when To_UARTFR (Register_Read (Descriptor, UARTFR)).RXFF;
-      end loop;
-      Data := To_UARTDR (Register_Read (Descriptor, UARTDR)).DATA;
-   end RX;
-
-pragma Warnings (On, "* is not referenced");
 
 end PL011;

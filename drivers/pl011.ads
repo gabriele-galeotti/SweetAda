@@ -15,11 +15,14 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 
 package PL011
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -31,8 +34,6 @@ package PL011
 
    use System;
    use Interfaces;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- PrimeCell® UART (PL011)
@@ -64,15 +65,15 @@ pragma Style_Checks (Off);
       Write_16     => null
       );
 
-   procedure Init
-      (Descriptor : in Descriptor_Type);
    procedure TX
       (Descriptor : in Descriptor_Type;
        Data       : in Unsigned_8);
+
    procedure RX
       (Descriptor : in     Descriptor_Type;
        Data       :    out Unsigned_8);
 
-pragma Style_Checks (On);
+   procedure Init
+      (Descriptor : in Descriptor_Type);
 
 end PL011;
