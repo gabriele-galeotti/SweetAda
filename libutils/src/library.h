@@ -166,13 +166,13 @@
  * swapXX macros.                                                             *
  ******************************************************************************/
 
-static __inline__ uint16_t
+static inline uint16_t
 swap16(uint16_t x)
 {
         return ((x << 8) & 0xFF00) | ((x >> 8) & 0xFF);
 }
 
-static __inline__ uint32_t
+static inline uint32_t
 swap32(uint32_t x)
 {
         return ((x << 24) & 0xFF000000UL) |
@@ -181,13 +181,13 @@ swap32(uint32_t x)
                ((x >> 24) & 0x000000FFUL);
 }
 
-static __inline__ uint64_t
+static inline uint64_t
 swap64(uint64_t x)
 {
         return ((((uint64_t)(swap32((uint32_t)(x)))) << 32) | (swap32(((uint64_t)(x)) >> 32)));
 }
 
-static __inline__ uint64_t
+static inline uint64_t
 swapXX(uint64_t x, size_t size)
 {
         switch (size)
@@ -208,7 +208,7 @@ swapXX(uint64_t x, size_t size)
 #define ENDIANNESS_BIG    0
 #define ENDIANNESS_LITTLE 1
 
-static __inline__ int
+static inline int
 endianness_detect(void)
 {
         volatile union {
@@ -248,7 +248,7 @@ endianness_detect(void)
         } while (false)
 
 /* reverse an 8-bit byte */
-static __inline__ uint8_t
+static inline uint8_t
 byte_reverse(uint8_t value)
 {
         int     i;
@@ -270,7 +270,7 @@ byte_reverse(uint8_t value)
  * Various text facilities.                                                   *
  ******************************************************************************/
 
-static __inline__ uint8_t
+static inline uint8_t
 hexdigit2u8(int c, bool msd)
 {
         uint8_t value;
