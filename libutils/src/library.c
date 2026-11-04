@@ -45,7 +45,7 @@
 # include <sys/wait.h> /* WEXITSTATUS() */
 #endif
 #if __START_IF_SELECTION__
-#elif defined(__APPLE__)
+#elif defined(__APPLE__) || defined(__linux__)
 # include <signal.h>
 #endif
 
