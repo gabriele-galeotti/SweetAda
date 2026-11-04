@@ -32,7 +32,7 @@ begin
       Print (Prefix);
    end if;
    if SA /= System.Null_Address then
-      for Idx in size_t range 0 .. Limit - 1 loop
+      for Idx in Bits.Bytesize range 0 .. Limit - 1 loop
          declare
             c : aliased char
                with Address    => SA,
