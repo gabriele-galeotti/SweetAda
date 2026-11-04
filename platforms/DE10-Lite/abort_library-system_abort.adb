@@ -21,7 +21,7 @@ procedure System_Abort
     Line    : in Integer;
     Column  : in Integer;
     Message : in System.Address)
-   is
+is
    pragma Unreferenced (File);
    pragma Unreferenced (Line);
    pragma Unreferenced (Column);
