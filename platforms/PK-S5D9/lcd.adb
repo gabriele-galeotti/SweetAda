@@ -23,7 +23,7 @@ with S5D9;
 with ILI9341V;
 
 package body LCD
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -45,18 +45,25 @@ package body LCD
 
    procedure LCD_Delay
       (Count : in Integer);
+
    procedure Init_SPI;
+
    procedure CS_Assert
       with Inline => True;
+
    procedure CS_Deassert
       with Inline => True;
+
    procedure Command_Assert
       with Inline => True;
+
    procedure Data_Assert
       with Inline => True;
+
    procedure Data_Send
       (Data : in Unsigned_8)
       with Inline => True;
+
    procedure DataArray_Send
       (Data : in Byte_Array)
       with Inline => True;
@@ -74,7 +81,7 @@ package body LCD
    ----------------------------------------------------------------------------
    procedure LCD_Delay
       (Count : in Integer)
-      is
+   is
    begin
       for Delay_Loop_Count in 1 .. Count loop CPU.NOP; end loop;
    end LCD_Delay;
@@ -95,7 +102,7 @@ package body LCD
    -- WRX (D/CX)   /WR          -       -        LCD_WR    --> pin 96  P1_15 (selector command/parameter)
    ----------------------------------------------------------------------------
    procedure Init_SPI
-      is
+   is
    begin
       SPI (0).SPCR.SPE := False;
       SPI (0).SPSR := (
@@ -171,7 +178,7 @@ package body LCD
    ----------------------------------------------------------------------------
    procedure Data_Send
       (Data : in Unsigned_8)
-      is
+   is
       RX_Data : Unsigned_8 with Unreferenced => True;
    begin
       loop exit when SPI (0).SPSR.SPTEF; end loop;
@@ -192,7 +199,7 @@ package body LCD
    ----------------------------------------------------------------------------
    procedure DataArray_Send
       (Data : in Byte_Array)
-      is
+   is
    begin
       for Index in Data'Range loop
          Data_Send (Data (Index));
@@ -203,7 +210,7 @@ package body LCD
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
    begin
       Init_SPI;
       -- Software Reset

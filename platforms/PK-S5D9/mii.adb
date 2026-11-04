@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Warnings (Off, "* is not referenced");
+
 with Interfaces;
 with Bits;
 with CPU;
@@ -22,7 +24,7 @@ with S5D9;
 with Console;
 
 package body MII
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -36,29 +38,33 @@ package body MII
    use Bits;
    use S5D9;
 
-pragma Warnings (Off, "* is not referenced");
-
    READ  : constant := 0;
    WRITE : constant := 1;
 
    procedure MII_Delay
       (Count : in Integer)
       with Inline => True;
+
    function Bit_Read
       return Bits_1
       with Inline => True;
+
    procedure Bit_Write
       (Bit : in Bits_1)
       with Inline => True;
+
    procedure Turn_Around
       with Inline => True;
 
    procedure ReadOrWrite
       (ReadWrite : in Integer);
+
    procedure AddressOrRegister
       (Value : in Unsigned_8);
+
    function RegisterRead
       return Unsigned_16;
+
    procedure RegisterWrite
       (Value : in Unsigned_16);
 
@@ -75,7 +81,7 @@ pragma Warnings (Off, "* is not referenced");
    ----------------------------------------------------------------------------
    procedure MII_Delay
       (Count : in Integer)
-      is
+   is
    begin
       for Delay_Loop_Count in 1 .. Count loop CPU.NOP; end loop;
    end MII_Delay;
@@ -85,7 +91,7 @@ pragma Warnings (Off, "* is not referenced");
    ----------------------------------------------------------------------------
    function Bit_Read
       return Bits_1
-      is
+   is
       Bit : Bits_1;
    begin
       Bit := PIR.MDI;
@@ -101,7 +107,7 @@ pragma Warnings (Off, "* is not referenced");
    ----------------------------------------------------------------------------
    procedure Bit_Write
       (Bit : in Bits_1)
-      is
+   is
    begin
       PIR := (MMD => 1, MDC => 1, MDO => Bit, others => <>);
       MII_Delay (1_000);
@@ -113,7 +119,7 @@ pragma Warnings (Off, "* is not referenced");
    -- Turn_Around
    ----------------------------------------------------------------------------
    procedure Turn_Around
-      is
+   is
    begin
       PIR := (MMD => 0, MDC => 1, others => <>);
       MII_Delay (1_000);
@@ -130,7 +136,7 @@ pragma Warnings (Off, "* is not referenced");
    ----------------------------------------------------------------------------
    procedure ReadOrWrite
       (ReadWrite : in Integer)
-      is
+   is
    begin
       for N in 1 .. 32 loop Bit_Write (1); end loop; -- preamble
       Bit_Write (0); Bit_Write (1);                  -- start of frame
@@ -146,7 +152,7 @@ pragma Warnings (Off, "* is not referenced");
    ----------------------------------------------------------------------------
    procedure AddressOrRegister
       (Value : in Unsigned_8)
-      is
+   is
    begin
       for Bitshift in reverse 0 .. 4 loop
          Bit_Write (Bits_1 (Shift_Right (Value, Bitshift) and 1));
@@ -158,7 +164,7 @@ pragma Warnings (Off, "* is not referenced");
    ----------------------------------------------------------------------------
    function RegisterRead
       return Unsigned_16
-      is
+   is
       Data : Unsigned_16 := 0;
    begin
       for Bitshift in 0 .. 15 loop
@@ -172,7 +178,7 @@ pragma Warnings (Off, "* is not referenced");
    ----------------------------------------------------------------------------
    procedure RegisterWrite
       (Value : in Unsigned_16)
-      is
+   is
    begin
       for Bitshift in reverse 0 .. 15 loop
          Bit_Write (Bits_1 (Shift_Right (Value, Bitshift) and 1));
@@ -183,7 +189,7 @@ pragma Warnings (Off, "* is not referenced");
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
    begin
       -- ETH_RESET# active low
       PFSR (P806).PMR := False;   -- GPIO
@@ -216,7 +222,5 @@ pragma Warnings (Off, "* is not referenced");
       Turn_Around;
       Console.Print (Prefix => "MII reg3: ", Value => RegisterRead, NL => True);
    end Init;
-
-pragma Warnings (On, "* is not referenced");
 
 end MII;

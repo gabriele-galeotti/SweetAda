@@ -15,12 +15,14 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
 
 package S5D9
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -33,8 +35,6 @@ package S5D9
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- S5D9 Microcontroller Group User's Manual
@@ -6434,7 +6434,5 @@ pragma Warnings (On);
    -- 58.2.44 Output Control Block Output Interface Register (OUT_SET)
    -- 58.2.45 Output Control Block Brightness Correction Register 1 (OUT_BRIGHT1)
    -- 58.2.46 Output Control Block Brightness Correction Register 2 (OUT_BRIGHT2)
-
-pragma Style_Checks (On);
 
 end S5D9;

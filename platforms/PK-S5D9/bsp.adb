@@ -29,7 +29,7 @@ with MII;
 with LCD;
 
 package body BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -60,7 +60,7 @@ package body BSP
    -- SysTick_Init
    ----------------------------------------------------------------------------
    procedure SysTick_Init
-      is
+   is
    begin
       ARMv7M.SYST_RVR.RELOAD := Bits_24 (Clocks.CLK_Core / 2_000);
       ARMv7M.SHPR3.PRI_15 := 16#FF#;
@@ -78,7 +78,7 @@ package body BSP
    -- LED_Init
    ----------------------------------------------------------------------------
    procedure LED_Init
-      is
+   is
    begin
       -- P600 output LED1 (green) OFF
       PFSR (P600).PMR := False;
@@ -100,7 +100,7 @@ package body BSP
    -- UART on J7: UART_RXD3 port P706, UART_TXD3 port P707
    ----------------------------------------------------------------------------
    procedure Serial_Console_Init
-      is
+   is
    begin
       -- 34.3.7 SCI Initialization in Asynchronous Mode
       SCI (3).SCR := (
@@ -173,7 +173,7 @@ package body BSP
 
    procedure Console_Putchar
       (C : in Character)
-      is
+   is
    begin
       -- wait for transmitter available
       loop exit when SCI (3).SSR.NORMAL.TDRE; end loop;
@@ -182,7 +182,7 @@ package body BSP
 
    procedure Console_Getchar
       (C : out Character)
-      is
+   is
       Data : Unsigned_8;
    begin
       -- wait for receiver available
@@ -195,7 +195,7 @@ package body BSP
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup
-      is
+   is
       function To_U32 is new Ada.Unchecked_Conversion (ARMv7M.CPUID_Type, Unsigned_32);
    begin
       -- unlock registers -----------------------------------------------------
@@ -248,6 +248,7 @@ package body BSP
       -------------------------------------------------------------------------
       ARMv7M.Irq_Enable;
       ARMv7M.Fault_Irq_Enable;
+      Tick_Count := 0;
       SysTick_Init;
       -------------------------------------------------------------------------
    end Setup;

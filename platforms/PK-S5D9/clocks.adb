@@ -19,7 +19,7 @@ with Definitions;
 with S5D9;
 
 package body Clocks
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -44,7 +44,7 @@ package body Clocks
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
    begin
       -- select MOCO
       SCKSCR.CKSEL := CKSEL_MOCO;

@@ -20,7 +20,7 @@ with S5D9;
 with Console;
 
 package body W25Q64FV
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -45,7 +45,7 @@ package body W25Q64FV
    -- Device_Detect
    ----------------------------------------------------------------------------
    procedure Device_Detect
-      is
+   is
       RDID  : constant := 16#9F#;
       mfid  : Unsigned_8;         -- “Manufacturer Identification”
       mtype : Unsigned_8;         -- “Memory Type”
@@ -70,7 +70,7 @@ package body W25Q64FV
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
    begin
       -- pins 500..505 function = QSPI
       for P5x in P500 .. P505 loop
