@@ -15,10 +15,12 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with System.Storage_Elements;
 
 package body PL110
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -60,7 +62,7 @@ package body PL110
        G : G_Type;
        B : B_Type)
       return Unsigned_16
-      is
+   is
    begin
       return Shift_Left (Unsigned_16 (R), 11) or
              Shift_Left (Unsigned_16 (G),  5) or
@@ -68,11 +70,72 @@ package body PL110
    end RGB565;
 
    ----------------------------------------------------------------------------
+   -- Print (Character)
+   ----------------------------------------------------------------------------
+   procedure Print
+      (D : in Descriptor_Type;
+       X : in Text_XCoord_Type;
+       Y : in Text_YCoord_Type;
+       C : in Character)
+   is
+      Framebuffer        : aliased U16_Array
+         (0 .. VIDEO_WIDTH_MAX * VIDEO_HEIGHT_MAX - 1)
+         with Address    => D.Framebuffer_Address,
+              Volatile   => True,
+              Import     => True,
+              Convention => Ada;
+      Framebuffer_Offset : Natural;
+      Pattern            : Unsigned_8;
+   begin
+      Framebuffer_Offset := X * 8 + Y * 16 * D.Width;
+      for Index in Storage_Offset range 0 .. Videofont8x16.Font_Height - 1 loop
+         Pattern := Unsigned_8 (Videofont8x16.Font (Character'Pos (C)) (Index));
+         for B in 0 .. 7 loop
+            if (Shift_Right (Pattern, B) and 1) /= 0 then
+               Framebuffer (Framebuffer_Offset + (7 - B)) := 16#FFFF#;
+            end if;
+         end loop;
+         Framebuffer_Offset := @ + D.Width;
+      end loop;
+   end Print;
+
+   ----------------------------------------------------------------------------
+   -- Print (String)
+   ----------------------------------------------------------------------------
+   procedure Print
+      (D : in Descriptor_Type;
+       X : in Text_XCoord_Type;
+       Y : in Text_YCoord_Type;
+       S : in String)
+   is
+      X1 : Text_XCoord_Type;
+      Y1 : Text_YCoord_Type;
+      C  : Character;
+   begin
+      X1 := X;
+      Y1 := Y;
+      for Index in S'Range loop
+         C := S (Index);
+         Print (D, X1, Y1, C);
+         if X1 = Text_XCoord_Type'Last then
+            X1 := 0;
+            if Y1 = Text_YCoord_Type'Last then
+               Y1 := 0;
+            else
+               Y1 := @ + 1;
+            end if;
+         else
+            X1 := @ + 1;
+         end if;
+      end loop;
+   end Print;
+
+   ----------------------------------------------------------------------------
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
       (D : in Descriptor_Type)
-      is
+   is
       PL110_Device : aliased PL110_Type
          with Address    => D.Base_Address,
               Volatile   => True,
@@ -126,66 +189,5 @@ package body PL110
          end loop;
       end;
    end Init;
-
-   ----------------------------------------------------------------------------
-   -- Print (Character)
-   ----------------------------------------------------------------------------
-   procedure Print
-      (D : in Descriptor_Type;
-       X : in Text_XCoord_Type;
-       Y : in Text_YCoord_Type;
-       C : in Character)
-      is
-      Framebuffer        : aliased U16_Array
-         (0 .. VIDEO_WIDTH_MAX * VIDEO_HEIGHT_MAX - 1)
-         with Address    => D.Framebuffer_Address,
-              Volatile   => True,
-              Import     => True,
-              Convention => Ada;
-      Framebuffer_Offset : Natural;
-      Pattern            : Unsigned_8;
-   begin
-      Framebuffer_Offset := X * 8 + Y * 16 * D.Width;
-      for Index in Storage_Offset range 0 .. Videofont8x16.Font_Height - 1 loop
-         Pattern := Unsigned_8 (Videofont8x16.Font (Character'Pos (C)) (Index));
-         for B in 0 .. 7 loop
-            if (Shift_Right (Pattern, B) and 1) /= 0 then
-               Framebuffer (Framebuffer_Offset + (7 - B)) := 16#FFFF#;
-            end if;
-         end loop;
-         Framebuffer_Offset := @ + D.Width;
-      end loop;
-   end Print;
-
-   ----------------------------------------------------------------------------
-   -- Print (String)
-   ----------------------------------------------------------------------------
-   procedure Print
-      (D : in Descriptor_Type;
-       X : in Text_XCoord_Type;
-       Y : in Text_YCoord_Type;
-       S : in String)
-      is
-      X1 : Text_XCoord_Type;
-      Y1 : Text_YCoord_Type;
-      C  : Character;
-   begin
-      X1 := X;
-      Y1 := Y;
-      for Index in S'Range loop
-         C := S (Index);
-         Print (D, X1, Y1, C);
-         if X1 = Text_XCoord_Type'Last then
-            X1 := 0;
-            if Y1 = Text_YCoord_Type'Last then
-               Y1 := 0;
-            else
-               Y1 := @ + 1;
-            end if;
-         else
-            X1 := @ + 1;
-         end if;
-      end loop;
-   end Print;
 
 end PL110;

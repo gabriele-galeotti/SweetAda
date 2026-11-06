@@ -15,13 +15,16 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
 with Videofont8x16;
 
 package PL110
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -34,8 +37,6 @@ package PL110
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- PrimeCellTM Color LCD Controller (PL110)
@@ -193,12 +194,6 @@ pragma Style_Checks (Off);
       range 0 .. VIDEO_HEIGHT_MAX / Videofont8x16.Font_Height - 1;
 
    ----------------------------------------------------------------------------
-   -- Initialization procedure.
-   ----------------------------------------------------------------------------
-   procedure Init
-      (D : in Descriptor_Type);
-
-   ----------------------------------------------------------------------------
    -- Print character C @ X, Y.
    ----------------------------------------------------------------------------
    procedure Print
@@ -216,6 +211,10 @@ pragma Style_Checks (Off);
        Y : in Text_YCoord_Type;
        S : in String);
 
-pragma Style_Checks (On);
+   ----------------------------------------------------------------------------
+   -- Initialization procedure.
+   ----------------------------------------------------------------------------
+   procedure Init
+      (D : in Descriptor_Type);
 
 end PL110;
