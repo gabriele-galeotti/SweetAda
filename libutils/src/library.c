@@ -1137,7 +1137,7 @@ lib_mempcpy(void *dest, const void *src, size_t n)
  *                                                                            *
  ******************************************************************************/
 static int
-execvpe(const char *file, char *const argv[], char *const envp[])
+lib_execvpe(const char *file, char *const argv[], char *const envp[])
 {
         const char *path;
         size_t      file_length;
@@ -1795,7 +1795,7 @@ execute_exec(execute_t this)
                         extern char **environ;
                         if ((this->flags & EXEC_USE_PATH) != 0)
                         {
-                                execvpe(this->filename, (char * const *)this->argv, environ);
+                                lib_execvpe(this->filename, (char * const *)this->argv, environ);
                         }
                         else
                         {
@@ -1806,7 +1806,7 @@ execute_exec(execute_t this)
                 {
                         if ((this->flags & EXEC_USE_PATH) != 0)
                         {
-                                execvpe(this->filename, (char * const *)this->argv, (char * const *)this->envp);
+                                lib_execvpe(this->filename, (char * const *)this->argv, (char * const *)this->envp);
                         }
                         else
                         {
