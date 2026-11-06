@@ -44,7 +44,19 @@ abort(void)
 static unsigned long
 strtoxl(const char *str, char **endptr, int base, int flags)
 {
-        return ada_strtoxl(str, endptr, base, flags);
+        int           errno_code;
+        unsigned long number;
+
+        errno_code = 0;
+
+        ada_strtoxl(str, endptr, base, flags, &number, &errno_code);
+
+        if (errno_code != 0)
+        {
+                errno = errno_code;
+        }
+
+        return number;
 }
 
 /******************************************************************************

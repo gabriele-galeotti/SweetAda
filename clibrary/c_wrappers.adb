@@ -589,26 +589,26 @@ is
    ----------------------------------------------------------------------------
    -- Ada_StrToxL
    ----------------------------------------------------------------------------
-   function Ada_StrToxL
-      (Str            : in chars_ptr;
-       EndPtr         : in chars_pptr;
-       Base_Input     : in Integer;
-       Flags_Input    : in Integer)
-       return ULong_Integer
+   procedure Ada_StrToxL
+      (Str            : in     chars_ptr;
+       EndPtr         : in     chars_pptr;
+       Base_Input     : in     Interfaces.C.int;
+       Flags_Input    : in     Interfaces.C.int;
+       Number         :    out ULong_Integer;
+       Errno_Code     :    out Interfaces.C.int)
    is
       UNSIGNED    : constant := 0; -- use unsigned long version
       NEGATIVE    : constant := 1; -- "-" detected
       OVERFLOW    : constant := 2; -- overflow in conversion
       ANYDIGIT    : constant := 3; -- 1+ valid digits detected
-      Number      : ULong_Integer;
-      Base        : Integer := Base_Input;
+      Base        : Integer := Integer (Base_Input);
       function To_BM4 is new Ada.Unchecked_Conversion (Bits.Bits_4, Bits.Bitmap_4);
       function To_Flags
-         (Value : Integer)
+         (Value : Interfaces.C.int)
          return Bits.Bitmap_4
          with Inline => True;
       function To_Flags
-         (Value : Integer)
+         (Value : Interfaces.C.int)
          return Bits.Bitmap_4
       is
       begin
@@ -652,7 +652,7 @@ is
                Str_Address := @ + 1;
             end if;
          else
-            Errno := EINVAL;
+            Errno_Code := EINVAL;
             exit; -- goto <<strtoxl_exit>>
          end if;
          -- setup base
@@ -720,7 +720,7 @@ is
                   Number := ULong_Integer (Long_Integer'Last);
                end if;
             end if;
-            Errno := ERANGE;
+            Errno_Code := ERANGE;
          -- valid number
          else
             if Flags (NEGATIVE) then
@@ -742,7 +742,6 @@ is
             EndPtr.all := S'Unchecked_Access;
          end;
       end if;
-      return Number;
    end Ada_StrToxL;
 
    ----------------------------------------------------------------------------

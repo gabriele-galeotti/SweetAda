@@ -188,12 +188,13 @@ is
       with Size       => System.Parameters.ptr_bits,
            Convention => C;
 
-   function Ada_StrToxL
-      (Str            : in chars_ptr;
-       EndPtr         : in chars_pptr;
-       Base_Input     : in Integer;
-       Flags_Input    : in Integer)
-      return ULong_Integer
+   procedure Ada_StrToxL
+      (Str            : in     chars_ptr;
+       EndPtr         : in     chars_pptr;
+       Base_Input     : in     Interfaces.C.int;
+       Flags_Input    : in     Interfaces.C.int;
+       Number         :    out ULong_Integer;
+       Errno_Code     :    out Interfaces.C.int)
       with Export        => True,
            Convention    => C,
            External_Name => "ada_strtoxl";
