@@ -163,5 +163,6 @@ list-insert = $(eval $$1 := $$2 $$($$1))
 list-append = $(eval $$1 := $$($$1) $$2)
 list-delete = $(eval $$1 := $$(filter-out $$2,$$($$1)))
 
+# MAKEFILE_FN_IN_INCLUDED
 endif
 

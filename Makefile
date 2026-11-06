@@ -199,7 +199,7 @@ CONFIGURE_DEPS += Makefile.os.in
 
 # add LIBUTILS_DIRECTORY to PATH
 ifeq ($(OSTYPE),cmd)
-PATH := $(SWEETADA_PATH)\$(LIBUTILS_DIRECTORY);$(PATH)
+PATH := $(subst /,\,$(SWEETADA_PATH))\$(LIBUTILS_DIRECTORY);$(PATH)
 else
 PATH := $(SWEETADA_PATH)/$(LIBUTILS_DIRECTORY):$(PATH)
 endif
@@ -847,30 +847,30 @@ endif
 
 KERNEL_PARENT_PATH := .
 
-MAKE_APPLICATION := SHELL="$(SHELL)"              \
-                      KERNEL_PARENT_PATH=..       \
-                      -C $(APPLICATION_DIRECTORY)
-MAKE_CLIBRARY    := SHELL="$(SHELL)"           \
-                      KERNEL_PARENT_PATH=..    \
-                      -C $(CLIBRARY_DIRECTORY)
-MAKE_CORE        := SHELL="$(SHELL)"        \
-                      KERNEL_PARENT_PATH=.. \
-                      -C $(CORE_DIRECTORY)
-MAKE_CPU         := SHELL="$(SHELL)"                  \
-                      KERNEL_PARENT_PATH=../..        \
-                      -C $(CPU_BASE_DIRECTORY)/$(CPU)
-MAKE_DRIVERS     := SHELL="$(SHELL)"          \
-                      KERNEL_PARENT_PATH=..   \
-                      -C $(DRIVERS_DIRECTORY)
-MAKE_MODULES     := SHELL="$(SHELL)"          \
-                      KERNEL_PARENT_PATH=..   \
-                      -C $(MODULES_DIRECTORY)
-MAKE_PLATFORM    := SHELL="$(SHELL)"                            \
-                      KERNEL_PARENT_PATH=../..                  \
-                      -C $(PLATFORM_BASE_DIRECTORY)/$(PLATFORM)
-MAKE_RTS         := SHELL="$(SHELL)"        \
-                      KERNEL_PARENT_PATH=.. \
-                      -C $(RTS_DIRECTORY)
+MAKE_APPLICATION_ARGS := SHELL="$(SHELL)"              \
+                           KERNEL_PARENT_PATH=..       \
+                           -C $(APPLICATION_DIRECTORY)
+MAKE_CLIBRARY_ARGS    := SHELL="$(SHELL)"           \
+                           KERNEL_PARENT_PATH=..    \
+                           -C $(CLIBRARY_DIRECTORY)
+MAKE_CORE_ARGS        := SHELL="$(SHELL)"        \
+                           KERNEL_PARENT_PATH=.. \
+                           -C $(CORE_DIRECTORY)
+MAKE_CPU_ARGS         := SHELL="$(SHELL)"                  \
+                           KERNEL_PARENT_PATH=../..        \
+                           -C $(CPU_BASE_DIRECTORY)/$(CPU)
+MAKE_DRIVERS_ARGS     := SHELL="$(SHELL)"          \
+                           KERNEL_PARENT_PATH=..   \
+                           -C $(DRIVERS_DIRECTORY)
+MAKE_MODULES_ARGS     := SHELL="$(SHELL)"          \
+                           KERNEL_PARENT_PATH=..   \
+                           -C $(MODULES_DIRECTORY)
+MAKE_PLATFORM_ARGS    := SHELL="$(SHELL)"                            \
+                           KERNEL_PARENT_PATH=../..                  \
+                           -C $(PLATFORM_BASE_DIRECTORY)/$(PLATFORM)
+MAKE_RTS_ARGS         := SHELL="$(SHELL)"        \
+                           KERNEL_PARENT_PATH=.. \
+                           -C $(RTS_DIRECTORY)
 
 CLEAN_OBJECTS     := $(KERNEL_OBJFILE)       \
                      $(KERNEL_OUTFILE)       \
@@ -1048,17 +1048,17 @@ endif
 FORCE:
 
 $(OBJECT_DIRECTORY)/libplatform.a: FORCE
-	$(MAKE) $(MAKE_PLATFORM) all
+	$(MAKE) $(MAKE_PLATFORM_ARGS) all
 
 $(OBJECT_DIRECTORY)/libcpu.a: FORCE
-	$(MAKE) $(MAKE_CPU) all
+	$(MAKE) $(MAKE_CPU_ARGS) all
 
 $(OBJECT_DIRECTORY)/libcore.a: FORCE
-	$(MAKE) $(MAKE_CORE) all
+	$(MAKE) $(MAKE_CORE_ARGS) all
 
 $(CLIBRARY_OBJECT): FORCE
 ifeq ($(USE_CLIBRARY),Y)
-	$(MAKE) $(MAKE_CLIBRARY) all
+	$(MAKE) $(MAKE_CLIBRARY_ARGS) all
 endif
 
 ifeq ($(USE_EXE_WRAPPER),Y)
@@ -1170,20 +1170,25 @@ else
 	$(MV) $(OBJECT_DIRECTORY)/gnatbind_objs.lst ./ 2> /dev/null
 endif
 endif
-ifeq ($(OSTYPE),cmd)
-	$(PROCESSALIS) -p "$(SWEETADA_PATH)" gnatbind_alis.lst
-	$(PROCESSOBJS)                                              \
-                       -b $(BUILD_MODE) -o $(OBJECT_DIRECTORY)      \
-                       $(foreach u,$(IMPLICIT_ALI_UNITS),-i $(u).o) \
+ifeq ($(OSTYPE),msys)
+	$(PROCESSALIS)                                                              \
+                       -r "$(shell cygpath.exe -m "$(SWEETADA_PATH)" 2> /dev/null)" \
+                       gnatbind_alis.lst
+	$(PROCESSOBJS)                                                              \
+                       -b $(BUILD_MODE)                                             \
+                       -o $(OBJECT_DIRECTORY)                                       \
+                       -r "$(shell cygpath.exe -m "$(SWEETADA_PATH)" 2> /dev/null)" \
+                       $(foreach u,$(IMPLICIT_ALI_UNITS),-i $(u).o)                 \
                        gnatbind_objs.lst
 else
-	$(SED_INPLACE) -e "s|$(SWEETADA_PATH)/||g" gnatbind_alis.lst
-ifeq ($(OSTYPE),msys)
-	$(SED_INPLACE) -e "s|\\\\|/|g" gnatbind_objs.lst
-endif
-	$(SED_INPLACE)                                                   \
-                       -e "s| |\\\\ |g"                                  \
-                       $(foreach u,$(IMPLICIT_ALI_UNITS),-e "/$(u).o/d") \
+	$(PROCESSALIS)                       \
+                       -r "$(SWEETADA_PATH)" \
+                       gnatbind_alis.lst
+	$(PROCESSOBJS)                                              \
+                       -b $(BUILD_MODE)                             \
+                       -o $(OBJECT_DIRECTORY)                       \
+                       -r "$(SWEETADA_PATH)"                        \
+                       $(foreach u,$(IMPLICIT_ALI_UNITS),-i $(u).o) \
                        gnatbind_objs.lst
 endif
 
@@ -1211,7 +1216,7 @@ endif
 #
 
 $(PLATFORM_DIRECTORY)/$(LD_SCRIPT): FORCE
-	$(MAKE) $(MAKE_PLATFORM) $(LD_SCRIPT)
+	$(MAKE) $(MAKE_PLATFORM_ARGS) $(LD_SCRIPT)
 
 $(CORE_DIRECTORY)/linker.ads  \
 $(CORE_DIRECTORY)/linker.adb: $(CONFIGURE_DEPS) $(PLATFORM_DIRECTORY)/$(LD_SCRIPT)
@@ -1417,9 +1422,18 @@ else
         fi
 endif
 	$(MAKE) distclean
-	$(call echo-print,"PLATFORM := $(PLATFORM)")> $(KERNEL_CFGFILE)
-ifneq ($(SUBPLATFORM),)
-	$(call echo-print,"SUBPLATFORM := $(SUBPLATFORM)")>> $(KERNEL_CFGFILE)
+ifeq ($(OSTYPE),cmd)
+ifeq ($(SUBPLATFORM),)
+	ECHO PLATFORM := $(PLATFORM)> $(KERNEL_CFGFILE)
+else
+	(ECHO PLATFORM := $(PLATFORM)&ECHO SUBPLATFORM := $(SUBPLATFORM))> $(KERNEL_CFGFILE)
+endif
+else
+ifeq ($(SUBPLATFORM),)
+	printf "%s\n" "PLATFORM := $(PLATFORM)" > $(KERNEL_CFGFILE)
+else
+	printf "%s\n%s\n" "PLATFORM := $(PLATFORM)" "SUBPLATFORM := $(SUBPLATFORM)" > $(KERNEL_CFGFILE)
+endif
 endif
 	@$(call echo-print,"")
 ifeq ($(SUBPLATFORM),)
@@ -1428,19 +1442,19 @@ else
 	@$(call echo-print,"$(PLATFORM)/$(SUBPLATFORM) : $(KERNEL_CFGFILE) created successfully.")
 endif
 	@$(call echo-print,"")
-	$(MAKE) $(MAKE_PLATFORM) installfiles
+	$(MAKE) $(MAKE_PLATFORM_ARGS) installfiles
 else
 	$(error Error: no valid PLATFORM, configuration not created)
 endif
 
 define configure-subdirs-command =
-$(MAKE) $(MAKE_APPLICATION) configure
-$(MAKE) $(MAKE_CLIBRARY) configure
-$(MAKE) $(MAKE_CORE) configure
-$(MAKE) $(MAKE_CPU) configure
-$(MAKE) $(MAKE_DRIVERS) configure
-$(MAKE) $(MAKE_MODULES) configure
-$(MAKE) $(MAKE_PLATFORM) configure
+$(MAKE) $(MAKE_APPLICATION_ARGS) configure
+$(MAKE) $(MAKE_CLIBRARY_ARGS) configure
+$(MAKE) $(MAKE_CORE_ARGS) configure
+$(MAKE) $(MAKE_CPU_ARGS) configure
+$(MAKE) $(MAKE_DRIVERS_ARGS) configure
+$(MAKE) $(MAKE_MODULES_ARGS) configure
+$(MAKE) $(MAKE_PLATFORM_ARGS) configure
 endef
 
 .PHONY: configure-subdirs
@@ -1656,18 +1670,18 @@ endif
 
 .PHONY: installfiles
 installfiles: clean clean-configure
-	$(MAKE) $(MAKE_PLATFORM) installfiles
+	$(MAKE) $(MAKE_PLATFORM_ARGS) installfiles
 
 .PHONY: prebuild-aux
 prebuild-aux: clean clean-configure
-	$(MAKE) $(MAKE_PLATFORM) prebuild
+	$(MAKE) $(MAKE_PLATFORM_ARGS) prebuild
 
 .PHONY: prebuild
 prebuild: prebuild-aux
 
 .PHONY: postbuild
 postbuild: $(KERNEL_ROMFILE)
-	$(MAKE) $(MAKE_PLATFORM) postbuild
+	$(MAKE) $(MAKE_PLATFORM_ARGS) postbuild
 
 .PHONY: session-start
 session-start:
@@ -1724,7 +1738,7 @@ endif
 #
 
 .PHONY: rts
-rts: make-check clean clean-configure
+rts: clean clean-configure
 ifeq ($(OSTYPE),cmd)
 	IF "$(strip $(GCC_MULTILIBS))"==""                      \
           ECHO *** Error: GCC_MULTILIBS is empty.>&2& EXIT /B 1
@@ -1733,7 +1747,7 @@ ifeq ($(OSTYPE),cmd)
           (                                                                  \
            ECHO.&& ECHO $(CPU): RTS = $(RTS_BUILD), multilib = %%M&& ECHO.&& \
            SET "MAKEFLAGS=" && SET "RTS=$(RTS_BUILD)"                     && \
-           "$(MAKE)" $(MAKE_RTS) MULTILIB=%%M multilib                       \
+           "$(MAKE)" $(MAKE_RTS_ARGS) MULTILIB=%%M multilib                  \
           ) || EXIT /B 1
 else
 	if [ "x$(strip $(GCC_MULTILIBS))" = "x" ] ; then            \
@@ -1746,7 +1760,7 @@ else
            printf "%s\n" "$(CPU): RTS = $(RTS_BUILD), multilib = \"$$m\"" && \
            printf "%s\n" ""                                               && \
            MAKEFLAGS= RTS=$(RTS_BUILD)                                       \
-           "$(MAKE)" $(MAKE_RTS) MULTILIB="$$m" multilib                     \
+           "$(MAKE)" $(MAKE_RTS_ARGS) MULTILIB="$$m" multilib                \
           ) || exit $$? ;                                                    \
         done
 endif
@@ -1769,19 +1783,19 @@ else
 	$(RM) $(LIBRARY_DIRECTORY)/*
 	$(RMDIR) $(OBJECT_DIRECTORY)/*
 endif
-	$(MAKE) $(MAKE_APPLICATION) clean
-	$(MAKE) $(MAKE_CLIBRARY) clean
-	$(MAKE) $(MAKE_CORE) clean
+	$(MAKE) $(MAKE_APPLICATION_ARGS) clean
+	$(MAKE) $(MAKE_CLIBRARY_ARGS) clean
+	$(MAKE) $(MAKE_CORE_ARGS) clean
 ifneq ($(CPU),)
 ifeq ($(filter $(CPU),$(CPUS)),$(CPU))
-	$(MAKE) $(MAKE_CPU) clean
+	$(MAKE) $(MAKE_CPU_ARGS) clean
 endif
 endif
-	$(MAKE) $(MAKE_DRIVERS) clean
-	$(MAKE) $(MAKE_MODULES) clean
+	$(MAKE) $(MAKE_DRIVERS_ARGS) clean
+	$(MAKE) $(MAKE_MODULES_ARGS) clean
 ifneq ($(PLATFORM),)
 ifeq ($(filter $(PLATFORM),$(PLATFORMS)),$(PLATFORM))
-	$(MAKE) $(MAKE_PLATFORM) clean
+	$(MAKE) $(MAKE_PLATFORM_ARGS) clean
 endif
 endif
 	$(RM) $(CLEAN_OBJECTS)
@@ -1805,16 +1819,16 @@ endif
 
 .PHONY: distclean
 distclean: clean
-	$(MAKE) $(MAKE_APPLICATION) distclean
-	$(MAKE) $(MAKE_CLIBRARY) distclean
-	$(MAKE) $(MAKE_CORE) distclean
+	$(MAKE) $(MAKE_APPLICATION_ARGS) distclean
+	$(MAKE) $(MAKE_CLIBRARY_ARGS) distclean
+	$(MAKE) $(MAKE_CORE_ARGS) distclean
 ifneq ($(CPU),)
-	$(MAKE) $(MAKE_CPU) distclean
+	$(MAKE) $(MAKE_CPU_ARGS) distclean
 endif
-	$(MAKE) $(MAKE_DRIVERS) distclean
-	$(MAKE) $(MAKE_MODULES) distclean
+	$(MAKE) $(MAKE_DRIVERS_ARGS) distclean
+	$(MAKE) $(MAKE_MODULES_ARGS) distclean
 ifneq ($(PLATFORM),)
-	$(MAKE) $(MAKE_PLATFORM) distclean
+	$(MAKE) $(MAKE_PLATFORM_ARGS) distclean
 endif
 	$(RM) $(DISTCLEAN_OBJECTS)
 
@@ -1826,11 +1840,11 @@ endif
 make-check:
 	@$(call echo-print,"MAKE VERSION: $(MAKE_VERSION)")
 ifeq ($(OSTYPE),cmd)
-	IF $(call substring,$(subst .,,$(MAKE_VERSION)),1,2) LSS 44             \
-          ECHO *** Warning: SweetAda requires GNU Make version 4.4 or later.>&2
+	IF $(call substring,$(subst .,,$(MAKE_VERSION)),1,2) LSS 43             \
+          ECHO *** Warning: SweetAda requires GNU Make version 4.3 or later.>&2
 else
-	if [ $(call substring,$(subst .,,$(MAKE_VERSION)),1,2) -lt 44 ] ; then                 \
-          printf "%s\n" "*** Warning: SweetAda requires GNU Make version 4.4 or later." 1>&2 ; \
+	if [ $(call substring,$(subst .,,$(MAKE_VERSION)),1,2) -lt 43 ] ; then                 \
+          printf "%s\n" "*** Warning: SweetAda requires GNU Make version 4.3 or later." 1>&2 ; \
         fi
 endif
 

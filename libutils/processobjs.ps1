@@ -11,10 +11,11 @@
 #
 # Arguments:
 # $1 = <filename>       object list filename
-# -b <BUILD_MODE>       "GNATMAKE" or "GPRBUILD"
+# -a <path_prefix>      prefix to be added to each object file
+# -b <BUILD_MODE>       (ignored) "GNATMAKE" or "GPRBUILD"
 # -i <ali_unit>         one for every ali instance
 # -o <object_directory> (ignored) object directory
-# -p <path_prefix>      (optional) prefix to be added to each object file
+# -r <path_prefix>      prefix to be removed from each object file
 #
 # Environment variables:
 # none
@@ -124,10 +125,11 @@ function GetEnvVar
 ################################################################################
 
 $objs_filename = ""
+$path_prefix_add = ""
 $build_mode = ""
 $implicit_ali_units = New-Object System.Collections.Generic.List[System.Object]
 $object_directory = ""
-$path_prefix = ""
+$path_prefix_remove = ""
 
 # parse command line arguments
 $argsindex = 0
@@ -136,7 +138,13 @@ while ($argsindex -lt $args.Length)
   if ($args[$argsindex][0] -eq "-")
   {
     $optionchar = $args[$argsindex].Substring(1)
-    if ($optionchar -eq "b")
+    if ($optionchar -eq "a")
+    {
+      # path prefix to be added
+      $argsindex++
+      $path_prefix_add = $($args[$argsindex])
+    }
+    elseif ($optionchar -eq "b")
     {
       # BUILD_MODE
       $argsindex++
@@ -154,11 +162,11 @@ while ($argsindex -lt $args.Length)
       $argsindex++
       $object_directory = $args[$argsindex]
     }
-    elseif ($optionchar -eq "p")
+    elseif ($optionchar -eq "r")
     {
-      # path prefix
+      # path prefix to be removed
       $argsindex++
-      $path_prefix = $($args[$argsindex])
+      $path_prefix_remove = $($args[$argsindex])
     }
     else
     {
@@ -198,18 +206,14 @@ catch
 }
 
 [string]$stdout = ""
-if ($path_prefix -ne "")
-{
-  $path_prefix += "/"
-}
 
 $textlines | ForEach-Object `
 {
-  $textline = $_
+  $textline = $_.Replace("\", "/")
   $found = $false
   foreach ($ali in $implicit_ali_units)
   {
-    if ($textline -Match $ali)
+    if ($textline.EndsWith($ali))
     {
       $found = $true
       break
@@ -217,11 +221,15 @@ $textlines | ForEach-Object `
   }
   if (-not $found)
   {
-    if ($build_mode -eq "GPRBUILD")
+    if (($path_prefix_remove -ne "") -and $textline.StartsWith($path_prefix_remove))
     {
-      $textline = $textline.Replace("$(Get-Location)\", "").Replace("\", "/")
+      $textline = $textline.Replace("$($path_prefix_remove)/", "")
     }
-    $stdout = "$($stdout)$($path_prefix)$($textline)$($nl)"
+    if ($path_prefix_add -ne "")
+    {
+      $textline = "$($path_prefix_add)/$($textline)"
+    }
+    $stdout = "$($stdout)$($textline)$($nl)"
   }
 }
 

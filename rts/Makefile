@@ -38,6 +38,7 @@
 
 MAKEFILE_RTS_INCLUDED := Y
 
+# deterministic build
 .NOTPARALLEL:
 
 # add silent operation in probevariable[s] targets
@@ -225,6 +226,21 @@ endif
 .PHONY: all
 all: multilib
 
+.PHONY: multilib
+multilib: create-dirs
+	$(MAKE) multilib-aux
+
+.PHONY: multilib-aux
+ifneq ($(findstring "$(MULTILIB_DIRECTORY)",$(MULTILIB_SKIPS)),)
+multilib-aux:
+	$(info *** Skipping target "multilib" for multilib directory "$(MULTILIB_DIRECTORY)".)
+else
+multilib-aux: configure $(LIBGNAT) $(LIBGNARL) clean-objs
+endif
+
+.PHONY: configure
+configure: configure-rts configure-rts-target
+
 .PHONY: create-dirs
 create-dirs:
 ifeq ($(OSTYPE),cmd)
@@ -287,17 +303,6 @@ else
         done
 endif
 
-.PHONY: configure
-configure: create-dirs configure-rts configure-rts-target
-
-.PHONY: multilib
-ifneq ($(findstring "$(MULTILIB_DIRECTORY)",$(MULTILIB_SKIPS)),)
-multilib:
-	$(info *** Skipping target "multilib" for multilib directory "$(MULTILIB_DIRECTORY)".)
-else
-multilib: configure $(LIBGNAT) $(LIBGNARL) clean-objs
-endif
-
 $(LIBGNAT): $(LIBGNAT_OBJS)
 	$(AR) cr $@ $(LIBGNAT_OBJS)
 	$(RANLIB) $@
@@ -320,12 +325,14 @@ endif
 -include $(RTS_SOURCE_PATH_TARGET)/Makefile.in
 
 # Ada sources generic rules
+%.o: %.adb
 $(ADALIB_PATH)/%.o: $(ADAINCLUDE_PATH)/%.adb
 	$(ADAC) -o $@ -c       \
           -g -O2               \
           -I$(ADAINCLUDE_PATH) \
           $(ADAC_SWITCHES)     \
           $<
+%.o: %.ads
 $(ADALIB_PATH)/%.o: $(ADAINCLUDE_PATH)/%.ads
 	$(ADAC) -o $@ -c       \
           -g -O2               \
@@ -334,6 +341,7 @@ $(ADALIB_PATH)/%.o: $(ADAINCLUDE_PATH)/%.ads
           $<
 
 # C sources generic rules
+%.o: %.c
 $(ADALIB_PATH)/%.o: $(ADAINCLUDE_PATH)/%.c
 	$(CC) -o $@ -c         \
           -g -O2               \

@@ -15,7 +15,6 @@
 # CP
 # MV
 # ADJMAKEDEPS
-# SED_INPLACE
 # UPDATETM
 # GNATADC_FILENAME
 # KERNEL_PARENT_PATH
@@ -49,9 +48,6 @@ ifeq      ($(BUILD_MODE),GNATMAKE)
 
 INCLUDES := $(foreach d,$(INCLUDE_DIRECTORIES),-I$(KERNEL_PARENT_PATH)/$(d))
 VPATH    := $(foreach d,$(INCLUDE_DIRECTORIES),$(KERNEL_PARENT_PATH)/$(d))
-
-KERNEL_PARENT_PATH_SED := $(subst .,\.,$(KERNEL_PARENT_PATH))
-OBJ_DIRECTORY_SED      := $(subst .,\.,$(OBJ_DIRECTORY))
 
 ifeq      ($(LIBRARY_NAME),clibrary)
 GCC_SWITCHES_LIBRARY :=
@@ -113,17 +109,17 @@ $(OBJ_DIRECTORY)/%.o: %.adb $(DEP_DIRECTORY)/%.d
 	$(compile-gnatmake-depend)
 ifeq ($(OSTYPE),cmd)
 	$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
-	@$(ADJMAKEDEPS)                            \
-                        -obj +                     \
-                        -kpp $(KERNEL_PARENT_PATH) \
-                        $(DEP_DIRECTORY_CMD)\$*.d
+	$(ADJMAKEDEPS)                            \
+                       -kpp $(KERNEL_PARENT_PATH) \
+                       -obj +                     \
+                       $(DEP_DIRECTORY_CMD)\$*.d
 	$(UPDATETM) $(DEP_DIRECTORY_CMD)\$*.ali
 	$(UPDATETM) $(OBJ_DIRECTORY_CMD)\$*.o
 else
 	$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
-	$(SED_INPLACE)                                                              \
-                       -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|"                \
-                       -e "s| $(KERNEL_PARENT_PATH_SED)| \$$(KERNEL_PARENT_PATH)|g" \
+	$(ADJMAKEDEPS)                            \
+                       -kpp $(KERNEL_PARENT_PATH) \
+                       -obj +                     \
                        $(DEP_DIRECTORY)/$*.d
 	$(UPDATETM) $(DEP_DIRECTORY)/$*.ali
 	$(UPDATETM) $(OBJ_DIRECTORY)/$*.o
@@ -136,16 +132,16 @@ $(OBJ_DIRECTORY)/%.o: %.ads $(DEP_DIRECTORY)/%.d
 ifeq ($(OSTYPE),cmd)
 	$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
 	$(ADJMAKEDEPS)                            \
-                       -obj +                     \
                        -kpp $(KERNEL_PARENT_PATH) \
+                       -obj +                     \
                        $(DEP_DIRECTORY_CMD)\$*.d
 	$(UPDATETM) $(DEP_DIRECTORY_CMD)\$*.ali
 	$(UPDATETM) $(OBJ_DIRECTORY_CMD)\$*.o
 else
 	$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
-	$(SED_INPLACE)                                                              \
-                       -e "s|^\(.* : .*\)\$$|\$$(OBJ_DIRECTORY)/\1|"                \
-                       -e "s| $(KERNEL_PARENT_PATH_SED)| \$$(KERNEL_PARENT_PATH)|g" \
+	$(ADJMAKEDEPS)                            \
+                       -kpp $(KERNEL_PARENT_PATH) \
+                       -obj +                     \
                        $(DEP_DIRECTORY)/$*.d
 	$(UPDATETM) $(DEP_DIRECTORY)/$*.ali
 	$(UPDATETM) $(OBJ_DIRECTORY)/$*.o
@@ -168,16 +164,15 @@ $(OBJ_DIRECTORY)/%.o: %.S $(DEP_DIRECTORY)/%.d
 ifeq ($(OSTYPE),cmd)
 	$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
 	$(ADJMAKEDEPS)                            \
-                       -obj $(OBJ_DIRECTORY)      \
                        -kpp $(KERNEL_PARENT_PATH) \
+                       -obj $(OBJ_DIRECTORY)      \
                        $(DEP_DIRECTORY_CMD)\$*.d
 	$(UPDATETM) $(OBJ_DIRECTORY_CMD)\$*.o
 else
 	$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
-	$(SED_INPLACE)                                                                           \
-                       -e "s|^$(OBJ_DIRECTORY_SED)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|"         \
-                       -e "s|^$(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)|\$$(KERNEL_PARENT_PATH)\1|g"  \
-                       -e "s| $(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)| \$$(KERNEL_PARENT_PATH)\1|g" \
+	$(ADJMAKEDEPS)                            \
+                       -kpp $(KERNEL_PARENT_PATH) \
+                       -obj $(OBJ_DIRECTORY)      \
                        $(DEP_DIRECTORY)/$*.d
 	$(UPDATETM) $(OBJ_DIRECTORY)/$*.o
 endif
@@ -188,16 +183,15 @@ $(OBJ_DIRECTORY)/%.o: %.c $(DEP_DIRECTORY)/%.d
 ifeq ($(OSTYPE),cmd)
 	$(MV) $(DEP_DIRECTORY_CMD)\$*.td $(DEP_DIRECTORY_CMD)\$*.d
 	$(ADJMAKEDEPS)                            \
-                       -obj $(OBJ_DIRECTORY)      \
                        -kpp $(KERNEL_PARENT_PATH) \
+                       -obj $(OBJ_DIRECTORY)      \
                        $(DEP_DIRECTORY_CMD)\$*.d
 	$(UPDATETM) $(OBJ_DIRECTORY_CMD)\$*.o
 else
 	$(MV) $(DEP_DIRECTORY)/$*.td $(DEP_DIRECTORY)/$*.d
-	$(SED_INPLACE)                                                                           \
-                       -e "s|^$(OBJ_DIRECTORY_SED)\(.* *: .*\)\$$|\$$(OBJ_DIRECTORY)\1|"         \
-                       -e "s|^$(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)|\$$(KERNEL_PARENT_PATH)\1|g"  \
-                       -e "s| $(KERNEL_PARENT_PATH_SED)\(/[^ :]*\)| \$$(KERNEL_PARENT_PATH)\1|g" \
+	$(ADJMAKEDEPS)                            \
+                       -kpp $(KERNEL_PARENT_PATH) \
+                       -obj $(OBJ_DIRECTORY)      \
                        $(DEP_DIRECTORY)/$*.d
 	$(UPDATETM) $(OBJ_DIRECTORY)/$*.o
 endif

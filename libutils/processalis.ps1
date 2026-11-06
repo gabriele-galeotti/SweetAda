@@ -11,7 +11,7 @@
 #
 # Arguments:
 # $1 = <filename>  ALI list filename
-# -p <path_prefix> path prefix to be removed
+# -r <path_prefix> path prefix to be removed
 #
 # Environment variables:
 # none
@@ -121,7 +121,7 @@ function GetEnvVar
 ################################################################################
 
 $alis_filename = ""
-$path_prefix = ""
+$path_prefix_remove = ""
 
 # parse command line arguments
 $argsindex = 0
@@ -130,11 +130,11 @@ while ($argsindex -lt $args.Length)
   if ($args[$argsindex][0] -eq "-")
   {
     $optionchar = $args[$argsindex].Substring(1)
-    if ($optionchar -eq "p")
+    if ($optionchar -eq "r")
     {
       # path prefix
       $argsindex++
-      $path_prefix = "$($args[$argsindex])"
+      $path_prefix_remove = "$($args[$argsindex])"
     }
     else
     {
@@ -177,10 +177,10 @@ catch
 
 $textlines | ForEach-Object `
 {
-  $textline = $_
-  if ($path_prefix -ne "")
+  $textline = $_.Replace("\", "/")
+  if (($path_prefix_remove -ne "") -and $textline.StartsWith($path_prefix_remove))
   {
-    $textline = $textline.Replace("\", "/").Replace("$($path_prefix)/", "")
+    $textline = $textline.Replace("$($path_prefix_remove)/", "")
   }
   $stdout = "$($stdout)$($textline)$($nl)"
 }

@@ -40,8 +40,12 @@ else
 OSTYPE_UNAME := $(shell uname -s 2> /dev/null)
 ifeq      ($(OSTYPE_UNAME),Darwin)
 OSTYPE := darwin
+else ifeq ($(OSTYPE_UNAME),FreeBSD)
+OSTYPE := freebsd
 else ifeq ($(OSTYPE_UNAME),Linux)
 OSTYPE := linux
+else ifeq ($(OSTYPE_UNAME),OpenBSD)
+OSTYPE := openbsd
 else
 $(error Error: no valid OSTYPE)
 endif
@@ -130,5 +134,6 @@ endif
 
 export CHDIR CP LS MKDIR MV RM RMDIR
 
+# MAKEFILE_OS_IN_INCLUDED
 endif
 

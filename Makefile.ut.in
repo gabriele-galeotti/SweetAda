@@ -20,23 +20,8 @@
 ifneq ($(MAKEFILE_UT_IN_INCLUDED),Y)
 MAKEFILE_UT_IN_INCLUDED := Y
 
-ifeq      ($(OSTYPE),cmd)
-ELFTOOL      := elftool-win$(EXEEXT)
-EXE_WRAPPER  := exe-wrapper-win$(EXEEXT)
-else ifeq ($(OSTYPE),msys)
-ELFTOOL      := elftool-win$(EXEEXT)
-EXE_WRAPPER  := exe-wrapper-win$(EXEEXT)
-else ifeq ($(OSTYPE),darwin)
-ELFTOOL      := elftool-osx$(EXEEXT)
-EXE_WRAPPER  := exe-wrapper-osx$(EXEEXT)
-else ifeq ($(OSTYPE),linux)
-ELFTOOL      := elftool-lnx$(EXEEXT)
-EXE_WRAPPER  := exe-wrapper-lnx$(EXEEXT)
-else
-$(error Error: no valid executables for OSTYPE '$(OSTYPE)')
-endif
-
 ifeq ($(OSTYPE),msys)
+ADJMAKEDEPS        := adjmakedeps$(SCREXT_cmd)
 CREATECONFIGUREGPR := createconfiguregpr$(SCREXT_cmd)
 CREATEGNATADC      := creategnatadc$(SCREXT_cmd)
 DOS2UNIX           := dos2unix$(SCREXT_cmd)
@@ -48,11 +33,14 @@ GCCDEFINES         := gccdefines$(SCREXT_cmd)
 GPRBINDFILT        := gprbindfilt$(SCREXT_cmd)
 GPRDEPS            := gprdeps$(SCREXT_cmd)
 LINKERADSB         := linkeradsb$(SCREXT_cmd)
+PROCESSALIS        := $(SHELL_CMD) processalis$(SCREXT_cmd)
 PROCESSCFG         := processcfg$(SCREXT_cmd)
+PROCESSOBJS        := $(SHELL_CMD) processobjs$(SCREXT_cmd)
 RMSYMLINK          := rmsymlink$(SCREXT_cmd)
 SYMLINK            := symlink$(SCREXT_cmd)
 UPDATETM           := updatetm$(SCREXT_cmd)
 else
+ADJMAKEDEPS        := adjmakedeps$(SCREXT)
 CREATECONFIGUREGPR := createconfiguregpr$(SCREXT)
 CREATEGNATADC      := creategnatadc$(SCREXT)
 ELFSYMBOL          := elfsymbol$(SCREXT)
@@ -63,30 +51,44 @@ GCCDEFINES         := gccdefines$(SCREXT)
 GPRBINDFILT        := gprbindfilt$(SCREXT)
 GPRDEPS            := gprdeps$(SCREXT)
 LINKERADSB         := linkeradsb$(SCREXT)
+PROCESSALIS        := processalis$(SCREXT)
 PROCESSCFG         := processcfg$(SCREXT)
+PROCESSOBJS        := processobjs$(SCREXT)
 RMSYMLINK          := rmsymlink$(SCREXT)
 SYMLINK            := symlink$(SCREXT)
 UPDATETM           := updatetm$(SCREXT)
 ifeq ($(OSTYPE),cmd)
-ADJMAKEDEPS        := adjmakedeps$(SCREXT)
 DOS2UNIX           := dos2unix$(SCREXT)
-PROCESSALIS        := processalis$(SCREXT)
-PROCESSOBJS        := processobjs$(SCREXT)
 endif
 endif
 
-ifeq ($(OSTYPE),darwin)
-SED_INPLACE := sed -i ''
-else
-SED_INPLACE := sed -i
-endif
-
-# useful utilities in user scripts
+# export useful utilities
 export DOS2UNIX   \
        ELFSYMBOL  \
        FILEPAD    \
        FILEPATCH  \
        PROCESSCFG
 
+ifeq      ($(OSTYPE),cmd)
+ELFTOOL     := elftool-win$(EXEEXT)
+EXE_WRAPPER := exe-wrapper-win$(EXEEXT)
+else ifeq ($(OSTYPE),msys)
+ELFTOOL     := elftool-win$(EXEEXT)
+EXE_WRAPPER := exe-wrapper-win$(EXEEXT)
+else ifeq ($(OSTYPE),darwin)
+ELFTOOL     := elftool-osx$(EXEEXT)
+EXE_WRAPPER := exe-wrapper-osx$(EXEEXT)
+else ifeq ($(OSTYPE),freebsd)
+ELFTOOL     := elftool-fbs$(EXEEXT)
+EXE_WRAPPER := exe-wrapper-fbs$(EXEEXT)
+else ifeq ($(OSTYPE),linux)
+ELFTOOL     := elftool-lnx$(EXEEXT)
+EXE_WRAPPER := exe-wrapper-lnx$(EXEEXT)
+else ifeq ($(OSTYPE),openbsd)
+ELFTOOL     := elftool-obs$(EXEEXT)
+EXE_WRAPPER := exe-wrapper-obs$(EXEEXT)
+endif
+
+# MAKEFILE_UT_IN_INCLUDED
 endif
 
