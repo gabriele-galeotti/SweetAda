@@ -15,11 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+
 with Interfaces;
 with Bits;
 
 package body PL031
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -67,7 +69,7 @@ package body PL031
    procedure Read_Clock
       (D : in     Descriptor_Type;
        T :    out Time.TM_Time)
-      is
+   is
       RTC : RTC_Type
          with Address    => D.Base_Address,
               Volatile   => True,
@@ -82,7 +84,7 @@ package body PL031
    ----------------------------------------------------------------------------
    procedure Init
       (D : in Descriptor_Type)
-      is
+   is
       RTC : RTC_Type
          with Address    => D.Base_Address,
               Volatile   => True,

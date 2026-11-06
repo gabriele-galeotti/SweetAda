@@ -15,11 +15,14 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Restrictions (No_Elaboration_Code);
+pragma Style_Checks (Off);
+
 with System;
 with Time;
 
 package PL031
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -30,8 +33,6 @@ package PL031
    --========================================================================--
 
    use System;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- ARM PrimeCellTM
@@ -54,7 +55,5 @@ pragma Style_Checks (Off);
 
    procedure Init
       (D : in Descriptor_Type);
-
-pragma Style_Checks (On);
 
 end PL031;
