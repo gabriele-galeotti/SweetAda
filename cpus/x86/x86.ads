@@ -353,6 +353,7 @@ is
        GDT_Length              : in     GDT_Index_Type;
        GDT_Code_Selector_Index : in     GDT_Index_Type)
       with Inline => True;
+
    procedure GDT_Set_Entry
       (GDT_Entry   : in out Segment_Descriptor_Type;
        Base        : in     Address;

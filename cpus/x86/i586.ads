@@ -48,6 +48,7 @@ is
    function CR4_Read
       return CR4_Type
       renames i486.CR4_Read;
+
    procedure CR4_Write
       (Value : in CR4_Type)
       renames i486.CR4_Write;
@@ -112,6 +113,7 @@ is
       (Value : IA32_APIC_BASE_Type)
       return Unsigned_64
       with Inline => True;
+
    function To_IA32_APIC_BASE
       (Value : Unsigned_64)
       return IA32_APIC_BASE_Type
@@ -123,10 +125,12 @@ is
       (MSR_Register_Number : MSR_Type)
       return Unsigned_64
       with Inline => True;
+
    procedure WRMSR
       (MSR_Register_Number : in MSR_Type;
        Value               : in Unsigned_64)
       with Inline => True;
+
    function RDTSC
       return Unsigned_64
       with Inline => True;

@@ -96,6 +96,7 @@ is
    function CR4_Read
       return CR4_Type
       with Inline => True;
+
    procedure CR4_Write
       (Value : in CR4_Type)
       with Inline => True;

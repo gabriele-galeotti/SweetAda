@@ -46,6 +46,7 @@ is
    function CR4_Read
       return CR4_Type
       renames i586.CR4_Read;
+
    procedure CR4_Write
       (Value : in CR4_Type)
       renames i586.CR4_Write;
@@ -79,6 +80,7 @@ is
       (MSR_Register_Number : MSR_Type)
       return Unsigned_64
       renames i586.RDMSR;
+
    procedure WRMSR
       (MSR_Register_Number : in MSR_Type;
        Value               : in Unsigned_64)

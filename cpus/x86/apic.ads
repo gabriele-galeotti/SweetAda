@@ -214,6 +214,7 @@ is
    function IOAPIC_Read
       (Register_Number : Natural)
       return Unsigned_32;
+
    procedure IOAPIC_Write
       (Register_Number : in Natural;
        Value           : in Unsigned_32);
