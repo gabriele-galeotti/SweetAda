@@ -15,13 +15,15 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
 with PCI;
 
 package PIIX
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -36,6 +38,12 @@ package PIIX
    use Bits;
 
    ----------------------------------------------------------------------------
+   -- 82371FB (PIIX) AND 82371SB (PIIX3)
+   -- PCI ISA IDE XCELERATOR
+   -- Order Number: 290550-002
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
    -- 2.2. PCI Configuration Registers - PCI To ISA Bridge (Function 0)
    ----------------------------------------------------------------------------
 
@@ -45,11 +53,11 @@ package PIIX
       IOSE      : Boolean := True;  -- I/O Space Access Enable (IOSE).
       MAE       : Boolean := True;  -- Memory Access Enable (MAE). (Not Implemented)
       BME       : Boolean := True;  -- Bus Master Enable (BME). (Not Implemented)
-      SCE       : Boolean;          -- Special Cycle Enable (SCE).
+      SCE       : Boolean := False; -- Special Cycle Enable (SCE).
       PMWE      : Boolean := False; -- Postable Memory Write Enable. (Not Implemented)
       Reserved1 : Bits_3  := 0;
-      SERRE     : Boolean;          -- SERR# Enable (SERRE).
-      FBE       : Boolean := False; -- Fast Back-to-Back Enable.
+      SERRE     : Boolean := False; -- SERR# Enable (SERRE).
+      FBBE      : Boolean := False; -- Fast Back-to-Back Enable.
       Reserved2 : Bits_6  := 0;
    end record
       with Bit_Order => Low_Order_First,
@@ -62,7 +70,7 @@ package PIIX
       PMWE      at 0 range  4 ..  4;
       Reserved1 at 0 range  5 ..  7;
       SERRE     at 0 range  8 ..  8;
-      FBE       at 0 range  9 ..  9;
+      FBBE      at 0 range  9 ..  9;
       Reserved2 at 0 range 10 .. 15;
    end record;
 
@@ -71,19 +79,119 @@ package PIIX
       return Unsigned_16
       with Inline => True;
 
+   -- 2.2.4. PCISTS—PCI DEVICE STATUS REGISTER (Function 0)
+
+   type PCISTS_Type is record
+      Reserved : Bits_7  := 0;
+      FBB      : Boolean := False; -- Fast Back to Back—RO.
+      PERRR    : Boolean := False; -- PERR# Response.
+      DEVT     : Bits_2  := 2#00#; -- DEVSEL# Timing Status (DEVT)—RO.
+      STA      : Boolean := False; -- Signaled Target-Abort Status (STA)—R/WC.
+      RTA      : Boolean := False; -- Received Target-Abort Status (RTA)—R/WC.
+      MA       : Boolean := False; -- Master-Abort Status (MA)—R/WC.
+      SERRS    : Boolean := False; -- Signaled SERR# Status (SERRS)—R/WC.
+      PERR     : Boolean := False; -- Detected Parity Error (PERR).
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for PCISTS_Type use record
+      Reserved at 0 range  0 ..  6;
+      FBB      at 0 range  7 ..  7;
+      PERRR    at 0 range  8 ..  8;
+      DEVT     at 0 range  9 .. 10;
+      STA      at 0 range 11 .. 11;
+      RTA      at 0 range 12 .. 12;
+      MA       at 0 range 13 .. 13;
+      SERRS    at 0 range 14 .. 14;
+      PERR     at 0 range 15 .. 15;
+   end record;
+
+   -- 2.2.5. RID—REVISION IDENTIFICATION REGISTER (Function 0)
+
+   type RID_Type is record
+      RID : Bits_8; -- Revision ID Byte.
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for RID_Type use record
+      RID at 0 range 0 .. 7;
+   end record;
+
+  -- 2.2.6. CLASSC CLASS CODE REGISTER (Function 0)
+
+   type CLASSC_Type is record
+      PI    : Bits_8; -- Programming Interface (PI).
+      SCC   : Bits_8; -- Sub-Class Code (SCC).
+      BASEC : Bits_8; -- Base Class Code (BASEC).
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 24;
+   for CLASSC_Type use record
+      PI    at 0 range  0 ..  7;
+      SCC   at 0 range  8 .. 15;
+      BASEC at 0 range 16 .. 23;
+   end record;
+
+   -- 2.2.7. HEDT—HEADER TYPE REGISTER (Function 0)
+
+   type HEDT_Type is record
+      DEVICET : Bits_8; -- Device Type (DEVICET).
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for HEDT_Type use record
+      DEVICET at 0 range 0 .. 7;
+   end record;
+
+   -- 2.2.8. IORT—ISA I/O RECOVERY TIMER REGISTER (Function 0)
+
+   IO16RT_SYSCLK1 : constant := 2#01#; -- SYSCLK 1
+   IO16RT_SYSCLK2 : constant := 2#10#; -- SYSCLK 2
+   IO16RT_SYSCLK3 : constant := 2#11#; -- SYSCLK 3
+   IO16RT_SYSCLK4 : constant := 2#00#; -- SYSCLK 4
+
+   IO8RT_SYSCLK1 : constant := 2#001#; -- SYSCLK 1
+   IO8RT_SYSCLK2 : constant := 2#010#; -- SYSCLK 2
+   IO8RT_SYSCLK3 : constant := 2#011#; -- SYSCLK 3
+   IO8RT_SYSCLK4 : constant := 2#100#; -- SYSCLK 4
+   IO8RT_SYSCLK5 : constant := 2#101#; -- SYSCLK 5
+   IO8RT_SYSCLK6 : constant := 2#110#; -- SYSCLK 6
+   IO8RT_SYSCLK7 : constant := 2#111#; -- SYSCLK 7
+   IO8RT_SYSCLK8 : constant := 2#000#; -- SYSCLK 8
+
+   DMAAC_ALIASIO : constant := 0; -- When DMAAC=0, the PIIX/PIIX3 aliases I/O accesses in the 90–9Fh range to the 80–8Fh range. In this case, the PIIX/PIIX3 only forwards write accesses to these locations to the ISA Bus.
+   DMAAC_NOALIAS : constant := 1; -- When DMAAC=1, the PIIX3 disables aliasing for the entire 90–9Fh range (they are considered ISA bus register locations). When disabled, the PIIX3 forwards read ands write accesses to these registers to ISA.
+
+   type IORT_Type is record
+      IO16RT : Bits_2  := IO16RT_SYSCLK1; -- 16-Bit I/O Recovery Times.
+      IO16RE : Boolean := True;           -- 16-Bit I/O Recovery Enable.
+      IO8RT  : Bits_3  := IO8RT_SYSCLK1;  -- 8-Bit I/O Recovery times.
+      IO8RE  : Boolean := True;           -- 8-Bit I/O Recovery Enable.
+      DMAAC  : Bits_1  := DMAAC_ALIASIO;  -- DMA Reserved Page Register Aliasing Control (DMAAC).
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for IORT_Type use record
+      IO16RT at 0 range 0 .. 1;
+      IO16RE at 0 range 2 .. 2;
+      IO8RT  at 0 range 3 .. 5;
+      IO8RE  at 0 range 6 .. 6;
+      DMAAC  at 0 range 7 .. 7;
+   end record;
+
    -- 2.2.9. XBCS-X-BUS CHIP SELECT REGISTER (Function 0)
 
    type XBCS_Type is record
-      RTCALE     : Boolean; -- RTC Address Location Enable.
-      KBDCALE    : Boolean; -- Keyboard Controller Address Location Enable.
-      BIOSCS_WPE : Boolean; -- BIOSCS# Write Protect Enable.
-      Reserved1  : Bits_1;
-      IRQ12ME    : Boolean; -- IRQ12/M Mouse Function Enable.
-      COPROCERRE : Boolean; -- Coprocessor Error function Enable.
-      LOBIOSE    : Boolean; -- Lower BIOS Enable.
-      EXTBIOSE   : Boolean; -- Extended BIOS Enable.
-      APICCS     : Boolean; -- PIIX3: APIC Chip Select.
-      Reserved2  : Bits_7;
+      RTCALE     : Boolean := True;  -- RTC Address Location Enable.
+      KBDCALE    : Boolean := True;  -- Keyboard Controller Address Location Enable.
+      BIOSCS_WPE : Boolean := False; -- BIOSCS# Write Protect Enable.
+      Reserved1  : Bits_1  := 0;
+      IRQ12ME    : Boolean := False; -- IRQ12/M Mouse Function Enable.
+      COPROCERRE : Boolean := False; -- Coprocessor Error function Enable.
+      LOBIOSE    : Boolean := False; -- Lower BIOS Enable.
+      EXTBIOSE   : Boolean := False; -- Extended BIOS Enable.
+      APICCS     : Boolean := False; -- PIIX3: APIC Chip Select.
+      Reserved2  : Bits_7  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 16;
@@ -107,34 +215,34 @@ package PIIX
 
    -- 2.2.10. PIRQRC[A:D]-PIRQx ROUTE CONTROL REGISTERS (Function 0)
 
-   IRQROUTE_RESERVED1  : constant := 2#0000#; -- Reserved
-   IRQROUTE_RESERVED2  : constant := 2#0001#; -- Reserved
-   IRQROUTE_RESERVED3  : constant := 2#0010#; -- Reserved
-   IRQROUTE_IRQ3       : constant := 2#0011#; -- IRQ3
-   IRQROUTE_IRQ4       : constant := 2#0100#; -- IRQ4
-   IRQROUTE_IRQ5       : constant := 2#0101#; -- IRQ5
-   IRQROUTE_IRQ6       : constant := 2#0110#; -- IRQ6
-   IRQROUTE_IRQ7       : constant := 2#0111#; -- IRQ7
-   IRQROUTE_RESERVED8  : constant := 2#1000#; -- Reserved
-   IRQROUTE_IRQ9       : constant := 2#1001#; -- IRQ9
-   IRQROUTE_IRQ10      : constant := 2#1010#; -- IRQ10
-   IRQROUTE_IRQ11      : constant := 2#1011#; -- IRQ11
-   IRQROUTE_IRQ12      : constant := 2#1100#; -- IRQ12
-   IRQROUTE_RESERVED13 : constant := 2#1000#; -- Reserved
-   IRQROUTE_IRQ14      : constant := 2#1110#; -- IRQ14
-   IRQROUTE_IRQ15      : constant := 2#1111#; -- IRQ15
+   IRQROUTE_RSVD1  : constant := 2#0000#; -- Reserved
+   IRQROUTE_RSVD2  : constant := 2#0001#; -- Reserved
+   IRQROUTE_RSVD3  : constant := 2#0010#; -- Reserved
+   IRQROUTE_IRQ3   : constant := 2#0011#; -- IRQ3
+   IRQROUTE_IRQ4   : constant := 2#0100#; -- IRQ4
+   IRQROUTE_IRQ5   : constant := 2#0101#; -- IRQ5
+   IRQROUTE_IRQ6   : constant := 2#0110#; -- IRQ6
+   IRQROUTE_IRQ7   : constant := 2#0111#; -- IRQ7
+   IRQROUTE_RSVD8  : constant := 2#1000#; -- Reserved
+   IRQROUTE_IRQ9   : constant := 2#1001#; -- IRQ9
+   IRQROUTE_IRQ10  : constant := 2#1010#; -- IRQ10
+   IRQROUTE_IRQ11  : constant := 2#1011#; -- IRQ11
+   IRQROUTE_IRQ12  : constant := 2#1100#; -- IRQ12
+   IRQROUTE_RSVD13 : constant := 2#1000#; -- Reserved
+   IRQROUTE_IRQ14  : constant := 2#1110#; -- IRQ14
+   IRQROUTE_IRQ15  : constant := 2#1111#; -- IRQ15
 
    type PIRQC_Type is record
-      IRQROUTE   : Bits_4;        -- Interrupt Routing.
-      Reserved   : Bits_3   := 0;
-      IRQROUTEEN : NBoolean;      -- Interrupt Routing Enable. 0=Enable; 1=Disable
+      IRQROUTE  : Bits_4   := IRQROUTE_RSVD1; -- Interrupt Routing.
+      Reserved  : Bits_3   := 0;
+      IRQROUTEE : NBoolean := NFalse;         -- Interrupt Routing Enable. 0=Enable; 1=Disable
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
    for PIRQC_Type use record
-      IRQROUTE   at 0 range 0 .. 3;
-      Reserved   at 0 range 4 .. 6;
-      IRQROUTEEN at 0 range 7 .. 7;
+      IRQROUTE  at 0 range 0 .. 3;
+      Reserved  at 0 range 4 .. 6;
+      IRQROUTEE at 0 range 7 .. 7;
    end record;
 
    function To_U8
@@ -162,20 +270,20 @@ package PIIX
    TOM_MB16 : constant := 2#1111#; -- 16 Mbyte
 
    type TOM_Type is record
-      Reserved        : Bits_1;
-      ISADMAFWD       : Boolean; -- ISA/DMA 512–640-Kbyte Region Forwarding Enable.
-      ABSEGFWD        : Boolean; -- PIIX3: A,B Segment Forwarding Enable.
-      ISADMALOBIOSFWD : Boolean; -- ISA/DMA Lower BIOS Forwarding Enable.
-      TOM             : Bits_4;  -- Top Of Memory.
+      Reserved         : Bits_1  := 0;
+      ISADMA512640FWDE : Boolean := True;    -- ISA/DMA 512–640-Kbyte Region Forwarding Enable.
+      ABSEGFWDE        : Boolean := False;   -- PIIX3: A,B Segment Forwarding Enable.
+      ISADMALOBIOSFWDE : Boolean := False;   -- ISA/DMA Lower BIOS Forwarding Enable.
+      TOM              : Bits_4  := TOM_MB1; -- Top Of Memory.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
    for TOM_Type use record
-      Reserved        at 0 range 0 .. 0;
-      ISADMAFWD       at 0 range 1 .. 1;
-      ABSEGFWD        at 0 range 2 .. 2;
-      ISADMALOBIOSFWD at 0 range 3 .. 3;
-      TOM             at 0 range 4 .. 7;
+      Reserved         at 0 range 0 .. 0;
+      ISADMA512640FWDE at 0 range 1 .. 1;
+      ABSEGFWDE        at 0 range 2 .. 2;
+      ISADMALOBIOSFWDE at 0 range 3 .. 3;
+      TOM              at 0 range 4 .. 7;
    end record;
 
    function To_U8
@@ -225,23 +333,23 @@ package PIIX
 
    -- 2.2.13. MBIRQ[1:0]-MOTHERBOARD DEVICE IRQ ROUTE CONTROL REGISTERS (Function 0)
 
-   -- use IRQROUTE_IRQx constants from PIRQC_Type
+   -- IRQROUTE_* already defined at 2.2.10
 
    type MBIRQ_Type is record
-      IRQROUTE   : Bits_4;   -- Interrupt Routing.
-      Reserved   : Bits_1;
-      IRQ0       : Boolean;  -- PIIX3: IRQ0 Enable
-      MIRQSHARE  : Boolean;  -- MIRQx/IRQx Sharing Enable.
-      IRQROUTEEN : NBoolean; -- Interrupt Routing Enable.
+      IRQROUTE  : Bits_4   := IRQROUTE_RSVD1; -- Interrupt Routing.
+      Reserved  : Bits_1   := 0;
+      IRQ0E     : Boolean  := False;          -- PIIX3: IRQ0 Enable
+      MIRQSHARE : Boolean  := False;          -- MIRQx/IRQx Sharing Enable.
+      IRQROUTEE : NBoolean := NFalse;         -- Interrupt Routing Enable.
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
    for MBIRQ_Type use record
-      IRQROUTE   at 0 range 0 .. 3;
-      Reserved   at 0 range 4 .. 4;
-      IRQ0       at 0 range 5 .. 5;
-      MIRQSHARE  at 0 range 6 .. 6;
-      IRQROUTEEN at 0 range 7 .. 7;
+      IRQROUTE  at 0 range 0 .. 3;
+      Reserved  at 0 range 4 .. 4;
+      IRQ0E     at 0 range 5 .. 5;
+      MIRQSHARE at 0 range 6 .. 6;
+      IRQROUTEE at 0 range 7 .. 7;
    end record;
 
    function To_U8
@@ -249,21 +357,66 @@ package PIIX
       return Unsigned_8
       with Inline => True;
 
+   -- 2.2.14. MBDMA[1:0]—MOTHERBOARD DEVICE DMA CONTROL REGISTERS (Function 0)
+
+   CHNL_DMA0 : constant := 2#000#; -- DMA channel 0
+   CHNL_DMA1 : constant := 2#001#; -- DMA channel 1
+   CHNL_DMA2 : constant := 2#010#; -- DMA channel 2
+   CHNL_DMA3 : constant := 2#011#; -- DMA channel 3
+   CHNL_DMA4 : constant := 2#100#; -- DMA channel 4
+   CHNL_DMA5 : constant := 2#101#; -- DMA channel 5
+   CHNL_DMA6 : constant := 2#110#; -- DMA channel 6
+   CHNL_DMA7 : constant := 2#111#; -- DMA channel 7
+   CHNL_DISABLED renames CHNL_DMA4;
+
+   type MBDMA_Type is record
+      CHNL      : Bits_3  := CHNL_DISABLED; -- Type F and Motherboard DMA Channel Routing (CHNL).
+      Reserved1 : Bits_1  := 1;
+      Reserved2 : Bits_3  := 0;
+      FAST      : Boolean := False;         -- Type F and DMA Buffer Enable (FAST).
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 8;
+   for MBDMA_Type use record
+      CHNL      at 0 range 0 .. 2;
+      Reserved1 at 0 range 3 .. 3;
+      Reserved2 at 0 range 4 .. 6;
+      FAST      at 0 range 7 .. 7;
+   end record;
+
+   -- 2.2.15. PCSC—PROGRAMMABLE CHIP SELECT CONTROL REGISTER (Function 0)
+
+   PCSADDRMASK_4    : constant := 2#00#; -- 4 bytes (default)
+   PCSADDRMASK_8    : constant := 2#01#; -- 8 bytes, contiguous
+   PCSADDRMASK_NONE : constant := 2#10#; -- Disabled
+   PCSADDRMASK_16   : constant := 2#11#; -- 16 bytes, contiguous
+
+   type PCSC_Type is record
+      PCSADDRMASK : Bits_2  := PCSADDRMASK_NONE; -- PCS Address Mask.
+      PCSADDR     : Bits_14 := 0;                -- PCS Address (PCSADDR).
+   end record
+      with Bit_Order => Low_Order_First,
+           Size      => 16;
+   for PCSC_Type use record
+      PCSADDRMASK at 0 range 0 ..  1;
+      PCSADDR     at 0 range 2 .. 15;
+   end record;
+
    -- 2.2.16. APICBASE-APIC BASE ADDRESS RELOCATION REGISTER (Function 0) (PIIX3 Only)
 
    type APICBASE_Type is record
-      Y        : Bits_2;  -- Y-Base Address.
-      X        : Bits_4;  -- X-Base Address.
-      A12MASK  : Boolean; -- A12 Mask.
-      Reserved : Bits_1;
+      YBASEADDR : Bits_2  := 0;     -- Y-Base Address.
+      XBASEADDR : Bits_4  := 0;     -- X-Base Address.
+      A12MASK   : Boolean := False; -- A12 Mask.
+      Reserved  : Bits_1  := 0;
    end record
       with Bit_Order => Low_Order_First,
            Size      => 8;
    for APICBASE_Type use record
-      Y        at 0 range 0 .. 1;
-      X        at 0 range 2 .. 5;
-      A12MASK  at 0 range 6 .. 6;
-      Reserved at 0 range 7 .. 7;
+      YBASEADDR at 0 range 0 .. 1;
+      XBASEADDR at 0 range 2 .. 5;
+      A12MASK   at 0 range 6 .. 6;
+      Reserved  at 0 range 7 .. 7;
    end record;
 
    function To_U8
@@ -290,9 +443,9 @@ package PIIX
    -- 2.3.3. PCICMD-COMMAND REGISTER (Function 1)
 
    type PCICMD1_Type is record
-      IOSE      : Boolean;          -- I/O Space Access Enable (IOSE).
-      MSE       : Boolean := True;  -- Memory Space Enable (MSE). (Not Implemented)
-      BME       : Boolean;          -- Bus Master Enable (BME).
+      IOSE      : Boolean := False; -- I/O Space Access Enable (IOSE).
+      MSE       : Boolean := False; -- Memory Space Enable (MSE). (Not Implemented)
+      BME       : Boolean := False; -- Bus Master Enable (BME).
       SCE       : Boolean := False; -- Special Cycle Enable (SCE). (Not Implemented)
       MWI       : Boolean := False; -- Memory Write and Invalidate Enable (MWI). (Not Implemented)
       Reserved1 : Bits_4  := 0;
@@ -324,9 +477,9 @@ package PIIX
    -- 2.4.3. PCICMD-COMMAND REGISTER (Function 2)
 
    type PCICMD2_Type is record
-      IOSE      : Boolean;          -- I/O Space Access Enable (IOSE).
+      IOSE      : Boolean := False; -- I/O Space Access Enable (IOSE).
       MSE       : Boolean := False; -- Memory Space Enable (MSE). (Not Implemented)
-      BME       : Boolean;          -- Bus Master Enable (BME).
+      BME       : Boolean := False; -- Bus Master Enable (BME).
       SCE       : Boolean := False; -- Special Cycle Enable (SCE). (Not Implemented)
       MWI       : Boolean := False; -- Memory Write and Invalidate Enable (MWI). (Not Implemented)
       Reserved1 : Bits_4  := 0;

@@ -18,7 +18,7 @@
 with Ada.Unchecked_Conversion;
 
 package body PIIX
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -58,7 +58,7 @@ pragma Style_Checks (On);
    function Probe
       (D : PCI.Descriptor_Type)
       return Boolean
-      is
+   is
       Success       : Boolean;
       Device_Number : PCI.Device_Number_Type with Unreferenced => True;
    begin
@@ -78,11 +78,11 @@ pragma Style_Checks (On);
    ----------------------------------------------------------------------------
    procedure Init
       (D : in PCI.Descriptor_Type)
-      is
+   is
       PIRQC : constant PIRQC_Type := (
-         IRQROUTE   => IRQROUTE_RESERVED1,
-         IRQROUTEEN => NFalse,
-         others     => <>
+         IRQROUTE  => IRQROUTE_RSVD1,
+         IRQROUTEE => NFalse,
+         others    => <>
          );
    begin
       PCI.Cfg_Write (
