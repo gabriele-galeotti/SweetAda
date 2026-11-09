@@ -18,7 +18,7 @@
 with Ada.Unchecked_Conversion;
 
 package body KSZ8851SNL
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -36,7 +36,7 @@ package body KSZ8851SNL
        Register    : Unsigned_8;
        Byte_Enable : BYTE_ENABLE_Type)
       return Bits_16
-      is
+   is
       function To_B16 is new Ada.Unchecked_Conversion (Command_REGISTERS_Type, Bits_16);
    begin
       return To_B16 (Command_REGISTERS_Type'(
@@ -53,7 +53,7 @@ package body KSZ8851SNL
    function Command_TXQRXQ
       (Opcode : OPCODE_FIFO_Type)
       return Bits_16
-      is
+   is
       function To_B16 is new Ada.Unchecked_Conversion (Command_TXQRXQ_Type, Bits_16);
    begin
       return To_B16 (Command_TXQRXQ_Type'(Opcode => Opcode, others => <>));

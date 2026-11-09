@@ -15,12 +15,14 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
 
 package KSZ8851SNL
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -33,8 +35,6 @@ package KSZ8851SNL
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- KSZ8851SNL/SNLI
@@ -179,7 +179,5 @@ pragma Style_Checks (Off);
    function Command_TXQRXQ
       (Opcode : OPCODE_FIFO_Type)
       return Bits_16;
-
-pragma Style_Checks (On);
 
 end KSZ8851SNL;
