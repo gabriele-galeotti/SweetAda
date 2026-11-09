@@ -15,11 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Warnings (Off, "* is not referenced");
+
 with CPU;
 with Console;
 
 package body Ethernet
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -28,8 +30,6 @@ package body Ethernet
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-pragma Warnings (Off, "* is not referenced");
 
    IEEE8023_Max_Length : constant := 1500;
 
@@ -41,7 +41,7 @@ pragma Warnings (Off, "* is not referenced");
    The_Descriptor : Descriptor_Type := DESCRIPTOR_INVALID;
 
    procedure ARP_Handler
-      (P : in Pbuf_Ptr);
+      (P : in PBUF.Pbuf_Ptr);
 
    --========================================================================--
    --                                                                        --
@@ -55,10 +55,10 @@ pragma Warnings (Off, "* is not referenced");
    -- ARP_Handler
    ----------------------------------------------------------------------------
    procedure ARP_Handler
-      (P : in Pbuf_Ptr)
-      is
+      (P : in PBUF.Pbuf_Ptr)
+   is
       ARP_Header : aliased ARP_Header_Type
-         with Address    => Payload_CurrentAddress (P),
+         with Address    => PBUF.Payload_CurrentAddress (P),
               Import     => True,
               Convention => Ada;
    begin
@@ -72,7 +72,7 @@ pragma Warnings (Off, "* is not referenced");
                ARP_Header.Tpa  := ARP_Header.Spa;
                ARP_Header.Sha  := The_Descriptor.Haddress;         -- sender = myself
                ARP_Header.Spa  := The_Descriptor.Paddress;
-               Payload_Rewind (P);                                 -- uncover ETH header
+               PBUF.Payload_Rewind (P);                                 -- uncover ETH header
                P.all.Payload (0 .. 5)  := P.all.Payload (6 .. 11); -- target MAC is sender MAC
                P.all.Payload (6 .. 11) := The_Descriptor.Haddress; -- sender = myself
                TX (P);
@@ -94,7 +94,8 @@ pragma Warnings (Off, "* is not referenced");
    -- Init
    ----------------------------------------------------------------------------
    procedure Init
-      (D : in Descriptor_Type) is
+      (D : in Descriptor_Type)
+   is
    begin
       PBUF.Init;
       The_Descriptor := D;
@@ -105,7 +106,7 @@ pragma Warnings (Off, "* is not referenced");
    ----------------------------------------------------------------------------
    function Descriptor_Get
       return Descriptor_Type
-      is
+   is
    begin
       return The_Descriptor;
    end Descriptor_Get;
@@ -116,17 +117,17 @@ pragma Warnings (Off, "* is not referenced");
    -- src/netif/ethernetif.c:ethernetif_input()
    ----------------------------------------------------------------------------
    procedure Packet_Handler
-      (P : in Pbuf_Ptr)
-      is
+      (P : in PBUF.Pbuf_Ptr)
+   is
       ETH_Header : aliased Ethernet_Header_Type
-         with Address    => Payload_CurrentAddress (P),
+         with Address    => PBUF.Payload_CurrentAddress (P),
               Import     => True,
               Convention => Ada;
    begin
       -- Console.Print ("---------------------------------------------------------", NL => True);
       -- Console.Print (P.all.Total_Size, Prefix => "length: ", NL => True);
       -- Console.Print_Memory (Payload_Address (P), Bytelength (P.all.Size), 16);
-      Payload_Adjust (P, -ETH_HDR_SIZE);
+      PBUF.Payload_Adjust (P, -ETH_HDR_SIZE);
       case NToH (ETH_Header.Type_or_Length) is
          ---------------------
          when EtherType_ARP =>
@@ -147,8 +148,8 @@ pragma Warnings (Off, "* is not referenced");
    -- TX
    ----------------------------------------------------------------------------
    procedure TX
-      (P : in Pbuf_Ptr)
-      is
+      (P : in PBUF.Pbuf_Ptr)
+   is
    begin
       The_Descriptor.TX.all (The_Descriptor.Data_Address, P);
    end TX;
@@ -159,7 +160,7 @@ pragma Warnings (Off, "* is not referenced");
    function Nqueue
       (Q : access Queue_Type)
       return Natural
-      is
+   is
    begin
       return Q.all.Count;
    end Nqueue;
@@ -169,9 +170,9 @@ pragma Warnings (Off, "* is not referenced");
    ----------------------------------------------------------------------------
    procedure Enqueue
       (Q       : access Queue_Type;
-       P       : in     Pbuf_Ptr;
+       P       : in     PBUF.Pbuf_Ptr;
        Success :    out Boolean)
-      is
+   is
       Intcontext : CPU.Intcontext_Type;
    begin
       CPU.Intcontext_Get (Intcontext);
@@ -192,25 +193,25 @@ pragma Warnings (Off, "* is not referenced");
    ----------------------------------------------------------------------------
    procedure Dequeue
       (Q       : access Queue_Type;
-       P       : out    Pbuf_Ptr;
-       Success : out    Boolean)
-      is
+       P       : in     PBUF.Pbuf_Ptr;
+       Success :    out Boolean)
+   is
       Intcontext : CPU.Intcontext_Type;
+      Pbuf_Tail  : PBUF.Pbuf_Ptr;
    begin
       CPU.Intcontext_Get (Intcontext);
       CPU.Irq_Disable;
-      if Q.all.Tail = Q.all.Head then
-         P := null;
+      if Q.all.Head = Q.all.Tail then
          Success := False;
       else
-         P := Q.all.Queue (Q.all.Tail);
+         Pbuf_Tail := Q.all.Queue (Q.all.Tail);
+         P.all := Pbuf_Tail.all;
+         PBUF.Free (Pbuf_Tail);
          Q.all.Tail := @ + 1;
          Q.all.Count := @ - 1;
          Success := True;
       end if;
       CPU.Intcontext_Set (Intcontext);
    end Dequeue;
-
-pragma Warnings (On, "* is not referenced");
 
 end Ethernet;

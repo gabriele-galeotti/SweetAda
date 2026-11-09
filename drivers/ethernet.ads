@@ -22,7 +22,7 @@ with TCPIP;
 with PBUF;
 
 package Ethernet
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -36,7 +36,6 @@ package Ethernet
    use Interfaces;
    use Bits;
    use TCPIP;
-   use PBUF;
 
    ----------------------------------------------------------------------------
    -- Ethernet basic types
@@ -119,7 +118,7 @@ package Ethernet
    ----------------------------------------------------------------------------
 
    type RX_Ptr is access procedure (Data_Address : in Address);
-   type TX_Ptr is access procedure (Data_Address : in Address; P : in Pbuf_Ptr);
+   type TX_Ptr is access procedure (Data_Address : in Address; P : in PBUF.Pbuf_Ptr);
 
    type Descriptor_Type is record
       Haddress     : MAC_Address_Type;  -- "hardware" address (MAC)
@@ -148,31 +147,31 @@ package Ethernet
       return Descriptor_Type;
 
    procedure Packet_Handler
-      (P : in Pbuf_Ptr);
+      (P : in PBUF.Pbuf_Ptr);
 
    procedure TX
-      (P : in Pbuf_Ptr);
+      (P : in PBUF.Pbuf_Ptr);
 
    ----------------------------------------------------------------------------
    -- Packet Queue
    ----------------------------------------------------------------------------
 
-   QUEUE_SIZE : constant := 32;
+   QUEUE_SIZE : constant := 16;
 
    type Queue_Index_Type is mod QUEUE_SIZE;
 
-   type Queue_Array is array (Queue_Index_Type) of Pbuf_Ptr
-      with Suppress_Initialization => True;
+   type Queue_Array is array (Queue_Index_Type) of PBUF.Pbuf_Ptr;
 
    type Queue_Type is record
-      Queue : Queue_Array;
+      Queue : Queue_Array                   := [others => null];
       Head  : Queue_Index_Type              := 0;
       Tail  : Queue_Index_Type              := 0;
       Count : Natural range 0 .. QUEUE_SIZE := 0;
+      ID    : Natural                       := 0;
    end record
       with Volatile => True;
 
-   Packet_Queue : aliased Queue_Type := ([others => null], 0, 0, 0);
+   Packet_Queue : aliased Queue_Type;
 
    function Nqueue
       (Q : access Queue_Type)
@@ -180,12 +179,12 @@ package Ethernet
 
    procedure Enqueue
       (Q       : access Queue_Type;
-       P       : in     Pbuf_Ptr;
+       P       : in     PBUF.Pbuf_Ptr;
        Success :    out Boolean);
 
    procedure Dequeue
       (Q       : access Queue_Type;
-       P       : out    Pbuf_Ptr;
-       Success : out    Boolean);
+       P       : in     PBUF.Pbuf_Ptr;
+       Success :    out Boolean);
 
 end Ethernet;
