@@ -319,19 +319,19 @@ is
       renames Print_Integer;
 
    ----------------------------------------------------------------------------
-   -- Print[_sizet]
+   -- Print[_Bytesize]
    ----------------------------------------------------------------------------
-   procedure Print_sizet
-      (Value  : in Interfaces.C.size_t;
+   procedure Print_Bytesize
+      (Value  : in Bits.Bytesize;
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "");
    procedure Print
-      (Value  : in Interfaces.C.size_t;
+      (Value  : in Bits.Bytesize;
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
-      renames Print_sizet;
+      renames Print_Bytesize;
 
    ----------------------------------------------------------------------------
    -- Print_BitImage

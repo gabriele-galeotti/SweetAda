@@ -32,7 +32,7 @@ begin
       Init_Flag := True;
       Debug_Flag := Debug_Enable;
       -- simulate a request to sbrk()
-      Heap_Block.Size     := Size;
+      Heap_Block.Size     := Interfaces.C.size_t (Size);
       Heap_Block.Next_Ptr := null;
       Free (Heap_Block'Address + MEMORYBLOCKTYPE_SIZE);
       if Debug_Flag then

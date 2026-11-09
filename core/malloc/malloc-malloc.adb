@@ -32,14 +32,14 @@ begin
       raise Program_Error;
    end if;
    if Debug_Flag then
-      Console.Print (Prefix => "[MALLOC] Requesting: ", Value => Size, NL => True);
+      Console.Print (Prefix => "[MALLOC] Requesting: ", Value => Bits.Bytesize (Size), NL => True);
    end if;
    if Size = 0 then
       return Null_Address;
    end if;
    RSize := Round_Size (MEMORYBLOCKTYPE_SIZE + Size, DEFAULT_ALIGNMENT);
    if Debug_Flag then
-      Console.Print (Prefix => "[MALLOC] Rounded size: ", Value => RSize, NL => True);
+      Console.Print (Prefix => "[MALLOC] Rounded size: ", Value => Bits.Bytesize (RSize), NL => True);
    end if;
    Mutex.Acquire (Mtx);
    -- traverse the list of free block

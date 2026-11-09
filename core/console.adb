@@ -269,10 +269,10 @@ is
    separate;
 
    ----------------------------------------------------------------------------
-   -- Print_sizet
+   -- Print_Bytesize
    ----------------------------------------------------------------------------
-   procedure Print_sizet
-      (Value  : in Interfaces.C.size_t;
+   procedure Print_Bytesize
+      (Value  : in Bits.Bytesize;
        NL     : in Boolean := False;
        Prefix : in String := "";
        Suffix : in String := "")
@@ -307,7 +307,7 @@ is
    ----------------------------------------------------------------------------
    procedure Print_ASCIIZ_String
       (String_Address : in System.Address;
-       Limit          : in Interfaces.C.size_t := Maximum_String_Length;
+       Limit          : in Bits.Bytesize := Maximum_String_Length;
        NL             : in Boolean := False;
        Prefix         : in String := "";
        Suffix         : in String := "")

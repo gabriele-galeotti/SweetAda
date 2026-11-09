@@ -25,7 +25,7 @@ procedure Print_ASCIIZ_String
 is
    use type System.Address;
    use type SSE.Storage_Offset;
-   use Interfaces.C;
+   use type Bits.Bytesize;
    SA : System.Address := String_Address;
 begin
    if Prefix'Length /= 0 then
@@ -34,13 +34,13 @@ begin
    if SA /= System.Null_Address then
       for Idx in Bits.Bytesize range 0 .. Limit - 1 loop
          declare
-            c : aliased char
+            C : aliased Character
                with Address    => SA,
                     Import     => True,
                     Convention => Ada;
          begin
-            exit when c = nul;
-            Print (c);
+            exit when C = ASCII.NUL;
+            Print (C);
          end;
          -- SA := @ + SSE.Storage_Offset'(1);
          SA := @ + System.Storage_Elements.Storage_Offset'(1);

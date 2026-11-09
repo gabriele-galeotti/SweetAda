@@ -20,7 +20,6 @@ pragma Style_Checks (Off);
 with System;
 with System.Storage_Elements;
 with Interfaces;
-with Interfaces.C;
 
 package Bits
    with Pure       => True,
@@ -86,7 +85,7 @@ is
    for Bitsize use (0, 8, 16, 32, 64);
 
    -- Bytesize is a modular type representing size in bytes of large objects
-   subtype Bytesize is Interfaces.C.size_t;
+   type Bytesize is mod System.Memory_Size;
 
    ----------------------------------------------------------------------------
    -- Fundamental bit-level types and constants.

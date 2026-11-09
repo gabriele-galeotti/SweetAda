@@ -2,7 +2,7 @@
 --                                                     SweetAda                                                      --
 -----------------------------------------------------------------------------------------------------------------------
 -- __HDS__                                                                                                           --
--- __FLN__ console-print_sizet.adb                                                                                   --
+-- __FLN__ console-print_bytesize.adb                                                                                --
 -- __DSC__                                                                                                           --
 -- __HSH__ e69de29bb2d1d6434b8b29ae775ad8c2e48c5391                                                                  --
 -- __HDE__                                                                                                           --
@@ -18,14 +18,14 @@
 with LLutils;
 
 separate (Console)
-procedure Print_sizet
-   (Value  : in Interfaces.C.size_t;
+procedure Print_Bytesize
+   (Value  : in Bits.Bytesize;
     NL     : in Boolean := False;
     Prefix : in String := "";
     Suffix : in String := "")
 is
-   use Interfaces.C;
-   Number         : size_t := Value;
+   use type Bits.Bytesize;
+   Number         : Bits.Bytesize := Value;
    Number_Literal : String (1 .. 16);
    Literal_Idx    : Natural := 0;
 begin
@@ -47,4 +47,4 @@ begin
    if NL then
       Print_NewLine;
    end if;
-end Print_sizet;
+end Print_Bytesize;
