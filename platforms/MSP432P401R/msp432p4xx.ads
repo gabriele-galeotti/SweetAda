@@ -15,12 +15,14 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
 
 package MSP432P4xx
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -33,8 +35,6 @@ package MSP432P4xx
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- MSP432P4xx SimpleLinkTM Microcontrollers Technical Reference Manual
@@ -7636,7 +7636,5 @@ pragma Style_Checks (Off);
    -- 27.3.14 LCDBM[index] Register
 
    -- 27.3.15 LCDANM[index] Register
-
-pragma Style_Checks (On);
 
 end MSP432P4xx;

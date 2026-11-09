@@ -19,7 +19,7 @@ with Interfaces;
 with Bits;
 
 package Exceptions
-   is
+is
 
    --========================================================================--
    --                                                                        --

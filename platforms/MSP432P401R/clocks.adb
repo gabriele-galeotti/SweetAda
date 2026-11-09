@@ -20,7 +20,7 @@ with CPU;
 with MSP432P4xx;
 
 package body Clocks
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -50,7 +50,7 @@ package body Clocks
    ----------------------------------------------------------------------------
    function Status_Ready
       return Boolean
-      is
+   is
       Status : CSSTAT_Type;
    begin
       Status := CSSTAT;
@@ -69,7 +69,7 @@ package body Clocks
    -- HSMCLK/SMCLK: 12 MHz
    ----------------------------------------------------------------------------
    procedure Init
-      is
+   is
    begin
       CSKEY.CSKEY := CSKEY_CSKEY;
       loop exit when CSSTAT.REFO_ON; end loop;

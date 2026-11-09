@@ -25,7 +25,7 @@ with Exceptions;
 with Console;
 
 package body BSP
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -54,7 +54,7 @@ package body BSP
    -- SysTick_Init
    ----------------------------------------------------------------------------
    procedure SysTick_Init
-      is
+   is
    begin
       ARMv7M.SYST_RVR.RELOAD := Bits_24 (Clocks.MCLK / Configure.TICK_FREQUENCY);
       ARMv7M.SHPR3.PRI_15 := 16#01#;
@@ -74,7 +74,7 @@ package body BSP
 
    procedure Console_Putchar
       (C : in Character)
-      is
+   is
    begin
       -- wait for transmitter available
       loop exit when not eUSCI_A0_UART.UCAxSTATW.UCBUSY; end loop;
@@ -83,7 +83,7 @@ package body BSP
 
    procedure Console_Getchar
       (C : out Character)
-      is
+   is
    begin
       C := Character'Val (0);
    end Console_Getchar;
@@ -92,7 +92,7 @@ package body BSP
    -- Setup
    ----------------------------------------------------------------------------
    procedure Setup
-      is
+   is
    begin
       -- PCM ------------------------------------------------------------------
       PCMCTL0.AMR := AMR_AM_LDO_VCORE0;
@@ -146,9 +146,9 @@ package body BSP
       -------------------------------------------------------------------------
       Console.Print ("MSP432P401R", NL => True);
       -------------------------------------------------------------------------
-      Tick_Count := 0;
       ARMv7M.Irq_Enable;
       ARMv7M.Fault_Irq_Enable;
+      Tick_Count := 0;
       SysTick_Init;
       -------------------------------------------------------------------------
    end Setup;
