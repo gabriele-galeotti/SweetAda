@@ -15,11 +15,13 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Bits;
 
 package MPC106
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -31,8 +33,6 @@ package MPC106
 
    use System;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- MPC106 PCI Bridge/Memory Controller User’s Manual
@@ -51,6 +51,8 @@ pragma Style_Checks (Off);
 
    PICR1_Offset : constant := 16#A8#;
    PICR2_Offset : constant := 16#AC#;
+   ESCR1_Offset : constant := 16#E0#;
+   ESCR2_Offset : constant := 16#E8#;
 
    -- 3.2.3 PCI Registers
    -- 3.2.3.1 PCI Command Register
@@ -423,7 +425,5 @@ pragma Style_Checks (Off);
       nXIO_MODE at 0 range 0 .. 0;
       Reserved  at 0 range 1 .. 7;
    end record;
-
-pragma Style_Checks (On);
 
 end MPC106;
