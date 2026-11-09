@@ -15,12 +15,14 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
 
 package MMA8451Q
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -33,8 +35,6 @@ package MMA8451Q
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- MMA8451Q, 3-axis, 14-bit/8-bit digital accelerometer
@@ -965,7 +965,5 @@ pragma Style_Checks (Off);
    for OFF_Z_Type use record
       D at 0 range 0 .. 7;
    end record;
-
-pragma Style_Checks (On);
 
 end MMA8451Q;
