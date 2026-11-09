@@ -11,6 +11,8 @@
 #
 # Environment variables:
 # OSTYPE
+# SPACE
+# DEL
 # PATH
 # EXEEXT
 # SCREXT
@@ -214,7 +216,7 @@ $(foreach s,                                                 \
   $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell         \
     SET "VERBOSE="                                        && \
     SET "PATH=$(PATH)"                                    && \
-    SET "KERNEL_PARENT_PATH=.."                           && \
+    SET "KERNEL_PARENT_PATH=$(KERNEL_PARENT_PATH_RTS)"    && \
     SET "CPU=$(CPU)"                                      && \
     SET "RTS=$(RTS)"                                      && \
     SET "TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)"                && \
@@ -239,7 +241,7 @@ $(foreach s,                                                        \
   $(subst |,$(SPACE),$(subst $(SPACE),$(DEL),$(shell                \
     VERBOSE=                                                        \
     PATH="$(PATH)"                                                  \
-    KERNEL_PARENT_PATH=..                                           \
+    KERNEL_PARENT_PATH="$(KERNEL_PARENT_PATH_RTS)"                  \
     CPU=$(CPU)                                                      \
     RTS=$(RTS)                                                      \
     TOOLCHAIN_NAME=$(TOOLCHAIN_NAME)                                \

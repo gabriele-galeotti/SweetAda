@@ -10,15 +10,17 @@
 
 #
 # Environment variables:
-# NULL
-# SPACE
-# DEL
 # OSTYPE
 # VERBOSE
 #
 
 ifneq ($(MAKEFILE_FN_IN_INCLUDED),Y)
 MAKEFILE_FN_IN_INCLUDED := Y
+
+NULL  :=
+SPACE := $(NULL) $(NULL)
+TAB   := $(NULL)	$(NULL)
+DEL   := $(NULL)$(NULL)
 
 __CHARACTERS__ :=
 __CHARACTERS__ +=    !  "  \# $$ %  &  '  (  )  *  +  ,  -  .  /
@@ -27,6 +29,8 @@ __CHARACTERS__ += @  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O
 __CHARACTERS__ += P  Q  R  S  T  U  V  W  X  Y  Z  [  \  ]  ^  _
 __CHARACTERS__ += `  a  b  c  d  e  f  g  h  i  j  k  l  m  n  o
 __CHARACTERS__ += p  q  r  s  t  u  v  w  x  y  z  {  |  }  ~
+
+__CHARACTERS_NOSLASH__ := $(subst /,,$(__CHARACTERS__))
 
 #
 # substring
@@ -41,7 +45,7 @@ substring = $(strip \
               $(eval \
                 $$(foreach c,$$(__CHARACTERS__),\
                   $$(eval \
-                    __t__ := $$$$(subst $$$$c,$$$$c$$$$(SPACE),$$(__t__))\
+                    __t__ := $$$$(subst $$$$(c),$$$$c$$$$(SPACE),$$(__t__))\
                     )\
                   )\
                )\
@@ -162,6 +166,25 @@ list-create = $(eval $$1 := $$2)
 list-insert = $(eval $$1 := $$2 $$($$1))
 list-append = $(eval $$1 := $$($$1) $$2)
 list-delete = $(eval $$1 := $$(filter-out $$2,$$($$1)))
+
+#
+# kernel-parent-path
+#
+# Usage: $(call kernel-parent-path,<subdirectory_path>)
+#
+# KERNEL_PARENT_PATH generator function.
+#
+kernel-parent-path = $(if $1,$(patsubst %/,%,$(strip \
+                       $(eval __t__ := $(subst $(SPACE),,$1/))\
+                       $(eval \
+                         $$(foreach c,$$(__CHARACTERS_NOSLASH__),\
+                           $$(eval \
+                             __t__ := $$$$(subst $$$$(c),,$$(__t__))\
+                             )\
+                           )\
+                        )\
+                       $(subst /,../,$(__t__))\
+                      )),.)
 
 # MAKEFILE_FN_IN_INCLUDED
 endif

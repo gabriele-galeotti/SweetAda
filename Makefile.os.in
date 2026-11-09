@@ -22,12 +22,6 @@
 ifneq ($(MAKEFILE_OS_IN_INCLUDED),Y)
 MAKEFILE_OS_IN_INCLUDED := Y
 
-NULL  :=
-SPACE := $(NULL) $(NULL)
-TAB   := $(NULL)	$(NULL)
-COMMA := $(NULL),$(NULL)
-DEL   := $(NULL)$(NULL)
-
 # detect OS type
 # detected OS names: "cmd"/"msys"/"darwin"/"linux"
 ifeq ($(OS),Windows_NT)

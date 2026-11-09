@@ -97,8 +97,10 @@ endif
 ifeq ($(GCC_VERSION),)
 $(error Error: no valid toolchain)
 endif
+ifeq ($(filter multilib,$(MAKECMDGOALS)),multilib)
 ifeq ($(MULTILIB),)
 $(error Error: no valid MULTILIB)
+endif
 endif
 endif
 
@@ -224,7 +226,30 @@ endif
 ################################################################################
 
 .PHONY: all
-all: multilib
+all:
+ifeq ($(OSTYPE),cmd)
+	IF "$(strip $(GCC_MULTILIBS))"==""                      \
+          ECHO *** Error: GCC_MULTILIBS is empty.>&2& EXIT /B 1
+	SETLOCAL ENABLEDELAYEDEXPANSION                             && \
+        FOR %%M IN ($(foreach m,$(GCC_MULTILIBS),"$(m)")) DO           \
+          (                                                            \
+           ECHO.&& ECHO $(CPU): RTS = $(RTS), multilib = %%M&& ECHO.&& \
+           "$(MAKE)" MULTILIB=%%M multilib                             \
+          ) || EXIT /B 1
+else
+	if [ "x$(strip $(GCC_MULTILIBS))" = "x" ] ; then            \
+          printf "%s\n" "*** Error: GCC_MULTILIBS is empty." 1>&2 ; \
+          exit 1 ;                                                  \
+        fi
+	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do             \
+          (                                                            \
+           printf "%s\n" ""                                         && \
+           printf "%s\n" "$(CPU): RTS = $(RTS), multilib = \"$$m\"" && \
+           printf "%s\n" ""                                         && \
+           "$(MAKE)" MULTILIB="$$m" multilib                           \
+          ) || exit $$? ;                                              \
+        done
+endif
 
 .PHONY: multilib
 multilib: create-dirs

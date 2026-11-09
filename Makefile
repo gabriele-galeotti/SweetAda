@@ -13,10 +13,9 @@
 # make arguments
 #
 # Environment variables:
-# OS
-# MSYSTEM
-# TEMP
 # VERBOSE
+# OS
+# NULL
 # PLATFORM
 # SUBPLATFORM
 # CPU
@@ -335,39 +334,43 @@ CLIBRARY_DIRECTORY      := clibrary
 CORE_DIRECTORY          := core
 DRIVERS_DIRECTORY       := drivers
 MODULES_DIRECTORY       := modules
-LIBRARY_DIRECTORY       := lib
 OBJECT_DIRECTORY        := obj
+LIBRARY_DIRECTORY       := lib
 RTS_DIRECTORY           := rts
 SHARE_DIRECTORY         := share
+
+KERNEL_PARENT_PATH     := $(call kernel-parent-path,)
+KERNEL_PARENT_PATH_OBJ := $(call kernel-parent-path,$(OBJECT_DIRECTORY))
+KERNEL_PARENT_PATH_RTS := $(call kernel-parent-path,$(RTS_DIRECTORY))
 
 # PLATFORMs - CPUs - RTSes
 ifeq ($(OSTYPE),cmd)
 PLATFORMS := $(shell $(CHDIR) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs) 2>nul)
 CPUS      := $(shell $(CHDIR) $(CPU_BASE_DIRECTORY) && $(call ls-dirs) 2>nul)
-RTSES     := $(shell                          \
-               SET "VERBOSE="              && \
-               SET "PATH=$(PATH)"          && \
-               SET "KERNEL_PARENT_PATH=.." && \
-               "$(MAKE)"                      \
-                 --debug=n                    \
-                 --no-print-directory         \
-                 -C $(RTS_DIRECTORY)          \
-                 PROBEVARIABLE=RTSES          \
-                 probevariable                \
+RTSES     := $(shell                                                 \
+               SET "VERBOSE="                                     && \
+               SET "PATH=$(PATH)"                                 && \
+               SET "KERNEL_PARENT_PATH=$(KERNEL_PARENT_PATH_RTS)" && \
+               "$(MAKE)"                                             \
+                 --debug=n                                           \
+                 --no-print-directory                                \
+                 -C $(RTS_DIRECTORY)                                 \
+                 PROBEVARIABLE=RTSES                                 \
+                 probevariable                                       \
                2>nul)
 else
 PLATFORMS := $(shell ($(CHDIR) $(PLATFORM_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
 CPUS      := $(shell ($(CHDIR) $(CPU_BASE_DIRECTORY) && $(call ls-dirs)) 2> /dev/null)
-RTSES     := $(shell                  \
-               VERBOSE=               \
-               PATH="$(PATH)"         \
-               KERNEL_PARENT_PATH=..  \
-               "$(MAKE)"              \
-                 --debug=n            \
-                 --no-print-directory \
-                 -C $(RTS_DIRECTORY)  \
-                 PROBEVARIABLE=RTSES  \
-                 probevariable        \
+RTSES     := $(shell                                          \
+               VERBOSE=                                       \
+               PATH="$(PATH)"                                 \
+               KERNEL_PARENT_PATH="$(KERNEL_PARENT_PATH_RTS)" \
+               "$(MAKE)"                                      \
+                 --debug=n                                    \
+                 --no-print-directory                         \
+                 -C $(RTS_DIRECTORY)                          \
+                 PROBEVARIABLE=RTSES                          \
+                 probevariable                                \
                2> /dev/null)
 endif
 
@@ -845,32 +848,30 @@ endif
 #                                                                              #
 ################################################################################
 
-KERNEL_PARENT_PATH := .
-
-MAKE_APPLICATION_ARGS := SHELL="$(SHELL)"              \
-                           KERNEL_PARENT_PATH=..       \
-                           -C $(APPLICATION_DIRECTORY)
-MAKE_CLIBRARY_ARGS    := SHELL="$(SHELL)"           \
-                           KERNEL_PARENT_PATH=..    \
-                           -C $(CLIBRARY_DIRECTORY)
-MAKE_CORE_ARGS        := SHELL="$(SHELL)"        \
-                           KERNEL_PARENT_PATH=.. \
-                           -C $(CORE_DIRECTORY)
-MAKE_CPU_ARGS         := SHELL="$(SHELL)"                  \
-                           KERNEL_PARENT_PATH=../..        \
-                           -C $(CPU_BASE_DIRECTORY)/$(CPU)
-MAKE_DRIVERS_ARGS     := SHELL="$(SHELL)"          \
-                           KERNEL_PARENT_PATH=..   \
-                           -C $(DRIVERS_DIRECTORY)
-MAKE_MODULES_ARGS     := SHELL="$(SHELL)"          \
-                           KERNEL_PARENT_PATH=..   \
-                           -C $(MODULES_DIRECTORY)
-MAKE_PLATFORM_ARGS    := SHELL="$(SHELL)"                            \
-                           KERNEL_PARENT_PATH=../..                  \
-                           -C $(PLATFORM_BASE_DIRECTORY)/$(PLATFORM)
-MAKE_RTS_ARGS         := SHELL="$(SHELL)"        \
-                           KERNEL_PARENT_PATH=.. \
-                           -C $(RTS_DIRECTORY)
+MAKE_APPLICATION_ARGS := SHELL="$(SHELL)"                                                       \
+                         KERNEL_PARENT_PATH=$(call kernel-parent-path,$(APPLICATION_DIRECTORY)) \
+                         -C $(APPLICATION_DIRECTORY)
+MAKE_CLIBRARY_ARGS    := SHELL="$(SHELL)"                                                    \
+                         KERNEL_PARENT_PATH=$(call kernel-parent-path,$(CLIBRARY_DIRECTORY)) \
+                         -C $(CLIBRARY_DIRECTORY)
+MAKE_CORE_ARGS        := SHELL="$(SHELL)"                                                \
+                         KERNEL_PARENT_PATH=$(call kernel-parent-path,$(CORE_DIRECTORY)) \
+                         -C $(CORE_DIRECTORY)
+MAKE_CPU_ARGS         := SHELL="$(SHELL)"                                                           \
+                         KERNEL_PARENT_PATH=$(call kernel-parent-path,$(CPU_BASE_DIRECTORY)/$(CPU)) \
+                         -C $(CPU_BASE_DIRECTORY)/$(CPU)
+MAKE_DRIVERS_ARGS     := SHELL="$(SHELL)"                                                   \
+                         KERNEL_PARENT_PATH=$(call kernel-parent-path,$(DRIVERS_DIRECTORY)) \
+                         -C $(DRIVERS_DIRECTORY)
+MAKE_MODULES_ARGS     := SHELL="$(SHELL)"                                                   \
+                         KERNEL_PARENT_PATH=$(call kernel-parent-path,$(MODULES_DIRECTORY)) \
+                         -C $(MODULES_DIRECTORY)
+MAKE_PLATFORM_ARGS    := SHELL="$(SHELL)"                                                                     \
+                         KERNEL_PARENT_PATH=$(call kernel-parent-path,$(PLATFORM_BASE_DIRECTORY)/$(PLATFORM)) \
+                         -C $(PLATFORM_BASE_DIRECTORY)/$(PLATFORM)
+MAKE_RTS_ARGS         := SHELL="$(SHELL)"                                               \
+                         KERNEL_PARENT_PATH=$(call kernel-parent-path,$(RTS_DIRECTORY)) \
+                         -C $(RTS_DIRECTORY)
 
 CLEAN_OBJECTS     := $(KERNEL_OBJFILE)       \
                      $(KERNEL_OUTFILE)       \
@@ -978,8 +979,8 @@ help:
 	@$(call echo-print,"make PROBEVARIABLE=<variablename> probevariable")
 	@$(call echo-print,"  Obtain the value of a variable.")
 	@$(call echo-print,"make PROBEVARIABLES=<variablename_list> probevariables")
-	@$(call echo-print,"  Generate a list of assignments to define variables$(COMMA) \
-                              each assignment ends with a '|'.")
+	@$(call echo-print,"  Generate a list of assignments to define variables \
+                              (each assignment ends with a '|').")
 	@$(call echo-print,"")
 	@$(call echo-print,"Available CPUs: $(CPUS)")
 	@$(call echo-print,"")
@@ -1070,17 +1071,17 @@ endif
 ifeq      ($(BUILD_MODE),GNATMAKE)
 	@$(REM) GNATMAKE-driven procedure
 	$(call brief-command, \
-        $(GNATMAKE)                                                            \
-                    $(GNATMAKE_WRAPPER)                                        \
-                    --RTS="$(KERNEL_PARENT_PATH)/$(RTS_DIRECTORY)/$(RTS_PATH)" \
-                    -gnatec=$(GNATADC_FILENAME)                                \
-                    -D $(OBJECT_DIRECTORY)                                     \
-                    $(foreach                                                  \
-                      d,$(INCLUDE_DIRECTORIES),                                \
-                      -I$(d)                                                   \
-                      )                                                        \
-                    -c                                                         \
-                    main.adb                                                   \
+        $(GNATMAKE)                                      \
+                    $(GNATMAKE_WRAPPER)                  \
+                    --RTS="$(RTS_DIRECTORY)/$(RTS_PATH)" \
+                    -gnatec=$(GNATADC_FILENAME)          \
+                    -D $(OBJECT_DIRECTORY)               \
+                    $(foreach                            \
+                      d,$(INCLUDE_DIRECTORIES),          \
+                      -I$(d)                             \
+                      )                                  \
+                    -c                                   \
+                    main.adb                             \
         ,[GNATMAKE],main.adb)
 else ifeq ($(BUILD_MODE),GPRbuild)
 	@$(REM) GPRbuild-driven procedure
@@ -1121,22 +1122,22 @@ endif
 endif
 ifeq      ($(BUILD_MODE),GNATMAKE)
 	$(call brief-command, \
-        $(GNATBIND)                                        \
-                    -o b__main.adb                         \
-                    -F -e -l -n -s                         \
-                    --RTS="./$(RTS_DIRECTORY)/$(RTS_PATH)" \
-                    -A=gnatbind_alis.lst                   \
-                    -O=gnatbind_objs.lst                   \
-                    $(foreach                              \
-                      d,$(INCLUDE_DIRECTORIES),            \
-                      -I$(d)                               \
-                      )                                    \
-                    $(patsubst                             \
-                      %,$(OBJECT_DIRECTORY)/%.ali,         \
-                      main $(IMPLICIT_ALI_UNITS)           \
-                      )                                    \
-                    $(EXTERNAL_ALIS)                       \
-                    > gnatbind_elab.lst                    \
+        $(GNATBIND)                                      \
+                    -o b__main.adb                       \
+                    -F -e -l -n -s                       \
+                    --RTS="$(RTS_DIRECTORY)/$(RTS_PATH)" \
+                    -A=gnatbind_alis.lst                 \
+                    -O=gnatbind_objs.lst                 \
+                    $(foreach                            \
+                      d,$(INCLUDE_DIRECTORIES),          \
+                      -I$(d)                             \
+                      )                                  \
+                    $(patsubst                           \
+                      %,$(OBJECT_DIRECTORY)/%.ali,       \
+                      main $(IMPLICIT_ALI_UNITS)         \
+                      )                                  \
+                    $(EXTERNAL_ALIS)                     \
+                    > gnatbind_elab.lst                  \
         ,[GNATBIND],b__main.adb)
 ifeq ($(OSTYPE),cmd)
 	$(MV) b__main.ad* $(OBJECT_DIRECTORY)\ $(NULL)
@@ -1202,12 +1203,12 @@ $(OBJECT_DIRECTORY)/b__main.o: $(B__MAIN_O_DEPS)
 	@$(REM) compile the main program, incorporating the given elaboration order
 ifeq ($(BUILD_MODE),GNATMAKE)
 	$(call brief-command, \
-        $(CHDIR) $(OBJECT_DIRECTORY)                             && \
-        $(ADAC_GNATBIND)                                            \
-                         -o b__main.o                               \
-                         --RTS="../$(RTS_DIRECTORY)/$(RTS_PATH)"    \
-                         -c                                         \
-                         b__main.adb                                \
+        $(CHDIR) $(OBJECT_DIRECTORY)                                                    && \
+        $(ADAC_GNATBIND)                                                                   \
+                         -o b__main.o                                                      \
+                         --RTS="$(KERNEL_PARENT_PATH_OBJ)/$(RTS_DIRECTORY)/$(RTS_PATH)"    \
+                         -c                                                                \
+                         b__main.adb                                                       \
         ,[ADAC],b__main.adb)
 endif
 
@@ -1466,23 +1467,23 @@ configure-gnattdi: $(GNATTDI_FILENAME)
 $(GNATTDI_FILENAME): $(CONFIGURE_DEPS)
 ifeq ($(OSTYPE),cmd)
 	-$(call brief-command, \
-        $(CHDIR) $(OBJECT_DIRECTORY)                    && \
-        $(ADAC)                                            \
-                --RTS="../$(RTS_DIRECTORY)/$(RTS_PATH)"    \
-                -gnatet=../$(GNATTDI_FILENAME)             \
-                -c                                         \
-                __tdi__.ads                                \
-                1>nul 2>nul                                \
+        $(CHDIR) $(OBJECT_DIRECTORY)                                           && \
+        $(ADAC)                                                                   \
+                --RTS="$(KERNEL_PARENT_PATH_OBJ)/$(RTS_DIRECTORY)/$(RTS_PATH)"    \
+                -gnatet=$(KERNEL_PARENT_PATH_OBJ)/$(GNATTDI_FILENAME)             \
+                -c                                                                \
+                __tdi__.ads                                                       \
+                1>nul 2>nul                                                       \
         ,[ADAC],$(GNATTDI_FILENAME))
 else
 	-$(call brief-command, \
-        $(CHDIR) $(OBJECT_DIRECTORY)                    && \
-        $(ADAC)                                            \
-                --RTS="../$(RTS_DIRECTORY)/$(RTS_PATH)"    \
-                -gnatet=../$(GNATTDI_FILENAME)             \
-                -c                                         \
-                __tdi__.ads                                \
-                1> /dev/null 2> /dev/null                  \
+        $(CHDIR) $(OBJECT_DIRECTORY)                                           && \
+        $(ADAC)                                                                   \
+                --RTS="$(KERNEL_PARENT_PATH_OBJ)/$(RTS_DIRECTORY)/$(RTS_PATH)"    \
+                -gnatet=$(KERNEL_PARENT_PATH_OBJ)/$(GNATTDI_FILENAME)             \
+                -c                                                                \
+                __tdi__.ads                                                       \
+                1> /dev/null 2> /dev/null                                         \
         ,[ADAC],$(GNATTDI_FILENAME))
 endif
 
@@ -1739,31 +1740,12 @@ endif
 
 .PHONY: rts
 rts: clean clean-configure
-ifeq ($(OSTYPE),cmd)
-	IF "$(strip $(GCC_MULTILIBS))"==""                      \
-          ECHO *** Error: GCC_MULTILIBS is empty.>&2& EXIT /B 1
-	SETLOCAL ENABLEDELAYEDEXPANSION                                   && \
-        FOR %%M IN ($(foreach m,$(GCC_MULTILIBS),"$(m)")) DO                 \
-          (                                                                  \
-           ECHO.&& ECHO $(CPU): RTS = $(RTS_BUILD), multilib = %%M&& ECHO.&& \
-           SET "MAKEFLAGS=" && SET "RTS=$(RTS_BUILD)"                     && \
-           "$(MAKE)" $(MAKE_RTS_ARGS) MULTILIB=%%M multilib                  \
-          ) || EXIT /B 1
-else
-	if [ "x$(strip $(GCC_MULTILIBS))" = "x" ] ; then            \
-          printf "%s\n" "*** Error: GCC_MULTILIBS is empty." 1>&2 ; \
-          exit 1 ;                                                  \
-        fi
-	for m in $(foreach m,$(GCC_MULTILIBS),"$(m)") ; do                   \
-          (                                                                  \
-           printf "%s\n" ""                                               && \
-           printf "%s\n" "$(CPU): RTS = $(RTS_BUILD), multilib = \"$$m\"" && \
-           printf "%s\n" ""                                               && \
-           MAKEFLAGS= RTS=$(RTS_BUILD)                                       \
-           "$(MAKE)" $(MAKE_RTS_ARGS) MULTILIB="$$m" multilib                \
-          ) || exit $$? ;                                                    \
-        done
-endif
+	"$(MAKE)"                                  \
+                  $(MAKE_RTS_ARGS)                 \
+                  MAKEFLAGS=                       \
+                  RTS=$(RTS_BUILD)                 \
+                  GCC_MULTILIBS="$(GCC_MULTILIBS)" \
+                  all
 
 #
 # Cleaning targets.
