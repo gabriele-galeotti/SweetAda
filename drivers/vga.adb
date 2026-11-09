@@ -664,7 +664,6 @@ is
    ----------------------------------------------------------------------------
    procedure Scroll_Text
    is
-      use type Bits.Bytesize'Base;
       BYTES_PER_TEXTLINE : constant := VIDEO_TEXT_WIDTH * TEXT_CHARACTER_SIZE;
    begin
       Memory_Functions.Movemem (
