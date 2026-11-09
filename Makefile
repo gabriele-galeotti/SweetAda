@@ -1740,12 +1740,12 @@ endif
 
 .PHONY: rts
 rts: clean clean-configure
-	"$(MAKE)"                                  \
-                  $(MAKE_RTS_ARGS)                 \
-                  MAKEFLAGS=                       \
-                  RTS=$(RTS_BUILD)                 \
-                  GCC_MULTILIBS="$(GCC_MULTILIBS)" \
-                  all
+	$(MAKE)                                  \
+                $(MAKE_RTS_ARGS)                 \
+                MAKEFLAGS=                       \
+                RTS=$(RTS_BUILD)                 \
+                GCC_MULTILIBS="$(GCC_MULTILIBS)" \
+                all
 
 #
 # Cleaning targets.
