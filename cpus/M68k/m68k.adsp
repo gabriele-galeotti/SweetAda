@@ -198,9 +198,13 @@ is
       (Value : in SR_Type)
       with Inline => True;
 
+#if ENABLE_VBR
+
    procedure VBR_Set
       (VBR_Address : in Address)
       with Inline => True;
+
+#end if;
 
 #if ENABLE_MOVES
 
@@ -240,8 +244,10 @@ is
       with Inline => True;
 
 #if ENABLE_RESET
+
    procedure RESET
       with Inline => True;
+
 #end if;
 
    procedure BREAKPOINT

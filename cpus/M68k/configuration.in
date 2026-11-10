@@ -1,56 +1,71 @@
 
 TOOLCHAIN_NAME := $(TOOLCHAIN_NAME_M68k)
 
-ifeq      ($(CPU_MODEL),M68010)
+ifeq      ($(CPU_MODEL),M68000)
+  CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/M68000
+  GPR_CORE_CPU += m68k.adb m68k.ads
+  ENABLE_VBR   := False
+  ENABLE_MOVES := False
+  ENABLE_RESET := True
+else ifeq ($(CPU_MODEL),M68010)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/M68010
   GPR_CORE_CPU += m68k.adb m68k.ads
+  ENABLE_VBR   := True
   ENABLE_MOVES := True
   ENABLE_RESET := True
 else ifeq ($(CPU_MODEL),M68020)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/M68020
   GPR_CORE_CPU += m68k.adb m68k.ads
+  ENABLE_VBR   := True
   ENABLE_MOVES := True
   ENABLE_RESET := True
 else ifeq ($(CPU_MODEL),M68030)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/M68030
   GPR_CORE_CPU += m68k.adb m68k.ads
+  ENABLE_VBR   := True
   ENABLE_MOVES := True
   ENABLE_RESET := True
 else ifeq ($(CPU_MODEL),M68040)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/M68040
   GPR_CORE_CPU += m68k.adb m68k.ads
+  ENABLE_VBR   := True
   ENABLE_MOVES := True
   ENABLE_RESET := True
 else ifeq ($(CPU_MODEL),MCF5206)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/MCF5206
   GPR_CORE_CPU += m68k.adb m68k.ads cfv2.adb cfv2.ads
+  ENABLE_VBR   := True
   ENABLE_MOVES := False
   ENABLE_RESET := False
 else ifeq ($(CPU_MODEL),MCF5235)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/MCF523x
   GPR_CORE_CPU += m68k.adb m68k.ads cfv2.adb cfv2.ads
+  ENABLE_VBR   := True
   ENABLE_MOVES := False
   ENABLE_RESET := False
 else ifeq ($(CPU_MODEL),MCF5373)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/MCF5373
   GPR_CORE_CPU += m68k.adb m68k.ads cfv2.adb cfv2.ads cfv3.ads
+  ENABLE_VBR   := True
   ENABLE_MOVES := False
   ENABLE_RESET := False
 else ifeq ($(CPU_MODEL),CFv2)
   CPU_MODEL_DIRECTORY := $(CPU_DIRECTORY)/CFv2
   GPR_CORE_CPU += m68k.adb m68k.ads cfv2.adb cfv2.ads
+  ENABLE_VBR   := True
   ENABLE_MOVES := False
   ENABLE_RESET := False
 else
   ifneq ($(filter rts,$(MAKECMDGOALS)),rts)
     $(warning *** Warning: "$(CPU_MODEL)": no CPU model supported.\
-      Available CPU_MODEL are: M680[1|2|3|4]0 MCF[v2|5206|5235|5373].)
+      Available CPU_MODEL are: M680[0|1|2|3|4]0 MCF[v2|5206|5235|5373].)
   endif
 endif
 
 GNATPREP_FILES        += $(CPU_DIRECTORY)/m68k.ads \
                          $(CPU_DIRECTORY)/m68k.adb
-GNATPREP_DEFINES_m68k := -DENABLE_MOVES=$(ENABLE_MOVES) \
+GNATPREP_DEFINES_m68k := -DENABLE_VBR=$(ENABLE_VBR)     \
+                         -DENABLE_MOVES=$(ENABLE_MOVES) \
                          -DENABLE_RESET=$(ENABLE_RESET)
 
 GPR_CORE_CPU += cpu.ads
