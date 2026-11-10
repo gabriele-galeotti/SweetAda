@@ -45,7 +45,7 @@ substring = $(strip \
               $(eval \
                 $$(foreach c,$$(__CHARACTERS__),\
                   $$(eval \
-                    __t__ := $$$$(subst $$$$(c),$$$$c$$$$(SPACE),$$(__t__))\
+                    __t__ := $$$$(subst $$$$(c),$$$$(c)$$$$(SPACE),$$(__t__))\
                     )\
                   )\
                )\
