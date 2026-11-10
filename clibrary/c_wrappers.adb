@@ -590,19 +590,23 @@ is
    -- Ada_StrToxL
    ----------------------------------------------------------------------------
    procedure Ada_StrToxL
-      (Str            : in     chars_ptr;
-       EndPtr         : in     chars_pptr;
+      (Str            : in     char_ptr;
+       EndPtr         : in     char_pptr;
        Base_Input     : in     Interfaces.C.int;
        Flags_Input    : in     Interfaces.C.int;
-       Number         :    out ULong_Integer;
+       Number         :    out Interfaces.C.unsigned_long;
        Errno_Code     :    out Interfaces.C.int)
    is
+      use type Interfaces.C.char;
+      use type Interfaces.C.long;
+      use type Interfaces.C.unsigned_long;
       UNSIGNED    : constant := 0; -- use unsigned long version
       NEGATIVE    : constant := 1; -- "-" detected
       OVERFLOW    : constant := 2; -- overflow in conversion
       ANYDIGIT    : constant := 3; -- 1+ valid digits detected
       Base        : Integer := Integer (Base_Input);
-      function To_BM4 is new Ada.Unchecked_Conversion (Bits.Bits_4, Bits.Bitmap_4);
+      function To_BM4
+         is new Ada.Unchecked_Conversion (Bits.Bits_4, Bits.Bitmap_4);
       function To_Flags
          (Value : Interfaces.C.int)
          return Bits.Bitmap_4
@@ -617,18 +621,18 @@ is
       Flags       : Bits.Bitmap_4 := To_Flags (Flags_Input);
       Str_Address : System.Address := Str.all'Address;
       D           : Natural range 0 .. 35;
-      C           : Character;
-      Cutoff      : ULong_Integer;
-      Limit       : ULong_Integer;
+      C           : Interfaces.C.char;
+      Cutoff      : Interfaces.C.unsigned_long;
+      Limit       : Interfaces.C.unsigned_long;
       function Get_Character
          (Addr : System.Address)
-         return Character
+         return Interfaces.C.char
          with Inline => True;
       function Get_Character
          (Addr : System.Address)
-         return Character
+         return Interfaces.C.char
       is
-         Cchar : aliased Character
+         Cchar : aliased Interfaces.C.char
             with Address => Addr,
                  Import  => True;
       begin
@@ -670,29 +674,42 @@ is
          end if;
          -- setup range values
          if Flags (UNSIGNED) then
-            Cutoff := ULong_Integer'Last / ULong_Integer (Base);
-            Limit := ULong_Integer'Last mod ULong_Integer (Base);
+            Cutoff := Interfaces.C.unsigned_long'Last   /
+                      Interfaces.C.unsigned_long (Base);
+            Limit := Interfaces.C.unsigned_long'Last   mod
+                     Interfaces.C.unsigned_long (Base);
          else
             declare
-               Maxvalue : ULong_Integer;
+               Maxvalue : Interfaces.C.unsigned_long;
             begin
                if Flags (NEGATIVE) then
-                  Maxvalue := ULong_Integer (-Long_Integer'First);
+                  Maxvalue :=
+                     Interfaces.C.unsigned_long (-Interfaces.C.long'First);
                else
-                  Maxvalue := ULong_Integer (Long_Integer'Last);
+                  Maxvalue :=
+                      Interfaces.C.unsigned_long (Interfaces.C.long'Last);
                end if;
-               Cutoff := Maxvalue / ULong_Integer (Base);
-               Limit := Maxvalue mod ULong_Integer (Base);
+               Cutoff := Maxvalue / Interfaces.C.unsigned_long (Base);
+               Limit := Maxvalue mod Interfaces.C.unsigned_long (Base);
             end;
          end if;
          -- conversion loop
          loop
+            pragma Warnings (Off, "subrange of unordered enumeration type");
             case C is
-               when '0' .. '9' => D := Character'Pos (C) - Character'Pos ('0');
-               when 'A' .. 'Z' => D := Character'Pos (C) - Character'Pos ('A') + 10;
-               when 'a' .. 'z' => D := Character'Pos (C) - Character'Pos ('a') + 10;
-               when others     => exit;
+               when '0' .. '9' =>
+                  D := Interfaces.C.char'Pos (C)   -
+                       Interfaces.C.char'Pos ('0');
+               when 'A' .. 'Z' =>
+                  D := Interfaces.C.char'Pos (C)        -
+                       Interfaces.C.char'Pos ('A') + 10;
+               when 'a' .. 'z' =>
+                  D := Interfaces.C.char'Pos (C)        -
+                       Interfaces.C.char'Pos ('a') + 10;
+               when others     =>
+                  exit;
             end case;
+            pragma Warnings (On, "subrange of unordered enumeration type");
             if D >= Base then
                exit;
             end if;
@@ -700,11 +717,12 @@ is
             Flags (ANYDIGIT) := True;
             if Flags (OVERFLOW) or else
                Number > Cutoff or else
-               (Number = Cutoff and then ULong_Integer (D) > Limit)
+               (Number = Cutoff and then Interfaces.C.unsigned_long (D) > Limit)
             then
                Flags (OVERFLOW) := True;
             else
-               Number := Number * ULong_Integer (Base) + ULong_Integer (D);
+               Number := Number * Interfaces.C.unsigned_long (Base) +
+                         Interfaces.C.unsigned_long (D);
             end if;
             C := Get_Character (Str_Address);
             Str_Address := @ + 1;
@@ -712,12 +730,14 @@ is
          -- conversion overflowed
          if Flags (OVERFLOW) then
             if Flags (UNSIGNED) then
-               Number := ULong_Integer'Last;
+               Number := Interfaces.C.unsigned_long'Last;
             else
                if Flags (NEGATIVE) then
-                  Number := ULong_Integer (-Long_Integer'First);
+                  Number :=
+                     Interfaces.C.unsigned_long (-Interfaces.C.long'First);
                else
-                  Number := ULong_Integer (Long_Integer'Last);
+                  Number :=
+                      Interfaces.C.unsigned_long (Interfaces.C.long'Last);
                end if;
             end if;
             Errno_Code := ERANGE;
@@ -736,8 +756,9 @@ is
             Str_Address := @ - 1;
          end if;
          declare
-            S : aliased Character
-               with Address => Str_Address;
+            S : aliased char_array_c
+               with Address => Str_Address,
+                    Import  => True;
          begin
             EndPtr.all := S'Unchecked_Access;
          end;
@@ -813,5 +834,9 @@ is
    begin
       return Realloc (A, S);
    end Ada_Realloc;
+
+   ----------------------------------------------------------------------------
+   -- STRING subprograms
+   ----------------------------------------------------------------------------
 
 end C_Wrappers;

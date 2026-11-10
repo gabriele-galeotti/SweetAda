@@ -178,22 +178,22 @@ is
 
    -- specific types for Ada_StrToxL
 
-   type ULong_Integer is mod 2**Long_Integer'Size;
+   subtype char_array_c is Interfaces.C.char_array (Interfaces.C.size_t);
 
-   type chars_ptr is access all Character
+   type char_ptr is access all char_array_c
       with Size       => System.Parameters.ptr_bits,
            Convention => C;
 
-   type chars_pptr is access all chars_ptr
+   type char_pptr is access all char_ptr
       with Size       => System.Parameters.ptr_bits,
            Convention => C;
 
    procedure Ada_StrToxL
-      (Str            : in     chars_ptr;
-       EndPtr         : in     chars_pptr;
+      (Str            : in     char_ptr;
+       EndPtr         : in     char_pptr;
        Base_Input     : in     Interfaces.C.int;
        Flags_Input    : in     Interfaces.C.int;
-       Number         :    out ULong_Integer;
+       Number         :    out Interfaces.C.unsigned_long;
        Errno_Code     :    out Interfaces.C.int)
       with Export        => True,
            Convention    => C,
