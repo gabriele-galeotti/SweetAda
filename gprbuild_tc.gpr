@@ -29,12 +29,6 @@ abstract project Gprbuild_Tc is
    ----------------------------------------------------------------------------
 
    package Naming is
-      for Spec_Suffix ("Asm_Cpp") use ".h";
-      for Body_Suffix ("Asm_Cpp") use ".S";
-      for Spec_Suffix ("C")       use ".h";
-      for Body_Suffix ("C")       use ".c";
-      for Spec_Suffix ("Ada")     use ".ads";
-      for Body_Suffix ("Ada")     use ".adb";
    end Naming;
 
    ----------------------------------------------------------------------------

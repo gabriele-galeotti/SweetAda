@@ -39,9 +39,7 @@ library project Platform is
    -- Naming
    ----------------------------------------------------------------------------
 
-   package Naming extends Gprbuild_Tc.Naming is
-      for Spec_Suffix ("C") use ".hc";
-   end Naming;
+   package Naming renames Gprbuild_Tc.Naming;
 
    ----------------------------------------------------------------------------
    -- Builder
