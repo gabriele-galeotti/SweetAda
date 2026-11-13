@@ -10192,17 +10192,17 @@ is
    TXFP_REQUEST : constant := 1; -- Priority driven by the request order (chronologically)
 
    type CAN_MCR_Type is record
-      INRQ      : Boolean := False; -- Initialization request
-      SLEEP     : Boolean := True;  -- Sleep mode request
-      TXFP      : Bits_1  := False; -- Transmit FIFO priority
-      RFLM      : Boolean := False; -- Receive FIFO locked mode
-      NART      : Boolean := False; -- No automatic retransmission
-      AWUM      : Boolean := False; -- Automatic wake-up mode
-      ABOM      : Boolean := False; -- Automatic bus-off management
-      TTCM      : Boolean := False; -- Time triggered communication mode
+      INRQ      : Boolean := False;        -- Initialization request
+      SLEEP     : Boolean := True;         -- Sleep mode request
+      TXFP      : Bits_1  := TXFP_IDOFMSG; -- Transmit FIFO priority
+      RFLM      : Boolean := False;        -- Receive FIFO locked mode
+      NART      : Boolean := False;        -- No automatic retransmission
+      AWUM      : Boolean := False;        -- Automatic wake-up mode
+      ABOM      : Boolean := False;        -- Automatic bus-off management
+      TTCM      : Boolean := False;        -- Time triggered communication mode
       Reserved1 : Bits_7  := 0;
-      RESET     : Boolean := False; -- bxCAN software master reset
-      DBF       : Boolean := True;  -- Debug freeze
+      RESET     : Boolean := False;        -- bxCAN software master reset
+      DBF       : Boolean := True;         -- Debug freeze
       Reserved2 : Bits_15 := 0;
    end record
       with Bit_Order   => Low_Order_First,
@@ -10254,13 +10254,227 @@ is
    end record;
 
    -- CAN transmit status register (CAN_TSR)
+
+   type CAN_TSR_Type is record
+      RQCP0     : Boolean := False; -- Request completed mailbox0
+      TXOK0     : Boolean := False; -- Transmission OK of mailbox0
+      ALST0     : Boolean := False; -- Arbitration lost for mailbox0
+      TERR0     : Boolean := False; -- Transmission error of mailbox0
+      Reserved1 : Bits_3  := 0;
+      ABRQ0     : Boolean := False; -- Abort request for mailbox1
+      RQCP1     : Boolean := False; -- Request completed mailbox1
+      TXOK1     : Boolean := False; -- Transmission OK of mailbox1
+      ALST1     : Boolean := False; -- Arbitration lost for mailbox1
+      TERR1     : Boolean := False; -- Transmission error of mailbox1
+      Reserved2 : Bits_3  := 0;
+      ABRQ1     : Boolean := False; -- Abort request for mailbox1
+      RQCP2     : Boolean := False; -- Request completed mailbox2
+      TXOK2     : Boolean := False; -- Transmission OK of mailbox2
+      ALST2     : Boolean := False; -- Arbitration lost for mailbox2
+      TERR2     : Boolean := False; -- Transmission error of mailbox2
+      Reserved3 : Bits_3  := 0;
+      ABRQ2     : Boolean := False; -- Abort request for mailbox2
+      CODE      : Bits_2  := 0;     -- Mailbox code
+      TME0      : Boolean := True;  -- Transmit mailbox 0 empty
+      TME1      : Boolean := True;  -- Transmit mailbox 1 empty
+      TME2      : Boolean := True;  -- Transmit mailbox 2 empty
+      LOW0      : Boolean := False; -- Lowest priority flag for mailbox 0
+      LOW1      : Boolean := False; -- Lowest priority flag for mailbox 1
+      LOW2      : Boolean := False; -- Lowest priority flag for mailbox 2
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for CAN_TSR_Type use record
+      RQCP0     at 0 range  0 ..  0;
+      TXOK0     at 0 range  1 ..  1;
+      ALST0     at 0 range  2 ..  2;
+      TERR0     at 0 range  3 ..  3;
+      Reserved1 at 0 range  4 ..  6;
+      ABRQ0     at 0 range  7 ..  7;
+      RQCP1     at 0 range  8 ..  8;
+      TXOK1     at 0 range  9 ..  9;
+      ALST1     at 0 range 10 .. 10;
+      TERR1     at 0 range 11 .. 11;
+      Reserved2 at 0 range 12 .. 14;
+      ABRQ1     at 0 range 15 .. 15;
+      RQCP2     at 0 range 16 .. 16;
+      TXOK2     at 0 range 17 .. 17;
+      ALST2     at 0 range 18 .. 18;
+      TERR2     at 0 range 19 .. 19;
+      Reserved3 at 0 range 20 .. 22;
+      ABRQ2     at 0 range 23 .. 23;
+      CODE      at 0 range 24 .. 25;
+      TME0      at 0 range 26 .. 26;
+      TME1      at 0 range 27 .. 27;
+      TME2      at 0 range 28 .. 28;
+      LOW0      at 0 range 29 .. 29;
+      LOW1      at 0 range 30 .. 30;
+      LOW2      at 0 range 31 .. 31;
+   end record;
+
    -- CAN receive FIFO 0 register (CAN_RF0R)
+
+   type CAN_RF0R_Type is record
+      FMP0      : Bits_2  := 0;     -- FIFO 0 message pending
+      Reserved1 : Bits_1  := 0;
+      FULL0     : Boolean := False; -- FIFO 0 full
+      FOVR0     : Boolean := False; -- FIFO 0 overrun
+      RFOM0     : Boolean := False; -- Release FIFO 0 output mailbox
+      Reserved2 : Bits_26 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for CAN_RF0R_Type use record
+      FMP0      at 0 range 0 ..  1;
+      Reserved1 at 0 range 2 ..  2;
+      FULL0     at 0 range 3 ..  3;
+      FOVR0     at 0 range 4 ..  4;
+      RFOM0     at 0 range 5 ..  5;
+      Reserved2 at 0 range 6 .. 31;
+   end record;
+
    -- CAN receive FIFO 1 register (CAN_RF1R)
+
+   type CAN_RF1R_Type is record
+      FMP1      : Bits_2  := 0;     -- FIFO 1 message pending
+      Reserved1 : Bits_1  := 0;
+      FULL1     : Boolean := False; -- FIFO 1 full
+      FOVR1     : Boolean := False; -- FIFO 1 overrun
+      RFOM1     : Boolean := False; -- Release FIFO 1 output mailbox
+      Reserved2 : Bits_26 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for CAN_RF1R_Type use record
+      FMP1      at 0 range 0 ..  1;
+      Reserved1 at 0 range 2 ..  2;
+      FULL1     at 0 range 3 ..  3;
+      FOVR1     at 0 range 4 ..  4;
+      RFOM1     at 0 range 5 ..  5;
+      Reserved2 at 0 range 6 .. 31;
+   end record;
+
    -- CAN interrupt enable register (CAN_IER)
+
+   type CAN_IER_Type is record
+      TMEIE     : Boolean := False; -- Transmit mailbox empty interrupt enable
+      FMPIE0    : Boolean := False; -- FIFO message pending interrupt enable
+      FFIE0     : Boolean := False; -- FIFO full interrupt enable
+      FOVIE0    : Boolean := False; -- FIFO overrun interrupt enable
+      FMPIE1    : Boolean := False; -- FIFO message pending interrupt enable
+      FFIE1     : Boolean := False; -- FIFO full interrupt enable
+      FOVIE1    : Boolean := False; -- FIFO overrun interrupt enable
+      Reserved1 : Bits_1  := 0;
+      EWGIE     : Boolean := False; -- Error warning interrupt enable
+      EPVIE     : Boolean := False; -- Error passive interrupt enable
+      BOFIE     : Boolean := False; -- Bus-off interrupt enable
+      LECIE     : Boolean := False; -- Last error code interrupt enable
+      Reserved2 : Bits_3  := 0;
+      ERRIE     : Boolean := False; -- Error interrupt enable
+      WKUIE     : Boolean := False; -- Wake-up interrupt enable
+      SLKIE     : Boolean := False; -- Sleep interrupt enable
+      Reserved3 : Bits_14 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for CAN_IER_Type use record
+      TMEIE     at 0 range  0 ..  0;
+      FMPIE0    at 0 range  1 ..  1;
+      FFIE0     at 0 range  2 ..  2;
+      FOVIE0    at 0 range  3 ..  3;
+      FMPIE1    at 0 range  4 ..  4;
+      FFIE1     at 0 range  5 ..  5;
+      FOVIE1    at 0 range  6 ..  6;
+      Reserved1 at 0 range  7 ..  7;
+      EWGIE     at 0 range  8 ..  8;
+      EPVIE     at 0 range  9 ..  9;
+      BOFIE     at 0 range 10 .. 10;
+      LECIE     at 0 range 11 .. 11;
+      Reserved2 at 0 range 12 .. 14;
+      ERRIE     at 0 range 15 .. 15;
+      WKUIE     at 0 range 16 .. 16;
+      SLKIE     at 0 range 17 .. 17;
+      Reserved3 at 0 range 18 .. 31;
+   end record;
+
    -- CAN error status register (CAN_ESR)
+
+   LEC_NONE   : constant := 2#000#; -- No error
+   LEC_STUFF  : constant := 2#001#; -- Stuff error
+   LEC_FORM   : constant := 2#010#; -- Form error
+   LEC_ACK    : constant := 2#011#; -- Acknowledgment error
+   LEC_RECESS : constant := 2#100#; -- Bit recessive error
+   LEC_DOMINA : constant := 2#101#; -- Bit dominant error
+   LEC_CRC    : constant := 2#110#; -- CRC error
+   LEC_SOFT   : constant := 2#111#; -- Set by software
+
+   type CAN_ESR_Type is record
+      EWGF      : Boolean    := False;    -- Error warning flag
+      EPVF      : Boolean    := False;    -- Error passive flag
+      BOFF      : Boolean    := False;    -- Bus-off flag
+      Reserved1 : Bits_1     := 0;
+      LEC       : Bits_3     := LEC_NONE; -- Last error code
+      Reserved2 : Bits_9     := 0;
+      TEC       : Unsigned_8 := 0;        -- Least significant byte of the 9-bit transmit error counter
+      REC       : Unsigned_8 := 0;        -- Receive error counter
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for CAN_ESR_Type use record
+      EWGF      at 0 range  0 ..  0;
+      EPVF      at 0 range  1 ..  1;
+      BOFF      at 0 range  2 ..  2;
+      Reserved1 at 0 range  3 ..  3;
+      LEC       at 0 range  4 ..  6;
+      Reserved2 at 0 range  7 .. 15;
+      TEC       at 0 range 16 .. 23;
+      REC       at 0 range 24 .. 31;
+   end record;
+
    -- CAN bit timing register (CAN_BTR)
+
+   type CAN_BTR_Type is record
+      BRP       : Bits_10 := 0;     -- Baud rate prescaler
+      Reserved1 : Bits_6  := 0;
+      TS1       : Bits_4  := 3;     -- Time segment 1
+      TS2       : Bits_3  := 2;     -- Time segment 2
+      Reserved2 : Bits_1  := 0;
+      SJW       : Bits_2  := 1;     -- Resynchronization jump width
+      Reserved3 : Bits_4  := 0;
+      LBKM      : Boolean := False; -- Loop back mode (debug)
+      SILM      : Boolean := False; -- Silent mode (debug)
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for CAN_BTR_Type use record
+      BRP       at 0 range  0 ..  9;
+      Reserved1 at 0 range 10 .. 15;
+      TS1       at 0 range 16 .. 19;
+      TS2       at 0 range 20 .. 22;
+      Reserved2 at 0 range 23 .. 23;
+      SJW       at 0 range 24 .. 25;
+      Reserved3 at 0 range 26 .. 29;
+      LBKM      at 0 range 30 .. 30;
+      SILM      at 0 range 31 .. 31;
+   end record;
+
    -- 40.9.3 CAN mailbox registers
+   -- CAN TX mailbox identifier register (CAN_TIxR) (x = 0..2)
+   -- CAN mailbox data length control and time stamp register (CAN_TDTxR) (x = 0..2)
+   -- CAN mailbox data low register (CAN_TDLxR) (x = 0..2)
+   -- CAN mailbox data high register (CAN_TDHxR) (x = 0..2)
+   -- CAN receive FIFO mailbox identifier register (CAN_RIxR) (x = 0..1)
+   -- CAN receive FIFO mailbox data length control and time stamp register (CAN_RDTxR) (x = 0..1)
+   -- CAN receive FIFO mailbox data low register (CAN_RDLxR) (x = 0..1)
+   -- CAN receive FIFO mailbox data high register (CAN_RDHxR) (x = 0..1)
+
    -- 40.9.4 CAN filter registers
+   -- CAN filter master register (CAN_FMR)
+   -- CAN filter mode register (CAN_FM1R)
+   -- CAN filter scale register (CAN_FS1R)
+   -- CAN filter FIFO assignment register (CAN_FFA1R)
+   -- CAN filter activation register (CAN_FA1R)
+   -- Filter bank i register x (CAN_FiRx) (i = 0..27, x = 1, 2)
 
    ----------------------------------------------------------------------------
    -- 41 USB on-the-go full-speed/high-speed (OTG_FS/OTG_HS)
