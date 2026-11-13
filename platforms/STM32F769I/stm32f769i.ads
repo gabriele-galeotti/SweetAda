@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
@@ -33,8 +35,6 @@ is
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- RM0410 Rev 4
@@ -3224,7 +3224,7 @@ pragma Style_Checks (Off);
       FCR  : DMA_SxFCR_Type  with Volatile_Full_Access => True;
    end record
       with Bit_Order   => Low_Order_First,
-           Object_Size => 32 * 6;
+           Object_Size => 6 * 32;
    for DMA_Stream_Type use record
       CR   at 16#00# range 0 .. 31;
       NDTR at 16#04# range 0 .. 31;
@@ -10185,6 +10185,80 @@ pragma Style_Checks (Off);
    ----------------------------------------------------------------------------
 
    -- 40.9.2 CAN control and status registers
+
+   -- CAN master control register (CAN_MCR)
+
+   TXFP_IDOFMSG : constant := 0; -- Priority driven by the identifier of the message
+   TXFP_REQUEST : constant := 1; -- Priority driven by the request order (chronologically)
+
+   type CAN_MCR_Type is record
+      INRQ      : Boolean := False; -- Initialization request
+      SLEEP     : Boolean := True;  -- Sleep mode request
+      TXFP      : Bits_1  := False; -- Transmit FIFO priority
+      RFLM      : Boolean := False; -- Receive FIFO locked mode
+      NART      : Boolean := False; -- No automatic retransmission
+      AWUM      : Boolean := False; -- Automatic wake-up mode
+      ABOM      : Boolean := False; -- Automatic bus-off management
+      TTCM      : Boolean := False; -- Time triggered communication mode
+      Reserved1 : Bits_7  := 0;
+      RESET     : Boolean := False; -- bxCAN software master reset
+      DBF       : Boolean := True;  -- Debug freeze
+      Reserved2 : Bits_15 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for CAN_MCR_Type use record
+      INRQ      at 0 range  0 ..  0;
+      SLEEP     at 0 range  1 ..  1;
+      TXFP      at 0 range  2 ..  2;
+      RFLM      at 0 range  3 ..  3;
+      NART      at 0 range  4 ..  4;
+      AWUM      at 0 range  5 ..  5;
+      ABOM      at 0 range  6 ..  6;
+      TTCM      at 0 range  7 ..  7;
+      Reserved1 at 0 range  8 .. 14;
+      RESET     at 0 range 15 .. 15;
+      DBF       at 0 range 16 .. 16;
+      Reserved2 at 0 range 17 .. 31;
+   end record;
+
+   -- CAN master status register (CAN_MSR)
+
+   type CAN_MSR_Type is record
+      INAK      : Boolean := False; -- Initialization acknowledge
+      SLAK      : Boolean := False; -- Sleep acknowledge
+      ERRI      : Boolean := False; -- Error interrupt
+      WKUI      : Boolean := False; -- Wake-up interrupt
+      SLAKI     : Boolean := False; -- Sleep acknowledge interrupt
+      Reserved1 : Bits_3  := 0;
+      TXM       : Boolean := False; -- Transmit mode
+      RXM       : Boolean := False; -- Receive mode
+      SAMP      : Bits_1  := 0;     -- Last sample point
+      RX        : Bits_1  := 0;     -- CAN Rx signal
+      Reserved2 : Bits_20 := 0;
+   end record
+      with Bit_Order   => Low_Order_First,
+           Object_Size => 32;
+   for CAN_MSR_Type use record
+      INAK      at 0 range  0 ..  0;
+      SLAK      at 0 range  1 ..  1;
+      ERRI      at 0 range  2 ..  2;
+      WKUI      at 0 range  3 ..  3;
+      SLAKI     at 0 range  4 ..  4;
+      Reserved1 at 0 range  5 ..  7;
+      TXM       at 0 range  8 ..  8;
+      RXM       at 0 range  9 ..  9;
+      SAMP      at 0 range 10 .. 10;
+      RX        at 0 range 11 .. 11;
+      Reserved2 at 0 range 12 .. 31;
+   end record;
+
+   -- CAN transmit status register (CAN_TSR)
+   -- CAN receive FIFO 0 register (CAN_RF0R)
+   -- CAN receive FIFO 1 register (CAN_RF1R)
+   -- CAN interrupt enable register (CAN_IER)
+   -- CAN error status register (CAN_ESR)
+   -- CAN bit timing register (CAN_BTR)
    -- 40.9.3 CAN mailbox registers
    -- 40.9.4 CAN filter registers
 
@@ -10334,7 +10408,5 @@ pragma Style_Checks (Off);
    -- 43.7.4 CEC Rx data register (CEC_RXDR)
    -- 43.7.5 CEC interrupt and status register (CEC_ISR)
    -- 43.7.6 CEC interrupt enable register (CEC_IER)
-
-pragma Style_Checks (On);
 
 end STM32F769I;
