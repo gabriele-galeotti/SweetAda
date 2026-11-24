@@ -26,8 +26,10 @@
 
 #if defined(_WIN32)
 # include <windows.h>
+# define pid_t DWORD
+#else
+# include <sys/types.h> /* pid_t */
 #endif
-#include <sys/types.h>  /* pid_t */
 
 /******************************************************************************
  * Application headers.                                                       *

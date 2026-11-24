@@ -41,9 +41,6 @@
  * System headers.                                                            *
  ******************************************************************************/
 
-#include <fcntl.h>
-#include <unistd.h>
-
 /******************************************************************************
  * Application headers.                                                       *
  ******************************************************************************/
@@ -83,7 +80,7 @@ typedef struct _Elf_Data {
         } Elf_Data_t;
 
 typedef struct _Elf {
-        int           fd;                       /* file descriptor */
+        FILE         *fp;                       /* stream pointer */
         size_t        idlen;                    /* identifier size */
         unsigned int  class;                    /* ELF class */
         uint8_t      *data;                     /* file/member data */
@@ -294,7 +291,7 @@ fprintf_tab2spaces(FILE *fp, const char *input_string)
  *                                                                            *
  ******************************************************************************/
 static int
-data_read(int fd, void *buffer, size_t length)
+data_read(FILE *fp, void *buffer, size_t length)
 {
         size_t datacount;
         size_t n;
@@ -302,7 +299,7 @@ data_read(int fd, void *buffer, size_t length)
         datacount = 0;
         while (datacount < length)
         {
-                n = read(fd, (void *)((uint8_t *)buffer + datacount), length - datacount);
+                n = fread((void *)((uint8_t *)buffer + datacount), 1, length - datacount, fp);
                 if (n == 0)
                 {
                         /* no data available */
@@ -328,13 +325,14 @@ data_read(int fd, void *buffer, size_t length)
  *                                                                            *
  ******************************************************************************/
 static void *
-elf_read(Elf_t *pelf, void *buffer, off_t offset, size_t length)
+elf_read(Elf_t *pelf, void *buffer, long offset, size_t length)
 {
         if (length != 0)
         {
                 void *t_buffer;
                 offset += pelf->base;
-                if (lseek(pelf->fd, offset, SEEK_SET) != offset)
+                fseek(pelf->fp, offset, SEEK_SET);
+                if (ftell(pelf->fp) != offset)
                 {
                         // ERROR_IO
                 }
@@ -342,7 +340,7 @@ elf_read(Elf_t *pelf, void *buffer, off_t offset, size_t length)
                 {
                         // ERROR_NOMEM
                 }
-                else if (data_read(pelf->fd, t_buffer, length) < 0)
+                else if (data_read(pelf->fp, t_buffer, length) < 0)
                 {
                         // ERROR_IO
                         if (t_buffer != buffer)
@@ -365,20 +363,18 @@ elf_read(Elf_t *pelf, void *buffer, off_t offset, size_t length)
  *                                                                            *
  ******************************************************************************/
 static Elf_t *
-elf_begin(int fd)
+elf_begin(FILE *fp)
 {
         Elf_t  *pelf;
-        off_t   fd_offset;
         size_t  size;
         int     endian_detect;
 
-        fd_offset = lseek(fd, (off_t)0, SEEK_END);
-        if (fd_offset == (off_t)-1)
+        if (fseek(fp, 0, SEEK_END) == -1)
         {
                 // ERROR_IO
                 return NULL;
         }
-        size = fd_offset;
+        size = (size_t)ftell(fp);
 
         pelf = lib_malloc(sizeof(Elf_t));
         if (pelf == NULL)
@@ -386,7 +382,7 @@ elf_begin(int fd)
                 // ERROR_NOMEM
                 return NULL;
         }
-        pelf->fd = fd;
+        pelf->fp = fp;
         pelf->base = 0;
 
         pelf->data = elf_read(pelf, NULL, 0, size);
@@ -869,16 +865,16 @@ command_setdebugflag(void)
         }
 
         offset = application.pelf->scn_text_offset + (application.symbol_value - application.pelf->scn_text_addr);
-        lseek(application.pelf->fd, offset, SEEK_SET);
-        if (read(application.pelf->fd, (void *)&value, 1) != 1)
+        fseek(application.pelf->fp, (long)offset, SEEK_SET);
+        if (fread((void *)&value, 1, 1, application.pelf->fp) != 1)
         {
                 log_printf(LOG_STDERR | LOG_FILE, "*** Error: read()ing the input file.");
                 return ERROR_ERROR;
         }
         if (value != application.debug_flag_value)
         {
-                lseek(application.pelf->fd, -1, SEEK_CUR);
-                if (write(application.pelf->fd, (void *)&application.debug_flag_value, 1) != 1)
+                fseek(application.pelf->fp, -1, SEEK_CUR);
+                if (fwrite((void *)&application.debug_flag_value, 1, 1, application.pelf->fp) != 1)
                 {
                         log_printf(LOG_STDERR | LOG_FILE, "*** Error: write()ing the input file.");
                         return ERROR_ERROR;
@@ -1056,11 +1052,11 @@ main(int argc, char **argv)
 {
         int         exit_status;
         char        program_name[PATH_MAX + 1];
-        int         fd;
+        FILE       *fp;
         const char *process_arguments_error_message;
 
         exit_status = EXIT_FAILURE;
-        fd = -1;
+        fp = NULL;
 
         application.input_filename        = NULL;
         application.command               = COMMAND_NONE;
@@ -1111,11 +1107,11 @@ main(int argc, char **argv)
          */
 #if __START_IF_SELECTION__
 #elif defined(_WIN32)
-        fd = open(application.input_filename, O_RDWR | O_BINARY);
+        fp = fopen(application.input_filename, "rb");
 #elif defined(__APPLE__) || defined(__linux__)
-        fd = open(application.input_filename, O_RDWR);
+        fp = fopen(application.input_filename, "r");
 #endif
-        if (fd < 0)
+        if (fp == NULL)
         {
                 log_printf(LOG_STDERR | LOG_FILE, "*** Error: open(): %s: %s.", application.input_filename, strerror(errno));
                 goto main_exit;
@@ -1124,7 +1120,7 @@ main(int argc, char **argv)
         /*
          * Build the ELF descriptor.
          */
-        application.pelf = elf_begin(fd);
+        application.pelf = elf_begin(fp);
         if (application.pelf == NULL)
         {
                 log_printf(LOG_STDERR | LOG_FILE, "*** Error: elf_begin().");
@@ -1187,9 +1183,9 @@ main_exit:
                 application.pelf = NULL;
         }
 
-        if (fd >= 0)
+        if (fp != NULL)
         {
-                close(fd);
+                fclose(fp);
         }
 
         /*

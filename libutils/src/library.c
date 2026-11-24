@@ -25,9 +25,6 @@
  * System headers.                                                            *
  ******************************************************************************/
 
-#include <unistd.h>
-#include <sys/stat.h>
-
 /******************************************************************************
  * Application headers.                                                       *
  ******************************************************************************/
@@ -40,13 +37,10 @@
 
 #if __START_IF_SELECTION__
 #elif defined(__APPLE__) || defined(__linux__)
-# include <dlfcn.h>    /* dlopen() */
-# include <spawn.h>
-# include <sys/wait.h> /* WEXITSTATUS() */
-#endif
-#if __START_IF_SELECTION__
-#elif defined(__APPLE__) || defined(__linux__)
-# include <signal.h>
+# include <dlfcn.h>     /* dlopen() */
+# include <sys/stat.h>  /* lstat() stat() */
+# include <sys/wait.h>  /* kill() waitpid() WEXITSTATUS() */
+# include <unistd.h>    /* _exit() chdir() execve() fork() symlink() */
 #endif
 
 /******************************************************************************
@@ -470,6 +464,14 @@ time_msleep(size_t ms)
 bool
 file_exists(const char *filename)
 {
+#if __START_IF_SELECTION__
+#elif defined(_WIN32)
+        DWORD dwAttrib;
+
+        dwAttrib = GetFileAttributes((LPCTSTR)filename);
+
+        return dwAttrib != INVALID_FILE_ATTRIBUTES && !(dwAttrib & FILE_ATTRIBUTE_DIRECTORY);
+#elif defined(__APPLE__) || defined(__linux__)
         struct stat s;
 
         if (stat(filename, &s) != 0)
@@ -478,6 +480,7 @@ file_exists(const char *filename)
         }
 
         return true;
+#endif
 }
 
 /******************************************************************************
@@ -487,6 +490,35 @@ file_exists(const char *filename)
 size_t
 file_length(const char *filename)
 {
+#if __START_IF_SELECTION__
+#elif defined(_WIN32)
+        HANDLE        hFile;
+        LARGE_INTEGER size;
+
+        hFile = CreateFile(
+                (LPCSTR)filename,
+                GENERIC_READ,
+                FILE_SHARE_READ,
+                NULL,
+                OPEN_EXISTING,
+                FILE_ATTRIBUTE_NORMAL,
+                NULL
+                );
+
+        if (hFile == INVALID_HANDLE_VALUE)
+        {
+                return 0;
+        }
+
+        if (!GetFileSizeEx(hFile, &size))
+        {
+                return 0;
+        }
+
+        CloseHandle(hFile);
+
+        return (size_t)size.QuadPart;
+#elif defined(__APPLE__) || defined(__linux__)
         struct stat s;
 
         if (stat(filename, &s) != 0)
@@ -495,6 +527,7 @@ file_length(const char *filename)
         }
 
         return s.st_size;
+#endif
 }
 
 /******************************************************************************
@@ -1541,7 +1574,7 @@ execute_exec(execute_t this)
                 return -1;
         }
 
-        this->child_pid = (pid_t)ProcessInformation.dwProcessId;
+        this->child_pid = ProcessInformation.dwProcessId;
         CloseHandle(ProcessInformation.hThread);
         exit_status = 0;
 
@@ -1610,7 +1643,7 @@ execute_exec(execute_t this)
         }
 
         pid = fork();
-        if (pid == (pid_t)-1)
+        if (pid == PID_INVALID)
         {
                 log_printf(
                         LOG_STDERR,
