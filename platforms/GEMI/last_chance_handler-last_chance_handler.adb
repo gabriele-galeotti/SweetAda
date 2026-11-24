@@ -21,7 +21,7 @@ separate (Last_Chance_Handler)
 procedure Last_Chance_Handler
    (Source_Location : in System.Address;
     Line            : in Integer)
-   is
+is
    -- procedure GEMI_Last_Chance_Handler
    --    (SL : in System.Address;
    --     L  : in Integer)
