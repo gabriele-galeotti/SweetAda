@@ -75,7 +75,7 @@ is
    SEQUENCER_Register_Values_MODE03H : constant array (SEQUENCER_Register_Type range <>) of Unsigned_8 :=
       [
        16#03#, -- 00 Reset:
-       16#00#, -- 01 Clocking Mode: bit0 = 0 --> 9 dots, bit0 = 1 --> 8 dots
+       16#00#, -- 01 Clocking Mode: bit0 = 0 -> 9 dots, bit0 = 1 -> 8 dots
        16#03#, -- 02 Map Mask:
        16#00#, -- 03 Character Map Select:
        16#02#  -- 04 Sequencer Memory Mode:
@@ -84,7 +84,7 @@ is
    SEQUENCER_Register_Values_MODE12H : constant array (SEQUENCER_Register_Type range <>) of Unsigned_8 :=
       [
        16#03#, -- 00 Reset:
-       16#01#, -- 01 Clocking Mode: bit0 = 0 --> 9 dots, bit0 = 1 --> 8 dots
+       16#01#, -- 01 Clocking Mode: bit0 = 0 -> 9 dots, bit0 = 1 -> 8 dots
        16#0F#, -- 02 Map Mask:
        16#00#, -- 03 Character Map Select:
        16#06#  -- 04 Sequencer Memory Mode:
@@ -111,14 +111,14 @@ is
        16#1F#, -- 07 Overflow:
        16#00#, -- 08 Preset Row Scan:
        16#4F#, -- 09 Maximum Scan Line:
-       16#2E#, -- 0A Cursor Start: bit5 on --> disable cursor
+       16#2E#, -- 0A Cursor Start: bit5 on -> disable cursor
        16#0F#, -- 0B Cursor End:
        16#00#, -- 0C Start Address High:
        16#00#, -- 0D Start Address Low:
        16#00#, -- 0E Cursor Location High:
        16#00#, -- 0F Cursor Location Low:
        16#9C#, -- 10 Vertical Retrace Start:
-       16#AE#, -- 11 Vertical Retrace End: bit 4 on --> clear irq, bit5 on --> disable irq, bit7 on --> protect
+       16#AE#, -- 11 Vertical Retrace End: bit 4 on -> clear irq, bit5 on -> disable irq, bit7 on -> protect
        16#8F#, -- 12 Vertical Display End:
        16#28#, -- 13 Offset:
        16#1F#, -- 14 Underline Location:
@@ -140,14 +140,14 @@ is
        16#3E#, -- 07 Overflow:
        16#00#, -- 08 Preset Row Scan:
        16#40#, -- 09 Maximum Scan Line:
-       16#00#, -- 0A Cursor Start: bit5 on --> disable cursor
+       16#00#, -- 0A Cursor Start: bit5 on -> disable cursor
        16#00#, -- 0B Cursor End:
        16#00#, -- 0C Start Address High:
        16#00#, -- 0D Start Address Low:
        16#00#, -- 0E Cursor Location High:
        16#59#, -- 0F Cursor Location Low:
        16#EA#, -- 10 Vertical Retrace Start:
-       16#8C#, -- 11 Vertical Retrace End: bit 4 on --> clear irq, bit5 on --> disable irq, bit7 on --> protect
+       16#8C#, -- 11 Vertical Retrace End: bit 4 on -> clear irq, bit5 on -> disable irq, bit7 on -> protect
        16#DF#, -- 12 Vertical Display End:
        16#28#, -- 13 Offset:
        16#00#, -- 14 Underline Location:
@@ -509,20 +509,20 @@ is
    is
    begin
       -- Video Subsystem Enable -----------------------------------------------
-      -- bit0 = 1  --> the I/O and memory address decoding for the video
-      --               subsystem are enabled; when set to 0, this bit disables
-      --               the video I/O and memory address decoding
-      -- bit1..7   --> reserved
+      -- bit0 = 1  -> the I/O and memory address decoding for the video
+      --              subsystem are enabled; when set to 0, this bit disables
+      --              the video I/O and memory address decoding
+      -- bit1..7   -> reserved
       CPU.IO.PortOut (VIDEO_SUBSYSTEM_ENABLE, Unsigned_8'(16#01#));
       -- Miscellaneous Output -------------------------------------------------
-      -- bit0 = 1           --> use 0x3D4, 0x3DA
-      -- bit1 = 1           --> CPU can access VGA RAM
-      -- bit2 = 0, bit3 = 0 --> 25.175 MHz
-      -- bit2 = 1, bit3 = 0 --> 28.322 MHz
-      -- bit4 = 0           --> reserved
-      -- bit5 = 1           --> select bank1 in Even/Odd mode
-      -- bit6 = 1           --> HSYNC=negative
-      -- bit7 = 1           --> VSYNC=negative
+      -- bit0 = 1           -> use 0x3D4, 0x3DA
+      -- bit1 = 1           -> CPU can access VGA RAM
+      -- bit2 = 0, bit3 = 0 -> 25.175 MHz
+      -- bit2 = 1, bit3 = 0 -> 28.322 MHz
+      -- bit4 = 0           -> reserved
+      -- bit5 = 1           -> select bank1 in Even/Odd mode
+      -- bit6 = 1           -> HSYNC=negative
+      -- bit7 = 1           -> VSYNC=negative
       case Mode is
          when MODE03H => CPU.IO.PortOut (MISCELLANEOUS_OUTPUT, Unsigned_8'(16#67#));
          when MODE12H => CPU.IO.PortOut (MISCELLANEOUS_OUTPUT, Unsigned_8'(16#E3#));
