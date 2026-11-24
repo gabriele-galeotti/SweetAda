@@ -18,7 +18,7 @@
 with Ada.Unchecked_Conversion;
 
 package body I2C
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -35,7 +35,7 @@ package body I2C
       (Device_Address : Unsigned_8;
        RW             : RW_Mode_Type)
       return Unsigned_8
-      is
+   is
       function To_U8 is new Ada.Unchecked_Conversion (RW_Mode_Type, Unsigned_8);
    begin
       return Shift_Left (Device_Address, 1) or To_U8 (RW);
