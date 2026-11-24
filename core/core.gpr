@@ -26,6 +26,11 @@ library project Core is
    Obj_Dir := Kernel_Parent_Path & "/" & Configure.Object_Directory;
    Lib_Dir := Kernel_Parent_Path & "/" & Configure.Library_Directory;
 
+   ----------------------------------------------------------------------------
+   -- Library
+   ----------------------------------------------------------------------------
+
+   -- system-wide attributes
    for Target use Configure.Toolchain_Name;
    for Runtime ("Ada") use
       Kernel_Parent_Path      &
@@ -33,8 +38,18 @@ library project Core is
       Configure.RTS_Directory &
       "/"                     &
       Configure.RTS_Path;
+   for Object_Dir use project'Project_Dir & Obj_Dir;
+   for Library_Dir use project'Project_Dir & Lib_Dir;
+   for Library_Builder use Gprbuild_Tc.Library_Builder;
+   for Archive_Builder use Gprbuild_Tc.Archive_Builder;
+
+   -- library attributes
+   for Library_Name use "core";
+   for Library_Kind use "static";
+   for Library_Support use "static_only";
    for Source_Dirs use Include_Directories & (".");
-   for Default_Language use "Ada";
+
+   for Languages use ("Ada");
 
    Abort_Library_Files := (
       "abort_library.adb", "abort_library.ads",
@@ -226,12 +241,6 @@ library project Core is
       Mutex_Files;
 
    ----------------------------------------------------------------------------
-   -- Naming
-   ----------------------------------------------------------------------------
-
-   package Naming renames Gprbuild_Tc.Naming;
-
-   ----------------------------------------------------------------------------
    -- Builder
    ----------------------------------------------------------------------------
 
@@ -242,17 +251,5 @@ library project Core is
    ----------------------------------------------------------------------------
 
    package Compiler renames Gprbuild_Tc.Compiler;
-
-   ----------------------------------------------------------------------------
-   -- Library
-   ----------------------------------------------------------------------------
-
-   for Library_Name use "core";
-   for Library_Kind use Gprbuild_Tc.Library_Kind;
-   for Library_Support use Gprbuild_Tc.Library_Support;
-   for Library_Builder use Gprbuild_Tc.Library_Builder;
-   for Archive_Builder use Gprbuild_Tc.Archive_Builder;
-   for Object_Dir use project'Project_Dir & Obj_Dir;
-   for Library_Dir use project'Project_Dir & Lib_Dir;
 
 end Core;

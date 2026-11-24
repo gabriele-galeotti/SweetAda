@@ -24,6 +24,11 @@ library project CLibrary is
    Obj_Dir := Kernel_Parent_Path & "/" & Configure.Object_Directory;
    Lib_Dir := Kernel_Parent_Path & "/" & Configure.Library_Directory;
 
+   ----------------------------------------------------------------------------
+   -- Library
+   ----------------------------------------------------------------------------
+
+   -- system-wide attributes
    for Target use Configure.Toolchain_Name;
    for Runtime ("Ada") use
       Kernel_Parent_Path      &
@@ -31,7 +36,17 @@ library project CLibrary is
       Configure.RTS_Directory &
       "/"                     &
       Configure.RTS_Path;
+   for Object_Dir use project'Project_Dir & Obj_Dir;
+   for Library_Dir use project'Project_Dir & Lib_Dir;
+   for Library_Builder use Gprbuild_Tc.Library_Builder;
+   for Archive_Builder use Gprbuild_Tc.Archive_Builder;
+
+   -- library attributes
+   for Library_Name use "clibrary";
+   for Library_Kind use "static";
+   for Library_Support use "static_only";
    for Source_Dirs use Include_Directories & (".");
+
    for Languages use ("Ada", "C");
 
    Ada_Files := (
@@ -43,10 +58,9 @@ library project CLibrary is
       "bits-byte_swap_32.adb",
       "bits-byte_swap_64.adb"
       );
+
    C_Files := (
       "assert.c",
-      -- "ctype.c",
-      -- "errno.c",
       "stdio.c",
       "stdlib.c",
       "string.c",
@@ -54,12 +68,6 @@ library project CLibrary is
       );
 
    for Source_Files use Ada_Files & C_Files;
-
-   ----------------------------------------------------------------------------
-   -- Naming
-   ----------------------------------------------------------------------------
-
-   package Naming renames Gprbuild_Tc.Naming;
 
    ----------------------------------------------------------------------------
    -- Builder
@@ -72,17 +80,5 @@ library project CLibrary is
    ----------------------------------------------------------------------------
 
    package Compiler renames Gprbuild_Tc.Compiler;
-
-   ----------------------------------------------------------------------------
-   -- Library
-   ----------------------------------------------------------------------------
-
-   for Library_Name use "clibrary";
-   for Library_Kind use Gprbuild_Tc.Library_Kind;
-   for Library_Support use Gprbuild_Tc.Library_Support;
-   for Library_Builder use Gprbuild_Tc.Library_Builder;
-   for Archive_Builder use Gprbuild_Tc.Archive_Builder;
-   for Object_Dir use project'Project_Dir & Obj_Dir;
-   for Library_Dir use project'Project_Dir & Lib_Dir;
 
 end CLibrary;
