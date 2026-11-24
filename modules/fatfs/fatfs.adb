@@ -240,7 +240,7 @@ package body FATFS
        Partition_Start : in     Sector_Type;
        Success         :    out Boolean)
       is
-      Bootrecord             : Bootrecord_Type;
+      Bootrecord             : aliased Bootrecord_Type;
       Tmp_Sector_Size        : Unsigned_16;
       Tmp_NFATs              : NFATs_Type;
       Tmp_Number_Of_Clusters : Unsigned_32;
@@ -260,7 +260,7 @@ package body FATFS
       procedure Swap_Data
          (B : in out Block_Type)
          is
-         Values : Byte_Array (0 .. 511)
+         Values : aliased Byte_Array (0 .. 511)
             with Address    => B'Address,
                  Volatile   => True,
                  Convention => Ada;
