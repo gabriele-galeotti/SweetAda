@@ -266,6 +266,9 @@ $gcc_output = $stdout
 $gcc_output = $gcc_output.Split($nl, [StringSplitOptions]::RemoveEmptyEntries)
 
 $gcc_defines = ""
+$gcc_defines_AtomicOrder = ""
+[int]$AtomicOrder_Min = -1
+[int]$AtomicOrder_Max = -1
 
 $gcc_defines += $nl
 $gcc_defines += "package $($package_name)" + $nl
@@ -349,6 +352,19 @@ foreach ($i in $items)
           { if ([string]::IsNullOrEmpty($value)) { $value = "`"`"" } }
         { $_ -eq "UString" }
           { if ([string]::IsNullOrEmpty($value)) { $value = "`"`"" } else { $value = "`"$value`"" } }
+        { $_ -eq "NAtomicOrder_Type" }
+          { if ([string]::IsNullOrEmpty($value))
+            {
+              $value = "-1"
+            }
+            else
+            {
+              $value = $(ConvertHex $value)
+              if ($AtomicOrder_Min -eq -1) { $AtomicOrder_Min = $value }
+              if ($value -lt $AtomicOrder_Min) { $AtomicOrder_Min = $value }
+              if ($value -gt $AtomicOrder_Max) { $AtomicOrder_Max = $value }
+            }
+          }
         default
           {
             Write-Stderr "$($scriptname): *** Error: inconsistent item specification."
@@ -364,7 +380,11 @@ foreach ($i in $items)
     {
       { ($_ -eq "BBoolean") -or ($_ -eq "HBoolean") }
         { $value = "False" }
-      { ($_ -eq "N") -or ($_ -eq "NInteger") -or ($_ -eq "P") -or ($_ -eq "PInteger") }
+      { ($_ -eq "N")                 -or `
+        ($_ -eq "NInteger")          -or `
+        ($_ -eq "P")                 -or `
+        ($_ -eq "PInteger")          -or `
+        ($_ -eq "NAtomicOrder_Type") }
         { $value = "-1" }
       { ($_ -eq "SString") -or ($_ -eq "UString") }
         { $value = "`"`"" }
@@ -377,9 +397,19 @@ foreach ($i in $items)
   }
   $declstring = `
     "$($indent)$($i_tmacro)$($mseparator) : constant $($i_type)$($tseparator):= $($value);"
-  $gcc_defines += "$($declstring)" + $nl
+  if ("$($i_spec)$($i_type)" -eq "NAtomicOrder_Type")
+  {
+    $gcc_defines_AtomicOrder += "$($declstring)" + $nl
+  }
+  else
+  {
+    $gcc_defines += "$($declstring)" + $nl
+  }
 }
 
+$gcc_defines += $nl
+$gcc_defines += "$($indent)subtype AtomicOrder_Type is Integer range $($AtomicOrder_Min) .. $($AtomicOrder_Max);" + $nl
+$gcc_defines += $gcc_defines_AtomicOrder
 $gcc_defines += $nl
 $gcc_defines += "end $($package_name);" + $nl
 

@@ -21,6 +21,7 @@ with System;
 with System.Storage_Elements;
 with Interfaces;
 with Bits;
+with GCC.Defines;
 
 package LLutils
    with SPARK_Mode => On
@@ -205,7 +206,7 @@ is
    ----------------------------------------------------------------------------
    procedure Atomic_Clear
       (Object_Address : in System.Address;
-       Memory_Order   : in Integer)
+       Memory_Order   : in GCC.Defines.AtomicOrder_Type)
       with Inline_Always => True;
 
    ----------------------------------------------------------------------------
@@ -213,7 +214,7 @@ is
    ----------------------------------------------------------------------------
    function Atomic_Load
       (Object_Address : System.Address;
-       Memory_Order   : Integer)
+       Memory_Order   : GCC.Defines.AtomicOrder_Type)
       return Atomic_Type
       with Inline_Always => True;
 
@@ -222,7 +223,7 @@ is
    ----------------------------------------------------------------------------
    function Atomic_Test_And_Set
       (Object_Address : System.Address;
-       Memory_Order   : Integer)
+       Memory_Order   : GCC.Defines.AtomicOrder_Type)
       return Boolean
       with Inline_Always => True;
 

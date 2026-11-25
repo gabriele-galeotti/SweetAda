@@ -170,6 +170,9 @@ gcc_output=$(                                                                   
 NL=$(printf "\n%s" "_") ; NL=${NL%_}
 
 gcc_defines=""
+gcc_defines_AtomicOrder=""
+AtomicOrder_Min="-1"
+AtomicOrder_Max="-1"
 
 gcc_defines=${gcc_defines}${NL}
 gcc_defines=${gcc_defines}$(printf "%s\n" "package ${PACKAGE_NAME}")${NL}
@@ -238,12 +241,22 @@ EOF
   IFS=${BACKUP_IFS}
   if [ "x${found}" = "xY" ] ; then
     case ${i_spec}${i_type} in
-      BBoolean)   value="True" ;;
-      HBoolean)   if [ $((value)) -ne 0 ] ; then value="True" ; else value="False" ; fi ;;
-      N|NInteger) if [ "x${value}" = "x" ] ; then value="-1" ; else value=$(convert_hex ${value}) ; fi ;;
-      P|PInteger) if [ $((value)) -lt 1 ] ; then value="-1" ; else value=$(convert_hex ${value}) ; fi ;;
-      SString)    if [ "x${value}" = "x" ] ; then value="\"\"" ; fi ;;
-      UString)    if [ "x${value}" = "x" ] ; then value="\"\"" ; else value="\"${value}\"" ; fi ;;
+      BBoolean)          value="True" ;;
+      HBoolean)          if [ $((value)) -ne 0 ] ; then value="True" ; else value="False" ; fi ;;
+      N|NInteger)        if [ "x${value}" = "x" ] ; then value="-1" ; else value=$(convert_hex ${value}) ; fi ;;
+      P|PInteger)        if [ $((value)) -lt 1 ] ; then value="-1" ; else value=$(convert_hex ${value}) ; fi ;;
+      SString)           if [ "x${value}" = "x" ] ; then value="\"\"" ; fi ;;
+      UString)           if [ "x${value}" = "x" ] ; then value="\"\"" ; else value="\"${value}\"" ; fi ;;
+      NAtomicOrder_Type)
+        if [ "x${value}" = "x" ] ; then
+          value="-1"
+        else
+          value=$(convert_hex ${value})
+          if [ ${AtomicOrder_Min} = "-1" ] ; then AtomicOrder_Min=${value} ; fi
+          if [ ${value} -lt ${AtomicOrder_Min} ] ; then AtomicOrder_Min=${value} ; fi
+          if [ ${value} -gt ${AtomicOrder_Max} ] ; then AtomicOrder_Max=${value} ; fi
+        fi
+        ;;
       *)
         log_print_error "${SCRIPT_FILENAME}: *** Error: inconsistent item specification."
         exit 1
@@ -254,15 +267,23 @@ EOF
       BBoolean|HBoolean)     value="False" ;;
       N|NInteger|P|PInteger) value="-1" ;;
       SString|UString)       value="\"\"" ;;
+      NAtomicOrder_Type)     value="-1" ;;
       *)
         log_print_error "${SCRIPT_FILENAME}: *** Error: inconsistent item specification."
         exit 1
         ;;
     esac
   fi
-  gcc_defines=${gcc_defines}$(printf "%s${format_string}\n" "$indent" "${i_tmacro}" "${i_type}" "${value}")${NL}
+  if [ "${i_spec}${i_type}" = "NAtomicOrder_Type" ] ; then
+    gcc_defines_AtomicOrder=${gcc_defines_AtomicOrder}$(printf "%s${format_string}\n" "${indent}" "${i_tmacro}" "${i_type}" "${value}")${NL}
+  else
+    gcc_defines=${gcc_defines}$(printf "%s${format_string}\n" "${indent}" "${i_tmacro}" "${i_type}" "${value}")${NL}
+  fi
 done
 
+gcc_defines=${gcc_defines}${NL}
+gcc_defines=${gcc_defines}"${indent}""subtype AtomicOrder_Type is Integer range ${AtomicOrder_Min} .. ${AtomicOrder_Max};"${NL}
+gcc_defines=${gcc_defines}${gcc_defines_AtomicOrder}
 gcc_defines=${gcc_defines}${NL}
 gcc_defines=${gcc_defines}$(printf "%s\n" "end ${PACKAGE_NAME};")${NL}
 

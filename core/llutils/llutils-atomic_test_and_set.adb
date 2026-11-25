@@ -18,7 +18,7 @@
 separate (LLutils)
 function Atomic_Test_And_Set
    (Object_Address : System.Address;
-    Memory_Order   : Integer)
+    Memory_Order   : GCC.Defines.AtomicOrder_Type)
    return Boolean
 is
    function ATAS

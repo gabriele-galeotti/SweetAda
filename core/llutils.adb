@@ -274,7 +274,7 @@ is
    ----------------------------------------------------------------------------
    procedure Atomic_Clear
       (Object_Address : in System.Address;
-       Memory_Order   : in Integer)
+       Memory_Order   : in GCC.Defines.AtomicOrder_Type)
    is
    separate;
 
@@ -283,7 +283,7 @@ is
    ----------------------------------------------------------------------------
    function Atomic_Load
       (Object_Address : System.Address;
-       Memory_Order   : Integer)
+       Memory_Order   : GCC.Defines.AtomicOrder_Type)
       return Atomic_Type
    is
    separate;
@@ -293,7 +293,7 @@ is
    ----------------------------------------------------------------------------
    function Atomic_Test_And_Set
       (Object_Address : System.Address;
-       Memory_Order   : Integer)
+       Memory_Order   : GCC.Defines.AtomicOrder_Type)
       return Boolean
    is
    separate;

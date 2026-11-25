@@ -18,7 +18,7 @@
 separate (LLutils)
 procedure Atomic_Clear
    (Object_Address : in System.Address;
-    Memory_Order   : in Integer)
+    Memory_Order   : in GCC.Defines.AtomicOrder_Type)
 is
    procedure AC
       (OA : in System.Address;

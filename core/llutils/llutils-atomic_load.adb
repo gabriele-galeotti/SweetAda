@@ -18,7 +18,7 @@
 separate (LLutils)
 function Atomic_Load
    (Object_Address : System.Address;
-    Memory_Order   : Integer)
+    Memory_Order   : GCC.Defines.AtomicOrder_Type)
    return Atomic_Type
 is
    function AL
