@@ -21,7 +21,7 @@ with Definitions;
 with LLutils;
 
 package body UART16x50
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -237,8 +237,8 @@ pragma Warnings (Off, "* is not referenced");
    -- Local subprograms
 
    function Register_Read
-      (D : in Descriptor_Type;
-       R : in Register_Type)
+      (D : Descriptor_Type;
+       R : Register_Type)
       return Unsigned_8
       with Inline => True;
 
@@ -265,10 +265,10 @@ pragma Warnings (Off, "* is not referenced");
    -- Register_Read
    ----------------------------------------------------------------------------
    function Register_Read
-      (D : in Descriptor_Type;
-       R : in Register_Type)
+      (D : Descriptor_Type;
+       R : Register_Type)
       return Unsigned_8
-      is
+   is
    begin
       return D.Read_8
                 (Build_Address
@@ -284,7 +284,7 @@ pragma Warnings (Off, "* is not referenced");
       (D     : in Descriptor_Type;
        R     : in Register_Type;
        Value : in Unsigned_8)
-      is
+   is
    begin
       D.Write_8
          (Build_Address
@@ -299,7 +299,7 @@ pragma Warnings (Off, "* is not referenced");
    procedure Baud_Rate_Set
       (D         : in Descriptor_Type;
        Baud_Rate : in Integer)
-      is
+   is
    begin
       -- __FIX__
       -- a lock should be used here, because, once DLAB is set, no other
@@ -333,7 +333,7 @@ pragma Warnings (Off, "* is not referenced");
       (D       : in     Descriptor_Type;
        Result  :    out Unsigned_8;
        Success :    out Boolean)
-      is
+   is
    begin
       Success := False;
       if To_LSR (Register_Read (D, LSR)).DR then
@@ -348,7 +348,7 @@ pragma Warnings (Off, "* is not referenced");
    procedure TX
       (D    : in out Descriptor_Type;
        Data : in     Unsigned_8)
-      is
+   is
    begin
       -- wait for transmitter available
       loop
@@ -363,7 +363,7 @@ pragma Warnings (Off, "* is not referenced");
    procedure RX
       (D    : in out Descriptor_Type;
        Data :    out Unsigned_8)
-      is
+   is
    begin
       -- wait for receiver available
       loop
@@ -377,7 +377,7 @@ pragma Warnings (Off, "* is not referenced");
    ----------------------------------------------------------------------------
    procedure Receive
       (Descriptor_Address : in System.Address)
-      is
+   is
       D       : Descriptor_Type with
          Address    => Descriptor_Address,
          Import     => True,
@@ -398,7 +398,7 @@ pragma Warnings (Off, "* is not referenced");
    ----------------------------------------------------------------------------
    procedure Init
       (D : in out Descriptor_Type)
-      is
+   is
    begin
       Baud_Rate_Set (D, Definitions.Baud_Rate_Type'Enum_Rep (Definitions.BR_9600));
       Register_Write

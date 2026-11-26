@@ -15,6 +15,8 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
@@ -22,7 +24,7 @@ with MMIO;
 with FIFO;
 
 package UART16x50
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -35,8 +37,6 @@ package UART16x50
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- NS16C450 Universal Asynchronous Receiver/Transmitter
@@ -92,7 +92,5 @@ pragma Style_Checks (Off);
 
    procedure Init
       (D : in out Descriptor_Type);
-
-pragma Style_Checks (On);
 
 end UART16x50;
