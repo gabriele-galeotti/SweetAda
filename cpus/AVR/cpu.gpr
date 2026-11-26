@@ -96,8 +96,8 @@ library project Cpu is
    ----------------------------------------------------------------------------
 
    for Library_Name use "cpu";
-   for Library_Kind use Gprbuild_Tc.Library_Kind;
-   for Library_Support use Gprbuild_Tc.Library_Support;
+   for Library_Kind use "static";
+   for Library_Support use "static_only";
    for Library_Builder use Gprbuild_Tc.Library_Builder;
    for Archive_Builder use Gprbuild_Tc.Archive_Builder;
    for Object_Dir use project'Project_Dir & Obj_Dir;
