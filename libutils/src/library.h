@@ -15,7 +15,7 @@
  * Standard C headers.                                                        *
  ******************************************************************************/
 
-#include <inttypes.h>
+#include <stdint.h>
 #include <stdarg.h>     /* va_list */
 #include <stdbool.h>
 #include <stddef.h>     /* size_t */
@@ -27,6 +27,8 @@
 #if defined(_WIN32)
 # include <windows.h>
 # define pid_t DWORD
+# undef PATH_MAX
+# define PATH_MAX _MAX_PATH
 #else
 # include <sys/types.h> /* pid_t */
 #endif
@@ -322,7 +324,6 @@ extern int         env_put(const char *, const char *);
  * Timing.                                                                    *
  ******************************************************************************/
 
-extern int time_usleep(size_t);
 extern int time_msleep(size_t);
 
 /******************************************************************************

@@ -39,7 +39,7 @@
 #elif defined(__APPLE__) || defined(__linux__)
 # include <dlfcn.h>     /* dlopen() */
 # include <sys/stat.h>  /* lstat() stat() */
-# include <sys/wait.h>  /* kill() waitpid() WEXITSTATUS() */
+# include <sys/wait.h>  /* WEXITSTATUS() kill() waitpid() */
 # include <unistd.h>    /* _exit() chdir() execve() fork() symlink() */
 #endif
 
@@ -380,13 +380,16 @@ env_put(const char *name, const char *value)
  *                                                                            *
  ******************************************************************************/
 
+#if __START_IF_SELECTION__
+#elif defined(_WIN32)
+#else
 /******************************************************************************
- * time_usleep()                                                              *
+ * lib_usleep()                                                               *
  *                                                                            *
  * nanosleep() is available also in modern versions of MinGW-w64.             *
  ******************************************************************************/
 int
-time_usleep(size_t us)
+lib_usleep(size_t us)
 {
         struct timespec ts;
         int    status;
@@ -413,6 +416,7 @@ time_usleep(size_t us)
 
         return status;
 }
+#endif
 
 /******************************************************************************
  * time_msleep()                                                              *
@@ -421,6 +425,12 @@ time_usleep(size_t us)
 int
 time_msleep(size_t ms)
 {
+#if __START_IF_SELECTION__
+#elif defined(_WIN32)
+        Sleep(DWORD(ms));
+
+        return 0;
+#elif defined(__APPLE__) || defined(__linux__)
         int status;
 
         /*
@@ -428,7 +438,7 @@ time_msleep(size_t ms)
          */
         while (ms >= 1000)
         {
-                status = time_usleep(999 * 1000);
+                status = lib_usleep(999 * 1000);
                 if (status < 0)
                 {
                         break;
@@ -445,8 +455,9 @@ time_msleep(size_t ms)
         }
         else
         {
-                return time_usleep(ms * 1000);
+                return lib_usleep(ms * 1000);
         }
+#endif
 }
 
 /******************************************************************************
@@ -1166,7 +1177,7 @@ lib_mempcpy(void *dest, const void *src, size_t n)
 #elif defined(_WIN32)
 #else
 /******************************************************************************
- * execvpe()                                                                  *
+ * lib_execvpe()                                                              *
  *                                                                            *
  ******************************************************************************/
 static int
@@ -1259,6 +1270,7 @@ lib_execvpe(const char *file, char *const argv[], char *const envp[])
                                         break;
                                 default:
                                         return -1;
+                                        break;
                         }
                         if (*p_start++ == '\0')
                         {
@@ -1612,13 +1624,12 @@ execute_exec(execute_t this)
         }
 
         /*
-         * NOTE: if a "fork" is being performed we do not free memory linked
-         * with lpCommandLine and lpEnvironment, since the child process seems
-         * to possibly reference it until it will be completely initialized;
-         * it is not simple to detect this case, so we suffer a memory leak
-         * here.
+         * NOTE: if a "fork" is being performed, we do not free the memory
+         * allocated for lpCommandLine and lpEnvironment since the child
+         * process could reference them until it will be completely
+         * initialized; it is not simple to detect this case, so we suffer
+         * an (unharmful) temporary memory leak here.
          */
-
         CloseHandle(ProcessInformation.hProcess);
 
         return exit_status;
@@ -1787,7 +1798,7 @@ execute_exec(execute_t this)
                                 );
                         return -1;
                 }
-                /* CANNOTOCCUR */
+                /* __DNO__ */
                 log_printf(
                         LOG_STDERR,
                         "execute_exec(): child pid %"PID_FORMAT" anomalous exit, unknown reason.",
