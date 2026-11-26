@@ -19,7 +19,7 @@ with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 
 package body Z8530
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -706,7 +706,7 @@ pragma Warnings (Off, "* is not referenced");
    procedure Create_Ports
       (Descriptor : in out Descriptor_Type;
        Channel    : in     Channel_Type)
-      is
+   is
       Base_Address : Address := Descriptor.Base_Address;
    begin
       if Descriptor.Flags.DECstation5000133 then
@@ -727,7 +727,7 @@ pragma Warnings (Off, "* is not referenced");
        Channel    : Channel_Type;
        Register   : Register_Type)
       return Unsigned_8
-      is
+   is
    begin
       Descriptor.Write_8 (Descriptor.Control_Port (Channel), Register_ID (Register));
       return Descriptor.Read_8 (Descriptor.Control_Port (Channel));
@@ -741,7 +741,7 @@ pragma Warnings (Off, "* is not referenced");
        Channel    : in Channel_Type;
        Register   : in Register_Type;
        Value      : in Unsigned_8)
-      is
+   is
    begin
       Descriptor.Write_8 (Descriptor.Control_Port (Channel), Register_ID (Register));
       Descriptor.Write_8 (Descriptor.Control_Port (Channel), Value);
@@ -759,7 +759,7 @@ pragma Warnings (Off, "* is not referenced");
       (Descriptor : in Descriptor_Type;
        Channel    : in Channel_Type;
        Baud_Rate  : in Definitions.Baud_Rate_Type)
-      is
+   is
       Unused        : Unsigned_8 with Unreferenced => True;
       BR            : constant Integer := Definitions.Baud_Rate_Type'Enum_Rep (Baud_Rate);
       Time_Constant : Unsigned_16;
@@ -792,7 +792,7 @@ pragma Warnings (Off, "* is not referenced");
    procedure Init
       (Descriptor : in out Descriptor_Type;
        Channel    : in     Channel_Type)
-      is
+   is
       Unused : Unsigned_8 with Unreferenced => True;
    begin
       Create_Ports (Descriptor, Channel);
@@ -865,7 +865,7 @@ pragma Warnings (Off, "* is not referenced");
       (Descriptor : in Descriptor_Type;
        Channel    : in Channel_Type;
        Data       : in Unsigned_8)
-      is
+   is
    begin
       -- wait for transmitter available
       loop
@@ -881,7 +881,7 @@ pragma Warnings (Off, "* is not referenced");
       (Descriptor : in     Descriptor_Type;
        Channel    : in     Channel_Type;
        Data       :    out Unsigned_8)
-      is
+   is
    begin
       -- wait for receiver available
       loop
@@ -897,7 +897,7 @@ pragma Warnings (Off, "* is not referenced");
       (Descriptor : in Descriptor_Type;
        Channel    : in Channel_Type;
        Enable     : in Boolean)
-      is
+   is
       R : WR1_Type;
       I : RxINTMode_Type;
    begin

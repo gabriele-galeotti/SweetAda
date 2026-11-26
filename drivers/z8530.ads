@@ -21,7 +21,7 @@ with Definitions;
 with Bits;
 
 package Z8530
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -78,17 +78,21 @@ package Z8530
       (Descriptor : in Descriptor_Type;
        Channel    : in Channel_Type;
        Baud_Rate  : in Definitions.Baud_Rate_Type);
+
    procedure Init
       (Descriptor : in out Descriptor_Type;
        Channel    : in     Channel_Type);
+
    procedure TX
       (Descriptor : in Descriptor_Type;
        Channel    : in Channel_Type;
        Data       : in Unsigned_8);
+
    procedure RX
       (Descriptor : in     Descriptor_Type;
        Channel    : in     Channel_Type;
        Data       :    out Unsigned_8);
+
    procedure RxINT_Enable
       (Descriptor : in Descriptor_Type;
        Channel    : in Channel_Type;
