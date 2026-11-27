@@ -427,7 +427,7 @@ time_msleep(size_t ms)
 {
 #if __START_IF_SELECTION__
 #elif defined(_WIN32)
-        Sleep(DWORD(ms));
+        Sleep((DWORD)ms);
 
         return 0;
 #elif defined(__APPLE__) || defined(__linux__)
@@ -954,9 +954,9 @@ log_close(void)
  *                                                                            *
  * log_init() can be called more than once:                                   *
  * - if logprogramname does exist, it gets changed                            *
- * - logfilename = NULL   --> keep the current one                            *
- * - logfilename = ""     --> current gets closed                             *
- * - logfilename = <name> --> a new file will be opened                       *
+ * - logfilename = NULL   -> keep the current one                             *
+ * - logfilename = ""     -> current gets closed                              *
+ * - logfilename = <name> -> a new file will be opened                        *
  * LOG_STDERR defaults to enable; thus we could detect an error in the        *
  * initialization phase; in order to disable it, call log_setmode() at once   *
  * after log_init().                                                          *

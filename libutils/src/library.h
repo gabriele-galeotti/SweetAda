@@ -24,13 +24,13 @@
  * System headers.                                                            *
  ******************************************************************************/
 
+#include <sys/types.h> /* off_t pid_t */
+
 #if defined(_WIN32)
 # include <windows.h>
 # define pid_t DWORD
 # undef PATH_MAX
 # define PATH_MAX _MAX_PATH
-#else
-# include <sys/types.h> /* pid_t */
 #endif
 
 /******************************************************************************
