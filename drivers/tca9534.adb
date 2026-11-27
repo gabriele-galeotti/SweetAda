@@ -15,10 +15,12 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with Ada.Unchecked_Conversion;
 
 package body TCA9534
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -27,8 +29,6 @@ package body TCA9534
    --                                                                        --
    --                                                                        --
    --========================================================================--
-
-pragma Style_Checks (Off);
 
    function To_INPUTPORT  (Value : Unsigned_8)      return INPUTPORT_Type
       is function Convert is new Ada.Unchecked_Conversion (Unsigned_8, INPUTPORT_Type);  begin return Convert (Value); end To_INPUTPORT;
@@ -47,7 +47,5 @@ pragma Style_Checks (Off);
       is function Convert is new Ada.Unchecked_Conversion (CONFIGPORT_Type, Unsigned_8); begin return Convert (Value); end To_U8;
    function To_CONFIGPORT (Value : Unsigned_8)      return CONFIGPORT_Type
       is function Convert is new Ada.Unchecked_Conversion (Unsigned_8, CONFIGPORT_Type); begin return Convert (Value); end To_CONFIGPORT;
-
-pragma Style_Checks (On);
 
 end TCA9534;

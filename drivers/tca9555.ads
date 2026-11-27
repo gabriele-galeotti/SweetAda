@@ -15,12 +15,14 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
+pragma Style_Checks (Off);
+
 with System;
 with Interfaces;
 with Bits;
 
 package TCA9555
-   is
+is
 
    --========================================================================--
    --                                                                        --
@@ -33,8 +35,6 @@ package TCA9555
    use System;
    use Interfaces;
    use Bits;
-
-pragma Style_Checks (Off);
 
    ----------------------------------------------------------------------------
    -- TCA9555
@@ -195,7 +195,5 @@ pragma Style_Checks (Off);
       (Value : Unsigned_8)
       return CONFIGPORT_Type
       with Inline => True;
-
-pragma Style_Checks (On);
 
 end TCA9555;
