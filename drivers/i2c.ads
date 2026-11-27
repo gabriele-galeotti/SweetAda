@@ -15,7 +15,6 @@
 -- Please consult the LICENSE.txt file located in the top-level directory.                                           --
 -----------------------------------------------------------------------------------------------------------------------
 
-with System;
 with Interfaces;
 with Bits;
 
@@ -30,7 +29,6 @@ is
    --                                                                        --
    --========================================================================--
 
-   use System;
    use Interfaces;
    use Bits;
 
